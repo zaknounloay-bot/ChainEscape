@@ -1,0 +1,12 @@
+{
+	"name": "Gordian Knot",
+	"map": [
+		"R^      G<      R<      Y<      Pv@~#Y  P>#G    .",
+		".       Pv      .       .       .       .       .",
+		"G^      Rv      .       G^      .       .       .",
+		".       B>      .       .       B^      R^      Pv",
+		"Gv      P<      .       G^      P>@     Y<      .",
+		".       .       .       R>@-    Yv@*    P<      G<",
+		"G>      .       R>@-    B^@     Gv      .       ."
+	]
+}

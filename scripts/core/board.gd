@@ -15,6 +15,14 @@ var rows: int = 0
 var columns: int = 0
 var cell_size: float = 100.0
 var input_enabled: bool = true
+## World theme colors for the board panel and empty slots.
+var board_color: Color = Palette.BOARD
+var slot_color: Color = Palette.SLOT
+## Hammer mode: the next tap smashes a block instead of moving it.
+var hammer_mode: bool = false:
+	set(v):
+		hammer_mode = v
+		queue_redraw()
 ## Mystery levels get a slightly deeper board tint.
 var mystery: bool = false:
 	set(v):
@@ -124,8 +132,10 @@ func _draw() -> void:
 	if rows == 0:
 		return
 	var pad := PADDING_CELLS * cell_size
-	_panel_style.bg_color = Palette.BOARD_MYSTERY if mystery else Palette.BOARD
-	_slot_style.bg_color = Palette.SLOT_MYSTERY if mystery else Palette.SLOT
+	_panel_style.bg_color = board_color.darkened(0.08) if mystery else board_color
+	_slot_style.bg_color = slot_color.darkened(0.08) if mystery else slot_color
+	_panel_style.border_color = Color("#FF4D4D")
+	_panel_style.set_border_width_all(6 if hammer_mode else 0)
 	_panel_style.set_corner_radius_all(int(cell_size * 0.28))
 	_panel_style.draw(get_canvas_item(), Rect2(Vector2(-pad, -pad), Vector2(columns, rows) * cell_size + Vector2(pad, pad) * 2.0))
 	_slot_style.set_corner_radius_all(int(cell_size * 0.18))
@@ -185,10 +195,7 @@ func play_escape(id: int, chain: int, turned: Array = []) -> void:
 	_views.erase(id)
 	if view.hinted:
 		view.hinted = false
-	for sid in turned:
-		var sv: BlockView = _views.get(sid)
-		if sv:
-			sv.play_turn(Direction.rotate_cw(sv.data.direction), true, 0.05)
+	animate_turns(turned)
 	var dir := Direction.vector(view.data.direction)
 	var duration := clampf(0.28 - 0.012 * (chain - 1), 0.20, 0.28)
 	var tween := view.play_escape(_offscreen_point(view.home, dir), duration)
@@ -216,6 +223,17 @@ func play_bump(id: int, blocker_id: int) -> void:
 		blocker.play_hit(view.data.direction, cell_size * 0.05, 0.05 + 0.015 * dist)
 
 
+## Spinners turned by an escape/smash: animate each by its own rule.
+func animate_turns(turned: Array) -> void:
+	for sid in turned:
+		var sv: BlockView = _views.get(sid)
+		if sv:
+			var cw := sv.data.next_turn_cw()
+			var d := sv.data.direction
+			sv.data.spin_step += 1
+			sv.play_turn(Direction.rotate_cw(d) if cw else Direction.rotate_ccw(d), cw, 0.05)
+
+
 ## Makes views match the model after an Undo. Returning blocks fly back in.
 func sync_to(blocks: Array) -> void:
 	var wanted := {}
@@ -229,8 +247,11 @@ func sync_to(blocks: Array) -> void:
 		if _views.has(id):
 			var existing: BlockView = _views[id]
 			if existing.data.direction != wanted[id].direction:
-				# A spinner turned back by Undo.
-				existing.play_turn(wanted[id].direction, false)
+				# A spinner turned back by Undo: animate the reverse of the
+				# turn it made.
+				var undone_cw := BlockData.turn_is_cw(wanted[id].spin_rule, wanted[id].spin_step)
+				existing.play_turn(wanted[id].direction, not undone_cw)
+			existing.data.spin_step = wanted[id].spin_step
 			if existing.data.hidden != wanted[id].hidden:
 				# A mystery arrow hidden again by Undo.
 				existing.data.hidden = wanted[id].hidden
@@ -238,6 +259,29 @@ func sync_to(blocks: Array) -> void:
 			continue
 		var view := _create_view(wanted[id])
 		view.play_return(_offscreen_point(view.home, Direction.vector(view.data.direction)).lerp(view.home, 0.55))
+
+
+func set_theme(t: Dictionary) -> void:
+	board_color = t["board"]
+	slot_color = t["slot"]
+	queue_redraw()
+
+
+## Hammer smash: shake, crack burst, then the block is gone.
+func play_smash(id: int) -> void:
+	var view: BlockView = _views.get(id)
+	if view == null:
+		return
+	_views.erase(id)
+	var home := view.home
+	var t := view.create_tween()
+	t.tween_property(view, "scale", Vector2(1.15, 0.85), 0.06)
+	t.tween_property(view, "scale", Vector2(0.2, 0.2), 0.14).set_trans(Tween.TRANS_BACK).set_ease(Tween.EASE_IN)
+	t.parallel().tween_property(view, "modulate:a", 0.0, 0.14)
+	t.tween_callback(view.queue_free)
+	_burst(home, Vector2.UP, Palette.face(view.data.color), 22, 1.3, 180.0)
+	_burst(home, Vector2.DOWN, Color("#FFFFFF"), 10, 1.0, 180.0)
+	_pulse(0.02)
 
 
 ## Shows every view's padlock according to the model (no animation).

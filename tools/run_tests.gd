@@ -23,6 +23,15 @@ func _initialize() -> void:
 	test_stars_data_driven()
 	test_progress_persistence()
 	test_generator()
+	test_spin_rules()
+	test_typed_spinners_in_solver()
+	test_save_migration()
+	test_economy_rewards()
+	test_chests_no_duplicates()
+	test_shop()
+	test_hammer_safety()
+	test_worlds()
+	test_generator_future_levels()
 	print("%d checks, %d failures" % [_checks, _fails])
 	print("UNIT TESTS PASSED" if _fails == 0 else "UNIT TESTS FAILED")
 	quit(0 if _fails == 0 else 1)
@@ -33,6 +42,12 @@ func check(cond: bool, msg: String) -> void:
 	if not cond:
 		_fails += 1
 		printerr("FAIL: " + msg)
+
+
+## Deletes a save and its backup/temp files (the loader falls back to .bak).
+func wipe_save(path: String) -> void:
+	for suffix in ["", ".bak", ".tmp"]:
+		DirAccess.remove_absolute(ProjectSettings.globalize_path(path + suffix))
 
 
 func level_from_map(map: Array) -> LevelData:
@@ -110,7 +125,7 @@ func test_solver_trap_detection() -> void:
 func test_all_levels_solvable() -> void:
 	var lm := LevelManager.new()
 	lm._ready()
-	check(lm.level_count >= 60, "at least 60 levels (found %d)" % lm.level_count)
+	check(lm.level_count >= 100, "at least 100 levels (found %d)" % lm.level_count)
 	for n in range(1, lm.level_count + 1):
 		var level := lm.load_level(n)
 		var s := Solver.from_model(model_of(level))
@@ -156,7 +171,7 @@ func test_hints_never_invalid() -> void:
 
 func test_progress_persistence() -> void:
 	var path := "user://test_progress.cfg"
-	DirAccess.remove_absolute(ProjectSettings.globalize_path(path))
+	wipe_save(path)
 	var p := PlayerProgress.new(path).load_from_disk()
 	check(p.highest_completed == 0 and p.is_unlocked(1) and not p.is_unlocked(2), "fresh progress: only level 1 open")
 	p.current_level = 17
@@ -173,7 +188,7 @@ func test_progress_persistence() -> void:
 	check(q.best_score(3) == 5100 and q.stars_for(3) == 3, "best score and best stars persist (never go down)")
 	check(q.is_unlocked(4) and not q.is_unlocked(5), "next level unlocks after a clear")
 	check(not q.music_on and q.sfx_on and not q.haptics_on, "settings persist")
-	DirAccess.remove_absolute(ProjectSettings.globalize_path(path))
+	wipe_save(path)
 
 
 func test_locks() -> void:
@@ -274,3 +289,209 @@ func test_generator() -> void:
 		var json = JSON.parse_string(LevelManager.to_json_text(level))
 		var again := LevelManager.parse_level(json, 0)
 		check(again.blocks.size() == level.blocks.size(), "generated level survives JSON round-trip")
+
+
+# --- v0.4 -------------------------------------------------------------------
+
+func test_spin_rules() -> void:
+	var expect := {
+		BlockData.SpinRule.CW: [true, true, true, true, true, true],
+		BlockData.SpinRule.CCW: [false, false, false, false, false, false],
+		BlockData.SpinRule.ALT: [true, false, true, false, true, false],
+		BlockData.SpinRule.PATTERN: [true, true, false, true, true, false],
+	}
+	for rule in expect:
+		var seq := []
+		for step in 6:
+			seq.append(BlockData.turn_is_cw(rule, step))
+		check(seq == expect[rule], "spin rule %d follows its fixed sequence" % rule)
+		# Same inputs, same outputs, every time (never random).
+		for step in 6:
+			check(BlockData.turn_is_cw(rule, step) == BlockData.turn_is_cw(rule, step), "rule %d deterministic" % rule)
+		var b := BlockData.new(0, Vector2i.ZERO, "red", Direction.UP, BlockData.Kind.SPINNER)
+		b.spin_rule = rule
+		var dirs := [b.direction]
+		for i in 6:
+			b.apply_turn()
+			dirs.append(b.direction)
+		for i in 6:
+			b.undo_turn()
+			check(b.direction == dirs[5 - i] and b.spin_step == 5 - i, "rule %d undo_turn is the exact inverse" % rule)
+	var level := level_from_map(["R^@- B>@~ G<@*", ".   .    ."])
+	check(level.blocks[0].spin_rule == BlockData.SpinRule.CCW and level.blocks[1].spin_rule == BlockData.SpinRule.ALT
+		and level.blocks[2].spin_rule == BlockData.SpinRule.PATTERN, "spinner rule tokens parsed")
+	var json = JSON.parse_string(LevelManager.to_json_text(level))
+	var again := LevelManager.parse_level(json, 0)
+	check(again.blocks.map(func(b): return b.spin_rule) == level.blocks.map(func(b): return b.spin_rule), "spin rules survive JSON round-trip")
+
+
+## Model and solver must agree step by step on typed spinners, and the
+## model must match its own snapshot after Undo.
+func test_typed_spinners_in_solver() -> void:
+	var lm := LevelManager.new()
+	lm._ready()
+	var checked := 0
+	for n in range(1, lm.level_count + 1):
+		var level := lm.load_level(n)
+		if not level.blocks.any(func(b): return b.is_spinner() and b.spin_rule != BlockData.SpinRule.CW):
+			continue
+		var m := model_of(level)
+		var sol := Solver.from_model(m).solve()
+		check(not sol.is_empty(), "L%d with typed spinners solvable" % n)
+		for id in sol:
+			var snap := m.snapshot()
+			check(m.can_escape(id), "L%d solver move %d legal in the model" % [n, id])
+			m.remove(id)
+			var back := BoardModel.new()
+			back.setup(m.rows, m.columns, snap)
+			var s2 := Solver.from_model(back)
+			s2._apply(id)
+			var agree := true
+			for b in m.snapshot():
+				agree = agree and s2._dir[b.id] == b.direction and s2._step[b.id] == b.spin_step
+			check(agree, "L%d model and solver agree after move %d" % [n, id])
+		check(m.is_empty(), "L%d cleared by replaying the solution" % n)
+		checked += 1
+	check(checked >= 10, "typed-spinner levels checked (%d)" % checked)
+	lm.free()
+
+
+func test_save_migration() -> void:
+	var path := "user://test_migrate.cfg"
+	wipe_save(path)
+	# A v0.3 save: no [meta] version, no economy, plus an unknown key.
+	var old := ConfigFile.new()
+	old.set_value("progress", "current_level", 23)
+	old.set_value("progress", "highest_completed", 22)
+	old.set_value("scores", "5", 4000)
+	old.set_value("stars", "5", 3)
+	old.set_value("stars", "6", 2)
+	old.set_value("settings", "music", false)
+	old.set_value("future", "something", 42)
+	old.save(path)
+	var p := PlayerProgress.new(path).load_from_disk()
+	check(p.version == PlayerProgress.SAVE_VERSION, "old save migrated to current version")
+	check(p.current_level == 23 and p.highest_completed == 22 and p.best_score(5) == 4000 and p.stars_for(6) == 2, "v0.3 progress kept")
+	check(not p.music_on, "settings kept through migration")
+	check(p.coins == int(Economy.config()["starting_coins"]), "migration grants starting coins")
+	check(p.perfect_levels.has(5), "3-star levels count as already PERFECT (no double reward)")
+	check(p.has_progress() and p.highest_unlocked() == 23, "continue/unlock state after migration")
+	p.coins = 777
+	p.inventory["hammer"] = 3
+	p.claimed_chests.append("g0_t0")
+	p.save()
+	var q := PlayerProgress.new(path).load_from_disk()
+	check(q.coins == 777 and q.inventory["hammer"] == 3 and q.claimed_chests.has("g0_t0"), "coins, inventory, chests persist")
+	var raw := ConfigFile.new()
+	raw.load(path)
+	check(raw.get_value("future", "something", 0) == 42, "unknown keys from other versions are preserved")
+	check(int(raw.get_value("meta", "version", 0)) == PlayerProgress.SAVE_VERSION, "save file carries its version")
+	# Damaged main file: falls back to the backup.
+	var f := FileAccess.open(path, FileAccess.WRITE)
+	f.store_string("[[[ not a config file")
+	f.close()
+	var r := PlayerProgress.new(path).load_from_disk()
+	check(r.current_level == 23, "damaged save falls back to the .bak copy")
+	wipe_save(path)
+
+
+func test_economy_rewards() -> void:
+	var first := Economy.level_reward(5, true, 0, 3, true)
+	check(first["coins"] > 0, "first clear with 3 stars and PERFECT pays")
+	var replay := Economy.level_reward(5, false, 3, 3, false)
+	check(replay["coins"] == 0, "replaying without improving pays nothing (no farming)")
+	var better := Economy.level_reward(5, false, 1, 3, false)
+	check(better["coins"] == 2 * int(Economy.config()["rewards"]["per_new_star"]), "only newly earned stars pay")
+	var low := Economy.level_reward(5, true, 0, 1, false)
+	check(first["coins"] > low["coins"], "better performance earns more")
+	var hard := Economy.level_reward(95, true, 0, 3, true)
+	check(hard["coins"] > first["coins"], "harder worlds pay more for the same performance")
+
+
+func test_chests_no_duplicates() -> void:
+	var path := "user://test_chest.cfg"
+	wipe_save(path)
+	var p := PlayerProgress.new(path).load_from_disk()
+	var start := p.coins
+	for n in range(1, 11):
+		p.best_stars[n] = 2
+	var tiers := Economy.chest_tiers(p, 0)
+	check(tiers[0]["claimable"] and not tiers[1]["claimable"], "20 stars opens the first chest only")
+	var got := Economy.claim_chest(p, 0, 0)
+	check(got == tiers[0]["coins"] and p.coins == start + got, "chest pays once")
+	check(Economy.claim_chest(p, 0, 0) == 0 and p.coins == start + got, "a claimed chest can never pay again")
+	check(Economy.claim_chest(p, 0, 1) == 0, "a chest above the star count cannot be claimed")
+	var q := PlayerProgress.new(path).load_from_disk()
+	check(Economy.claim_chest(q, 0, 0) == 0, "claimed chests persist across restarts")
+	wipe_save(path)
+
+
+func test_shop() -> void:
+	var path := "user://test_shop.cfg"
+	wipe_save(path)
+	var p := PlayerProgress.new(path).load_from_disk()
+	p.coins = Economy.price("hint") + Economy.price("hammer") - 1
+	check(Economy.buy(p, "hint"), "can buy a hint")
+	check(not Economy.buy(p, "hammer"), "cannot buy what you cannot afford")
+	check(p.coins == Economy.price("hammer") - 1 and p.inventory["hammer"] == 0, "failed purchase changes nothing")
+	check(Economy.price("hammer") > Economy.price("hint"), "hammer costs more than hint")
+	var q := PlayerProgress.new(path).load_from_disk()
+	check(q.inventory["hint"] == p.inventory["hint"], "inventory persists")
+	wipe_save(path)
+
+
+## Hammer safety, exhaustively on real board states: the rule the game uses
+## must accept exactly the smashes that keep the level solvable.
+func test_hammer_safety() -> void:
+	var lm := LevelManager.new()
+	lm._ready()
+	var rng := RandomNumberGenerator.new()
+	rng.seed = 99
+	var accepted := 0
+	var rejected := 0
+	for n in [11, 31, 45, 61, 75, 88, 97]:
+		if n > lm.level_count:
+			continue
+		var m := model_of(lm.load_level(n))
+		for step in 6:
+			for id in m.blocks.keys():
+				var t := BoardModel.new()
+				t.setup(m.rows, m.columns, m.snapshot())
+				t.remove(id)
+				var ok := t.is_empty() or Solver.from_model(t).is_solvable()
+				if ok:
+					accepted += 1
+				else:
+					rejected += 1
+				# Whatever the rule accepts must replay to an empty board.
+				if ok and not t.is_empty():
+					var sol := Solver.from_model(t).solve()
+					for x in sol:
+						t.remove(x)
+					check(t.is_empty(), "L%d accepted smash of %d really stays solvable" % [n, id])
+			var free := m.free_block_ids()
+			if free.is_empty():
+				break
+			m.remove(free[rng.randi() % free.size()])
+	check(accepted > 50, "many safe smashes found (%d)" % accepted)
+	check(rejected > 0, "unsafe smashes exist and are detected (%d)" % rejected)
+	lm.free()
+
+
+func test_worlds() -> void:
+	check(Worlds.world_of(1) == 1 and Worlds.world_of(20) == 1 and Worlds.world_of(21) == 2, "world boundaries")
+	check(Worlds.world_of(81) == 5 and Worlds.world_of(99) == 5, "world 5 range")
+	check(Worlds.theme_for_level(100)["id"] == Worlds.MASTER_THEME["id"], "level 100 has the Master theme")
+	var musics := {}
+	for n in range(1, 101):
+		musics[Worlds.theme_for_level(n)["music"]] = true
+	check(musics.size() == 6, "six music themes (5 worlds + master)")
+	for t in Worlds.THEMES + [Worlds.MASTER_THEME]:
+		check(ResourceLoader.exists("res://assets/audio/music_%s.wav" % t["music"]), "music file for %s exists" % t["music"])
+
+
+func test_generator_future_levels() -> void:
+	check(LevelGenerator.profile_for_level(121)["name"] == "w5_master", "101+ maps to the hardest profile")
+	check(LevelGenerator.profile_for_level(110)["name"] == "w_mystery_late", "every 10th future level is a mystery")
+	var band := LevelGenerator.target_difficulty(150)
+	check(band.x > LevelGenerator.target_difficulty(100).x, "target difficulty keeps rising past 100")

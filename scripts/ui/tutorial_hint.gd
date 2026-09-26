@@ -5,6 +5,9 @@ extends Node2D
 
 const CYCLE := 1.3
 
+## Message color; follows the World theme (light text on dark Worlds).
+static var text_color: Color = Palette.TEXT
+
 var _text: String = ""
 var _target := Vector2.ZERO  # canvas position of the block to tap
 var _text_pos := Vector2.ZERO
@@ -72,7 +75,7 @@ func _draw() -> void:
 			size -= 1
 			w = font.get_string_size(_text, HORIZONTAL_ALIGNMENT_LEFT, -1, size).x
 		var bob := sin(_time * 3.0) * 3.0
-		draw_string(font, _text_pos + Vector2(-w * 0.5, bob), _text, HORIZONTAL_ALIGNMENT_LEFT, -1, size, Palette.TEXT)
+		draw_string(font, _text_pos + Vector2(-w * 0.5, bob), _text, HORIZONTAL_ALIGNMENT_LEFT, -1, size, text_color)
 
 
 ## A soft fingertip that presses the target, then a ripple ring.

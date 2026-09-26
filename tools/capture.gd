@@ -4,7 +4,8 @@ extends Node
 ##
 ##   godot --path . res://tools/Capture.tscn -- --level=3 --taps=2,1 --out=/tmp/cap
 ##   (add --coords to draw grid coordinates, --debug to open the debug panel,
-##    --settings to open the settings card, --hint to show a hint)
+##    --settings to open the settings card, --hint to show a hint,
+##    --title / --shop / --levels for the title screen, Shop and Level Select)
 ##
 ## Each tap saves frames at the listed delays (seconds after the tap).
 
@@ -31,6 +32,7 @@ func _ready() -> void:
 func _run() -> void:
 	DirAccess.make_dir_recursive_absolute(out)
 	PlayerProgress.default_path = "user://capture_progress.cfg"
+	GameManager.skip_title = not ("--title" in OS.get_cmdline_user_args())
 	var game: GameManager = load("res://scenes/Main.tscn").instantiate()
 	get_tree().root.add_child(game)
 	game.start_level(level)
@@ -40,6 +42,14 @@ func _run() -> void:
 		game.debug_panel.visible = true
 		game.request_hint()
 		game.debug_panel.visible = false
+	if "--shop" in OS.get_cmdline_user_args():
+		game.open_shop()
+	if "--levels" in OS.get_cmdline_user_args():
+		game.progress.highest_completed = maxi(game.progress.highest_completed, 23)
+		for n in range(1, 24):
+			game.progress.best_stars[n] = [3, 2, 3, 1][n % 4]
+			game.progress.best_scores[n] = 1000
+		game.open_level_select()
 	if "--settings" in OS.get_cmdline_user_args():
 		game.ui._open_settings()
 	await get_tree().create_timer(0.6).timeout

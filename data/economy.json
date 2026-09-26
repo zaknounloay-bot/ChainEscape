@@ -1,0 +1,22 @@
+{
+	"_comment": "Tunable economy values (prototype). Coins are soft currency only - no real money.",
+	"starting_coins": 60,
+	"starting_inventory": {"hint": 1, "hammer": 0},
+	"prices": {"hint": 30, "hammer": 60},
+	"rewards": {
+		"first_clear": 3,
+		"per_new_star": 4,
+		"first_perfect": 10,
+		"world_complete": 100,
+		"master_clear": 300
+	},
+	"world_multiplier": [1.0, 1.25, 1.5, 1.75, 2.0],
+	"chest_group_size": 10,
+	"chest_tiers": [
+		{"stars": 20, "coins": 20},
+		{"stars": 24, "coins": 40},
+		{"stars": 27, "coins": 70}
+	],
+	"hammer_per_level": 1,
+	"score_penalty": {"hint_booster": 250, "hammer": 400}
+}

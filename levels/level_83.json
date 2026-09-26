@@ -1,0 +1,12 @@
+{
+	"name": "Ridge Line",
+	"map": [
+		".      .      R<@#P  P>@    B>@-   P^",
+		"G<     .      Pv     Bv     .      .",
+		"G^     R<     R<     Gv@~   Y<     .",
+		".      .      Bv     .      .      Y^",
+		"R^@*   Gv     Y<     .      Y^#R   .",
+		".      P>@    P>     .      B>     B^",
+		"P^     .      .      P<     .      ."
+	]
+}

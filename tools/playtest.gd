@@ -28,8 +28,10 @@ func _ready() -> void:
 		if arg.begins_with("--shots="):
 			shots_dir = arg.get_slice("=", 1)
 	# Never touch the real player's progress.
-	DirAccess.remove_absolute(ProjectSettings.globalize_path(PROGRESS_PATH))
+	for suffix in ["", ".bak", ".tmp"]:
+		DirAccess.remove_absolute(ProjectSettings.globalize_path(PROGRESS_PATH + suffix))
 	PlayerProgress.default_path = PROGRESS_PATH
+	GameManager.skip_title = true
 	_run.call_deferred()
 
 
@@ -40,7 +42,8 @@ func _run() -> void:
 	AudioManager.set_music_enabled(false)
 	var total: int = game.level_manager.level_count
 	print("Levels found: %d" % total)
-	_check(total >= 60, "expected at least 60 levels")
+	_check(total >= 100, "expected at least 100 levels")
+	await _test_web_audio_gate()
 	await _test_perfect_and_bests()
 	await _test_replay_and_level_select()
 	await _test_undo_limit()
@@ -50,11 +53,17 @@ func _run() -> void:
 	await _test_out_of_hearts()
 	await _test_restart()
 	await _test_trap_and_stuck()
+	await _test_worlds_and_music()
+	await _test_shop_and_hammer()
+	await _test_hint_booster()
+	await _test_chests_and_coins()
 	for n in range(1, total + 1):
 		await _play_level(n)
 	_test_persistence(total)
+	await _test_master_level_result()
+	await _test_relaunch_continue()
 	if failures.is_empty():
-		print("PLAYTEST PASSED: all %d levels cleared; score/stars/PERFECT/bests/undo+hint limits/locks/mystery/replay/level select OK" % total)
+		print("PLAYTEST PASSED: all %d levels cleared; save/continue, worlds+music, web audio gate, coins, chests, shop, hammer, hint boosters, master level, score/stars/PERFECT, limits, locks, mystery, spinner rules OK" % total)
 		get_tree().quit(0)
 	else:
 		for f in failures:
@@ -125,16 +134,198 @@ func _play_level(n: int) -> void:
 			await _wait(0.3)
 			taps -= 1
 		await _wait(0.07)
-	await _wait(1.0 if not game.last_result.get("perfect", false) else 1.6)
+	# PERFECT and the Master Level celebrate longer before the card.
+	await _wait(2.4 if n == Worlds.MASTER_LEVEL else (1.0 if not game.last_result.get("perfect", false) else 1.6))
 	_shot("L%02d_complete" % n)
 	var r := game.last_result
 	_check(game.ui.is_complete_visible(), "L%d complete card not shown" % n)
 	_check(r.get("level", -1) == n and r["score"] > 0 and r["stars"] >= 1, "L%d settled with score and stars" % n)
 	_check(not r["perfect"], "L%d is not PERFECT after mistake/undo" % n)
 	_check(game.progress.best_score(n) >= r["score"] and game.progress.stars_for(n) >= r["stars"], "L%d best saved" % n)
-	print("Level %2d  %-18s blocks=%2d spn=%d lck=%d hid=%d score=%5d stars=%d hints=%d" % [
-		n, game.level.name, start_count, _count(func(b): return b.is_spinner()), _count(func(b): return b.lock_color != ""),
-		_count(func(b): return b.hidden), r["score"], r["stars"], game.hints_used])
+	print("Level %3d W%d %-18s blocks=%2d spn=%d rules=%s lck=%d hid=%d score=%5d stars=%d coins=+%d" % [
+		n, Worlds.world_of(n), game.level.name, start_count, _count(func(b): return b.is_spinner()),
+		",".join(game.level.blocks.filter(func(b): return b.is_spinner()).map(func(b): return ["cw", "ccw", "alt", "pat"][b.spin_rule])),
+		_count(func(b): return b.lock_color != ""), _count(func(b): return b.hidden), r["score"], r["stars"], r["coins"]])
+
+
+# --- v0.4 scenarios ----------------------------------------------------------
+
+## Mobile-web rule simulated in-engine: music must wait for the first real
+## input event, then start (the real browser is covered by
+## tools/web_audio_test.mjs).
+func _test_web_audio_gate() -> void:
+	AudioManager.set_music_enabled(true)
+	AudioManager.require_gesture = true
+	AudioManager.unlocked = false
+	AudioManager._music.stop()
+	AudioManager.start_music()
+	await _frames(2)
+	_check(not AudioManager.is_music_playing(), "web: music does not start before the first gesture")
+	var ev := InputEventScreenTouch.new()
+	ev.pressed = true
+	ev.position = Vector2(10, 10)
+	get_tree().root.push_input(ev, true)
+	await _frames(3)
+	_check(AudioManager.unlocked and AudioManager.is_music_playing(), "web: first tap unlocks audio and starts music")
+	AudioManager.set_music_enabled(false)
+	print("Web audio gate OK")
+
+
+func _test_worlds_and_music() -> void:
+	game.start_level(20)
+	await _wait(0.3)
+	_check(game.theme["id"] == 1 and AudioManager.music_theme == "w1", "level 20 is World 1")
+	game.start_level(21)
+	await _wait(0.3)
+	_check(game.theme["id"] == 2 and game.background.theme["id"] == 2 and AudioManager.music_theme == "w2", "level 21 switches to World 2 (theme, background, music)")
+	_check(game.ui._banner.visible, "World banner shown on entering a new World")
+	_shot("world2_banner")
+	for spec in [[45, 3, "w3"], [70, 4, "w4"], [90, 5, "w5"], [100, 6, "master"]]:
+		game.start_level(spec[0])
+		await _wait(0.2)
+		_check(game.theme["id"] == spec[1] and AudioManager.music_theme == spec[2], "L%d uses theme %d / music %s" % spec)
+	await _wait(1.3)
+	_shot("L100_master_theme")
+	_check(game.ui._level_label.text == "MASTER LEVEL", "Level 100 shows the Master Level label")
+	game.ui.levels_opened.emit()
+	await _frames(3)
+	var worlds := game.ui._level_select._list.get_children().filter(func(c): return c.has_meta("world"))
+	_check(worlds.size() == 5, "Level Select groups levels into 5 Worlds (%d)" % worlds.size())
+	_shot("level_select_worlds")
+	game.ui._level_select.close()
+	print("Worlds / music / level select grouping OK")
+
+
+func _test_shop_and_hammer() -> void:
+	game.progress.coins = 500
+	game.progress.inventory["hammer"] = 0
+	game.start_level(31)
+	await _wait(0.3)
+	game.toggle_hammer()  # none owned -> opens the shop
+	_check(game.ui.is_shop_open(), "hammer with empty inventory opens the Shop")
+	_shot("shop")
+	game.ui.buy_requested.emit("hammer")
+	game.ui.buy_requested.emit("hammer")
+	_check(game.progress.inventory["hammer"] == 2 and game.progress.coins == 500 - 2 * Economy.price("hammer"), "buying hammers spends coins")
+	game.ui._shop.close()
+	# Find an unsafe block (smashing it would make the level unsolvable).
+	var unsafe := -1
+	var safe := -1
+	for id in game.model.blocks:
+		if game.is_hammer_safe(id):
+			if safe == -1:
+				safe = id
+		elif unsafe == -1:
+			unsafe = id
+	if unsafe != -1:
+		game.toggle_hammer()
+		var count := game.model.block_count()
+		await _tap(unsafe)
+		_check(game.model.block_count() == count and game.progress.inventory["hammer"] == 2, "unsafe smash rejected, hammer not consumed")
+	else:
+		print("  (no unsafe smash on L31's first state - checked in unit tests)")
+	game.toggle_hammer()
+	_check(game.board.hammer_mode, "hammer armed")
+	var before := game.model.block_count()
+	await _tap(safe)
+	await _wait(0.3)
+	_check(game.model.block_count() == before - 1 and game.progress.inventory["hammer"] == 1 and game.hammers_used == 1, "safe smash removes the block and uses one hammer")
+	_check(Solver.from_model(game.model).is_solvable(), "board still solvable after the hammer")
+	game.toggle_hammer()
+	_check(not game.hammer_armed, "only one hammer per level")
+	await _solve_cleanly()
+	await _wait(1.2)
+	_check(not game.last_result["perfect"] and game.last_result["hammers"] == 1, "hammer use prevents PERFECT")
+	var disk := PlayerProgress.new(PROGRESS_PATH).load_from_disk()
+	_check(disk.inventory["hammer"] == 1, "hammer inventory persisted")
+	print("Shop / Hammer OK")
+
+
+func _test_hint_booster() -> void:
+	game.progress.inventory["hint"] = 1
+	game.start_level(14)  # no free hints before level 20
+	await _wait(0.3)
+	game.request_hint()
+	_check(game.hint_block != -1 and game.progress.inventory["hint"] == 0 and game.booster_hints_used == 1, "hint booster used when no free hints are left")
+	_check(game.model.can_escape(game.hint_block), "booster hint is a legal move")
+	await _tap(game.hint_block)
+	game.request_hint()
+	_check(game.hint_block == -1, "no hint without free hints or boosters")
+	print("Hint booster OK")
+
+
+func _test_chests_and_coins() -> void:
+	# Coins: first clear pays, replay without improving pays nothing.
+	game.start_level(3)
+	await _wait(0.3)
+	var c0 := game.progress.coins
+	await _solve_cleanly()
+	await _wait(1.3)
+	var c1 := game.progress.coins
+	_check(c1 > c0 and game.last_result["coins"] == c1 - c0, "first clear pays coins (%d)" % (c1 - c0))
+	game.start_level(3)
+	await _wait(0.3)
+	await _solve_cleanly()
+	await _wait(1.3)
+	_check(game.progress.coins == c1 and game.last_result["coins"] == 0, "replay without improving pays nothing")
+	# Chest for levels 1-10.
+	for n in range(1, 11):
+		game.progress.best_stars[n] = maxi(game.progress.stars_for(n), 2)
+	var before := game.progress.coins
+	game.claim_chest(0, 0)
+	var paid := game.progress.coins - before
+	_check(paid > 0, "chest claim pays coins")
+	game.claim_chest(0, 0)
+	_check(game.progress.coins == before + paid, "chest cannot be claimed twice")
+	game.ui._level_select.close()
+	var disk := PlayerProgress.new(PROGRESS_PATH).load_from_disk()
+	_check(disk.claimed_chests.has(Economy.chest_id(0, 0)), "claimed chest persisted")
+	print("Coins / chests OK")
+
+
+func _test_master_level_result() -> void:
+	var r := game.progress.achievements.has("master")
+	_check(r, "Master Level clear recorded as an achievement")
+	print("Master Level achievement OK")
+
+
+## Simulates closing and reopening the app: a fresh GameManager built from
+## the save file must restore everything and offer CONTINUE - LEVEL X.
+func _test_relaunch_continue() -> void:
+	game.start_level(57)
+	await _wait(0.2)
+	game.ui.setting_toggled.emit("haptics", false)
+	var expect := {"coins": game.progress.coins, "inv": game.progress.inventory.duplicate(),
+		"stars": game.progress.total_stars(), "best": game.progress.best_scores.duplicate(),
+		"chests": game.progress.claimed_chests.duplicate(), "worlds": game.progress.completed_worlds.duplicate()}
+	game.queue_free()
+	await _frames(3)
+	GameManager.skip_title = false
+	game = load("res://scenes/Main.tscn").instantiate()
+	get_tree().root.add_child(game)
+	await _frames(5)
+	_check(game.ui.is_title_open(), "relaunch shows the title screen")
+	_check(game.ui._title._continue.text == "CONTINUE  -  LEVEL 57", "title offers CONTINUE - LEVEL 57 (got '%s')" % game.ui._title._continue.text)
+	_shot("relaunch_title")
+	_check(game.current_level == 57, "last played level restored")
+	_check(game.progress.coins == expect["coins"] and game.progress.inventory == expect["inv"], "coins and boosters restored")
+	_check(game.progress.total_stars() == expect["stars"] and game.progress.best_scores == expect["best"], "stars and best scores restored")
+	_check(game.progress.claimed_chests == expect["chests"] and game.progress.completed_worlds == expect["worlds"], "chests and world milestones restored")
+	_check(not game.progress.haptics_on and not Haptics.enabled, "settings restored after relaunch")
+	_check(game.progress.highest_unlocked() > 57, "unlock progress restored (not reset to level 1)")
+	game.ui.continue_pressed.emit()
+	await _frames(2)
+	_check(not game.ui.is_title_open() and game.current_level == 57, "CONTINUE resumes level 57")
+	print("Relaunch / continue OK")
+
+
+func _count_tiles(node: Node) -> int:
+	var n := 0
+	for c in node.get_children():
+		if c is LevelSelect.LevelTile:
+			n += 1
+		n += _count_tiles(c)
+	return n
 
 
 func _count(pred: Callable) -> int:
@@ -176,7 +367,7 @@ func _test_replay_and_level_select() -> void:
 	await _frames(3)
 	_check(game.ui.is_level_select_open(), "level select opens")
 	_shot("level_select")
-	var tiles := game.ui._level_select._grid.get_child_count()
+	var tiles: int = _count_tiles(game.ui._level_select._list)
 	_check(tiles == game.level_manager.level_count, "level select shows every level (%d)" % tiles)
 	game.ui.level_chosen.emit(5)
 	game.ui._level_select.close()
@@ -199,6 +390,7 @@ func _test_undo_limit() -> void:
 
 
 func _test_hint_limits() -> void:
+	game.progress.inventory["hint"] = 0  # test the free allowance only
 	for spec in [[12, 0], [25, 1], [35, 2]]:
 		game.start_level(spec[0])
 		await _wait(0.3)

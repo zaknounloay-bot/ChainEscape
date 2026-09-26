@@ -1,11 +1,13 @@
 {
 	"name": "Twisted Lanes",
+	"hint": "Ring arrows show which way a spinner turns next",
+	"hint_finger": false,
 	"map": [
-		".   .   Pv  .   Yv  P<",
-		"Bv  .   R<  .   Rv@ .",
-		".   B<  .   .   Y<@ G>",
-		"Gv  .   .   R>@ .   R^",
-		"R>  .   .   .   .   G>",
-		".   .   .   R^  .   ."
+		".     .     Pv    .     Yv    P<",
+		"Bv    .     R<    .     Rv@-  .",
+		".     B<    .     .     Y<@   G>",
+		"Gv    .     .     R>@   .     R^",
+		"R>    .     .     .     .     G>",
+		".     .     .     R^    .     ."
 	]
 }

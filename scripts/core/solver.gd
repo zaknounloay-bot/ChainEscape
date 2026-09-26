@@ -33,6 +33,8 @@ var _spinner: PackedByteArray
 var _alive: PackedByteArray
 var _alive_count: int = 0
 var _spinner_ids: PackedInt32Array
+var _rule: PackedInt32Array  # spinner rule (BlockData.SpinRule)
+var _step: PackedInt32Array  # spinner turns made so far
 var _color: PackedInt32Array  # color index per block
 var _lock: PackedInt32Array  # key color index, -1 = not locked
 var _hidden: PackedByteArray  # concealed at construction time
@@ -60,12 +62,16 @@ func _init(p_rows: int, p_columns: int, blocks: Array) -> void:
 	_alive = PackedByteArray(); _alive.resize(n)
 	_alive.fill(0)
 	_spinner_ids = PackedInt32Array()
+	_rule = PackedInt32Array(); _rule.resize(n)
+	_step = PackedInt32Array(); _step.resize(n)
 	_color = PackedInt32Array(); _color.resize(n)
 	_lock = PackedInt32Array(); _lock.resize(n)
 	_lock.fill(-1)
 	_hidden = PackedByteArray(); _hidden.resize(n)
 	_neighbours.resize(n)
 	for b in blocks:
+		_rule[b.id] = b.spin_rule
+		_step[b.id] = b.spin_step
 		_color[b.id] = _color_index(b.color)
 		_color_count[_color[b.id]] += 1
 		if b.lock_color != "":
@@ -165,7 +171,10 @@ func analyze() -> Dictionary:
 		"start_traps": 0, "decision_points": 0, "trap_moves": 0,
 		"depth": 0, "direction_share": 0.0, "directions_used": 0,
 		"locks": 0, "hidden": 0,
+		"rule_cw": 0, "rule_ccw": 0, "rule_alt": 0, "rule_pattern": 0,
 	}
+	for sid in _spinner_ids:
+		m["rule_" + ["cw", "ccw", "alt", "pattern"][_rule[sid]]] += 1
 	for id in _alive.size():
 		if _alive[id] == 1:
 			m["locks"] += 1 if _lock[id] >= 0 else 0
@@ -343,6 +352,10 @@ func _key() -> String:
 	var dirs := 0
 	for sid in _spinner_ids:
 		dirs = dirs * 4 + _dir[sid]
+		# ALT / PATTERN spinners: where they are in their sequence matters.
+		var period := BlockData.rule_period(_rule[sid])
+		if period > 1:
+			dirs = dirs * period + posmod(_step[sid], period)
 	parts.append(str(dirs))
 	return ":".join(parts)
 
@@ -412,7 +425,9 @@ func _apply(id: int) -> Array:
 		if x >= 0 and y >= 0 and x < columns and y < rows:
 			var other := _grid[y * columns + x]
 			if other != -1 and _spinner[other] == 1:
-				_dir[other] = Direction.rotate_cw(_dir[other])
+				var cw := BlockData.turn_is_cw(_rule[other], _step[other])
+				_dir[other] = Direction.rotate_cw(_dir[other]) if cw else Direction.rotate_ccw(_dir[other])
+				_step[other] += 1
 				turned.append(other)
 	return turned
 
@@ -435,7 +450,9 @@ func _undo(id: int, _turned: Array = []) -> void:
 		if x >= 0 and y >= 0 and x < columns and y < rows:
 			var other := _grid[y * columns + x]
 			if other != -1 and _spinner[other] == 1:
-				_dir[other] = Direction.rotate_ccw(_dir[other])
+				_step[other] -= 1
+				var cw := BlockData.turn_is_cw(_rule[other], _step[other])
+				_dir[other] = Direction.rotate_ccw(_dir[other]) if cw else Direction.rotate_cw(_dir[other])
 	_grid[idx] = id
 	_alive[id] = 1
 	_alive_count += 1

@@ -229,18 +229,41 @@ func _draw_spinner_badge(center: Vector2, size: float) -> void:
 	var col := Color(Palette.arrow(data.color), 0.85)
 	var r := size * 0.39
 	var w := maxf(2.0, size * 0.045)
+	var cw := data.next_turn_cw()
 	var drift := sin(_spin_time * 2.0) * 0.12  # gentle idle wobble
 	for k in 2:
 		var a0 := drift + PI * k + 0.35
 		var a1 := a0 + PI - 0.7
 		draw_arc(center, r, a0, a1, 20, col, w, true)
-		# Arrowhead at the end of each arc, pointing clockwise.
-		var tip := center + Vector2.from_angle(a1) * r
-		var tangent := Vector2.from_angle(a1 + PI * 0.5)
-		var normal := Vector2.from_angle(a1)
+		# Arrowhead shows the direction of the NEXT turn.
+		var at := a1 if cw else a0
+		var tip := center + Vector2.from_angle(at) * r
+		var tangent := Vector2.from_angle(at + (PI * 0.5 if cw else -PI * 0.5))
+		var normal := Vector2.from_angle(at)
 		var hs := size * 0.075
 		var pts := PackedVector2Array([tip + tangent * hs * 1.3, tip + normal * hs, tip - normal * hs])
 		draw_colored_polygon(pts, col)
+	# ALT / PATTERN: a small sequence strip at the bottom of the face.
+	# Filled dot = clockwise turn, ring = counter-clockwise; the upcoming
+	# turn is drawn bigger. The rule is visible, never a surprise.
+	var period := BlockData.rule_period(data.spin_rule)
+	if period > 1:
+		var dot := size * 0.05
+		var y := center.y + size * 0.40
+		var x0 := center.x - (period - 1) * dot * 1.6
+		var next_i := posmod(data.spin_step, period)
+		var strip := StyleBoxFlat.new()
+		strip.bg_color = Color(0, 0, 0, 0.22)
+		strip.set_corner_radius_all(int(dot * 1.6))
+		strip.anti_aliasing = true
+		strip.draw(get_canvas_item(), Rect2(Vector2(x0 - dot * 1.7, y - dot * 1.5), Vector2((period - 1) * dot * 3.2 + dot * 3.4, dot * 3.0)))
+		for i in period:
+			var p := Vector2(x0 + i * dot * 3.2, y)
+			var rr := dot * (1.35 if i == next_i else 0.9)
+			if BlockData.turn_is_cw(data.spin_rule, i):
+				draw_circle(p, rr, col)
+			else:
+				draw_arc(p, rr * 0.85, 0.0, TAU, 12, col, maxf(1.5, dot * 0.5), true)
 
 
 func _draw_hint_ring(face_rect: Rect2) -> void:

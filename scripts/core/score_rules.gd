@@ -17,7 +17,8 @@ const NO_UNDO := 300
 const PERFECT := 1000          # no heart lost + no Undo + no Hint
 const MISTAKE_PENALTY := 100   # per blocked/locked tap
 const UNDO_PENALTY := 150      # per Undo
-const HINT_PENALTY := 250      # per Hint
+const HINT_PENALTY := 250      # per Hint (free allowance or Hint booster)
+const HAMMER_PENALTY := 400    # per Hammer booster
 
 ## Default star rules; a level can override any key in its "stars" object.
 ##   rule names: complete, no_hints, no_undo, no_mistakes, perfect, score,
@@ -33,16 +34,19 @@ static func escape_points(chain: int) -> int:
 
 
 ## `r` keys: escape_points, blocks, hearts_left, max_hearts, mistakes,
-## undos, hints. Returns r plus the breakdown, "perfect" and "score".
+## undos, hints, hammers (optional). Returns r plus the breakdown, "perfect" and "score".
 static func settle(r: Dictionary) -> Dictionary:
 	var out := r.duplicate()
 	var hearts_left: int = r["hearts_left"] if r["max_hearts"] > 0 else 3 - mini(3, r["mistakes"])
-	out["perfect"] = r["mistakes"] == 0 and r["undos"] == 0 and r["hints"] == 0
+	var hammers: int = r.get("hammers", 0)
+	out["hammers"] = hammers
+	out["perfect"] = r["mistakes"] == 0 and r["undos"] == 0 and r["hints"] == 0 and hammers == 0
 	out["bonus_complete"] = COMPLETE
 	out["bonus_hearts"] = hearts_left * PER_HEART
 	out["bonus_clean"] = (NO_MISTAKES if r["mistakes"] == 0 else 0) + (NO_HINTS if r["hints"] == 0 else 0) + (NO_UNDO if r["undos"] == 0 else 0)
 	out["bonus_perfect"] = PERFECT if out["perfect"] else 0
-	out["penalties"] = r["mistakes"] * MISTAKE_PENALTY + r["undos"] * UNDO_PENALTY + r["hints"] * HINT_PENALTY
+	out["penalties"] = (r["mistakes"] * MISTAKE_PENALTY + r["undos"] * UNDO_PENALTY + r["hints"] * HINT_PENALTY
+			+ hammers * HAMMER_PENALTY)
 	out["score"] = maxi(0, r["escape_points"] + out["bonus_complete"] + out["bonus_hearts"]
 			+ out["bonus_clean"] + out["bonus_perfect"] - out["penalties"])
 	return out
@@ -79,7 +83,7 @@ static func stars(level: LevelData, result: Dictionary) -> int:
 static func _passes(rule: String, r: Dictionary, rules: Dictionary) -> bool:
 	match rule:
 		"complete": return true
-		"no_hints": return r["hints"] == 0
+		"no_hints": return r["hints"] == 0 and r.get("hammers", 0) == 0
 		"no_undo": return r["undos"] == 0
 		"no_mistakes": return r["mistakes"] == 0
 		"perfect": return r["perfect"]

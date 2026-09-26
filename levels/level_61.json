@@ -1,0 +1,11 @@
+{
+	"name": "Neon Gate",
+	"map": [
+		".     R^#P  B<    Y<    .     G<",
+		"R^    .     .     R^    G>    B^@",
+		"Rv@-  .     .     .     .     .",
+		"G^    .     Pv    Y^    B<    .",
+		"P^    P<    Y<    Pv@   Rv    B>#Y",
+		".     .     .     Yv@   B<    ."
+	]
+}

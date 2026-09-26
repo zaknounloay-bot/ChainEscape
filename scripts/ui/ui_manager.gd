@@ -9,6 +9,12 @@ signal restart_pressed
 signal next_pressed
 signal hint_pressed
 signal replay_pressed
+signal hammer_pressed
+signal buy_requested(item: String)
+signal chest_claim(group: int, tier: int)
+signal continue_pressed
+signal title_level_select
+signal shop_open_requested
 signal level_chosen(number: int)
 signal levels_opened  # GameManager fills the grid via open_level_select()
 signal setting_toggled(key: String, on: bool)  # "music" | "sfx" | "haptics"
@@ -42,6 +48,14 @@ var _card_style: StyleBoxFlat
 var _levels_button: PillButton
 var _level_select: LevelSelect
 var _stamp: Label
+var _hammer_button: PillButton
+var _coin_pill: CoinPill
+var _shop: ShopPanel
+var _title: TitleScreen
+var _banner: Label
+var _card_coins: Label
+## Current World theme (HUD colors follow it).
+var theme: Dictionary = Worlds.THEMES[0]
 var _overlay: ColorRect
 var _card: PanelContainer
 var _card_title: Label
@@ -68,11 +82,15 @@ func get_board_area() -> Rect2:
 
 
 func set_level(number: int, total: int, level_name: String, mystery: bool = false) -> void:
-	_level_label.text = "LEVEL %d" % number
+	var master := number == Worlds.MASTER_LEVEL
+	_level_label.text = "MASTER LEVEL" if master else "LEVEL %d" % number
+	_level_label.add_theme_font_size_override("font_size", 50 if master else 64)
 	_name_label.text = level_name.to_upper() if total == 0 else "%s  ·  %d/%d" % [level_name.to_upper(), number, total]
 	if mystery:
 		_name_label.text = "?  MYSTERY  ·  " + _name_label.text
-	_name_label.add_theme_color_override("font_color", Palette.PURPLE_BADGE if mystery else Palette.TEXT_SOFT)
+	var mystery_col := Color("#C9A8FF") if theme["dark"] else Palette.PURPLE_BADGE
+	_name_label.add_theme_color_override("font_color", mystery_col if mystery else theme["text_soft"])
+	_level_label.add_theme_color_override("font_color", Palette.GOLD if master else theme["text"])
 	hide_complete()
 	_chain_label.modulate.a = 0.0
 
@@ -125,15 +143,95 @@ func set_undo_state(can_undo: bool, remaining: int) -> void:
 	set_undo_enabled(can_undo and remaining > 0)
 
 
-## Hint: remaining uses this level (∞ in debug). Dimmed when the level has
-## no hints at all.
-func set_hint_state(remaining: int, allowed: int, unlimited: bool) -> void:
-	_hint_button.badge_text = "∞" if unlimited else str(remaining)
-	_hint_button.modulate.a = 1.0 if (unlimited or allowed > 0) else 0.45
+## Hint badge: free hints left this level + owned Hint boosters, shown as
+## "1+2" when both exist (∞ in debug). Dimmed when nothing is available.
+func set_hint_state(remaining: int, allowed: int, unlimited: bool, owned: int = 0) -> void:
+	if unlimited:
+		_hint_button.badge_text = "∞"
+	elif remaining > 0 and owned > 0:
+		_hint_button.badge_text = "%d+%d" % [remaining, owned]
+	else:
+		_hint_button.badge_text = str(remaining + owned)
+	_hint_button.modulate.a = 1.0 if (unlimited or remaining + owned > 0) else 0.5
 
 
-func open_level_select(levels: Array, total_stars: int) -> void:
-	_level_select.open(levels, total_stars)
+## Hammer badge = owned Hammer boosters; highlighted while aiming.
+func set_hammer_state(owned: int, active: bool, usable: bool) -> void:
+	_hammer_button.badge_text = str(owned)
+	_hammer_button.modulate.a = 1.0 if owned > 0 and usable else 0.5
+	_hammer_button.text = "CANCEL" if active else "HAMMER"
+
+
+func set_coins(coins: int, animate: bool = true) -> void:
+	_coin_pill.set_coins(coins, animate)
+
+
+func open_shop(coins: int, inventory: Dictionary) -> void:
+	_shop.open(coins, inventory)
+
+
+func refresh_shop(coins: int, inventory: Dictionary) -> void:
+	_shop.refresh(coins, inventory)
+
+
+func is_shop_open() -> bool:
+	return _shop.visible
+
+
+func pulse_coins() -> void:
+	_pulse(_coin_pill)
+
+
+func show_title(has_progress: bool, level: int, stars: int, coins: int) -> void:
+	_title.open(has_progress, level, stars, coins, theme)
+	_top.modulate.a = 0.0
+	_bottom.modulate.a = 0.0
+
+
+func hide_title() -> void:
+	_title.close()
+	_top.modulate.a = 1.0
+	_bottom.modulate.a = 1.0
+
+
+func is_title_open() -> bool:
+	return _title.visible
+
+
+## HUD colors follow the World (blocks and buttons never change).
+func apply_theme(t: Dictionary) -> void:
+	theme = t
+	_level_label.add_theme_color_override("font_color", t["text"])
+	_name_label.add_theme_color_override("font_color", t["text_soft"])
+	_hearts.empty_color = Color(1, 1, 1, 0.22) if t["dark"] else Palette.SLOT
+	_hearts.queue_redraw()
+	_progress.track_color = Color(1, 1, 1, 0.16) if t["dark"] else t["slot"]
+	_progress.fill_color = t["accent"]
+	_progress.queue_redraw()
+	TutorialHint.text_color = t["text"]
+
+
+## "WORLD 2 · DEEP CURRENT" banner when entering a new World.
+func show_world_banner(text: String) -> void:
+	var vis := get_viewport().get_visible_rect()
+	_banner.text = text
+	_banner.add_theme_color_override("font_color", theme["accent"])
+	_banner.visible = true
+	_banner.reset_size()
+	_banner.position = Vector2((vis.size.x - _banner.size.x) * 0.5, vis.size.y * 0.30)
+	_banner.modulate.a = 0.0
+	_banner.pivot_offset = _banner.size * 0.5
+	_banner.scale = Vector2(0.8, 0.8)
+	var t := create_tween()
+	t.tween_property(_banner, "modulate:a", 1.0, 0.25)
+	t.parallel().tween_property(_banner, "scale", Vector2.ONE, 0.35).set_trans(Tween.TRANS_BACK).set_ease(Tween.EASE_OUT)
+	t.tween_interval(1.3)
+	t.tween_property(_banner, "modulate:a", 0.0, 0.4)
+	t.tween_callback(func(): _banner.visible = false)
+
+
+func open_level_select(levels: Array, total_stars: int, chests: Dictionary = {}, group_stars: Dictionary = {}) -> void:
+	_level_select.open(levels, total_stars, chests, group_stars)
 
 
 func is_level_select_open() -> bool:
@@ -156,7 +254,7 @@ func show_chain(chain: int) -> void:
 	var tier := mini(chain - 2, 8)
 	_chain_label.text = "CHAIN x%d" % chain
 	_chain_label.add_theme_font_size_override("font_size", 40 + tier * 3)
-	_chain_label.add_theme_color_override("font_color", Palette.ACCENT.lerp(Palette.ACCENT_HOT, tier / 8.0))
+	_chain_label.add_theme_color_override("font_color", Color(theme["accent"]).lerp(Palette.ACCENT_HOT, tier / 8.0))
 	_chain_label.pivot_offset = _chain_label.size * 0.5
 	_chain_label.modulate.a = 1.0
 	_chain_label.scale = Vector2.ONE * (1.25 + tier * 0.02)
@@ -172,6 +270,8 @@ func show_chain(chain: int) -> void:
 func show_complete(r: Dictionary) -> void:
 	var perfect: bool = r["perfect"]
 	_card_title.text = "PERFECT!" if perfect else "LEVEL COMPLETE"
+	if r.get("master", false):
+		_card_title.text = "MASTER CLEARED!"
 	_card_title.add_theme_color_override("font_color", Palette.GOLD if perfect else Palette.TEXT)
 	_card_style.border_color = Palette.GOLD
 	_card_style.set_border_width_all(8 if perfect else 0)
@@ -179,6 +279,13 @@ func show_complete(r: Dictionary) -> void:
 	_card_stars.set_stars(r["stars"], true)
 	var hearts_txt := "HEARTS %d/%d" % [r["hearts_left"], r["max_hearts"]] if r["max_hearts"] > 0 else "NO HEARTS"
 	_card_stats.text = "%s   ·   UNDO %d   ·   HINTS %d" % [hearts_txt, r["undos"], r["hints"]]
+	if r.get("hammers", 0) > 0:
+		_card_stats.text += "   ·   HAMMER %d" % r["hammers"]
+	var coins: int = r.get("coins", 0)
+	_card_coins.text = ("+%d COINS" % coins) if coins > 0 else ""
+	if r.get("coin_notes", "") != "":
+		_card_coins.text += "   (" + r["coin_notes"] + ")"
+	_card_coins.visible = coins > 0
 	if r["new_best"]:
 		_card_reward.text = "NEW BEST!"
 		_card_reward.add_theme_color_override("font_color", Palette.ACCENT)
@@ -207,9 +314,11 @@ func show_complete(r: Dictionary) -> void:
 	_bottom.modulate.a = 0.0
 
 
-## Big golden "PERFECT!" stamp over the board before the card appears.
-func show_perfect_stamp() -> void:
+## Big golden stamp over the board before the card appears
+## ("PERFECT!", or "MASTER!" for Level 100).
+func show_perfect_stamp(text: String = "PERFECT!", hold: float = 0.45) -> void:
 	var vis := get_viewport().get_visible_rect()
+	_stamp.text = text
 	_stamp.visible = true
 	_stamp.reset_size()
 	_stamp.position = vis.size * 0.5 - _stamp.size * 0.5
@@ -221,7 +330,7 @@ func show_perfect_stamp() -> void:
 	t.tween_property(_stamp, "scale", Vector2.ONE, 0.28).set_trans(Tween.TRANS_BACK).set_ease(Tween.EASE_OUT)
 	t.tween_property(_stamp, "rotation", -0.08, 0.28)
 	t.tween_property(_stamp, "modulate:a", 1.0, 0.12)
-	t.chain().tween_interval(0.45)
+	t.chain().tween_interval(hold)
 	t.chain().tween_property(_stamp, "modulate:a", 0.0, 0.2)
 	t.chain().tween_callback(func(): _stamp.visible = false)
 
@@ -236,6 +345,7 @@ static func _fmt(n: int) -> String:
 
 
 func _set_card_mode(complete: bool) -> void:
+	_card_coins.visible = complete and _card_coins.text != ""
 	_card_stars.visible = complete
 	_card_score.visible = complete
 	_card_reward.visible = complete
@@ -315,19 +425,23 @@ func _build() -> void:
 	_bottom = HBoxContainer.new()
 	_bottom.set_anchors_and_offsets_preset(Control.PRESET_BOTTOM_WIDE)
 	_bottom.alignment = BoxContainer.ALIGNMENT_CENTER
-	_bottom.add_theme_constant_override("separation", 16)
+	_bottom.add_theme_constant_override("separation", 14)
 	_bottom.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	_root.add_child(_bottom)
-	_undo_button = PillButton.new("UNDO", PillButton.Icon.UNDO, Palette.WHITE, Palette.TEXT, 26, true)
-	_undo_button.custom_minimum_size = Vector2(200, 96)
+	_undo_button = PillButton.new("UNDO", PillButton.Icon.UNDO, Palette.WHITE, Palette.TEXT, 20, true, true)
+	_undo_button.custom_minimum_size = Vector2(150, 104)
 	_undo_button.pressed.connect(func(): undo_pressed.emit())
 	_bottom.add_child(_undo_button)
-	_hint_button = PillButton.new("HINT", PillButton.Icon.HINT, Palette.WHITE, Palette.TEXT, 26, true)
-	_hint_button.custom_minimum_size = Vector2(186, 96)
+	_hint_button = PillButton.new("HINT", PillButton.Icon.HINT, Palette.WHITE, Palette.TEXT, 20, true, true)
+	_hint_button.custom_minimum_size = Vector2(150, 104)
 	_hint_button.pressed.connect(func(): hint_pressed.emit())
 	_bottom.add_child(_hint_button)
-	_restart_button = PillButton.new("RESTART", PillButton.Icon.RESTART, Palette.WHITE, Palette.TEXT, 26, true)
-	_restart_button.custom_minimum_size = Vector2(212, 96)
+	_hammer_button = PillButton.new("HAMMER", PillButton.Icon.HAMMER, Palette.WHITE, Palette.TEXT, 20, true, true)
+	_hammer_button.custom_minimum_size = Vector2(150, 104)
+	_hammer_button.pressed.connect(func(): hammer_pressed.emit())
+	_bottom.add_child(_hammer_button)
+	_restart_button = PillButton.new("RESTART", PillButton.Icon.RESTART, Palette.WHITE, Palette.TEXT, 20, true, true)
+	_restart_button.custom_minimum_size = Vector2(150, 104)
 	_restart_button.pressed.connect(func(): restart_pressed.emit())
 	_bottom.add_child(_restart_button)
 
@@ -367,7 +481,9 @@ func _build() -> void:
 	_card_reward = _make_label(30, Palette.ACCENT, 900)
 	card_box.add_child(_card_reward)
 	_card_stats = _make_label(22, Palette.TEXT_SOFT, 800)
+	_card_coins = _make_label(26, Color("#D98A00"), 900)
 	card_box.add_child(_card_stats)
+	card_box.add_child(_card_coins)
 	var spacer := Control.new()
 	spacer.custom_minimum_size = Vector2(0, 12)
 	card_box.add_child(spacer)
@@ -405,7 +521,24 @@ func _build() -> void:
 	_build_settings()
 	_level_select = LevelSelect.new()
 	_level_select.level_chosen.connect(func(n): level_chosen.emit(n))
+	_level_select.chest_claim.connect(func(g, t): chest_claim.emit(g, t))
+	_coin_pill = CoinPill.new()
+	_coin_pill.set_anchors_and_offsets_preset(Control.PRESET_TOP_RIGHT)
+	_coin_pill.pressed.connect(func(): shop_open_requested.emit())
+	_root.add_child(_coin_pill)
+	_banner = _make_label(44, Palette.ACCENT, 900)
+	_banner.add_theme_color_override("font_outline_color", Color(0, 0, 0, 0.35))
+	_banner.add_theme_constant_override("outline_size", 10)
+	_banner.visible = false
+	_root.add_child(_banner)
+	_title = TitleScreen.new()
+	_title.continue_pressed.connect(func(): continue_pressed.emit())
+	_title.level_select_pressed.connect(func(): title_level_select.emit())
+	_root.add_child(_title)
 	_root.add_child(_level_select)
+	_shop = ShopPanel.new()
+	_shop.buy_requested.connect(func(item): buy_requested.emit(item))
+	_root.add_child(_shop)
 
 
 func _build_settings() -> void:
@@ -501,8 +634,11 @@ func _apply_safe_area() -> void:
 	_levels_button.offset_right = 24.0 + 76.0
 	_levels_button.offset_top = _safe_top + 28.0
 	_levels_button.offset_bottom = _safe_top + 28.0 + 76.0
-	if _level_select:
-		_level_select.offset_top = 0.0
+	if _coin_pill:
+		_coin_pill.offset_left = -150.0 - 24.0
+		_coin_pill.offset_right = -24.0
+		_coin_pill.offset_top = _safe_top + 150.0
+		_coin_pill.offset_bottom = _safe_top + 150.0 + 56.0
 	_bottom.offset_top = -BOTTOM_HEIGHT - _safe_bottom + 30.0
 	_bottom.offset_bottom = -_safe_bottom - 60.0
 

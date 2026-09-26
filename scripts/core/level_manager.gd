@@ -9,6 +9,8 @@ extends Node
 ##    "."  = empty cell
 ##    "R>" = color letter (R,B,G,Y,P) + arrow (^ v < >)
 ##    "R>@" = same, but a SPINNER (turns clockwise when a neighbour escapes)
+##    "R>@-" / "R>@~" / "R>@*" = counter-clockwise / alternating / pattern
+##           spinner (see BlockData.SpinRule)
 ##    "R>?" = HIDDEN arrow (mystery): revealed when a neighbour escapes
 ##    "R>#G" = LOCKED: cannot escape while any green block remains
 ##    Modifiers can be combined in the order  @ ? #K  (spinners cannot be
@@ -88,7 +90,7 @@ static var _token_re: RegEx
 
 static func _parse_map(map: Array, level: LevelData) -> void:
 	if _token_re == null:
-		_token_re = RegEx.create_from_string("^([RBGYPrbgyp])([\\^v<>])(@)?(\\?)?(#[RBGYPrbgyp])?$")
+		_token_re = RegEx.create_from_string("^([RBGYPrbgyp])([\\^v<>])(@[-~*]?)?(\\?)?(#[RBGYPrbgyp])?$")
 	level.rows = map.size()
 	level.columns = 0
 	var next_id := 0
@@ -108,6 +110,8 @@ static func _parse_map(map: Array, level: LevelData) -> void:
 			var b := BlockData.new(next_id, Vector2i(c, r), color, Direction.MAP_CHARS[m.get_string(2)],
 					BlockData.Kind.SPINNER if spinner else BlockData.Kind.NORMAL)
 			b.hidden = m.get_string(4) != ""
+			if spinner:
+				b.spin_rule = maxi(0, BlockData.RULE_SUFFIX.find(m.get_string(3).substr(1)))
 			if m.get_string(5) != "":
 				b.lock_color = COLOR_LETTERS[m.get_string(5).substr(1).to_upper()]
 			_validate_block(b, level)
@@ -137,6 +141,8 @@ static func _parse_block_list(json: Dictionary, level: LevelData) -> void:
 		var block := BlockData.new(next_id, cell, String(b["color"]), Direction.from_string(String(b["direction"])), kind)
 		block.lock_color = String(b.get("lock", ""))
 		block.hidden = bool(b.get("hidden", false))
+		block.spin_rule = ["cw", "ccw", "alt", "pattern"].find(String(b.get("spin", "cw")))
+		block.spin_rule = maxi(block.spin_rule, 0)
 		_validate_block(block, level)
 		level.blocks.append(block)
 		next_id += 1
@@ -157,7 +163,7 @@ static func to_json_text(level: LevelData) -> String:
 	for k in Direction.MAP_CHARS:
 		arrows[Direction.MAP_CHARS[k]] = k
 	for b in level.blocks:
-		grid[b.cell.y][b.cell.x] = (letters.get(b.color, "B") + arrows[b.direction] + ("@" if b.is_spinner() else "")
+		grid[b.cell.y][b.cell.x] = (letters.get(b.color, "B") + arrows[b.direction] + ("@" + BlockData.RULE_SUFFIX[b.spin_rule] if b.is_spinner() else "")
 				+ ("?" if b.hidden else "") + ("#" + letters[b.lock_color] if b.lock_color != "" else ""))
 	var lines := PackedStringArray()
 	for row in grid:

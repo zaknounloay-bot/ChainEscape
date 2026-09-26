@@ -1,0 +1,12 @@
+{
+	"name": "Clockwork Crown",
+	"map": [
+		".      .      .      P>     B>     P>     R^",
+		"B>     .      B>     R^     .      R>     G^",
+		"G^@*   .      .      B^@*   P>     P<@    .",
+		".      .      .      .      .      .      Yv",
+		".      .      Rv@#B  .      G<     P<     Pv",
+		"R^@~   .      B<     .      .      .      .",
+		"Pv     B<     .      Y<     P^     G<@-   Y<#R"
+	]
+}

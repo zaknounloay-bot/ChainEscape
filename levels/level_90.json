@@ -1,0 +1,12 @@
+{
+	"name": "Eclipse Peak",
+	"mystery": true,
+	"map": [
+		".       .       .       R^      P<?     Yv",
+		"Pv      Y<@     Gv      B^      G^      Rv?",
+		".       G<?     B<      Y<      P>?     .",
+		".       B^#P    G^@-#B  .       .       Yv",
+		"Yv?     .       .       G^      .       B<",
+		"Pv      P<@*    G>      B<@~#Y  G^      ."
+	]
+}

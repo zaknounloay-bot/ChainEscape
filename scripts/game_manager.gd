@@ -46,6 +46,19 @@ var escape_points: int = 0
 ## Settled result of the last completed level (for tests / UI).
 var last_result: Dictionary = {}
 
+## Hint uses split: free per-level allowance vs Hint boosters from inventory.
+var free_hints_used: int = 0
+var booster_hints_used: int = 0
+var hammers_used: int = 0
+## Hammer aimed: the next block tap smashes (if safe) instead of moving.
+var hammer_armed: bool = false
+## Current World theme (drives background, HUD colors and music).
+var theme: Dictionary = {}
+var background: WorldBackground
+
+## Tests and --level=N skip the title screen.
+static var skip_title := false
+
 var _total_blocks: int = 0
 var _blocked_hint_shown := false
 var _locked_hint_shown := false
@@ -56,6 +69,8 @@ var _solving := false
 
 func _ready() -> void:
 	progress = PlayerProgress.new().load_from_disk()
+	background = WorldBackground.new()
+	add_child(background)
 	_apply_settings()
 	board.block_tapped.connect(_on_block_tapped)
 	ui.undo_pressed.connect(undo)
@@ -65,7 +80,15 @@ func _ready() -> void:
 	ui.hint_pressed.connect(request_hint)
 	ui.setting_toggled.connect(_on_setting_toggled)
 	ui.levels_opened.connect(open_level_select)
-	ui.level_chosen.connect(func(n): start_level(n))
+	ui.level_chosen.connect(func(n):
+		ui.hide_title()
+		start_level(n))
+	ui.hammer_pressed.connect(toggle_hammer)
+	ui.buy_requested.connect(buy)
+	ui.shop_open_requested.connect(open_shop)
+	ui.chest_claim.connect(claim_chest)
+	ui.continue_pressed.connect(continue_game)
+	ui.title_level_select.connect(open_level_select)
 	ui.title_tapped.connect(debug_panel.register_title_tap)
 	debug_panel.level_count = level_manager.level_count
 	debug_panel.level_requested.connect(func(n): start_level(wrapi(n, 1, level_manager.level_count + 1)))
@@ -75,8 +98,22 @@ func _ready() -> void:
 	debug_panel.solve_requested.connect(auto_solve)
 	debug_panel.visibility_changed.connect(_refresh_buttons)
 	get_viewport().size_changed.connect(_layout)
+	var direct: bool = Array(OS.get_cmdline_user_args()).any(func(a): return a.begins_with("--level="))
 	start_level(_initial_level())
+	ui.set_coins(progress.coins, false)
+	# Real-app launch: show the title with CONTINUE - LEVEL X. (Music waits
+	# for the first tap on the web, see AudioManager.)
+	if not skip_title and not direct:
+		ui.show_title(progress.has_progress(), current_level, progress.total_stars(), progress.coins)
 	AudioManager.start_music()
+
+
+## Title "CONTINUE - LEVEL X" / "PLAY": the level is already loaded behind it.
+func continue_game() -> void:
+	ui.hide_title()
+	AudioManager.play_ui_tap()
+	ui.show_world_banner("WORLD %d  ·  %s" % [Worlds.world_of(current_level), String(theme["name"]).to_upper()]
+		if current_level != Worlds.MASTER_LEVEL else "MASTER LEVEL")
 
 
 func _initial_level() -> int:
@@ -103,6 +140,11 @@ func start_level(number: int) -> void:
 	mistakes = 0
 	undos_used = 0
 	hints_used = 0
+	free_hints_used = 0
+	booster_hints_used = 0
+	hammers_used = 0
+	hammer_armed = false
+	board.hammer_mode = false
 	escape_points = 0
 	completed = false
 	game_over = false
@@ -114,6 +156,7 @@ func start_level(number: int) -> void:
 	max_hearts = level.hearts if level.hearts >= 0 else (MAX_HEARTS if number >= HEARTS_FROM_LEVEL else 0)
 	hearts = max_hearts
 
+	_apply_world_theme(number)
 	board.mystery = level.mystery
 	board.build(level.rows, level.columns, level.blocks, true)
 	board.refresh_locks(model)
@@ -171,6 +214,9 @@ func _on_block_tapped(id: int) -> void:
 		return
 	if tutorial.is_showing():
 		tutorial.hide_hint()
+	if hammer_armed:
+		_smash(id)
+		return
 	match model.move_state(id):
 		"ok": _escape(id)
 		"blocked": _blocked(id)
@@ -290,11 +336,29 @@ func _on_board_cleared() -> void:
 	var r := ScoreRules.settle({
 		"escape_points": escape_points, "blocks": _total_blocks,
 		"hearts_left": hearts, "max_hearts": max_hearts,
-		"mistakes": mistakes, "undos": undos_used, "hints": hints_used,
+		"mistakes": mistakes, "undos": undos_used, "hints": hints_used, "hammers": hammers_used,
 	})
 	r["stars"] = ScoreRules.stars(level, r)
-	var rec := progress.record_result(current_level, r["score"], r["stars"])
+	var rec := progress.record_result(current_level, r["score"], r["stars"], r["perfect"])
 	r.merge(rec, true)
+	# Coins: only improvements pay (see Economy.level_reward).
+	var reward := Economy.level_reward(current_level, rec["first_clear"], rec["previous_stars"], r["stars"], rec["first_perfect"])
+	var coins: int = reward["coins"]
+	var notes: Array = reward["lines"]
+	var world_bonus := Economy.check_world_complete(progress, Worlds.world_of(current_level), level_manager.level_count)
+	if world_bonus > 0:
+		coins += world_bonus
+		notes.append("World %d complete!" % Worlds.world_of(current_level))
+	r["master"] = current_level == Worlds.MASTER_LEVEL
+	if r["master"] and not progress.achievements.has("master"):
+		progress.achievements.append("master")
+		var mc := int(Economy.config()["rewards"]["master_clear"])
+		coins += mc
+		notes.append("MASTER")
+	progress.coins += coins - world_bonus  # the World bonus was credited by Economy
+	progress.save()
+	r["coins"] = coins
+	r["coin_notes"] = " · ".join(notes)
 	r["best"] = progress.best_score(current_level)
 	r["is_last"] = current_level == level_manager.level_count
 	r["level"] = current_level
@@ -305,7 +369,15 @@ func _on_board_cleared() -> void:
 	if session != _session_id:
 		return
 	board.celebrate()
-	if r["perfect"]:
+	if r["master"]:
+		# Level 100: the biggest celebration in the game.
+		for i in 3:
+			board.celebrate()
+		ui.show_perfect_stamp("MASTER!", 1.2)
+		AudioManager.play_master()
+		Haptics.medium()
+		await get_tree().create_timer(1.6).timeout
+	elif r["perfect"]:
 		board.celebrate()
 		ui.show_perfect_stamp()
 		AudioManager.play_perfect()
@@ -318,6 +390,9 @@ func _on_board_cleared() -> void:
 	if session != _session_id:
 		return
 	ui.show_complete(r)
+	if coins > 0:
+		AudioManager.play_coin()
+	_refresh_buttons()
 
 
 # --- Undo ------------------------------------------------------------------
@@ -331,6 +406,8 @@ func _capture_state() -> Dictionary:
 func undo() -> void:
 	if completed or game_over or not history.can_undo():
 		return
+	if hammer_armed:
+		toggle_hammer()
 	if undos_used >= MAX_UNDOS:
 		_show_message("No undos left - Restart to try again", 2.4)
 		return
@@ -364,11 +441,12 @@ func request_hint() -> void:
 	if hint_block != -1:
 		return  # already showing; don't charge twice
 	var unlimited := unlimited_hints()
-	if not unlimited and hints_used >= hints_allowed():
-		if hints_allowed() == 0:
-			_show_message("Hints unlock at level 20", 2.4)
-		else:
-			_show_message("No hints left for this level", 2.4)
+	var free_left := hints_allowed() - free_hints_used
+	var owned: int = progress.inventory.get("hint", 0)
+	if not unlimited and free_left <= 0 and owned <= 0:
+		# Explain gently; the coin pill pulses to point at the Shop.
+		_show_message("No hints left - get Hint boosters in the Shop", 2.6)
+		ui.pulse_coins()
 		return
 	var id := Solver.from_model(model).recommend_move()
 	if id == -1:
@@ -380,6 +458,12 @@ func request_hint() -> void:
 		return
 	if not unlimited:
 		hints_used += 1
+		if free_left > 0:
+			free_hints_used += 1
+		else:
+			booster_hints_used += 1
+			progress.inventory["hint"] = owned - 1
+			progress.save()
 	hint_block = id
 	board.set_hint(id)
 	AudioManager.play_hint()
@@ -396,7 +480,127 @@ func _refresh_buttons() -> void:
 	if level == null:
 		return
 	ui.set_undo_state(history.can_undo() and not completed, MAX_UNDOS - undos_used)
-	ui.set_hint_state(hints_allowed() - hints_used, hints_allowed(), unlimited_hints())
+	ui.set_hint_state(hints_allowed() - free_hints_used, hints_allowed(), unlimited_hints(), progress.inventory.get("hint", 0))
+	ui.set_hammer_state(progress.inventory.get("hammer", 0), hammer_armed, not completed and hammers_used < _hammer_limit())
+	ui.set_coins(progress.coins)
+
+
+# --- Boosters: Hammer ------------------------------------------------------------
+
+func _hammer_limit() -> int:
+	return int(Economy.config()["hammer_per_level"])
+
+
+## Arms / disarms the Hammer. With none owned, opens the Shop.
+func toggle_hammer() -> void:
+	if completed or game_over:
+		return
+	if hammer_armed:
+		hammer_armed = false
+		board.hammer_mode = false
+		tutorial.hide_hint()
+		_refresh_buttons()
+		return
+	if progress.inventory.get("hammer", 0) <= 0:
+		_show_message("No Hammers yet - buy one in the Shop", 2.4)
+		open_shop()
+		return
+	if hammers_used >= _hammer_limit():
+		_show_message("One Hammer per level", 2.2)
+		return
+	hammer_armed = true
+	board.hammer_mode = true
+	_show_message("Tap a block to smash it", 3.0)
+	_refresh_buttons()
+
+
+## Smashes block `id` if (and only if) the level stays solvable. A rejected
+## smash does not use up the Hammer.
+func _smash(id: int) -> void:
+	hammer_armed = false
+	board.hammer_mode = false
+	if not is_hammer_safe(id):
+		AudioManager.play_invalid()
+		board.play_hidden_tap(id)
+		_show_message("That would make the level unsolvable - Hammer kept", 2.8)
+		_refresh_buttons()
+		return
+	progress.inventory["hammer"] = progress.inventory.get("hammer", 0) - 1
+	progress.save()
+	hammers_used += 1
+	history.push(_capture_state())
+	var turned := model.remove(id)
+	var revealed := model.last_revealed.duplicate()
+	var unlocked := model.last_unlocked.duplicate()
+	_clear_hint()
+	board.play_smash(id)
+	board.animate_turns(turned)
+	AudioManager.play_hammer()
+	Haptics.medium()
+	if not revealed.is_empty():
+		board.play_reveals(revealed)
+	if not unlocked.is_empty():
+		board.play_unlocks(unlocked)
+		AudioManager.play_unlock()
+	ui.set_progress(1.0 - float(model.block_count()) / maxf(_total_blocks, 1.0))
+	_refresh_buttons()
+	if model.is_empty():
+		_on_board_cleared()
+
+
+## True if removing `id` leaves a solvable (or empty) board.
+func is_hammer_safe(id: int) -> bool:
+	if not model.blocks.has(id):
+		return false
+	var test := BoardModel.new()
+	test.setup(model.rows, model.columns, model.snapshot())
+	test.remove(id)
+	if test.is_empty():
+		return true
+	var s := Solver.from_model(test)
+	return s.is_solvable() and not s.aborted
+
+
+# --- Economy: Shop & chests -----------------------------------------------------
+
+func open_shop() -> void:
+	ui.open_shop(progress.coins, progress.inventory)
+
+
+func buy(item: String) -> void:
+	if Economy.buy(progress, item):
+		AudioManager.play_coin()
+	else:
+		AudioManager.play_invalid()
+	ui.refresh_shop(progress.coins, progress.inventory)
+	_refresh_buttons()
+
+
+func claim_chest(group: int, tier: int) -> void:
+	var coins := Economy.claim_chest(progress, group, tier)
+	if coins > 0:
+		AudioManager.play_chest()
+		ui.set_coins(progress.coins)
+		open_level_select()  # refresh the grid (chest now shows as claimed)
+
+
+# --- Worlds ------------------------------------------------------------------------
+
+## Applies the World (or Master) theme for `number`: background, board,
+## HUD colors and music. Cross-fades + banner when the World changes.
+func _apply_world_theme(number: int) -> void:
+	var t := Worlds.theme_for_level(number)
+	var changed: bool = theme.is_empty() or t["id"] != theme["id"]
+	var first: bool = theme.is_empty()
+	theme = t
+	background.apply_theme(t, not first)
+	board.set_theme(t)
+	ui.apply_theme(t)
+	AudioManager.set_music_theme(t["music"])
+	if changed and not first:
+		AudioManager.play_world()
+		ui.show_world_banner("MASTER LEVEL" if number == Worlds.MASTER_LEVEL
+			else "WORLD %d  ·  %s" % [Worlds.world_of(number), String(t["name"]).to_upper()])
 
 
 # --- Level select --------------------------------------------------------------
@@ -411,7 +615,12 @@ func open_level_select() -> void:
 			"mystery": level_manager.is_mystery(n),
 			"current": n == current_level,
 		})
-	ui.open_level_select(levels, progress.total_stars())
+	var chests := {}
+	var group_stars := {}
+	for g in Economy.group_count(level_manager.level_count):
+		chests[g] = Economy.chest_tiers(progress, g)
+		group_stars[g] = Economy.group_stars(progress, g)
+	ui.open_level_select(levels, progress.total_stars(), chests, group_stars)
 
 
 # --- Settings ----------------------------------------------------------------

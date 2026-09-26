@@ -1,0 +1,11 @@
+{
+	"name": "Night Circuit",
+	"map": [
+		".     .     .     Rv    G<    .",
+		".     .     .     .     .     P>#Y",
+		"Bv@   .     R<@-  Rv    R^    .",
+		".     P>    .     .     G^    .",
+		"G^@   .     .     Y>    R>    Rv",
+		"Y<    G^@   P<#B  .     P<    ."
+	]
+}

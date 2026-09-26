@@ -7,6 +7,8 @@ var value: float = 0.0:
 		value = v
 		queue_redraw()
 var _tween: Tween
+var track_color: Color = Palette.SLOT
+var fill_color: Color = Palette.ACCENT
 
 
 func set_progress(target: float, animate: bool = true) -> void:
@@ -22,11 +24,11 @@ func set_progress(target: float, animate: bool = true) -> void:
 func _draw() -> void:
 	var h := size.y
 	var track := StyleBoxFlat.new()
-	track.bg_color = Palette.SLOT
+	track.bg_color = track_color
 	track.set_corner_radius_all(int(h * 0.5))
 	track.anti_aliasing = true
 	track.draw(get_canvas_item(), Rect2(Vector2.ZERO, size))
 	if value > 0.001:
 		var fill := track.duplicate() as StyleBoxFlat
-		fill.bg_color = Palette.ACCENT
+		fill.bg_color = fill_color
 		fill.draw(get_canvas_item(), Rect2(Vector2.ZERO, Vector2(maxf(h, size.x * value), h)))

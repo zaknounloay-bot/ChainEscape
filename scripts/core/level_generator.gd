@@ -37,6 +37,9 @@ static func profile(name: String) -> Dictionary:
 		"min_depth": 3, "min_decision_points": 0, "min_start_traps": 0, "max_similarity": 0.45,
 		"method": "reverse", "refine_steps": 150,
 		"locks": Vector2i(0, 0), "hidden": Vector2i(0, 0),
+		# Spinner rule mix: rule name -> Vector2i(min, max) spinners of that
+		# rule ("ccw", "alt", "pattern"; the rest stay classic clockwise).
+		"spin_rules": {},
 		# A mechanic must add at least this much difficulty to be kept.
 		"min_mechanic_impact": 0.5,
 	}
@@ -90,7 +93,84 @@ static func profile(name: String) -> Dictionary:
 			base.merge({"sizes": [Vector2i(6, 6)], "blocks": Vector2i(17, 23), "spinners": Vector2i(2, 4),
 				"locks": Vector2i(1, 2), "hidden": Vector2i(3, 4), "max_start_moves": 2, "min_depth": 8,
 				"min_decision_points": 4, "max_direction_share": 0.36}, true)
+		# --- v0.4 profiles: advanced spinner rules (worlds 4-5) ---
+		"w4_very_hard":
+			base.merge({"sizes": [Vector2i(6, 6)], "blocks": Vector2i(17, 22), "spinners": Vector2i(3, 4),
+				"locks": Vector2i(1, 2), "spin_rules": {"ccw": Vector2i(1, 2), "alt": Vector2i(0, 1)},
+				"max_start_moves": 2, "min_depth": 8, "min_decision_points": 6, "min_start_traps": 1,
+				"max_direction_share": 0.34, "refine_steps": 320}, true)
+		"w4_advanced":
+			base.merge({"sizes": [Vector2i(6, 6), Vector2i(6, 7)], "blocks": Vector2i(19, 24), "spinners": Vector2i(4, 5),
+				"locks": Vector2i(1, 3), "spin_rules": {"alt": Vector2i(1, 2), "pattern": Vector2i(1, 1), "ccw": Vector2i(0, 1)},
+				"max_start_moves": 2, "min_depth": 9, "min_decision_points": 8, "min_start_traps": 1,
+				"max_direction_share": 0.33, "refine_steps": 320}, true)
+		"w5_expert":
+			base.merge({"sizes": [Vector2i(6, 7), Vector2i(7, 7)], "blocks": Vector2i(21, 27), "spinners": Vector2i(5, 6),
+				"locks": Vector2i(2, 3), "spin_rules": {"ccw": Vector2i(1, 2), "alt": Vector2i(1, 2), "pattern": Vector2i(1, 2)},
+				"max_start_moves": 2, "min_depth": 10, "min_decision_points": 10, "min_start_traps": 1,
+				"max_direction_share": 0.32, "refine_steps": 320}, true)
+		"w5_master":
+			base.merge({"sizes": [Vector2i(7, 7)], "blocks": Vector2i(24, 30), "spinners": Vector2i(6, 8),
+				"locks": Vector2i(2, 4), "spin_rules": {"ccw": Vector2i(1, 3), "alt": Vector2i(1, 2), "pattern": Vector2i(1, 2)},
+				"max_start_moves": 2, "min_depth": 12, "min_decision_points": 12, "min_start_traps": 1,
+				"max_direction_share": 0.30, "refine_steps": 320}, true)
+		"master_100":
+			base.merge({"sizes": [Vector2i(7, 7)], "blocks": Vector2i(24, 29), "spinners": Vector2i(6, 7),
+				"locks": Vector2i(2, 3), "hidden": Vector2i(2, 3), "spin_rules": {"ccw": Vector2i(1, 2), "alt": Vector2i(1, 2), "pattern": Vector2i(1, 2)},
+				"max_start_moves": 2, "min_depth": 12, "min_decision_points": 10, "min_start_traps": 1,
+				"max_direction_share": 0.31, "refine_steps": 400}, true)
+		"w_mystery_late":
+			base.merge({"sizes": [Vector2i(6, 6), Vector2i(6, 7)], "blocks": Vector2i(19, 25), "spinners": Vector2i(4, 5),
+				"locks": Vector2i(1, 3), "hidden": Vector2i(3, 5), "spin_rules": {"ccw": Vector2i(0, 1), "alt": Vector2i(1, 1), "pattern": Vector2i(0, 1)},
+				"max_start_moves": 2, "min_depth": 9, "min_decision_points": 6, "max_direction_share": 0.34, "refine_steps": 320}, true)
 	return base
+
+
+## Future levels (101+): which profile a campaign level number maps to.
+static func profile_for_level(n: int) -> Dictionary:
+	var name := "medium"
+	if n % 10 == 0 and n >= 60:
+		name = "w_mystery_late"
+	elif n <= 20:
+		name = "medium"
+	elif n <= 40:
+		name = "spin_lock"
+	elif n <= 60:
+		name = "spin_lock_hard"
+	elif n <= 70:
+		name = "w4_very_hard"
+	elif n <= 80:
+		name = "w4_advanced"
+	elif n <= 99:
+		name = "w5_expert"
+	else:
+		name = "w5_master"
+	return profile(name)
+
+
+## Target difficulty curve (the scores the curated campaign follows). Used to
+## accept generated levels for a given slot, e.g. future levels 101+.
+static func target_difficulty(n: int) -> Vector2:
+	var center := 1.5 + 0.55 * n if n <= 60 else 34.0 + 0.45 * (n - 60)
+	return Vector2(center * 0.75, center * 1.35)
+
+
+## Generate a candidate for campaign slot `n`: right profile, difficulty in
+## the target band, full validation. Returns null if nothing qualified.
+## Output still goes to a human for curation - never auto-released.
+func generate_for_level(n: int, attempts: int = 200) -> LevelData:
+	var p := profile_for_level(n)
+	var band := target_difficulty(n)
+	for i in attempts:
+		var level := generate(p, 1)
+		if level == null:
+			continue
+		if last_metrics["difficulty"] >= band.x and last_metrics["difficulty"] <= band.y:
+			level.number = n
+			return level
+		known_boards.pop_back()
+		_reject("difficulty_band")
+	return null
 
 
 ## Tries up to `attempts` candidates; returns the first accepted level or null.
@@ -143,6 +223,8 @@ func refine(level: LevelData, metrics: Dictionary, p: Dictionary) -> Array:
 
 func _score(m: Dictionary, p: Dictionary) -> float:
 	var missing: int = maxi(0, p["locks"].x - m.get("locks", 0)) + maxi(0, p["hidden"].x - m.get("hidden", 0))
+	for rule in p["spin_rules"]:
+		missing += maxi(0, p["spin_rules"][rule].x - m.get("rule_" + rule, 0))
 	var over_start: int = maxi(0, m["start_moves"] - p["max_start_moves"])
 	var over_share: float = maxf(0.0, m["direction_share"] - p["max_direction_share"])
 	var decisions: int = mini(m["decision_points"], p["min_decision_points"] + 3)
@@ -191,6 +273,18 @@ func _mutate(level: LevelData, p: Dictionary) -> LevelData:
 			b.hidden = true
 		else:
 			return null
+		return _rebuilt(copy)
+	if not p["spin_rules"].is_empty() and spinners > 0 and rng.randf() < 0.2:
+		# Change a spinner's rule (cw / ccw / alt / pattern) within limits.
+		var sp: BlockData = spinner_list[rng.randi() % spinners]
+		var names := ["cw", "ccw", "alt", "pattern"]
+		var options := ["cw"]
+		for rule in p["spin_rules"]:
+			var have := spinner_list.filter(func(x): return x.spin_rule == names.find(rule)).size()
+			if have < p["spin_rules"][rule].y:
+				options.append(rule)
+		sp.spin_rule = names.find(options[rng.randi() % options.size()])
+		sp.spin_step = 0
 		return _rebuilt(copy)
 	if roll < 0.25 and spinners > 0:
 		# Trap motif: make a neighbour of a spinner point INTO it. If the
@@ -327,7 +421,7 @@ func build_reverse(p: Dictionary) -> LevelData:
 		for step in Direction.STEPS:
 			var n: BlockData = grid.get(cell + step)
 			if n != null and n.is_spinner():
-				n.direction = Direction.rotate_ccw(n.direction)
+				n.undo_turn()
 		var remaining := n_blocks - i
 		var make_spinner := n_spinners > 0 and rng.randf() < float(n_spinners) / remaining
 		# Spinners placed as the very first reverse step (last to leave) are
@@ -386,6 +480,9 @@ func rejection_reason(m: Dictionary, p: Dictionary, level: LevelData = null) -> 
 		return "no_decisions"
 	if m.get("locks", 0) < p["locks"].x or m.get("hidden", 0) < p["hidden"].x:
 		return "missing_mechanic"
+	for rule in p["spin_rules"]:
+		if m.get("rule_" + rule, 0) < p["spin_rules"][rule].x:
+			return "missing_spin_rule"
 	if level != null and is_repetitive(level, p["max_similarity"]):
 		return "repetitive"
 	if level != null and (m.get("locks", 0) > 0 or m.get("hidden", 0) > 0 or m["spinners"] > 0):
@@ -408,7 +505,8 @@ static func difficulty(m: Dictionary) -> float:
 	return (m["blocks"] * 0.15 + m["depth"] * 0.6 + m["decision_points"] * 1.5
 		+ m["trap_moves"] * 0.4 + m["start_traps"] * 1.0 + m["spinners"] * 0.5
 		+ (4 - mini(m["start_moves"], 4)) * 0.5
-		+ m.get("locks", 0) * 0.8 + m.get("hidden", 0) * 0.6)
+		+ m.get("locks", 0) * 0.8 + m.get("hidden", 0) * 0.6
+		+ m.get("rule_ccw", 0) * 0.3 + m.get("rule_alt", 0) * 0.6 + m.get("rule_pattern", 0) * 0.8)
 
 
 ## Fraction of cells with the same content (same arrow, both occupied) as

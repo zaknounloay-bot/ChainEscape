@@ -2,7 +2,7 @@ class_name PillButton
 extends Button
 ## Rounded button with an optional hand-drawn icon (no image assets needed).
 
-enum Icon { NONE, UNDO, RESTART, HINT, GEAR, GRID }
+enum Icon { NONE, UNDO, RESTART, HINT, GEAR, GRID, HAMMER, COIN, CHEST }
 
 var icon_kind: int = Icon.NONE
 ## Small counter bubble in the top-right corner ("" = hidden).
@@ -12,12 +12,16 @@ var badge_text: String = "":
 		queue_redraw()
 ## Horizontal position of the icon center.
 var icon_x: float = 50.0
+## Stacked layout: icon on top, small label underneath (compact bars).
+var stacked: bool = false
 var _press_tween: Tween
+var _top_pad := 18
 
 
-func _init(p_text: String = "", p_icon: int = Icon.NONE, bg: Color = Palette.WHITE, fg: Color = Palette.TEXT, font_size: int = 30, compact: bool = false) -> void:
+func _init(p_text: String = "", p_icon: int = Icon.NONE, bg: Color = Palette.WHITE, fg: Color = Palette.TEXT, font_size: int = 30, compact: bool = false, p_stacked: bool = false) -> void:
 	text = p_text
 	icon_kind = p_icon
+	stacked = p_stacked
 	focus_mode = Control.FOCUS_NONE
 	action_mode = BaseButton.ACTION_MODE_BUTTON_RELEASE
 	add_theme_font_override("font", Palette.font(800))
@@ -32,6 +36,10 @@ func _init(p_text: String = "", p_icon: int = Icon.NONE, bg: Color = Palette.WHI
 	if p_text == "":
 		_right_pad = 0
 	icon_x = 50.0 if not compact else 36.0
+	if stacked:
+		left_pad = 6
+		_right_pad = 6
+		_top_pad = 50
 	add_theme_stylebox_override("normal", _style(bg, left_pad))
 	add_theme_stylebox_override("hover", _style(bg, left_pad))
 	add_theme_stylebox_override("focus", StyleBoxEmpty.new())
@@ -53,8 +61,8 @@ func _style(bg: Color, left_pad: int, shadow: bool = true) -> StyleBoxFlat:
 	s.anti_aliasing = true
 	s.content_margin_left = left_pad
 	s.content_margin_right = _right_pad
-	s.content_margin_top = 18
-	s.content_margin_bottom = 18
+	s.content_margin_top = _top_pad
+	s.content_margin_bottom = 12 if stacked else 18
 	if shadow:
 		s.shadow_color = Palette.SHADOW
 		s.shadow_size = 10
@@ -84,6 +92,8 @@ func _draw() -> void:
 		return
 	var col: Color = get_theme_color("font_disabled_color" if disabled else "font_color")
 	var c := Vector2(icon_x if text != "" else size.x * 0.5, size.y * 0.5)
+	if stacked:
+		c = Vector2(size.x * 0.5, 34.0)
 	var r := 15.0
 	var w := 5.0
 	if icon_kind == Icon.UNDO:
@@ -113,12 +123,42 @@ func _draw() -> void:
 			for gx in 3:
 				var cc := c + Vector2((gx - 1) * 11, (gy - 1) * 11)
 				draw_rect(Rect2(cc - Vector2(4, 4), Vector2(8, 8)), col)
+	elif icon_kind == Icon.HAMMER:
+		# Handle + head.
+		draw_line(c + Vector2(-10, 14), c + Vector2(6, -2), col, 6.0, true)
+		var head := PackedVector2Array([c + Vector2(-2, -16), c + Vector2(14, 0), c + Vector2(20, -6), c + Vector2(4, -22)])
+		draw_colored_polygon(head, col)
+	elif icon_kind == Icon.COIN:
+		draw_coin(self, c, 15.0)
+	elif icon_kind == Icon.CHEST:
+		draw_chest(self, c, 18.0, col)
 	elif icon_kind == Icon.GEAR:
 		for k in 8:
 			var a := TAU * k / 8.0
 			draw_line(c + Vector2.from_angle(a) * 11.0, c + Vector2.from_angle(a) * 18.0, col, 6.0, true)
 		draw_arc(c, 12.0, 0.0, TAU, 32, col, 5.0, true)
 		draw_arc(c, 4.0, 0.0, TAU, 16, col, 3.0, true)
+
+
+## Gold coin (shared by the coin pill, shop and cards).
+static func draw_coin(ci: CanvasItem, c: Vector2, r: float) -> void:
+	ci.draw_circle(c + Vector2(0, 2), r, Color("#B7740A"))
+	ci.draw_circle(c, r, Color("#FFC21A"))
+	ci.draw_arc(c, r * 0.68, 0.0, TAU, 24, Color("#E39A00"), maxf(2.0, r * 0.14), true)
+	ci.draw_circle(c + Vector2(-r * 0.35, -r * 0.35), r * 0.18, Color(1, 1, 1, 0.7))
+
+
+static func draw_chest(ci: CanvasItem, c: Vector2, r: float, col: Color) -> void:
+	var body := StyleBoxFlat.new()
+	body.bg_color = col
+	body.set_corner_radius_all(int(r * 0.2))
+	body.draw(ci.get_canvas_item(), Rect2(c + Vector2(-r, -r * 0.35), Vector2(r * 2, r * 1.2)))
+	var lid := StyleBoxFlat.new()
+	lid.bg_color = col.lightened(0.2)
+	lid.corner_radius_top_left = int(r * 0.6)
+	lid.corner_radius_top_right = int(r * 0.6)
+	lid.draw(ci.get_canvas_item(), Rect2(c + Vector2(-r, -r * 0.95), Vector2(r * 2, r * 0.62)))
+	ci.draw_rect(Rect2(c + Vector2(-r * 0.18, -r * 0.5), Vector2(r * 0.36, r * 0.45)), Color("#FFE08A"))
 
 
 func _draw_badge() -> void:

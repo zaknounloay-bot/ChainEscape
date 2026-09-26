@@ -1,11 +1,13 @@
 {
 	"name": "Gearbox",
+	"hint": "Dots show a spinner's rule: this one alternates",
+	"hint_finger": false,
 	"map": [
-		".   P>  R<@ Y>  Rv  .",
-		"G>  .   .   P^  G>  Pv",
-		".   .   .   R^  Pv@ B>",
-		"Y>  Gv  Bv@ .   .   .",
-		"Gv  R<  G<  .   R^@ .",
-		"Y<  P<  .   .   G<  ."
+		".     P>    R<@~  Y>    Rv    .",
+		"G>    .     .     P^    G>    Pv",
+		".     .     .     R^    Pv@   B>",
+		"Y>    Gv    Bv@   .     .     .",
+		"Gv    R<    G<    .     R^@   .",
+		"Y<    P<    .     .     G<    ."
 	]
 }

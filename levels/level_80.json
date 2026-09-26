@@ -1,0 +1,13 @@
+{
+	"name": "Dark Matter",
+	"mystery": true,
+	"map": [
+		".       Y<      Y<      Y>@#B   .       .",
+		"Yv?     .       P>      Y^@     .       .",
+		"G>      .       .       R^      .       B^",
+		".       .       .       Yv      .       Y^",
+		".       .       .       Gv      .       G^?",
+		".       Rv@-#Y  B>@*    P^@~    Yv      Y^",
+		".       .       .       G>#B    Pv?     Yv?"
+	]
+}

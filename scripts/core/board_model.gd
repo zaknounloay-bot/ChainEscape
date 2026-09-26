@@ -108,7 +108,7 @@ func count_of_color(color: String) -> int:
 
 
 ## Removes the block from the board. Caller must check can_escape first.
-## Spinners orthogonally adjacent to the removed block turn clockwise.
+## Spinners orthogonally adjacent to the removed block turn (by their rule).
 ## Returns the ids of the spinners that turned (for animation).
 func remove(id: int) -> Array:
 	var b: BlockData = blocks.get(id)
@@ -128,7 +128,7 @@ func remove(id: int) -> Array:
 		if n == null:
 			continue
 		if n.is_spinner():
-			n.direction = Direction.rotate_cw(n.direction)
+			n.apply_turn()
 			turned.append(n.id)
 		if n.hidden:
 			n.hidden = false

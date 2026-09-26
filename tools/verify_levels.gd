@@ -17,9 +17,14 @@ extends SceneTree
 ##   * every level that uses spinners / locks / mystery: that mechanic must
 ##     add difficulty (impact >= 0.5; mystery >= 0.3) - no decoration
 ##   * mystery levels: provably fair (hidden arrows never decide a trap)
+##   * from level 61: at most 2 starting moves, depth >= 8, >= 4 decision
+##     points (misleading-but-fair options)
+##   * Level 100 (Master): spinners of 3+ rules, locks and mystery, fair,
+##     and the highest difficulty score in the campaign
 ##   * from level 11: no two boards of the same size more than 60% alike
 
 const HIGH_LEVEL := 21
+const LATE_LEVEL := 61
 const MAX_SIMILARITY := 0.6
 
 
@@ -36,13 +41,15 @@ func _initialize() -> void:
 			n += 1
 	var problems: Array[String] = []
 	var levels: Array = []
-	print("  #  name               size blk spn lck hid start trp dec dep len dir%  diff   S    L    M  fair status")
+	print("  # W name               size blk spn rules  lck hid start trp dec dep len dir%  diff   S    L    M  fair status")
+	var diffs := {}
 	for i in files.size():
 		var json = JSON.parse_string(FileAccess.get_file_as_string(files[i]))
 		var level := LevelManager.parse_level(json, i + 1)
 		levels.append(level)
 		var m := LevelAnalysis.analyze(level)
 		var n := i + 1
+		diffs[n] = m["difficulty"]
 		var status := "OK"
 		if not m["solvable"] or m["aborted"]:
 			status = "GAVE UP" if m["aborted"] else "UNSOLVABLE"
@@ -52,12 +59,17 @@ func _initialize() -> void:
 			if issue != "":
 				status = issue
 				problems.append("L%d %s" % [n, issue])
-		print("%3d  %-17s %dx%d %3d %3d %3d %3d %5d %3d %3d %3d %3d %4d %5.1f %4s %4s %4s  %-4s %s" % [
-			n, level.name.left(17), level.columns, level.rows, m["blocks"], m["spinners"], m["locks"], m["hidden"],
+		var rules := "c%da%dp%d" % [m["rule_ccw"], m["rule_alt"], m["rule_pattern"]] if m["spinners"] > 0 else "-"
+		print("%3d %d %-17s %dx%d %3d %3d %-6s %3d %3d %5d %3d %3d %3d %3d %4d %5.1f %4s %4s %4s  %-4s %s" % [
+			n, Worlds.world_of(n), level.name.left(17), level.columns, level.rows, m["blocks"], m["spinners"], rules, m["locks"], m["hidden"],
 			m["start_moves"], m["start_traps"], m["decision_points"], m["depth"], m["solution_length"],
 			int(m["direction_share"] * 100), m["difficulty"],
 			_imp(m["spinner_impact"], m["spinners"]), _imp(m["lock_impact"], m["locks"]), _imp(m["mystery_impact"], m["hidden"]),
 			("yes" if m["mystery_fair"] else "NO") if m["hidden"] > 0 else "-", status])
+	if campaign and diffs.has(Worlds.MASTER_LEVEL):
+		var top: float = diffs.values().max()
+		if diffs[Worlds.MASTER_LEVEL] < top:
+			problems.append("L100 (Master) is not the hardest level (%.1f < %.1f)" % [diffs[Worlds.MASTER_LEVEL], top])
 	if campaign:
 		for i in range(10, levels.size()):
 			for j in range(10, i):
@@ -72,6 +84,17 @@ func _initialize() -> void:
 
 
 static func _rule_issue(n: int, m: Dictionary) -> String:
+	if n >= LATE_LEVEL:
+		if m["start_moves"] > 2:
+			return "TOO MANY START MOVES (61+)"
+		if m["depth"] < 8:
+			return "TOO SHALLOW (61+)"
+		if m["decision_points"] < 4:
+			return "TOO FEW DECISIONS (61+)"
+	if n == Worlds.MASTER_LEVEL:
+		var rule_kinds := int(m["rule_cw"] > 0) + int(m["rule_ccw"] > 0) + int(m["rule_alt"] > 0) + int(m["rule_pattern"] > 0)
+		if rule_kinds < 3 or m["locks"] == 0 or m["hidden"] == 0:
+			return "MASTER NEEDS SPINNER RULES + LOCKS + MYSTERY"
 	if n >= HIGH_LEVEL:
 		if m["start_moves"] > 3:
 			return "TOO MANY START MOVES"

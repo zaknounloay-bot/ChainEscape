@@ -1,0 +1,13 @@
+{
+	"name": "Blackout",
+	"mystery": true,
+	"map": [
+		"G>     .      .      B>     .      Gv",
+		".      .      Rv     Y<?    G<     .",
+		".      B>     .      .      R^     .",
+		".      P<     R<     .      .      G<",
+		".      B>?    G^@#P  B>     .      Gv?",
+		".      Rv?    B^@    Y^#B   Bv?    Y^@",
+		".      B<     .      .      B<@~   ."
+	]
+}

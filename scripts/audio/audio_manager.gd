@@ -11,7 +11,8 @@ extends Node
 ## without touching code.
 
 const SOUND_IDS := ["escape", "invalid", "combo", "level_complete", "ui_tap", "undo",
-	"turn", "heart_lost", "hint", "try_again", "unlock", "reveal", "star", "perfect", "new_best"]
+	"turn", "heart_lost", "hint", "try_again", "unlock", "reveal", "star", "perfect", "new_best",
+	"coin", "hammer", "chest", "master", "world"]
 const MUSIC_ID := "music"
 const MUSIC_VOLUME_DB := -15.0  # background level: present but never in the way
 const DUCK_DB := -8.0  # extra attenuation while ducked
@@ -24,16 +25,29 @@ const VOICES := 8
 const CHAIN_SCALE := [0, 2, 4, 7, 9, 12, 14, 16, 19, 21, 24]
 
 ## Sound effects on/off (Settings). Music has its own switch.
+signal audio_unlocked
+
 var sfx_enabled: bool = true
 var music_enabled: bool = true
-var _music: AudioStreamPlayer
+## Web browsers block audio until a user gesture. When true, music waits
+## for the first tap/click/key (see _input). Always true on the web build;
+## tests can set it to simulate a browser.
+var require_gesture: bool = OS.has_feature("web")
+var unlocked: bool = false
+## Music theme currently requested ("w1".."w5", "master").
+var music_theme: String = "w1"
+var _music: AudioStreamPlayer  # the active player
+var _music_b: AudioStreamPlayer  # the other one, for cross-fades
+var _fade_tween: Tween
 var _duck_tween: Tween
+var _theme_streams: Dictionary = {}
 var _streams: Dictionary = {}
 var _players: Array[AudioStreamPlayer] = []
 var _next_voice: int = 0
 
 
 func _ready() -> void:
+	unlocked = not require_gesture
 	for bus in ["Music", "SFX"]:
 		if AudioServer.get_bus_index(bus) == -1:
 			AudioServer.add_bus()
@@ -46,17 +60,73 @@ func _ready() -> void:
 		_players.append(p)
 	for id in SOUND_IDS:
 		_streams[id] = _load_or_synthesize(id)
-	_music = AudioStreamPlayer.new()
-	_music.bus = "Music"
-	_music.volume_db = MUSIC_VOLUME_DB
-	_music.stream = _load_music()
-	add_child(_music)
+	for k in 2:
+		var mp := AudioStreamPlayer.new()
+		mp.bus = "Music"
+		mp.volume_db = MUSIC_VOLUME_DB
+		add_child(mp)
+		if k == 0:
+			_music = mp
+		else:
+			_music_b = mp
+	_music.stream = _theme_stream(music_theme)
 
 
 func _exit_tree() -> void:
-	# Release the looping stream cleanly on quit.
-	_music.stop()
-	_music.stream = null
+	# Release the looping streams cleanly on quit.
+	for mp in [_music, _music_b]:
+		mp.stop()
+		mp.stream = null
+
+
+## First real user gesture unlocks audio on the web. Music is started from
+## inside this input event, which is what mobile browsers require.
+func _input(event: InputEvent) -> void:
+	if unlocked:
+		return
+	var gesture: bool = (event is InputEventScreenTouch and event.pressed) \
+		or (event is InputEventMouseButton and event.pressed) \
+		or (event is InputEventKey and event.pressed)
+	if gesture:
+		unlock_audio()
+
+
+## Web builds publish their audio state to the page (window.chainEscapeAudio)
+## so automated browser tests - and curious developers - can check it.
+func _publish_web_state() -> void:
+	if not OS.has_feature("web"):
+		return
+	JavaScriptBridge.eval("window.chainEscapeAudio = {unlocked: %s, musicPlaying: %s, theme: '%s', musicEnabled: %s};" % [
+		str(unlocked).to_lower(), str(_music.playing).to_lower(), music_theme, str(music_enabled).to_lower()], true)
+
+
+var _publish_timer := 0.0
+
+
+func _process(delta: float) -> void:
+	if OS.has_feature("web"):
+		_publish_timer += delta
+		if _publish_timer >= 0.5:
+			_publish_timer = 0.0
+			_publish_web_state()
+
+
+func unlock_audio() -> void:
+	if unlocked:
+		return
+	unlocked = true
+	if OS.has_feature("web"):
+		# Belt and braces: resume any suspended WebAudio context.
+		JavaScriptBridge.eval("(function(){try{var c=window.GodotAudio&&GodotAudio.ctx;if(c&&c.state!=='running'){c.resume();}}catch(e){}})()", true)
+	audio_unlocked.emit()
+	start_music()
+	_publish_web_state()
+
+
+func _notification(what: int) -> void:
+	# Coming back to the tab / app: make sure the loop is still running.
+	if what == NOTIFICATION_APPLICATION_FOCUS_IN or what == NOTIFICATION_APPLICATION_RESUMED:
+		start_music()
 
 
 # --- Settings ----------------------------------------------------------------
@@ -71,15 +141,49 @@ func set_music_enabled(on: bool) -> void:
 	AudioServer.set_bus_mute(AudioServer.get_bus_index("Music"), not on)
 	if on:
 		start_music()
-	elif _music.playing:
+	else:
 		_music.stop()
+		_music_b.stop()
 
 
 # --- Music -----------------------------------------------------------------
 
+func is_music_playing() -> bool:
+	return _music.playing
+
+
+## Starts the current theme if allowed (music on, audio unlocked).
 func start_music() -> void:
-	if music_enabled and _music.stream and not _music.playing:
+	if not music_enabled or not unlocked:
+		return
+	if _music.stream and not _music.playing:
+		_music.volume_db = MUSIC_VOLUME_DB
 		_music.play()
+
+
+## Switches the music theme with a smooth cross-fade (World changes).
+func set_music_theme(theme: String, fade: float = 1.5) -> void:
+	if theme == music_theme and _music.stream != null:
+		start_music()
+		return
+	music_theme = theme
+	var stream := _theme_stream(theme)
+	if not music_enabled or not unlocked or not _music.playing:
+		_music.stream = stream
+		start_music()
+		return
+	if _fade_tween:
+		_fade_tween.kill()
+	var old := _music
+	_music = _music_b
+	_music_b = old
+	_music.stream = stream
+	_music.volume_db = -40.0
+	_music.play()
+	_fade_tween = create_tween().set_parallel()
+	_fade_tween.tween_property(_music, "volume_db", MUSIC_VOLUME_DB, fade).set_trans(Tween.TRANS_SINE)
+	_fade_tween.tween_property(old, "volume_db", -40.0, fade).set_trans(Tween.TRANS_SINE)
+	_fade_tween.chain().tween_callback(old.stop)
 
 
 ## Dips the music for `hold` seconds (e.g. under the level-complete jingle).
@@ -94,10 +198,16 @@ func duck_music(hold: float = 1.2) -> void:
 	_duck_tween.tween_method(func(db): AudioServer.set_bus_volume_db(bus, db), DUCK_DB, 0.0, 0.8)
 
 
-func _load_music() -> AudioStream:
+func _theme_stream(theme: String) -> AudioStream:
+	if not _theme_streams.has(theme):
+		_theme_streams[theme] = _load_music(MUSIC_ID + "_" + theme)
+	return _theme_streams[theme]
+
+
+func _load_music(id: String) -> AudioStream:
 	var stream: AudioStream = null
 	for ext in ["ogg", "wav", "mp3"]:
-		var path: String = ASSET_DIR + MUSIC_ID + "." + ext
+		var path: String = ASSET_DIR + id + "." + ext
 		if ResourceLoader.exists(path):
 			stream = load(path)
 			break
@@ -176,6 +286,27 @@ func play_new_best() -> void:
 	play("new_best", 1.0, -5.0)
 
 
+func play_coin() -> void:
+	play("coin", 1.0, -6.0)
+
+
+func play_hammer() -> void:
+	play("hammer", 1.0, -3.0)
+
+
+func play_chest() -> void:
+	play("chest", 1.0, -3.0)
+
+
+func play_master() -> void:
+	duck_music(2.8)
+	play("master", 1.0, -1.0)
+
+
+func play_world() -> void:
+	play("world", 1.0, -5.0)
+
+
 static func chain_pitch(chain: int) -> float:
 	var idx := maxi(chain - 1, 0)
 	if idx >= CHAIN_SCALE.size():
@@ -238,6 +369,17 @@ func _load_or_synthesize(id: String) -> AudioStream:
 			return _synth_notes([[784.0, 0.0], [988.0, 0.07], [1175.0, 0.14], [1568.0, 0.21], [1976.0, 0.30], [2349.0, 0.40]], 1.2, 4.5)
 		"new_best":
 			return _synth_notes([[1047.0, 0.0], [1568.0, 0.1], [2093.0, 0.2]], 0.7, 7.0)
+		"coin":
+			return _synth_notes([[1976.0, 0.0], [2637.0, 0.05]], 0.3, 14.0)
+		"hammer":
+			# Heavy thud + crack.
+			return _synth([[110.0, 1.0], [220.0, 0.5], [3300.0, 0.08]], 0.3, 16.0, -0.4)
+		"chest":
+			return _synth_notes([[659.0, 0.0], [831.0, 0.08], [988.0, 0.16], [1319.0, 0.24], [1976.0, 0.34]], 1.0, 5.0)
+		"master":
+			return _synth_notes([[523.0, 0.0], [659.0, 0.1], [784.0, 0.2], [1047.0, 0.3], [1319.0, 0.45], [1568.0, 0.6], [2093.0, 0.8]], 2.0, 2.5)
+		"world":
+			return _synth_notes([[392.0, 0.0], [587.0, 0.15], [784.0, 0.3]], 1.1, 3.5)
 		"try_again":
 			return _synth_notes([[523.0, 0.0], [466.0, 0.12], [392.0, 0.24]], 0.7, 6.0)
 	return null

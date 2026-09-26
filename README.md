@@ -1,30 +1,307 @@
-# Chain Escape — v0.3
+# Chain Escape — v0.4
 
-A one-handed portrait puzzle prototype built with **Godot 4.3 (GDScript)** for iOS and Android.
+A one-handed portrait puzzle game built with **Godot 4.3 (GDScript)** for iOS, Android and mobile Web.
 
 > Tap a block → it escapes in its arrow direction → space opens → more blocks can leave → chain the exits. Clear the board.
 
-The v0.3 goal is replayability and mastery: *"I understand the rules immediately, but I need to think carefully to solve this well."* Leaderboards, accounts, backend, timed mode, Daily Challenge, ads, monetization, multiplayer and the image-reveal collection are intentionally left out.
+v0.4 turns the prototype into a game with long-term progression:
+
+- a real save / continue flow
+- five Worlds, each with its own look and music
+- a soft-currency economy with treasure chests, a Shop and two boosters
+- advanced spinners
+- a 100-level campaign ending in a Master Level
+
+The feeling it aims for: *"I know how to play, I am getting better, and I want to see what comes next."*
+
+Not included, on purpose: real-money purchases, ads, leaderboards, accounts, backend, multiplayer, Daily Challenge, timed mode and store billing.
 
 ---
 
-## What's new in v0.3
+## What's new in v0.4
 
 | Area | Change |
 |---|---|
-| **Score** | Every level is scored. Escapes and chains earn points, and bonuses are settled at the end. Mistakes, Undo and Hints cost points. There's no timer. Your personal best is saved per level, with **NEW BEST!** when you beat it. |
-| **3 stars** | ★ complete · ★★ no Hint · ★★★ PERFECT or a strong score. The rules are data-driven per level, and your best stars are saved. |
-| **PERFECT** | No heart lost, no Undo and no Hint. It shows a golden stamp animation, a special sound, a +1000 bonus and a gold-framed card. |
-| **Undo** | Limited to **3 per level**. The count is shown on the button. It prevents PERFECT and costs points. It uses the same snapshot history as before. |
-| **Hints** | They're per level now, not tokens. Levels 1–19 have 0, 20–29 have 1, and 30+ have 2. A hint highlights one move and never plays it. It prevents PERFECT and costs points. Debug mode has unlimited hints. |
-| **Locked blocks** | A new core mechanic. A locked block can't leave until every block of its key color has escaped. It has a padlock in its key color, and the padlock pops open when it unlocks. |
-| **Mystery levels** | Levels 10, 20, 30, 40, 50 and 60. Some arrows start hidden and are revealed when a neighbor escapes. They're provably fair: no guessing. |
-| **60 levels** | 1–5 onboarding · 6–10 easy · 11–20 medium · 21–30 medium-hard · 31–40 hard · 41–50 very hard · 51–60 expert. |
-| **Level complete screen** | Shows score (counting up), personal best / NEW BEST, stars, PERFECT, hearts left, Undo used and Hints used. Buttons: **NEXT LEVEL** and **REPLAY**. |
-| **Level Select** | A grid with level number, best stars, completed/locked state and a "?" marker on Mystery levels. |
-| **Analysis** | The verifier reports per-mechanic impact and mystery fairness, and enforces campaign quality rules. |
+| **Save / Continue** | A versioned save file (v2) with migration from v0.3, atomic writes and a backup fallback. The launch screen offers **CONTINUE – LEVEL X** and **LEVEL SELECT**. The game never resets to Level 1. |
+| **Mobile Web audio** | Music starts on the first real tap, inside that gesture, as mobile browsers require. After that it loops normally. It was tested in a real exported Web build in Chromium with mobile emulation. |
+| **Worlds** | Five Worlds of 20 levels, plus a Master theme for level 100. Each has its own background gradient, ambient decorations, board tint, HUD/accent colors and music. The transitions cross-fade and show a banner. |
+| **Music themes** | Six generated seamless loops (one per World plus Master), rising in tempo and tension, with cross-fades between them. |
+| **Advanced spinners** | Clockwise ↻ (the original), counter-clockwise ↺, alternating and pattern (↻↻↺). Always deterministic, and the ring shows the next turn. |
+| **Coins** | Soft currency, earned through skilled play. Only *improvements* pay (a first clear, new stars, a first PERFECT), and harder Worlds pay more. |
+| **Treasure chests** | Every 10 levels, three chests unlock at 20 / 24 / 27 stars. Each can be claimed once. |
+| **Shop and boosters** | **Hint** (30 coins) and **Hammer** (60 coins). The Hammer only works if the level stays solvable. All prices are in `data/economy.json`. |
+| **Inventory** | Boosters are saved and shown on the Hint and Hammer buttons. |
+| **100 levels** | New levels 61–100, all verified. **Level 100 – The Master** combines every mechanic. |
+| **Level Select** | Grouped by World, with chest rows and a crown on the Master Level. |
+| **Generator** | Understands spinner rules, has World 4–5 profiles, maps a level number to a profile and a target difficulty, and never auto-releases levels (groundwork for 101+). |
 
 ---
+
+## Save / Continue
+
+`scripts/core/player_progress.gd`, saved to `user://progress.cfg` (IndexedDB on the Web).
+
+**What is saved:**
+
+- last played level (the CONTINUE target) and highest completed level
+- highest unlocked level (= highest completed + 1)
+- stars and best score per level, and PERFECT levels
+- coin balance and booster inventory
+- claimed chests, completed Worlds and achievements (for example `master`)
+- Music, Sound Effects and Vibration settings
+
+**Launch:**
+
+- A returning player sees **CONTINUE – LEVEL X** (with stars and coins) and **LEVEL SELECT**.
+- A new player sees **PLAY**.
+- The last played level is already loaded behind the title, so continuing is instant.
+
+**Robustness:**
+
+- **Version-aware:** `[meta] version = 2`. `_migrate()` upgrades older saves in place. v0.3 saves keep all progress, get the starting coins and booster, and 3-star levels are marked PERFECT so they aren't paid twice.
+- **Forward-safe:** keys a build doesn't know are kept when it re-saves, so a newer save opened by an older build isn't wiped.
+- **Atomic:** each save writes `progress.cfg.tmp`, keeps the previous file as `progress.cfg.bak`, then renames. If the main file is damaged, the loader falls back to the `.bak` copy.
+
+## Music system
+
+- `AudioManager` plays one theme per World: `music_w1` … `music_w5`, plus `music_master` for level 100.
+- The themes are generated by `tools/generate_music.py`. Tempo, key, harmony, rhythmic density and timbre rise from calm (World 1, 92 BPM, major) to tense and dramatic (Master, 84 BPM, C minor bells and deep drums).
+- Each is a sample-seamless loop with embedded WAV loop points. To replace one with a real track, drop `music_<theme>.ogg` into `assets/audio/`.
+- **Cross-fades:** two music players, so entering a new World fades the themes over 1.5 s.
+- Music ducks under the level-complete, PERFECT and Master jingles.
+- **Settings:** Music, Sound Effects and Vibration toggles are saved and restored on launch. Music and SFX use separate buses.
+
+**Mobile Web autoplay:**
+
+- On the Web build, `AudioManager.require_gesture` is on. Music doesn't start until the first real tap, click or key press. The music is then started **inside that input event**, which is what iOS/Android browsers allow.
+- The first tap can be CONTINUE / PLAY on the title screen.
+- After that, music keeps looping, and it's restarted if the tab or app regains focus.
+- You never have to re-enable it.
+- The Web build publishes `window.chainEscapeAudio` (unlocked / musicPlaying / theme) so it can be tested.
+
+## Worlds
+
+| World | Levels | Name | Look | Music |
+|---|---|---|---|---|
+| 1 | 1–20 | First Light | bright, clean lilac-white, floating bubbles | calm, 92 BPM |
+| 2 | 21–40 | Deep Current | deeper blues, soft wave arcs | rhythmic, 100 BPM |
+| 3 | 41–60 | Ember Ridge | warm coral, stronger contrast, drifting triangles | driving, 108 BPM |
+| 4 | 61–80 | Neon Night | dark indigo, subtle neon lines and diamonds | intense, 116 BPM |
+| 5 | 81–99 | Master's Summit | premium navy and gold, twinkling stars | advanced, 104 BPM |
+| ★ | 100 | Master Level | black and gold, slow golden rays, "MASTER LEVEL" label | distinct Master theme |
+
+- Only the surroundings change: the background, board and slot tint, HUD text and accent colors, the decoration and the music.
+- **Block colors and arrows never change**, so readability is identical everywhere. On dark Worlds the HUD text switches to light colors automatically.
+- Entering a new World cross-fades the background and music and shows a "WORLD 2 · DEEP CURRENT" banner.
+
+## Advanced spinner rules
+
+| Rule | Token | Turns (1st, 2nd, 3rd, …) | Indicator | Introduced |
+|---|---|---|---|---|
+| Clockwise ↻ | `@` | ↻ ↻ ↻ … | ring arrows point clockwise | Level 9 |
+| Counter-clockwise ↺ | `@-` | ↺ ↺ ↺ … | ring arrows point counter-clockwise | Level 31 |
+| Alternating | `@~` | ↻ ↺ ↻ ↺ … | 2-dot strip (● ○); the next turn's dot is bigger | Level 35 |
+| Pattern | `@*` | ↻ ↻ ↺, repeat | 3-dot strip (● ● ○); the next turn's dot is bigger | Level 52 |
+
+- **Never random.** A spinner's next turn depends only on its rule and how many turns it has already made (`BlockData.turn_is_cw(rule, step)`).
+- The ring's arrowheads always point the way the **next** turn will go. ALT and PATTERN show their sequence as dots, with the upcoming step enlarged.
+- Undo restores the step counter exactly.
+- The solver includes the sequence position in its memo key, and the unit tests check that the model and solver agree turn by turn.
+- **Introductions keep the curated boards:** levels 31, 35 and 52 kept their layouts, with one spinner each converted to CCW, ALT and PATTERN (chosen so the level stays solvable and passes every rule), plus a one-line hint.
+- From 61 on, spinner types mix; from 71 all four can appear in one puzzle.
+- Mystery arrows are never on spinners, so a spinner's rule is always visible.
+
+## Coin economy
+
+`scripts/core/economy.gd` reads every value from **`data/economy.json`**. These are prototype values, meant to be tuned.
+
+| Reward | Coins (× World multiplier 1.0 / 1.25 / 1.5 / 1.75 / 2.0) |
+|---|---|
+| First clear of a level | 3 |
+| Each star earned for the first time | 4 |
+| First PERFECT on a level | 10 |
+| Completing every level of a World | 100 (once) |
+| Clearing the Master Level | 300 (once, plus the `master` achievement) |
+| Treasure chests | 20 / 40 / 70 per 10-level group |
+| Starting grant | 60 coins + 1 Hint booster |
+
+- **Only improvements pay.** Replaying a level without earning a new star or first PERFECT pays nothing, so easy levels can't be farmed.
+- Better performance pays more (3★ + PERFECT ≫ a plain clear), and harder Worlds multiply the reward.
+- Coins show in a small pill under the settings gear, and count up when they change. Tapping it opens the Shop. The complete card shows "+N COINS" with the reason.
+- **Coins can't be bought** with real money.
+
+## Treasure chests
+
+- The campaign is split into groups of 10 levels (30 possible stars each).
+- Each group has **three chests**: at **20★** (20 coins), **24★** (40 coins) and **27★** (70 coins).
+- Chests appear under each group in Level Select, shining gold when claimable.
+- Claiming records `g<group>_t<tier>` in the save file. `Economy.claim_chest()` refuses anything already claimed, so **a chest can never pay twice**, even after restarts.
+- The thresholds are reachable without perfection and reward going back for missing stars.
+
+## Shop and boosters
+
+- **Shop:** tap the coin pill (or the Hammer button with none owned). It lists the two items with prices, owned counts and BUY buttons, and a purchase fails harmlessly if you can't afford it.
+- Prices are in `data/economy.json`: Hint **30**, Hammer **60**. The Hammer always costs more than the Hint.
+
+**Hint booster**
+
+- It uses the existing Hint logic: one recommended legal move that keeps the level solvable, highlighted, never played for you.
+- The HINT button uses the level's free hints first (0 / 1 / 2 by level band), then Hint boosters from the inventory. The badge shows `free+owned`, for example `1+2`.
+- Hint boosters make hints available in levels 1–19 too.
+- A booster hint counts as a hint: −250 points, no ★★, no PERFECT.
+
+**Hammer booster**
+
+- Tap HAMMER (the board gets a red frame), then tap a block to smash it.
+- **Safety:** before removing anything, the game copies the board, removes the block and asks the solver whether the level is still solvable (`GameManager.is_hammer_safe`).
+  - If not, the smash is **rejected**, the Hammer **isn't consumed**, and the game says why.
+  - If the solver can't decide within its node limit, the smash is also refused.
+- A smashed block leaves like an escape: neighbors turn, reveal or unlock. But it earns no escape points and doesn't extend the chain.
+- **Limited:** 1 Hammer per level (tunable), −400 points, no ★★ and no PERFECT. So it rescues a stuck player without trivializing puzzles.
+- Undo can revert a smash (it's in the history), but the Hammer stays spent.
+
+## Inventory
+
+- Owned boosters are saved (`inventory = {hint, hammer}`), and their counts are shown on the gameplay buttons.
+- Using a booster removes one.
+- With none left:
+  - **Hint** explains gently and pulses the coin pill.
+  - **Hammer** opens the Shop.
+- Neither interrupts play aggressively.
+
+## 100-level progression
+
+| Levels | Band | What makes it harder |
+|---|---|---|
+| 1–20 | onboarding → medium | tap, blocking, chains; spinners (9); mystery (10); locks (16) |
+| 21–40 | medium → hard | lock depth, spinner traps; CCW (31) and ALT (35) spinners |
+| 41–60 | hard | spinner + lock combinations; PATTERN spinner (52); all mechanics at 50 and 60 |
+| 61–70 | very hard | 2 starting moves, a trap at the start, mixed CCW/ALT spinners with locks |
+| 71–80 | advanced | ALT + PATTERN spinners in the same puzzle, 3 locks, 11–15 decision points |
+| 81–90 | expert | 7×7 boards, all four spinner rules together, deep dependency chains |
+| 91–99 | master-level | 15–19 decision points, depth up to 21, difficulty 50–61 |
+| 100 | **Master Level** | 7×7, 7 spinners (4 rules), 3 locks, 3 fair hidden arrows, 21 decision points, highest difficulty (67.7) |
+
+Difficulty comes from dependency depth, decision points, traps, spinner rules, locks and mystery reveals, not block count. Most late levels have 19–25 blocks, similar to level 40.
+
+The verifier additionally requires, from level 61:
+
+- at most 2 starting moves
+- depth ≥ 8
+- at least 4 decision points (misleading but fair options)
+
+Level 100 must combine 3+ spinner rules, locks and mystery, be fair, and have the highest difficulty score in the campaign.
+
+**Level 100 – The Master** has:
+
+- a gold-and-black theme, its own music and a crown in Level Select
+- the label "MASTER LEVEL" in place of "LEVEL 100"
+- on completion: a quadruple celebration burst, a "MASTER!" stamp, the Master jingle, a "MASTER CLEARED!" card, +300 coins and the `master` achievement
+
+**All 100 levels** (✦ = Mystery, 👑 = Master; from `tools/verify_levels.gd`):
+
+| # | W | Name | Size | Blocks | Spinners (rules) | Locks | Hidden | Start | Traps | Decisions | Depth | Diff | Band |
+|---|---|---|---|---|---|---|---|---|---|---|---|---|---|
+| 1 | 1 | First Steps | 3×3 | 3 | 0 | 0 | 0 | 3 | 0 | 0 | 1 | 1.5 | Onboarding→medium |
+| 2 | 1 | In The Way | 3×3 | 3 | 0 | 0 | 0 | 1 | 0 | 0 | 2 | 3.1 | Onboarding→medium |
+| 3 | 1 | One After Another | 3×3 | 3 | 0 | 0 | 0 | 1 | 0 | 0 | 3 | 3.8 | Onboarding→medium |
+| 4 | 1 | Around The Corner | 4×4 | 4 | 0 | 0 | 0 | 1 | 0 | 0 | 4 | 4.5 | Onboarding→medium |
+| 5 | 1 | Two Ways In | 4×4 | 6 | 0 | 0 | 0 | 2 | 0 | 0 | 3 | 3.7 | Onboarding→medium |
+| 6 | 1 | Rush Hour | 5×5 | 15 | 0 | 0 | 0 | 6 | 0 | 0 | 5 | 5.2 | Onboarding→medium |
+| 7 | 1 | Crossroads | 5×5 | 9 | 0 | 0 | 0 | 2 | 0 | 0 | 7 | 6.5 | Onboarding→medium |
+| 8 | 1 | Look Closer | 5×5 | 13 | 0 | 0 | 0 | 1 | 0 | 0 | 9 | 8.8 | Onboarding→medium |
+| 9 | 1 | Spinner | 4×4 | 4 | 1 | 0 | 0 | 1 | 0 | 0 | 3 | 4.4 | Onboarding→medium |
+| 10 ✦ | 1 | Hidden Arrow | 4×4 | 5 | 0 | 0 | 1 | 1 | 0 | 0 | 4 | 5.2 | Onboarding→medium |
+| 11 | 1 | Order Matters | 4×4 | 5 | 1 | 0 | 0 | 2 | 1 | 1 | 4 | 7.6 | Onboarding→medium |
+| 12 | 1 | Quarter Turn | 4×4 | 9 | 1 | 0 | 0 | 2 | 0 | 2 | 5 | 9.7 | Onboarding→medium |
+| 13 | 1 | Wrong Way | 4×4 | 11 | 1 | 0 | 0 | 3 | 1 | 2 | 8 | 12.2 | Onboarding→medium |
+| 14 | 1 | Pinwheel | 5×5 | 13 | 2 | 0 | 0 | 1 | 0 | 1 | 10 | 12.3 | Onboarding→medium |
+| 15 | 1 | Tight Squeeze | 4×4 | 10 | 1 | 0 | 0 | 3 | 1 | 3 | 7 | 13.4 | Onboarding→medium |
+| 16 | 1 | Locked | 4×4 | 5 | 0 | 1 | 0 | 2 | 0 | 0 | 4 | 5.0 | Onboarding→medium |
+| 17 | 1 | Second Thoughts | 5×5 | 14 | 2 | 0 | 0 | 2 | 0 | 2 | 11 | 14.5 | Onboarding→medium |
+| 18 | 1 | Key Colors | 4×4 | 9 | 0 | 2 | 0 | 1 | 0 | 0 | 7 | 8.7 | Onboarding→medium |
+| 19 | 1 | Crosswind | 5×5 | 15 | 2 | 0 | 0 | 3 | 0 | 4 | 11 | 17.9 | Onboarding→medium |
+| 20 ✦ | 1 | Fog | 5×5 | 11 | 0 | 0 | 3 | 1 | 0 | 0 | 8 | 9.8 | Onboarding→medium |
+| 21 | 2 | Knots | 5×5 | 13 | 2 | 0 | 0 | 3 | 0 | 6 | 9 | 20.2 | Medium→hard |
+| 22 | 2 | Padlocks | 5×5 | 11 | 0 | 2 | 0 | 1 | 0 | 0 | 11 | 11.3 | Medium→hard |
+| 23 | 2 | Clockwork | 5×5 | 16 | 3 | 0 | 0 | 3 | 1 | 4 | 13 | 20.8 | Medium→hard |
+| 24 | 2 | Combination | 5×5 | 12 | 0 | 3 | 0 | 1 | 0 | 0 | 10 | 11.7 | Medium→hard |
+| 25 | 2 | Gridlock | 6×6 | 20 | 3 | 0 | 0 | 3 | 0 | 4 | 14 | 21.0 | Medium→hard |
+| 26 | 2 | Master Key | 5×5 | 12 | 0 | 3 | 0 | 1 | 0 | 0 | 11 | 12.3 | Medium→hard |
+| 27 | 2 | Domino Line | 5×5 | 13 | 2 | 0 | 0 | 3 | 2 | 7 | 10 | 25.9 | Medium→hard |
+| 28 | 2 | Safe House | 5×5 | 16 | 0 | 2 | 0 | 2 | 0 | 0 | 13 | 12.8 | Medium→hard |
+| 29 | 2 | Traffic Jam | 6×6 | 19 | 4 | 0 | 0 | 2 | 1 | 6 | 14 | 26.6 | Medium→hard |
+| 30 ✦ | 2 | Smoke and Mirrors | 6×6 | 17 | 2 | 0 | 3 | 2 | 1 | 2 | 14 | 19.6 | Medium→hard |
+| 31 | 2 | Twisted Lanes | 6×6 | 15 | 3 (1 CCW) | 0 | 0 | 3 | 1 | 8 | 12 | 27.9 | Medium→hard |
+| 32 | 2 | Vault | 5×5 | 17 | 0 | 4 | 0 | 2 | 0 | 0 | 12 | 13.9 | Medium→hard |
+| 33 | 2 | Hairpin | 5×5 | 19 | 3 | 0 | 0 | 2 | 0 | 7 | 17 | 28.8 | Medium→hard |
+| 34 | 2 | Strongroom | 6×6 | 17 | 0 | 4 | 0 | 1 | 0 | 0 | 16 | 16.8 | Medium→hard |
+| 35 | 2 | Gearbox | 6×6 | 21 | 4 (1 ALT) | 0 | 0 | 2 | 1 | 9 | 13 | 32.6 | Medium→hard |
+| 36 | 2 | Spin the Lock | 6×6 | 15 | 3 | 2 | 0 | 2 | 1 | 6 | 12 | 26.0 | Medium→hard |
+| 37 | 2 | Rush Order | 6×6 | 19 | 4 | 0 | 0 | 2 | 1 | 11 | 13 | 35.5 | Medium→hard |
+| 38 | 2 | Tumblers | 6×6 | 17 | 2 | 2 | 0 | 2 | 0 | 7 | 12 | 26.7 | Medium→hard |
+| 39 | 2 | Labyrinth | 6×6 | 19 | 3 | 0 | 0 | 2 | 1 | 11 | 16 | 36.9 | Medium→hard |
+| 40 ✦ | 2 | Night Shift | 6×6 | 19 | 2 | 0 | 3 | 2 | 0 | 7 | 13 | 28.6 | Medium→hard |
+| 41 | 3 | Gatekeeper | 6×6 | 14 | 3 | 2 | 0 | 2 | 0 | 8 | 10 | 27.4 | Hard |
+| 42 | 3 | Whirlpool | 6×6 | 20 | 4 | 0 | 0 | 2 | 1 | 11 | 17 | 38.1 | Hard |
+| 43 | 3 | Turnstile | 6×6 | 18 | 3 | 2 | 0 | 2 | 1 | 6 | 15 | 28.2 | Hard |
+| 44 | 3 | Chain Reaction | 6×6 | 23 | 5 | 0 | 0 | 2 | 1 | 11 | 17 | 39.5 | Hard |
+| 45 | 3 | Deadbolt | 5×5 | 14 | 3 | 2 | 0 | 2 | 1 | 10 | 13 | 34.0 | Hard |
+| 46 | 3 | Key Ring | 6×6 | 20 | 4 | 3 | 0 | 2 | 1 | 8 | 16 | 34.2 | Hard |
+| 47 | 3 | Grand Tangle | 6×6 | 21 | 3 | 0 | 0 | 2 | 1 | 15 | 14 | 43.5 | Hard |
+| 48 | 3 | Lockstep | 6×6 | 20 | 4 | 2 | 0 | 2 | 1 | 9 | 15 | 34.7 | Hard |
+| 49 | 3 | Long Way Round | 6×6 | 18 | 0 | 3 | 0 | 1 | 0 | 0 | 18 | 17.4 | Hard |
+| 50 ✦ | 3 | Eclipse | 6×6 | 17 | 3 | 1 | 3 | 2 | 0 | 6 | 13 | 26.9 | Hard |
+| 51 | 3 | Great Escape | 6×7 | 25 | 6 | 0 | 0 | 2 | 1 | 14 | 22 | 48.6 | Hard |
+| 52 | 3 | Clockmaker | 6×6 | 22 | 5 (1 PAT) | 3 | 0 | 2 | 1 | 10 | 15 | 39.0 | Hard |
+| 53 | 3 | Escape Room | 6×6 | 20 | 5 | 3 | 0 | 2 | 1 | 10 | 16 | 38.5 | Hard |
+| 54 | 3 | Mechanism | 6×6 | 18 | 4 | 3 | 0 | 2 | 1 | 12 | 16 | 41.5 | Hard |
+| 55 | 3 | Cyclone | 6×7 | 22 | 6 | 0 | 0 | 2 | 1 | 8 | 17 | 33.7 | Hard |
+| 56 | 3 | Pressure | 6×7 | 22 | 5 | 3 | 0 | 2 | 1 | 11 | 17 | 41.3 | Hard |
+| 57 | 3 | Grand Vault | 6×6 | 23 | 5 | 3 | 0 | 2 | 1 | 12 | 17 | 43.4 | Hard |
+| 58 | 3 | Last Lock | 6×6 | 18 | 4 | 2 | 0 | 2 | 1 | 15 | 14 | 45.2 | Hard |
+| 59 | 3 | Final Turn | 6×6 | 21 | 4 | 2 | 0 | 2 | 1 | 16 | 20 | 51.1 | Hard |
+| 60 ✦ | 3 | The Last Secret | 6×6 | 22 | 4 | 2 | 4 | 2 | 0 | 10 | 15 | 38.3 | Hard |
+| 61 | 4 | Neon Gate | 6×6 | 21 | 4 (1 CCW) | 2 | 0 | 2 | 1 | 8 | 17 | 34.4 | Very hard |
+| 62 | 4 | Afterglow | 6×6 | 19 | 4 (2 CCW) | 2 | 0 | 2 | 1 | 9 | 15 | 35.2 | Very hard |
+| 63 | 4 | Static | 6×6 | 17 | 4 (2 CCW, 1 ALT) | 1 | 0 | 2 | 1 | 10 | 13 | 35.4 | Very hard |
+| 64 | 4 | Night Circuit | 6×6 | 17 | 4 (1 CCW) | 2 | 0 | 2 | 1 | 10 | 14 | 35.9 | Very hard |
+| 65 | 4 | Flicker | 6×6 | 20 | 4 (1 CCW, 1 ALT) | 2 | 0 | 2 | 1 | 9 | 16 | 36.2 | Very hard |
+| 66 | 4 | Voltage | 6×6 | 22 | 4 (1 CCW, 1 ALT) | 2 | 0 | 2 | 1 | 8 | 19 | 36.4 | Very hard |
+| 67 | 4 | Backspin | 6×6 | 20 | 4 (1 CCW) | 2 | 0 | 2 | 1 | 11 | 16 | 39.4 | Very hard |
+| 68 | 4 | Glowline | 6×6 | 22 | 4 (2 CCW, 1 ALT) | 2 | 0 | 2 | 1 | 12 | 14 | 41.3 | Very hard |
+| 69 | 4 | Prism | 6×6 | 18 | 3 (2 CCW, 1 ALT) | 2 | 0 | 2 | 1 | 15 | 13 | 45.3 | Very hard |
+| 70 ✦ | 4 | Blackout | 6×7 | 22 | 4 (1 ALT) | 2 | 5 | 2 | 0 | 8 | 14 | 35.1 | Very hard |
+| 71 | 4 | Overdrive | 6×6 | 19 | 5 (2 ALT, 1 PAT) | 3 | 0 | 2 | 1 | 12 | 15 | 43.6 | Advanced |
+| 72 | 4 | Synthwave | 6×6 | 22 | 5 (1 ALT, 1 PAT) | 2 | 0 | 2 | 1 | 12 | 17 | 43.8 | Advanced |
+| 73 | 4 | Pulse Lock | 6×7 | 21 | 5 (1 CCW, 2 ALT, 1 PAT) | 2 | 0 | 2 | 1 | 11 | 20 | 44.4 | Advanced |
+| 74 | 4 | Arcade | 6×7 | 23 | 5 (2 ALT, 1 PAT) | 3 | 0 | 2 | 1 | 11 | 19 | 44.6 | Advanced |
+| 75 | 4 | Relay | 6×6 | 22 | 5 (2 ALT, 1 PAT) | 2 | 0 | 2 | 1 | 12 | 18 | 45.0 | Advanced |
+| 76 | 4 | Dynamo | 6×7 | 20 | 5 (1 ALT, 1 PAT) | 2 | 0 | 2 | 1 | 14 | 15 | 46.1 | Advanced |
+| 77 | 4 | Feedback | 6×6 | 19 | 5 (1 ALT, 1 PAT) | 3 | 0 | 2 | 1 | 15 | 15 | 48.6 | Advanced |
+| 78 | 4 | Wavelength | 6×7 | 19 | 5 (1 CCW, 1 ALT, 1 PAT) | 3 | 0 | 2 | 1 | 15 | 16 | 49.5 | Advanced |
+| 79 | 4 | Hyperloop | 6×7 | 20 | 5 (1 CCW, 2 ALT, 1 PAT) | 2 | 0 | 2 | 1 | 15 | 19 | 51.3 | Advanced |
+| 80 ✦ | 4 | Dark Matter | 6×7 | 21 | 5 (1 CCW, 1 ALT, 1 PAT) | 3 | 4 | 2 | 0 | 13 | 17 | 48.0 | Advanced |
+| 81 | 5 | Summit Path | 6×7 | 23 | 6 (2 CCW, 2 ALT, 1 PAT) | 3 | 0 | 2 | 1 | 11 | 16 | 43.9 | Expert |
+| 82 | 5 | Thin Air | 7×7 | 21 | 5 (1 CCW, 2 ALT, 1 PAT) | 3 | 0 | 2 | 1 | 13 | 15 | 46.0 | Expert |
+| 83 | 5 | Ridge Line | 6×7 | 24 | 6 (1 CCW, 1 ALT, 1 PAT) | 2 | 0 | 2 | 1 | 12 | 20 | 46.7 | Expert |
+| 84 | 5 | Iron Crown | 7×7 | 22 | 6 (1 CCW, 2 ALT, 1 PAT) | 2 | 0 | 2 | 1 | 13 | 18 | 47.7 | Expert |
+| 85 | 5 | Avalanche | 7×7 | 22 | 6 (2 CCW, 1 ALT, 1 PAT) | 3 | 0 | 2 | 1 | 13 | 18 | 48.2 | Expert |
+| 86 | 5 | Glacier | 7×7 | 23 | 6 (1 CCW, 2 ALT, 1 PAT) | 3 | 0 | 2 | 1 | 13 | 18 | 48.6 | Expert |
+| 87 | 5 | Stormwatch | 6×7 | 23 | 6 (1 CCW, 2 ALT, 1 PAT) | 3 | 0 | 2 | 1 | 13 | 19 | 49.2 | Expert |
+| 88 | 5 | High Pass | 6×7 | 27 | 5 (2 CCW, 1 ALT, 1 PAT) | 3 | 0 | 2 | 1 | 13 | 20 | 49.6 | Expert |
+| 89 | 5 | Keystone | 7×7 | 21 | 6 (1 CCW, 1 ALT, 1 PAT) | 3 | 0 | 2 | 1 | 15 | 16 | 50.3 | Expert |
+| 90 ✦ | 5 | Eclipse Peak | 6×6 | 24 | 4 (1 CCW, 1 ALT, 1 PAT) | 3 | 5 | 2 | 0 | 13 | 21 | 51.0 | Expert |
+| 91 | 5 | Grandmaster | 7×7 | 23 | 6 (2 CCW, 2 ALT, 1 PAT) | 3 | 0 | 2 | 1 | 13 | 17 | 50.4 | Master-level |
+| 92 | 5 | Checkmate | 7×7 | 23 | 6 (1 CCW, 1 ALT, 1 PAT) | 3 | 0 | 2 | 1 | 14 | 19 | 50.5 | Master-level |
+| 93 | 5 | Gordian Knot | 7×7 | 27 | 6 (2 CCW, 1 ALT, 1 PAT) | 2 | 0 | 2 | 1 | 13 | 23 | 51.1 | Master-level |
+| 94 | 5 | Clockwork Crown | 7×7 | 26 | 6 (1 CCW, 1 ALT, 2 PAT) | 2 | 0 | 2 | 1 | 14 | 20 | 53.2 | Master-level |
+| 95 | 5 | Paradox | 7×7 | 23 | 5 (1 CCW, 1 ALT, 1 PAT) | 3 | 0 | 2 | 1 | 16 | 19 | 53.8 | Master-level |
+| 96 | 5 | Endgame | 7×7 | 22 | 6 (1 CCW, 2 ALT, 1 PAT) | 3 | 0 | 2 | 1 | 18 | 18 | 58.0 | Master-level |
+| 97 | 5 | Apex | 7×7 | 22 | 6 (1 CCW, 1 ALT, 1 PAT) | 2 | 0 | 2 | 1 | 19 | 18 | 58.5 | Master-level |
+| 98 | 5 | Zenith | 6×7 | 23 | 6 (1 CCW, 1 ALT, 2 PAT) | 3 | 0 | 2 | 1 | 19 | 18 | 61.0 | Master-level |
+| 99 | 5 | Last Light | 6×7 | 25 | 6 (2 CCW, 1 ALT, 1 PAT) | 2 | 0 | 2 | 1 | 19 | 21 | 61.1 | Master-level |
+| 100 👑 | 5 | The Master | 7×7 | 24 | 7 (1 CCW, 2 ALT, 2 PAT) | 3 | 3 | 2 | 1 | 21 | 19 | 67.7 | Master |
 
 ## Score rules (`scripts/core/score_rules.gd`)
 
@@ -39,7 +316,8 @@ The v0.3 goal is replayability and mastery: *"I understand the rules immediately
 | **PERFECT** | **+1000** |
 | Blocked or locked tap | −100 each |
 | Undo | −150 each |
-| Hint | −250 each |
+| Hint (free or booster) | −250 each |
+| Hammer booster | −400 each |
 
 - There's no time component in Classic mode.
 - Escape points are stored in the Undo snapshot, so an undone move also takes back its points. You can't farm points with Undo.
@@ -53,7 +331,7 @@ The defaults, overridable per level:
 | Star | Default rule |
 |---|---|
 | ★ | Complete the level |
-| ★★ | `no_hints`: complete without a Hint |
+| ★★ | `no_hints`: complete without a Hint or Hammer |
 | ★★★ | `perfect_or_score`: PERFECT, or a score ≥ the level's target |
 
 - Stars are cumulative: star 3 also needs star 2.
@@ -64,7 +342,7 @@ The defaults, overridable per level:
 
 ## PERFECT rules
 
-A PERFECT clear needs **no heart lost** (no blocked or locked tap), **no Undo** and **no Hint**. In onboarding levels without hearts, "no heart lost" means no blocked tap. It gives:
+A PERFECT clear needs **no heart lost** (no blocked or locked tap), **no Undo**, **no Hint** and **no Hammer**. In onboarding levels without hearts, "no heart lost" means no blocked tap. It gives:
 
 - +1000 points
 - a golden "PERFECT!" stamp over the board, a double celebration burst and a special jingle (the music ducks)
@@ -81,9 +359,10 @@ A PERFECT clear needs **no heart lost** (no blocked or locked tap), **no Undo** 
 
 ## Hint rules
 
-- Allowance per level: **levels 1–19: 0** · **20–29: 1** · **30+: 2**. A level can override this with `"hints": n`.
-- A hint highlights one recommended **legal** move that keeps the level solvable, with a pulsing two-tone ring. It never plays the move and never shows more than one move.
-- Each hint costs 250 points, removes the No-Hint bonus (and therefore star 2) and prevents PERFECT.
+- Free allowance per level: **levels 1–19: 0** · **20–29: 1** · **30+: 2**. A level can override this with `"hints": n`.
+- When the free hints are used up, the HINT button uses **Hint boosters** from the inventory.
+- A hint highlights one recommended **legal** move that keeps the level solvable. It never plays the move and never shows more than one.
+- Each hint costs 250 points, removes the No-Hint bonus (and therefore ★★) and prevents PERFECT.
 - If the board is already lost, Hint points to Undo instead, and nothing is spent.
 - **Debug mode** (F1, or `--debug`) has unlimited, free hints.
 
@@ -100,7 +379,7 @@ A PERFECT clear needs **no heart lost** (no blocked or locked tap), **no Undo** 
 
 ## Mystery levels
 
-- Levels **10, 20, 30, 40, 50 and 60**. They have a slightly deeper board tint, a purple **"? MYSTERY"** label, and a "?" marker in Level Select.
+- Levels **10, 20, 30, …, 90** (and the Master Level 100). They have a slightly deeper board tint, a purple **"? MYSTERY"** label, and a "?" marker in Level Select.
 - A hidden block shows its **color** but a **"?"** in place of its arrow, with a dashed inner border.
 - **Reveal rule:** the arrow is revealed as soon as **an orthogonally adjacent block escapes**, with a card-flip animation and a sparkle sound.
 - **A hidden block can't escape until it's revealed**, and tapping it is free: it wobbles and explains, with no heart lost and no penalty. So you never have to *guess* an arrow.
@@ -108,124 +387,32 @@ A PERFECT clear needs **no heart lost** (no blocked or locked tap), **no Undo** 
 - Mystery combines with other mechanics gradually:
   - 10 and 20: mystery only
   - 30 and 40: mystery + spinners
-  - 50 and 60: mystery + spinners + locks
+  - 50–90 and 100: mystery + spinners (including the new rules from 70) + locks
 - In level data it's written `Y>?`. Spinners and locked blocks can't be hidden.
 
-## Difficulty progression and verification
-
-The mechanics arrive gradually:
-
-- **1–15:** the original mechanics and spinners.
-- **16–35:** locked blocks are introduced (16), then used lock-only with growing depth up to 34.
-- **36–60:** spinner + lock combinations.
-- **46–60:** a few boards combine all three (50 and 60).
-- **Variety breathers:** lock-only 49 and spinner-only 42, 44, 47, 51 and 55 keep the late game from becoming one-note.
-
-`tools/verify_levels.gd` computes, for every level:
-
-- block count and board size
-- legal starting moves and starting traps
-- decision points
-- dependency depth
-- solution length
-- largest direction share
-- spinner, lock and hidden counts
-- the **impact** of each mechanic (difficulty with vs. without it; **ESS** = the level is unsolvable without it)
-- mystery fairness
-- a difficulty score
-
-The run fails if any campaign rule is broken:
-
-- Every level is solvable, and the solver didn't give up.
-- From level 21: at most 3 starting moves, depth ≥ 5, all 4 directions used, and no direction on more than 45% of blocks.
-- Every spinner, lock or mystery use must add difficulty (impact ≥ 0.5; mystery ≥ 0.3). No decoration.
-- Mystery levels must be fair.
-- From level 11, no two boards of the same size may be more than 60% alike.
-
-Locks on their own can't create *traps*: removing a block only ever unlocks. So lock-only levels add dependency depth and reading, while real ordering decisions come from spinner + lock combinations. That's why late levels mostly combine the two.
-
-Current result, all 60 levels (✦ = Mystery):
-
-| # | Name | Size | Blocks | Spin | Lock | Hidden | Start | Traps | Decisions | Depth | Diff | Band |
-|---|---|---|---|---|---|---|---|---|---|---|---|---|
-| 1 | First Steps | 3×3 | 3 | 0 | 0 | 0 | 3 | 0 | 0 | 1 | 1.5 | Onboarding |
-| 2 | In The Way | 3×3 | 3 | 0 | 0 | 0 | 1 | 0 | 0 | 2 | 3.1 | Onboarding |
-| 3 | One After Another | 3×3 | 3 | 0 | 0 | 0 | 1 | 0 | 0 | 3 | 3.8 | Onboarding |
-| 4 | Around The Corner | 4×4 | 4 | 0 | 0 | 0 | 1 | 0 | 0 | 4 | 4.5 | Onboarding |
-| 5 | Two Ways In | 4×4 | 6 | 0 | 0 | 0 | 2 | 0 | 0 | 3 | 3.7 | Onboarding |
-| 6 | Rush Hour | 5×5 | 15 | 0 | 0 | 0 | 6 | 0 | 0 | 5 | 5.2 | Easy |
-| 7 | Crossroads | 5×5 | 9 | 0 | 0 | 0 | 2 | 0 | 0 | 7 | 6.5 | Easy |
-| 8 | Look Closer | 5×5 | 13 | 0 | 0 | 0 | 1 | 0 | 0 | 9 | 8.8 | Easy |
-| 9 | Spinner | 4×4 | 4 | 1 | 0 | 0 | 1 | 0 | 0 | 3 | 4.4 | Easy |
-| 10 ✦ | Hidden Arrow | 4×4 | 5 | 0 | 0 | 1 | 1 | 0 | 0 | 4 | 5.2 | Easy |
-| 11 | Order Matters | 4×4 | 5 | 1 | 0 | 0 | 2 | 1 | 1 | 4 | 7.6 | Medium |
-| 12 | Quarter Turn | 4×4 | 9 | 1 | 0 | 0 | 2 | 0 | 2 | 5 | 9.7 | Medium |
-| 13 | Wrong Way | 4×4 | 11 | 1 | 0 | 0 | 3 | 1 | 2 | 8 | 12.2 | Medium |
-| 14 | Pinwheel | 5×5 | 13 | 2 | 0 | 0 | 1 | 0 | 1 | 10 | 12.3 | Medium |
-| 15 | Tight Squeeze | 4×4 | 10 | 1 | 0 | 0 | 3 | 1 | 3 | 7 | 13.4 | Medium |
-| 16 | Locked | 4×4 | 5 | 0 | 1 | 0 | 2 | 0 | 0 | 4 | 5.0 | Medium |
-| 17 | Second Thoughts | 5×5 | 14 | 2 | 0 | 0 | 2 | 0 | 2 | 11 | 14.5 | Medium |
-| 18 | Key Colors | 4×4 | 9 | 0 | 2 | 0 | 1 | 0 | 0 | 7 | 8.7 | Medium |
-| 19 | Crosswind | 5×5 | 15 | 2 | 0 | 0 | 3 | 0 | 4 | 11 | 17.9 | Medium |
-| 20 ✦ | Fog | 5×5 | 11 | 0 | 0 | 3 | 1 | 0 | 0 | 8 | 9.8 | Medium |
-| 21 | Knots | 5×5 | 13 | 2 | 0 | 0 | 3 | 0 | 6 | 9 | 20.2 | Medium-hard |
-| 22 | Padlocks | 5×5 | 11 | 0 | 2 | 0 | 1 | 0 | 0 | 11 | 11.3 | Medium-hard |
-| 23 | Clockwork | 5×5 | 16 | 3 | 0 | 0 | 3 | 1 | 4 | 13 | 20.8 | Medium-hard |
-| 24 | Combination | 5×5 | 12 | 0 | 3 | 0 | 1 | 0 | 0 | 10 | 11.7 | Medium-hard |
-| 25 | Gridlock | 6×6 | 20 | 3 | 0 | 0 | 3 | 0 | 4 | 14 | 21.0 | Medium-hard |
-| 26 | Master Key | 5×5 | 12 | 0 | 3 | 0 | 1 | 0 | 0 | 11 | 12.3 | Medium-hard |
-| 27 | Domino Line | 5×5 | 13 | 2 | 0 | 0 | 3 | 2 | 7 | 10 | 25.9 | Medium-hard |
-| 28 | Safe House | 5×5 | 16 | 0 | 2 | 0 | 2 | 0 | 0 | 13 | 12.8 | Medium-hard |
-| 29 | Traffic Jam | 6×6 | 19 | 4 | 0 | 0 | 2 | 1 | 6 | 14 | 26.6 | Medium-hard |
-| 30 ✦ | Smoke and Mirrors | 6×6 | 17 | 2 | 0 | 3 | 2 | 1 | 2 | 14 | 19.6 | Medium-hard |
-| 31 | Twisted Lanes | 6×6 | 15 | 3 | 0 | 0 | 3 | 1 | 8 | 12 | 27.6 | Hard |
-| 32 | Vault | 5×5 | 17 | 0 | 4 | 0 | 2 | 0 | 0 | 12 | 13.9 | Hard |
-| 33 | Hairpin | 5×5 | 19 | 3 | 0 | 0 | 2 | 0 | 7 | 17 | 28.8 | Hard |
-| 34 | Strongroom | 6×6 | 17 | 0 | 4 | 0 | 1 | 0 | 0 | 16 | 16.8 | Hard |
-| 35 | Gearbox | 6×6 | 21 | 4 | 0 | 0 | 2 | 1 | 9 | 13 | 32.0 | Hard |
-| 36 | Spin the Lock | 6×6 | 15 | 3 | 2 | 0 | 2 | 1 | 6 | 12 | 26.0 | Hard |
-| 37 | Rush Order | 6×6 | 19 | 4 | 0 | 0 | 2 | 1 | 11 | 13 | 35.5 | Hard |
-| 38 | Tumblers | 6×6 | 17 | 2 | 2 | 0 | 2 | 0 | 7 | 12 | 26.7 | Hard |
-| 39 | Labyrinth | 6×6 | 19 | 3 | 0 | 0 | 2 | 1 | 11 | 16 | 36.9 | Hard |
-| 40 ✦ | Night Shift | 6×6 | 19 | 2 | 0 | 3 | 2 | 0 | 7 | 13 | 28.6 | Hard |
-| 41 | Gatekeeper | 6×6 | 14 | 3 | 2 | 0 | 2 | 0 | 8 | 10 | 27.4 | Very hard |
-| 42 | Whirlpool | 6×6 | 20 | 4 | 0 | 0 | 2 | 1 | 11 | 17 | 38.1 | Very hard |
-| 43 | Turnstile | 6×6 | 18 | 3 | 2 | 0 | 2 | 1 | 6 | 15 | 28.2 | Very hard |
-| 44 | Chain Reaction | 6×6 | 23 | 5 | 0 | 0 | 2 | 1 | 11 | 17 | 39.5 | Very hard |
-| 45 | Deadbolt | 5×5 | 14 | 3 | 2 | 0 | 2 | 1 | 10 | 13 | 34.0 | Very hard |
-| 46 | Key Ring | 6×6 | 20 | 4 | 3 | 0 | 2 | 1 | 8 | 16 | 34.2 | Very hard |
-| 47 | Grand Tangle | 6×6 | 21 | 3 | 0 | 0 | 2 | 1 | 15 | 14 | 43.5 | Very hard |
-| 48 | Lockstep | 6×6 | 20 | 4 | 2 | 0 | 2 | 1 | 9 | 15 | 34.7 | Very hard |
-| 49 | Long Way Round | 6×6 | 18 | 0 | 3 | 0 | 1 | 0 | 0 | 18 | 17.4 | Very hard |
-| 50 ✦ | Eclipse | 6×6 | 17 | 3 | 1 | 3 | 2 | 0 | 6 | 13 | 26.9 | Very hard |
-| 51 | Great Escape | 6×7 | 25 | 6 | 0 | 0 | 2 | 1 | 14 | 22 | 48.6 | Expert |
-| 52 | Clockmaker | 6×6 | 22 | 5 | 3 | 0 | 2 | 1 | 10 | 15 | 38.2 | Expert |
-| 53 | Escape Room | 6×6 | 20 | 5 | 3 | 0 | 2 | 1 | 10 | 16 | 38.5 | Expert |
-| 54 | Mechanism | 6×6 | 18 | 4 | 3 | 0 | 2 | 1 | 12 | 16 | 41.5 | Expert |
-| 55 | Cyclone | 6×7 | 22 | 6 | 0 | 0 | 2 | 1 | 8 | 17 | 33.7 | Expert |
-| 56 | Pressure | 6×7 | 22 | 5 | 3 | 0 | 2 | 1 | 11 | 17 | 41.3 | Expert |
-| 57 | Grand Vault | 6×6 | 23 | 5 | 3 | 0 | 2 | 1 | 12 | 17 | 43.4 | Expert |
-| 58 | Last Lock | 6×6 | 18 | 4 | 2 | 0 | 2 | 1 | 15 | 14 | 45.2 | Expert |
-| 59 | Final Turn | 6×6 | 21 | 4 | 2 | 0 | 2 | 1 | 16 | 20 | 51.1 | Expert |
-| 60 ✦ | The Last Secret | 6×6 | 22 | 4 | 2 | 4 | 2 | 0 | 10 | 15 | 38.3 | Expert |
-
-## Level generator
+## Level generator (groundwork for 101+)
 
 ```bash
-godot --headless --path . --script res://tools/generate_levels.gd -- --profile=spin_lock_hard --count=3 --seed=7 [--out=user://generated]
+godot --headless --path . --script res://tools/generate_levels.gd -- --profile=w5_expert --count=3 --seed=7 [--out=user://generated]
 ```
 
-The pipeline is the same as v0.2 (reverse construction → hill-climbing → solver validation → metric rejection → repetition filter), plus:
+The pipeline:
 
-- **Mutations** that add, remove or re-key locks, recolor blocks (colors are keys), and hide or reveal arrows.
-- **Profiles:**
-  - v0.2: `easy`, `medium`, `medium_hard`, `hard`, `expert`
-  - locks: `lock_easy`, `lock_medium`, `lock_hard`
-  - combinations: `spin_lock`, `spin_lock_hard`, `spin_lock_expert`
-  - mystery: `mystery_medium`, `mystery_hard`, `mystery_expert`
-- **A final acceptance gate** (`LevelAnalysis`): a candidate is rejected if any mechanic it uses is decorative, or if a mystery isn't provably fair.
+1. Reverse construction (solvable by design).
+2. Hill-climbing mutations: arrows, spinners, **spinner rules**, locks, colors, hidden arrows.
+3. Solver validation.
+4. Metric rejection: start moves, direction diversity, depth, decision points, start traps, required mechanics and **required spinner rules**.
+5. Repetition filter.
+6. `LevelAnalysis` gate: no decorative mechanic, and every mystery is proven fair.
 
-Levels 18–60 that are new in v0.3 (all except the moved v0.2 levels and the handmade 10 and 16) were generated this way and curated by difficulty.
+Profiles:
+
+- v0.2 and v0.3 profiles, plus `w4_very_hard`, `w4_advanced`, `w5_expert`, `w5_master`, `w_mystery_late` and `master_100`.
+- `LevelGenerator.profile_for_level(n)` maps any level number, including **101+**, to a profile (every 10th is a mystery).
+- `target_difficulty(n)` gives the accepted difficulty band for that slot.
+- `generate_for_level(n)` combines both.
+
+Generated levels are written to a separate folder for human curation, never released automatically. Levels 61–100 were produced this way and curated by difficulty; one candidate (difficulty 75.2) was set aside because it was harder than the Master Level.
 
 ---
 
@@ -239,7 +426,7 @@ The desktop window opens at phone proportions (405×720). Mouse clicks are treat
 
 ```bash
 godot --path .                                  # play
-godot --path . -- --level=40                    # start directly on level 40
+godot --path . -- --level=40                    # start directly on level 40 (skips the title)
 godot --path . -- --debug                       # start with the debug panel open (unlimited hints)
 ```
 
@@ -249,7 +436,9 @@ godot --path . -- --debug                       # start with the debug panel ope
 |---|---|
 | Escape a block | Tap it |
 | Undo (3 per level) | **UNDO**. The badge shows the uses left. |
-| Hint (0–2 per level) | **HINT**. The badge shows hints left for this level (∞ in debug). |
+| Hint | **HINT**. The badge shows free hints left + owned boosters, e.g. `1+2` (∞ in debug). |
+| Hammer | **HAMMER**, then tap a block. The badge shows owned Hammers. |
+| Shop | Tap the coin pill (under the gear) |
 | Level Select | Grid icon, top left |
 | Restart level | **RESTART** |
 | Settings | Gear icon, top right |
@@ -258,12 +447,7 @@ godot --path . -- --debug                       # start with the debug panel ope
 
 ### Saved progress
 
-Saved in `user://progress.cfg`:
-
-- current level
-- highest completed level
-- best score and best stars for every level
-- Music / Sound Effects / Vibration settings
+See **Save / Continue** above for what is saved and how.
 
 ### Export to mobile
 
@@ -271,7 +455,10 @@ The project uses the **Compatibility** renderer, a portrait orientation and `can
 
 1. *Editor → Manage Export Templates* → download the templates for your version.
 2. *Project → Export → Add…* → **Android** (needs the Android SDK and a debug keystore) or **iOS** (needs macOS + Xcode).
-3. Levels are plain JSON. Godot 4 exports `.json` automatically, but if levels are missing in a build, add `levels/*.json` under *Export → Resources → Filters to export non-resource files*.
+3. **Web:** `export_presets.cfg` has a ready **Web** preset (single-threaded, so it runs without special server headers). Run `godot --headless --path . --export-release "Web" build/web/index.html`, then serve `build/web/` over HTTP.
+4. Levels are plain JSON. Godot 4 exports `.json` automatically, but if levels are missing in a build, add `levels/*.json` under *Export → Resources → Filters to export non-resource files*.
+
+---
 
 ---
 
@@ -283,80 +470,87 @@ Run `godot --headless --path . --import` once on a fresh checkout so Godot regis
 
 ```bash
 godot --headless --path . --script res://tools/run_tests.gd        # unit tests
-godot --headless --path . --script res://tools/verify_levels.gd    # 60-level analysis + campaign rules
+godot --headless --path . --script res://tools/verify_levels.gd    # 100-level analysis + campaign rules
 godot --headless --path . res://tools/Playtest.tscn                # end-to-end play-through
+godot --headless --path . --export-release "Web" build/web/index.html && node tools/web_audio_test.mjs   # real browser
 ```
 
-**Unit tests** (`run_tests.gd`) cover:
+**Unit tests** (`run_tests.gd`) cover everything since v0.1, plus:
 
-- directions and spinner turning
-- undo snapshots (spinners, locks and hidden arrows)
-- solver trap detection
-- **lock / unlock** in the model and solver, and a lock facing its only key being unsolvable
-- **mystery reveal**, re-hiding on Undo, and fairness: the intro level is fair, and a deliberately unfair board is rejected
-- **score arithmetic**, PERFECT, and default and data-driven **stars**
-- **best score / stars / progress persistence**
-- all levels solvable
-- **hint safety**: 3 random (often bad) play-throughs of every level. On every state, the hint must be legal and keep the board solvable, and no hint may be offered on a lost board.
-- the generator
+- spinner rule sequences (fixed, never random) and exact undo inverses
+- the model and solver agreeing turn by turn on every typed-spinner level
+- **save migration** v1→v2, unknown keys preserved, the save version, and the damaged-file fallback
+- coin rewards (only improvements pay; harder Worlds pay more)
+- chests: a threshold, pay-once, and still unclaimable twice after a restart
+- the Shop: prices, affordability, inventory persistence
+- **Hammer safety** on real states from 7 levels: every accepted smash replays to an empty board, and unsafe smashes are detected
+- the World and music mapping, and generator profiles for 101+
+- hint safety across all 100 levels
 
-**Playtest** (`Playtest.tscn`) plays every level through the real scene with injected touches. Per level:
+**Playtest** (`Playtest.tscn`) clears **all 100 levels** through the real scene with injected touches. Per level it does a blocked tap, a hint where allowed, an Undo, a solver-driven clear, and checks the complete card with score, stars and coins. It also runs these scenarios:
 
-- a blocked tap: chain reset, and a heart lost from level 6
-- a hint where allowed: legal, keeps the board solvable, highlighted, not auto-played, counted
-- an Undo: block, directions, hidden arrows and locks restored; the count goes up
-- clearing the board by following the solver, then the complete card with score, stars and the best saved
+- **Web audio gate**, simulated in-engine.
+- **World transitions:** theme, background, music and banner for 21, 45, 70, 90 and 100.
+- **Level Select:** grouped into 5 Worlds.
+- **Shop and Hammer:** an empty inventory opens the Shop, coins are spent, an unsafe smash is rejected and not consumed, a safe smash works, one per level, and no PERFECT.
+- **Hint booster** when no free hints are left.
+- **Coins:** paid for a first clear, nothing for a replay.
+- **Chests:** a claim can't be duplicated and is persisted.
+- **Master Level:** the achievement is recorded.
+- **Relaunch:** a genuine restart. The game is freed and rebuilt from the save file, the title shows **CONTINUE – LEVEL 57**, and coins, boosters, stars, bests, chests, Worlds and settings are all restored.
+- The v0.3 scenarios: PERFECT, bests, Replay, Undo/Hint limits, locks, mystery, hearts, Restart and a trap.
 
-Plus these scenarios:
+**Web audio test** (`tools/web_audio_test.mjs`): the exported Web build in Chromium with mobile emulation (Pixel 7 viewport, touch) and the strict `document-user-activation-required` autoplay policy. It checks, on a first visit and after a reload:
 
-- **PERFECT** gives exactly `max_score` and ★★★. A worse replay keeps the best, and it's persisted to disk.
-- **Replay** restarts the same level.
-- **Level Select** opens with every level, and choosing a level starts it.
-- **Undo limit:** the 4th Undo is refused and the button is disabled.
-- **Hint limits:** 0 / 1 / 2 by band, and unlimited in debug.
-- **Locked block:** tapping it is a mistake; the unlock animation clears the padlock.
-- **Mystery:** tapping a hidden block is free, and the arrow is revealed on screen.
-- the out-of-hearts flow, Restart, and a spinner trap → stuck → Undo recovery
-- every level's best score persisted
+- no music before the first interaction
+- one touch-tap unlocks audio and starts the music
+- an AudioContext is running
+- the music is still playing seconds later
 
-**Current results (v0.3):**
+**Current results (v0.4):**
 
 | Check | Result |
 |---|---|
-| Unit tests | `UNIT TESTS PASSED`: 4,418 checks, 0 failures |
-| Level verifier | `ALL 60 LEVELS SOLVABLE AND PASS CAMPAIGN RULES`. All 6 Mystery levels are proven fair. Every mechanic use adds difficulty. |
-| Playtest | `PLAYTEST PASSED`: all 60 levels cleared through real touch input, plus the PERFECT, bests, Replay, Level Select, Undo/Hint limits, lock, mystery, hearts, Restart and trap scenarios |
-| Rendering | Checked at portrait 9:16 (720×1280) with screenshots of the HUD, locks, mystery levels, the complete/PERFECT cards and Level Select |
+| Unit tests | `UNIT TESTS PASSED`: 9,423 checks, 0 failures |
+| Level verifier | `ALL 100 LEVELS SOLVABLE AND PASS CAMPAIGN RULES`. All 10 mystery levels are proven fair. Level 100 is the hardest (67.7). Levels 31, 35 and 52 still pass after their spinner-rule changes. |
+| Playtest | `PLAYTEST PASSED`: all 100 levels cleared through real touch input, plus 17 scenarios (save/continue relaunch, Worlds and music, web audio gate, coins, chests, Shop, Hammer, Hint booster, Master Level, and the v0.3 systems) |
+| Web audio (real browser) | `WEB AUDIO TEST PASSED`: 12 checks on the exported Web build (Chromium, mobile emulation, strict autoplay), on a first visit and after a reload |
+| Rendering | Screenshots at 720×1280 of the title, all 5 Worlds, the Master Level, the Shop and a World-grouped Level Select |
 
-The tests write progress to separate files (`user://test_progress.cfg`, `user://playtest_progress.cfg`), never to the player's.
+The tests write progress to separate files (`user://test_*.cfg`, `user://playtest_progress.cfg`), never to the player's save.
 
 ---
 
 ## Project structure
 
 ```
-levels/level_01..60.json      Level data (map form; modifiers @ spinner, ? hidden, #K locked by color K)
+data/economy.json             Tunable economy (prices, rewards, chest tiers, hammer limit)
+levels/level_01..100.json     Level data (map tokens: @ @- @~ @* spinners, ? hidden, #K locked)
+assets/audio/music_*.wav      Six generated music themes (w1..w5, master)
+export_presets.cfg            Web export preset
 scripts/
-  game_manager.gd             Orchestration: rules, history, hearts, undo/hint limits, score, stars, level select
+  game_manager.gd             Orchestration: title/continue, worlds, rules, history, hearts, limits,
+                              score, stars, coins, chests, shop, boosters, master level
   core/
-    board_model.gd            Rules: lanes, spinners, locks (color counts), hidden arrows, snapshots
-    solver.gd                 Search solver: solve, recommend_move (hints), analyze, mystery_fairness
-    level_analysis.gd         Per-level report incl. mechanic impact + fairness (verifier / generator)
-    score_rules.gd            Score, PERFECT and data-driven star rules
-    player_progress.gd        Saved progress, best score + stars per level, settings
-    level_generator.gd        Prototype generator (construct, refine, validate, score, reject)
-    level_manager.gd          Loads/parses/serializes JSON levels (tokens with @ ? #K)
-    block_data.gd / level_data.gd / direction.gd / history.gd
-    board.gd / block_view.gd  Board and block visuals (padlock, "?" arrows, reveal/unlock animations, score pop-ups)
-    escape_ghost.gd
+    block_data.gd             Block data incl. spinner rule + step (deterministic turns)
+    board_model.gd            Rules: lanes, spinners, locks, hidden arrows, snapshots
+    solver.gd                 Search solver (spinner rules in the memo key), hints, analysis, fairness
+    level_analysis.gd         Mechanic impact + fairness report
+    level_generator.gd        Generator: profiles, spinner rules, 101+ mapping, target difficulty
+    economy.gd                Coin rewards, chests, shop (reads data/economy.json)
+    player_progress.gd        Versioned save v2: migration, atomic write, backup
+    worlds.gd                 World themes + Master theme
+    score_rules.gd / level_manager.gd / level_data.gd / direction.gd / history.gd
+    board.gd / block_view.gd  Board + blocks (spinner rule badges, hammer smash, locks, reveals)
   ui/
-    ui_manager.gd             HUD, Undo/Hint badges, complete card (score, stars, best), PERFECT stamp, settings
-    level_select.gd           Level grid (stars, locked/completed, Mystery marker)
-    stars_row.gd / shapes.gd  Star widgets
-    hearts_bar.gd / pill_button.gd / progress_bar.gd / tutorial_hint.gd / palette.gd
-  audio/ audio_manager.gd, haptics.gd
-  debug/ debug_panel.gd
-tools/ run_tests.gd, verify_levels.gd, Playtest.tscn, generate_levels.gd, Capture.tscn, generate_music.py
+    ui_manager.gd             HUD, 4-button bar, coin pill, world banner, cards, stamps, settings
+    title_screen.gd           CONTINUE - LEVEL X / PLAY + LEVEL SELECT
+    level_select.gd           World-grouped grid, chest rows, Mystery marker, Master crown
+    shop_panel.gd / coin_pill.gd / world_background.gd
+    stars_row.gd / shapes.gd / hearts_bar.gd / pill_button.gd / progress_bar.gd / tutorial_hint.gd / palette.gd
+  audio/ audio_manager.gd (themes, cross-fades, web unlock), haptics.gd
+tools/ run_tests.gd, verify_levels.gd, Playtest.tscn, Capture.tscn, generate_levels.gd,
+       generate_music.py, web_audio_test.mjs
 ```
 
 ## Architecture
@@ -404,7 +598,7 @@ One JSON file per level: `levels/level_NN.json`, discovered by number.
 }
 ```
 
-Each cell is `.` (empty) or a color letter + arrow, then optional modifiers in this order: `@` spinner, `?` hidden arrow (mystery), `#K` locked by color K. For example: `B>`, `R^@`, `Y<?`, `G>#P`, `B>@#R`.
+Each cell is `.` (empty) or a color letter + arrow, then optional modifiers in this order: `@` spinner (`@` clockwise, `@-` counter-clockwise, `@~` alternating, `@*` pattern), `?` hidden arrow (mystery), `#K` locked by color K. For example: `B>`, `R^@`, `R^@~`, `Y<?`, `G>#P`, `B>@*#R`.
 
 - Colors: `R` red, `B` blue, `G` green, `Y` yellow, `P` purple.
 - Arrows: `^` up, `v` down, `<` left, `>` right.
@@ -413,7 +607,7 @@ Each cell is `.` (empty) or a color letter + arrow, then optional modifiers in t
 
 ```json
 { "rows": 4, "columns": 4,
-  "blocks": [ { "row": 1, "column": 2, "color": "red", "direction": "up", "spinner": true, "lock": "green", "hidden": false } ] }
+  "blocks": [ { "row": 1, "column": 2, "color": "red", "direction": "up", "spinner": true, "spin": "alt", "lock": "green", "hidden": false } ] }
 ```
 
 Optional level keys:
@@ -423,59 +617,24 @@ Optional level keys:
 - `stars` (star rules)
 - `hearts`, `hint`, `hint_finger`, `blocked_hint`
 
-## Audio
-
-Sound hooks:
-
-- `play_escape(chain)`
-- `play_invalid()`
-- `play_combo(chain)`
-- `play_level_complete()` (also ducks the music)
-- `play_turn()`
-- `play_heart_lost()`
-- `play_hint()`
-- `play_try_again()`
-- `play_ui_tap()`
-- `play_undo()`
-- `play_unlock()`
-- `play_reveal()`
-- `play_star(i)`
-- `play_perfect()` (also ducks the music)
-- `play_new_best()`
-
-The placeholder sounds are synthesized at startup.
-
-**Music.** `assets/audio/music.wav` is generated by `tools/generate_music.py`: 96 BPM, maj7 progression, pad + pluck arpeggio + bass + soft kick/shaker. It's rendered in a circular buffer, so the loop is sample-seamless, with WAV loop points embedded. It plays at −15 dB on its own `Music` bus and dips 8 dB during the level-complete jingle.
-
-**Replacing audio.** Put a file named after the sound id in `assets/audio/`, and it's picked up automatically:
-
-- `escape`, `invalid`, `combo`, `level_complete`, `turn`, `heart_lost`, `hint`, `try_again`, `ui_tap`, `undo`
-- `unlock`, `reveal`, `star`, `perfect`, `new_best`
-- `music` for the background track
-
-`.ogg`, `.wav` and `.mp3` all work.
-
----
-
 ---
 
 ## Known limitations
 
-- **Lock-only levels can't create traps.** Removing a block only ever unlocks, so lock-only boards add depth and reading but not ordering *consequences*. Real ordering decisions come from spinner + lock combinations. That's why lock-only levels have lower difficulty scores than their neighbors (for example 32, 34 and 49).
-- **Locks depend on color.** Arrows and spinners are identified by shape, but a lock's key is a color. The padlock is drawn in the key color, and tapping a lock makes every key block hop, but color-blind players may still find some boards harder. A future "symbol per color" option would fix this.
-- **Mystery fairness is checked along the solver's solution path**, not every reachable state. It guarantees a fair line of play exists, not that every detour is equally informative.
-- **Generated levels were curated by metrics and screenshots**, not by human playtests. Some expert boards have 20+ moves with long dependency chains.
-- **Progress from v0.2 carries over by level number,** but levels were renumbered (v0.2 levels moved to new slots), so old saves may unlock a slightly different set. v0.2 hint tokens are no longer used.
-- **The 3-star target is automatic** (`max_score − 1500`) unless a level sets one. It hasn't been tuned per level.
-- **Solver node limit (60k).** All 60 levels solve far below it.
-- **Placeholder audio.** Music and sound effects are generated placeholders. The UI uses the device's system font (DejaVu Sans on desktop Linux).
-- **Headless runs print an exit warning** (`music.wav still in use` / `ObjectDB leaked`). It comes from the dummy audio driver and is harmless.
-- **Not yet tested on physical devices.** It was verified by automated play-throughs and rendered screenshots at 9:16, 19.5:9 and a wider ratio.
+- **Real iOS Safari was not tested.** The web audio test uses Chromium's strict autoplay policy with mobile emulation. Under Playwright, navigation marks the page as "user-activated", so the *browser-level* pre-tap state can't be asserted there. The *game-level* gate (no music before the first real input, music started inside that input) is verified in the browser and in-engine. Please confirm on a real iPhone and Android phone.
+- **Web saves** live in the browser's IndexedDB (`user://`). Clearing site data or private browsing loses progress. There are no accounts or cloud sync (not in scope).
+- **Economy values are first guesses** (`data/economy.json`), not tuned with players.
+- **Locks depend on color.** The padlock, the key blocks' hop and the solver make them readable, but color-blind players may still find some lock boards harder. A symbol-per-color option is future work.
+- **Generated levels (18–100) were curated by metrics and screenshots**, not by human playtests. Worlds 4–5 are long, planning-heavy boards (19–27 blocks, depth up to 24).
+- **Mystery fairness** is proven along the solver's solution line, not for every possible detour.
+- **Level renumbering:** v0.3 kept levels 1–60 in place, so v0.3 saves carry over cleanly. Only levels 31, 35 and 52 changed: one spinner each became a new rule.
+- **Placeholder audio.** Music and sound effects are generated placeholders. The UI uses the system font.
+- **Headless runs print an exit warning** about leaked audio resources. It comes from the dummy audio driver and is harmless.
 
 ## Recommended next steps
 
-1. **Playtest v0.3 with the same group.** Do players chase stars and replay? Is the lock rule obvious from level 16 alone? Do the Mystery levels feel like "uncovering"?
-2. **Tune 3-star targets per level** from real score distributions.
-3. **Color-independent lock keys** (symbols per color) for accessibility.
-4. **Stronger lock-only puzzles:** a second lock condition (a future version) could create lock traps.
-5. **Only then** consider Daily Challenge, leaderboards and the image-reveal collection.
+1. **Playtest v0.4 on real phones and mobile browsers.** Check the title → Continue flow, the first-tap music, whether the World changes feel like progress, and how often players use the Hammer.
+2. **Tune the economy** (`data/economy.json`) from real coin income and spending, and consider more booster types only if they add fun.
+3. **Human-curate Worlds 4–5**: re-order or replace boards that feel grindy.
+4. **Real music and SFX** per World (drop-in `music_w*.ogg`).
+5. **Then** the future phases: Daily Challenge (the generator's `generate_for_level` and a date seed), leaderboards, and store billing.

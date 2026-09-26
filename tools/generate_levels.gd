@@ -33,8 +33,8 @@ func _initialize() -> void:
 		level.name = "%s %d" % [args["profile"].capitalize(), made]
 		var m := gen.last_metrics
 		level.mystery = m.get("hidden", 0) > 0
-		print("# %s  %dx%d blocks=%d spinners=%d locks=%d hidden=%d start_moves=%d start_traps=%d decisions=%d traps=%d depth=%d dir_share=%.2f difficulty=%.1f" % [
-			level.name, level.columns, level.rows, m["blocks"], m["spinners"], m.get("locks", 0), m.get("hidden", 0),
+		print("# %s  %dx%d blocks=%d spinners=%d ccw=%d alt=%d pat=%d locks=%d hidden=%d start_moves=%d start_traps=%d decisions=%d traps=%d depth=%d dir_share=%.2f difficulty=%.1f" % [
+			level.name, level.columns, level.rows, m["blocks"], m["spinners"], m["rule_ccw"], m["rule_alt"], m["rule_pattern"], m.get("locks", 0), m.get("hidden", 0),
 			m["start_moves"], m["start_traps"], m["decision_points"], m["trap_moves"], m["depth"], m["direction_share"], m["difficulty"]])
 		var text := LevelManager.to_json_text(level)
 		print(text)

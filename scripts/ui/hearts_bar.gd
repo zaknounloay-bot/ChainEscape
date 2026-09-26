@@ -7,6 +7,8 @@ const HEART_SIZE := 34.0
 const GAP := 12.0
 
 var max_hearts: int = 3
+## Color of lost-heart outlines (lighter on dark Worlds).
+var empty_color: Color = Palette.SLOT
 var hearts: int = 3
 ## Per-heart animation state: scale, y offset, alpha of the "falling" copy.
 var _pop := [1.0, 1.0, 1.0]
@@ -63,7 +65,7 @@ func _draw() -> void:
 			_draw_heart(c, s, Palette.HEART)
 			_draw_heart(c + Vector2(-s * 0.14, -s * 0.12), s * 0.28, Color(1, 1, 1, 0.45))  # shine
 		else:
-			_draw_heart(c, s, Palette.SLOT)
+			_draw_heart(c, s, empty_color)
 			if _fall_alpha[i] > 0.0:
 				_draw_heart(c + Vector2(0, _fall[i]), s, Color(Palette.HEART, _fall_alpha[i]))
 

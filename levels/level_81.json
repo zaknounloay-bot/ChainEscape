@@ -1,0 +1,12 @@
+{
+	"name": "Summit Path",
+	"map": [
+		".     G^#Y  .     .     .     .",
+		".     Yv@   G<@~  .     .     R^#G",
+		".     P^    Y>@*  P^    R>    Bv",
+		".     G>    Bv    Bv    .     .",
+		"Y>@-  B<    .     .     B^#P  Gv",
+		"Yv    .     R<    Gv    P<    P^@~",
+		"G>@-  .     .     R>    .     ."
+	]
+}
