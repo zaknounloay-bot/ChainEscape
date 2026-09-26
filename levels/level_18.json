@@ -1,10 +1,9 @@
 {
-	"name": "Clockwork",
+	"name": "Key Colors",
 	"map": [
-		"P^  Y<  P<  .   .",
-		"Gv  R<  Gv  R<@ P<",
-		".   B>  .   .   G^",
-		"Pv  .   Gv  .   .",
-		"Y>@ B>  Yv@ G>  ."
+		"B>    .     .     G^",
+		"G^    Y<    P>#Y  .",
+		".     Pv#G  .     R<",
+		"G^    .     Y<    ."
 	]
 }

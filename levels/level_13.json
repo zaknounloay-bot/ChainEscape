@@ -1,10 +1,9 @@
 {
-	"name": "Pinwheel",
+	"name": "Wrong Way",
 	"map": [
-		".   Bv  Y<@ .   G<",
-		".   Yv  G<  Y<  .",
-		"R>  .   .   G^  .",
-		".   .   Bv@ .   .",
-		".   Gv  R>  P^  Y^"
+		"Rv  .   Y^  R<",
+		"B>  R>  .   Gv",
+		".   .   Yv  B<",
+		"P>  .   Bv@ P>"
 	]
 }

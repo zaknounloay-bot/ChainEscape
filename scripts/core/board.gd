@@ -15,6 +15,11 @@ var rows: int = 0
 var columns: int = 0
 var cell_size: float = 100.0
 var input_enabled: bool = true
+## Mystery levels get a slightly deeper board tint.
+var mystery: bool = false:
+	set(v):
+		mystery = v
+		queue_redraw()
 var show_coords: bool = false:
 	set(v):
 		show_coords = v
@@ -119,6 +124,8 @@ func _draw() -> void:
 	if rows == 0:
 		return
 	var pad := PADDING_CELLS * cell_size
+	_panel_style.bg_color = Palette.BOARD_MYSTERY if mystery else Palette.BOARD
+	_slot_style.bg_color = Palette.SLOT_MYSTERY if mystery else Palette.SLOT
 	_panel_style.set_corner_radius_all(int(cell_size * 0.28))
 	_panel_style.draw(get_canvas_item(), Rect2(Vector2(-pad, -pad), Vector2(columns, rows) * cell_size + Vector2(pad, pad) * 2.0))
 	_slot_style.set_corner_radius_all(int(cell_size * 0.18))
@@ -224,9 +231,71 @@ func sync_to(blocks: Array) -> void:
 			if existing.data.direction != wanted[id].direction:
 				# A spinner turned back by Undo.
 				existing.play_turn(wanted[id].direction, false)
+			if existing.data.hidden != wanted[id].hidden:
+				# A mystery arrow hidden again by Undo.
+				existing.data.hidden = wanted[id].hidden
+				existing.queue_redraw()
 			continue
 		var view := _create_view(wanted[id])
 		view.play_return(_offscreen_point(view.home, Direction.vector(view.data.direction)).lerp(view.home, 0.55))
+
+
+## Shows every view's padlock according to the model (no animation).
+func refresh_locks(model: BoardModel) -> void:
+	for id in _views:
+		_views[id].set_locked(model.is_locked(id), false)
+
+
+func play_unlocks(ids: Array) -> void:
+	for id in ids:
+		var v: BlockView = _views.get(id)
+		if v:
+			v.set_locked(false, true)
+			_burst(v.home, Vector2.UP, Palette.face(v.data.lock_color), 12, 1.0, 180.0)
+
+
+func play_reveals(ids: Array) -> void:
+	for i in ids.size():
+		var v: BlockView = _views.get(ids[i])
+		if v:
+			v.play_reveal()
+
+
+## Locked block tapped: rattle it and make its key blocks hop.
+func play_locked_tap(id: int, key_ids: Array) -> void:
+	var v: BlockView = _views.get(id)
+	if v:
+		v.play_rattle()
+	for i in key_ids.size():
+		var k: BlockView = _views.get(key_ids[i])
+		if k:
+			k.play_key_pulse(0.05 * i)
+
+
+## Hidden block tapped: small wobble (not a mistake).
+func play_hidden_tap(id: int) -> void:
+	var v: BlockView = _views.get(id)
+	if v:
+		v.play_key_pulse()
+
+
+## Floating "+120" at a block's position.
+func show_points(at_local: Vector2, text: String, color: Color = Palette.ACCENT) -> void:
+	var l := Label.new()
+	l.text = text
+	l.add_theme_font_override("font", Palette.font(900))
+	l.add_theme_font_size_override("font_size", int(clampf(cell_size * 0.3, 22, 38)))
+	l.add_theme_color_override("font_color", color)
+	l.add_theme_color_override("font_outline_color", Palette.WHITE)
+	l.add_theme_constant_override("outline_size", 6)
+	l.z_index = 40
+	_fx_root.add_child(l)
+	l.reset_size()
+	l.position = at_local - l.size * 0.5
+	var t := l.create_tween()
+	t.tween_property(l, "position:y", l.position.y - cell_size * 0.7, 0.7).set_trans(Tween.TRANS_CUBIC).set_ease(Tween.EASE_OUT)
+	t.parallel().tween_property(l, "modulate:a", 0.0, 0.3).set_delay(0.4)
+	t.tween_callback(l.queue_free)
 
 
 ## Highlights one block as the hint (clears any previous highlight).

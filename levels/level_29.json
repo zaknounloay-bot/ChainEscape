@@ -1,11 +1,11 @@
 {
-	"name": "Grand Tangle",
+	"name": "Traffic Jam",
 	"map": [
-		"R>  .   .   Rv  Yv  .",
-		".   Y^@ .   .   .   G<",
-		".   R<  .   Y>  Bv  R^",
-		"Y^@ G^  P<  Gv  Rv  .",
-		".   .   R^  .   B>  Y^",
-		"G^  .   .   B>  Y>  B<@"
+		".   .   .   .   Rv@ G<",
+		"G^  B<  Pv  .   Yv  .",
+		".   .   G>  P>  .   Rv",
+		"Pv  B^  .   .   Y<  .",
+		"B>  .   Y^@ .   B>  P>",
+		".   R^@ B<  .   .   R<@"
 	]
 }

@@ -1,10 +1,11 @@
 {
-	"name": "Domino Line",
+	"name": "Fog",
+	"mystery": true,
 	"map": [
-		".   B>@ .   G>  P>",
-		".   G<  .   Y<  .",
-		"Y>  .   .   .   Gv",
-		"B^  .   .   R^  Yv",
-		".   R^@ Pv  .   B<"
+		".    Y<   G>?  .    .",
+		".    R^   Y<   Yv?  .",
+		".    .    G<?  .    B<",
+		".    .    .    .    .",
+		"R>   .    B^   Y>   G^"
 	]
 }

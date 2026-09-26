@@ -8,6 +8,9 @@ signal undo_pressed
 signal restart_pressed
 signal next_pressed
 signal hint_pressed
+signal replay_pressed
+signal level_chosen(number: int)
+signal levels_opened  # GameManager fills the grid via open_level_select()
 signal setting_toggled(key: String, on: bool)  # "music" | "sfx" | "haptics"
 signal title_tapped  # used as a hidden debug gesture on devices
 
@@ -30,7 +33,15 @@ var _settings_button: PillButton
 var _settings_overlay: ColorRect
 var _setting_buttons: Dictionary = {}  # key -> PillButton
 var _settings: Dictionary = {"music": true, "sfx": true, "haptics": true}
-var _card_reward: Label
+var _card_reward: Label  # "NEW BEST!" / "BEST 1234"
+var _card_score: Label
+var _card_stars: StarsRow
+var _card_buttons: HBoxContainer
+var _replay_button: PillButton
+var _card_style: StyleBoxFlat
+var _levels_button: PillButton
+var _level_select: LevelSelect
+var _stamp: Label
 var _overlay: ColorRect
 var _card: PanelContainer
 var _card_title: Label
@@ -56,9 +67,12 @@ func get_board_area() -> Rect2:
 	return Rect2(Vector2(side, top), Vector2(vis.size.x - side * 2.0, maxf(bottom - top, 100.0)))
 
 
-func set_level(number: int, total: int, level_name: String) -> void:
+func set_level(number: int, total: int, level_name: String, mystery: bool = false) -> void:
 	_level_label.text = "LEVEL %d" % number
 	_name_label.text = level_name.to_upper() if total == 0 else "%s  ·  %d/%d" % [level_name.to_upper(), number, total]
+	if mystery:
+		_name_label.text = "?  MYSTERY  ·  " + _name_label.text
+	_name_label.add_theme_color_override("font_color", Palette.PURPLE_BADGE if mystery else Palette.TEXT_SOFT)
 	hide_complete()
 	_chain_label.modulate.a = 0.0
 
@@ -104,6 +118,28 @@ func apply_settings(music: bool, sfx: bool, haptics: bool) -> void:
 	_refresh_setting_buttons()
 
 
+## Undo: remaining uses shown as a badge; disabled when nothing to undo or
+## no uses left.
+func set_undo_state(can_undo: bool, remaining: int) -> void:
+	_undo_button.badge_text = str(remaining)
+	set_undo_enabled(can_undo and remaining > 0)
+
+
+## Hint: remaining uses this level (∞ in debug). Dimmed when the level has
+## no hints at all.
+func set_hint_state(remaining: int, allowed: int, unlimited: bool) -> void:
+	_hint_button.badge_text = "∞" if unlimited else str(remaining)
+	_hint_button.modulate.a = 1.0 if (unlimited or allowed > 0) else 0.45
+
+
+func open_level_select(levels: Array, total_stars: int) -> void:
+	_level_select.open(levels, total_stars)
+
+
+func is_level_select_open() -> bool:
+	return _level_select.visible
+
+
 func set_undo_enabled(enabled: bool) -> void:
 	_undo_button.disabled = not enabled
 	_undo_button.queue_redraw()
@@ -131,16 +167,25 @@ func show_chain(chain: int) -> void:
 	_chain_tween.tween_property(_chain_label, "modulate:a", 0.0, 0.3)
 
 
-func show_complete(best_chain: int, perfect: bool, is_last_level: bool, hints_awarded: int = 0) -> void:
-	_card_reward.visible = hints_awarded > 0
-	_card_reward.text = "+%d HINT%s" % [hints_awarded, "S" if hints_awarded > 1 else ""]
-	_next_button.visible = true
-	_card_title.text = "LEVEL COMPLETE" if not is_last_level else "ALL LEVELS COMPLETE"
-	var stats := "Best chain  x%d" % best_chain
-	if perfect:
-		stats = "PERFECT CHAIN!  ·  " + stats
-	_card_stats.text = stats
-	_next_button.text = "NEXT LEVEL" if not is_last_level else "PLAY AGAIN"
+## `r`: settled result + score, stars, best, new_best, first_clear,
+## hearts_left, max_hearts, undos, hints, perfect, is_last.
+func show_complete(r: Dictionary) -> void:
+	var perfect: bool = r["perfect"]
+	_card_title.text = "PERFECT!" if perfect else "LEVEL COMPLETE"
+	_card_title.add_theme_color_override("font_color", Palette.GOLD if perfect else Palette.TEXT)
+	_card_style.border_color = Palette.GOLD
+	_card_style.set_border_width_all(8 if perfect else 0)
+	_set_card_mode(true)
+	_card_stars.set_stars(r["stars"], true)
+	var hearts_txt := "HEARTS %d/%d" % [r["hearts_left"], r["max_hearts"]] if r["max_hearts"] > 0 else "NO HEARTS"
+	_card_stats.text = "%s   ·   UNDO %d   ·   HINTS %d" % [hearts_txt, r["undos"], r["hints"]]
+	if r["new_best"]:
+		_card_reward.text = "NEW BEST!"
+		_card_reward.add_theme_color_override("font_color", Palette.ACCENT)
+	else:
+		_card_reward.text = "BEST  %s" % _fmt(r["best"])
+		_card_reward.add_theme_color_override("font_color", Palette.TEXT_SOFT)
+	_next_button.text = "NEXT LEVEL" if not r["is_last"] else "PLAY AGAIN"
 	_overlay.visible = true
 	_overlay.color = Color(Palette.BACKGROUND, 0.0)
 	_card.pivot_offset = _card.size * 0.5
@@ -150,15 +195,60 @@ func show_complete(best_chain: int, perfect: bool, is_last_level: bool, hints_aw
 	t.tween_property(_overlay, "color:a", 0.72, 0.25)
 	t.tween_property(_card, "scale", Vector2.ONE, 0.32).set_trans(Tween.TRANS_BACK).set_ease(Tween.EASE_OUT)
 	t.tween_property(_card, "modulate:a", 1.0, 0.18)
+	# Score counts up; NEW BEST pulses after it lands.
+	var score: int = r["score"]
+	var c := create_tween()
+	c.tween_method(func(v): _card_score.text = _fmt(int(v)), 0.0, float(score), 0.6).set_delay(0.2).set_trans(Tween.TRANS_CUBIC).set_ease(Tween.EASE_OUT)
+	if r["new_best"]:
+		_card_reward.pivot_offset = _card_reward.size * 0.5
+		c.tween_callback(func(): AudioManager.play_new_best())
+		c.tween_property(_card_reward, "scale", Vector2(1.25, 1.25), 0.12)
+		c.tween_property(_card_reward, "scale", Vector2.ONE, 0.2).set_trans(Tween.TRANS_BACK)
 	_bottom.modulate.a = 0.0
+
+
+## Big golden "PERFECT!" stamp over the board before the card appears.
+func show_perfect_stamp() -> void:
+	var vis := get_viewport().get_visible_rect()
+	_stamp.visible = true
+	_stamp.reset_size()
+	_stamp.position = vis.size * 0.5 - _stamp.size * 0.5
+	_stamp.pivot_offset = _stamp.size * 0.5
+	_stamp.scale = Vector2(2.2, 2.2)
+	_stamp.rotation = -0.25
+	_stamp.modulate.a = 0.0
+	var t := create_tween().set_parallel()
+	t.tween_property(_stamp, "scale", Vector2.ONE, 0.28).set_trans(Tween.TRANS_BACK).set_ease(Tween.EASE_OUT)
+	t.tween_property(_stamp, "rotation", -0.08, 0.28)
+	t.tween_property(_stamp, "modulate:a", 1.0, 0.12)
+	t.chain().tween_interval(0.45)
+	t.chain().tween_property(_stamp, "modulate:a", 0.0, 0.2)
+	t.chain().tween_callback(func(): _stamp.visible = false)
+
+
+static func _fmt(n: int) -> String:
+	var s := str(n)
+	var out := ""
+	while s.length() > 3:
+		out = "," + s.right(3) + out
+		s = s.left(s.length() - 3)
+	return s + out
+
+
+func _set_card_mode(complete: bool) -> void:
+	_card_stars.visible = complete
+	_card_score.visible = complete
+	_card_reward.visible = complete
+	_card_buttons.visible = complete
 
 
 ## Short, friendly out-of-hearts state. GameManager restarts the level after.
 func show_try_again() -> void:
 	_card_title.text = "OUT OF HEARTS"
+	_card_title.add_theme_color_override("font_color", Palette.TEXT)
+	_card_style.set_border_width_all(0)
 	_card_stats.text = "No worries - try again!"
-	_card_reward.visible = false
-	_next_button.visible = false
+	_set_card_mode(false)
 	_overlay.visible = true
 	_overlay.color = Color(Palette.BACKGROUND, 0.0)
 	_card.pivot_offset = _card.size * 0.5
@@ -259,28 +349,47 @@ func _build() -> void:
 	card_style.shadow_color = Palette.SHADOW
 	card_style.shadow_size = 24
 	card_style.shadow_offset = Vector2(0, 8)
-	card_style.set_content_margin_all(48)
+	card_style.set_content_margin_all(40)
+	_card_style = card_style
 	_card.add_theme_stylebox_override("panel", card_style)
-	_card.custom_minimum_size = Vector2(560, 0)
+	_card.custom_minimum_size = Vector2(600, 0)
 	center.add_child(_card)
 	var card_box := VBoxContainer.new()
 	card_box.add_theme_constant_override("separation", 18)
 	_card.add_child(card_box)
 	_card_title = _make_label(50, Palette.TEXT, 900)
 	card_box.add_child(_card_title)
-	_card_stats = _make_label(26, Palette.TEXT_SOFT, 800)
-	card_box.add_child(_card_stats)
+	_card_stars = StarsRow.new(36)
+	_card_stars.size_flags_horizontal = Control.SIZE_SHRINK_CENTER
+	card_box.add_child(_card_stars)
+	_card_score = _make_label(64, Palette.TEXT, 900)
+	card_box.add_child(_card_score)
 	_card_reward = _make_label(30, Palette.ACCENT, 900)
-	_card_reward.visible = false
 	card_box.add_child(_card_reward)
+	_card_stats = _make_label(22, Palette.TEXT_SOFT, 800)
+	card_box.add_child(_card_stats)
 	var spacer := Control.new()
 	spacer.custom_minimum_size = Vector2(0, 12)
 	card_box.add_child(spacer)
-	_next_button = PillButton.new("NEXT LEVEL", PillButton.Icon.NONE, Palette.ACCENT, Palette.WHITE, 36)
-	_next_button.custom_minimum_size = Vector2(380, 112)
-	_next_button.size_flags_horizontal = Control.SIZE_SHRINK_CENTER
+	_card_buttons = HBoxContainer.new()
+	_card_buttons.alignment = BoxContainer.ALIGNMENT_CENTER
+	_card_buttons.add_theme_constant_override("separation", 16)
+	card_box.add_child(_card_buttons)
+	_replay_button = PillButton.new("REPLAY", PillButton.Icon.RESTART, Palette.BACKGROUND, Palette.TEXT, 28, true)
+	_replay_button.custom_minimum_size = Vector2(200, 104)
+	_replay_button.pressed.connect(func(): replay_pressed.emit())
+	_card_buttons.add_child(_replay_button)
+	_next_button = PillButton.new("NEXT LEVEL", PillButton.Icon.NONE, Palette.ACCENT, Palette.WHITE, 32)
+	_next_button.custom_minimum_size = Vector2(300, 104)
 	_next_button.pressed.connect(func(): next_pressed.emit())
-	card_box.add_child(_next_button)
+	_card_buttons.add_child(_next_button)
+
+	_stamp = _make_label(110, Palette.GOLD, 900)
+	_stamp.text = "PERFECT!"
+	_stamp.add_theme_color_override("font_outline_color", Palette.WHITE)
+	_stamp.add_theme_constant_override("outline_size", 18)
+	_stamp.visible = false
+	_root.add_child(_stamp)
 
 	# Settings: gear in the top-right corner + a small card of toggles.
 	_settings_button = PillButton.new("", PillButton.Icon.GEAR, Palette.WHITE, Palette.TEXT_SOFT, 26)
@@ -288,7 +397,15 @@ func _build() -> void:
 	_settings_button.set_anchors_and_offsets_preset(Control.PRESET_TOP_RIGHT)
 	_settings_button.pressed.connect(_open_settings)
 	_root.add_child(_settings_button)
+	_levels_button = PillButton.new("", PillButton.Icon.GRID, Palette.WHITE, Palette.TEXT_SOFT, 26)
+	_levels_button.custom_minimum_size = Vector2(76, 76)
+	_levels_button.set_anchors_and_offsets_preset(Control.PRESET_TOP_LEFT)
+	_levels_button.pressed.connect(func(): levels_opened.emit())
+	_root.add_child(_levels_button)
 	_build_settings()
+	_level_select = LevelSelect.new()
+	_level_select.level_chosen.connect(func(n): level_chosen.emit(n))
+	_root.add_child(_level_select)
 
 
 func _build_settings() -> void:
@@ -380,6 +497,12 @@ func _apply_safe_area() -> void:
 	_settings_button.offset_right = -24.0
 	_settings_button.offset_top = _safe_top + 28.0
 	_settings_button.offset_bottom = _safe_top + 28.0 + 76.0
+	_levels_button.offset_left = 24.0
+	_levels_button.offset_right = 24.0 + 76.0
+	_levels_button.offset_top = _safe_top + 28.0
+	_levels_button.offset_bottom = _safe_top + 28.0 + 76.0
+	if _level_select:
+		_level_select.offset_top = 0.0
 	_bottom.offset_top = -BOTTOM_HEIGHT - _safe_bottom + 30.0
 	_bottom.offset_bottom = -_safe_bottom - 60.0
 

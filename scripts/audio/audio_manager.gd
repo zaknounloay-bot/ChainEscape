@@ -11,7 +11,7 @@ extends Node
 ## without touching code.
 
 const SOUND_IDS := ["escape", "invalid", "combo", "level_complete", "ui_tap", "undo",
-	"turn", "heart_lost", "hint", "try_again"]
+	"turn", "heart_lost", "hint", "try_again", "unlock", "reveal", "star", "perfect", "new_best"]
 const MUSIC_ID := "music"
 const MUSIC_VOLUME_DB := -15.0  # background level: present but never in the way
 const DUCK_DB := -8.0  # extra attenuation while ducked
@@ -154,6 +154,28 @@ func play_try_again() -> void:
 	play("try_again", 1.0, -5.0)
 
 
+func play_unlock() -> void:
+	play("unlock", 1.0, -4.0)
+
+
+func play_reveal() -> void:
+	play("reveal", 1.0, -6.0)
+
+
+## Stars pop with rising pitch (index 0..2).
+func play_star(index: int) -> void:
+	play("star", pow(2.0, [0, 4, 7][clampi(index, 0, 2)] / 12.0), -5.0)
+
+
+func play_perfect() -> void:
+	duck_music(1.8)
+	play("perfect", 1.0, -2.0)
+
+
+func play_new_best() -> void:
+	play("new_best", 1.0, -5.0)
+
+
 static func chain_pitch(chain: int) -> float:
 	var idx := maxi(chain - 1, 0)
 	if idx >= CHAIN_SCALE.size():
@@ -205,6 +227,17 @@ func _load_or_synthesize(id: String) -> AudioStream:
 			return _synth_notes([[587.0, 0.0], [440.0, 0.09]], 0.4, 9.0)
 		"hint":
 			return _synth_notes([[1175.0, 0.0], [1568.0, 0.07], [2093.0, 0.14]], 0.5, 10.0)
+		"unlock":
+			# Mechanical click, then a bright "open" chime.
+			return _synth_notes([[1800.0, 0.0], [988.0, 0.06], [1480.0, 0.12]], 0.5, 12.0)
+		"reveal":
+			return _synth([[900.0, 1.0], [1800.0, 0.3]], 0.22, 14.0, 0.5)
+		"star":
+			return _synth_notes([[1319.0, 0.0], [2637.0, 0.0]], 0.35, 11.0)
+		"perfect":
+			return _synth_notes([[784.0, 0.0], [988.0, 0.07], [1175.0, 0.14], [1568.0, 0.21], [1976.0, 0.30], [2349.0, 0.40]], 1.2, 4.5)
+		"new_best":
+			return _synth_notes([[1047.0, 0.0], [1568.0, 0.1], [2093.0, 0.2]], 0.7, 7.0)
 		"try_again":
 			return _synth_notes([[523.0, 0.0], [466.0, 0.12], [392.0, 0.24]], 0.7, 6.0)
 	return null

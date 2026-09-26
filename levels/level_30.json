@@ -1,12 +1,12 @@
 {
-	"name": "Great Escape",
+	"name": "Smoke and Mirrors",
+	"mystery": true,
 	"map": [
-		".   .   B>  G>  .   Rv",
-		"Yv@ Gv  Y^  .   .   Bv",
-		".   Bv  Gv@ B<  Y<  .",
-		"Y^  .   Y^@ Rv  B<@ P<",
-		".   .   R>  .   Y^  .",
-		"Y>@ B<  .   .   B^  .",
-		"G>@ P>  R>  .   P>  ."
+		".    Gv   .    R<   G>   .",
+		".    R>   Bv   .    Y^@  B>",
+		"G>   .    .    .    P^   .",
+		".    .    .    .    G^   .",
+		".    Yv   .    .    .    .",
+		"Y^   Bv?  R<@  Gv?  Y^   Y>?"
 	]
 }

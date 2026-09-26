@@ -1,11 +1,10 @@
 {
-	"name": "Whirlpool",
+	"name": "Domino Line",
 	"map": [
-		"R<  .   Yv  Bv@ .   .",
-		"G^  .   P<  Yv  G<  R<",
-		".   Rv@ .   P<  .   Y^",
-		"G^  Bv@ .   .   .   G^",
-		".   G^  .   G<@ .   P^",
-		".   .   .   Y<  B>  Y^"
+		".   B>@ .   G>  P>",
+		".   G<  .   Y<  .",
+		"Y>  .   .   .   Gv",
+		"B^  .   .   R^  Yv",
+		".   R^@ Pv  .   B<"
 	]
 }

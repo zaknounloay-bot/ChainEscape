@@ -1,0 +1,11 @@
+{
+	"name": "Clockmaker",
+	"map": [
+		".      R>     P>     Yv     .      .",
+		"P<     Gv@#R  P<     G>     .      P^",
+		"B>@    .      .      R>     B>     R^",
+		".      .      Rv#B   Gv#B   Y>     G<@",
+		"G^     .      P<     Bv@    .      .",
+		"B^     .      .      P<     Y<@    ."
+	]
+}

@@ -1,11 +1,10 @@
 {
-	"name": "Twisted Lanes",
+	"name": "Padlocks",
 	"map": [
-		".   .   Pv  .   Yv  P<",
-		"Bv  .   R<  .   Rv@ .",
-		".   B<  .   .   Y<@ G>",
-		"Gv  .   .   R>@ .   R^",
-		"R>  .   .   .   .   G>",
-		".   .   .   R^  .   ."
+		".     .     G>    Gv    .",
+		".     R<    B^#R  .     .",
+		".     B^    .     Yv    .",
+		"Y^#B  .     .     Pv    .",
+		".     P^    B<    P<    ."
 	]
 }

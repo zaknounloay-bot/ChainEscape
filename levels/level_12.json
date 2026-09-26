@@ -1,9 +1,9 @@
 {
-	"name": "Wrong Way",
+	"name": "Quarter Turn",
 	"map": [
-		"Rv  .   Y^  R<",
-		"B>  R>  .   Gv",
-		".   .   Yv  B<",
-		"P>  .   Bv@ P>"
+		".   Pv  R^  .",
+		"Y>  .   .   Bv",
+		".   P<  .   Y<",
+		"P^  G>@ R^  ."
 	]
 }

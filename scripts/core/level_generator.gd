@@ -36,6 +36,9 @@ static func profile(name: String) -> Dictionary:
 		"min_start_moves": 1, "max_start_moves": 3, "max_direction_share": 0.40,
 		"min_depth": 3, "min_decision_points": 0, "min_start_traps": 0, "max_similarity": 0.45,
 		"method": "reverse", "refine_steps": 150,
+		"locks": Vector2i(0, 0), "hidden": Vector2i(0, 0),
+		# A mechanic must add at least this much difficulty to be kept.
+		"min_mechanic_impact": 0.5,
 	}
 	match name:
 		"easy":
@@ -55,6 +58,38 @@ static func profile(name: String) -> Dictionary:
 			base.merge({"sizes": [Vector2i(6, 6), Vector2i(6, 7)], "blocks": Vector2i(22, 28), "spinners": Vector2i(4, 6),
 				"max_start_moves": 2, "max_direction_share": 0.34, "min_depth": 7, "min_decision_points": 4,
 				"min_start_traps": 1}, true)
+		# --- v0.3 profiles: locked blocks, mystery and combinations ---
+		"lock_easy":
+			base.merge({"sizes": [Vector2i(4, 4), Vector2i(5, 5)], "blocks": Vector2i(9, 13), "locks": Vector2i(1, 2),
+				"max_start_moves": 3, "min_depth": 4}, true)
+		"lock_medium":
+			base.merge({"sizes": [Vector2i(5, 5)], "blocks": Vector2i(12, 16), "locks": Vector2i(2, 3),
+				"max_start_moves": 2, "min_depth": 6, "max_direction_share": 0.38}, true)
+		"lock_hard":
+			base.merge({"sizes": [Vector2i(5, 5), Vector2i(6, 6)], "blocks": Vector2i(15, 20), "locks": Vector2i(3, 4),
+				"max_start_moves": 2, "min_depth": 8, "max_direction_share": 0.36}, true)
+		"spin_lock":
+			base.merge({"sizes": [Vector2i(5, 5), Vector2i(6, 6)], "blocks": Vector2i(14, 19), "spinners": Vector2i(2, 3),
+				"locks": Vector2i(1, 2), "max_start_moves": 2, "min_depth": 6, "min_decision_points": 3,
+				"max_direction_share": 0.36}, true)
+		"spin_lock_hard":
+			base.merge({"sizes": [Vector2i(6, 6)], "blocks": Vector2i(17, 23), "spinners": Vector2i(3, 4),
+				"locks": Vector2i(2, 3), "max_start_moves": 2, "min_depth": 8, "min_decision_points": 5,
+				"min_start_traps": 1, "max_direction_share": 0.34}, true)
+		"spin_lock_expert":
+			base.merge({"sizes": [Vector2i(6, 6), Vector2i(6, 7)], "blocks": Vector2i(20, 26), "spinners": Vector2i(4, 5),
+				"locks": Vector2i(2, 3), "max_start_moves": 2, "min_depth": 9, "min_decision_points": 7,
+				"min_start_traps": 1, "max_direction_share": 0.33}, true)
+		"mystery_medium":
+			base.merge({"sizes": [Vector2i(5, 5)], "blocks": Vector2i(11, 15), "hidden": Vector2i(2, 3),
+				"max_start_moves": 3, "min_depth": 5}, true)
+		"mystery_hard":
+			base.merge({"sizes": [Vector2i(5, 5), Vector2i(6, 6)], "blocks": Vector2i(14, 19), "spinners": Vector2i(1, 2),
+				"hidden": Vector2i(2, 4), "max_start_moves": 2, "min_depth": 6, "min_decision_points": 2}, true)
+		"mystery_expert":
+			base.merge({"sizes": [Vector2i(6, 6)], "blocks": Vector2i(17, 23), "spinners": Vector2i(2, 4),
+				"locks": Vector2i(1, 2), "hidden": Vector2i(3, 4), "max_start_moves": 2, "min_depth": 8,
+				"min_decision_points": 4, "max_direction_share": 0.36}, true)
 	return base
 
 
@@ -107,10 +142,11 @@ func refine(level: LevelData, metrics: Dictionary, p: Dictionary) -> Array:
 
 
 func _score(m: Dictionary, p: Dictionary) -> float:
+	var missing: int = maxi(0, p["locks"].x - m.get("locks", 0)) + maxi(0, p["hidden"].x - m.get("hidden", 0))
 	var over_start: int = maxi(0, m["start_moves"] - p["max_start_moves"])
 	var over_share: float = maxf(0.0, m["direction_share"] - p["max_direction_share"])
 	var decisions: int = mini(m["decision_points"], p["min_decision_points"] + 3)
-	return (-6.0 * over_start - 40.0 * over_share - 1.0 * m["start_moves"]
+	return (-8.0 * missing - 6.0 * over_start - 40.0 * over_share - 1.0 * m["start_moves"]
 		+ 2.0 * decisions + 2.0 * mini(m["start_traps"], 2) + 0.6 * m["depth"]
 		+ 1.0 * m["directions_used"])
 
@@ -127,6 +163,35 @@ func _mutate(level: LevelData, p: Dictionary) -> LevelData:
 	var roll := rng.randf()
 	var spinner_list := copy.blocks.filter(func(x): return x.is_spinner())
 	var spinners := spinner_list.size()
+	var locks := copy.blocks.filter(func(x): return x.lock_color != "").size()
+	var hiddens := copy.blocks.filter(func(x): return x.hidden).size()
+	var wants_locks: bool = p["locks"].y > 0
+	var wants_hidden: bool = p["hidden"].y > 0
+	if wants_locks and rng.randf() < 0.22:
+		# Lock / unlock / re-key a block, or recolor one (colors are keys).
+		var r2 := rng.randf()
+		if r2 < 0.2:
+			b.color = COLORS[rng.randi() % COLORS.size()]
+			if b.lock_color == b.color:
+				b.lock_color = ""
+		elif b.lock_color != "" and (locks > p["locks"].x or r2 < 0.45):
+			b.lock_color = ""
+		elif locks < p["locks"].y and not b.hidden:
+			var keys := COLORS.filter(func(c): return c != b.color and copy.blocks.any(func(x): return x.color == c))
+			if keys.is_empty():
+				return null
+			b.lock_color = keys[rng.randi() % keys.size()]
+		else:
+			return null
+		return _rebuilt(copy)
+	if wants_hidden and rng.randf() < 0.18:
+		if b.hidden and hiddens > p["hidden"].x:
+			b.hidden = false
+		elif not b.hidden and hiddens < p["hidden"].y and not b.is_spinner() and b.lock_color == "":
+			b.hidden = true
+		else:
+			return null
+		return _rebuilt(copy)
 	if roll < 0.25 and spinners > 0:
 		# Trap motif: make a neighbour of a spinner point INTO it. If the
 		# spinner is later turned to face that neighbour, both are stuck.
@@ -147,7 +212,7 @@ func _mutate(level: LevelData, p: Dictionary) -> LevelData:
 	elif roll < 0.82:
 		if b.is_spinner() and spinners > p["spinners"].x:
 			b.kind = BlockData.Kind.NORMAL
-		elif not b.is_spinner() and spinners < p["spinners"].y:
+		elif not b.is_spinner() and spinners < p["spinners"].y and not b.hidden:
 			b.kind = BlockData.Kind.SPINNER
 		else:
 			return null
@@ -160,11 +225,16 @@ func _mutate(level: LevelData, p: Dictionary) -> LevelData:
 		if empty.is_empty():
 			return null
 		b.cell = empty[rng.randi() % empty.size()]
+	return _rebuilt(copy)
+
+
+## Re-numbers ids in reading order, keeping colors (locks depend on them).
+func _rebuilt(copy: LevelData) -> LevelData:
 	var grid := {}
 	for x in copy.blocks:
 		grid[x.cell] = x
 	copy.blocks.clear()
-	_finish(copy, grid)
+	_finish(copy, grid, false)
 	return copy
 
 
@@ -273,12 +343,15 @@ func build_reverse(p: Dictionary) -> LevelData:
 
 
 ## Ids in reading order, colors that differ from left/top neighbours.
-func _finish(level: LevelData, grid: Dictionary) -> void:
+func _finish(level: LevelData, grid: Dictionary, recolor: bool = true) -> void:
 	var ordered := grid.values()
 	ordered.sort_custom(func(a, b): return a.cell.y * 100 + a.cell.x < b.cell.y * 100 + b.cell.x)
 	for i in ordered.size():
 		var b: BlockData = ordered[i]
 		b.id = i
+		if not recolor:
+			level.blocks.append(b)
+			continue
 		var avoid := []
 		for step in [Vector2i(-1, 0), Vector2i(0, -1)]:
 			var n: BlockData = grid.get(b.cell + step)
@@ -311,8 +384,21 @@ func rejection_reason(m: Dictionary, p: Dictionary, level: LevelData = null) -> 
 		return "shallow"
 	if m["decision_points"] < p["min_decision_points"] or m["start_traps"] < p["min_start_traps"]:
 		return "no_decisions"
+	if m.get("locks", 0) < p["locks"].x or m.get("hidden", 0) < p["hidden"].x:
+		return "missing_mechanic"
 	if level != null and is_repetitive(level, p["max_similarity"]):
 		return "repetitive"
+	if level != null and (m.get("locks", 0) > 0 or m.get("hidden", 0) > 0 or m["spinners"] > 0):
+		# Every advanced mechanic must add real difficulty/decisions, and
+		# mystery must be fair. (Expensive, so it runs last.)
+		var full := LevelAnalysis.analyze(level)
+		var need: float = p["min_mechanic_impact"]
+		if m["spinners"] > 0 and full["spinner_impact"] < need:
+			return "spinners_decorative"
+		if m.get("locks", 0) > 0 and full["lock_impact"] < need:
+			return "locks_decorative"
+		if m.get("hidden", 0) > 0 and (full["mystery_impact"] < need * 0.6 or not full["mystery_fair"]):
+			return "mystery_unfair_or_decorative"
 	return ""
 
 
@@ -321,7 +407,8 @@ func rejection_reason(m: Dictionary, p: Dictionary, level: LevelData = null) -> 
 static func difficulty(m: Dictionary) -> float:
 	return (m["blocks"] * 0.15 + m["depth"] * 0.6 + m["decision_points"] * 1.5
 		+ m["trap_moves"] * 0.4 + m["start_traps"] * 1.0 + m["spinners"] * 0.5
-		+ (4 - mini(m["start_moves"], 4)) * 0.5)
+		+ (4 - mini(m["start_moves"], 4)) * 0.5
+		+ m.get("locks", 0) * 0.8 + m.get("hidden", 0) * 0.6)
 
 
 ## Fraction of cells with the same content (same arrow, both occupied) as

@@ -66,6 +66,11 @@ func _draw() -> void:
 		var font := Palette.font(800)
 		var size := 30
 		var w := font.get_string_size(_text, HORIZONTAL_ALIGNMENT_LEFT, -1, size).x
+		# Shrink long lines to fit the screen width.
+		var max_w := get_viewport_rect().size.x - 48.0
+		while w > max_w and size > 18:
+			size -= 1
+			w = font.get_string_size(_text, HORIZONTAL_ALIGNMENT_LEFT, -1, size).x
 		var bob := sin(_time * 3.0) * 3.0
 		draw_string(font, _text_pos + Vector2(-w * 0.5, bob), _text, HORIZONTAL_ALIGNMENT_LEFT, -1, size, Palette.TEXT)
 

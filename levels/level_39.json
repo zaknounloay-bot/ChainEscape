@@ -1,0 +1,11 @@
+{
+	"name": "Labyrinth",
+	"map": [
+		".   Y^  .   .   P>  Rv",
+		"B>  G^@ Y>  Pv@ R^  Yv",
+		"G^  Yv  P>  R>  .   Pv",
+		".   Rv  .   .   .   .",
+		"Y^  P<  .   .   .   .",
+		".   B^@ .   .   .   B>"
+	]
+}

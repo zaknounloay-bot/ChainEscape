@@ -1,11 +1,10 @@
 {
-	"name": "Gearbox",
+	"name": "Combination",
 	"map": [
-		".   P>  R<@ Y>  Rv  .",
-		"G>  .   .   P^  G>  Pv",
-		".   .   .   R^  Pv@ B>",
-		"Y>  Gv  Bv@ .   .   .",
-		"Gv  R<  G<  .   R^@ .",
-		"Y<  P<  .   .   G<  ."
+		".     Pv#G  G^#B  .     .",
+		"R>    .     Gv#B  .     .",
+		".     Yv    G<    .     .",
+		".     Pv    .     .     B<",
+		"R^    B>    .     B>    P>"
 	]
 }

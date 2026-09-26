@@ -1,10 +1,10 @@
 {
-	"name": "Hairpin",
+	"name": "Clockwork",
 	"map": [
-		".   .   Pv  B<  .",
-		"Gv  P<  Rv  Y^  Gv",
-		"Bv  Y^  B<  .   Yv",
-		"Y>  P>@ R^@ B>  G>",
-		".   R>  B^@ R>  ."
+		"P^  Y<  P<  .   .",
+		"Gv  R<  Gv  R<@ P<",
+		".   B>  .   .   G^",
+		"Pv  .   Gv  .   .",
+		"Y>@ B>  Yv@ G>  ."
 	]
 }

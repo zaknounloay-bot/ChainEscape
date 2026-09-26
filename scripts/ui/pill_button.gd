@@ -2,7 +2,7 @@ class_name PillButton
 extends Button
 ## Rounded button with an optional hand-drawn icon (no image assets needed).
 
-enum Icon { NONE, UNDO, RESTART, HINT, GEAR }
+enum Icon { NONE, UNDO, RESTART, HINT, GEAR, GRID }
 
 var icon_kind: int = Icon.NONE
 ## Small counter bubble in the top-right corner ("" = hidden).
@@ -108,6 +108,11 @@ func _draw() -> void:
 		draw_line(c + Vector2(8, 6), c + Vector2(5, 12), col, w, true)
 		draw_line(c + Vector2(-6, 14), c + Vector2(6, 14), col, w, true)
 		draw_line(c + Vector2(-4, 19), c + Vector2(4, 19), col, w, true)
+	elif icon_kind == Icon.GRID:
+		for gy in 3:
+			for gx in 3:
+				var cc := c + Vector2((gx - 1) * 11, (gy - 1) * 11)
+				draw_rect(Rect2(cc - Vector2(4, 4), Vector2(8, 8)), col)
 	elif icon_kind == Icon.GEAR:
 		for k in 8:
 			var a := TAU * k / 8.0

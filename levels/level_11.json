@@ -1,9 +1,11 @@
 {
-	"name": "Quarter Turn",
+	"name": "Order Matters",
+	"hint": "Order matters now - look before you tap",
+	"hint_finger": false,
 	"map": [
-		".   Pv  R^  .",
-		"Y>  .   .   Bv",
-		".   P<  .   Y<",
-		"P^  G>@ R^  ."
+		".   .   .   .",
+		".   B^@ G<  R<",
+		"P>  Yv  .   .",
+		".   .   .   ."
 	]
 }

@@ -1,11 +1,10 @@
 {
-	"name": "Labyrinth",
+	"name": "Master Key",
 	"map": [
-		".   Y^  .   .   P>  Rv",
-		"B>  G^@ Y>  Pv@ R^  Yv",
-		"G^  Yv  P>  R>  .   Pv",
-		".   Rv  .   .   .   .",
-		"Y^  P<  .   .   .   .",
-		".   B^@ .   .   .   B>"
+		"Y^#G  .     .     Y>#P  .",
+		"Y^    B>    Yv    .     G^",
+		"R^    R<    B<    .     P<",
+		".     Yv#B  .     R<    .",
+		".     .     .     .     ."
 	]
 }

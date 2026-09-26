@@ -1,0 +1,11 @@
+{
+	"name": "Twisted Lanes",
+	"map": [
+		".   .   Pv  .   Yv  P<",
+		"Bv  .   R<  .   Rv@ .",
+		".   B<  .   .   Y<@ G>",
+		"Gv  .   .   R>@ .   R^",
+		"R>  .   .   .   .   G>",
+		".   .   .   R^  .   ."
+	]
+}

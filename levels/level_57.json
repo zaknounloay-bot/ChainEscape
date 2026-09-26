@@ -1,0 +1,11 @@
+{
+	"name": "Grand Vault",
+	"map": [
+		".      B<     R^@#Y  G<     .      Pv",
+		"Gv@#R  P<     P<     B^     .      .",
+		".      R>@    .      P^     .      Bv",
+		"Bv     G^     .      B<#R   .      .",
+		"Yv     R>@    .      G>     .      Rv",
+		"Y>     B>     P^@    Y>     .      R>"
+	]
+}

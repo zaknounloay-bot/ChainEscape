@@ -1,9 +1,10 @@
 {
-	"name": "Tight Squeeze",
+	"name": "Pinwheel",
 	"map": [
-		".   .   .   Y<",
-		"G>  Pv  Y>  G^",
-		".   G>  R^  .",
-		".   P<@ Gv  Y<"
+		".   Bv  Y<@ .   G<",
+		".   Yv  G<  Y<  .",
+		"R>  .   .   G^  .",
+		".   .   Bv@ .   .",
+		".   Gv  R>  P^  Y^"
 	]
 }

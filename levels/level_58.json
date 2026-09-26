@@ -1,0 +1,11 @@
+{
+	"name": "Last Lock",
+	"map": [
+		".      .      .      B>     P>     Pv",
+		".      .      .      R^     G^     .",
+		"Bv@    G>@    .      R^     .      .",
+		"Bv@    P<     .      .      .      .",
+		"G^     B^     .      Pv#G   Bv     R>",
+		".      Y^     .      B<@#R  Yv     ."
+	]
+}

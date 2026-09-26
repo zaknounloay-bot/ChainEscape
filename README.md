@@ -1,29 +1,231 @@
-# Chain Escape — v0.2
+# Chain Escape — v0.3
 
 A one-handed portrait puzzle prototype built with **Godot 4.3 (GDScript)** for iOS and Android.
 
 > Tap a block → it escapes in its arrow direction → space opens → more blocks can leave → chain the exits. Clear the board.
 
-The prototype answers one question: *is the core loop fun enough that people want to play another level?* Monetization, accounts, backend, stores and leaderboards are intentionally left out.
+The v0.3 goal is replayability and mastery: *"I understand the rules immediately, but I need to think carefully to solve this well."* Leaderboards, accounts, backend, timed mode, Daily Challenge, ads, monetization, multiplayer and the image-reveal collection are intentionally left out.
 
 ---
 
-## What's new in v0.2 (from playtest feedback)
-
-Players aged 12, 15 and 18, plus an adult, understood v0.1 instantly and enjoyed it. They found it too easy after the first few levels, too predictable, and visually muted. v0.2 keeps every v0.1 system (architecture, undo, layout, tests) and adds:
+## What's new in v0.3
 
 | Area | Change |
 |---|---|
-| **Ordering depth** | One new mechanic: **Spinner blocks**. A spinner turns 90° clockwise every time an orthogonally adjacent block escapes. Clearing a neighbor at the wrong moment can turn a spinner to face a block that faces it back, and then both are stuck. Move order now genuinely matters. |
-| **30 curated levels** | 1–5 onboarding (unchanged) · 6–10 easy (spinners introduced at 9–10) · 11–15 medium · 16–20 medium-hard · 21–25 hard · 26–30 challenging. Difficulty comes from fewer free moves, traps, interacting lanes and direction diversity, not just block count. |
-| **Hearts** | From level 6: 3 hearts per attempt. A blocked tap costs one, with a pop-and-drop animation and a soft sound. At 0, a brief friendly **"Out of hearts – try again!"** card appears and the level restarts. Undo doesn't refund hearts. |
-| **Hints** | A **HINT** button highlights one recommended move with a pulsing two-tone ring. It never plays the move. It costs a hint token, which is saved. If the board is already lost, it points to Undo for free. The debug panel gives unlimited hints. |
-| **Stuck detection** | If no legal move remains, the message *"No moves left – tap Undo"* appears and the Undo button pulses. It never costs a heart. |
-| **Vivid palette** | Brighter, more saturated block colors on a cool light background. Yellow blocks get a dark arrow for contrast. |
-| **Music and audio** | A generated, seamless 20-second lo-fi loop at low volume. It ducks under the level-complete jingle. New sounds for spinner turns, heart loss, hints and Try Again. |
-| **Settings** | A gear icon (top right) opens toggles for Music, Sound Effects and Vibration. All three are saved. |
-| **Solver** | A real search solver powers hints, level verification, stuck handling and the generator. |
-| **LevelGenerator** | A prototype procedural generator. It generates candidates, validates them with the solver, computes difficulty metrics, and rejects trivial or repetitive boards. Levels 7 and 11–30 were generated this way, then curated by hand. |
+| **Score** | Every level is scored. Escapes and chains earn points, and bonuses are settled at the end. Mistakes, Undo and Hints cost points. There's no timer. Your personal best is saved per level, with **NEW BEST!** when you beat it. |
+| **3 stars** | ★ complete · ★★ no Hint · ★★★ PERFECT or a strong score. The rules are data-driven per level, and your best stars are saved. |
+| **PERFECT** | No heart lost, no Undo and no Hint. It shows a golden stamp animation, a special sound, a +1000 bonus and a gold-framed card. |
+| **Undo** | Limited to **3 per level**. The count is shown on the button. It prevents PERFECT and costs points. It uses the same snapshot history as before. |
+| **Hints** | They're per level now, not tokens. Levels 1–19 have 0, 20–29 have 1, and 30+ have 2. A hint highlights one move and never plays it. It prevents PERFECT and costs points. Debug mode has unlimited hints. |
+| **Locked blocks** | A new core mechanic. A locked block can't leave until every block of its key color has escaped. It has a padlock in its key color, and the padlock pops open when it unlocks. |
+| **Mystery levels** | Levels 10, 20, 30, 40, 50 and 60. Some arrows start hidden and are revealed when a neighbor escapes. They're provably fair: no guessing. |
+| **60 levels** | 1–5 onboarding · 6–10 easy · 11–20 medium · 21–30 medium-hard · 31–40 hard · 41–50 very hard · 51–60 expert. |
+| **Level complete screen** | Shows score (counting up), personal best / NEW BEST, stars, PERFECT, hearts left, Undo used and Hints used. Buttons: **NEXT LEVEL** and **REPLAY**. |
+| **Level Select** | A grid with level number, best stars, completed/locked state and a "?" marker on Mystery levels. |
+| **Analysis** | The verifier reports per-mechanic impact and mystery fairness, and enforces campaign quality rules. |
+
+---
+
+## Score rules (`scripts/core/score_rules.gd`)
+
+| | Points |
+|---|---|
+| Each escape | **100 + 20 × (chain − 1)**, with the chain bonus capped at +200 (chain ×11) |
+| Board cleared | +500 |
+| Hearts remaining | +200 each. Levels without hearts count 3 minus mistakes. |
+| No blocked/locked tap | +300 |
+| No Hint used | +300 |
+| No Undo used | +300 |
+| **PERFECT** | **+1000** |
+| Blocked or locked tap | −100 each |
+| Undo | −150 each |
+| Hint | −250 each |
+
+- There's no time component in Classic mode.
+- Escape points are stored in the Undo snapshot, so an undone move also takes back its points. You can't farm points with Undo.
+- The score never goes below 0.
+- The best possible score is `ScoreRules.max_score(blocks)`: one unbroken chain and PERFECT.
+
+## Star rules
+
+The defaults, overridable per level:
+
+| Star | Default rule |
+|---|---|
+| ★ | Complete the level |
+| ★★ | `no_hints`: complete without a Hint |
+| ★★★ | `perfect_or_score`: PERFECT, or a score ≥ the level's target |
+
+- Stars are cumulative: star 3 also needs star 2.
+- The automatic 3-star target is `max_score − 1500`. A clean run that used Undo once still reaches it, but a run with a blocked tap does not.
+- A level can override any rule in its JSON: `"stars": {"two": "no_mistakes", "three": "no_undo", "score": 9000}`.
+- Available rule names: `complete`, `no_hints`, `no_undo`, `no_mistakes`, `perfect`, `score`, `perfect_or_score`.
+- The best stars and best score per level are saved, and they never go down.
+
+## PERFECT rules
+
+A PERFECT clear needs **no heart lost** (no blocked or locked tap), **no Undo** and **no Hint**. In onboarding levels without hearts, "no heart lost" means no blocked tap. It gives:
+
+- +1000 points
+- a golden "PERFECT!" stamp over the board, a double celebration burst and a special jingle (the music ducks)
+- a gold-framed card titled **PERFECT!**
+- a guaranteed ★★★
+
+## Undo rules
+
+- **3 Undos per level attempt.** The count left is shown as a badge on the button, and the button is disabled at 0 or when there's nothing to undo.
+- Each Undo costs 150 points, removes the No-Undo bonus and prevents PERFECT.
+- Undo restores the board, spinner directions, hidden arrows, locks, the chain and the escape points. It does not refund hearts or penalties.
+- If you're stuck with no Undos left, the game says *"No moves left – tap Restart"*.
+- Restart and Replay start a fresh attempt with 3 Undos.
+
+## Hint rules
+
+- Allowance per level: **levels 1–19: 0** · **20–29: 1** · **30+: 2**. A level can override this with `"hints": n`.
+- A hint highlights one recommended **legal** move that keeps the level solvable, with a pulsing two-tone ring. It never plays the move and never shows more than one move.
+- Each hint costs 250 points, removes the No-Hint bonus (and therefore star 2) and prevents PERFECT.
+- If the board is already lost, Hint points to Undo instead, and nothing is spent.
+- **Debug mode** (F1, or `--debug`) has unlimited, free hints.
+
+## Locked blocks
+
+- A locked block shows a **padlock in its key color** and a soft veil. It can't escape while **any block of the key color** is still on the board.
+- It still blocks other blocks' lanes while it waits.
+- Tapping a locked block counts as a blocked tap: it costs a heart and −100 points. The block rattles and all its key blocks hop, so the rule explains itself.
+- When the last key-color block escapes, the padlock **pops open**, with a burst in the key color, a flash, an unlock chime and a haptic tick.
+- In level data it's written `B>#G` (a blue right-arrow block locked by green), or `"lock": "green"` in the explicit form.
+- The lock state is derived from the board, so Undo re-locks correctly, and the solver needs no extra state.
+- **Future lock types.** `BlockData.lock_color` and `BoardModel.is_locked()` / `key_blocks()` are the single extension point. A new condition would add a field and one branch there. None are implemented yet.
+- **Teaching.** Level 16 has one lock and two green keys, with a short hint and a finger. Levels 18–34 are lock-only boards with growing depth. From 36, locks combine with spinners.
+
+## Mystery levels
+
+- Levels **10, 20, 30, 40, 50 and 60**. They have a slightly deeper board tint, a purple **"? MYSTERY"** label, and a "?" marker in Level Select.
+- A hidden block shows its **color** but a **"?"** in place of its arrow, with a dashed inner border.
+- **Reveal rule:** the arrow is revealed as soon as **an orthogonally adjacent block escapes**, with a card-flip animation and a sparkle sound.
+- **A hidden block can't escape until it's revealed**, and tapping it is free: it wobbles and explains, with no heart lost and no penalty. So you never have to *guess* an arrow.
+- **Fairness is proven by the verifier.** At every state along the solution, for each still-hidden arrow and each of its three other possible directions, the trap status of every risky visible move must stay the same (`Solver.mystery_fairness()`). So a player can always choose a good move from visible information only; hidden arrows are uncovered, not guessed. Alternatives that would make the level unsolvable are ignored.
+- Mystery combines with other mechanics gradually:
+  - 10 and 20: mystery only
+  - 30 and 40: mystery + spinners
+  - 50 and 60: mystery + spinners + locks
+- In level data it's written `Y>?`. Spinners and locked blocks can't be hidden.
+
+## Difficulty progression and verification
+
+The mechanics arrive gradually:
+
+- **1–15:** the original mechanics and spinners.
+- **16–35:** locked blocks are introduced (16), then used lock-only with growing depth up to 34.
+- **36–60:** spinner + lock combinations.
+- **46–60:** a few boards combine all three (50 and 60).
+- **Variety breathers:** lock-only 49 and spinner-only 42, 44, 47, 51 and 55 keep the late game from becoming one-note.
+
+`tools/verify_levels.gd` computes, for every level:
+
+- block count and board size
+- legal starting moves and starting traps
+- decision points
+- dependency depth
+- solution length
+- largest direction share
+- spinner, lock and hidden counts
+- the **impact** of each mechanic (difficulty with vs. without it; **ESS** = the level is unsolvable without it)
+- mystery fairness
+- a difficulty score
+
+The run fails if any campaign rule is broken:
+
+- Every level is solvable, and the solver didn't give up.
+- From level 21: at most 3 starting moves, depth ≥ 5, all 4 directions used, and no direction on more than 45% of blocks.
+- Every spinner, lock or mystery use must add difficulty (impact ≥ 0.5; mystery ≥ 0.3). No decoration.
+- Mystery levels must be fair.
+- From level 11, no two boards of the same size may be more than 60% alike.
+
+Locks on their own can't create *traps*: removing a block only ever unlocks. So lock-only levels add dependency depth and reading, while real ordering decisions come from spinner + lock combinations. That's why late levels mostly combine the two.
+
+Current result, all 60 levels (✦ = Mystery):
+
+| # | Name | Size | Blocks | Spin | Lock | Hidden | Start | Traps | Decisions | Depth | Diff | Band |
+|---|---|---|---|---|---|---|---|---|---|---|---|---|
+| 1 | First Steps | 3×3 | 3 | 0 | 0 | 0 | 3 | 0 | 0 | 1 | 1.5 | Onboarding |
+| 2 | In The Way | 3×3 | 3 | 0 | 0 | 0 | 1 | 0 | 0 | 2 | 3.1 | Onboarding |
+| 3 | One After Another | 3×3 | 3 | 0 | 0 | 0 | 1 | 0 | 0 | 3 | 3.8 | Onboarding |
+| 4 | Around The Corner | 4×4 | 4 | 0 | 0 | 0 | 1 | 0 | 0 | 4 | 4.5 | Onboarding |
+| 5 | Two Ways In | 4×4 | 6 | 0 | 0 | 0 | 2 | 0 | 0 | 3 | 3.7 | Onboarding |
+| 6 | Rush Hour | 5×5 | 15 | 0 | 0 | 0 | 6 | 0 | 0 | 5 | 5.2 | Easy |
+| 7 | Crossroads | 5×5 | 9 | 0 | 0 | 0 | 2 | 0 | 0 | 7 | 6.5 | Easy |
+| 8 | Look Closer | 5×5 | 13 | 0 | 0 | 0 | 1 | 0 | 0 | 9 | 8.8 | Easy |
+| 9 | Spinner | 4×4 | 4 | 1 | 0 | 0 | 1 | 0 | 0 | 3 | 4.4 | Easy |
+| 10 ✦ | Hidden Arrow | 4×4 | 5 | 0 | 0 | 1 | 1 | 0 | 0 | 4 | 5.2 | Easy |
+| 11 | Order Matters | 4×4 | 5 | 1 | 0 | 0 | 2 | 1 | 1 | 4 | 7.6 | Medium |
+| 12 | Quarter Turn | 4×4 | 9 | 1 | 0 | 0 | 2 | 0 | 2 | 5 | 9.7 | Medium |
+| 13 | Wrong Way | 4×4 | 11 | 1 | 0 | 0 | 3 | 1 | 2 | 8 | 12.2 | Medium |
+| 14 | Pinwheel | 5×5 | 13 | 2 | 0 | 0 | 1 | 0 | 1 | 10 | 12.3 | Medium |
+| 15 | Tight Squeeze | 4×4 | 10 | 1 | 0 | 0 | 3 | 1 | 3 | 7 | 13.4 | Medium |
+| 16 | Locked | 4×4 | 5 | 0 | 1 | 0 | 2 | 0 | 0 | 4 | 5.0 | Medium |
+| 17 | Second Thoughts | 5×5 | 14 | 2 | 0 | 0 | 2 | 0 | 2 | 11 | 14.5 | Medium |
+| 18 | Key Colors | 4×4 | 9 | 0 | 2 | 0 | 1 | 0 | 0 | 7 | 8.7 | Medium |
+| 19 | Crosswind | 5×5 | 15 | 2 | 0 | 0 | 3 | 0 | 4 | 11 | 17.9 | Medium |
+| 20 ✦ | Fog | 5×5 | 11 | 0 | 0 | 3 | 1 | 0 | 0 | 8 | 9.8 | Medium |
+| 21 | Knots | 5×5 | 13 | 2 | 0 | 0 | 3 | 0 | 6 | 9 | 20.2 | Medium-hard |
+| 22 | Padlocks | 5×5 | 11 | 0 | 2 | 0 | 1 | 0 | 0 | 11 | 11.3 | Medium-hard |
+| 23 | Clockwork | 5×5 | 16 | 3 | 0 | 0 | 3 | 1 | 4 | 13 | 20.8 | Medium-hard |
+| 24 | Combination | 5×5 | 12 | 0 | 3 | 0 | 1 | 0 | 0 | 10 | 11.7 | Medium-hard |
+| 25 | Gridlock | 6×6 | 20 | 3 | 0 | 0 | 3 | 0 | 4 | 14 | 21.0 | Medium-hard |
+| 26 | Master Key | 5×5 | 12 | 0 | 3 | 0 | 1 | 0 | 0 | 11 | 12.3 | Medium-hard |
+| 27 | Domino Line | 5×5 | 13 | 2 | 0 | 0 | 3 | 2 | 7 | 10 | 25.9 | Medium-hard |
+| 28 | Safe House | 5×5 | 16 | 0 | 2 | 0 | 2 | 0 | 0 | 13 | 12.8 | Medium-hard |
+| 29 | Traffic Jam | 6×6 | 19 | 4 | 0 | 0 | 2 | 1 | 6 | 14 | 26.6 | Medium-hard |
+| 30 ✦ | Smoke and Mirrors | 6×6 | 17 | 2 | 0 | 3 | 2 | 1 | 2 | 14 | 19.6 | Medium-hard |
+| 31 | Twisted Lanes | 6×6 | 15 | 3 | 0 | 0 | 3 | 1 | 8 | 12 | 27.6 | Hard |
+| 32 | Vault | 5×5 | 17 | 0 | 4 | 0 | 2 | 0 | 0 | 12 | 13.9 | Hard |
+| 33 | Hairpin | 5×5 | 19 | 3 | 0 | 0 | 2 | 0 | 7 | 17 | 28.8 | Hard |
+| 34 | Strongroom | 6×6 | 17 | 0 | 4 | 0 | 1 | 0 | 0 | 16 | 16.8 | Hard |
+| 35 | Gearbox | 6×6 | 21 | 4 | 0 | 0 | 2 | 1 | 9 | 13 | 32.0 | Hard |
+| 36 | Spin the Lock | 6×6 | 15 | 3 | 2 | 0 | 2 | 1 | 6 | 12 | 26.0 | Hard |
+| 37 | Rush Order | 6×6 | 19 | 4 | 0 | 0 | 2 | 1 | 11 | 13 | 35.5 | Hard |
+| 38 | Tumblers | 6×6 | 17 | 2 | 2 | 0 | 2 | 0 | 7 | 12 | 26.7 | Hard |
+| 39 | Labyrinth | 6×6 | 19 | 3 | 0 | 0 | 2 | 1 | 11 | 16 | 36.9 | Hard |
+| 40 ✦ | Night Shift | 6×6 | 19 | 2 | 0 | 3 | 2 | 0 | 7 | 13 | 28.6 | Hard |
+| 41 | Gatekeeper | 6×6 | 14 | 3 | 2 | 0 | 2 | 0 | 8 | 10 | 27.4 | Very hard |
+| 42 | Whirlpool | 6×6 | 20 | 4 | 0 | 0 | 2 | 1 | 11 | 17 | 38.1 | Very hard |
+| 43 | Turnstile | 6×6 | 18 | 3 | 2 | 0 | 2 | 1 | 6 | 15 | 28.2 | Very hard |
+| 44 | Chain Reaction | 6×6 | 23 | 5 | 0 | 0 | 2 | 1 | 11 | 17 | 39.5 | Very hard |
+| 45 | Deadbolt | 5×5 | 14 | 3 | 2 | 0 | 2 | 1 | 10 | 13 | 34.0 | Very hard |
+| 46 | Key Ring | 6×6 | 20 | 4 | 3 | 0 | 2 | 1 | 8 | 16 | 34.2 | Very hard |
+| 47 | Grand Tangle | 6×6 | 21 | 3 | 0 | 0 | 2 | 1 | 15 | 14 | 43.5 | Very hard |
+| 48 | Lockstep | 6×6 | 20 | 4 | 2 | 0 | 2 | 1 | 9 | 15 | 34.7 | Very hard |
+| 49 | Long Way Round | 6×6 | 18 | 0 | 3 | 0 | 1 | 0 | 0 | 18 | 17.4 | Very hard |
+| 50 ✦ | Eclipse | 6×6 | 17 | 3 | 1 | 3 | 2 | 0 | 6 | 13 | 26.9 | Very hard |
+| 51 | Great Escape | 6×7 | 25 | 6 | 0 | 0 | 2 | 1 | 14 | 22 | 48.6 | Expert |
+| 52 | Clockmaker | 6×6 | 22 | 5 | 3 | 0 | 2 | 1 | 10 | 15 | 38.2 | Expert |
+| 53 | Escape Room | 6×6 | 20 | 5 | 3 | 0 | 2 | 1 | 10 | 16 | 38.5 | Expert |
+| 54 | Mechanism | 6×6 | 18 | 4 | 3 | 0 | 2 | 1 | 12 | 16 | 41.5 | Expert |
+| 55 | Cyclone | 6×7 | 22 | 6 | 0 | 0 | 2 | 1 | 8 | 17 | 33.7 | Expert |
+| 56 | Pressure | 6×7 | 22 | 5 | 3 | 0 | 2 | 1 | 11 | 17 | 41.3 | Expert |
+| 57 | Grand Vault | 6×6 | 23 | 5 | 3 | 0 | 2 | 1 | 12 | 17 | 43.4 | Expert |
+| 58 | Last Lock | 6×6 | 18 | 4 | 2 | 0 | 2 | 1 | 15 | 14 | 45.2 | Expert |
+| 59 | Final Turn | 6×6 | 21 | 4 | 2 | 0 | 2 | 1 | 16 | 20 | 51.1 | Expert |
+| 60 ✦ | The Last Secret | 6×6 | 22 | 4 | 2 | 4 | 2 | 0 | 10 | 15 | 38.3 | Expert |
+
+## Level generator
+
+```bash
+godot --headless --path . --script res://tools/generate_levels.gd -- --profile=spin_lock_hard --count=3 --seed=7 [--out=user://generated]
+```
+
+The pipeline is the same as v0.2 (reverse construction → hill-climbing → solver validation → metric rejection → repetition filter), plus:
+
+- **Mutations** that add, remove or re-key locks, recolor blocks (colors are keys), and hide or reveal arrows.
+- **Profiles:**
+  - v0.2: `easy`, `medium`, `medium_hard`, `hard`, `expert`
+  - locks: `lock_easy`, `lock_medium`, `lock_hard`
+  - combinations: `spin_lock`, `spin_lock_hard`, `spin_lock_expert`
+  - mystery: `mystery_medium`, `mystery_hard`, `mystery_expert`
+- **A final acceptance gate** (`LevelAnalysis`): a candidate is rejected if any mechanic it uses is decorative, or if a mystery isn't provably fair.
+
+Levels 18–60 that are new in v0.3 (all except the moved v0.2 levels and the handmade 10 and 16) were generated this way and curated by difficulty.
 
 ---
 
@@ -37,7 +239,7 @@ The desktop window opens at phone proportions (405×720). Mouse clicks are treat
 
 ```bash
 godot --path .                                  # play
-godot --path . -- --level=17                    # start directly on level 17
+godot --path . -- --level=40                    # start directly on level 40
 godot --path . -- --debug                       # start with the debug panel open (unlimited hints)
 ```
 
@@ -46,8 +248,9 @@ godot --path . -- --debug                       # start with the debug panel ope
 | Action | How |
 |---|---|
 | Escape a block | Tap it |
-| Undo (unlimited) | **UNDO** |
-| Hint (uses a token) | **HINT**. The badge shows tokens left (∞ in debug). |
+| Undo (3 per level) | **UNDO**. The badge shows the uses left. |
+| Hint (0–2 per level) | **HINT**. The badge shows hints left for this level (∞ in debug). |
+| Level Select | Grid icon, top left |
 | Restart level | **RESTART** |
 | Settings | Gear icon, top right |
 | Debug panel | **F1**, or tap the "LEVEL X" title 5× quickly on a device |
@@ -59,7 +262,7 @@ Saved in `user://progress.cfg`:
 
 - current level
 - highest completed level
-- hint tokens
+- best score and best stars for every level
 - Music / Sound Effects / Vibration settings
 
 ### Export to mobile
@@ -72,181 +275,88 @@ The project uses the **Compatibility** renderer, a portrait orientation and `can
 
 ---
 
+---
+
 ## Automated checks
 
 Run `godot --headless --path . --import` once on a fresh checkout so Godot registers the script classes.
 
 ```bash
-# 1) Unit tests. Covers:
-#      - rules, spinner turning, and undo snapshots of spinners
-#      - the solver and trap detection
-#      - hint safety: 3 random (often bad) play-throughs of every level; on each
-#        state, the hint must be a legal move that keeps the board solvable,
-#        and no hint may be offered on a lost board
-#      - progress and settings persistence, the hint economy, and the generator
-godot --headless --path . --script res://tools/run_tests.gd
-
-# 2) Level report. Every level must be solvable; prints difficulty metrics.
-godot --headless --path . --script res://tools/verify_levels.gd
-
-# 3) Full play-through of all 30 levels through the real game scene with
-#    injected touch events. Per level, it checks:
-#      - a blocked tap (chain reset; heart lost from level 6)
-#      - a hint (legal, highlighted, not auto-played, costs exactly one token,
-#        a second press is free)
-#      - an undo (block, chain and spinner directions restored)
-#      - clearing the level, and the LEVEL COMPLETE card
-#    Plus extra scenarios: out of hearts → Try Again → fresh attempt;
-#    Restart; a spinner trap → "no moves" → free hint refusal → Undo recovery;
-#    progress and tokens persisted to disk.
-godot --headless --path . res://tools/Playtest.tscn
+godot --headless --path . --script res://tools/run_tests.gd        # unit tests
+godot --headless --path . --script res://tools/verify_levels.gd    # 60-level analysis + campaign rules
+godot --headless --path . res://tools/Playtest.tscn                # end-to-end play-through
 ```
 
-Current results:
+**Unit tests** (`run_tests.gd`) cover:
 
-- `UNIT TESTS PASSED` (2,105 checks)
-- `ALL LEVELS SOLVABLE`
-- `PLAYTEST PASSED: all 30 levels cleared, hearts/hints/undo/restart/persistence OK`
+- directions and spinner turning
+- undo snapshots (spinners, locks and hidden arrows)
+- solver trap detection
+- **lock / unlock** in the model and solver, and a lock facing its only key being unsolvable
+- **mystery reveal**, re-hiding on Undo, and fairness: the intro level is fair, and a deliberately unfair board is rejected
+- **score arithmetic**, PERFECT, and default and data-driven **stars**
+- **best score / stars / progress persistence**
+- all levels solvable
+- **hint safety**: 3 random (often bad) play-throughs of every level. On every state, the hint must be legal and keep the board solvable, and no hint may be offered on a lost board.
+- the generator
+
+**Playtest** (`Playtest.tscn`) plays every level through the real scene with injected touches. Per level:
+
+- a blocked tap: chain reset, and a heart lost from level 6
+- a hint where allowed: legal, keeps the board solvable, highlighted, not auto-played, counted
+- an Undo: block, directions, hidden arrows and locks restored; the count goes up
+- clearing the board by following the solver, then the complete card with score, stars and the best saved
+
+Plus these scenarios:
+
+- **PERFECT** gives exactly `max_score` and ★★★. A worse replay keeps the best, and it's persisted to disk.
+- **Replay** restarts the same level.
+- **Level Select** opens with every level, and choosing a level starts it.
+- **Undo limit:** the 4th Undo is refused and the button is disabled.
+- **Hint limits:** 0 / 1 / 2 by band, and unlimited in debug.
+- **Locked block:** tapping it is a mistake; the unlock animation clears the padlock.
+- **Mystery:** tapping a hidden block is free, and the arrow is revealed on screen.
+- the out-of-hearts flow, Restart, and a spinner trap → stuck → Undo recovery
+- every level's best score persisted
+
+**Current results (v0.3):**
+
+| Check | Result |
+|---|---|
+| Unit tests | `UNIT TESTS PASSED`: 4,418 checks, 0 failures |
+| Level verifier | `ALL 60 LEVELS SOLVABLE AND PASS CAMPAIGN RULES`. All 6 Mystery levels are proven fair. Every mechanic use adds difficulty. |
+| Playtest | `PLAYTEST PASSED`: all 60 levels cleared through real touch input, plus the PERFECT, bests, Replay, Level Select, Undo/Hint limits, lock, mystery, hearts, Restart and trap scenarios |
+| Rendering | Checked at portrait 9:16 (720×1280) with screenshots of the HUD, locks, mystery levels, the complete/PERFECT cards and Level Select |
 
 The tests write progress to separate files (`user://test_progress.cfg`, `user://playtest_progress.cfg`), never to the player's.
-
-With a display you can also save screenshots or animation frames:
-
-```bash
-godot --path . res://tools/Playtest.tscn -- --shots=/tmp/shots
-godot --path . res://tools/Capture.tscn -- --level=12 --taps=2,1 --out=/tmp/cap [--hint] [--settings] [--coords] [--debug]
-```
-
----
-
-## The spinner mechanic
-
-```
- . B↻ G←        B is a spinner pointing up (free). G points into B. Y is free below B.
- . Y↓  .        Right: tap B first; then G and Y are free.
-                Trap:  tap Y first → B turns to face G, and G faces B → stuck.
-```
-
-- A spinner is marked by a **ring of two clockwise arrows** around its arrow. It's identified by shape, not color.
-- When a neighbor escapes, its arrow turns a quarter clockwise with a small tick sound.
-- Only orthogonal neighbors count. A spinner leaving also turns spinners next to it.
-- Undo turns spinners back, because block directions are part of the undo snapshot.
-- **Teaching.** Level 9 shows a spinner turning into an open lane, with no possible mistake. Level 10 is the first 50/50 choice where one start is a trap. From level 11 on, spinners and traps grow gradually.
-
-## The 30 levels
-
-These metrics come from `tools/verify_levels.gd`:
-
-- **Start:** legal moves at the beginning.
-- **Traps:** how many of those starting moves make the level unsolvable.
-- **Decisions:** states along the solution where a trap move exists.
-- **Depth:** number of dependency rounds.
-- **Diff:** the generator's difficulty score, weighted toward decisions and traps rather than raw block count.
-
-| # | Name | Size | Blocks | Spinners | Start | Traps | Decisions | Depth | Diff | Band |
-|---|---|---|---|---|---|---|---|---|---|---|
-| 1 | First Steps | 3×3 | 3 | 0 | 3 | 0 | 0 | 1 | 1.5 | Onboarding: tap |
-| 2 | In The Way | 3×3 | 3 | 0 | 1 | 0 | 0 | 2 | 3.1 | Onboarding: blocking |
-| 3 | One After Another | 3×3 | 3 | 0 | 1 | 0 | 0 | 3 | 3.8 | Onboarding: chain |
-| 4 | Around The Corner | 4×4 | 4 | 0 | 1 | 0 | 0 | 4 | 4.5 | Onboarding |
-| 5 | Two Ways In | 4×4 | 6 | 0 | 2 | 0 | 0 | 3 | 3.7 | Onboarding: two starts |
-| 6 | Rush Hour | 5×5 | 15 | 0 | 6 | 0 | 0 | 5 | 5.2 | Easy: hearts begin |
-| 7 | Crossroads | 5×5 | 9 | 0 | 2 | 0 | 0 | 7 | 6.5 | Easy (generated) |
-| 8 | Look Closer | 5×5 | 13 | 0 | 1 | 0 | 0 | 9 | 8.8 | Easy: decoy lanes |
-| 9 | Spinner | 4×4 | 4 | 1 | 1 | 0 | 0 | 3 | 4.4 | Easy: spinner intro |
-| 10 | Order Matters | 4×4 | 5 | 1 | 2 | 1 | 1 | 4 | 7.6 | Easy: first trap |
-| 11 | Quarter Turn | 4×4 | 9 | 1 | 2 | 0 | 2 | 5 | 9.7 | Medium |
-| 12 | Wrong Way | 4×4 | 11 | 1 | 3 | 1 | 2 | 8 | 12.2 | Medium |
-| 13 | Pinwheel | 5×5 | 13 | 2 | 1 | 0 | 1 | 10 | 12.3 | Medium |
-| 14 | Tight Squeeze | 4×4 | 10 | 1 | 3 | 1 | 3 | 7 | 13.4 | Medium |
-| 15 | Second Thoughts | 5×5 | 14 | 2 | 2 | 0 | 2 | 11 | 14.5 | Medium |
-| 16 | Crosswind | 5×5 | 15 | 2 | 3 | 0 | 4 | 11 | 17.9 | Medium-hard |
-| 17 | Knots | 5×5 | 13 | 2 | 3 | 0 | 6 | 9 | 20.2 | Medium-hard |
-| 18 | Clockwork | 5×5 | 16 | 3 | 3 | 1 | 4 | 13 | 20.8 | Medium-hard |
-| 19 | Gridlock | 6×6 | 20 | 3 | 3 | 0 | 4 | 14 | 21.0 | Medium-hard |
-| 20 | Domino Line | 5×5 | 13 | 2 | 3 | 2 | 7 | 10 | 25.9 | Medium-hard |
-| 21 | Traffic Jam | 6×6 | 19 | 4 | 2 | 1 | 6 | 14 | 26.6 | Hard |
-| 22 | Twisted Lanes | 6×6 | 15 | 3 | 3 | 1 | 8 | 12 | 27.6 | Hard |
-| 23 | Hairpin | 5×5 | 19 | 3 | 2 | 0 | 7 | 17 | 28.8 | Hard |
-| 24 | Gearbox | 6×6 | 21 | 4 | 2 | 1 | 9 | 13 | 32.0 | Hard |
-| 25 | Rush Order | 6×6 | 19 | 4 | 2 | 1 | 11 | 13 | 35.5 | Hard |
-| 26 | Labyrinth | 6×6 | 19 | 3 | 2 | 1 | 11 | 16 | 36.9 | Challenging |
-| 27 | Whirlpool | 6×6 | 20 | 4 | 2 | 1 | 11 | 17 | 38.1 | Challenging |
-| 28 | Chain Reaction | 6×6 | 23 | 5 | 2 | 1 | 11 | 17 | 39.5 | Challenging |
-| 29 | Grand Tangle | 6×6 | 21 | 3 | 2 | 1 | 15 | 14 | 43.5 | Challenging |
-| 30 | Great Escape | 6×7 | 25 | 6 | 2 | 1 | 14 | 22 | 48.6 | Challenging |
-
-v0.1's levels 8–10 (Two Streams, The Wave, Unwind) were removed. They were exactly the "many blocks pointing the same way, solution obvious" boards the playtest flagged.
-
-## Hint economy
-
-- A new player starts with **1 token**, which covers levels 1–10 (about 1 per 10 levels).
-- Completing levels **15 and 20** for the first time awards +1 each (about 1 per 5 levels in 11–20).
-- From level 21, every level divisible by 3 (**21, 24, 27, 30**) awards +1 (about 1 per 3 levels).
-- Replaying a level never awards tokens again.
-- Rewards show as **+1 HINT** on the completion card.
-
-The formula lives in `PlayerProgress.hints_awarded_for()`, so it already covers future levels.
-
-## Level generator (prototype)
-
-```bash
-godot --headless --path . --script res://tools/generate_levels.gd -- --profile=hard --count=3 --seed=7 [--out=user://generated]
-```
-
-`LevelGenerator` (`scripts/core/level_generator.gd`) works in five steps:
-
-1. **Reverse construction.** It plays the game backwards: blocks slide in from the edge, one at a time, onto cells whose lane is empty, and spinner turns are undone as it goes. Played forwards, the reverse order is a solution. Placement favors cells that block currently free blocks, and outward-facing edge blocks are budgeted, because those can never be blocked.
-2. **Hill-climbing refinement.** Random mutations (turn an arrow, toggle a spinner, move a block, or create a "trap motif" where a neighbor points into a spinner) are kept only if the board is still solvable and scores better on the profile.
-3. **Validation.** The `Solver` checks every candidate. Nothing is accepted on construction alone.
-4. **Metrics and rejection.** It checks board size, block and spinner counts, legal starting moves, start traps, decision points, dependency depth and direction diversity (largest direction share, and whether all 4 directions are used). Too many free moves, low direction diversity, a shallow structure or no real decisions each reject a board.
-5. **Repetition filter.** A board is rejected if its cell/arrow similarity to any known level of the same size exceeds the profile limit.
-
-Profiles: `easy`, `medium`, `medium_hard`, `hard`, `expert`. Output is written to a separate folder for a human to curate, never straight into `levels/`.
 
 ---
 
 ## Project structure
 
 ```
-project.godot                 Portrait 720x1280 base, Compatibility renderer, AudioManager autoload
-scenes/Main.tscn              GameManager + LevelManager, Board, TutorialHint, UI, DebugPanel
-levels/level_01..30.json      Level data (one file per level)
+levels/level_01..60.json      Level data (map form; modifiers @ spinner, ? hidden, #K locked by color K)
 scripts/
-  game_manager.gd             Orchestrates everything: rules, history, hearts, hints, board/ui/audio
+  game_manager.gd             Orchestration: rules, history, hearts, undo/hint limits, score, stars, level select
   core/
-    direction.gd              UP/DOWN/LEFT/RIGHT helpers, clockwise rotation
-    block_data.gd             Plain block data (id, cell, color, direction, kind: normal/spinner)
-    board_model.gd            Pure rules: occupancy, path checks, remove (+ spinner turns), snapshots
-    solver.gd                 Search solver: solve, recommend_move (hints), analyze (metrics)
-    level_generator.gd        Prototype generator: construct, refine, validate, score, reject
-    player_progress.gd        Saved progress, hint tokens, settings, hint economy
-    history.gd                Generic snapshot undo stack
-    level_data.gd             Parsed level
-    level_manager.gd          Loads/parses/serializes JSON levels
-    board.gd                  Grid→screen mapping, block views, input, feedback FX, hint highlight
-    block_view.gd             Draws one block (spinner badge, hint ring), plays its animations
-    escape_ghost.gd           Expanding outline effect where a block left
+    board_model.gd            Rules: lanes, spinners, locks (color counts), hidden arrows, snapshots
+    solver.gd                 Search solver: solve, recommend_move (hints), analyze, mystery_fairness
+    level_analysis.gd         Per-level report incl. mechanic impact + fairness (verifier / generator)
+    score_rules.gd            Score, PERFECT and data-driven star rules
+    player_progress.gd        Saved progress, best score + stars per level, settings
+    level_generator.gd        Prototype generator (construct, refine, validate, score, reject)
+    level_manager.gd          Loads/parses/serializes JSON levels (tokens with @ ? #K)
+    block_data.gd / level_data.gd / direction.gd / history.gd
+    board.gd / block_view.gd  Board and block visuals (padlock, "?" arrows, reveal/unlock animations, score pop-ups)
+    escape_ghost.gd
   ui/
-    ui_manager.gd             HUD: title, progress, hearts, chain, Undo/Hint/Restart, settings, cards
-    hearts_bar.gd             Hearts row + heart-loss animation
-    pill_button.gd            Rounded button with drawn icons and a count badge
-    progress_bar.gd           Board-cleared progress bar
-    tutorial_hint.gd          Animated tap indicator + one-line messages
-    palette.gd                All colors and fonts in one place
-  audio/
-    audio_manager.gd          Music/SFX buses, sound hooks, pitch scaling, ducking, placeholders
-    haptics.gd                Vibration wrapper (mobile only, can be switched off)
-  debug/
-    debug_panel.gd            Developer overlay (hidden by default; unlimited hints)
-tools/
-  run_tests.gd                Unit tests
-  verify_levels.gd            Level solvability and difficulty report
-  Playtest.tscn               End-to-end play-through of all levels
-  generate_levels.gd          LevelGenerator CLI
-  Capture.tscn                Screenshot/frame capture for design review
-  generate_music.py           Renders assets/audio/music.wav (numpy)
-assets/audio/                 music.wav + drop-in replacements for any sound (see Audio)
+    ui_manager.gd             HUD, Undo/Hint badges, complete card (score, stars, best), PERFECT stamp, settings
+    level_select.gd           Level grid (stars, locked/completed, Mystery marker)
+    stars_row.gd / shapes.gd  Star widgets
+    hearts_bar.gd / pill_button.gd / progress_bar.gd / tutorial_hint.gd / palette.gd
+  audio/ audio_manager.gd, haptics.gd
+  debug/ debug_panel.gd
+tools/ run_tests.gd, verify_levels.gd, Playtest.tscn, generate_levels.gd, Capture.tscn, generate_music.py
 ```
 
 ## Architecture
@@ -259,13 +369,15 @@ assets/audio/                 music.wav + drop-in replacements for any sound (se
     │                        ├──► UIManager   (hearts, chain, progress, cards, settings)
     └────────────────────────┤◄── UIManager signals: undo / hint / restart / next / setting
                              ├──► AudioManager (autoload: Music + SFX buses) + Haptics
-                             ├──► PlayerProgress (ConfigFile)
+                             ├──► PlayerProgress (ConfigFile: progress, bests, stars, settings)
+                             ├──► ScoreRules (score, PERFECT, stars)
                              └──► TutorialHint, DebugPanel
 ```
 
 - **Model vs. view split.** `BoardModel` holds the grid and rules, and `BoardModel.remove()` returns the spinners it turned. `Board`/`BlockView` only draw and animate. `GameManager` asks the model what is legal, then tells the view what to play.
-- **Solver.** It works on a compact in-place copy of the board, and memoizes dead states by remaining blocks plus spinner directions. Its key pruning rule is that a free block with no spinner neighbor is *always* safe to remove, because it only frees space and turns nothing. So it removes those greedily, and it branches only on moves that turn spinners. That keeps hints instant on a phone. A node limit guards against pathological boards.
-- **Undo = snapshots.** It's unchanged from v0.1. Spinner directions live in the block snapshot, so Undo covers the new mechanic with no extra code. Hearts are deliberately *not* in the snapshot, so undoing never refunds a mistake.
+- **Solver.** It works on a compact in-place copy of the board, and memoizes dead states by remaining blocks plus spinner directions. Locks (color counts) and reveals (whether any original neighbor has escaped) are derived from the alive set, so the memo key stays exact. Its key pruning rule is that a free block with no spinner neighbor is *always* safe to remove, because it only frees space and turns nothing. So it removes those greedily, and it branches only on moves that turn spinners. That keeps hints instant on a phone. A node limit guards against pathological boards.
+- **Undo = snapshots.** Unchanged since v0.1. Spinner directions and hidden flags live in the block snapshot. Locks are derived from the board (color counts), so Undo re-locks automatically. Escape points are in the snapshot too, so an undone move also takes back its points. Hearts, mistakes and penalties are deliberately *not* in the snapshot.
+- **Locks and mystery in the model.** `BoardModel.move_state(id)` returns `ok`, `blocked`, `locked` or `hidden`. `remove()` reports turned spinners, `last_revealed` and `last_unlocked`, so the Board can animate them.
 - **Grid, not pixels.** The board fits any rows × columns. 3×3 up to 6×7 are in use.
 - **Logic first, animation second.** A tap updates the model immediately and the animation follows, so fast chains are never throttled.
 - **Chain system.** Unchanged: consecutive escapes without a blocked tap. As the chain grows, the pitch climbs a pentatonic scale, the text grows, the particles strengthen and exits get faster. Finishing a level with no blocked taps shows **PERFECT CHAIN!**
@@ -292,7 +404,7 @@ One JSON file per level: `levels/level_NN.json`, discovered by number.
 }
 ```
 
-Each cell is `.` (empty) or a color letter + arrow, with an optional `@` for a spinner:
+Each cell is `.` (empty) or a color letter + arrow, then optional modifiers in this order: `@` spinner, `?` hidden arrow (mystery), `#K` locked by color K. For example: `B>`, `R^@`, `Y<?`, `G>#P`, `B>@#R`.
 
 - Colors: `R` red, `B` blue, `G` green, `Y` yellow, `P` purple.
 - Arrows: `^` up, `v` down, `<` left, `>` right.
@@ -301,8 +413,15 @@ Each cell is `.` (empty) or a color letter + arrow, with an optional `@` for a s
 
 ```json
 { "rows": 4, "columns": 4,
-  "blocks": [ { "row": 1, "column": 2, "color": "red", "direction": "up", "spinner": true } ] }
+  "blocks": [ { "row": 1, "column": 2, "color": "red", "direction": "up", "spinner": true, "lock": "green", "hidden": false } ] }
 ```
+
+Optional level keys:
+
+- `mystery` (bool)
+- `hints` (per-level hint allowance)
+- `stars` (star rules)
+- `hearts`, `hint`, `hint_finger`, `blocked_hint`
 
 ## Audio
 
@@ -318,6 +437,11 @@ Sound hooks:
 - `play_try_again()`
 - `play_ui_tap()`
 - `play_undo()`
+- `play_unlock()`
+- `play_reveal()`
+- `play_star(i)`
+- `play_perfect()` (also ducks the music)
+- `play_new_best()`
 
 The placeholder sounds are synthesized at startup.
 
@@ -326,31 +450,32 @@ The placeholder sounds are synthesized at startup.
 **Replacing audio.** Put a file named after the sound id in `assets/audio/`, and it's picked up automatically:
 
 - `escape`, `invalid`, `combo`, `level_complete`, `turn`, `heart_lost`, `hint`, `try_again`, `ui_tap`, `undo`
+- `unlock`, `reveal`, `star`, `perfect`, `new_best`
 - `music` for the background track
 
 `.ogg`, `.wav` and `.mp3` all work.
 
 ---
 
+---
+
 ## Known limitations
 
-- **Trap feedback is delayed.** A trap is only obvious when the board becomes stuck, sometimes several moves later. Hint and "No moves left" guide the player back with Undo. We didn't add an explicit "this board is now lost" warning; playtest whether players want one.
-- **Hint strategy.** Hint recommends the first legal move that keeps the board solvable. It prefers moves that turn spinners (the real decisions) over always-safe moves. It doesn't try to explain *why*.
-- **Generated levels were curated, but only by metrics and screenshots.** Levels 7 and 11–30 have not yet been hand-played by humans for fun or fairness. Some long dependency chains (depth 17–22) may feel grindy. Re-order or replace any that playtest poorly.
-- **Hearts vs. Undo.** Undo is unlimited and free, so hearts only punish blocked taps, not spinner mistakes. This is intentional: it's not harsh. A future "moves" or "star" rating could reward clean solves.
-- **Solver limits.** The solver has a node limit (60k). All shipped levels solve far below it. Much larger boards (8×8+ with many spinners) may need a smarter heuristic.
-- **Music is a generated placeholder**, and so are the sound effects.
-- **Fonts.** The UI uses the device's system font (SF Pro / Roboto) via `SystemFont`. On desktop Linux it falls back to DejaVu Sans.
-- **Haptics use `Input.vibrate_handheld`.** On iOS the duration is ignored.
-- **Not yet tested on physical devices.** It was verified by automated play-throughs and rendered screenshots at 9:16, 19.5:9 and 3:4-ish ratios.
-- **Headless test runs print an exit warning.** It's an `ObjectDB … leaked` / `music.wav still in use` warning: Godot's dummy audio driver never releases the looping music playback on quit. It's harmless, and it doesn't occur with a real audio device.
-- **Debug side effect.** The "Show grid coords" checkbox doesn't reflect the `--coords` capture flag.
+- **Lock-only levels can't create traps.** Removing a block only ever unlocks, so lock-only boards add depth and reading but not ordering *consequences*. Real ordering decisions come from spinner + lock combinations. That's why lock-only levels have lower difficulty scores than their neighbors (for example 32, 34 and 49).
+- **Locks depend on color.** Arrows and spinners are identified by shape, but a lock's key is a color. The padlock is drawn in the key color, and tapping a lock makes every key block hop, but color-blind players may still find some boards harder. A future "symbol per color" option would fix this.
+- **Mystery fairness is checked along the solver's solution path**, not every reachable state. It guarantees a fair line of play exists, not that every detour is equally informative.
+- **Generated levels were curated by metrics and screenshots**, not by human playtests. Some expert boards have 20+ moves with long dependency chains.
+- **Progress from v0.2 carries over by level number,** but levels were renumbered (v0.2 levels moved to new slots), so old saves may unlock a slightly different set. v0.2 hint tokens are no longer used.
+- **The 3-star target is automatic** (`max_score − 1500`) unless a level sets one. It hasn't been tuned per level.
+- **Solver node limit (60k).** All 60 levels solve far below it.
+- **Placeholder audio.** Music and sound effects are generated placeholders. The UI uses the device's system font (DejaVu Sans on desktop Linux).
+- **Headless runs print an exit warning** (`music.wav still in use` / `ObjectDB leaked`). It comes from the dummy audio driver and is harmless.
+- **Not yet tested on physical devices.** It was verified by automated play-throughs and rendered screenshots at 9:16, 19.5:9 and a wider ratio.
 
 ## Recommended next steps
 
-1. **Playtest v0.2 with the same group.** Watch levels 9–12 (do people understand spinners without text?), 20 and 25–30 (is it hard-fun or hard-frustrating?), and how often Hint and Undo are used.
-2. **Tune the curve with data.** Log time per level, blocked taps, undo count, hint use and quits. Swap levels using the generator and the `verify_levels.gd` metrics.
-3. **Mid-game trap feedback.** Consider a subtle cue when the board becomes unsolvable, for example spinners flashing gray, and measure whether it helps or spoils the puzzle.
-4. **Grow the generator into a pipeline.** Add a batch mode with more profiles, then curate with human playtest ratings. Only then consider endless generated content.
-5. **Juice with real assets:** designed SFX and music, iOS haptic patterns, and a bundled brand font.
-6. **Meta-lite:** a level select with PERFECT badges. The background-image reveal idea is reserved for a later version.
+1. **Playtest v0.3 with the same group.** Do players chase stars and replay? Is the lock rule obvious from level 16 alone? Do the Mystery levels feel like "uncovering"?
+2. **Tune 3-star targets per level** from real score distributions.
+3. **Color-independent lock keys** (symbols per color) for accessibility.
+4. **Stronger lock-only puzzles:** a second lock condition (a future version) could create lock traps.
+5. **Only then** consider Daily Challenge, leaderboards and the image-reveal collection.

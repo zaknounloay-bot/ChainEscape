@@ -35,6 +35,13 @@ var hinted: bool = false:
 var _hint_time: float = 0.0
 var _spin_time: float = 0.0
 var _turn_tween: Tween
+## Lock presentation: true while the padlock is shown. _lock_open animates
+## 0 (closed) -> 1 (open and gone) when the lock releases.
+var locked_visual: bool = false
+var _lock_open: float = 0.0:
+	set(v):
+		_lock_open = v
+		queue_redraw()
 ## 0..1 white flash drawn over the face (used on tap).
 var flash: float = 0.0:
 	set(v):
@@ -82,11 +89,15 @@ func _draw() -> void:
 	_side_style.draw(get_canvas_item(), side_rect)
 	_face_style.draw(get_canvas_item(), face_rect)
 	var center := face_rect.get_center()
-	if data.is_spinner():
+	if data.hidden:
+		_draw_mystery(face_rect, size)
+	elif data.is_spinner():
 		_draw_spinner_badge(center, size)
 		_draw_arrow(center, size * 0.78)
 	else:
 		_draw_arrow(center, size)
+	if locked_visual:
+		_draw_lock(face_rect, size)
 	if hinted:
 		_draw_hint_ring(face_rect)
 	if flash > 0.0:
@@ -120,6 +131,96 @@ func _draw_arrow(center: Vector2, size: float) -> void:
 	head.append(head[0])
 	draw_polyline(shaft, col, 1.5, true)
 	draw_polyline(head, col, 1.5, true)
+
+
+## Hidden arrow: a "?" and a dashed inner border. Color stays visible
+## (locks may depend on it); only the direction is unknown.
+func _draw_mystery(face_rect: Rect2, size: float) -> void:
+	var col := Palette.arrow(data.color)
+	var inner := face_rect.grow(-size * 0.12)
+	var dash := size * 0.08
+	var pts := [inner.position, Vector2(inner.end.x, inner.position.y), inner.end, Vector2(inner.position.x, inner.end.y), inner.position]
+	for i in 4:
+		draw_dashed_line(pts[i], pts[i + 1], Color(col, 0.45), maxf(2.0, size * 0.03), dash, true)
+	var font := Palette.font(900)
+	var fs := int(size * 0.55)
+	var w := font.get_string_size("?", HORIZONTAL_ALIGNMENT_LEFT, -1, fs).x
+	draw_string(font, face_rect.get_center() + Vector2(-w * 0.5, fs * 0.36), "?", HORIZONTAL_ALIGNMENT_LEFT, -1, fs, col)
+
+
+## Padlock in the top-right corner, colored like its key color, over a
+## soft veil that makes the block read as "not available yet".
+func _draw_lock(face_rect: Rect2, size: float) -> void:
+	var t := _lock_open
+	var veil := _face_style.duplicate() as StyleBoxFlat
+	veil.bg_color = Color(0.1, 0.07, 0.25, 0.30 * (1.0 - t))
+	veil.shadow_size = 0
+	veil.draw(get_canvas_item(), face_rect)
+	var s := size * 0.36 * (1.0 + 0.5 * t)
+	var a := 1.0 - t
+	var c := face_rect.position + Vector2(face_rect.size.x - size * 0.16, size * 0.18)
+	var body := Rect2(c + Vector2(-s * 0.5, -s * 0.1), Vector2(s, s * 0.72))
+	# Shackle (lifts as the lock opens).
+	var lift := s * 0.35 * t
+	draw_arc(c + Vector2(0, -s * 0.1 - lift), s * 0.3, PI, TAU, 16, Color(1, 1, 1, a), maxf(3.0, s * 0.16), true)
+	var st := StyleBoxFlat.new()
+	st.bg_color = Color(Palette.face(data.lock_color), a)
+	st.border_color = Color(1, 1, 1, a)
+	st.set_border_width_all(maxi(2, int(s * 0.1)))
+	st.set_corner_radius_all(int(s * 0.18))
+	st.anti_aliasing = true
+	st.shadow_color = Color(0, 0, 0, 0.25 * a)
+	st.shadow_size = 3
+	st.draw(get_canvas_item(), body)
+	draw_circle(body.get_center() + Vector2(0, -s * 0.04), s * 0.09, Color(1, 1, 1, a))
+
+
+func set_locked(on: bool, animate: bool = false) -> void:
+	if on:
+		locked_visual = true
+		_lock_open = 0.0
+	elif locked_visual:
+		if animate:
+			var t := create_tween()
+			t.tween_property(self, "_lock_open", 1.0, 0.45).set_trans(Tween.TRANS_BACK).set_ease(Tween.EASE_IN)
+			t.tween_callback(func():
+				locked_visual = false
+				queue_redraw())
+			flash = 1.0
+			create_tween().tween_property(self, "flash", 0.0, 0.4)
+		else:
+			locked_visual = false
+			_lock_open = 0.0
+
+
+## Mystery reveal: a quick card-flip, then the arrow is shown.
+func play_reveal() -> void:
+	var t := create_tween()
+	t.tween_property(self, "scale:x", 0.0, 0.09).set_trans(Tween.TRANS_SINE).set_ease(Tween.EASE_IN)
+	t.tween_callback(func():
+		data.hidden = false
+		flash = 1.0
+		queue_redraw())
+	t.tween_property(self, "scale:x", 1.0, 0.16).set_trans(Tween.TRANS_BACK).set_ease(Tween.EASE_OUT)
+	t.tween_property(self, "flash", 0.0, 0.25)
+
+
+## Locked block tapped: rattle sideways.
+func play_rattle() -> void:
+	position = home
+	var t := _new_tween()
+	for i in 3:
+		t.tween_property(self, "position", home + Vector2(cell_size * 0.05, 0), 0.035)
+		t.tween_property(self, "position", home - Vector2(cell_size * 0.05, 0), 0.035)
+	t.tween_property(self, "position", home, 0.04)
+
+
+## "I am one of the keys": a small hop.
+func play_key_pulse(delay: float = 0.0) -> void:
+	var t := create_tween()
+	t.tween_interval(delay)
+	t.tween_property(self, "scale", Vector2(1.12, 1.12), 0.1).set_trans(Tween.TRANS_SINE)
+	t.tween_property(self, "scale", Vector2.ONE, 0.18).set_trans(Tween.TRANS_BACK).set_ease(Tween.EASE_OUT)
 
 
 ## Spinner marker: a ring of two clockwise arcs with arrowheads around the

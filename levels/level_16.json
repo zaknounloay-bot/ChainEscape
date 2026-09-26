@@ -1,10 +1,10 @@
 {
-	"name": "Crosswind",
+	"name": "Locked",
+	"hint": "A lock opens when all blocks of its color are gone",
 	"map": [
-		".   R>  .   G>  .",
-		"P^@ G^  .   .   Y<",
-		"B^@ .   .   .   P^",
-		"R^  .   G>  R>  Yv",
-		"G<  P<  Y<  .   R<"
+		"Rv   .   Y<  .",
+		"B>#G .   .   .",
+		"Gv   .   .   Gv",
+		".    .   .   ."
 	]
 }

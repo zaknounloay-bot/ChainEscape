@@ -1,10 +1,10 @@
 {
-	"name": "Knots",
+	"name": "Second Thoughts",
 	"map": [
-		".   .   .   Y>  .",
-		"P^  Y>  .   G^  .",
-		"B^  G<  P>  Y>@ Rv@",
-		"Y>  P^  .   .   .",
-		"P^  .   .   .   Pv"
+		"G<  .   .   R<  G<",
+		".   Yv  .   .   R^",
+		"B^  Pv  .   .   .",
+		"P^@ .   R>  B>  P^",
+		".   P>  Y>@ G>  ."
 	]
 }

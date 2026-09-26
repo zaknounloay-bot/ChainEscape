@@ -1,11 +1,10 @@
 {
-	"name": "Chain Reaction",
+	"name": "Safe House",
 	"map": [
-		"Yv@ .   Yv  P>@ .   .",
-		"B>  .   P>  R>@ .   Y^",
-		".   Yv  G<  P^  .   .",
-		".   Bv  Rv@ G<  R<  .",
-		"P^  Rv  Yv  B>  .   B^",
-		".   G^@ R>  .   G>  P^"
+		"R^    G<    .     R<    Y<",
+		"Y>    .     Rv    P^    Y^",
+		"Gv#B  .     G>    Gv    P^",
+		".     R^    .     .     B<#Y",
+		".     P<    .     R<    ."
 	]
 }

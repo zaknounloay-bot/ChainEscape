@@ -1,11 +1,10 @@
 {
-	"name": "Gridlock",
+	"name": "Crosswind",
 	"map": [
-		".   Gv  .   .   .   .",
-		"R>  .   .   R^  Pv  .",
-		"P>@ .   G<  P<@ Gv  R<",
-		"Bv  G>  B>@ .   Yv  .",
-		"Y<  B>  .   G^  Bv  Y^",
-		".   G>  .   .   .   R^"
+		".   R>  .   G>  .",
+		"P^@ G^  .   .   Y<",
+		"B^@ .   .   .   P^",
+		"R^  .   G>  R>  Yv",
+		"G<  P<  Y<  .   R<"
 	]
 }

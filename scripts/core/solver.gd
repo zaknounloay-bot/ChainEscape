@@ -1,6 +1,6 @@
 class_name Solver
 extends RefCounted
-## Exhaustive solver for Chain Escape boards (with spinners).
+## Exhaustive solver for Chain Escape boards (spinners, locks, mystery).
 ##
 ## Used by the Hint button, the level verifier and the LevelGenerator.
 ##
@@ -9,6 +9,10 @@ extends RefCounted
 ## are applied greedily without branching. The search only branches on moves
 ## that turn spinners, and remembers dead states. Normal levels without
 ## spinners therefore solve in linear time.
+##
+## Locks and hidden arrows keep that rule valid: removing a block can only
+## lower color counts (unlocking) and reveal neighbours - never hurt. Both
+## are derived from the alive set, so the memo key stays exact.
 
 const DEFAULT_NODE_LIMIT := 60000
 
@@ -29,6 +33,12 @@ var _spinner: PackedByteArray
 var _alive: PackedByteArray
 var _alive_count: int = 0
 var _spinner_ids: PackedInt32Array
+var _color: PackedInt32Array  # color index per block
+var _lock: PackedInt32Array  # key color index, -1 = not locked
+var _hidden: PackedByteArray  # concealed at construction time
+var _neighbours: Array = []  # per block: neighbour ids at construction
+var _color_count := PackedInt32Array([0, 0, 0, 0, 0, 0, 0, 0])
+var _color_names: Array = []
 var _failed: Dictionary = {}
 var _path: Array[int] = []
 
@@ -50,6 +60,17 @@ func _init(p_rows: int, p_columns: int, blocks: Array) -> void:
 	_alive = PackedByteArray(); _alive.resize(n)
 	_alive.fill(0)
 	_spinner_ids = PackedInt32Array()
+	_color = PackedInt32Array(); _color.resize(n)
+	_lock = PackedInt32Array(); _lock.resize(n)
+	_lock.fill(-1)
+	_hidden = PackedByteArray(); _hidden.resize(n)
+	_neighbours.resize(n)
+	for b in blocks:
+		_color[b.id] = _color_index(b.color)
+		_color_count[_color[b.id]] += 1
+		if b.lock_color != "":
+			_lock[b.id] = _color_index(b.lock_color)
+		_hidden[b.id] = 1 if b.hidden else 0
 	for b in blocks:
 		var idx: int = b.cell.y * columns + b.cell.x
 		_grid[idx] = b.id
@@ -60,6 +81,22 @@ func _init(p_rows: int, p_columns: int, blocks: Array) -> void:
 		_alive_count += 1
 		if b.is_spinner():
 			_spinner_ids.append(b.id)
+	for b in blocks:
+		var nb := []
+		for step in Direction.STEPS:
+			var x: int = b.cell.x + step.x
+			var y: int = b.cell.y + step.y
+			if x >= 0 and y >= 0 and x < columns and y < rows and _grid[y * columns + x] != -1:
+				nb.append(_grid[y * columns + x])
+		_neighbours[b.id] = nb
+
+
+func _color_index(c: String) -> int:
+	var i := _color_names.find(c)
+	if i == -1:
+		_color_names.append(c)
+		i = _color_names.size() - 1
+	return i
 
 
 static func from_model(model: BoardModel) -> Solver:
@@ -94,7 +131,7 @@ func is_solvable() -> bool:
 func legal_moves() -> Array[int]:
 	var out: Array[int] = []
 	for id in _alive.size():
-		if _alive[id] == 1 and _is_free(id):
+		if _alive[id] == 1 and _is_legal(id):
 			out.append(id)
 	return out
 
@@ -127,7 +164,12 @@ func analyze() -> Dictionary:
 		"solvable": false, "solution": [],
 		"start_traps": 0, "decision_points": 0, "trap_moves": 0,
 		"depth": 0, "direction_share": 0.0, "directions_used": 0,
+		"locks": 0, "hidden": 0,
 	}
+	for id in _alive.size():
+		if _alive[id] == 1:
+			m["locks"] += 1 if _lock[id] >= 0 else 0
+			m["hidden"] += 1 if _is_concealed(id) else 0
 	# Direction diversity.
 	var counts := [0, 0, 0, 0]
 	for id in _alive.size():
@@ -174,6 +216,57 @@ func analyze() -> Dictionary:
 	return m
 
 
+## Mystery fairness: hidden arrows must never be needed to choose well.
+##
+## Walks the solution. At every state with concealed blocks, it takes each
+## concealed block, tries its three other possible directions, and checks
+## that every risky visible move (one that turns a spinner) keeps the same
+## "trap / not trap" status. If so, a player can always pick a good move
+## from visible information only; hidden arrows are uncovered, not guessed.
+## (Alternatives that would make the level unsolvable are skipped.)
+func mystery_fairness() -> Dictionary:
+	var result := {"fair": true, "states_checked": 0, "reason": ""}
+	var solution := solve()
+	if solution.is_empty() and _alive_count > 0:
+		return {"fair": false, "states_checked": 0, "reason": "unsolvable"}
+	var applied: Array = []
+	for step in solution.size():
+		var concealed := []
+		for id in _alive.size():
+			if _alive[id] == 1 and _is_concealed(id):
+				concealed.append(id)
+		if not concealed.is_empty():
+			result["states_checked"] += 1
+			var risky := legal_moves().filter(func(x): return _spinner_neighbours(x) > 0)
+			if not risky.is_empty():
+				var base := _trap_map(risky)
+				for h in concealed:
+					var true_dir := _dir[h]
+					for d in 4:
+						if d == true_dir:
+							continue
+						_dir[h] = d
+						if not _solve_keep_state().is_empty() and _trap_map(risky) != base:
+							result["fair"] = false
+							result["reason"] = "step %d: hidden block %d decides a trap" % [step, h]
+						_dir[h] = true_dir
+		var move: int = solution[step]
+		applied.append(move)
+		_apply(move)
+	for i in range(applied.size() - 1, -1, -1):
+		_undo(applied[i])
+	return result
+
+
+func _trap_map(moves: Array) -> Array:
+	var out := []
+	for id in moves:
+		_apply(id)
+		out.append(_alive_count > 0 and _solve_keep_state().is_empty())
+		_undo(id)
+	return out
+
+
 # --- Search ----------------------------------------------------------------
 
 func _solve_keep_state() -> Array[int]:
@@ -208,7 +301,7 @@ func _dfs() -> bool:
 	while progress:
 		progress = false
 		for id in _alive.size():
-			if _alive[id] == 1 and _spinner_neighbours(id) == 0 and _is_free(id):
+			if _alive[id] == 1 and _spinner_neighbours(id) == 0 and _is_legal(id):
 				_apply(id)
 				safe.append(id)
 				_path.append(id)
@@ -219,7 +312,7 @@ func _dfs() -> bool:
 	if not _failed.has(key):
 		# 2) Branch on moves that turn spinners.
 		for id in _alive.size():
-			if _alive[id] == 1 and _is_free(id):
+			if _alive[id] == 1 and _is_legal(id):
 				var turned := _apply(id)
 				_path.append(id)
 				if _dfs():
@@ -252,6 +345,25 @@ func _key() -> String:
 		dirs = dirs * 4 + _dir[sid]
 	parts.append(str(dirs))
 	return ":".join(parts)
+
+
+## Can escape now: not hidden, not locked, and the lane is clear.
+func _is_legal(id: int) -> bool:
+	if _hidden[id] == 1 and _is_concealed(id):
+		return false
+	if _lock[id] >= 0 and _color_count[_lock[id]] > 0:
+		return false
+	return _is_free(id)
+
+
+## Still hidden: no neighbour (at construction time) has escaped yet.
+func _is_concealed(id: int) -> bool:
+	if _hidden[id] == 0:
+		return false
+	for n in _neighbours[id]:
+		if _alive[n] == 0:
+			return false
+	return true
 
 
 func _is_free(id: int) -> bool:
@@ -290,6 +402,7 @@ func _apply(id: int) -> Array:
 	_grid[idx] = -1
 	_alive[id] = 0
 	_alive_count -= 1
+	_color_count[_color[id]] -= 1
 	var turned := []
 	var c := idx % columns
 	var r := idx / columns
@@ -326,3 +439,4 @@ func _undo(id: int, _turned: Array = []) -> void:
 	_grid[idx] = id
 	_alive[id] = 1
 	_alive_count += 1
+	_color_count[_color[id]] += 1

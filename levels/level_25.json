@@ -1,11 +1,11 @@
 {
-	"name": "Rush Order",
+	"name": "Gridlock",
 	"map": [
-		"R<@ B<  Y<  Bv  .   .",
-		"G^  .   P>  G>  .   Yv",
-		"Y^  .   B>@ .   G^  Rv@",
-		".   .   R^  .   B<  .",
-		".   Y^  B>  .   .   Yv",
-		".   P^  .   .   .   B<@"
+		".   Gv  .   .   .   .",
+		"R>  .   .   R^  Pv  .",
+		"P>@ .   G<  P<@ Gv  R<",
+		"Bv  G>  B>@ .   Yv  .",
+		"Y<  B>  .   G^  Bv  Y^",
+		".   G>  .   .   .   R^"
 	]
 }

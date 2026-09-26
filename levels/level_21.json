@@ -1,11 +1,10 @@
 {
-	"name": "Traffic Jam",
+	"name": "Knots",
 	"map": [
-		".   .   .   .   Rv@ G<",
-		"G^  B<  Pv  .   Yv  .",
-		".   .   G>  P>  .   Rv",
-		"Pv  B^  .   .   Y<  .",
-		"B>  .   Y^@ .   B>  P>",
-		".   R^@ B<  .   .   R<@"
+		".   .   .   Y>  .",
+		"P^  Y>  .   G^  .",
+		"B^  G<  P>  Y>@ Rv@",
+		"Y>  P^  .   .   .",
+		"P^  .   .   .   Pv"
 	]
 }

@@ -15,3 +15,10 @@ var blocks: Array = []  # Array of BlockData
 var hint_finger: bool = true
 ## Hearts for this level; -1 = use the default rule (3 from level 6 on).
 var hearts: int = -1
+## Mystery level (some arrows start hidden). Derived from blocks if not set.
+var mystery: bool = false
+## Hints allowed this level; -1 = default rule (see GameManager).
+var hints: int = -1
+## Star rules, data-driven per level. Keys: "two", "three" (rule names, see
+## ScoreRules) and "score" (3-star score target, 0 = auto).
+var star_rules: Dictionary = {}

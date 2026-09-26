@@ -1,10 +1,9 @@
 {
-	"name": "Second Thoughts",
+	"name": "Tight Squeeze",
 	"map": [
-		"G<  .   .   R<  G<",
-		".   Yv  .   .   R^",
-		"B^  Pv  .   .   .",
-		"P^@ .   R>  B>  P^",
-		".   P>  Y>@ G>  ."
+		".   .   .   Y<",
+		"G>  Pv  Y>  G^",
+		".   G>  R^  .",
+		".   P<@ Gv  Y<"
 	]
 }

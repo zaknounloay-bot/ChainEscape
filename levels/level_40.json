@@ -1,0 +1,12 @@
+{
+	"name": "Night Shift",
+	"mystery": true,
+	"map": [
+		".    Bv   .    R>   B>   B>",
+		"B>   .    .    B^@  R<@  .",
+		"P^   .    .    B>   .    P^",
+		"R^   G<?  .    R<   .    B^",
+		"B^?  Pv?  .    .    .    Gv",
+		".    .    .    Yv   .    B<"
+	]
+}
