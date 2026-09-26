@@ -13,6 +13,7 @@ config_version=5
 config/name="Chain Escape"
 config/description="Tap a block, let it escape, chain the exits. Clear the board."
 run/main_scene="res://scenes/Main.tscn"
+config/icon="res://icon.svg"
 config/features=PackedStringArray("4.3", "GL Compatibility")
 boot_splash/bg_color=Color(0.96, 0.95, 0.93, 1)
 boot_splash/show_image=false

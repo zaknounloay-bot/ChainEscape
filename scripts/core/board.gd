@@ -19,6 +19,8 @@ var show_coords: bool = false:
 	set(v):
 		show_coords = v
 		queue_redraw()
+		if _coords_layer:
+			_coords_layer.queue_redraw()
 
 ## id -> BlockView for blocks that are on the board (escaping ones are removed).
 var _views: Dictionary = {}
@@ -29,11 +31,14 @@ var _rest_position := Vector2.ZERO
 var _pulse_tween: Tween
 @onready var _blocks_root := Node2D.new()
 @onready var _fx_root := Node2D.new()
+@onready var _coords_layer := Node2D.new()  # debug labels, drawn above blocks
 
 
 func _ready() -> void:
 	add_child(_blocks_root)
 	add_child(_fx_root)
+	add_child(_coords_layer)
+	_coords_layer.draw.connect(_draw_coords)
 	_panel_style.bg_color = Palette.BOARD
 	_panel_style.anti_aliasing = true
 	_slot_style.bg_color = Palette.SLOT
@@ -55,7 +60,7 @@ func build(p_rows: int, p_columns: int, blocks: Array, animate: bool) -> void:
 	for b in blocks:
 		var view := _create_view(b)
 		if animate:
-			view.play_appear(0.03 * (b.cell.x + b.cell.y))
+			view.play_appear(0.018 * (b.cell.x + b.cell.y))
 	queue_redraw()
 
 
@@ -122,9 +127,20 @@ func _draw() -> void:
 		for c in columns:
 			var center := cell_to_local(Vector2i(c, r))
 			_slot_style.draw(get_canvas_item(), Rect2(center - Vector2(slot, slot) * 0.5, Vector2(slot, slot)))
-			if show_coords:
-				draw_string(Palette.font(700), center + Vector2(-slot * 0.45, -slot * 0.3), "%d,%d" % [c, r],
-						HORIZONTAL_ALIGNMENT_LEFT, -1, int(cell_size * 0.16), Palette.TEXT_SOFT)
+	_coords_layer.queue_redraw()
+
+
+## Debug overlay: "column,row" in the corner of every cell.
+func _draw_coords() -> void:
+	if not show_coords:
+		return
+	for r in rows:
+		for c in columns:
+			var corner := Vector2(c, r) * cell_size + Vector2(cell_size * 0.1, cell_size * 0.26)
+			_coords_layer.draw_string(Palette.font(800), corner + Vector2(2, 2), "%d,%d" % [c, r],
+					HORIZONTAL_ALIGNMENT_LEFT, -1, int(cell_size * 0.17), Color(0, 0, 0, 0.5))
+			_coords_layer.draw_string(Palette.font(800), corner, "%d,%d" % [c, r],
+					HORIZONTAL_ALIGNMENT_LEFT, -1, int(cell_size * 0.17), Color.WHITE)
 
 
 # --- Input -----------------------------------------------------------------

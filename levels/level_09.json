@@ -1,0 +1,10 @@
+{
+	"name": "The Wave",
+	"map": [
+		"R^ Y< G< B< P<",
+		"Y^ G< B< P< R<",
+		"G^ B< P< R< Y<",
+		"B^ P< R< Y< G<",
+		"P^ R< Y< G< B<"
+	]
+}

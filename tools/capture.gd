@@ -3,6 +3,7 @@ extends Node
 ## frames so animations can be inspected without a device.
 ##
 ##   godot --path . res://tools/Capture.tscn -- --level=3 --taps=2,1 --out=/tmp/cap
+##   (add --coords to draw grid coordinates, --debug to open the debug panel)
 ##
 ## Each tap saves frames at the listed delays (seconds after the tap).
 
@@ -31,6 +32,8 @@ func _run() -> void:
 	var game: GameManager = load("res://scenes/Main.tscn").instantiate()
 	get_tree().root.add_child(game)
 	game.start_level(level)
+	if "--coords" in OS.get_cmdline_user_args():
+		game.board.show_coords = true
 	await get_tree().create_timer(0.6).timeout
 	_save("start")
 	var i := 0

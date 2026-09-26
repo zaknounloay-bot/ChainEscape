@@ -59,7 +59,12 @@ func play_undo() -> void:
 
 
 static func chain_pitch(chain: int) -> float:
-	var idx := clampi(chain - 1, 0, CHAIN_SCALE.size() - 1)
+	var idx := maxi(chain - 1, 0)
+	if idx >= CHAIN_SCALE.size():
+		# Past the top, keep a melody going in the upper octave instead of
+		# repeating one note (long cascades like level 10).
+		var top := 5
+		idx = CHAIN_SCALE.size() - top + (idx - CHAIN_SCALE.size()) % top
 	return pow(2.0, CHAIN_SCALE[idx] / 12.0)
 
 

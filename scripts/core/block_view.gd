@@ -84,8 +84,6 @@ func _draw_arrow(center: Vector2, size: float) -> void:
 	head.append(head[0])
 	draw_polyline(shaft, col, 1.5, true)
 	draw_polyline(head, col, 1.5, true)
-	# Rounded shaft end.
-	draw_circle(base, shaft_w, col)
 
 
 # --- Animations ------------------------------------------------------------

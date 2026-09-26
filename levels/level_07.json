@@ -1,0 +1,10 @@
+{
+	"name": "Look Closer",
+	"map": [
+		"Y> .  .  .  Pv",
+		".  B< P< Y< Rv",
+		".  .  R^ .  Y<",
+		".  G^ .  .  G<",
+		"R^ .  P> B^ ."
+	]
+}
