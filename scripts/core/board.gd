@@ -170,11 +170,18 @@ func _find_block_near(local: Vector2) -> int:
 # --- Feedback --------------------------------------------------------------
 
 ## Sends a block off-screen. `chain` makes the effect a touch stronger.
-func play_escape(id: int, chain: int) -> void:
+## `turned` = spinner ids the escape turned (from BoardModel.remove).
+func play_escape(id: int, chain: int, turned: Array = []) -> void:
 	var view: BlockView = _views.get(id)
 	if view == null:
 		return
 	_views.erase(id)
+	if view.hinted:
+		view.hinted = false
+	for sid in turned:
+		var sv: BlockView = _views.get(sid)
+		if sv:
+			sv.play_turn(Direction.rotate_cw(sv.data.direction), true, 0.05)
 	var dir := Direction.vector(view.data.direction)
 	var duration := clampf(0.28 - 0.012 * (chain - 1), 0.20, 0.28)
 	var tween := view.play_escape(_offscreen_point(view.home, dir), duration)
@@ -213,9 +220,29 @@ func sync_to(blocks: Array) -> void:
 			_views.erase(id)
 	for id in wanted:
 		if _views.has(id):
+			var existing: BlockView = _views[id]
+			if existing.data.direction != wanted[id].direction:
+				# A spinner turned back by Undo.
+				existing.play_turn(wanted[id].direction, false)
 			continue
 		var view := _create_view(wanted[id])
 		view.play_return(_offscreen_point(view.home, Direction.vector(view.data.direction)).lerp(view.home, 0.55))
+
+
+## Highlights one block as the hint (clears any previous highlight).
+func set_hint(id: int) -> void:
+	for vid in _views:
+		_views[vid].hinted = (vid == id)
+
+
+func clear_hint() -> void:
+	set_hint(-1)
+
+
+## Screen position of a block's center (for tutorial fingers etc.).
+func block_screen_position(id: int) -> Vector2:
+	var view: BlockView = _views.get(id)
+	return to_global(view.home) if view else global_position
 
 
 ## Short celebration when the board is cleared.

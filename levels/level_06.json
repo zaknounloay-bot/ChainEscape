@@ -1,5 +1,7 @@
 {
 	"name": "Rush Hour",
+	"hint": "From now on, blocked taps cost a heart",
+	"hint_finger": false,
 	"map": [
 		"Rv .  B^ Y> .",
 		"R> G> .  .  P^",

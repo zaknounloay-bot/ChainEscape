@@ -1,0 +1,10 @@
+{
+	"name": "Hairpin",
+	"map": [
+		".   .   Pv  B<  .",
+		"Gv  P<  Rv  Y^  Gv",
+		"Bv  Y^  B<  .   Yv",
+		"Y>  P>@ R^@ B>  G>",
+		".   R>  B^@ R>  ."
+	]
+}

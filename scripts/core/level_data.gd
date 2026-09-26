@@ -11,3 +11,7 @@ var blocked_hint: String = ""
 var rows: int = 0
 var columns: int = 0
 var blocks: Array = []  # Array of BlockData
+## Show the animated finger with `hint` (false = text only).
+var hint_finger: bool = true
+## Hearts for this level; -1 = use the default rule (3 from level 6 on).
+var hearts: int = -1

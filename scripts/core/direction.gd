@@ -24,6 +24,20 @@ static func vector(dir: int) -> Vector2:
 	return Vector2(STEPS[dir])
 
 
+## Next direction clockwise on screen: UP -> RIGHT -> DOWN -> LEFT -> UP.
+static func rotate_cw(dir: int) -> int:
+	return [RIGHT, LEFT, UP, DOWN][dir]
+
+
+static func rotate_ccw(dir: int) -> int:
+	return [LEFT, RIGHT, DOWN, UP][dir]
+
+
+## Screen angle (radians) of an arrow pointing in `dir`, with RIGHT = 0.
+static func angle(dir: int) -> float:
+	return vector(dir).angle()
+
+
 static func from_string(value: String) -> int:
 	var idx := NAMES.find(value.strip_edges().to_lower())
 	if idx == -1:

@@ -1,10 +1,10 @@
 {
-	"name": "The Wave",
+	"name": "Spinner",
+	"hint": "Spinners turn when a neighbor escapes",
 	"map": [
-		"R^ Y< G< B< P<",
-		"Y^ G< B< P< R<",
-		"G^ B< P< R< Y<",
-		"B^ P< R< Y< G<",
-		"P^ R< Y< G< B<"
+		".   Yv  .   .",
+		".   P>@ R<  .",
+		".   Bv  .   .",
+		".   .   .   ."
 	]
 }

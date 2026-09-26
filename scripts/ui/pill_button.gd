@@ -2,13 +2,20 @@ class_name PillButton
 extends Button
 ## Rounded button with an optional hand-drawn icon (no image assets needed).
 
-enum Icon { NONE, UNDO, RESTART }
+enum Icon { NONE, UNDO, RESTART, HINT, GEAR }
 
 var icon_kind: int = Icon.NONE
+## Small counter bubble in the top-right corner ("" = hidden).
+var badge_text: String = "":
+	set(v):
+		badge_text = v
+		queue_redraw()
+## Horizontal position of the icon center.
+var icon_x: float = 50.0
 var _press_tween: Tween
 
 
-func _init(p_text: String = "", p_icon: int = Icon.NONE, bg: Color = Palette.WHITE, fg: Color = Palette.TEXT, font_size: int = 30) -> void:
+func _init(p_text: String = "", p_icon: int = Icon.NONE, bg: Color = Palette.WHITE, fg: Color = Palette.TEXT, font_size: int = 30, compact: bool = false) -> void:
 	text = p_text
 	icon_kind = p_icon
 	focus_mode = Control.FOCUS_NONE
@@ -18,7 +25,13 @@ func _init(p_text: String = "", p_icon: int = Icon.NONE, bg: Color = Palette.WHI
 	for state in ["font_color", "font_hover_color", "font_pressed_color", "font_focus_color", "font_hover_pressed_color"]:
 		add_theme_color_override(state, fg)
 	add_theme_color_override("font_disabled_color", Color(fg, 0.35))
-	var left_pad := 84 if icon_kind != Icon.NONE else 36
+	var left_pad := (84 if not compact else 68) if icon_kind != Icon.NONE else 36
+	if p_text == "":
+		left_pad = 0
+	_right_pad = 36 if not compact else 22
+	if p_text == "":
+		_right_pad = 0
+	icon_x = 50.0 if not compact else 36.0
 	add_theme_stylebox_override("normal", _style(bg, left_pad))
 	add_theme_stylebox_override("hover", _style(bg, left_pad))
 	add_theme_stylebox_override("focus", StyleBoxEmpty.new())
@@ -30,13 +43,16 @@ func _init(p_text: String = "", p_icon: int = Icon.NONE, bg: Color = Palette.WHI
 	resized.connect(func(): pivot_offset = size * 0.5)
 
 
+var _right_pad := 36
+
+
 func _style(bg: Color, left_pad: int, shadow: bool = true) -> StyleBoxFlat:
 	var s := StyleBoxFlat.new()
 	s.bg_color = bg
 	s.set_corner_radius_all(48)
 	s.anti_aliasing = true
 	s.content_margin_left = left_pad
-	s.content_margin_right = 36
+	s.content_margin_right = _right_pad
 	s.content_margin_top = 18
 	s.content_margin_bottom = 18
 	if shadow:
@@ -62,10 +78,12 @@ func _animate_scale(target: float, time: float) -> void:
 
 
 func _draw() -> void:
+	if badge_text != "":
+		_draw_badge()
 	if icon_kind == Icon.NONE:
 		return
 	var col: Color = get_theme_color("font_disabled_color" if disabled else "font_color")
-	var c := Vector2(50, size.y * 0.5)
+	var c := Vector2(icon_x if text != "" else size.x * 0.5, size.y * 0.5)
 	var r := 15.0
 	var w := 5.0
 	if icon_kind == Icon.UNDO:
@@ -81,6 +99,38 @@ func _draw() -> void:
 		var a1 := PI * 4.0 / 3.0
 		draw_arc(c, r, a0, a1, 32, col, w, true)
 		_arrow_head(c + Vector2.from_angle(a1) * r, Vector2(-sin(a1), cos(a1)), col)
+
+
+	elif icon_kind == Icon.HINT:
+		# Light bulb.
+		draw_arc(c + Vector2(0, -4), 12.0, PI * 0.75, PI * 2.25, 28, col, w, true)
+		draw_line(c + Vector2(-8, 6), c + Vector2(-5, 12), col, w, true)
+		draw_line(c + Vector2(8, 6), c + Vector2(5, 12), col, w, true)
+		draw_line(c + Vector2(-6, 14), c + Vector2(6, 14), col, w, true)
+		draw_line(c + Vector2(-4, 19), c + Vector2(4, 19), col, w, true)
+	elif icon_kind == Icon.GEAR:
+		for k in 8:
+			var a := TAU * k / 8.0
+			draw_line(c + Vector2.from_angle(a) * 11.0, c + Vector2.from_angle(a) * 18.0, col, 6.0, true)
+		draw_arc(c, 12.0, 0.0, TAU, 32, col, 5.0, true)
+		draw_arc(c, 4.0, 0.0, TAU, 16, col, 3.0, true)
+
+
+func _draw_badge() -> void:
+	var font := Palette.font(900)
+	var fs := 22
+	var w := maxf(34.0, font.get_string_size(badge_text, HORIZONTAL_ALIGNMENT_LEFT, -1, fs).x + 16.0)
+	var rect := Rect2(Vector2(size.x - w * 0.75, -10), Vector2(w, 34))
+	var st := StyleBoxFlat.new()
+	st.bg_color = Palette.HINT if badge_text != "0" else Palette.TEXT_SOFT
+	st.set_corner_radius_all(17)
+	st.anti_aliasing = true
+	st.border_color = Palette.WHITE
+	st.set_border_width_all(3)
+	st.draw(get_canvas_item(), rect)
+	var tw := font.get_string_size(badge_text, HORIZONTAL_ALIGNMENT_LEFT, -1, fs).x
+	draw_string(font, Vector2(rect.get_center().x - tw * 0.5, rect.position.y + 25), badge_text,
+			HORIZONTAL_ALIGNMENT_LEFT, -1, fs, Palette.TEXT)
 
 
 func _arrow_head(at: Vector2, dir: Vector2, col: Color) -> void:

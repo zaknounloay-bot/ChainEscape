@@ -2,6 +2,10 @@ class_name BoardModel
 extends RefCounted
 ## Pure game rules for a Chain Escape board.
 ##
+## A block may escape when every cell between it and the board edge (in its
+## arrow direction) is empty. When a block escapes, adjacent SPINNER blocks
+## turn clockwise, which is what makes move order matter.
+##
 ## Knows nothing about nodes, tweens or screens, which keeps it trivially
 ## testable (see tools/verify_levels.gd) and lets the undo system work on
 ## plain snapshots.
@@ -61,12 +65,33 @@ func can_escape(id: int) -> bool:
 
 
 ## Removes the block from the board. Caller must check can_escape first.
-func remove(id: int) -> void:
+## Spinners orthogonally adjacent to the removed block turn clockwise.
+## Returns the ids of the spinners that turned (for animation).
+func remove(id: int) -> Array:
 	var b: BlockData = blocks.get(id)
 	if b == null:
-		return
+		return []
 	_occupancy.erase(b.cell)
 	blocks.erase(id)
+	var turned := []
+	for step in Direction.STEPS:
+		var n := block_at(b.cell + step)
+		if n != null and n.is_spinner():
+			n.direction = Direction.rotate_cw(n.direction)
+			turned.append(n.id)
+	return turned
+
+
+## True if removing `id` would turn at least one spinner.
+func turns_spinners(id: int) -> bool:
+	var b: BlockData = blocks.get(id)
+	if b == null:
+		return false
+	for step in Direction.STEPS:
+		var n := block_at(b.cell + step)
+		if n != null and n.is_spinner():
+			return true
+	return false
 
 
 ## Ids of every block that could escape right now.

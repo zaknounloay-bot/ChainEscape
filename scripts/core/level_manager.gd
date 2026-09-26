@@ -8,17 +8,21 @@ extends Node
 ## 1) "map" (recommended) - one string per row, space separated cells.
 ##    "."  = empty cell
 ##    "R>" = color letter (R,B,G,Y,P) + arrow (^ v < >)
+##    "R>@" = same, but a SPINNER (turns clockwise when a neighbour escapes)
 ##      { "name": "Hello", "map": ["R> . .", ". B^ ."] }
 ##
 ## 2) Explicit block list:
 ##      { "rows": 4, "columns": 4,
-##        "blocks": [ { "row": 0, "column": 1, "color": "red", "direction": "up" } ] }
+##        "blocks": [ { "row": 0, "column": 1, "color": "red", "direction": "up",
+##                      "spinner": true } ] }
+##
+## Optional keys: "name", "hint" (start text + finger), "hint_finger" (bool,
+## default true), "blocked_hint", "hearts" (override the heart count).
 ##
 ## Levels are discovered by number, so adding level_11.json is all it takes
 ## to add a level.
 
 const LEVEL_PATH := "res://levels/level_%02d.json"
-const SAVE_PATH := "user://progress.cfg"
 
 const COLOR_LETTERS := {"R": "red", "B": "blue", "G": "green", "Y": "yellow", "P": "purple"}
 
@@ -52,6 +56,8 @@ static func parse_level(json: Dictionary, number: int = 0) -> LevelData:
 	level.name = json.get("name", "Level %d" % number)
 	level.hint = json.get("hint", "")
 	level.blocked_hint = json.get("blocked_hint", "")
+	level.hint_finger = bool(json.get("hint_finger", true))
+	level.hearts = int(json.get("hearts", -1))
 	if json.has("map"):
 		_parse_map(json["map"], level)
 	else:
@@ -70,11 +76,13 @@ static func _parse_map(map: Array, level: LevelData) -> void:
 			var t := tokens[c]
 			if t == "." or t == "..":
 				continue
-			if t.length() != 2 or not COLOR_LETTERS.has(t[0].to_upper()) or not Direction.MAP_CHARS.has(t[1]):
+			var spinner := t.length() == 3 and t[2] == "@"
+			if (t.length() != 2 and not spinner) or not COLOR_LETTERS.has(t[0].to_upper()) or not Direction.MAP_CHARS.has(t[1]):
 				push_error("Level %d: bad map token '%s' at row %d col %d" % [level.number, t, r, c])
 				continue
 			var color: String = COLOR_LETTERS[t[0].to_upper()]
-			level.blocks.append(BlockData.new(next_id, Vector2i(c, r), color, Direction.MAP_CHARS[t[1]]))
+			var kind := BlockData.Kind.SPINNER if spinner else BlockData.Kind.NORMAL
+			level.blocks.append(BlockData.new(next_id, Vector2i(c, r), color, Direction.MAP_CHARS[t[1]], kind))
 			next_id += 1
 
 
@@ -84,20 +92,31 @@ static func _parse_block_list(json: Dictionary, level: LevelData) -> void:
 	var next_id := 0
 	for b in json.get("blocks", []):
 		var cell := Vector2i(int(b["column"]), int(b["row"]))
-		level.blocks.append(BlockData.new(next_id, cell, String(b["color"]), Direction.from_string(String(b["direction"]))))
+		var kind := BlockData.Kind.SPINNER if b.get("spinner", false) else BlockData.Kind.NORMAL
+		level.blocks.append(BlockData.new(next_id, cell, String(b["color"]), Direction.from_string(String(b["direction"])), kind))
 		next_id += 1
 
 
-# --- Progress --------------------------------------------------------------
-
-func load_saved_level() -> int:
-	var cfg := ConfigFile.new()
-	if cfg.load(SAVE_PATH) != OK:
-		return 1
-	return clampi(int(cfg.get_value("progress", "current_level", 1)), 1, max(level_count, 1))
-
-
-func save_current_level(number: int) -> void:
-	var cfg := ConfigFile.new()
-	cfg.set_value("progress", "current_level", number)
-	cfg.save(SAVE_PATH)
+## Serializes a level back to the "map" JSON form (used by the generator).
+static func to_json_text(level: LevelData) -> String:
+	var grid := []
+	for r in level.rows:
+		var row := []
+		row.resize(level.columns)
+		row.fill(". ")
+		grid.append(row)
+	var letters := {}
+	for k in COLOR_LETTERS:
+		letters[COLOR_LETTERS[k]] = k
+	var arrows := {}
+	for k in Direction.MAP_CHARS:
+		arrows[Direction.MAP_CHARS[k]] = k
+	for b in level.blocks:
+		grid[b.cell.y][b.cell.x] = letters.get(b.color, "B") + arrows[b.direction] + ("@" if b.is_spinner() else "")
+	var lines := PackedStringArray()
+	for row in grid:
+		var cells := PackedStringArray()
+		for t in row:
+			cells.append(String(t).rpad(3))
+		lines.append('\t\t"%s"' % " ".join(cells).strip_edges())
+	return '{\n\t"name": "%s",\n\t"map": [\n%s\n\t]\n}\n' % [level.name, ",\n".join(lines)]

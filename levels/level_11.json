@@ -1,0 +1,9 @@
+{
+	"name": "Quarter Turn",
+	"map": [
+		".   Pv  R^  .",
+		"Y>  .   .   Bv",
+		".   P<  .   Y<",
+		"P^  G>@ R^  ."
+	]
+}

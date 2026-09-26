@@ -2,24 +2,34 @@ class_name Palette
 ## Central place for every color and font used by the game.
 ## Tweak the look of the whole prototype from here.
 
-const BACKGROUND := Color("#F6F3EE")
-const BOARD := Color("#ECE6DC")
-const SLOT := Color("#E2DBCF")
-const TEXT := Color("#2E2A33")
-const TEXT_SOFT := Color("#8F877C")
-const ACCENT := Color("#FF7A45")
-const ACCENT_HOT := Color("#F0435A")  # chain text shifts toward this at high chains
+# v0.2: brighter, more saturated palette. Color is decoration only - the
+# rules never depend on it. Direction is always the arrow shape and
+# spinners carry their own ring badge, so color-blind players lose nothing.
+const BACKGROUND := Color("#F3F1FA")
+const BOARD := Color("#E5E1F3")
+const SLOT := Color("#D8D2EC")
+const TEXT := Color("#1D1A2E")
+const TEXT_SOFT := Color("#7A7596")
+const ACCENT := Color("#FF5A1F")
+const ACCENT_HOT := Color("#FF1F6B")  # chain text shifts toward this at high chains
+const HEART := Color("#FF2D55")
+const HINT := Color("#FFC400")
 const WHITE := Color("#FFFFFF")
-const SHADOW := Color(0.24, 0.18, 0.10, 0.16)
+const SHADOW := Color(0.12, 0.08, 0.30, 0.18)
 
-## name -> [face, side (depth) color]
+## name -> [face, side (depth) color, arrow color]
+## Yellow gets a dark arrow: white on yellow is too low-contrast.
 const BLOCKS := {
-	"red": [Color("#F2545B"), Color("#C73B44")],
-	"blue": [Color("#3D8BFD"), Color("#2A67C9")],
-	"green": [Color("#2DBE7E"), Color("#1F9161")],
-	"yellow": [Color("#F7B32B"), Color("#CF8B12")],
-	"purple": [Color("#8E6CF0"), Color("#6A4BC4")],
+	"red": [Color("#FF3D5A"), Color("#D01F42"), Color("#FFFFFF")],
+	"blue": [Color("#1E7BFF"), Color("#0F57D6"), Color("#FFFFFF")],
+	"green": [Color("#00C46A"), Color("#00914E"), Color("#FFFFFF")],
+	"yellow": [Color("#FFB800"), Color("#DB8A00"), Color("#4A2A00")],
+	"purple": [Color("#8A3FFC"), Color("#6224D6"), Color("#FFFFFF")],
 }
+
+
+static func arrow(color_name: String) -> Color:
+	return BLOCKS.get(color_name, BLOCKS["blue"])[2]
 
 
 static func face(color_name: String) -> Color:

@@ -1,0 +1,10 @@
+{
+	"name": "Domino Line",
+	"map": [
+		".   B>@ .   G>  P>",
+		".   G<  .   Y<  .",
+		"Y>  .   .   .   Gv",
+		"B^  .   .   R^  Yv",
+		".   R^@ Pv  .   B<"
+	]
+}

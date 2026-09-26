@@ -1,0 +1,11 @@
+{
+	"name": "Traffic Jam",
+	"map": [
+		".   .   .   .   Rv@ G<",
+		"G^  B<  Pv  .   Yv  .",
+		".   .   G>  P>  .   Rv",
+		"Pv  B^  .   .   Y<  .",
+		"B>  .   Y^@ .   B>  P>",
+		".   R^@ B<  .   .   R<@"
+	]
+}

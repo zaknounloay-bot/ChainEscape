@@ -8,7 +8,7 @@ extends CanvasLayer
 signal level_requested(number: int)
 signal restart_requested
 signal coords_toggled(on: bool)
-signal hint_requested  # play one free block
+signal hint_requested  # play one correct move (solver)
 signal solve_requested  # play the whole level automatically
 
 var level_count: int = 1
@@ -69,7 +69,7 @@ func _build() -> void:
 	_panel.add_child(box)
 
 	var title := Label.new()
-	title.text = "DEBUG  (F1)"
+	title.text = "DEBUG (F1) - hints unlimited"
 	title.add_theme_color_override("font_color", Color.WHITE)
 	box.add_child(title)
 
@@ -87,7 +87,7 @@ func _build() -> void:
 	var row2 := HBoxContainer.new()
 	box.add_child(row2)
 	row2.add_child(_button("Restart", func(): restart_requested.emit()))
-	row2.add_child(_button("Hint", func(): hint_requested.emit()))
+	row2.add_child(_button("Move", func(): hint_requested.emit()))
 	row2.add_child(_button("Solve", func(): solve_requested.emit()))
 
 	var coords := CheckBox.new()

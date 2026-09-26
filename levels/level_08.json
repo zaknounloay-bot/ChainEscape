@@ -1,10 +1,10 @@
 {
-	"name": "Two Streams",
+	"name": "Look Closer",
 	"map": [
-		"R^ R< R< R< R<",
-		"Bv .  G^ .  Y^",
-		"Bv G< .  P> Y^",
-		"Bv .  Pv .  Y^",
-		"Bv B< B< B< B<"
+		"Y> .  .  .  Pv",
+		".  B< P< Y< Rv",
+		".  .  R^ .  Y<",
+		".  G^ .  .  G<",
+		"R^ .  P> B^ ."
 	]
 }

@@ -1,14 +1,17 @@
 class_name UIManager
 extends CanvasLayer
-## Gameplay HUD: level title, board progress, chain counter, Undo/Restart and
-## the level-complete card. Emits intent signals; never touches game state.
+## Gameplay HUD: level title, board progress, hearts, chain counter,
+## Undo/Hint/Restart, settings and the level-complete / try-again card.
+## Emits intent signals; never touches game state.
 
 signal undo_pressed
 signal restart_pressed
 signal next_pressed
+signal hint_pressed
+signal setting_toggled(key: String, on: bool)  # "music" | "sfx" | "haptics"
 signal title_tapped  # used as a hidden debug gesture on devices
 
-const TOP_HEIGHT := 250.0
+const TOP_HEIGHT := 290.0
 const BOTTOM_HEIGHT := 190.0
 
 var _root: Control
@@ -20,6 +23,14 @@ var _progress: BoardProgress
 var _chain_label: Label
 var _undo_button: PillButton
 var _restart_button: PillButton
+var _hint_button: PillButton
+var _hearts: HeartsBar
+var _hearts_holder: CenterContainer
+var _settings_button: PillButton
+var _settings_overlay: ColorRect
+var _setting_buttons: Dictionary = {}  # key -> PillButton
+var _settings: Dictionary = {"music": true, "sfx": true, "haptics": true}
+var _card_reward: Label
 var _overlay: ColorRect
 var _card: PanelContainer
 var _card_title: Label
@@ -56,6 +67,43 @@ func set_progress(fraction: float, animate: bool = true) -> void:
 	_progress.set_progress(fraction, animate)
 
 
+## Hearts row; max_hearts 0 hides it (onboarding levels).
+func set_hearts(max_hearts: int, current: int) -> void:
+	_hearts_holder.modulate.a = 1.0 if max_hearts > 0 else 0.0
+	if max_hearts > 0:
+		_hearts.set_hearts(max_hearts, current)
+
+
+func lose_heart() -> void:
+	_hearts.lose_heart()
+
+
+## Shows the hint token count on the Hint button ("∞"-style text in debug).
+func set_hint_count(text: String) -> void:
+	_hint_button.badge_text = text
+
+
+func pulse_hint_button() -> void:
+	_pulse(_hint_button)
+
+
+func pulse_undo_button() -> void:
+	_pulse(_undo_button)
+
+
+func _pulse(b: Control) -> void:
+	b.pivot_offset = b.size * 0.5
+	var t := create_tween()
+	for i in 2:
+		t.tween_property(b, "scale", Vector2(1.1, 1.1), 0.12).set_trans(Tween.TRANS_SINE)
+		t.tween_property(b, "scale", Vector2.ONE, 0.16).set_trans(Tween.TRANS_SINE)
+
+
+func apply_settings(music: bool, sfx: bool, haptics: bool) -> void:
+	_settings = {"music": music, "sfx": sfx, "haptics": haptics}
+	_refresh_setting_buttons()
+
+
 func set_undo_enabled(enabled: bool) -> void:
 	_undo_button.disabled = not enabled
 	_undo_button.queue_redraw()
@@ -83,7 +131,10 @@ func show_chain(chain: int) -> void:
 	_chain_tween.tween_property(_chain_label, "modulate:a", 0.0, 0.3)
 
 
-func show_complete(best_chain: int, perfect: bool, is_last_level: bool) -> void:
+func show_complete(best_chain: int, perfect: bool, is_last_level: bool, hints_awarded: int = 0) -> void:
+	_card_reward.visible = hints_awarded > 0
+	_card_reward.text = "+%d HINT%s" % [hints_awarded, "S" if hints_awarded > 1 else ""]
+	_next_button.visible = true
 	_card_title.text = "LEVEL COMPLETE" if not is_last_level else "ALL LEVELS COMPLETE"
 	var stats := "Best chain  x%d" % best_chain
 	if perfect:
@@ -100,6 +151,23 @@ func show_complete(best_chain: int, perfect: bool, is_last_level: bool) -> void:
 	t.tween_property(_card, "scale", Vector2.ONE, 0.32).set_trans(Tween.TRANS_BACK).set_ease(Tween.EASE_OUT)
 	t.tween_property(_card, "modulate:a", 1.0, 0.18)
 	_bottom.modulate.a = 0.0
+
+
+## Short, friendly out-of-hearts state. GameManager restarts the level after.
+func show_try_again() -> void:
+	_card_title.text = "OUT OF HEARTS"
+	_card_stats.text = "No worries - try again!"
+	_card_reward.visible = false
+	_next_button.visible = false
+	_overlay.visible = true
+	_overlay.color = Color(Palette.BACKGROUND, 0.0)
+	_card.pivot_offset = _card.size * 0.5
+	_card.scale = Vector2(0.9, 0.9)
+	_card.modulate.a = 0.0
+	var t := create_tween().set_parallel()
+	t.tween_property(_overlay, "color:a", 0.6, 0.2)
+	t.tween_property(_card, "scale", Vector2.ONE, 0.25).set_trans(Tween.TRANS_BACK).set_ease(Tween.EASE_OUT)
+	t.tween_property(_card, "modulate:a", 1.0, 0.15)
 
 
 func hide_complete() -> void:
@@ -142,6 +210,12 @@ func _build() -> void:
 	bar_holder.add_child(_progress)
 	_top.add_child(bar_holder)
 
+	_hearts_holder = CenterContainer.new()
+	_hearts_holder.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	_hearts = HeartsBar.new()
+	_hearts_holder.add_child(_hearts)
+	_top.add_child(_hearts_holder)
+
 	_chain_label = _make_label(40, Palette.ACCENT, 900)
 	_chain_label.custom_minimum_size = Vector2(0, 64)
 	_chain_label.modulate.a = 0.0
@@ -151,15 +225,19 @@ func _build() -> void:
 	_bottom = HBoxContainer.new()
 	_bottom.set_anchors_and_offsets_preset(Control.PRESET_BOTTOM_WIDE)
 	_bottom.alignment = BoxContainer.ALIGNMENT_CENTER
-	_bottom.add_theme_constant_override("separation", 28)
+	_bottom.add_theme_constant_override("separation", 16)
 	_bottom.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	_root.add_child(_bottom)
-	_undo_button = PillButton.new("UNDO", PillButton.Icon.UNDO)
-	_undo_button.custom_minimum_size = Vector2(250, 100)
+	_undo_button = PillButton.new("UNDO", PillButton.Icon.UNDO, Palette.WHITE, Palette.TEXT, 26, true)
+	_undo_button.custom_minimum_size = Vector2(200, 96)
 	_undo_button.pressed.connect(func(): undo_pressed.emit())
 	_bottom.add_child(_undo_button)
-	_restart_button = PillButton.new("RESTART", PillButton.Icon.RESTART)
-	_restart_button.custom_minimum_size = Vector2(250, 100)
+	_hint_button = PillButton.new("HINT", PillButton.Icon.HINT, Palette.WHITE, Palette.TEXT, 26, true)
+	_hint_button.custom_minimum_size = Vector2(186, 96)
+	_hint_button.pressed.connect(func(): hint_pressed.emit())
+	_bottom.add_child(_hint_button)
+	_restart_button = PillButton.new("RESTART", PillButton.Icon.RESTART, Palette.WHITE, Palette.TEXT, 26, true)
+	_restart_button.custom_minimum_size = Vector2(212, 96)
 	_restart_button.pressed.connect(func(): restart_pressed.emit())
 	_bottom.add_child(_restart_button)
 
@@ -192,6 +270,9 @@ func _build() -> void:
 	card_box.add_child(_card_title)
 	_card_stats = _make_label(26, Palette.TEXT_SOFT, 800)
 	card_box.add_child(_card_stats)
+	_card_reward = _make_label(30, Palette.ACCENT, 900)
+	_card_reward.visible = false
+	card_box.add_child(_card_reward)
 	var spacer := Control.new()
 	spacer.custom_minimum_size = Vector2(0, 12)
 	card_box.add_child(spacer)
@@ -200,6 +281,77 @@ func _build() -> void:
 	_next_button.size_flags_horizontal = Control.SIZE_SHRINK_CENTER
 	_next_button.pressed.connect(func(): next_pressed.emit())
 	card_box.add_child(_next_button)
+
+	# Settings: gear in the top-right corner + a small card of toggles.
+	_settings_button = PillButton.new("", PillButton.Icon.GEAR, Palette.WHITE, Palette.TEXT_SOFT, 26)
+	_settings_button.custom_minimum_size = Vector2(76, 76)
+	_settings_button.set_anchors_and_offsets_preset(Control.PRESET_TOP_RIGHT)
+	_settings_button.pressed.connect(_open_settings)
+	_root.add_child(_settings_button)
+	_build_settings()
+
+
+func _build_settings() -> void:
+	_settings_overlay = ColorRect.new()
+	_settings_overlay.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
+	_settings_overlay.color = Color(Palette.TEXT, 0.35)
+	_settings_overlay.mouse_filter = Control.MOUSE_FILTER_STOP
+	_settings_overlay.visible = false
+	_settings_overlay.gui_input.connect(func(e):
+		if e is InputEventMouseButton and e.pressed:
+			_close_settings())
+	_root.add_child(_settings_overlay)
+	var center := CenterContainer.new()
+	center.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
+	center.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	_settings_overlay.add_child(center)
+	var card := PanelContainer.new()
+	var st := StyleBoxFlat.new()
+	st.bg_color = Palette.WHITE
+	st.set_corner_radius_all(40)
+	st.anti_aliasing = true
+	st.set_content_margin_all(40)
+	card.add_theme_stylebox_override("panel", st)
+	card.custom_minimum_size = Vector2(480, 0)
+	center.add_child(card)
+	var box := VBoxContainer.new()
+	box.add_theme_constant_override("separation", 18)
+	card.add_child(box)
+	box.add_child(_make_label(40, Palette.TEXT, 900))
+	box.get_child(0).text = "SETTINGS"
+	for key in ["music", "sfx", "haptics"]:
+		var b := PillButton.new("", PillButton.Icon.NONE, Palette.BACKGROUND, Palette.TEXT, 28)
+		b.custom_minimum_size = Vector2(0, 84)
+		b.pressed.connect(func():
+			_settings[key] = not _settings[key]
+			_refresh_setting_buttons()
+			setting_toggled.emit(key, _settings[key]))
+		box.add_child(b)
+		_setting_buttons[key] = b
+	var done := PillButton.new("DONE", PillButton.Icon.NONE, Palette.ACCENT, Palette.WHITE, 30)
+	done.custom_minimum_size = Vector2(0, 90)
+	done.pressed.connect(_close_settings)
+	box.add_child(done)
+	_refresh_setting_buttons()
+
+
+func _refresh_setting_buttons() -> void:
+	var names := {"music": "MUSIC", "sfx": "SOUND EFFECTS", "haptics": "VIBRATION"}
+	for key in _setting_buttons:
+		_setting_buttons[key].text = "%s:  %s" % [names[key], "ON" if _settings[key] else "OFF"]
+		_setting_buttons[key].modulate.a = 1.0 if _settings[key] else 0.6
+
+
+func _open_settings() -> void:
+	_settings_overlay.visible = true
+
+
+func _close_settings() -> void:
+	_settings_overlay.visible = false
+
+
+func is_settings_open() -> bool:
+	return _settings_overlay.visible
 
 
 func _make_label(font_size: int, color: Color, weight: int) -> Label:
@@ -224,6 +376,10 @@ func _apply_safe_area() -> void:
 		_safe_top = safe.position.y * scale_y
 		_safe_bottom = maxf(0.0, (win.y - safe.end.y) * scale_y)
 	_top.offset_top = _safe_top + 36.0
+	_settings_button.offset_left = -76.0 - 24.0
+	_settings_button.offset_right = -24.0
+	_settings_button.offset_top = _safe_top + 28.0
+	_settings_button.offset_bottom = _safe_top + 28.0 + 76.0
 	_bottom.offset_top = -BOTTOM_HEIGHT - _safe_bottom + 30.0
 	_bottom.offset_bottom = -_safe_bottom - 60.0
 

@@ -1,10 +1,10 @@
 {
-	"name": "Look Closer",
+	"name": "Crossroads",
 	"map": [
-		"Y> .  .  .  Pv",
-		".  B< P< Y< Rv",
-		".  .  R^ .  Y<",
-		".  G^ .  .  G<",
-		"R^ .  P> B^ ."
+		"R>  .   .   R>  Gv",
+		"G>  .   R>  .   .",
+		"R^  .   .   .   .",
+		".   .   R^  .   .",
+		".   G<  .   .   R<"
 	]
 }
