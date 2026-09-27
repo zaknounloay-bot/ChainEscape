@@ -18,6 +18,10 @@ config/features=PackedStringArray("4.3", "GL Compatibility")
 boot_splash/bg_color=Color(0.953, 0.945, 0.98, 1)
 boot_splash/show_image=false
 
+[audio]
+
+general/default_playback_type.web=0
+
 [autoload]
 
 AudioManager="*res://scripts/audio/audio_manager.gd"

@@ -92,6 +92,19 @@ The unlock sequence:
    - This happens once. Later taps never restart the music.
 4. Saved Music / Sound Effects / Vibration settings are applied as loaded. The unlock never changes them.
 
+**Web playback type: Stream.**
+
+- `project.godot` sets `audio/general/default_playback_type.web = Stream`. Godot's default for Web is Sample.
+- No `AudioStreamPlayer` node sets its own type; all of them use Default, so they follow this setting.
+- **Stream:** Godot mixes all audio itself and feeds one Web Audio node. This is the path Web exports used before Godot 4.3, and it is well proven on iOS.
+- **Sample:** each sound is a separate Web Audio buffer routed through a JS copy of the bus layout.
+- Why Stream:
+  - Sample mode has open iOS WebKit problems, including page crashes that go away with Stream ([godot#116750](https://github.com/godotengine/godot/issues/116750)).
+  - It also has loop and bus-effect limitations.
+  - In our Chromium test, the Sample path started the music buffer, but it reached the output silent. Stream produced a measurable signal in every case.
+- The cost: mixing runs on the main thread in this single-threaded build. For this light 2D game that's fine. If the audio ever crackles on a slow phone, raise `audio/driver/output_latency.web` (currently 50 ms).
+- The Web export is **single-threaded** (`variant/thread_support=false`) with no GDExtension support and no PWA. It needs no COOP/COEP headers or SharedArrayBuffer, so it runs on itch.io without the "SharedArrayBuffer support" option.
+
 The first tap can be START / CONTINUE / PLAY on the title screen, or any in-game tap.
 
 **Temporary web audio diagnostics** (URL flags; remove before release):
@@ -100,7 +113,7 @@ The first tap can be START / CONTINUE / PLAY on the title screen, or any in-game
 |---|---|
 | `?audiodebug=1` | On-screen overlay of the `[CE-Audio]` log. The log itself always goes to the browser console. It covers the platform/browser, the first gesture, the context state before and after each unlock attempt, the `resume()` result, the unlock, the music decision and the SFX test. |
 | `?audiotest=1` | After unlock: a quiet 880 Hz beep straight through Web Audio, then Godot's `coin` sound effect. It also logs whether the audio clock is advancing. It also exposes `window.ceSetSetting(key, on)` for tests. |
-| `?audiomode=stream` | Forces Godot's STREAM playback instead of Web Audio samples. This is a fallback experiment if the context runs but nothing is heard. |
+| `?audiomode=sample` | A/B test: forces Godot's SAMPLE playback on every player, i.e. the Godot default the project no longer uses. `?audiomode=stream` forces STREAM, which is the same as the new default. The log shows the playback type in use. |
 
 The page also exposes `window.ceAudio.state()` and `window.chainEscapeAudio` (unlocked / musicPlaying / theme / musicEnabled / sfxEnabled / context / sfxPlayed). To switch the logging off, set `AudioManager.web_audio_debug` to false.
 
@@ -113,7 +126,9 @@ The page also exposes `window.ceAudio.state()` and `window.chainEscapeAudio` (un
    - `state before = suspended`
    - `resume() resolved … running`
    - `(godot) audio unlocked`
-   - `music: started`
+   - `playback type: STREAM`
+   - `music play attempt: theme w1 (STREAM, context running) -> playing=true`
+   - `SFX play attempt #1: 'coin' (STREAM, context running)`
    
    You should then hear a beep, a coin sound and the music.
 4. Repeat with the ringer switch on silent, with Music OFF, and with SFX OFF. Then lock the phone, come back and tap once (an `interrupted` context resumes on that tap).
@@ -587,6 +602,10 @@ Each case checks:
 - the SFX test runs or is skipped to match the setting
 - the `[CE-Audio]` log sequence is complete
 - extra taps don't restart anything
+- the output is silent (analyser peak 0) before the tap, and the music signal really reaches the output after it (STREAM)
+- the logged playback type
+
+An extra A/B case runs with `?audiomode=sample`.
 
 **Current results (v0.4):**
 
@@ -595,7 +614,7 @@ Each case checks:
 | Unit tests | `UNIT TESTS PASSED`: 9,423 checks, 0 failures |
 | Level verifier | `ALL 100 LEVELS SOLVABLE AND PASS CAMPAIGN RULES`. All 10 mystery levels are proven fair. Level 100 is the hardest (67.7). Levels 31, 35 and 52 still pass after their spinner-rule changes. |
 | Playtest | `PLAYTEST PASSED`: all 100 levels cleared through real touch input, plus 17 scenarios (save/continue relaunch, Worlds and music, web audio gate, coins, chests, Shop, Hammer, Hint booster, Master Level, and the v0.3 systems) |
-| Web audio (real browser) | `WEB AUDIO TEST PASSED`: 92 checks on the exported Web build (Chromium with strict autoplay): mobile first visit, returning player with Music ON / Music OFF / SFX OFF, a suspended (iOS-like) context, and desktop mouse |
+| Web audio (real browser) | `WEB AUDIO TEST PASSED`: 139 checks on the exported Web build (Chromium with strict autoplay): mobile first visit, returning player with Music ON / Music OFF / SFX OFF, a suspended (iOS-like) context, a Sample-mode A/B case, and desktop mouse. The music signal is measured at the output. |
 | Rendering | Screenshots at 720×1280 of the title, all 5 Worlds, the Master Level, the Shop and a World-grouped Level Select |
 
 The tests write progress to separate files (`user://test_*.cfg`, `user://playtest_progress.cfg`), never to the player's save.

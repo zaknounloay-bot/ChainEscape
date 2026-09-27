@@ -60,6 +60,57 @@ const MOBILE = {
 const DESKTOP = { viewport: { width: 1280, height: 800 } };
 const URL = 'http://localhost:8765/index.html?audiotest=1';
 
+// Taps everything the engine sends to the speakers into an AnalyserNode,
+// so the test can prove real (non-silent) audio comes out, in either
+// playback type (STREAM: one mixer node; SAMPLE: per-sound buffer nodes).
+function signalProbe() {
+  const origConnect = AudioNode.prototype.connect;
+  const probes = new Map();
+  AudioNode.prototype.connect = function (target, ...rest) {
+    const r = origConnect.call(this, target, ...rest);
+    if (target instanceof AudioDestinationNode) {
+      const ctx = this.context;
+      let a = probes.get(ctx);
+      if (!a) {
+        a = ctx.createAnalyser();
+        a.fftSize = 2048;
+        const mute = ctx.createGain();
+        mute.gain.value = 0;
+        origConnect.call(a, mute);
+        origConnect.call(mute, ctx.destination);
+        probes.set(ctx, a);
+      }
+      origConnect.call(this, a);
+    }
+    return r;
+  };
+  window.__peak = () => {
+    let peak = 0;
+    for (const a of probes.values()) {
+      const buf = new Float32Array(a.fftSize);
+      a.getFloatTimeDomainData(buf);
+      for (const v of buf) peak = Math.max(peak, Math.abs(v));
+    }
+    return peak;
+  };
+}
+
+// Peak level over ~2 s of sampling (the music has short rests).
+async function peakLevel(page) {
+  let peak = 0;
+  for (let i = 0; i < 20; i++) {
+    peak = Math.max(peak, await page.evaluate(() => window.__peak()));
+    await page.waitForTimeout(100);
+  }
+  return peak;
+}
+
+async function newContext(opts) {
+  const c = await browser.newContext(opts);
+  await c.addInitScript(signalProbe);
+  return c;
+}
+
 async function game(page) {
   return page.evaluate(() => ({
     g: window.chainEscapeAudio || null,
@@ -68,8 +119,8 @@ async function game(page) {
   }));
 }
 
-async function load(page) {
-  await page.goto(URL);
+async function load(page, extra = '') {
+  await page.goto(URL + extra);
   await page.waitForFunction(() => window.chainEscapeAudio !== undefined, null, { timeout: 120000 });
   await page.waitForTimeout(1200);
 }
@@ -80,8 +131,11 @@ async function tap(page, mobile) {
 }
 
 // One scenario: load, verify silence, tap, verify the unlock sequence.
-async function scenario(page, label, { mobile, musicOn, sfxOn }) {
+async function scenario(page, label, { mobile, musicOn, sfxOn, playback = 'STREAM' }) {
   let s = await game(page);
+  check(new RegExp(`playback type: ${playback}`).test(s.lines.join('\n')), `${label}: playback type logged as ${playback}`);
+  const before = await peakLevel(page);
+  check(before === 0, `${label}: output is silent before the first gesture (peak ${before.toFixed(4)})`);
   check(s.ctx !== 'no-bridge', `${label}: page-level unlock script (ceAudio) is present`);
   check(s.g.unlocked === false, `${label}: audio not unlocked before the first gesture`);
   check(s.g.musicPlaying === false, `${label}: no music before the first gesture`);
@@ -99,6 +153,9 @@ async function scenario(page, label, { mobile, musicOn, sfxOn }) {
   check(/\(godot\) audio unlocked \(context: running\)/.test(log), `${label}: log shows Godot unlocking only once the context runs`);
   check(new RegExp(musicOn ? '\\(godot\\) music: started' : '\\(godot\\) music: OFF').test(log), `${label}: log shows the music decision`);
   check(/JS test tone played/.test(log), `${label}: ?audiotest JS test tone played`);
+  check(new RegExp(musicOn ? `music play attempt: theme \\w+ \\(${playback}, context running\\) -> playing=true` : 'music: OFF').test(log),
+    `${label}: music play attempt logged (${musicOn ? playback + ', context running' : 'Music OFF'})`);
+  if (sfxOn) check(new RegExp(`SFX play attempt #1: '\\w+' \\(${playback}, context running\\)`).test(log), `${label}: SFX play attempt logged (${playback})`);
   if (sfxOn) {
     check(s.g.sfxPlayed >= 1, `${label}: Godot SFX played after unlock (${s.g.sfxPlayed})`);
     check(/SFX test: .*advancing\)/.test(log) && !/NOT advancing/.test(log), `${label}: SFX test ran with the audio clock advancing`);
@@ -115,6 +172,13 @@ async function scenario(page, label, { mobile, musicOn, sfxOn }) {
   const log2 = s.lines.join('\n');
   check((log2.match(/audio unlocked/g) || []).length === unlockCount && s.g.musicPlaying === musicOn,
     `${label}: extra taps do not re-unlock or restart music`);
+  if (musicOn) {
+    const after = await peakLevel(page);
+    if (playback === 'STREAM') check(after > 0.005, `${label}: music signal actually reaches the output (peak ${after.toFixed(4)})`);
+    // Godot's SAMPLE path measured silent in headless Chromium for this
+    // project; kept as information for the A/B comparison only.
+    else console.log(`INFO ${label}: output peak with ${playback} playback = ${after.toFixed(4)}`);
+  }
   return s;
 }
 
@@ -144,7 +208,7 @@ async function setSetting(page, key, on) {
 
 try {
   // --- Mobile (touch), same browser profile across reloads -----------------
-  const mctx = await browser.newContext(MOBILE);
+  const mctx = await newContext(MOBILE);
   const mp = await mctx.newPage();
   mp.on('console', (m) => { if (process.env.VERBOSE && m.text().includes('CE-Audio')) console.log('   ' + m.text()); });
   await load(mp);
@@ -169,7 +233,7 @@ try {
   // Playwright navigation already grants activation, so Chromium creates the
   // context running. Force it to start suspended (as iOS Safari does) to
   // prove the gesture really resumes it.
-  const sctx = await browser.newContext(MOBILE);
+  const sctx = await newContext(MOBILE);
   await sctx.addInitScript(() => {
     const C = window.AudioContext;
     const Wrapped = function (...a) { const c = new C(...a); c.suspend(); return c; };
@@ -186,8 +250,15 @@ try {
   console.log('--- unlock sequence (suspended context) ---\n' + sus.lines.map((l) => '   ' + l).join('\n'));
   await sctx.close();
 
+  // --- A/B: Godot's SAMPLE playback forced by URL (device comparison) ----
+  const actx = await newContext(MOBILE);
+  const ap = await actx.newPage();
+  await load(ap, '&audiomode=sample');
+  await scenario(ap, 'A/B ?audiomode=sample', { mobile: true, musicOn: true, sfxOn: true, playback: 'SAMPLE' });
+  await actx.close();
+
   // --- Desktop (mouse) ---------------------------------------------------------
-  const dctx = await browser.newContext(DESKTOP);
+  const dctx = await newContext(DESKTOP);
   const dp = await dctx.newPage();
   await load(dp);
   await scenario(dp, 'desktop Chrome (mouse)', { mobile: false, musicOn: true, sfxOn: true });

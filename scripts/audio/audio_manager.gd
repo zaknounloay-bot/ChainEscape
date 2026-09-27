@@ -98,6 +98,7 @@ var _last_ctx_state := ""
 ## Sound effects actually sent to a player (for tests / diagnostics).
 var sfx_played: int = 0
 var _audio_test: bool = false
+var _logged_sfx_dropped: bool = false
 ## TEMPORARY: extra [CE-Audio] logging on web builds (console + ?audiodebug overlay).
 var web_audio_debug: bool = true
 
@@ -111,11 +112,32 @@ func _init_web_audio() -> void:
 	_wlog("Godot audio: bridge=%s platform=%s music=%s sfx=%s" % [_bridge,
 		str(JavaScriptBridge.eval("window.ceAudio ? window.ceAudio.platform : navigator.userAgent")),
 		"ON" if music_enabled else "OFF", "ON" if sfx_enabled else "OFF"])
-	if search.contains("audiomode=stream"):
-		# Diagnostic switch: play through Godot's mixer instead of Web Audio samples.
+	# Web playback runs as STREAM (project setting
+	# audio/general/default_playback_type.web = Stream): Godot mixes and
+	# feeds one Web Audio node, the long-proven path on iOS Safari. Godot's
+	# default for Web is SAMPLE (each sound a Web Audio buffer), which has
+	# open iOS WebKit bugs. TEMPORARY A/B switch for device testing:
+	# ?audiomode=sample (or =stream) overrides every player.
+	var forced := ""
+	if search.contains("audiomode=sample"):
+		forced = "SAMPLE"
+		for p in _players + [_music, _music_b]:
+			p.playback_type = AudioServer.PLAYBACK_TYPE_SAMPLE
+	elif search.contains("audiomode=stream"):
+		forced = "STREAM"
 		for p in _players + [_music, _music_b]:
 			p.playback_type = AudioServer.PLAYBACK_TYPE_STREAM
-		_wlog("playback type forced to STREAM (diagnostic)")
+	_wlog("playback type: %s (project default for Web: %s)" % [
+		forced + " (forced by URL)" if forced != "" else playback_type_name(),
+		"STREAM" if int(ProjectSettings.get_setting("audio/general/default_playback_type.web", 1)) == 0 else "SAMPLE"])
+
+
+## Effective playback type of the music player (web diagnostics).
+func playback_type_name() -> String:
+	match _music.playback_type:
+		AudioServer.PLAYBACK_TYPE_STREAM: return "STREAM"
+		AudioServer.PLAYBACK_TYPE_SAMPLE: return "SAMPLE"
+	return "STREAM" if int(ProjectSettings.get_setting("audio/general/default_playback_type.web", 1)) == 0 else "SAMPLE"
 
 
 func _wlog(msg: String) -> void:
@@ -253,6 +275,8 @@ func start_music() -> void:
 	if _music.stream and not _music.playing:
 		_music.volume_db = MUSIC_VOLUME_DB
 		_music.play()
+		if _web:
+			_wlog("music play attempt: theme %s (%s, context %s) -> playing=%s" % [music_theme, playback_type_name(), _ctx_state(), _music.playing])
 
 
 ## Switches the music theme with a smooth cross-fade (World changes).
@@ -417,8 +441,13 @@ func play(id: String, pitch: float = 1.0, volume_db: float = 0.0) -> void:
 	# Before the (web) audio unlock nothing may play: a suspended context
 	# would otherwise queue sounds and burst them out on unlock.
 	if not unlocked or not sfx_enabled or not _streams.has(id):
+		if _web and not unlocked and not _logged_sfx_dropped:
+			_logged_sfx_dropped = true
+			_wlog("SFX '%s' requested before unlock - not played" % id)
 		return
 	sfx_played += 1
+	if _web and sfx_played <= 3:
+		_wlog("SFX play attempt #%d: '%s' (%s, context %s)" % [sfx_played, id, playback_type_name(), _ctx_state()])
 	var p := _players[_next_voice]
 	_next_voice = (_next_voice + 1) % _players.size()
 	p.stream = _streams[id]
