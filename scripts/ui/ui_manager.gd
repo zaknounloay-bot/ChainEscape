@@ -209,6 +209,11 @@ func apply_theme(t: Dictionary) -> void:
 	_progress.fill_color = t["accent"]
 	_progress.queue_redraw()
 	TutorialHint.text_color = t["text"]
+	# Accent-colored surfaces follow the World too.
+	var accent_btn: Color = t["accent"].darkened(0.1) if t["dark"] else t["accent"]
+	_next_button.set_background(accent_btn)
+	_coin_pill.accent = t["accent"]
+	_chain_label.add_theme_color_override("font_color", t["accent"])
 
 
 ## "WORLD 2 · DEEP CURRENT" banner when entering a new World.
@@ -294,7 +299,7 @@ func show_complete(r: Dictionary) -> void:
 		_card_reward.add_theme_color_override("font_color", Palette.TEXT_SOFT)
 	_next_button.text = "NEXT LEVEL" if not r["is_last"] else "PLAY AGAIN"
 	_overlay.visible = true
-	_overlay.color = Color(Palette.BACKGROUND, 0.0)
+	_overlay.color = Color(theme["bg_bottom"], 0.0)
 	_card.pivot_offset = _card.size * 0.5
 	_card.scale = Vector2(0.85, 0.85)
 	_card.modulate.a = 0.0
@@ -360,7 +365,7 @@ func show_try_again() -> void:
 	_card_stats.text = "No worries - try again!"
 	_set_card_mode(false)
 	_overlay.visible = true
-	_overlay.color = Color(Palette.BACKGROUND, 0.0)
+	_overlay.color = Color(theme["bg_bottom"], 0.0)
 	_card.pivot_offset = _card.size * 0.5
 	_card.scale = Vector2(0.9, 0.9)
 	_card.modulate.a = 0.0

@@ -48,6 +48,7 @@ func open(has_progress: bool, level: int, stars: int, coins: int, theme: Diction
 	_stats.text = ("%d ★    %d COINS" % [stars, coins]) if has_progress else "Tap a block. Let it escape."
 	_stats.add_theme_color_override("font_color", theme["text_soft"])
 	_title_color = theme["text"]
+	_continue.set_background(theme["accent"].darkened(0.1) if theme["dark"] else theme["accent"])
 	_bg_top = theme["bg_top"]
 	_bg_bottom = theme["bg_bottom"]
 	visible = true

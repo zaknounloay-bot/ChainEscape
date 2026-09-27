@@ -86,13 +86,35 @@ Not included, on purpose: real-money purchases, ads, leaderboards, accounts, bac
 | 1 | 1–20 | First Light | bright, clean lilac-white, floating bubbles | calm, 92 BPM |
 | 2 | 21–40 | Deep Current | deeper blues, soft wave arcs | rhythmic, 100 BPM |
 | 3 | 41–60 | Ember Ridge | warm coral, stronger contrast, drifting triangles | driving, 108 BPM |
-| 4 | 61–80 | Neon Night | dark indigo, subtle neon lines and diamonds | intense, 116 BPM |
-| 5 | 81–99 | Master's Summit | premium navy and gold, twinkling stars | advanced, 104 BPM |
+| 4 | 61–80 | Neon Night | dark indigo, subtle neon lines and diamonds, cyan accent | intense, 116 BPM |
+| 5 | 81–99 | Master's Summit | premium deep teal and gold, twinkling stars, gold accent | advanced, 104 BPM |
 | ★ | 100 | Master Level | black and gold, slow golden rays, "MASTER LEVEL" label | distinct Master theme |
 
 - Only the surroundings change: the background, board and slot tint, HUD text and accent colors, the decoration and the music.
 - **Block colors and arrows never change**, so readability is identical everywhere. On dark Worlds the HUD text switches to light colors automatically.
 - Entering a new World cross-fades the background and music and shows a "WORLD 2 · DEEP CURRENT" banner.
+
+**How World changes are applied (robust against stale visuals):**
+
+- **Mapping:** `Worlds.world_of(n)`: 1–20 → World 1, 21–40 → 2, 41–60 → 3, 61–80 → 4, 81–100 → 5. Level 100 uses the Master theme inside World 5.
+- **Recalculated on every level load.** `GameManager.start_level()` is the single path used by NEXT LEVEL, Level Select, Continue, Replay, Restart, debug jumps and a relaunch. It calls `_apply_world_theme(n)`, which works out the World from the level number and **re-applies every World-specific surface unconditionally**:
+  - background gradient and ambient decoration
+  - board and slot tint
+  - HUD text colors
+  - accent colors: chain text, progress bar, NEXT LEVEL and CONTINUE buttons, the coin pill's "+" and the level-complete overlay tint
+  - celebration particles
+  - the music theme
+
+  Nothing depends on what the previous level showed; only the banner and sound depend on whether the World actually changed.
+- **No leftovers:** the background cross-fade always starts from what is on screen right now. It ends by snapping to the exact target colors, and a settle guard snaps to the target even if a fade is interrupted (for example by tapping NEXT twice quickly). `WorldBackground.is_settled()` reports it.
+- **Distinct late Worlds:** World 4 (indigo neon, cyan accent) and World 5 (deep teal and gold) use clearly different hues, so crossing 80 → 81 is unmistakable.
+- **Debug logging:** debug builds print one line per level load, for example:
+
+  ```
+  [World] level=81 world=5 theme=Master's Summit (id 5, prev 4) music=w5  <- transition
+  ```
+
+  Turn it off with `GameManager.world_log = false`. `GameManager.world_state()` returns what is actually applied (World, theme ids, background settled, board and accent colors, music), and the tests use it.
 
 ## Advanced spinner rules
 
@@ -490,7 +512,14 @@ godot --headless --path . --export-release "Web" build/web/index.html && node to
 **Playtest** (`Playtest.tscn`) clears **all 100 levels** through the real scene with injected touches. Per level it does a blocked tap, a hint where allowed, an Undo, a solver-driven clear, and checks the complete card with score, stars and coins. It also runs these scenarios:
 
 - **Web audio gate**, simulated in-engine.
-- **World transitions:** theme, background, music and banner for 21, 45, 70, 90 and 100.
+- **World transitions**, through every entry point:
+  - **NEXT LEVEL** across 20→21, 40→41, 60→61, 80→81 and 99→100
+  - the same pairs via **Level Select** and **debug jumps** (also backwards: 100→99, 81→80, 61→60, 95→5, 5→95)
+  - **Replay** in each World
+  - **rapid** transitions that interrupt the cross-fade (79→80→81; 80→81→61→90)
+  - **Continue** after a real relaunch (levels 57 and 81)
+
+  After each one settles, the test checks the calculated World, the GameManager, background and UI theme ids, the exact background colors and decoration color, the board tint, the accent (progress bar, coin pill, particles) and the music theme. Nothing may be left from the previous World.
 - **Level Select:** grouped into 5 Worlds.
 - **Shop and Hammer:** an empty inventory opens the Shop, coins are spent, an unsafe smash is rejected and not consumed, a safe smash works, one per level, and no PERFECT.
 - **Hint booster** when no free hints are left.

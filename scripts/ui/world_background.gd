@@ -31,18 +31,19 @@ func _ready() -> void:
 	apply_theme(theme, false)
 
 
-## Switches to a theme; `animate` cross-fades colors over ~1.2 s.
+const FADE_TIME := 1.2
+
+## Switches to a theme; `animate` cross-fades colors over ~1.2 s. Every call
+## re-targets from whatever is on screen right now, and a settle guard snaps
+## to the exact target afterwards, so an interrupted or skipped fade can
+## never leave the previous World's colors behind.
 func apply_theme(t: Dictionary, animate: bool = true) -> void:
-	var same: bool = t["id"] == theme["id"]
+	var same: bool = t["id"] == theme["id"] and is_settled()
 	theme = t
 	if _tween:
 		_tween.kill()
 	if not animate or same:
-		_top = t["bg_top"]
-		_bottom = t["bg_bottom"]
-		_deco_color = t["deco_color"]
-		_deco_alpha = 1.0
-		_canvas.queue_redraw()
+		_snap()
 		return
 	var from_top := _top
 	var from_bottom := _bottom
@@ -54,7 +55,28 @@ func apply_theme(t: Dictionary, animate: bool = true) -> void:
 		_deco_alpha = absf(1.0 - 2.0 * k)
 		if k >= 0.5:
 			_deco_color = t["deco_color"]
-		_canvas.queue_redraw(), 0.0, 1.0, 1.2).set_trans(Tween.TRANS_SINE)
+		_canvas.queue_redraw(), 0.0, 1.0, FADE_TIME).set_trans(Tween.TRANS_SINE)
+	_tween.tween_callback(_snap)
+	# Guard: even if this tween is killed or stalls, land on the target.
+	var target_id: int = t["id"]
+	get_tree().create_timer(FADE_TIME + 0.3).timeout.connect(func():
+		if theme["id"] == target_id and not is_settled():
+			_snap())
+
+
+## Exactly the target theme on screen (no leftovers from the previous one).
+func _snap() -> void:
+	_top = theme["bg_top"]
+	_bottom = theme["bg_bottom"]
+	_deco_color = theme["deco_color"]
+	_deco_alpha = 1.0
+	_canvas.queue_redraw()
+
+
+## True when the rendered colors are exactly the target theme's.
+func is_settled() -> bool:
+	return (_top.is_equal_approx(theme["bg_top"]) and _bottom.is_equal_approx(theme["bg_bottom"])
+		and _deco_color.is_equal_approx(theme["deco_color"]) and is_equal_approx(_deco_alpha, 1.0))
 
 
 func _process(delta: float) -> void:

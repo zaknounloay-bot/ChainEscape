@@ -56,6 +56,11 @@ var hammer_armed: bool = false
 var theme: Dictionary = {}
 var background: WorldBackground
 
+## World of the loaded level (1-5), recalculated on every level load.
+var current_world: int = 1
+## Print "[World] ..." lines on every World application (debug builds).
+var world_log: bool = OS.is_debug_build()
+
 ## Tests and --level=N skip the title screen.
 static var skip_title := false
 
@@ -586,21 +591,47 @@ func claim_chest(group: int, tier: int) -> void:
 
 # --- Worlds ------------------------------------------------------------------------
 
-## Applies the World (or Master) theme for `number`: background, board,
-## HUD colors and music. Cross-fades + banner when the World changes.
+## Applies the World (or Master) theme for `number`: background, ambient
+## decoration, board, HUD accent colors, particles and music.
+##
+## Called from start_level(), which every entry point goes through (NEXT
+## LEVEL, Level Select, Continue, Replay, Restart, debug jumps, relaunch).
+## The World is RECALCULATED from the level number every time and every
+## World-specific surface is re-applied unconditionally - nothing depends
+## on what the previous level showed. Only the banner/sound depend on
+## whether the World actually changed.
 func _apply_world_theme(number: int) -> void:
 	var t := Worlds.theme_for_level(number)
-	var changed: bool = theme.is_empty() or t["id"] != theme["id"]
+	var previous_id: int = theme.get("id", 0)
 	var first: bool = theme.is_empty()
 	theme = t
-	background.apply_theme(t, not first)
+	current_world = Worlds.world_of(number)
+	background.apply_theme(t, not first and previous_id != t["id"])
 	board.set_theme(t)
 	ui.apply_theme(t)
 	AudioManager.set_music_theme(t["music"])
-	if changed and not first:
+	_log_world(number, previous_id)
+	if previous_id != t["id"] and not first:
 		AudioManager.play_world()
 		ui.show_world_banner("MASTER LEVEL" if number == Worlds.MASTER_LEVEL
-			else "WORLD %d  ·  %s" % [Worlds.world_of(number), String(t["name"]).to_upper()])
+			else "WORLD %d  ·  %s" % [current_world, String(t["name"]).to_upper()])
+
+
+## Debug log of every World application (debug builds / editor only).
+func _log_world(number: int, previous_id: int) -> void:
+	if not world_log:
+		return
+	print("[World] level=%d world=%d theme=%s (id %d, prev %d) music=%s%s" % [
+		number, current_world, theme["name"], theme["id"], previous_id, AudioManager.music_theme,
+		"  <- transition" if previous_id != theme["id"] else ""])
+
+
+## What is actually applied right now (for tests and debugging).
+func world_state() -> Dictionary:
+	return {"level": current_level, "world": current_world, "theme_id": theme.get("id", 0),
+		"background_theme_id": background.theme["id"], "background_settled": background.is_settled(),
+		"board_color": board.board_color, "accent": board.accent_color, "ui_theme_id": ui.theme["id"],
+		"music": AudioManager.music_theme}
 
 
 # --- Level select --------------------------------------------------------------

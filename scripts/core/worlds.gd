@@ -29,10 +29,11 @@ const THEMES := [
 		"board": Color("#2B2455"), "slot": Color("#3A3170"),
 		"text": Color("#F3EEFF"), "text_soft": Color("#A99BD8"), "accent": Color("#22E5FF"),
 		"deco": "neon", "deco_color": Color("#FF3DCB"), "dark": true},
+	# Deep teal + gold: clearly different from World 4's indigo neon.
 	{"id": 5, "name": "Master's Summit", "music": "w5",
-		"bg_top": Color("#18213A"), "bg_bottom": Color("#070A14"),
-		"board": Color("#212C48"), "slot": Color("#2D3A5C"),
-		"text": Color("#FFF6DD"), "text_soft": Color("#C9B98A"), "accent": Color("#FFC43D"),
+		"bg_top": Color("#0F3B3A"), "bg_bottom": Color("#041413"),
+		"board": Color("#15413F"), "slot": Color("#1F5553"),
+		"text": Color("#FFF6DD"), "text_soft": Color("#BFD8C9"), "accent": Color("#FFC43D"),
 		"deco": "stars", "deco_color": Color("#FFD978"), "dark": true},
 ]
 
@@ -43,6 +44,7 @@ const MASTER_THEME := {"id": 6, "name": "Master Level", "music": "master",
 	"deco": "rays", "deco_color": Color("#FFCE47"), "dark": true}
 
 
+## 1-20 = World 1, 21-40 = 2, 41-60 = 3, 61-80 = 4, 81-100 = 5 (101+ stays 5).
 static func world_of(level_number: int) -> int:
 	return clampi((level_number - 1) / LEVELS_PER_WORLD + 1, 1, THEMES.size())
 

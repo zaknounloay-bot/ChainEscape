@@ -4,6 +4,11 @@ extends Button
 ## Counts up/down smoothly when the balance changes.
 
 var coins: int = 0
+## "+" badge color (World accent).
+var accent: Color = Palette.ACCENT:
+	set(v):
+		accent = v
+		queue_redraw()
 var _shown: float = 0.0
 var _tween: Tween
 
@@ -42,6 +47,6 @@ func _draw() -> void:
 	var font := Palette.font(900)
 	draw_string(font, Vector2(52, size.y * 0.5 + 10), str(int(round(_shown))), HORIZONTAL_ALIGNMENT_LEFT, -1, 28, Palette.TEXT)
 	# Small "+" hints that tapping opens the shop.
-	draw_circle(Vector2(size.x - 20, size.y * 0.5), 11, Palette.ACCENT)
+	draw_circle(Vector2(size.x - 20, size.y * 0.5), 11, accent)
 	draw_line(Vector2(size.x - 26, size.y * 0.5), Vector2(size.x - 14, size.y * 0.5), Color.WHITE, 3)
 	draw_line(Vector2(size.x - 20, size.y * 0.5 - 6), Vector2(size.x - 20, size.y * 0.5 + 6), Color.WHITE, 3)

@@ -15,6 +15,7 @@ extends Node
 ##
 ##   godot --headless --path . res://tools/Playtest.tscn
 ##   godot --path . res://tools/Playtest.tscn -- --shots=/tmp/shots
+##   godot --headless --path . res://tools/Playtest.tscn -- --worlds-only
 
 const PROGRESS_PATH := "user://playtest_progress.cfg"
 
@@ -44,6 +45,13 @@ func _run() -> void:
 	print("Levels found: %d" % total)
 	_check(total >= 100, "expected at least 100 levels")
 	await _test_web_audio_gate()
+	if "--worlds-only" in OS.get_cmdline_user_args():
+		await _test_worlds_and_music()
+		print("WORLDS-ONLY RUN: %s" % ("PASSED" if failures.is_empty() else "FAILED"))
+		for f in failures:
+			printerr("FAIL: " + f)
+		get_tree().quit(0 if failures.is_empty() else 1)
+		return
 	await _test_perfect_and_bests()
 	await _test_replay_and_level_select()
 	await _test_undo_limit()
@@ -171,29 +179,96 @@ func _test_web_audio_gate() -> void:
 	print("Web audio gate OK")
 
 
+## World progression through every entry point. After each transition
+## settles, EVERY World-specific surface must show the new World: the
+## calculated World, background (exact colors, decoration), board tint,
+## accent (HUD, buttons, particles) and music. Nothing may be left over
+## from the previous World.
 func _test_worlds_and_music() -> void:
-	game.start_level(20)
-	await _wait(0.3)
-	_check(game.theme["id"] == 1 and AudioManager.music_theme == "w1", "level 20 is World 1")
-	game.start_level(21)
-	await _wait(0.3)
-	_check(game.theme["id"] == 2 and game.background.theme["id"] == 2 and AudioManager.music_theme == "w2", "level 21 switches to World 2 (theme, background, music)")
-	_check(game.ui._banner.visible, "World banner shown on entering a new World")
-	_shot("world2_banner")
-	for spec in [[45, 3, "w3"], [70, 4, "w4"], [90, 5, "w5"], [100, 6, "master"]]:
-		game.start_level(spec[0])
-		await _wait(0.2)
-		_check(game.theme["id"] == spec[1] and AudioManager.music_theme == spec[2], "L%d uses theme %d / music %s" % spec)
-	await _wait(1.3)
-	_shot("L100_master_theme")
+	var pairs := [[20, 21], [40, 41], [60, 61], [80, 81], [99, 100]]
+	# 1) NEXT LEVEL
+	for pr in pairs:
+		game.start_level(pr[0])
+		await _settle()
+		_expect_world(pr[0], "start %d" % pr[0])
+		game.ui.next_pressed.emit()
+		await _settle()
+		_expect_world(pr[1], "NEXT %d->%d" % pr)
+		if pr[1] == 21:
+			_shot("world2_after_next")
+		if pr[1] == 81:
+			_shot("world5_after_next_from_80")
+	# 2) Level Select
+	for pr in pairs:
+		game.start_level(pr[0])
+		await _settle()
+		game.ui.level_chosen.emit(pr[1])
+		await _settle()
+		_expect_world(pr[1], "LEVEL SELECT %d->%d" % pr)
+	# 3) Replay (same World must stay exactly applied)
+	for n in [21, 41, 61, 81, 100]:
+		game.start_level(n)
+		await _settle()
+		game.ui.replay_pressed.emit()
+		await _settle()
+		_expect_world(n, "REPLAY %d" % n)
+	# 4) Debug jumps (forwards, backwards, across several Worlds)
+	for pr in [[20, 21], [40, 41], [60, 61], [80, 81], [99, 100], [100, 99], [81, 80], [61, 60], [95, 5], [5, 95]]:
+		game.start_level(pr[0])
+		await _settle()
+		game.debug_panel.level_requested.emit(pr[1])
+		await _settle()
+		_expect_world(pr[1], "DEBUG JUMP %d->%d" % pr)
+	# 5) Rapid transitions that interrupt the cross-fade
+	game.start_level(79)
+	await _settle()
+	game.ui.next_pressed.emit()  # 80
+	await _wait(0.25)
+	game.ui.next_pressed.emit()  # 81 while the fade into 80 is still running
+	await _settle()
+	_expect_world(81, "RAPID 79->80->81")
+	game.start_level(80)
+	await _settle()
+	game.ui.next_pressed.emit()  # 81, fading W4 -> W5
+	await _wait(0.5)
+	game.debug_panel.level_requested.emit(61)  # back to W4 mid-fade
+	await _wait(0.1)
+	game.ui.level_chosen.emit(90)  # and to W5 again
+	await _settle()
+	_expect_world(90, "RAPID 80->81->61->90")
+	_shot("world5_after_rapid")
+	_check(game.ui._level_label.text == "LEVEL 90", "level label follows the jumps")
+	game.start_level(100)
+	await _settle()
 	_check(game.ui._level_label.text == "MASTER LEVEL", "Level 100 shows the Master Level label")
+	_shot("L100_master_theme")
 	game.ui.levels_opened.emit()
 	await _frames(3)
 	var worlds := game.ui._level_select._list.get_children().filter(func(c): return c.has_meta("world"))
 	_check(worlds.size() == 5, "Level Select groups levels into 5 Worlds (%d)" % worlds.size())
 	_shot("level_select_worlds")
 	game.ui._level_select.close()
-	print("Worlds / music / level select grouping OK")
+	print("Worlds / music / level select grouping OK (NEXT, Level Select, Replay, debug jumps, rapid)")
+
+
+func _settle() -> void:
+	await _wait(WorldBackground.FADE_TIME + 0.45)
+
+
+## Checks everything World-specific that is on screen for level `n`.
+func _expect_world(n: int, label: String) -> void:
+	var t := Worlds.theme_for_level(n)
+	var w := game.world_state()
+	var expect_world := clampi((n - 1) / 20 + 1, 1, 5)  # 1-20=1 ... 81-100=5
+	var ok: bool = (w["level"] == n and w["world"] == expect_world and w["theme_id"] == t["id"]
+		and w["background_theme_id"] == t["id"] and w["background_settled"]
+		and game.background._top.is_equal_approx(t["bg_top"]) and game.background._bottom.is_equal_approx(t["bg_bottom"])
+		and game.background._deco_color.is_equal_approx(t["deco_color"])
+		and w["board_color"].is_equal_approx(t["board"]) and w["accent"].is_equal_approx(t["accent"])
+		and w["ui_theme_id"] == t["id"] and game.ui._progress.fill_color.is_equal_approx(t["accent"])
+		and game.ui._coin_pill.accent.is_equal_approx(t["accent"])
+		and w["music"] == t["music"] and AudioManager.music_theme == t["music"])
+	_check(ok, "%s: level %d should be World %d / theme %d / music %s, got %s" % [label, n, expect_world, t["id"], t["music"], str(w)])
 
 
 func _test_shop_and_hammer() -> void:
@@ -316,6 +391,20 @@ func _test_relaunch_continue() -> void:
 	game.ui.continue_pressed.emit()
 	await _frames(2)
 	_check(not game.ui.is_title_open() and game.current_level == 57, "CONTINUE resumes level 57")
+	await _settle()
+	_expect_world(57, "CONTINUE after relaunch (57)")
+	# Relaunch again into World 5 (81) - a fresh start must apply World 5,
+	# not World 1 defaults or a previous World.
+	game.start_level(81)
+	await _wait(0.2)
+	game.queue_free()
+	await _frames(3)
+	game = load("res://scenes/Main.tscn").instantiate()
+	get_tree().root.add_child(game)
+	await _frames(5)
+	game.ui.continue_pressed.emit()
+	await _settle()
+	_expect_world(81, "CONTINUE after relaunch (81)")
 	print("Relaunch / continue OK")
 
 

@@ -40,6 +40,7 @@ func _init(p_text: String = "", p_icon: int = Icon.NONE, bg: Color = Palette.WHI
 		left_pad = 6
 		_right_pad = 6
 		_top_pad = 50
+	_left_pad = left_pad
 	add_theme_stylebox_override("normal", _style(bg, left_pad))
 	add_theme_stylebox_override("hover", _style(bg, left_pad))
 	add_theme_stylebox_override("focus", StyleBoxEmpty.new())
@@ -52,6 +53,16 @@ func _init(p_text: String = "", p_icon: int = Icon.NONE, bg: Color = Palette.WHI
 
 
 var _right_pad := 36
+var _left_pad := 36
+
+
+## Changes the button's background color (e.g. World accent).
+func set_background(bg: Color) -> void:
+	add_theme_stylebox_override("normal", _style(bg, _left_pad))
+	add_theme_stylebox_override("hover", _style(bg, _left_pad))
+	add_theme_stylebox_override("pressed", _style(bg.darkened(0.06), _left_pad))
+	add_theme_stylebox_override("hover_pressed", _style(bg.darkened(0.06), _left_pad))
+	add_theme_stylebox_override("disabled", _style(Color(bg, 0.55), _left_pad, false))
 
 
 func _style(bg: Color, left_pad: int, shadow: bool = true) -> StyleBoxFlat:

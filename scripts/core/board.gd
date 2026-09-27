@@ -18,6 +18,8 @@ var input_enabled: bool = true
 ## World theme colors for the board panel and empty slots.
 var board_color: Color = Palette.BOARD
 var slot_color: Color = Palette.SLOT
+## World accent: used by celebration particles.
+var accent_color: Color = Palette.ACCENT
 ## Hammer mode: the next tap smashes a block instead of moving it.
 var hammer_mode: bool = false:
 	set(v):
@@ -264,6 +266,7 @@ func sync_to(blocks: Array) -> void:
 func set_theme(t: Dictionary) -> void:
 	board_color = t["board"]
 	slot_color = t["slot"]
+	accent_color = t["accent"]
 	queue_redraw()
 
 
@@ -365,6 +368,8 @@ func celebrate() -> void:
 	for i in colors.size():
 		var angle := -PI * 0.5 + (i - 2) * 0.35
 		_burst(center, Vector2.from_angle(angle), Palette.face(colors[i]), 14, 1.6, 70.0)
+	# A ring of the World's accent color.
+	_burst(center, Vector2.UP, accent_color, 18, 1.4, 180.0)
 	_pulse(0.025)
 
 
