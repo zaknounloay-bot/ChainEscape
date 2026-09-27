@@ -13,14 +13,16 @@ extends Node
 ##           spinner (see BlockData.SpinRule)
 ##    "R>?" = HIDDEN arrow (mystery): revealed when a neighbour escapes
 ##    "R>#G" = LOCKED: cannot escape while any green block remains
-##    Modifiers can be combined in the order  @ ? #K  (spinners cannot be
-##    hidden, and hidden blocks cannot be locked).
+##    "R>$S" / "R>$G" = SILVER / GOLD reward block (v0.5; "$D" = future
+##           Diamond). Plays by the normal rules, pays coins once.
+##    Modifiers can be combined in the order  @ ? #K $R  (spinners cannot
+##    be hidden, and hidden blocks cannot be locked).
 ##      { "name": "Hello", "map": ["R> . .", ". B^ ."] }
 ##
 ## 2) Explicit block list:
 ##      { "rows": 4, "columns": 4,
 ##        "blocks": [ { "row": 0, "column": 1, "color": "red", "direction": "up",
-##                      "spinner": true } ] }
+##                      "spinner": true, "rarity": "gold" } ] }
 ##
 ## Optional keys: "name", "hint" (start text + finger), "hint_finger" (bool,
 ## default true), "blocked_hint", "hearts" (override the heart count),
@@ -35,7 +37,7 @@ const LEVEL_PATH := "res://levels/level_%02d.json"
 const COLOR_LETTERS := {"R": "red", "B": "blue", "G": "green", "Y": "yellow", "P": "purple"}
 
 var level_count: int = 0
-var _mystery_cache: Dictionary = {}
+var _info_cache: Dictionary = {}
 
 
 func _ready() -> void:
@@ -59,12 +61,22 @@ func load_level(number: int) -> LevelData:
 	return parse_level(json, number)
 
 
+## Cached summary for Level Select: {"mystery": bool, "rewards": {id: rarity}}.
+func level_info(number: int) -> Dictionary:
+	if not _info_cache.has(number):
+		var l := load_level(number)
+		var rewards := {}
+		if l != null:
+			for b in l.blocks:
+				if b.is_reward():
+					rewards[b.id] = b.rarity
+		_info_cache[number] = {"mystery": l != null and l.mystery, "rewards": rewards}
+	return _info_cache[number]
+
+
 ## True if level `number` is a Mystery level (cached; for Level Select).
 func is_mystery(number: int) -> bool:
-	if not _mystery_cache.has(number):
-		var l := load_level(number)
-		_mystery_cache[number] = l != null and l.mystery
-	return _mystery_cache[number]
+	return level_info(number)["mystery"]
 
 
 static func parse_level(json: Dictionary, number: int = 0) -> LevelData:
@@ -90,7 +102,7 @@ static var _token_re: RegEx
 
 static func _parse_map(map: Array, level: LevelData) -> void:
 	if _token_re == null:
-		_token_re = RegEx.create_from_string("^([RBGYPrbgyp])([\\^v<>])(@[-~*]?)?(\\?)?(#[RBGYPrbgyp])?$")
+		_token_re = RegEx.create_from_string("^([RBGYPrbgyp])([\\^v<>])(@[-~*]?)?(\\?)?(#[RBGYPrbgyp])?(\\$[SGD])?$")
 	level.rows = map.size()
 	level.columns = 0
 	var next_id := 0
@@ -114,6 +126,8 @@ static func _parse_map(map: Array, level: LevelData) -> void:
 				b.spin_rule = maxi(0, BlockData.RULE_SUFFIX.find(m.get_string(3).substr(1)))
 			if m.get_string(5) != "":
 				b.lock_color = COLOR_LETTERS[m.get_string(5).substr(1).to_upper()]
+			if m.get_string(6) != "":
+				b.rarity = BlockData.RARITY_TOKENS.find(m.get_string(6).substr(1))
 			_validate_block(b, level)
 			level.blocks.append(b)
 			next_id += 1
@@ -143,6 +157,7 @@ static func _parse_block_list(json: Dictionary, level: LevelData) -> void:
 		block.hidden = bool(b.get("hidden", false))
 		block.spin_rule = ["cw", "ccw", "alt", "pattern"].find(String(b.get("spin", "cw")))
 		block.spin_rule = maxi(block.spin_rule, 0)
+		block.rarity = maxi(0, BlockData.RARITY_NAMES.find(String(b.get("rarity", "normal"))))
 		_validate_block(block, level)
 		level.blocks.append(block)
 		next_id += 1
@@ -154,7 +169,7 @@ static func to_json_text(level: LevelData) -> String:
 	for r in level.rows:
 		var row := []
 		row.resize(level.columns)
-		row.fill(". ")
+		row.fill(".")
 		grid.append(row)
 	var letters := {}
 	for k in COLOR_LETTERS:
@@ -164,12 +179,41 @@ static func to_json_text(level: LevelData) -> String:
 		arrows[Direction.MAP_CHARS[k]] = k
 	for b in level.blocks:
 		grid[b.cell.y][b.cell.x] = (letters.get(b.color, "B") + arrows[b.direction] + ("@" + BlockData.RULE_SUFFIX[b.spin_rule] if b.is_spinner() else "")
-				+ ("?" if b.hidden else "") + ("#" + letters[b.lock_color] if b.lock_color != "" else ""))
-	var lines := PackedStringArray()
+				+ ("?" if b.hidden else "") + ("#" + letters[b.lock_color] if b.lock_color != "" else "")
+				+ ("$" + BlockData.RARITY_TOKENS[b.rarity] if b.is_reward() else ""))
+	var rows := []
 	for row in grid:
-		var cells := PackedStringArray()
-		for t in row:
-			cells.append(String(t).rpad(4))
-		lines.append('\t\t"%s"' % " ".join(cells).strip_edges())
-	var extra := '\t"mystery": true,\n' if level.mystery else ""
-	return '{\n\t"name": "%s",\n%s\t"map": [\n%s\n\t]\n}\n' % [level.name, extra, ",\n".join(lines)]
+		rows.append(" ".join(PackedStringArray(row)))
+	var json := {"name": level.name, "map": rows}
+	if level.mystery:
+		json["mystery"] = true
+	return format_level_json(json)
+
+
+## House style for level files: known keys first, one "map" row per line
+## with the cells padded into columns.
+static func format_level_json(json: Dictionary) -> String:
+	var order := ["name", "mystery", "hint", "hint_finger", "blocked_hint", "hearts", "hints", "stars"]
+	for k in json:
+		if not order.has(k) and k != "map":
+			order.append(k)
+	var lines := PackedStringArray()
+	for k in order:
+		if json.has(k):
+			lines.append('\t"%s": %s' % [k, JSON.stringify(json[k])])
+	if json.has("map"):
+		var cells := []
+		var width := 1
+		for row in json["map"]:
+			var tokens := String(row).split(" ", false)
+			cells.append(tokens)
+			for t in tokens:
+				width = maxi(width, t.length())
+		var rows := PackedStringArray()
+		for tokens in cells:
+			var padded := PackedStringArray()
+			for i in tokens.size():
+				padded.append(tokens[i] if i == tokens.size() - 1 else String(tokens[i]).rpad(width + 2))
+			rows.append('\t\t"%s"' % "".join(padded))
+		lines.append('\t"map": [\n%s\n\t]' % ",\n".join(rows))
+	return "{\n%s\n}\n" % ",\n".join(lines)

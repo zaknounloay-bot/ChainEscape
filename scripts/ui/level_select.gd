@@ -1,12 +1,14 @@
 class_name LevelSelect
 extends ColorRect
-## Level grid grouped by World. Each World shows its name and stars; each
-## group of 10 levels has a Treasure Chest row (3 star thresholds). Tiles
-## show number, best stars, completed/locked state, a Mystery marker and a
-## crown on the Master Level. No world map (intentionally).
+## Level grid grouped by Chapter (v0.5). Each Chapter header shows its
+## number and name in the Chapter's own colors, stars collected / 30, a
+## "complete" tick and the Chapter chest tiers (claimable right here).
+## Tiles show number, best stars, completed/locked state, a Mystery marker,
+## a Silver/Gold gem while a reward block is still uncollected, and a crown
+## on the Master Level. No world map (intentionally).
 
 signal level_chosen(number: int)
-signal chest_claim(group: int, tier: int)
+signal chest_claim(chapter: int, tier: int)
 
 const COLUMNS := 5
 
@@ -37,7 +39,7 @@ func _ready() -> void:
 	back.custom_minimum_size = Vector2(150, 76)
 	back.pressed.connect(close)
 	header.add_child(back)
-	var title := _label("LEVELS", 48, Palette.TEXT)
+	var title := _label("CHAPTERS", 44, Palette.TEXT)
 	title.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	header.add_child(title)
 	_title_stars = _label("", 26, Palette.TEXT_SOFT)
@@ -54,99 +56,97 @@ func _ready() -> void:
 	_scroll.add_child(_list)
 
 
-## `levels`: Array of {number, stars, unlocked, completed, mystery, current}.
-## `chests`: group -> Array of {stars, coins, claimed, claimable}; `group_stars`: group -> int.
-func open(levels: Array, total_stars: int, chests: Dictionary, group_stars: Dictionary) -> void:
+## `chapters`: Array of GameManager.chapter_summary() dictionaries, each
+## with "levels" (Array of {number, stars, unlocked, completed, mystery,
+## reward, master, current}) and "unlocked".
+func open(chapters: Array, total_stars: int, max_stars: int, current_chapter: int) -> void:
 	for c in _list.get_children():
 		c.queue_free()
-	var current_world := 1
-	for w in range(1, Worlds.THEMES.size() + 1):
-		var rg := Worlds.world_range(w)
-		if rg.x > levels.size():
-			break
-		var world_levels := levels.slice(rg.x - 1, mini(rg.y, levels.size()))
-		var stars := 0
-		for info in world_levels:
-			stars += info["stars"]
-			if info["current"]:
-				current_world = w
-		var head := _world_header(w, stars, world_levels.size() * 3)
-		_list.add_child(head)
-		for g in range(2):
-			var group := (rg.x - 1) / 10 + g
-			var gl := world_levels.slice(g * 10, g * 10 + 10)
-			if gl.is_empty():
-				continue
-			var grid := GridContainer.new()
-			grid.columns = COLUMNS
-			grid.add_theme_constant_override("h_separation", 14)
-			grid.add_theme_constant_override("v_separation", 14)
-			var center := CenterContainer.new()
-			center.add_child(grid)
-			_list.add_child(center)
-			for info in gl:
-				var tile := LevelTile.new(info)
-				tile.pressed.connect(func():
-					if info["unlocked"]:
-						level_chosen.emit(info["number"])
-						close())
-				grid.add_child(tile)
-			if chests.has(group):
-				_list.add_child(_chest_row(group, chests[group], group_stars.get(group, 0)))
-	_title_stars.text = "%d / %d ★" % [total_stars, levels.size() * 3]
+	for info in chapters:
+		_list.add_child(_chapter_header(info))
+		var grid := GridContainer.new()
+		grid.columns = COLUMNS
+		grid.add_theme_constant_override("h_separation", 14)
+		grid.add_theme_constant_override("v_separation", 14)
+		var center := CenterContainer.new()
+		center.add_child(grid)
+		_list.add_child(center)
+		for lv in info["levels"]:
+			var tile := LevelTile.new(lv)
+			tile.pressed.connect(func():
+				if lv["unlocked"]:
+					level_chosen.emit(lv["number"])
+					close())
+			grid.add_child(tile)
+	_title_stars.text = "%d / %d ★" % [total_stars, max_stars]
 	visible = true
-	# Scroll to the current World.
+	# Scroll to the current Chapter.
 	await get_tree().process_frame
-	var target := 0.0
-	var seen := 0
 	for c in _list.get_children():
-		if c.has_meta("world"):
-			seen = c.get_meta("world")
-			if seen == current_world:
-				target = c.position.y
-	_scroll.scroll_vertical = int(target)
+		if c.has_meta("chapter") and c.get_meta("chapter") == current_chapter:
+			_scroll.scroll_vertical = int(c.position.y)
 
 
 func close() -> void:
 	visible = false
 
 
-func _world_header(w: int, stars: int, max_stars: int) -> Control:
-	var t: Dictionary = Worlds.THEMES[w - 1]
+func _chapter_header(info: Dictionary) -> Control:
+	var t: Dictionary = info["theme"]
+	var c: int = info["chapter"]
 	var panel := PanelContainer.new()
-	panel.set_meta("world", w)
+	panel.set_meta("chapter", c)
 	var st := StyleBoxFlat.new()
-	st.bg_color = t["bg_bottom"]
+	st.bg_color = t["bg_bottom"] if t["dark"] else t["bg_top"].lerp(t["bg_bottom"], 0.6)
+	st.border_color = t["accent"]
+	st.border_width_left = 10
 	st.set_corner_radius_all(22)
 	st.set_content_margin_all(16)
+	st.anti_aliasing = true
 	panel.add_theme_stylebox_override("panel", st)
+	if not info["unlocked"]:
+		panel.modulate = Color(1, 1, 1, 0.55)
+	var col := VBoxContainer.new()
+	col.add_theme_constant_override("separation", 8)
+	panel.add_child(col)
 	var row := HBoxContainer.new()
-	panel.add_child(row)
-	var name := _label("WORLD %d  ·  %s" % [w, String(t["name"]).to_upper()], 26, t["text"])
-	name.horizontal_alignment = HORIZONTAL_ALIGNMENT_LEFT
-	name.size_flags_horizontal = Control.SIZE_EXPAND_FILL
-	row.add_child(name)
-	row.add_child(_label("%d/%d ★" % [stars, max_stars], 24, t["text"]))
+	col.add_child(row)
+	var names := VBoxContainer.new()
+	names.add_theme_constant_override("separation", 0)
+	names.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	row.add_child(names)
+	var kicker := _label("CHAPTER %d%s" % [c, "  ✓" if info["completed"] else ""], 20, t["accent"] if t["dark"] else t["accent"].darkened(0.2))
+	kicker.horizontal_alignment = HORIZONTAL_ALIGNMENT_LEFT
+	names.add_child(kicker)
+	var nm := _label(String(t["name"]).to_upper(), 28, t["text"])
+	nm.horizontal_alignment = HORIZONTAL_ALIGNMENT_LEFT
+	names.add_child(nm)
+	row.add_child(_label("%d/%d ★" % [info["stars"], info["max_stars"]], 26, t["text"]))
+	var chests := HBoxContainer.new()
+	chests.alignment = BoxContainer.ALIGNMENT_CENTER
+	chests.add_theme_constant_override("separation", 10)
+	col.add_child(chests)
+	for i in info["tiers"].size():
+		chests.add_child(chest_button(c, i, info["tiers"][i], func(): chest_claim.emit(c, i)))
 	return panel
 
 
-func _chest_row(group: int, tiers: Array, have: int) -> Control:
-	var row := HBoxContainer.new()
-	row.alignment = BoxContainer.ALIGNMENT_CENTER
-	row.add_theme_constant_override("separation", 10)
-	var rg := Economy.group_range(group)
-	row.add_child(_label("%d-%d  ★%d" % [rg.x, rg.y, have], 20, Palette.TEXT_SOFT))
-	for i in tiers.size():
-		var tier: Dictionary = tiers[i]
-		var text := "✓" if tier["claimed"] else "%d★" % tier["stars"]
-		var bg := Palette.GOLD if tier["claimable"] else (Palette.SLOT if not tier["claimed"] else Palette.BACKGROUND)
-		var b := PillButton.new(text, PillButton.Icon.CHEST, bg, Palette.TEXT, 20, true)
-		b.custom_minimum_size = Vector2(128, 60)
-		b.disabled = not tier["claimable"]
-		b.tooltip_text = "%d coins" % tier["coins"]
-		b.pressed.connect(func(): chest_claim.emit(group, i))
-		row.add_child(b)
-	return row
+## One Chapter-chest tier as a pill: "20★" (not yet), glowing gold when
+## claimable, "✓" once claimed. Shared with the Chapter Complete card.
+static func chest_button(chapter: int, tier: int, info: Dictionary, on_claim: Callable) -> PillButton:
+	var text := "✓" if info["claimed"] else "%d★" % info["stars"]
+	var bg := Palette.GOLD if info["claimable"] else (Palette.SLOT if not info["claimed"] else Palette.BACKGROUND)
+	var b := PillButton.new(text, PillButton.Icon.CHEST, bg, Palette.TEXT, 20, true)
+	b.custom_minimum_size = Vector2(128, 60)
+	b.disabled = not info["claimable"]
+	var items := ""
+	for item in info["items"]:
+		items += " + %d %s" % [info["items"][item], item]
+	b.tooltip_text = "%s chest: %d coins%s" % [info["name"], info["coins"], items]
+	b.set_meta("chapter", chapter)
+	b.set_meta("tier", tier)
+	b.pressed.connect(on_claim)
+	return b
 
 
 func _label(text: String, size: int, color: Color) -> Label:
@@ -175,7 +175,7 @@ class LevelTile extends Button:
 		st.set_corner_radius_all(24)
 		st.anti_aliasing = true
 		var r := Rect2(Vector2(0, 0), size - Vector2(0, 6))
-		var master: bool = info["number"] == Worlds.MASTER_LEVEL
+		var master: bool = info["master"]
 		if not info["unlocked"]:
 			st.bg_color = Palette.SLOT
 		elif info["current"]:
@@ -217,3 +217,10 @@ class LevelTile extends Button:
 			draw_circle(b, 16, Palette.PURPLE_BADGE)
 			var qw := font.get_string_size("?", HORIZONTAL_ALIGNMENT_LEFT, -1, 22).x
 			draw_string(font, b + Vector2(-qw * 0.5, 8), "?", HORIZONTAL_ALIGNMENT_LEFT, -1, 22, Palette.WHITE)
+		if info["reward"] > 0 and info["unlocked"]:
+			# Uncollected Silver/Gold block on this level: a reason to replay.
+			var metal: Array = Palette.METALS[info["reward"]]
+			var g := Vector2(20, 20)
+			var gs := 12.0
+			draw_colored_polygon(PackedVector2Array([g + Vector2(0, -gs), g + Vector2(gs, 0), g + Vector2(0, gs), g + Vector2(-gs, 0)]), metal[2])
+			draw_colored_polygon(PackedVector2Array([g + Vector2(0, -gs * 0.6), g + Vector2(gs * 0.6, 0), g + Vector2(0, gs * 0.6), g + Vector2(-gs * 0.6, 0)]), metal[0])

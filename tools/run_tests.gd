@@ -30,8 +30,14 @@ func _initialize() -> void:
 	test_chests_no_duplicates()
 	test_shop()
 	test_hammer_safety()
-	test_worlds()
+	test_chapters()
+	test_chapter_theme_contrast()
 	test_generator_future_levels()
+	test_reward_tokens()
+	test_reward_blocks_pay_once()
+	test_chapter_complete_once()
+	test_chest_items()
+	test_save_migration_v2()
 	print("%d checks, %d failures" % [_checks, _fails])
 	print("UNIT TESTS PASSED" if _fails == 0 else "UNIT TESTS FAILED")
 	quit(0 if _fails == 0 else 1)
@@ -405,7 +411,13 @@ func test_economy_rewards() -> void:
 	var low := Economy.level_reward(5, true, 0, 1, false)
 	check(first["coins"] > low["coins"], "better performance earns more")
 	var hard := Economy.level_reward(95, true, 0, 3, true)
-	check(hard["coins"] > first["coins"], "harder worlds pay more for the same performance")
+	check(hard["coins"] > first["coins"], "later Chapters pay more for the same performance")
+	var prev := 0.0
+	var rising := true
+	for c in range(1, 15):
+		rising = rising and Economy.chapter_multiplier(c) > prev
+		prev = Economy.chapter_multiplier(c)
+	check(rising and Economy.chapter_multiplier(40) <= float(Economy.config()["chapter_multiplier_max"]), "Chapter multiplier rises (capped) past Chapter 10")
 
 
 func test_chests_no_duplicates() -> void:
@@ -415,14 +427,15 @@ func test_chests_no_duplicates() -> void:
 	var start := p.coins
 	for n in range(1, 11):
 		p.best_stars[n] = 2
-	var tiers := Economy.chest_tiers(p, 0)
+	var tiers := Economy.chest_tiers(p, 1)
 	check(tiers[0]["claimable"] and not tiers[1]["claimable"], "20 stars opens the first chest only")
-	var got := Economy.claim_chest(p, 0, 0)
+	var got := Economy.claim_chest(p, 1, 0)
 	check(got == tiers[0]["coins"] and p.coins == start + got, "chest pays once")
-	check(Economy.claim_chest(p, 0, 0) == 0 and p.coins == start + got, "a claimed chest can never pay again")
-	check(Economy.claim_chest(p, 0, 1) == 0, "a chest above the star count cannot be claimed")
+	check(Economy.claim_chest(p, 1, 0) == 0 and p.coins == start + got, "a claimed chest can never pay again")
+	check(Economy.claim_chest(p, 1, 1) == 0, "a chest above the star count cannot be claimed")
+	check(Economy.chest_id(1, 0) == "g0_t0", "chest ids keep the v0.4 format (Chapter 1 = g0)")
 	var q := PlayerProgress.new(path).load_from_disk()
-	check(Economy.claim_chest(q, 0, 0) == 0, "claimed chests persist across restarts")
+	check(Economy.claim_chest(q, 1, 0) == 0, "claimed chests persist across restarts")
 	wipe_save(path)
 
 
@@ -478,16 +491,92 @@ func test_hammer_safety() -> void:
 	lm.free()
 
 
-func test_worlds() -> void:
-	check(Worlds.world_of(1) == 1 and Worlds.world_of(20) == 1 and Worlds.world_of(21) == 2, "world boundaries")
-	check(Worlds.world_of(81) == 5 and Worlds.world_of(99) == 5, "world 5 range")
-	check(Worlds.theme_for_level(100)["id"] == Worlds.MASTER_THEME["id"], "level 100 has the Master theme")
+func test_chapters() -> void:
+	check(Chapters.chapter_of(1) == 1 and Chapters.chapter_of(10) == 1 and Chapters.chapter_of(11) == 2, "chapter boundaries 10/11")
+	for c in range(1, 11):
+		var rg := Chapters.chapter_range(c)
+		check(rg == Vector2i((c - 1) * 10 + 1, c * 10) and Chapters.chapter_of(rg.x) == c and Chapters.chapter_of(rg.y) == c,
+			"chapter %d = levels %d-%d" % [c, rg.x, rg.y])
+	check(Chapters.chapter_of(101) == 11 and Chapters.chapter_of(120) == 12, "101-110 = Chapter 11, 111-120 = Chapter 12")
+	check(Chapters.defined_count() == 10, "ten hand-made Chapter themes")
+	check(Chapters.theme_for_level(100)["id"] == Chapters.MASTER_ID and Chapters.theme_for_level(100)["music"] == "master", "level 100 has the Master theme")
+	var ids := {}
 	var musics := {}
-	for n in range(1, 101):
-		musics[Worlds.theme_for_level(n)["music"]] = true
-	check(musics.size() == 6, "six music themes (5 worlds + master)")
-	for t in Worlds.THEMES + [Worlds.MASTER_THEME]:
-		check(ResourceLoader.exists("res://assets/audio/music_%s.wav" % t["music"]), "music file for %s exists" % t["music"])
+	var decos := {}
+	var styles := {}
+	for c in range(1, 11):
+		var t := Chapters.theme_for_chapter(c)
+		ids[t["id"]] = true
+		musics[t["music"]] = true
+		decos[t["deco"]] = true
+		styles[str(t["block_style"])] = true
+		check(ResourceLoader.exists("res://assets/audio/music_%s.wav" % t["music"]), "music file for chapter %d (%s) exists" % [c, t["music"]])
+	check(ids.size() == 10 and musics.size() == 10, "every Chapter has its own theme id and music identity")
+	check(decos.size() == 10, "every Chapter has its own ambient decoration (%d)" % decos.size())
+	check(styles.size() == 10, "block material changes every Chapter")
+	check(ResourceLoader.exists("res://assets/audio/music_master.wav"), "Master music exists")
+	# Block finish escalates (later Chapters look more premium) - hues never change.
+	var gloss_rises := true
+	for c in range(2, 11):
+		gloss_rises = gloss_rises and Chapters.theme_for_chapter(c)["block_style"]["gloss"] >= Chapters.theme_for_chapter(c - 1)["block_style"]["gloss"]
+	check(gloss_rises, "block finish grows Chapter by Chapter")
+	# 101+: data-driven overflow, unique ids, names with a round number.
+	var t11 := Chapters.theme_for_chapter(11)
+	check(t11["id"] == 11 and String(t11["name"]).ends_with(" II") and t11["music"] != "", "Chapter 11 reuses a theme as a new round (%s)" % t11["name"])
+	check(Chapters.theme_for_chapter(12)["id"] == 12 and Chapters.theme_for_level(115)["id"] == 12, "Chapter 12 = levels 111-120")
+	check(Chapters.title(4) == "CHAPTER 4  ·  EMBER RIDGE", "chapter title text")
+
+
+## Readability guard for every theme: HUD text on the background and block
+## colors on the board keep a minimum contrast (WCAG ratio).
+func test_chapter_theme_contrast() -> void:
+	var themes := []
+	for c in range(1, 11):
+		themes.append(Chapters.theme_for_chapter(c))
+	themes.append(Chapters.theme_for_level(100))
+	for t in themes:
+		for bg in [t["bg_top"], t["bg_bottom"]]:
+			check(_contrast(t["text"], bg) >= 4.5, "%s: title text contrast %.1f" % [t["name"], _contrast(t["text"], bg)])
+			check(_contrast(t["text_soft"], bg) >= 2.6, "%s: soft text contrast %.1f" % [t["name"], _contrast(t["text_soft"], bg)])
+		# Blocks vs board: hue/chroma matter as much as brightness (a bright
+		# yellow on a pastel board), so use the perceptual CIE76 difference.
+		for color in Palette.BLOCKS:
+			var de := _delta_e(Palette.face(color), t["board"])
+			check(de >= 35.0, "%s: %s blocks stand out from the board (dE %.0f)" % [t["name"], color, de])
+	for color in Palette.BLOCKS:
+		check(_contrast(Palette.arrow(color), Palette.face(color)) >= 2.0, "%s arrow readable on its block" % color)
+
+
+static func _contrast(a: Color, b: Color) -> float:
+	var la := _lum(a)
+	var lb := _lum(b)
+	return (maxf(la, lb) + 0.05) / (minf(la, lb) + 0.05)
+
+
+static func _lum(c: Color) -> float:
+	return 0.2126 * _lin(c.r) + 0.7152 * _lin(c.g) + 0.0722 * _lin(c.b)
+
+
+static func _delta_e(a: Color, b: Color) -> float:
+	return _lab(a).distance_to(_lab(b))
+
+
+static func _lab(c: Color) -> Vector3:
+	var r := _lin(c.r)
+	var g := _lin(c.g)
+	var bl := _lin(c.b)
+	var x := (0.4124 * r + 0.3576 * g + 0.1805 * bl) / 0.95047
+	var y := 0.2126 * r + 0.7152 * g + 0.0722 * bl
+	var z := (0.0193 * r + 0.1192 * g + 0.9505 * bl) / 1.08883
+	var f := func(t: float) -> float: return pow(t, 1.0 / 3.0) if t > 0.008856 else 7.787 * t + 16.0 / 116.0
+	var fx: float = f.call(x)
+	var fy: float = f.call(y)
+	var fz: float = f.call(z)
+	return Vector3(116.0 * fy - 16.0, 500.0 * (fx - fy), 200.0 * (fy - fz))
+
+
+static func _lin(v: float) -> float:
+	return v / 12.92 if v <= 0.03928 else pow((v + 0.055) / 1.055, 2.4)
 
 
 func test_generator_future_levels() -> void:
@@ -495,3 +584,146 @@ func test_generator_future_levels() -> void:
 	check(LevelGenerator.profile_for_level(110)["name"] == "w_mystery_late", "every 10th future level is a mystery")
 	var band := LevelGenerator.target_difficulty(150)
 	check(band.x > LevelGenerator.target_difficulty(100).x, "target difficulty keeps rising past 100")
+	var prev := 0.0
+	var ok := true
+	for c in range(1, 16):
+		ok = ok and LevelGenerator.chapter_target(c) > prev
+		prev = LevelGenerator.chapter_target(c)
+	check(ok, "chapter difficulty targets rise through Chapter 15")
+	var p3 := LevelGenerator.chapter_plan(3)
+	var p4 := LevelGenerator.chapter_plan(4)
+	var p6 := LevelGenerator.chapter_plan(6)
+	var p12 := LevelGenerator.chapter_plan(12)
+	check(p3["silver_levels"] == 0 and p4["silver_levels"] > 0 and p4["gold_levels"] == 0 and p6["gold_levels"] > 0, "Silver from Chapter 4, Gold from Chapter 6")
+	check(p12["gold_levels"] > 0 and p12["diamond_levels"] == 0 and p12["profile"] == "w5_master", "Chapter 12 plan exists (no Diamond yet)")
+	var slots := LevelGenerator.reward_slots(4, 5, 0.5)
+	check(slots.size() == 5 and slots.all(func(n): return n >= 31 and n <= 40), "reward slots stay inside the Chapter")
+	# Classification of real campaign levels.
+	var lm := LevelManager.new()
+	lm._ready()
+	var c100 := LevelGenerator.classify(lm.load_level(100), 100)
+	check(c100["chapter"] == 10 and c100["solvable"] and c100["spinner_complexity"] == 3 and c100["lock_complexity"] >= 2
+		and c100["mystery_complexity"] >= 1 and c100["rewards"]["gold"] == 2, "Level 100 classified as a multi-mechanic Chapter 10 level with 2 Gold (%s)" % str(c100))
+	var c5 := LevelGenerator.classify(lm.load_level(5), 5)
+	check(c5["chapter"] == 1 and c5["spinner_complexity"] == 0 and c5["reward_frequency"] == 0.0, "an early level classifies as simple")
+	# The generator can mark rewards on a fresh candidate, and they survive JSON.
+	var gen := LevelGenerator.new(3)
+	var lvl := gen.generate(LevelGenerator.profile("medium"))
+	check(lvl != null, "generator produced a candidate for reward placement")
+	if lvl:
+		gen.assign_reward_blocks(lvl, 1, 1)
+		var again := LevelManager.parse_level(JSON.parse_string(LevelManager.to_json_text(lvl)), 0)
+		check(again.blocks.filter(func(b): return b.rarity == BlockData.Rarity.GOLD).size() == 1
+			and again.blocks.filter(func(b): return b.rarity == BlockData.Rarity.SILVER).size() == 1, "generated reward blocks survive JSON")
+		check(Solver.from_model(model_of(again)).is_solvable(), "reward blocks never change solvability")
+	lm.free()
+
+
+# --- v0.5 -------------------------------------------------------------------
+
+func test_reward_tokens() -> void:
+	var l := level_from_map(["R>$S B<@-#R$G .", "Yv?$D G^ ."])
+	check(l.blocks[0].rarity == BlockData.Rarity.SILVER and l.blocks[1].rarity == BlockData.Rarity.GOLD
+		and l.blocks[2].rarity == BlockData.Rarity.DIAMOND and not l.blocks[3].is_reward(), "rarity tokens $S $G $D parsed")
+	check(l.blocks[1].is_spinner() and l.blocks[1].lock_color == "red", "rarity combines with other modifiers")
+	var again := LevelManager.parse_level(JSON.parse_string(LevelManager.to_json_text(l)), 0)
+	check(again.blocks.map(func(b): return b.rarity) == l.blocks.map(func(b): return b.rarity), "rarities survive JSON round-trip")
+	var listed := LevelManager.parse_level({"rows": 1, "columns": 2, "blocks": [
+		{"row": 0, "column": 0, "color": "red", "direction": "left", "rarity": "gold"}]}, 0)
+	check(listed.blocks[0].rarity == BlockData.Rarity.GOLD, "rarity in the explicit block list format")
+	check(Economy.reward_block_coins(BlockData.Rarity.SILVER) == 5 and Economy.reward_block_coins(BlockData.Rarity.GOLD) == 15, "Silver +5, Gold +15 (configurable)")
+	check(Economy.reward_block_coins(BlockData.Rarity.DIAMOND) == 0 and Economy.reward_block_coins(BlockData.Rarity.NORMAL) == 0, "Diamond disabled, normal blocks pay nothing")
+	# Rules ignore rarity: same moves, same solution.
+	var plain := level_from_map(["R> B<@-#R .", "Yv? G^ ."])
+	check(Solver.from_model(model_of(l)).solve() == Solver.from_model(model_of(plain)).solve(), "rarity never changes the rules")
+
+
+## Anti-farming: a reward block pays exactly once per save, whatever
+## happens (repeat escapes after Undo/Restart/Replay, relaunch).
+func test_reward_blocks_pay_once() -> void:
+	var path := "user://test_rewards.cfg"
+	wipe_save(path)
+	var p := PlayerProgress.new(path).load_from_disk()
+	var lvl := level_from_map(["R>$S G<$G ."])
+	var start := p.coins
+	check(Economy.collect_reward_block(p, 35, lvl.blocks[0]) == 5 and p.coins == start + 5, "Silver pays +5")
+	check(Economy.collect_reward_block(p, 35, lvl.blocks[0]) == 0 and p.coins == start + 5, "the same Silver never pays twice (Undo / Restart / Replay)")
+	check(Economy.collect_reward_block(p, 36, lvl.blocks[0]) == 5, "a different level's block is a different reward")
+	check(Economy.collect_reward_block(p, 35, lvl.blocks[1]) == 15, "Gold pays +15")
+	check(p.chapter_coins.get(4, 0) == 25, "reward coins count toward the Chapter's coins")
+	var q := PlayerProgress.new(path).load_from_disk()
+	check(Economy.collect_reward_block(q, 35, lvl.blocks[0]) == 0 and Economy.collect_reward_block(q, 35, lvl.blocks[1]) == 0, "collected rewards persist across relaunch")
+	check(q.collected_rewards(35) == {0: true, 1: true} and q.collected_rewards(3).is_empty(), "collected ids per level")
+	check(Economy.collect_reward_block(q, 35, level_from_map(["R>"]).blocks[0]) == 0, "normal blocks never pay")
+	wipe_save(path)
+
+
+func test_chapter_complete_once() -> void:
+	var path := "user://test_chapter.cfg"
+	wipe_save(path)
+	var p := PlayerProgress.new(path).load_from_disk()
+	for n in range(1, 10):
+		p.record_result(n, 1000, 2)
+	check(Economy.check_chapter_complete(p, 1, 100) == 0, "9 of 10 levels: Chapter not complete")
+	p.record_result(10, 1000, 2)
+	var start := p.coins
+	var bonus := Economy.check_chapter_complete(p, 1, 100)
+	check(bonus == int(Economy.config()["rewards"]["chapter_complete"]) and p.coins == start + bonus, "10 of 10: Chapter complete pays once")
+	check(Economy.check_chapter_complete(p, 1, 100) == 0 and p.coins == start + bonus, "Chapter completion never fires twice")
+	var q := PlayerProgress.new(path).load_from_disk()
+	check(q.completed_chapters.has(1) and Economy.check_chapter_complete(q, 1, 100) == 0, "Chapter completion persists")
+	wipe_save(path)
+
+
+func test_chest_items() -> void:
+	var path := "user://test_chest_items.cfg"
+	wipe_save(path)
+	var p := PlayerProgress.new(path).load_from_disk()
+	for n in range(21, 31):
+		p.best_stars[n] = 3
+	var tiers := Economy.chest_tiers(p, 3)
+	check(tiers.size() == 3 and tiers.all(func(t): return t["claimable"]), "30 stars: all three chest tiers claimable")
+	check(Economy.chest_level(p, 3) == 2, "chest upgraded to the top tier")
+	var hammers: int = p.inventory.get("hammer", 0)
+	var got := Economy.claim_chest(p, 3, 2)
+	check(got == int(tiers[2]["coins"]) and p.inventory["hammer"] == hammers + 1, "premium tier pays coins and a Hammer")
+	check(Economy.claim_chest(p, 3, 2) == 0 and p.inventory["hammer"] == hammers + 1, "premium tier items never duplicate")
+	var q := PlayerProgress.new(path).load_from_disk()
+	check(q.inventory["hammer"] == hammers + 1 and q.claimed_chests.has("g2_t2"), "chest items persist")
+	wipe_save(path)
+
+
+## A real v0.4 (save v2) file: Worlds become Chapters, nothing is paid
+## twice and nothing is lost.
+func test_save_migration_v2() -> void:
+	var path := "user://test_migrate_v2.cfg"
+	wipe_save(path)
+	var old := ConfigFile.new()
+	old.set_value("meta", "version", 2)
+	old.set_value("progress", "current_level", 57)
+	old.set_value("progress", "highest_completed", 56)
+	old.set_value("progress", "completed_worlds", [1, 2])
+	old.set_value("progress", "perfect_levels", [5])
+	old.set_value("progress", "achievements", [])
+	for n in range(1, 57):
+		old.set_value("scores", str(n), 3000)
+		old.set_value("stars", str(n), 2)
+	old.set_value("economy", "coins", 480)
+	old.set_value("economy", "inventory", {"hint": 2, "hammer": 1})
+	old.set_value("economy", "claimed_chests", ["g0_t0", "g1_t0", "g2_t1"])
+	old.set_value("settings", "sfx", false)
+	old.save(path)
+	var p := PlayerProgress.new(path).load_from_disk()
+	var bonus := int(Economy.config()["rewards"]["chapter_complete"])
+	check(p.version == 3, "v2 save migrated to v3")
+	check(p.current_level == 57 and p.highest_completed == 56 and p.best_score(40) == 3000 and p.stars_for(56) == 2, "v0.4 progress kept")
+	check(p.inventory == {"hint": 2, "hammer": 1} and not p.sfx_on, "inventory and settings kept")
+	check([1, 2, 3, 4].all(func(c): return p.completed_chapters.has(c)), "completed Worlds 1-2 = Chapters 1-4 complete (no second bonus)")
+	check(p.completed_chapters.has(5) and not p.completed_chapters.has(6), "Chapter 5 (41-50) fully cleared inside unfinished World 3 is completed now")
+	check(p.coins == 480 + bonus, "only the never-paid Chapter 5 bonus is added (%d)" % p.coins)
+	check(Economy.claim_chest(p, 1, 0) == 0 and Economy.claim_chest(p, 3, 1) == 0, "chests claimed in v0.4 stay claimed")
+	check(Economy.check_chapter_complete(p, 2, 100) == 0, "no Chapter Complete moment fires for old progress")
+	p.save()
+	var q := PlayerProgress.new(path).load_from_disk()
+	check(q.coins == 480 + bonus and q.completed_chapters.size() == 5, "re-loading a migrated save pays nothing again")
+	wipe_save(path)

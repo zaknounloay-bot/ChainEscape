@@ -11,7 +11,8 @@ signal hint_pressed
 signal replay_pressed
 signal hammer_pressed
 signal buy_requested(item: String)
-signal chest_claim(group: int, tier: int)
+signal chest_claim(chapter: int, tier: int)
+signal chapter_continue  # CONTINUE on the Chapter Complete card
 signal continue_pressed
 signal title_level_select
 signal shop_open_requested
@@ -54,8 +55,9 @@ var _shop: ShopPanel
 var _title: TitleScreen
 var _banner: Label
 var _card_coins: Label
-## Current World theme (HUD colors follow it).
-var theme: Dictionary = Worlds.THEMES[0]
+var _chapter_card: ChapterCard
+## Current Chapter theme (HUD colors follow it).
+var theme: Dictionary = Chapters.theme_for_chapter(1)
 var _overlay: ColorRect
 var _card: PanelContainer
 var _card_title: Label
@@ -82,12 +84,17 @@ func get_board_area() -> Rect2:
 
 
 func set_level(number: int, total: int, level_name: String, mystery: bool = false) -> void:
-	var master := number == Worlds.MASTER_LEVEL
+	var master := Chapters.is_master(number)
 	_level_label.text = "MASTER LEVEL" if master else "LEVEL %d" % number
 	_level_label.add_theme_font_size_override("font_size", 50 if master else 64)
-	_name_label.text = level_name.to_upper() if total == 0 else "%s  ·  %d/%d" % [level_name.to_upper(), number, total]
+	# "DEADBOLT  ·  CHAPTER 5  ·  5/10": where you are inside the Chapter.
+	var per := Chapters.levels_per_chapter()
+	_name_label.text = level_name.to_upper() if total == 0 else "%s  ·  CHAPTER %d  ·  %d/%d" % [
+		level_name.to_upper(), Chapters.chapter_of(number), (number - 1) % per + 1, per]
 	if mystery:
 		_name_label.text = "?  MYSTERY  ·  " + _name_label.text
+	# Long lines (mystery + long names) step down a size to stay on one line.
+	_name_label.add_theme_font_size_override("font_size", 24 if _name_label.text.length() <= 40 else 20)
 	var mystery_col := Color("#C9A8FF") if theme["dark"] else Palette.PURPLE_BADGE
 	_name_label.add_theme_color_override("font_color", mystery_col if mystery else theme["text_soft"])
 	_level_label.add_theme_color_override("font_color", Palette.GOLD if master else theme["text"])
@@ -162,7 +169,16 @@ func set_hammer_state(owned: int, active: bool, usable: bool) -> void:
 	_hammer_button.text = "CANCEL" if active else "HAMMER"
 
 
+## Coins currently flying to the counter: the counter waits for them, so
+## it counts up when they land rather than before.
+var _coins_flying := 0
+var _coins_pending := -1
+
+
 func set_coins(coins: int, animate: bool = true) -> void:
+	if _coins_flying > 0:
+		_coins_pending = coins
+		return
 	_coin_pill.set_coins(coins, animate)
 
 
@@ -198,7 +214,7 @@ func is_title_open() -> bool:
 	return _title.visible
 
 
-## HUD colors follow the World (blocks and buttons never change).
+## HUD colors follow the Chapter (block hues and buttons never change).
 func apply_theme(t: Dictionary) -> void:
 	theme = t
 	_level_label.add_theme_color_override("font_color", t["text"])
@@ -209,15 +225,15 @@ func apply_theme(t: Dictionary) -> void:
 	_progress.fill_color = t["accent"]
 	_progress.queue_redraw()
 	TutorialHint.text_color = t["text"]
-	# Accent-colored surfaces follow the World too.
+	# Accent-colored surfaces follow the Chapter too.
 	var accent_btn: Color = t["accent"].darkened(0.1) if t["dark"] else t["accent"]
 	_next_button.set_background(accent_btn)
 	_coin_pill.accent = t["accent"]
 	_chain_label.add_theme_color_override("font_color", t["accent"])
 
 
-## "WORLD 2 · DEEP CURRENT" banner when entering a new World.
-func show_world_banner(text: String) -> void:
+## "CHAPTER 3 · DEEP CURRENT" banner when entering a new Chapter.
+func show_chapter_banner(text: String) -> void:
 	var vis := get_viewport().get_visible_rect()
 	_banner.text = text
 	_banner.add_theme_color_override("font_color", theme["accent"])
@@ -235,8 +251,59 @@ func show_world_banner(text: String) -> void:
 	t.tween_callback(func(): _banner.visible = false)
 
 
-func open_level_select(levels: Array, total_stars: int, chests: Dictionary = {}, group_stars: Dictionary = {}) -> void:
-	_level_select.open(levels, total_stars, chests, group_stars)
+func open_level_select(chapters: Array, total_stars: int, max_stars: int, current_chapter: int) -> void:
+	_level_select.open(chapters, total_stars, max_stars, current_chapter)
+
+
+func show_chapter_card(summary: Dictionary) -> void:
+	hide_complete()
+	_bottom.modulate.a = 0.0
+	_chapter_card.open(summary)
+
+
+func refresh_chapter_card(summary: Dictionary) -> void:
+	_chapter_card.refresh(summary)
+
+
+func is_chapter_card_open() -> bool:
+	return _chapter_card.visible
+
+
+func chapter_card_chapter() -> int:
+	return _chapter_card.chapter
+
+
+## "+15 COINS" pops at a reward block and flies into the coin counter,
+## which then counts up. Fast (~0.8 s) and never blocks input.
+func fly_coins(from: Vector2, amount: int, rarity: int, new_total: int) -> void:
+	var metal: Array = Palette.METALS[clampi(rarity, 1, Palette.METALS.size() - 1)]
+	var l := _make_label(34, metal[1], 900)
+	l.text = "+%d COINS" % amount
+	l.add_theme_color_override("font_outline_color", metal[2])
+	l.add_theme_constant_override("outline_size", 10)
+	l.z_index = 50
+	_root.add_child(l)
+	l.reset_size()
+	l.position = from - l.size * 0.5
+	l.pivot_offset = l.size * 0.5
+	l.scale = Vector2(0.6, 0.6)
+	var target := _coin_pill.get_global_rect().get_center() - l.size * 0.5
+	_coins_flying += 1
+	if _coins_pending == -1:
+		_coins_pending = new_total
+	var t := l.create_tween()
+	t.tween_property(l, "scale", Vector2(1.15, 1.15), 0.14).set_trans(Tween.TRANS_BACK).set_ease(Tween.EASE_OUT)
+	t.tween_property(l, "position:y", l.position.y - 40.0, 0.18).set_trans(Tween.TRANS_SINE)
+	t.tween_property(l, "position", target, 0.38).set_trans(Tween.TRANS_CUBIC).set_ease(Tween.EASE_IN)
+	t.parallel().tween_property(l, "scale", Vector2(0.45, 0.45), 0.38).set_trans(Tween.TRANS_CUBIC).set_ease(Tween.EASE_IN)
+	t.tween_callback(func():
+		_coins_flying -= 1
+		if _coins_flying == 0:
+			# The latest balance wins (it may include more than this fly).
+			var latest := _coins_pending if _coins_pending != -1 else new_total
+			_coins_pending = -1
+			set_coins(latest)
+		l.queue_free())
 
 
 func is_level_select_open() -> bool:
@@ -298,6 +365,8 @@ func show_complete(r: Dictionary) -> void:
 		_card_reward.text = "BEST  %s" % _fmt(r["best"])
 		_card_reward.add_theme_color_override("font_color", Palette.TEXT_SOFT)
 	_next_button.text = "NEXT LEVEL" if not r["is_last"] else "PLAY AGAIN"
+	if r.get("chapter_complete", 0) > 0:
+		_next_button.text = "CONTINUE"  # opens the Chapter Complete card
 	_overlay.visible = true
 	_overlay.color = Color(theme["bg_bottom"], 0.0)
 	_card.pivot_offset = _card.size * 0.5
@@ -487,6 +556,8 @@ func _build() -> void:
 	card_box.add_child(_card_reward)
 	_card_stats = _make_label(22, Palette.TEXT_SOFT, 800)
 	_card_coins = _make_label(26, Color("#D98A00"), 900)
+	_card_coins.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+	_card_coins.custom_minimum_size = Vector2(520, 0)
 	card_box.add_child(_card_stats)
 	card_box.add_child(_card_coins)
 	var spacer := Control.new()
@@ -526,7 +597,7 @@ func _build() -> void:
 	_build_settings()
 	_level_select = LevelSelect.new()
 	_level_select.level_chosen.connect(func(n): level_chosen.emit(n))
-	_level_select.chest_claim.connect(func(g, t): chest_claim.emit(g, t))
+	_level_select.chest_claim.connect(func(c, t): chest_claim.emit(c, t))
 	_coin_pill = CoinPill.new()
 	_coin_pill.set_anchors_and_offsets_preset(Control.PRESET_TOP_RIGHT)
 	_coin_pill.pressed.connect(func(): shop_open_requested.emit())
@@ -541,6 +612,12 @@ func _build() -> void:
 	_title.level_select_pressed.connect(func(): title_level_select.emit())
 	_root.add_child(_title)
 	_root.add_child(_level_select)
+	_chapter_card = ChapterCard.new()
+	_chapter_card.continue_pressed.connect(func():
+		_bottom.modulate.a = 1.0
+		chapter_continue.emit())
+	_chapter_card.chest_claim.connect(func(c, t): chest_claim.emit(c, t))
+	_root.add_child(_chapter_card)
 	_shop = ShopPanel.new()
 	_shop.buy_requested.connect(func(item): buy_requested.emit(item))
 	_root.add_child(_shop)

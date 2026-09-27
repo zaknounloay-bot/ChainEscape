@@ -2,11 +2,11 @@
 	"name": "Ridge Line",
 	"map": [
 		".      .      R<@#P  P>@    B>@-   P^",
-		"G<     .      Pv     Bv     .      .",
-		"G^     R<     R<     Gv@~   Y<     .",
-		".      .      Bv     .      .      Y^",
-		"R^@*   Gv     Y<     .      Y^#R   .",
-		".      P>@    P>     .      B>     B^",
-		"P^     .      .      P<     .      ."
+		"G<     Y<     Pv     Bv     .      .",
+		"G^     R<     R<     Rv@~   Y<     .",
+		".      .      Bv     .      B^     Y^",
+		"R^@*   Gv$G   Y<     .      Y>#R   .",
+		".      P^@    P>     Yv     G>$S   B^",
+		"P^     .      .      P<@    .      ."
 	]
 }

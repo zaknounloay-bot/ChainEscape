@@ -1,11 +1,11 @@
 {
 	"name": "Relay",
 	"map": [
-		"G>     .      Yv     Pv     G<@*   .",
-		".      G^     .      P<     .      B<",
-		"Rv     Y>     P>     Yv     .      P^@~",
-		"P>@#G  .      Rv     .      P>     R^@",
-		"B>     .      .      P>     .      Y^",
-		".      P^@~   Rv     .      .      B<#R"
+		"G>      .       Yv      Pv      B<@*    .",
+		".       G^      .       P<      .       B<@",
+		"Rv      Y>      P>      Yv      .       P<@~",
+		"P>#G    .       Rv      .       P>      P^@*",
+		"B>      .       B>      P>      .       Y^",
+		".       P^@*$S  Rv      .       .       B<#R"
 	]
 }

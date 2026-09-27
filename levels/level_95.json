@@ -2,11 +2,11 @@
 	"name": "Paradox",
 	"map": [
 		"Rv     R<     .      .      .      .      R<",
-		".      B^@-   .      .      Rv     .      .",
-		"Pv     .      .      B>     R>@~   .      G^",
-		".      .      Gv#R   .      Pv     B<#Y   Y^",
-		"Y>@*   .      .      P^@    Gv@#Y  P<     G^",
-		"Bv     .      B>     .      R>     .      .",
-		".      .      .      P^     .      Y<     ."
+		".      Y^@-   .      .      .      .      .",
+		"Pv     Rv     .      B>     R>@*   .      G^",
+		".      .      Gv#R   .      Gv     B<#Y   Y^",
+		"P>@*   Y<     .      P^@    Gv@#Y  P<     G^",
+		"Bv     .      B>     .      R>@    .      .",
+		".      .      .      P^     .      Y<$S   ."
 	]
 }

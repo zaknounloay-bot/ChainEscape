@@ -2,7 +2,7 @@
 	"name": "The Last Secret",
 	"mystery": true,
 	"map": [
-		"Rv#B  R>    R>    Rv@   P>    G>",
+		"Rv#B  R>$S  R>    Rv@   P>    G>",
 		".     .     .     .     Bv    R^?",
 		".     Gv    .     G<@   .     G^?",
 		"P>    .     .     .     G>    G<@",

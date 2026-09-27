@@ -1,12 +1,12 @@
 {
 	"name": "Pulse Lock",
 	"map": [
-		".       R>@~    .       G^      Pv@*    .",
-		".       P^      .       .       .       .",
-		"Bv      P<      .       .       G<      .",
-		".       B^      .       .       .       Rv#G",
-		"Pv      Y^      .       G>      .       P<@-#B",
-		"Bv@     B^      .       .       .       G<",
-		"R>      B>      G>      .       R^@~    Yv"
+		"R>      R>@~    .       G^      Pv@*    .",
+		".       P^      .       Pv      .       .",
+		"Bv      P<      .       .       G<      G<",
+		".       B^      R<#G    .       .       .",
+		"Pv      Y^      .       G>$S    .       Pv@-#B",
+		"Bv@*    B^      .       .       .       G<",
+		"R>      B>      G>      .       R^@~    Yv@~"
 	]
 }

@@ -19,39 +19,15 @@
  *   3. ctx.resume() on every captured AudioContext that is not "running"
  *   4. start a 1-frame silent buffer on it (older iOS needs a real start)
  * Godot polls window.ceAudio.state() and starts music only once it reports
- * "running". Nothing audible is played here unless ?audiotest=1 asks for a
- * test tone.
- *
- * TEMPORARY DEBUG: logs go to the console ("[CE-Audio]"); add ?audiodebug=1
- * to the URL to also see them on screen (useful on an iPhone).
+ * "running" after a real gesture. Nothing audible is ever played here.
+ * Only failures are logged (console.warn).
  */
 (function () {
   'use strict';
-  var params = location.search || '';
-  var SHOW = /[?&]audiodebug/.test(params);
-  var lines = [];
-  var box = null;
   var ua = navigator.userAgent || '';
   var isIOS = /iPad|iPhone|iPod/.test(ua) || (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
-  var browser = /Edg\//.test(ua) ? 'Edge' : /CriOS|Chrome\//.test(ua) ? 'Chrome'
-    : /FxiOS|Firefox\//.test(ua) ? 'Firefox' : /Safari\//.test(ua) ? 'Safari' : 'other';
-  var platform = (isIOS ? 'iOS' : /Android/.test(ua) ? 'Android' : 'desktop') + ' ' + browser;
 
-  function log(msg) {
-    var line = '[CE-Audio] ' + msg;
-    console.log(line);
-    lines.push(line);
-    if (lines.length > 40) lines.shift();
-    if (SHOW) {
-      if (!box && document.body) {
-        box = document.createElement('div');
-        box.style.cssText = 'position:fixed;left:0;right:0;bottom:0;max-height:38%;overflow:auto;z-index:99999;' +
-          'background:rgba(0,0,0,.78);color:#9f9;font:11px/1.35 monospace;padding:6px;pointer-events:none;white-space:pre-wrap';
-        document.body.appendChild(box);
-      }
-      if (box) { box.textContent = lines.join('\n'); box.scrollTop = box.scrollHeight; }
-    }
-  }
+  function warn(msg) { console.warn('[CE-Audio] ' + msg); }
 
   // --- capture every AudioContext the engine creates -----------------------
   var contexts = [];
@@ -60,18 +36,18 @@
     var Wrapped = function (opts) {
       var c = (opts === undefined) ? new Orig() : new Orig(opts);
       contexts.push(c);
-      log('AudioContext created: state=' + c.state + ' sampleRate=' + c.sampleRate);
-      c.addEventListener('statechange', function () { log('AudioContext state -> ' + c.state); });
       return c;
     };
     Wrapped.prototype = Orig.prototype;
     window.AudioContext = Wrapped;
     if (window.webkitAudioContext) window.webkitAudioContext = Wrapped;
+  } else {
+    warn('no Web Audio support in this browser');
   }
-  log('platform: ' + platform + (Orig ? '' : ' (NO Web Audio support)'));
 
-  var SILENT_WAV = 'data:audio/wav;base64,UklGRrQBAABXQVZFZm10IBAAAAABAAEAQB8AAEAfAAABAAgAZGF0YZABAACAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICA';
+  var SILENT_WAV = 'data:audio/wav;base64,UklGRrQBAABXQVZFZm10IBAAAAABAAEAQB8AAEAfAAABAAgAZGF0YZABAACAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICA';
   var gestures = 0;
+  var unlockAttempts = 0;
   var mediaKicked = false;
 
   function allRunning() {
@@ -80,15 +56,10 @@
     return true;
   }
 
-  function states() {
-    return contexts.map(function (c) { return c.state; }).join(',') || 'none';
-  }
-
-  function unlock(eventType) {
+  function unlock() {
     // 1) iOS 17+: route Web Audio as media playback (not muted by the silent switch).
     if (navigator.audioSession && navigator.audioSession.type !== 'playback') {
-      try { navigator.audioSession.type = 'playback'; log('audioSession.type = playback'); }
-      catch (e) { log('audioSession not settable: ' + e); }
+      try { navigator.audioSession.type = 'playback'; } catch (e) { warn('audioSession not settable: ' + e); }
     }
     // 2) Older iOS: a short silent media element switches the audio route.
     if (isIOS && !navigator.audioSession && !mediaKicked) {
@@ -98,35 +69,31 @@
         a.setAttribute('playsinline', '');
         a.src = SILENT_WAV;
         var p = a.play();
-        if (p && p.then) p.then(function () { log('silent media kick: ok'); }, function (e) { log('silent media kick failed: ' + e); });
-      } catch (e) { log('silent media kick error: ' + e); }
+        if (p && p.catch) p.catch(function (e) { warn('silent media kick failed: ' + e); });
+      } catch (e) { warn('silent media kick error: ' + e); }
     }
-    if (!contexts.length) { log('gesture (' + eventType + ') before the engine created audio - will retry'); return; }
+    if (!contexts.length) return; // engine not started yet - the next tap retries
+    unlockAttempts++;
     // 3) + 4) resume and start a silent buffer, synchronously inside the gesture.
-    contexts.forEach(function (c, i) {
-      var before = c.state;
-      if (before !== 'running') {
-        log('unlock attempt #' + gestures + ' (' + eventType + '): context ' + i + ' state before = ' + before);
+    contexts.forEach(function (c) {
+      if (c.state !== 'running') {
         try {
-          c.resume().then(function () { log('resume() resolved: context ' + i + ' state after = ' + c.state); },
-            function (e) { log('resume() rejected: ' + e + ' (will retry on next tap)'); });
-        } catch (e) { log('resume() threw: ' + e); }
+          c.resume().catch(function (e) { warn('resume() rejected: ' + e + ' (will retry on the next tap)'); });
+        } catch (e) { warn('resume() threw: ' + e); }
       }
       try {
-        var buf = c.createBuffer(1, 1, c.sampleRate);
         var src = c.createBufferSource();
-        src.buffer = buf;
+        src.buffer = c.createBuffer(1, 1, c.sampleRate);
         src.connect(c.destination);
         src.start(0);
-      } catch (e) { log('silent buffer failed: ' + e); }
+      } catch (e) { warn('silent buffer failed: ' + e); }
     });
   }
 
-  function onGesture(e) {
+  function onGesture() {
     gestures++;
-    if (gestures === 1) log('first user gesture: ' + e.type + ' (contexts: ' + states() + ')');
     if (allRunning()) return; // already unlocked: nothing to do, never restarts anything
-    unlock(e.type);
+    unlock();
   }
 
   // Activation-triggering events only (touchstart is NOT one on iOS).
@@ -136,7 +103,6 @@
 
   // --- API used by Godot (JavaScriptBridge) --------------------------------
   window.ceAudio = {
-    platform: platform,
     isIOS: isIOS,
     /** "running" when every engine AudioContext runs; "none" before creation. */
     state: function () {
@@ -144,24 +110,7 @@
       return allRunning() ? 'running' : contexts[0].state;
     },
     gestures: function () { return gestures; },
-    /** Audio clock advancing = the output really runs. */
-    time: function () { return contexts.length ? contexts[0].currentTime : -1; },
-    log: log,
-    lines: function () { return lines.slice(); },
-    /** Short, quiet, harmless beep straight through Web Audio (bypasses Godot). */
-    testTone: function () {
-      var c = contexts[0];
-      if (!c || c.state !== 'running') { log('test tone skipped: context ' + (c ? c.state : 'missing')); return false; }
-      var o = c.createOscillator();
-      var g = c.createGain();
-      o.frequency.value = 880;
-      g.gain.setValueAtTime(0.0001, c.currentTime);
-      g.gain.exponentialRampToValueAtTime(0.06, c.currentTime + 0.02);
-      g.gain.exponentialRampToValueAtTime(0.0001, c.currentTime + 0.18);
-      o.connect(g); g.connect(c.destination);
-      o.start(); o.stop(c.currentTime + 0.2);
-      log('JS test tone played (880 Hz, 0.2 s)');
-      return true;
-    }
+    /** Counters for automated tests (no logging). */
+    info: function () { return { gestures: gestures, unlockAttempts: unlockAttempts, contexts: contexts.length }; }
   };
 })();

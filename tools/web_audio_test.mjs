@@ -5,19 +5,23 @@
 //   node tools/web_audio_test.mjs             (Node + Playwright + Chromium)
 //
 // Runs the exported game in Chromium under the strict autoplay policy
-// (document-user-activation-required) and checks, per case:
-//   * nothing plays before the first user gesture (music off, no SFX)
+// (document-user-activation-required). The game has no test hooks: the
+// test only taps the screen, reads window.chainEscapeAudio (published by
+// AudioManager) and measures the REAL output signal with an analyser
+// tapped onto the audio destination. Per case it checks:
+//   * nothing plays before the first gesture (output silent, music off,
+//     no SFX, audio not unlocked)
 //   * one tap/click unlocks: the page-level unlock (web/audio_unlock.js)
 //     resumes the engine's AudioContext inside the gesture, Godot sees it
 //     "running", THEN starts music (if ON) and allows SFX (if ON)
-//   * the [CE-Audio] log shows the full sequence
-//   * the ?audiotest=1 test sounds run (JS tone + Godot SFX, clock advancing)
-//   * music is never restarted by later taps
+//   * music really reaches the output; SFX really reach it when ON
+//   * later taps never restart the music
+//   * no temporary debug remains (no console logging, no test hooks)
 // Cases: mobile (touch) first visit, returning player with Music ON,
-// Music OFF, SFX OFF (settings changed through the real settings path and
-// persisted across a reload), and desktop mouse (Chrome; Edge uses the same
-// Chromium engine). iOS Safari cannot run here - see README for the manual
-// iPhone checklist.
+// Music OFF and SFX OFF (set by editing the real save file in IndexedDB,
+// then reloading), an iOS-like context that starts suspended, and desktop
+// mouse (Chrome; Edge uses the same Chromium engine). iOS Safari itself
+// cannot run here - see README for the iPhone checklist.
 import http from 'node:http';
 import fs from 'node:fs';
 import path from 'node:path';
@@ -36,7 +40,7 @@ const server = http.createServer((req, res) => {
   const rel = decodeURIComponent(req.url.split('?')[0]);
   const file = path.join(root, rel === '/' ? 'index.html' : rel);
   fs.readFile(file, (err, data) => {
-    if (err) { res.writeHead(404); res.end(); return; }
+    if (err) { res.writeHead(404, { 'Content-Type': 'text/html' }); res.end('<html></html>'); return; }
     res.writeHead(200, { 'Content-Type': types[path.extname(file)] || 'application/octet-stream' });
     res.end(data);
   });
@@ -53,19 +57,24 @@ const browser = await chromium.launch({
   args: ['--autoplay-policy=document-user-activation-required', '--use-gl=angle', '--use-angle=swiftshader', '--enable-unsafe-swiftshader'],
 });
 
+// Pixel density 1: this build machine renders with a software GPU, where a
+// 2x canvas drops to ~8 fps and starves Godot's main-thread (Stream) mixer.
+// The unlock logic does not depend on pixel density.
 const MOBILE = {
-  viewport: { width: 412, height: 915 }, deviceScaleFactor: 2, isMobile: true, hasTouch: true,
+  viewport: { width: 412, height: 915 }, deviceScaleFactor: 1, isMobile: true, hasTouch: true,
   userAgent: 'Mozilla/5.0 (Linux; Android 14; Pixel 7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0 Mobile Safari/537.36',
 };
 const DESKTOP = { viewport: { width: 1280, height: 800 } };
-const URL = 'http://localhost:8765/index.html?audiotest=1';
+const ORIGIN = 'http://localhost:8765';
+const GAME = ORIGIN + '/index.html';
+const SAVE_KEY = '/userfs/godot/app_userdata/Chain Escape/progress.cfg';
 
-// Taps everything the engine sends to the speakers into an AnalyserNode,
-// so the test can prove real (non-silent) audio comes out, in either
-// playback type (STREAM: one mixer node; SAMPLE: per-sound buffer nodes).
+// Taps everything the engine sends to the speakers into an AnalyserNode and
+// keeps the running maximum, so even a 40 ms UI click is caught.
 function signalProbe() {
   const origConnect = AudioNode.prototype.connect;
   const probes = new Map();
+  window.__maxPeak = 0;
   AudioNode.prototype.connect = function (target, ...rest) {
     const r = origConnect.call(this, target, ...rest);
     if (target instanceof AudioDestinationNode) {
@@ -84,156 +93,168 @@ function signalProbe() {
     }
     return r;
   };
-  window.__peak = () => {
-    let peak = 0;
+  const buf = new Float32Array(2048);
+  window.__sample = () => {
     for (const a of probes.values()) {
-      const buf = new Float32Array(a.fftSize);
       a.getFloatTimeDomainData(buf);
-      for (const v of buf) peak = Math.max(peak, Math.abs(v));
+      for (const v of buf) if (Math.abs(v) > window.__maxPeak) window.__maxPeak = Math.abs(v);
     }
-    return peak;
+    return window.__maxPeak;
+  };
+  window.__consoleCE = 0;
+  const log = console.log;
+  console.log = function (...args) {
+    if (String(args[0]).startsWith('[CE-Audio]')) window.__consoleCE++;
+    return log.apply(this, args);
   };
 }
 
-// Peak level over ~2 s of sampling (the music has short rests).
-async function peakLevel(page) {
-  let peak = 0;
-  for (let i = 0; i < 20; i++) {
-    peak = Math.max(peak, await page.evaluate(() => window.__peak()));
-    await page.waitForTimeout(100);
+// Peak over a window of `ms` milliseconds (the analyser is sampled every
+// 50 ms; each sample covers the last ~46 ms of output).
+async function peakDuring(page, ms) {
+  await page.evaluate(() => { window.__maxPeak = 0; });
+  const end = Date.now() + ms;
+  while (Date.now() < end) {
+    await page.evaluate(() => window.__sample());
+    await page.waitForTimeout(50);
   }
-  return peak;
+  return page.evaluate(() => window.__sample());
 }
 
-async function newContext(opts) {
-  const c = await browser.newContext(opts);
-  await c.addInitScript(signalProbe);
-  return c;
-}
-
-async function game(page) {
+async function state(page) {
   return page.evaluate(() => ({
     g: window.chainEscapeAudio || null,
     ctx: window.ceAudio ? window.ceAudio.state() : 'no-bridge',
-    lines: window.ceAudio ? window.ceAudio.lines() : [],
+    info: window.ceAudio && window.ceAudio.info ? window.ceAudio.info() : null,
+    hooks: typeof window.ceSetSetting + '/' + (window.ceAudio ? typeof window.ceAudio.testTone : 'none'),
+    ceLogs: window.__consoleCE,
   }));
 }
 
-async function load(page, extra = '') {
-  await page.goto(URL + extra);
+async function load(page) {
+  await page.goto(GAME);
   await page.waitForFunction(() => window.chainEscapeAudio !== undefined, null, { timeout: 120000 });
   await page.waitForTimeout(1200);
 }
 
-async function tap(page, mobile) {
-  if (mobile) await page.touchscreen.tap(206, Math.round(915 * 0.57));
-  else await page.mouse.click(640, Math.round(800 * 0.57));
+// Canvas layout: 720x1280 base, stretch "expand" -> map canvas to screen.
+function toScreen(vp, cx, cy, fromBottom = false) {
+  const scale = Math.min(vp.width / 720, vp.height / 1280);
+  const W = vp.width / scale;
+  const H = vp.height / scale;
+  const x = W / 2 + (cx - 360);
+  const y = fromBottom ? H - cy : cy;
+  return [x * scale, y * scale];
 }
 
-// One scenario: load, verify silence, tap, verify the unlock sequence.
-async function scenario(page, label, { mobile, musicOn, sfxOn, playback = 'STREAM' }) {
-  let s = await game(page);
-  check(new RegExp(`playback type: ${playback}`).test(s.lines.join('\n')), `${label}: playback type logged as ${playback}`);
-  const before = await peakLevel(page);
-  check(before === 0, `${label}: output is silent before the first gesture (peak ${before.toFixed(4)})`);
+async function tapAt(page, mobile, x, y) {
+  if (mobile) await page.touchscreen.tap(x, y);
+  else await page.mouse.click(x, y);
+}
+
+// The title's PLAY / CONTINUE button (first gesture), then any later tap.
+async function tapTitle(page, mobile, vp) {
+  await tapAt(page, mobile, vp.width / 2, Math.round(vp.height * 0.57));
+}
+
+// RESTART in the bottom bar: always plays the UI click sound.
+async function tapRestart(page, mobile, vp) {
+  const [x, y] = toScreen(vp, 606, 108, true);
+  await tapAt(page, mobile, x, y);
+}
+
+async function scenario(page, label, { mobile, vp, musicOn, sfxOn, expectSuspended = false }) {
+  let s = await state(page);
   check(s.ctx !== 'no-bridge', `${label}: page-level unlock script (ceAudio) is present`);
-  check(s.g.unlocked === false, `${label}: audio not unlocked before the first gesture`);
-  check(s.g.musicPlaying === false, `${label}: no music before the first gesture`);
-  check(s.g.sfxPlayed === 0, `${label}: no sound effects before the first gesture`);
+  check(s.hooks === 'undefined/undefined', `${label}: no temporary test hooks left (ceSetSetting / testTone)`);
+  check(s.g.unlocked === false && s.g.musicPlaying === false && s.g.sfxPlayed === 0, `${label}: nothing unlocked or played before the first gesture`);
   check(s.g.musicEnabled === musicOn && s.g.sfxEnabled === sfxOn, `${label}: saved settings restored (music ${musicOn ? 'ON' : 'OFF'}, sfx ${sfxOn ? 'ON' : 'OFF'})`);
-  console.log(`INFO ${label}: context before gesture = ${s.ctx}`);
-  await tap(page, mobile);
+  if (expectSuspended) check(s.ctx === 'suspended', `${label}: AudioContext starts suspended (${s.ctx})`);
+  const before = await peakDuring(page, 1000);
+  check(before === 0, `${label}: output is silent before the first gesture (peak ${before.toFixed(4)})`);
+  await tapTitle(page, mobile, vp);
   await page.waitForTimeout(2500);
-  s = await game(page);
-  const log = s.lines.join('\n');
+  s = await state(page);
   check(s.ctx === 'running', `${label}: AudioContext running after the gesture (${s.ctx})`);
-  check(s.g.unlocked === true, `${label}: Godot marked audio unlocked`);
+  check(s.g.unlocked === true, `${label}: Godot unlocked audio after the gesture`);
+  if (expectSuspended) check(s.info.unlockAttempts >= 1, `${label}: resume() was called inside the gesture (${s.info.unlockAttempts} attempts)`);
   check(s.g.musicPlaying === musicOn, `${label}: music ${musicOn ? 'playing' : 'NOT playing (Music OFF)'}`);
-  check(/first user gesture: (touchend|pointerup|mouseup|click)/.test(log), `${label}: log shows the first gesture event`);
-  check(/\(godot\) audio unlocked \(context: running\)/.test(log), `${label}: log shows Godot unlocking only once the context runs`);
-  check(new RegExp(musicOn ? '\\(godot\\) music: started' : '\\(godot\\) music: OFF').test(log), `${label}: log shows the music decision`);
-  check(/JS test tone played/.test(log), `${label}: ?audiotest JS test tone played`);
-  check(new RegExp(musicOn ? `music play attempt: theme \\w+ \\(${playback}, context running\\) -> playing=true` : 'music: OFF').test(log),
-    `${label}: music play attempt logged (${musicOn ? playback + ', context running' : 'Music OFF'})`);
-  if (sfxOn) check(new RegExp(`SFX play attempt #1: '\\w+' \\(${playback}, context running\\)`).test(log), `${label}: SFX play attempt logged (${playback})`);
+  const musicPeak = await peakDuring(page, 1500);
+  if (musicOn) check(musicPeak > 0.005, `${label}: music signal reaches the output (peak ${musicPeak.toFixed(4)})`);
+  else check(musicPeak === 0, `${label}: output silent with Music OFF (peak ${musicPeak.toFixed(4)})`);
+  // Later taps: nothing restarts. The music position keeps running.
+  const pos0 = (await state(page)).g.musicPos;
+  await tapTitle(page, mobile, vp);
+  await page.waitForTimeout(600);
+  s = await state(page);
+  const wrapped = s.g.musicPos < pos0 && pos0 > 12;
+  check(s.g.unlocked && s.g.musicPlaying === musicOn && (!musicOn || s.g.musicPos > pos0 || wrapped),
+    `${label}: later taps never restart the music (pos ${pos0.toFixed(2)} -> ${s.g.musicPos.toFixed(2)})`);
+  // SFX: RESTART plays the UI click.
+  const sfxBefore = s.g.sfxPlayed;
+  await tapRestart(page, mobile, vp);
+  const sfxPeak = await peakDuring(page, 900);
+  s = await state(page);
   if (sfxOn) {
-    check(s.g.sfxPlayed >= 1, `${label}: Godot SFX played after unlock (${s.g.sfxPlayed})`);
-    check(/SFX test: .*advancing\)/.test(log) && !/NOT advancing/.test(log), `${label}: SFX test ran with the audio clock advancing`);
+    check(s.g.sfxPlayed > sfxBefore, `${label}: sound effect played after unlock (${sfxBefore} -> ${s.g.sfxPlayed})`);
+    if (!musicOn) check(sfxPeak > 0.003, `${label}: SFX signal reaches the output with music off (peak ${sfxPeak.toFixed(4)})`);
   } else {
-    check(s.g.sfxPlayed === 0, `${label}: no SFX when Sound Effects are OFF`);
-    check(/SFX test skipped: Sound Effects are OFF/.test(log), `${label}: SFX test reports SFX OFF`);
+    check(s.g.sfxPlayed === 0, `${label}: no SFX with Sound Effects OFF`);
   }
-  // Later taps must not restart anything.
-  const unlockCount = (log.match(/audio unlocked/g) || []).length;
-  await tap(page, mobile);
-  await tap(page, mobile);
-  await page.waitForTimeout(800);
-  s = await game(page);
-  const log2 = s.lines.join('\n');
-  check((log2.match(/audio unlocked/g) || []).length === unlockCount && s.g.musicPlaying === musicOn,
-    `${label}: extra taps do not re-unlock or restart music`);
-  if (musicOn) {
-    const after = await peakLevel(page);
-    if (playback === 'STREAM') check(after > 0.005, `${label}: music signal actually reaches the output (peak ${after.toFixed(4)})`);
-    // Godot's SAMPLE path measured silent in headless Chromium for this
-    // project; kept as information for the A/B comparison only.
-    else console.log(`INFO ${label}: output peak with ${playback} playback = ${after.toFixed(4)}`);
-  }
+  check(s.ceLogs === 0, `${label}: no [CE-Audio] debug logging (${s.ceLogs} lines)`);
   return s;
 }
 
-// Reads the save file straight from the browser storage (IndexedDB).
-async function savedFile(page) {
-  return page.evaluate(async () => {
+// Edits the real save file in IndexedDB (settings), from a same-origin page
+// where the game is not running, so the next load starts with them.
+async function setSaved(page, edits) {
+  await page.waitForFunction(async (key) => {
     const db = await new Promise((r) => { const q = indexedDB.open('/userfs'); q.onsuccess = () => r(q.result); });
-    const v = await new Promise((r) => {
-      const q = db.transaction('FILE_DATA').objectStore('FILE_DATA').get('/userfs/godot/app_userdata/Chain Escape/progress.cfg');
-      q.onsuccess = () => r(q.result);
-    });
+    const v = await new Promise((r) => { const q = db.transaction('FILE_DATA').objectStore('FILE_DATA').get(key); q.onsuccess = () => r(q.result); });
     db.close();
-    return v ? new TextDecoder().decode(v.contents) : '';
-  });
-}
-
-// Changes a setting through the game's own settings handler, then waits
-// until Godot has synced the save to IndexedDB (can take a few seconds).
-async function setSetting(page, key, on) {
-  await page.evaluate(([k, v]) => window.ceSetSetting(k, v), [key, on]);
-  for (let i = 0; i < 60; i++) {
-    await page.waitForTimeout(500);
-    if ((await savedFile(page)).includes(`${key}=${on}`)) return;
-  }
-  throw new Error(`setting ${key}=${on} never reached browser storage`);
+    return !!v;
+  }, SAVE_KEY, { timeout: 30000, polling: 500 });
+  await page.waitForTimeout(1500);  // let the game's last sync land
+  await page.goto(ORIGIN + '/blank');
+  await page.evaluate(async ([key, edits]) => {
+    const db = await new Promise((r) => { const q = indexedDB.open('/userfs'); q.onsuccess = () => r(q.result); });
+    const store = db.transaction('FILE_DATA', 'readwrite').objectStore('FILE_DATA');
+    const v = await new Promise((r) => { const q = store.get(key); q.onsuccess = () => r(q.result); });
+    let text = new TextDecoder().decode(v.contents);
+    for (const k in edits) text = text.replace(new RegExp('^' + k + '=.*$', 'm'), k + '=' + edits[k]);
+    v.contents = new TextEncoder().encode(text);
+    v.timestamp = new Date();
+    await new Promise((r) => { const q = store.put(v, key); q.onsuccess = () => r(); });
+    db.close();
+  }, [SAVE_KEY, edits]);
 }
 
 try {
   // --- Mobile (touch), same browser profile across reloads -----------------
-  const mctx = await newContext(MOBILE);
+  const mctx = await browser.newContext(MOBILE);
+  await mctx.addInitScript(signalProbe);
   const mp = await mctx.newPage();
-  mp.on('console', (m) => { if (process.env.VERBOSE && m.text().includes('CE-Audio')) console.log('   ' + m.text()); });
   await load(mp);
-  const first = await scenario(mp, 'mobile first visit', { mobile: true, musicOn: true, sfxOn: true });
-  console.log('--- unlock sequence (mobile first visit) ---\n' + first.lines.map((l) => '   ' + l).join('\n'));
+  await scenario(mp, 'mobile first visit', { mobile: true, vp: MOBILE.viewport, musicOn: true, sfxOn: true });
 
   await load(mp); // reload = returning player, Music ON
-  await scenario(mp, 'returning player, Music ON', { mobile: true, musicOn: true, sfxOn: true });
+  await scenario(mp, 'returning player, Music ON', { mobile: true, vp: MOBILE.viewport, musicOn: true, sfxOn: true });
 
-  await setSetting(mp, 'music', false);
+  await setSaved(mp, { music: 'false' });
   await load(mp);
-  await scenario(mp, 'returning player, Music OFF', { mobile: true, musicOn: false, sfxOn: true });
+  await scenario(mp, 'returning player, Music OFF', { mobile: true, vp: MOBILE.viewport, musicOn: false, sfxOn: true });
 
-  await setSetting(mp, 'music', true);
-  await setSetting(mp, 'sfx', false);
+  await setSaved(mp, { music: 'true', sfx: 'false' });
   await load(mp);
-  await scenario(mp, 'returning player, SFX OFF', { mobile: true, musicOn: true, sfxOn: false });
-  await setSetting(mp, 'sfx', true);
+  await scenario(mp, 'returning player, SFX OFF', { mobile: true, vp: MOBILE.viewport, musicOn: true, sfxOn: false });
   await mctx.close();
 
   // --- iOS-like: the engine's AudioContext starts "suspended" -------------
   // Playwright navigation already grants activation, so Chromium creates the
   // context running. Force it to start suspended (as iOS Safari does) to
   // prove the gesture really resumes it.
-  const sctx = await newContext(MOBILE);
+  const sctx = await browser.newContext(MOBILE);
+  await sctx.addInitScript(signalProbe);
   await sctx.addInitScript(() => {
     const C = window.AudioContext;
     const Wrapped = function (...a) { const c = new C(...a); c.suspend(); return c; };
@@ -242,26 +263,15 @@ try {
   });
   const sp = await sctx.newPage();
   await load(sp);
-  const pre = await game(sp);
-  check(pre.ctx === 'suspended', `suspended context: starts suspended before the gesture (${pre.ctx})`);
-  const sus = await scenario(sp, 'suspended context (iOS-like)', { mobile: true, musicOn: true, sfxOn: true });
-  check(/state before = suspended/.test(sus.lines.join('\n')) && /resume\(\) resolved/.test(sus.lines.join('\n')),
-    'suspended context: log shows resume() inside the gesture');
-  console.log('--- unlock sequence (suspended context) ---\n' + sus.lines.map((l) => '   ' + l).join('\n'));
+  await scenario(sp, 'suspended context (iOS-like)', { mobile: true, vp: MOBILE.viewport, musicOn: true, sfxOn: true, expectSuspended: true });
   await sctx.close();
 
-  // --- A/B: Godot's SAMPLE playback forced by URL (device comparison) ----
-  const actx = await newContext(MOBILE);
-  const ap = await actx.newPage();
-  await load(ap, '&audiomode=sample');
-  await scenario(ap, 'A/B ?audiomode=sample', { mobile: true, musicOn: true, sfxOn: true, playback: 'SAMPLE' });
-  await actx.close();
-
   // --- Desktop (mouse) ---------------------------------------------------------
-  const dctx = await newContext(DESKTOP);
+  const dctx = await browser.newContext(DESKTOP);
+  await dctx.addInitScript(signalProbe);
   const dp = await dctx.newPage();
   await load(dp);
-  await scenario(dp, 'desktop Chrome (mouse)', { mobile: false, musicOn: true, sfxOn: true });
+  await scenario(dp, 'desktop Chrome (mouse)', { mobile: false, vp: DESKTOP.viewport, musicOn: true, sfxOn: true });
   await dctx.close();
 } catch (e) {
   check(false, 'exception: ' + e.message);

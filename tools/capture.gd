@@ -5,7 +5,9 @@ extends Node
 ##   godot --path . res://tools/Capture.tscn -- --level=3 --taps=2,1 --out=/tmp/cap
 ##   (add --coords to draw grid coordinates, --debug to open the debug panel,
 ##    --settings to open the settings card, --hint to show a hint,
-##    --title / --shop / --levels for the title screen, Shop and Level Select)
+##    --title / --shop / --levels for the title screen, Shop and Level Select,
+##    --gallery=5,15,25 to save the start frame of several levels (one per
+##    Chapter shows every theme), --chapter-card=4 for a Chapter Complete card)
 ##
 ## Each tap saves frames at the listed delays (seconds after the tap).
 
@@ -45,13 +47,32 @@ func _run() -> void:
 	if "--shop" in OS.get_cmdline_user_args():
 		game.open_shop()
 	if "--levels" in OS.get_cmdline_user_args():
-		game.progress.highest_completed = maxi(game.progress.highest_completed, 23)
-		for n in range(1, 24):
+		game.progress.highest_completed = maxi(game.progress.highest_completed, 53)
+		for n in range(1, 54):
 			game.progress.best_stars[n] = [3, 2, 3, 1][n % 4]
 			game.progress.best_scores[n] = 1000
 		game.open_level_select()
 	if "--settings" in OS.get_cmdline_user_args():
 		game.ui._open_settings()
+	for arg in OS.get_cmdline_user_args():
+		if arg.begins_with("--gallery="):
+			for n in arg.get_slice("=", 1).split(",", false):
+				game.start_level(int(n))
+				await get_tree().create_timer(2.0).timeout
+				_save("L%03d" % int(n))
+		elif arg.begins_with("--chapter-card="):
+			var c := int(arg.get_slice("=", 1))
+			var rg := Chapters.chapter_range(c)
+			for n in range(1, rg.y + 1):
+				game.progress.best_scores[n] = 5000
+				game.progress.best_stars[n] = 3 if n % 3 != 0 else 2
+			game.progress.highest_completed = rg.y
+			game.progress.chapter_coins[c] = 214
+			game.start_level(rg.y)
+			await get_tree().create_timer(1.6).timeout
+			game._show_chapter_card(c)
+			await get_tree().create_timer(0.6).timeout
+			_save("chapter_card_%d" % c)
 	await get_tree().create_timer(0.6).timeout
 	_save("start")
 	var i := 0

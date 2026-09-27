@@ -12,7 +12,7 @@ extends Node
 
 const SOUND_IDS := ["escape", "invalid", "combo", "level_complete", "ui_tap", "undo",
 	"turn", "heart_lost", "hint", "try_again", "unlock", "reveal", "star", "perfect", "new_best",
-	"coin", "hammer", "chest", "master", "world"]
+	"coin", "hammer", "chest", "master", "chapter", "silver", "gold", "chapter_complete"]
 const MUSIC_ID := "music"
 const MUSIC_VOLUME_DB := -15.0  # background level: present but never in the way
 const DUCK_DB := -8.0  # extra attenuation while ducked
@@ -34,8 +34,9 @@ var music_enabled: bool = true
 ## tests can set it to simulate a browser.
 var require_gesture: bool = OS.has_feature("web")
 var unlocked: bool = false
-## Music theme currently requested ("w1".."w5", "master").
-var music_theme: String = "w1"
+## Music theme currently requested ("c01".."c10", "master"; see
+## data/chapters.json).
+var music_theme: String = "c01"
 var _music: AudioStreamPlayer  # the active player
 var _music_b: AudioStreamPlayer  # the other one, for cross-fades
 var _fade_tween: Tween
@@ -87,65 +88,28 @@ func _exit_tree() -> void:
 ## click / keydown event, which is the only place iOS Safari accepts it.
 ## Godot's input events arrive a frame later, outside that gesture, so the
 ## game never tries to unlock from here - it only POLLS the context state
-## and starts music / allows SFX once the context reports "running".
+## and starts music / allows SFX once the context reports "running" after a
+## real gesture. Web playback is STREAM (project setting
+## audio/general/default_playback_type.web): Godot mixes everything and feeds
+## one Web Audio node, the long-proven path on iOS Safari.
 ## If the page has no bridge (old export), it falls back to unlocking on the
-## first gesture as before.
+## first gesture.
 var _web: bool = OS.has_feature("web")
 var _bridge: bool = false
-var _gesture_seen: bool = false
 var _poll_timer := 0.0
-var _last_ctx_state := ""
+var _publish_timer := 0.0
+var _blocked_since := -1.0
+var _stuck_warned := false
 ## Sound effects actually sent to a player (for tests / diagnostics).
 var sfx_played: int = 0
-var _audio_test: bool = false
-var _logged_sfx_dropped: bool = false
-## TEMPORARY: extra [CE-Audio] logging on web builds (console + ?audiodebug overlay).
-var web_audio_debug: bool = true
 
 
 func _init_web_audio() -> void:
 	if not _web:
 		return
 	_bridge = str(JavaScriptBridge.eval("typeof window.ceAudio")) == "object"
-	var search := str(JavaScriptBridge.eval("location.search"))
-	_audio_test = search.contains("audiotest")
-	_wlog("Godot audio: bridge=%s platform=%s music=%s sfx=%s" % [_bridge,
-		str(JavaScriptBridge.eval("window.ceAudio ? window.ceAudio.platform : navigator.userAgent")),
-		"ON" if music_enabled else "OFF", "ON" if sfx_enabled else "OFF"])
-	# Web playback runs as STREAM (project setting
-	# audio/general/default_playback_type.web = Stream): Godot mixes and
-	# feeds one Web Audio node, the long-proven path on iOS Safari. Godot's
-	# default for Web is SAMPLE (each sound a Web Audio buffer), which has
-	# open iOS WebKit bugs. TEMPORARY A/B switch for device testing:
-	# ?audiomode=sample (or =stream) overrides every player.
-	var forced := ""
-	if search.contains("audiomode=sample"):
-		forced = "SAMPLE"
-		for p in _players + [_music, _music_b]:
-			p.playback_type = AudioServer.PLAYBACK_TYPE_SAMPLE
-	elif search.contains("audiomode=stream"):
-		forced = "STREAM"
-		for p in _players + [_music, _music_b]:
-			p.playback_type = AudioServer.PLAYBACK_TYPE_STREAM
-	_wlog("playback type: %s (project default for Web: %s)" % [
-		forced + " (forced by URL)" if forced != "" else playback_type_name(),
-		"STREAM" if int(ProjectSettings.get_setting("audio/general/default_playback_type.web", 1)) == 0 else "SAMPLE"])
-
-
-## Effective playback type of the music player (web diagnostics).
-func playback_type_name() -> String:
-	match _music.playback_type:
-		AudioServer.PLAYBACK_TYPE_STREAM: return "STREAM"
-		AudioServer.PLAYBACK_TYPE_SAMPLE: return "SAMPLE"
-	return "STREAM" if int(ProjectSettings.get_setting("audio/general/default_playback_type.web", 1)) == 0 else "SAMPLE"
-
-
-func _wlog(msg: String) -> void:
-	if not (_web and web_audio_debug):
-		return
-	print("[CE-Audio] " + msg)
-	if _bridge:
-		JavaScriptBridge.eval("window.ceAudio.log(%s)" % JSON.stringify("(godot) " + msg), true)
+	if not _bridge:
+		push_warning("[CE-Audio] page unlock script missing - unlocking on the first Godot input instead")
 
 
 func _input(event: InputEvent) -> void:
@@ -154,12 +118,7 @@ func _input(event: InputEvent) -> void:
 	var gesture: bool = (event is InputEventScreenTouch and event.pressed) \
 		or (event is InputEventMouseButton and event.pressed) \
 		or (event is InputEventKey and event.pressed)
-	if not gesture:
-		return
-	if not _gesture_seen:
-		_gesture_seen = true
-		_wlog("user gesture received by Godot (context: %s)" % _ctx_state())
-	if not _bridge:
+	if gesture and not _bridge:
 		unlock_audio()  # desktop / old export fallback
 
 
@@ -174,36 +133,41 @@ func _ctx_state() -> String:
 
 
 ## Web builds publish their audio state to the page (window.chainEscapeAudio)
-## so automated browser tests - and curious developers - can check it.
+## so automated browser tests can check it.
 func _publish_web_state() -> void:
-	if not _web:
-		return
-	JavaScriptBridge.eval("window.chainEscapeAudio = {unlocked: %s, musicPlaying: %s, theme: '%s', musicEnabled: %s, sfxEnabled: %s, context: '%s', sfxPlayed: %d};" % [
-		str(unlocked).to_lower(), str(_music.playing).to_lower(), music_theme, str(music_enabled).to_lower(),
-		str(sfx_enabled).to_lower(), _ctx_state(), sfx_played], true)
-
-
-var _publish_timer := 0.0
+	JavaScriptBridge.eval("window.chainEscapeAudio = {unlocked: %s, musicPlaying: %s, musicPos: %.3f, theme: '%s', musicEnabled: %s, sfxEnabled: %s, context: '%s', sfxPlayed: %d};" % [
+		str(unlocked).to_lower(), str(_music.playing).to_lower(), _music.get_playback_position() if _music.playing else 0.0,
+		music_theme, str(music_enabled).to_lower(), str(sfx_enabled).to_lower(), _ctx_state(), sfx_played], true)
 
 
 func _process(delta: float) -> void:
 	if not _web:
 		return
 	_poll_timer += delta
-	if _bridge and _poll_timer >= 0.15:
+	if _bridge and not unlocked and _poll_timer >= 0.15:
 		_poll_timer = 0.0
-		var state := _ctx_state()
-		if state != _last_ctx_state:
-			_wlog("AudioContext state: %s" % state)
-			_last_ctx_state = state
 		# Some browsers create the context already "running" (e.g. high media
 		# engagement); still wait for a real user gesture before any sound.
-		if state == "running" and not unlocked and _page_gestures() > 0:
+		var gestures := _page_gestures()
+		if gestures > 0 and _ctx_state() == "running":
 			unlock_audio()
+		elif gestures >= 3:
+			_warn_if_stuck()
 	_publish_timer += delta
 	if _publish_timer >= 0.5:
 		_publish_timer = 0.0
 		_publish_web_state()
+
+
+## The only runtime audio log: the browser kept audio blocked although the
+## player tapped several times.
+func _warn_if_stuck() -> void:
+	var now := Time.get_ticks_msec() / 1000.0
+	if _blocked_since < 0.0:
+		_blocked_since = now
+	elif not _stuck_warned and now - _blocked_since > 2.0:
+		_stuck_warned = true
+		push_warning("[CE-Audio] audio still '%s' after %d taps - the browser is blocking playback" % [_ctx_state(), _page_gestures()])
 
 
 ## Audio is usable: start music (if ON) and allow SFX (if ON). Runs once;
@@ -212,36 +176,15 @@ func unlock_audio() -> void:
 	if unlocked:
 		return
 	unlocked = true
-	_wlog("audio unlocked (context: %s)" % _ctx_state())
 	audio_unlocked.emit()
 	start_music()
-	_wlog("music: %s" % ("started (theme %s, playing=%s)" % [music_theme, _music.playing] if music_enabled else "OFF in settings - not started"))
-	_wlog("sound effects: %s" % ("enabled" if sfx_enabled else "OFF in settings"))
-	if _audio_test:
-		_run_audio_test()
-	_publish_web_state()
-
-
-## TEMPORARY (?audiotest=1): one short, quiet test through Web Audio
-## directly, then one through Godot's SFX path, to prove audio is live.
-func _run_audio_test() -> void:
-	if _bridge:
-		JavaScriptBridge.eval("window.ceAudio.testTone()", true)
-	await get_tree().create_timer(0.4).timeout
-	if sfx_enabled:
-		play("coin", 1.0, -6.0)
-		var t0 := float(str(JavaScriptBridge.eval("window.ceAudio ? window.ceAudio.time() : -1")))
-		await get_tree().create_timer(0.3).timeout
-		var t1 := float(str(JavaScriptBridge.eval("window.ceAudio ? window.ceAudio.time() : -1")))
-		_wlog("SFX test: Godot 'coin' played; audio clock %.2f -> %.2f (%s)" % [t0, t1, "advancing" if t1 > t0 else "NOT advancing"])
-	else:
-		_wlog("SFX test skipped: Sound Effects are OFF in settings")
+	if _web:
+		_publish_web_state()
 
 
 func _notification(what: int) -> void:
 	# Coming back to the tab / app: make sure the loop is still running.
 	if what == NOTIFICATION_APPLICATION_FOCUS_IN or what == NOTIFICATION_APPLICATION_RESUMED:
-		_wlog("app focus/resume: context %s" % _ctx_state())
 		start_music()
 
 
@@ -275,18 +218,27 @@ func start_music() -> void:
 	if _music.stream and not _music.playing:
 		_music.volume_db = MUSIC_VOLUME_DB
 		_music.play()
-		if _web:
-			_wlog("music play attempt: theme %s (%s, context %s) -> playing=%s" % [music_theme, playback_type_name(), _ctx_state(), _music.playing])
 
 
-## Switches the music theme with a smooth cross-fade (World changes).
-func set_music_theme(theme: String, fade: float = 1.5) -> void:
+## Chapter change: the old theme fades out, the new one fades in just
+## behind it (a short tail overlap, never two full themes at once).
+const FADE_OUT := 0.8
+const FADE_IN_DELAY := 0.55
+const FADE_IN := 1.1
+
+
+## Switches the music theme with a clean sequential fade (Chapter changes).
+func set_music_theme(theme: String) -> void:
 	if theme == music_theme and _music.stream != null:
 		start_music()
 		return
 	music_theme = theme
 	var stream := _theme_stream(theme)
 	if not music_enabled or not unlocked or not _music.playing:
+		if _fade_tween:
+			_fade_tween.kill()
+		_music_b.stop()
+		_music.stop()
 		_music.stream = stream
 		start_music()
 		return
@@ -295,13 +247,21 @@ func set_music_theme(theme: String, fade: float = 1.5) -> void:
 	var old := _music
 	_music = _music_b
 	_music_b = old
+	_music.stop()
 	_music.stream = stream
 	_music.volume_db = -40.0
-	_music.play()
 	_fade_tween = create_tween().set_parallel()
-	_fade_tween.tween_property(_music, "volume_db", MUSIC_VOLUME_DB, fade).set_trans(Tween.TRANS_SINE)
-	_fade_tween.tween_property(old, "volume_db", -40.0, fade).set_trans(Tween.TRANS_SINE)
-	_fade_tween.chain().tween_callback(old.stop)
+	_fade_tween.tween_property(old, "volume_db", -40.0, FADE_OUT).set_trans(Tween.TRANS_SINE).set_ease(Tween.EASE_IN)
+	_fade_tween.tween_callback(old.stop).set_delay(FADE_OUT)
+	_fade_tween.tween_callback(func():
+		if music_enabled and unlocked:
+			_music.play()).set_delay(FADE_IN_DELAY)
+	_fade_tween.tween_property(_music, "volume_db", MUSIC_VOLUME_DB, FADE_IN).set_delay(FADE_IN_DELAY).set_trans(Tween.TRANS_SINE).set_ease(Tween.EASE_OUT)
+
+
+## True while a Chapter music change is still fading (tests).
+func is_music_transitioning() -> bool:
+	return _fade_tween != null and _fade_tween.is_valid() and _fade_tween.is_running()
 
 
 ## Dips the music for `hold` seconds (e.g. under the level-complete jingle).
@@ -421,8 +381,21 @@ func play_master() -> void:
 	play("master", 1.0, -1.0)
 
 
-func play_world() -> void:
-	play("world", 1.0, -5.0)
+func play_chapter() -> void:
+	play("chapter", 1.0, -5.0)
+
+
+func play_chapter_complete() -> void:
+	duck_music(2.0)
+	play("chapter_complete", 1.0, -2.0)
+
+
+## Silver / Gold block escaped: a short premium chime (gold is richer).
+func play_reward(rarity: int) -> void:
+	if rarity >= BlockData.Rarity.GOLD:
+		play("gold", 1.0, -4.0)
+	elif rarity == BlockData.Rarity.SILVER:
+		play("silver", 1.0, -5.0)
 
 
 static func chain_pitch(chain: int) -> float:
@@ -441,13 +414,8 @@ func play(id: String, pitch: float = 1.0, volume_db: float = 0.0) -> void:
 	# Before the (web) audio unlock nothing may play: a suspended context
 	# would otherwise queue sounds and burst them out on unlock.
 	if not unlocked or not sfx_enabled or not _streams.has(id):
-		if _web and not unlocked and not _logged_sfx_dropped:
-			_logged_sfx_dropped = true
-			_wlog("SFX '%s' requested before unlock - not played" % id)
 		return
 	sfx_played += 1
-	if _web and sfx_played <= 3:
-		_wlog("SFX play attempt #%d: '%s' (%s, context %s)" % [sfx_played, id, playback_type_name(), _ctx_state()])
 	var p := _players[_next_voice]
 	_next_voice = (_next_voice + 1) % _players.size()
 	p.stream = _streams[id]
@@ -504,8 +472,16 @@ func _load_or_synthesize(id: String) -> AudioStream:
 			return _synth_notes([[659.0, 0.0], [831.0, 0.08], [988.0, 0.16], [1319.0, 0.24], [1976.0, 0.34]], 1.0, 5.0)
 		"master":
 			return _synth_notes([[523.0, 0.0], [659.0, 0.1], [784.0, 0.2], [1047.0, 0.3], [1319.0, 0.45], [1568.0, 0.6], [2093.0, 0.8]], 2.0, 2.5)
-		"world":
+		"chapter":
 			return _synth_notes([[392.0, 0.0], [587.0, 0.15], [784.0, 0.3]], 1.1, 3.5)
+		"silver":
+			# Light, glassy two-note chime.
+			return _synth_notes([[1760.0, 0.0], [2637.0, 0.06], [3520.0, 0.12]], 0.45, 12.0)
+		"gold":
+			# Warmer, richer sparkle that rises a little further.
+			return _synth_notes([[1319.0, 0.0], [1760.0, 0.05], [2217.0, 0.1], [2637.0, 0.15], [3520.0, 0.22]], 0.7, 8.0)
+		"chapter_complete":
+			return _synth_notes([[523.0, 0.0], [659.0, 0.1], [784.0, 0.2], [1047.0, 0.32], [784.0, 0.5], [1047.0, 0.6], [1319.0, 0.72], [1568.0, 0.86]], 1.6, 3.2)
 		"try_again":
 			return _synth_notes([[523.0, 0.0], [466.0, 0.12], [392.0, 0.24]], 0.7, 6.0)
 	return null

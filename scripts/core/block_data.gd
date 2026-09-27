@@ -14,6 +14,14 @@ enum Kind { NORMAL, SPINNER }
 ##   ALT      clockwise, counter-clockwise, clockwise, ...
 ##   PATTERN  clockwise, clockwise, counter-clockwise, repeat
 enum SpinRule { CW, CCW, ALT, PATTERN }
+## v0.5 reward rarity. A reward is pure bonus: the rules never look at it.
+## Escaping a SILVER / GOLD block by normal play pays its coin reward once
+## (see Economy.reward_block_coins). DIAMOND is reserved for a future, very
+## rare tier: the data model, map token and config key exist, no level
+## uses it yet.
+enum Rarity { NORMAL, SILVER, GOLD, DIAMOND }
+const RARITY_NAMES := ["normal", "silver", "gold", "diamond"]
+const RARITY_TOKENS := ["", "S", "G", "D"]  # level-map token after "$"
 const PATTERN_SEQUENCE := [true, true, false]  # true = clockwise
 const RULE_SUFFIX := ["", "-", "~", "*"]  # level-map token after "@"
 
@@ -32,6 +40,7 @@ var hidden: bool = false
 var spin_rule: int = SpinRule.CW
 ## Turns this spinner has made so far (drives ALT / PATTERN).
 var spin_step: int = 0
+var rarity: int = Rarity.NORMAL
 
 
 func _init(p_id: int, p_cell: Vector2i, p_color: String, p_direction: int, p_kind: int = Kind.NORMAL) -> void:
@@ -79,6 +88,14 @@ func undo_turn() -> void:
 	direction = Direction.rotate_ccw(direction) if next_turn_cw() else Direction.rotate_cw(direction)
 
 
+func is_reward() -> bool:
+	return rarity != Rarity.NORMAL
+
+
+func rarity_name() -> String:
+	return RARITY_NAMES[rarity]
+
+
 func is_lockable() -> bool:
 	return lock_color != ""
 
@@ -89,4 +106,5 @@ func duplicate_data() -> BlockData:
 	b.hidden = hidden
 	b.spin_rule = spin_rule
 	b.spin_step = spin_step
+	b.rarity = rarity
 	return b

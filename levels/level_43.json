@@ -2,7 +2,7 @@
 	"name": "Turnstile",
 	"map": [
 		"R>#P  P>    G<@   Yv    .     .",
-		".     B^    P<    .     .     .",
+		".     B^    P<$S  .     .     .",
 		".     .     .     .     Yv    R<",
 		".     .     Rv    P<    .     .",
 		"G<    Y>@   .     .     P>    Rv",

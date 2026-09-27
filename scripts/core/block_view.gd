@@ -30,7 +30,7 @@ var hinted: bool = false:
 		_hint_time = 0.0
 		if not v:
 			scale = Vector2.ONE
-		set_process(v or data.is_spinner())
+		set_process(_needs_process())
 		queue_redraw()
 var _hint_time: float = 0.0
 var _spin_time: float = 0.0
@@ -42,6 +42,14 @@ var _lock_open: float = 0.0:
 	set(v):
 		_lock_open = v
 		queue_redraw()
+## Reward block (Silver/Gold) already collected on an earlier run: shown
+## with a faint frame only, no shimmer or gem - it pays nothing again.
+var reward_spent: bool = false:
+	set(v):
+		reward_spent = v
+		set_process(_needs_process())
+		if data:
+			set_cell_size(cell_size)  # re-styles: no metal halo once spent
 ## 0..1 white flash drawn over the face (used on tap).
 var flash: float = 0.0:
 	set(v):
@@ -52,8 +60,12 @@ var flash: float = 0.0:
 func setup(p_data: BlockData, p_cell_size: float) -> void:
 	data = p_data
 	arrow_angle = Direction.angle(data.direction)
-	set_process(data.is_spinner())
+	set_process(_needs_process())
 	set_cell_size(p_cell_size)
+
+
+func _needs_process() -> bool:
+	return data != null and (hinted or data.is_spinner() or (data.is_reward() and not reward_spent))
 
 
 func _process(delta: float) -> void:
@@ -72,12 +84,26 @@ func set_cell_size(value: float) -> void:
 		s.set_corner_radius_all(radius)
 		s.anti_aliasing = true
 		s.anti_aliasing_size = 1.2
-	_face_style.bg_color = Palette.face(data.color)
-	_side_style.bg_color = Palette.side(data.color)
-	_side_style.shadow_color = Palette.SHADOW
-	_side_style.shadow_size = int(cell_size * 0.08)
-	_side_style.shadow_offset = Vector2(0, cell_size * 0.04)
+	_face_style.bg_color = Palette.styled_face(data.color)
+	_side_style.bg_color = Palette.styled_side(data.color)
+	# Chapter material: on dark Chapters a soft glow in the block's own
+	# color replaces part of the drop shadow.
+	var glow: float = Palette.block_style.get("glow", 0.0)
+	_side_style.shadow_color = Palette.SHADOW.lerp(Color(Palette.styled_face(data.color), 0.45), glow)
+	_side_style.shadow_size = int(cell_size * (0.08 + 0.07 * glow))
+	_side_style.shadow_offset = Vector2(0, cell_size * 0.04 * (1.0 - glow))
+	if data.is_reward() and not reward_spent:
+		# Uncollected Silver/Gold: a halo in the metal's color (Gold wider).
+		var gold := data.rarity >= BlockData.Rarity.GOLD
+		_side_style.shadow_color = Color(Palette.METALS[data.rarity][0], 0.75 if gold else 0.6)
+		_side_style.shadow_size = int(cell_size * (0.2 if gold else 0.15))
+		_side_style.shadow_offset = Vector2.ZERO
 	queue_redraw()
+
+
+## Re-reads the Chapter block style (Board calls this on Chapter changes).
+func refresh_style() -> void:
+	set_cell_size(cell_size)
 
 
 func _draw() -> void:
@@ -88,6 +114,9 @@ func _draw() -> void:
 	var side_rect := Rect2(face_rect.position + Vector2(0, depth), face_rect.size)
 	_side_style.draw(get_canvas_item(), side_rect)
 	_face_style.draw(get_canvas_item(), face_rect)
+	_draw_material(face_rect, size)
+	if data.is_reward() and not reward_spent:
+		_draw_reward_sweep(face_rect, size)
 	var center := face_rect.get_center()
 	if data.hidden:
 		_draw_mystery(face_rect, size)
@@ -98,6 +127,10 @@ func _draw() -> void:
 		_draw_arrow(center, size)
 	if locked_visual:
 		_draw_lock(face_rect, size)
+	# Metal frame + gem sit above the lock veil so rewards read on locked
+	# blocks too; they only cover the rim, never the arrow.
+	if data.is_reward():
+		_draw_reward(face_rect, size)
 	if hinted:
 		_draw_hint_ring(face_rect)
 	if flash > 0.0:
@@ -105,6 +138,92 @@ func _draw() -> void:
 		fs.bg_color = Color(1, 1, 1, 0.35 * flash)
 		fs.shadow_size = 0
 		fs.draw(get_canvas_item(), face_rect)
+
+
+## Chapter finish: a gloss band on the upper face and a thin light rim.
+## Both sit UNDER the arrow, so direction always reads first.
+func _draw_material(face_rect: Rect2, size: float) -> void:
+	var gloss: float = Palette.block_style.get("gloss", 0.0)
+	var rim: float = Palette.block_style.get("rim", 0.0)
+	var radius := int(round(size * CORNER_RATIO))
+	if gloss > 0.0:
+		var band := StyleBoxFlat.new()
+		band.bg_color = Color(1, 1, 1, 0.2 * gloss)
+		band.anti_aliasing = true
+		band.corner_radius_top_left = radius
+		band.corner_radius_top_right = radius
+		band.corner_radius_bottom_left = int(radius * 0.6)
+		band.corner_radius_bottom_right = int(radius * 0.6)
+		var inset := size * 0.06
+		band.draw(get_canvas_item(), Rect2(face_rect.position + Vector2(inset, inset * 0.7), Vector2(size - inset * 2.0, size * 0.36)))
+	if rim > 0.0:
+		var edge := StyleBoxFlat.new()
+		edge.draw_center = false
+		edge.anti_aliasing = true
+		edge.set_corner_radius_all(radius)
+		edge.set_border_width_all(maxi(2, int(size * 0.028)))
+		edge.border_color = Color(Palette.block_style.get("edge", Color.WHITE), 0.5 * rim)
+		edge.draw(get_canvas_item(), face_rect)
+
+
+## Silver / Gold reward block: a thick metallic frame, a gem in the
+## top-left corner and (see _draw_reward_sweep) a light sweep every few
+## seconds. The block's own color stays fully visible (locks depend on it)
+## and the arrow is never covered.
+func _draw_reward(face_rect: Rect2, size: float) -> void:
+	var metal: Array = Palette.METALS[data.rarity]
+	var radius := int(round(size * CORNER_RATIO))
+	var frame := StyleBoxFlat.new()
+	frame.draw_center = false
+	frame.anti_aliasing = true
+	frame.set_corner_radius_all(radius)
+	if reward_spent:
+		frame.set_border_width_all(maxi(2, int(size * 0.03)))
+		frame.border_color = Color(metal[0], 0.45)
+		frame.draw(get_canvas_item(), face_rect)
+		return
+	var w := maxi(4, int(size * 0.09))
+	frame.set_border_width_all(w)
+	frame.border_color = metal[2]
+	frame.draw(get_canvas_item(), face_rect)
+	frame.set_border_width_all(maxi(3, int(w * 0.62)))
+	frame.border_color = metal[0]
+	frame.draw(get_canvas_item(), face_rect.grow(-w * 0.18))
+	# Highlight on the top edge sells the metal.
+	var hl := face_rect.position + Vector2(radius, w * 0.4)
+	draw_line(hl, hl + Vector2(size - radius * 2.0, 0), Color(metal[1], 0.9), maxf(2.0, w * 0.3), true)
+	# Gem badge (top-left; the padlock uses top-right), with a dark outline
+	# so it reads on every block color and Chapter.
+	var g := face_rect.position + Vector2(size * 0.19, size * 0.19)
+	var gs := size * 0.14
+	var outline := PackedVector2Array([g + Vector2(0, -gs * 1.22), g + Vector2(gs * 1.22, 0), g + Vector2(0, gs * 1.22), g + Vector2(-gs * 1.22, 0)])
+	draw_colored_polygon(outline, Color(0.08, 0.06, 0.16, 0.55))
+	draw_colored_polygon(PackedVector2Array([g + Vector2(0, -gs), g + Vector2(gs, 0), g + Vector2(0, gs), g + Vector2(-gs, 0)]), metal[2])
+	draw_colored_polygon(PackedVector2Array([g + Vector2(0, -gs * 0.66), g + Vector2(gs * 0.66, 0), g + Vector2(0, gs * 0.66), g + Vector2(-gs * 0.66, 0)]), metal[0])
+	# Twinkle on the gem.
+	var tw := 0.5 + 0.5 * sin(_spin_time * (4.0 if data.rarity >= BlockData.Rarity.GOLD else 2.6))
+	draw_circle(g + Vector2(-gs * 0.2, -gs * 0.22), gs * (0.16 + 0.1 * tw), Color(metal[1], 0.7 + 0.3 * tw))
+
+
+## Periodic light sweep across the face, drawn UNDER the arrow (Gold sweeps
+## more often than Silver).
+func _draw_reward_sweep(face_rect: Rect2, size: float) -> void:
+	var radius := size * CORNER_RATIO
+	var period := 2.2 if data.rarity >= BlockData.Rarity.GOLD else 3.2
+	var k := fposmod(_spin_time, period) / 0.55
+	if k >= 1.0:
+		return
+	var x := face_rect.position.x - size * 0.3 + k * size * 1.6
+	var slant := size * 0.3
+	var band := size * 0.14
+	var left := face_rect.position.x + radius * 0.4
+	var right := face_rect.end.x - radius * 0.4
+	var top := face_rect.position.y + size * 0.06
+	var bottom := face_rect.end.y - size * 0.06
+	var pts := PackedVector2Array([
+		Vector2(clampf(x, left, right), top), Vector2(clampf(x + band, left, right), top),
+		Vector2(clampf(x + band - slant, left, right), bottom), Vector2(clampf(x - slant, left, right), bottom)])
+	draw_colored_polygon(pts, Color(1, 1, 1, 0.3 * sin(k * PI)))
 
 
 ## Chunky white arrow: rectangular shaft + triangular head.

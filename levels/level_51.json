@@ -1,12 +1,12 @@
 {
 	"name": "Great Escape",
 	"map": [
-		".   .   B>  G>  .   Rv",
-		"Yv@ Gv  Y^  .   .   Bv",
-		".   Bv  Gv@ B<  Y<  .",
-		"Y^  .   Y^@ Rv  B<@ P<",
-		".   .   R>  .   Y^  .",
-		"Y>@ B<  .   .   B^  .",
-		"G>@ P>  R>  .   P>  ."
+		".     .     B>    G>$G  .     Rv",
+		"Yv@   Gv    Y^    .     .     Bv",
+		".     Bv    Gv@   B<    Y<    .",
+		"Y^    .     Y^@   Rv    B<@   P<",
+		".     .     R>    .     Y^    .",
+		"Y>@   B<    .     .     B^    .",
+		"G>@   P>    R>    .     P>    ."
 	]
 }

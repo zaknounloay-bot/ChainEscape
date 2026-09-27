@@ -15,11 +15,16 @@ var rows: int = 0
 var columns: int = 0
 var cell_size: float = 100.0
 var input_enabled: bool = true
-## World theme colors for the board panel and empty slots.
+## Chapter theme colors for the board panel and empty slots.
 var board_color: Color = Palette.BOARD
 var slot_color: Color = Palette.SLOT
-## World accent: used by celebration particles.
+## Chapter accent: used by celebration particles.
 var accent_color: Color = Palette.ACCENT
+## Chapter whose block material is applied (tests / debugging).
+var block_style_id: int = 0
+## Reward block ids (this level) already collected on an earlier run:
+## they are drawn "spent". Set by GameManager before build().
+var spent_rewards: Dictionary = {}
 ## Hammer mode: the next tap smashes a block instead of moving it.
 var hammer_mode: bool = false:
 	set(v):
@@ -121,6 +126,7 @@ func get_view(id: int) -> BlockView:
 func _create_view(b: BlockData) -> BlockView:
 	var view := BlockView.new()
 	view.setup(b.duplicate_data(), cell_size)
+	view.reward_spent = b.is_reward() and spent_rewards.has(b.id)
 	view.home = cell_to_local(b.cell)
 	view.position = view.home
 	_blocks_root.add_child(view)
@@ -263,11 +269,50 @@ func sync_to(blocks: Array) -> void:
 		view.play_return(_offscreen_point(view.home, Direction.vector(view.data.direction)).lerp(view.home, 0.55))
 
 
+## Chapter look: board and slot tint, accent, and the block material
+## (Palette.block_style) re-applied to every block on the board.
 func set_theme(t: Dictionary) -> void:
 	board_color = t["board"]
 	slot_color = t["slot"]
 	accent_color = t["accent"]
+	Palette.block_style = t["block_style"]
+	block_style_id = t["id"]
+	for id in _views:
+		_views[id].refresh_style()
 	queue_redraw()
+
+
+## Silver / Gold block escaped by normal play: metal sparkles and a quick
+## expanding ring at its old position. Short, never blocks input.
+func play_reward(at_local: Vector2, rarity: int) -> void:
+	var metal: Array = Palette.METALS[rarity]
+	var gold := rarity >= BlockData.Rarity.GOLD
+	_burst(at_local, Vector2.UP, metal[1], 16 if gold else 10, 1.2, 180.0)
+	_burst(at_local, Vector2.UP, metal[0], 12 if gold else 8, 1.0, 180.0)
+	var ring := RewardRing.new()
+	ring.color = metal[0]
+	ring.max_radius = cell_size * (0.95 if gold else 0.75)
+	ring.position = at_local
+	_fx_root.add_child(ring)
+	_pulse(0.012 if gold else 0.006)
+
+
+class RewardRing extends Node2D:
+	var color := Color.WHITE
+	var max_radius := 60.0
+	var k := 0.0:
+		set(v):
+			k = v
+			queue_redraw()
+
+	func _ready() -> void:
+		z_index = 30
+		var t := create_tween()
+		t.tween_property(self, "k", 1.0, 0.42).set_trans(Tween.TRANS_CUBIC).set_ease(Tween.EASE_OUT)
+		t.tween_callback(queue_free)
+
+	func _draw() -> void:
+		draw_arc(Vector2.ZERO, max_radius * (0.3 + 0.7 * k), 0.0, TAU, 40, Color(color, 0.9 * (1.0 - k)), 6.0 * (1.0 - k) + 1.0, true)
 
 
 ## Hammer smash: shake, crack burst, then the block is gone.

@@ -3,10 +3,10 @@
 	"mystery": true,
 	"map": [
 		".       .       .       R^      P<?     Yv",
-		"Pv      Y<@     Gv      B^      G^      Rv?",
-		".       G<?     B<      Y<      P>?     .",
-		".       B^#P    G^@-#B  .       .       Yv",
-		"Yv?     .       .       G^      .       B<",
-		"Pv      P<@*    G>      B<@~#Y  G^      ."
+		"Pv      P<@~    G<      Y^      G^      Rv?",
+		".       G^?     B<      Y<$S    P>?     .",
+		".       B^#P    G<@-#B  .       .       Yv",
+		"Y<?     .       .       G^      .       B<",
+		"Pv      P<@*    G>@*    B<@~#Y  G^      ."
 	]
 }

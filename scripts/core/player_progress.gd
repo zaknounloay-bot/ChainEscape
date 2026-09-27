@@ -10,8 +10,12 @@ extends RefCounted
 ## v1 (v0.2-v0.3): progress, scores, stars, settings.
 ## v2 (v0.4): + coins, inventory, claimed chests, completed worlds,
 ##            achievements, perfect levels, last played level.
+## v3 (v0.5): + completed Chapters, collected Silver/Gold reward blocks,
+##            coins earned per Chapter, one-time tips seen. v0.4 Worlds
+##            (20 levels) become two completed Chapters each; chest ids are
+##            unchanged (they were already per 10 levels).
 
-const SAVE_VERSION := 2
+const SAVE_VERSION := 3
 
 ## Tests point this somewhere else so they never touch real progress.
 static var default_path := "user://progress.cfg"
@@ -30,7 +34,16 @@ var coins: int = 0
 ## Booster inventory: {"hint": n, "hammer": n}
 var inventory: Dictionary = {"hint": 0, "hammer": 0}
 var claimed_chests: Array = []
+## v0.4 World milestones (kept only for migration / older builds).
 var completed_worlds: Array = []
+## Chapters whose "Chapter Complete" moment and bonus already happened.
+var completed_chapters: Array = []
+## Collected reward blocks, "level:block_id" (each pays once per save).
+var reward_blocks: Array = []
+## Chapter -> coins earned in it (for the Chapter Complete summary).
+var chapter_coins: Dictionary = {}
+## One-time explanations already shown ("silver", "gold", ...).
+var tips_seen: Array = []
 var achievements: Array = []
 var music_on: bool = true
 var sfx_on: bool = true
@@ -70,6 +83,13 @@ func load_from_disk() -> PlayerProgress:
 	completed_worlds = _cfg.get_value("progress", "completed_worlds", [])
 	achievements = _cfg.get_value("progress", "achievements", [])
 	perfect_levels = _cfg.get_value("progress", "perfect_levels", [])
+	completed_chapters = _cfg.get_value("chapters", "completed", [])
+	reward_blocks = _cfg.get_value("chapters", "reward_blocks", [])
+	tips_seen = _cfg.get_value("chapters", "tips_seen", [])
+	chapter_coins = {}
+	var cc: Dictionary = _cfg.get_value("chapters", "coins", {})
+	for k in cc:
+		chapter_coins[int(k)] = int(cc[k])
 	_migrate()
 	return self
 
@@ -85,7 +105,31 @@ func _migrate() -> void:
 		for n in best_stars:
 			if best_stars[n] >= 3:
 				perfect_levels.append(n)
+	if version < 3:
+		# v0.4 -> v0.5: 20-level Worlds become 10-level Chapters. A completed
+		# World already paid its bonus, so both of its Chapters count as
+		# completed (no second payment, no surprise "Chapter Complete" card
+		# for old progress). Chapters that were fully cleared inside an
+		# unfinished World never paid anything: they get their bonus now,
+		# once, silently.
+		for w in completed_worlds:
+			for c in [2 * int(w) - 1, 2 * int(w)]:
+				if not completed_chapters.has(c):
+					completed_chapters.append(c)
+		var c := 1
+		while Chapters.chapter_range(c).x <= highest_completed:
+			if not completed_chapters.has(c) and _all_cleared(Chapters.chapter_range(c)):
+				completed_chapters.append(c)
+				add_coins(int(Economy.config()["rewards"]["chapter_complete"]), c)
+			c += 1
 	version = SAVE_VERSION
+
+
+func _all_cleared(rg: Vector2i) -> bool:
+	for n in range(rg.x, rg.y + 1):
+		if not best_scores.has(n):
+			return false
+	return true
 
 
 func _start_fresh() -> void:
@@ -111,6 +155,10 @@ func save() -> void:
 	_cfg.set_value("economy", "coins", coins)
 	_cfg.set_value("economy", "inventory", inventory)
 	_cfg.set_value("economy", "claimed_chests", claimed_chests)
+	_cfg.set_value("chapters", "completed", completed_chapters)
+	_cfg.set_value("chapters", "reward_blocks", reward_blocks)
+	_cfg.set_value("chapters", "tips_seen", tips_seen)
+	_cfg.set_value("chapters", "coins", chapter_coins)
 	for n in best_scores:
 		_cfg.set_value("scores", str(n), best_scores[n])
 	for n in best_stars:
@@ -135,6 +183,32 @@ func _int_section(section: String) -> Dictionary:
 	if _cfg.has_section(section):
 		for key in _cfg.get_section_keys(section):
 			out[int(key)] = int(_cfg.get_value(section, key))
+	return out
+
+
+## Coins EARNED (never bought): also counted per Chapter for the summary.
+func add_coins(amount: int, chapter: int) -> void:
+	if amount <= 0:
+		return
+	coins += amount
+	chapter_coins[chapter] = int(chapter_coins.get(chapter, 0)) + amount
+
+
+static func reward_key(level_number: int, block_id: int) -> String:
+	return "%d:%d" % [level_number, block_id]
+
+
+func has_reward_block(level_number: int, block_id: int) -> bool:
+	return reward_blocks.has(reward_key(level_number, block_id))
+
+
+## Reward block ids of a level already collected (for "spent" visuals).
+func collected_rewards(level_number: int) -> Dictionary:
+	var out := {}
+	var prefix := "%d:" % level_number
+	for k in reward_blocks:
+		if String(k).begins_with(prefix):
+			out[int(String(k).get_slice(":", 1))] = true
 	return out
 
 

@@ -12,10 +12,13 @@ extends Node
 ## Scenarios: PERFECT, personal best + stars persistence, Replay, Level
 ## Select, Undo limit, Hint limits, locked tap + unlock, hidden tap +
 ## reveal, out of hearts, Restart, spinner trap -> stuck -> recovery.
+## v0.5: Chapter transitions through every entry point (visuals, block
+## material, music), Silver/Gold rewards and anti-farming, Chapter complete
+## (once) with chest and preview, Level Select by Chapter, relaunch.
 ##
 ##   godot --headless --path . res://tools/Playtest.tscn
 ##   godot --path . res://tools/Playtest.tscn -- --shots=/tmp/shots
-##   godot --headless --path . res://tools/Playtest.tscn -- --worlds-only
+##   godot --headless --path . res://tools/Playtest.tscn -- --chapters-only
 
 const PROGRESS_PATH := "user://playtest_progress.cfg"
 
@@ -45,9 +48,11 @@ func _run() -> void:
 	print("Levels found: %d" % total)
 	_check(total >= 100, "expected at least 100 levels")
 	await _test_web_audio_gate()
-	if "--worlds-only" in OS.get_cmdline_user_args():
-		await _test_worlds_and_music()
-		print("WORLDS-ONLY RUN: %s" % ("PASSED" if failures.is_empty() else "FAILED"))
+	if "--chapters-only" in OS.get_cmdline_user_args():
+		await _test_chapters_and_music()
+		await _test_reward_blocks()
+		await _test_chapter_complete()
+		print("CHAPTERS-ONLY RUN: %s" % ("PASSED" if failures.is_empty() else "FAILED"))
 		for f in failures:
 			printerr("FAIL: " + f)
 		get_tree().quit(0 if failures.is_empty() else 1)
@@ -61,7 +66,9 @@ func _run() -> void:
 	await _test_out_of_hearts()
 	await _test_restart()
 	await _test_trap_and_stuck()
-	await _test_worlds_and_music()
+	await _test_chapters_and_music()
+	await _test_reward_blocks()
+	await _test_chapter_complete()
 	await _test_shop_and_hammer()
 	await _test_hint_booster()
 	await _test_chests_and_coins()
@@ -71,7 +78,7 @@ func _run() -> void:
 	await _test_master_level_result()
 	await _test_relaunch_continue()
 	if failures.is_empty():
-		print("PLAYTEST PASSED: all %d levels cleared; save/continue, worlds+music, web audio gate, coins, chests, shop, hammer, hint boosters, master level, score/stars/PERFECT, limits, locks, mystery, spinner rules OK" % total)
+		print("PLAYTEST PASSED: all %d levels cleared; chapters (visuals, block palette, music), silver/gold rewards + anti-farming, chapter complete + chests, save/continue, web audio gate, coins, shop, hammer, hint boosters, master level, score/stars/PERFECT, limits, locks, mystery, spinner rules OK" % total)
 		get_tree().quit(0)
 	else:
 		for f in failures:
@@ -143,15 +150,15 @@ func _play_level(n: int) -> void:
 			taps -= 1
 		await _wait(0.07)
 	# PERFECT and the Master Level celebrate longer before the card.
-	await _wait(2.4 if n == Worlds.MASTER_LEVEL else (1.0 if not game.last_result.get("perfect", false) else 1.6))
+	await _wait(2.4 if Chapters.is_master(n) else (1.0 if not game.last_result.get("perfect", false) else 1.6))
 	_shot("L%02d_complete" % n)
 	var r := game.last_result
 	_check(game.ui.is_complete_visible(), "L%d complete card not shown" % n)
 	_check(r.get("level", -1) == n and r["score"] > 0 and r["stars"] >= 1, "L%d settled with score and stars" % n)
 	_check(not r["perfect"], "L%d is not PERFECT after mistake/undo" % n)
 	_check(game.progress.best_score(n) >= r["score"] and game.progress.stars_for(n) >= r["stars"], "L%d best saved" % n)
-	print("Level %3d W%d %-18s blocks=%2d spn=%d rules=%s lck=%d hid=%d score=%5d stars=%d coins=+%d" % [
-		n, Worlds.world_of(n), game.level.name, start_count, _count(func(b): return b.is_spinner()),
+	print("Level %3d C%-2d %-18s blocks=%2d spn=%d rules=%s lck=%d hid=%d score=%5d stars=%d coins=+%d" % [
+		n, Chapters.chapter_of(n), game.level.name, start_count, _count(func(b): return b.is_spinner()),
 		",".join(game.level.blocks.filter(func(b): return b.is_spinner()).map(func(b): return ["cw", "ccw", "alt", "pat"][b.spin_rule])),
 		_count(func(b): return b.lock_color != ""), _count(func(b): return b.hidden), r["score"], r["stars"], r["coins"]])
 
@@ -179,96 +186,287 @@ func _test_web_audio_gate() -> void:
 	print("Web audio gate OK")
 
 
-## World progression through every entry point. After each transition
-## settles, EVERY World-specific surface must show the new World: the
-## calculated World, background (exact colors, decoration), board tint,
-## accent (HUD, buttons, particles) and music. Nothing may be left over
-## from the previous World.
-func _test_worlds_and_music() -> void:
-	var pairs := [[20, 21], [40, 41], [60, 61], [80, 81], [99, 100]]
+## Chapter progression through every entry point. After each transition
+## settles, EVERY Chapter-specific surface must show the new Chapter: the
+## calculated Chapter, background (exact colors, decoration, particles),
+## board tint, block material (on the real block views), accent (HUD,
+## buttons, particles) and music - and only one music player may still be
+## playing (clean transitions, no lingering overlap). Nothing may be left
+## over from the previous Chapter.
+func _test_chapters_and_music() -> void:
+	AudioManager.set_music_enabled(true)  # real music transitions (dummy driver)
+	var pairs := [[10, 11], [20, 21], [30, 31], [40, 41], [50, 51], [60, 61], [70, 71], [80, 81], [90, 91], [99, 100]]
 	# 1) NEXT LEVEL
 	for pr in pairs:
 		game.start_level(pr[0])
 		await _settle()
-		_expect_world(pr[0], "start %d" % pr[0])
+		_expect_chapter(pr[0], "start %d" % pr[0])
 		game.ui.next_pressed.emit()
 		await _settle()
-		_expect_world(pr[1], "NEXT %d->%d" % pr)
-		if pr[1] == 21:
-			_shot("world2_after_next")
-		if pr[1] == 81:
-			_shot("world5_after_next_from_80")
+		_expect_chapter(pr[1], "NEXT %d->%d" % pr)
+		if pr[1] in [11, 41, 61, 91]:
+			_shot("chapter_after_next_%d" % pr[1])
 	# 2) Level Select
 	for pr in pairs:
 		game.start_level(pr[0])
 		await _settle()
 		game.ui.level_chosen.emit(pr[1])
 		await _settle()
-		_expect_world(pr[1], "LEVEL SELECT %d->%d" % pr)
-	# 3) Replay (same World must stay exactly applied)
-	for n in [21, 41, 61, 81, 100]:
+		_expect_chapter(pr[1], "LEVEL SELECT %d->%d" % pr)
+	# 3) Replay and Restart keep the Chapter exactly applied
+	for n in [11, 31, 51, 71, 91, 100]:
 		game.start_level(n)
 		await _settle()
 		game.ui.replay_pressed.emit()
 		await _settle()
-		_expect_world(n, "REPLAY %d" % n)
-	# 4) Debug jumps (forwards, backwards, across several Worlds)
-	for pr in [[20, 21], [40, 41], [60, 61], [80, 81], [99, 100], [100, 99], [81, 80], [61, 60], [95, 5], [5, 95]]:
+		_expect_chapter(n, "REPLAY %d" % n)
+		game.ui.restart_pressed.emit()
+		await _settle()
+		_expect_chapter(n, "RESTART %d" % n)
+	# 4) Debug jumps (forwards, backwards, across several Chapters)
+	for pr in [[10, 11], [41, 40], [60, 61], [81, 80], [99, 100], [100, 99], [95, 5], [5, 95], [23, 77]]:
 		game.start_level(pr[0])
 		await _settle()
 		game.debug_panel.level_requested.emit(pr[1])
 		await _settle()
-		_expect_world(pr[1], "DEBUG JUMP %d->%d" % pr)
-	# 5) Rapid transitions that interrupt the cross-fade
-	game.start_level(79)
+		_expect_chapter(pr[1], "DEBUG JUMP %d->%d" % pr)
+	# 5) Rapid transitions that interrupt the background and music fades
+	game.start_level(39)
 	await _settle()
-	game.ui.next_pressed.emit()  # 80
+	game.ui.next_pressed.emit()  # 40
 	await _wait(0.25)
-	game.ui.next_pressed.emit()  # 81 while the fade into 80 is still running
+	game.ui.next_pressed.emit()  # 41 while the fade into 40 is still running
 	await _settle()
-	_expect_world(81, "RAPID 79->80->81")
-	game.start_level(80)
+	_expect_chapter(41, "RAPID 39->40->41")
+	game.start_level(70)
 	await _settle()
-	game.ui.next_pressed.emit()  # 81, fading W4 -> W5
-	await _wait(0.5)
-	game.debug_panel.level_requested.emit(61)  # back to W4 mid-fade
+	game.ui.next_pressed.emit()  # 71, fading C7 -> C8
+	await _wait(0.4)
+	game.debug_panel.level_requested.emit(61)  # back to C7 mid-fade
 	await _wait(0.1)
-	game.ui.level_chosen.emit(90)  # and to W5 again
+	game.ui.level_chosen.emit(90)  # and on to C9
 	await _settle()
-	_expect_world(90, "RAPID 80->81->61->90")
-	_shot("world5_after_rapid")
+	_expect_chapter(90, "RAPID 70->71->61->90")
+	_shot("chapter9_after_rapid")
 	_check(game.ui._level_label.text == "LEVEL 90", "level label follows the jumps")
+	_check(game.ui._name_label.text.contains("CHAPTER 9") and game.ui._name_label.text.ends_with("10/10"), "HUD shows the Chapter and the position in it ('%s')" % game.ui._name_label.text)
 	game.start_level(100)
 	await _settle()
 	_check(game.ui._level_label.text == "MASTER LEVEL", "Level 100 shows the Master Level label")
 	_shot("L100_master_theme")
 	game.ui.levels_opened.emit()
 	await _frames(3)
-	var worlds := game.ui._level_select._list.get_children().filter(func(c): return c.has_meta("world"))
-	_check(worlds.size() == 5, "Level Select groups levels into 5 Worlds (%d)" % worlds.size())
-	_shot("level_select_worlds")
+	var headers := game.ui._level_select._list.get_children().filter(func(c): return c.has_meta("chapter"))
+	_check(headers.size() == 10, "Level Select groups levels into 10 Chapters (%d)" % headers.size())
+	_check(_count_tiles(game.ui._level_select._list) == game.level_manager.level_count, "Level Select still shows every level")
+	_shot("level_select_chapters")
 	game.ui._level_select.close()
-	print("Worlds / music / level select grouping OK (NEXT, Level Select, Replay, debug jumps, rapid)")
+	AudioManager.set_music_enabled(false)
+	print("Chapters / music / block palette / level select OK (NEXT, Level Select, Replay, Restart, debug jumps, rapid)")
 
 
 func _settle() -> void:
-	await _wait(WorldBackground.FADE_TIME + 0.45)
+	await _wait(maxf(ChapterBackground.FADE_TIME, AudioManager.FADE_IN_DELAY + AudioManager.FADE_IN) + 0.45)
 
 
-## Checks everything World-specific that is on screen for level `n`.
-func _expect_world(n: int, label: String) -> void:
-	var t := Worlds.theme_for_level(n)
-	var w := game.world_state()
-	var expect_world := clampi((n - 1) / 20 + 1, 1, 5)  # 1-20=1 ... 81-100=5
-	var ok: bool = (w["level"] == n and w["world"] == expect_world and w["theme_id"] == t["id"]
+## Checks everything Chapter-specific that is on screen for level `n`.
+func _expect_chapter(n: int, label: String) -> void:
+	var t := Chapters.theme_for_level(n)
+	var w := game.chapter_state()
+	var expect_chapter := (n - 1) / 10 + 1  # 1-10 = 1 ... 91-100 = 10
+	var ok: bool = (w["level"] == n and w["chapter"] == expect_chapter and w["theme_id"] == t["id"]
 		and w["background_theme_id"] == t["id"] and w["background_settled"]
 		and game.background._top.is_equal_approx(t["bg_top"]) and game.background._bottom.is_equal_approx(t["bg_bottom"])
-		and game.background._deco_color.is_equal_approx(t["deco_color"])
+		and game.background._deco_color.is_equal_approx(t["deco_color"]) and game.background._particle_color.is_equal_approx(t["particle_color"])
 		and w["board_color"].is_equal_approx(t["board"]) and w["accent"].is_equal_approx(t["accent"])
 		and w["ui_theme_id"] == t["id"] and game.ui._progress.fill_color.is_equal_approx(t["accent"])
 		and game.ui._coin_pill.accent.is_equal_approx(t["accent"])
+		and w["block_style_id"] == t["id"] and w["block_style"] == t["block_style"]
 		and w["music"] == t["music"] and AudioManager.music_theme == t["music"])
-	_check(ok, "%s: level %d should be World %d / theme %d / music %s, got %s" % [label, n, expect_world, t["id"], t["music"], str(w)])
+	_check(ok, "%s: level %d should be Chapter %d / theme %d / music %s, got %s" % [label, n, expect_chapter, t["id"], t["music"], str(w)])
+	# The block views really wear this Chapter's material.
+	var views_ok := true
+	for id in game.model.blocks:
+		var v := game.board.get_view(id)
+		if v:
+			views_ok = views_ok and v._face_style.bg_color.is_equal_approx(Palette.styled_face(v.data.color))
+	_check(views_ok, "%s: block views use Chapter %d's material" % [label, expect_chapter])
+	# Music: the right theme, and exactly one player left once settled.
+	if not AudioManager.music_enabled:
+		return
+	var playing := [AudioManager._music, AudioManager._music_b].filter(func(p): return p.playing)
+	_check(playing.size() == 1 and AudioManager._music.playing and AudioManager._music.stream == AudioManager._theme_stream(t["music"]),
+		"%s: exactly the Chapter's music is playing (%d players)" % [label, playing.size()])
+
+
+## Silver / Gold blocks: pay once when they escape by play; Undo, Restart
+## and Replay can't farm them; the Hammer never pays; feedback appears.
+func _test_reward_blocks() -> void:
+	game.progress.tips_seen.clear()
+	# Silver on level 32 (Chapter 4).
+	game.start_level(32)
+	await _wait(0.4)
+	var silver := _reward_id(BlockData.Rarity.SILVER)
+	_check(silver != -1, "level 32 has a Silver block")
+	_check(game.tutorial._text.begins_with("Silver Block"), "first Silver level explains it once ('%s')" % game.tutorial._text)
+	_check(game.board.get_view(silver) != null and not game.board.get_view(silver).reward_spent, "Silver block shows as a reward")
+	_shot("L32_silver")
+	var c0 := game.progress.coins
+	await _play_until_escaped(silver)
+	await _wait(0.1)
+	_shot("L32_silver_coins_fly")
+	_check(game.progress.coins == c0 + 5 and game.reward_coins_attempt == 5, "Silver escape pays +5 (coins %d -> %d)" % [c0, game.progress.coins])
+	_check(game.progress.has_reward_block(32, silver) and game.board.spent_rewards.has(silver), "Silver recorded as collected")
+	var fly := game.ui._root.get_children().filter(func(c): return c is Label and c.text == "+5 COINS")
+	_check(fly.size() == 1, "'+5 COINS' feedback flies to the counter")
+	_check(game.ui._coin_pill.coins == c0, "the counter waits for the flying coins (%d)" % game.ui._coin_pill.coins)
+	await _wait(1.0)
+	_check(game.ui._coin_pill.coins == game.progress.coins, "coin counter updated after the fly")
+	# Undo brings the block back - spent - and escaping it again pays nothing.
+	game.undo()
+	await _wait(0.1)
+	_check(game.model.blocks.has(silver) and game.board.get_view(silver).reward_spent, "Undo returns the Silver block as spent")
+	var c1 := game.progress.coins
+	await _tap(silver)
+	await _wait(0.1)
+	_check(not game.model.blocks.has(silver) and game.progress.coins == c1, "Undo cannot farm the Silver reward")
+	# Restart and Replay: still spent, still nothing.
+	game.restart()
+	await _wait(0.3)
+	_check(game.board.get_view(silver).reward_spent, "after Restart the Silver block is shown spent")
+	await _play_until_escaped(silver)
+	_check(game.progress.coins == c1, "Restart cannot farm the Silver reward")
+	await _solve_cleanly()
+	await _wait(1.3)
+	_check(game.last_result["reward_coins"] == 0, "no reward coins on a farming attempt")
+	# Gold on level 51 (Chapter 6).
+	game.start_level(51)
+	await _wait(0.4)
+	var gold := _reward_id(BlockData.Rarity.GOLD)
+	_check(gold != -1 and game.tutorial._text.begins_with("Gold Block"), "level 51 has a Gold block and explains it")
+	var g0 := game.progress.coins
+	await _play_until_escaped(gold)
+	_check(game.progress.coins == g0 + 15 and game.progress.has_reward_block(51, gold), "Gold escape pays +15")
+	await _solve_cleanly()
+	await _wait(1.3)
+	_check(game.last_result["reward_coins"] == 15 and String(game.last_result["coin_notes"]).contains("Gold +15"), "level card counts the Gold reward")
+	_shot("L51_card_with_gold")
+	# Hammer on a Gold block: no reward, and it stays earnable by play.
+	var target := -1
+	var level_n := -1
+	for n in [56, 64, 68, 71, 78, 81, 83, 86, 88, 91, 93, 96, 98]:
+		game.start_level(n)
+		await _wait(0.2)
+		var gid := _reward_id(BlockData.Rarity.GOLD)
+		if gid != -1 and game.is_hammer_safe(gid):
+			target = gid
+			level_n = n
+			break
+	_check(target != -1, "found a Gold block that a Hammer may smash")
+	if target != -1:
+		game.progress.inventory["hammer"] = 1
+		var h0 := game.progress.coins
+		game.toggle_hammer()
+		await _tap(target)
+		await _wait(0.3)
+		_check(not game.model.blocks.has(target) and game.progress.coins == h0, "Hammer on Gold pays no coins (L%d)" % level_n)
+		_check(not game.progress.has_reward_block(level_n, target), "a smashed Gold block is not marked collected")
+		_check(game.tutorial._text.begins_with("Smashed"), "the Hammer rule is explained")
+		game.restart()
+		await _wait(0.3)
+		await _play_until_escaped(target)
+		# Other reward blocks (e.g. a Silver) may be collected on the way.
+		var others := 0
+		for id in game.level.blocks.map(func(b): return b.id):
+			if id != target and game.progress.has_reward_block(level_n, id):
+				others += Economy.reward_block_coins(game.level.blocks[id].rarity)
+		_check(game.progress.has_reward_block(level_n, target) and game.progress.coins == h0 + 15 + others,
+			"the smashed Gold block can still be earned by play (coins %d -> %d, others %d)" % [h0, game.progress.coins, others])
+	var disk := PlayerProgress.new(PROGRESS_PATH).load_from_disk()
+	_check(disk.has_reward_block(32, silver) and disk.has_reward_block(51, gold), "collected rewards persisted")
+	print("Silver / Gold rewards, anti-farming (Undo, Restart, Replay, Hammer) OK")
+
+
+## Chapter 3 finished by clearing level 30: the moment fires once, shows
+## the Chapter's numbers, lets the chest be claimed, previews Chapter 4 and
+## continues into it. Clearing level 30 again fires nothing.
+func _test_chapter_complete() -> void:
+	for n in range(21, 30):
+		game.progress.best_scores[n] = 4000
+		game.progress.best_stars[n] = 3
+	game.progress.highest_completed = maxi(game.progress.highest_completed, 29)
+	game.progress.completed_chapters.erase(3)
+	game.start_level(30)
+	await _wait(0.4)
+	var coins0 := game.progress.coins
+	await _solve_cleanly()
+	await _wait(1.8)
+	var r := game.last_result
+	_check(r["chapter_complete"] == 3 and game.progress.completed_chapters.has(3), "clearing level 30 completes Chapter 3")
+	_check(String(r["coin_notes"]).contains("Chapter 3 complete!"), "level card mentions the Chapter bonus")
+	_check(game.ui._next_button.text == "CONTINUE", "level card offers CONTINUE into the Chapter moment")
+	game.ui.next_pressed.emit()
+	await _wait(0.5)
+	_check(game.ui.is_chapter_card_open() and game.ui.chapter_card_chapter() == 3, "Chapter Complete card shown")
+	var card: ChapterCard = game.ui._chapter_card
+	_check(card._kicker.text == "CHAPTER 3" and card._stars.text == "★ %d / 30" % Economy.chapter_stars(game.progress, 3), "card shows the Chapter's stars / 30")
+	_check(card._next_title.text == "CHAPTER 4  ·  EMBER RIDGE" and card._next_new.text == "NEW: Silver Blocks", "card previews Chapter 4 and its Silver Blocks")
+	_shot("chapter3_complete_card")
+	# Claim the chest tiers right here.
+	var c1 := game.progress.coins
+	for tier in Economy.chest_tiers(game.progress, 3).size():
+		game.ui.chest_claim.emit(3, tier)
+	_check(game.progress.coins > c1 and Economy.chest_tiers(game.progress, 3).all(func(t): return t["claimed"] or not t["claimable"]), "chest claimed from the Chapter card")
+	var claimed_before := game.progress.claimed_chests.size()
+	game.ui.chest_claim.emit(3, 0)
+	_check(game.progress.claimed_chests.size() == claimed_before, "the card never pays a chest twice")
+	card._continue.pressed.emit()
+	await _settle()
+	_check(not game.ui.is_chapter_card_open() and game.current_level == 31, "CONTINUE starts Chapter 4")
+	_expect_chapter(31, "CONTINUE from the Chapter card")
+	# Fires once: clear level 30 again.
+	game.start_level(30)
+	await _wait(0.4)
+	await _solve_cleanly()
+	await _wait(1.8)
+	_check(game.last_result["chapter_complete"] == 0 and game.pending_chapter_card == 0, "Chapter completion does not fire twice")
+	game.ui.next_pressed.emit()
+	await _wait(0.4)
+	_check(not game.ui.is_chapter_card_open() and game.current_level == 31, "NEXT goes straight on after a repeat clear")
+	_check(game.progress.coins >= coins0, "coins never go down through the Chapter flow")
+	var disk := PlayerProgress.new(PROGRESS_PATH).load_from_disk()
+	_check(disk.completed_chapters.has(3) and disk.claimed_chests.has(Economy.chest_id(3, 0)), "Chapter completion and chest persisted")
+	print("Chapter complete (once), chest claim, next-Chapter preview OK")
+
+
+func _reward_id(rarity: int) -> int:
+	for id in game.model.blocks:
+		if game.model.blocks[id].rarity == rarity:
+			return id
+	return -1
+
+
+func _stays_solvable(id: int) -> bool:
+	var t := BoardModel.new()
+	t.setup(game.model.rows, game.model.columns, game.model.snapshot())
+	t.remove(id)
+	return t.is_empty() or Solver.from_model(t).is_solvable()
+
+
+## Plays solver moves until block `id` has escaped (never smashes).
+func _play_until_escaped(id: int) -> void:
+	var guard := 0
+	while game.model.blocks.has(id) and guard < 60:
+		guard += 1
+		if game.model.can_escape(id) and _stays_solvable(id):
+			await _tap(id)
+		else:
+			var m := Solver.from_model(game.model).recommend_move()
+			if m == -1:
+				break
+			await _tap(m)
+		await _wait(0.04)
+	_check(not game.model.blocks.has(id), "block %d escaped by play" % id)
 
 
 func _test_shop_and_hammer() -> void:
@@ -347,14 +545,14 @@ func _test_chests_and_coins() -> void:
 	for n in range(1, 11):
 		game.progress.best_stars[n] = maxi(game.progress.stars_for(n), 2)
 	var before := game.progress.coins
-	game.claim_chest(0, 0)
+	game.claim_chest(1, 0)
 	var paid := game.progress.coins - before
 	_check(paid > 0, "chest claim pays coins")
-	game.claim_chest(0, 0)
+	game.claim_chest(1, 0)
 	_check(game.progress.coins == before + paid, "chest cannot be claimed twice")
 	game.ui._level_select.close()
 	var disk := PlayerProgress.new(PROGRESS_PATH).load_from_disk()
-	_check(disk.claimed_chests.has(Economy.chest_id(0, 0)), "claimed chest persisted")
+	_check(disk.claimed_chests.has(Economy.chest_id(1, 0)), "claimed chest persisted")
 	print("Coins / chests OK")
 
 
@@ -372,7 +570,8 @@ func _test_relaunch_continue() -> void:
 	game.ui.setting_toggled.emit("haptics", false)
 	var expect := {"coins": game.progress.coins, "inv": game.progress.inventory.duplicate(),
 		"stars": game.progress.total_stars(), "best": game.progress.best_scores.duplicate(),
-		"chests": game.progress.claimed_chests.duplicate(), "worlds": game.progress.completed_worlds.duplicate()}
+		"chests": game.progress.claimed_chests.duplicate(), "chapters": game.progress.completed_chapters.duplicate(),
+		"rewards": game.progress.reward_blocks.duplicate()}
 	game.queue_free()
 	await _frames(3)
 	GameManager.skip_title = false
@@ -385,16 +584,18 @@ func _test_relaunch_continue() -> void:
 	_check(game.current_level == 57, "last played level restored")
 	_check(game.progress.coins == expect["coins"] and game.progress.inventory == expect["inv"], "coins and boosters restored")
 	_check(game.progress.total_stars() == expect["stars"] and game.progress.best_scores == expect["best"], "stars and best scores restored")
-	_check(game.progress.claimed_chests == expect["chests"] and game.progress.completed_worlds == expect["worlds"], "chests and world milestones restored")
+	_check(game.progress.claimed_chests == expect["chests"] and game.progress.completed_chapters == expect["chapters"], "chests and Chapter milestones restored")
+	_check(game.progress.reward_blocks == expect["rewards"] and not expect["rewards"].is_empty(), "collected Silver/Gold blocks restored")
+	_check(game.ui._title._stats.text.begins_with("CHAPTER 6  ·  MIDNIGHT TIDE"), "title shows the Chapter to continue ('%s')" % game.ui._title._stats.text)
 	_check(not game.progress.haptics_on and not Haptics.enabled, "settings restored after relaunch")
 	_check(game.progress.highest_unlocked() > 57, "unlock progress restored (not reset to level 1)")
 	game.ui.continue_pressed.emit()
 	await _frames(2)
 	_check(not game.ui.is_title_open() and game.current_level == 57, "CONTINUE resumes level 57")
 	await _settle()
-	_expect_world(57, "CONTINUE after relaunch (57)")
-	# Relaunch again into World 5 (81) - a fresh start must apply World 5,
-	# not World 1 defaults or a previous World.
+	_expect_chapter(57, "CONTINUE after relaunch (57)")
+	# Relaunch again into Chapter 9 (81) - a fresh start must apply Chapter
+	# 9, not Chapter 1 defaults or a previous Chapter.
 	game.start_level(81)
 	await _wait(0.2)
 	game.queue_free()
@@ -404,7 +605,10 @@ func _test_relaunch_continue() -> void:
 	await _frames(5)
 	game.ui.continue_pressed.emit()
 	await _settle()
-	_expect_world(81, "CONTINUE after relaunch (81)")
+	AudioManager.set_music_enabled(true)
+	await _settle()
+	_expect_chapter(81, "CONTINUE after relaunch (81)")
+	AudioManager.set_music_enabled(false)
 	print("Relaunch / continue OK")
 
 

@@ -1,11 +1,11 @@
 {
 	"name": "Flicker",
 	"map": [
-		".     B<    Pv@-  .     .     G<#R",
-		".     Y^    .     Rv    .     .",
-		"Pv    B^    Pv    G<    .     .",
-		"B>    .     .     B>#Y  R>    Bv",
-		".     .     .     Pv@   B<    P<",
-		".     Y^    P>    G>@~  R>@   ."
+		"B^     B<@    Pv@-   .      R<     G^@#R",
+		".      P^     .      Rv     P^     .",
+		"P^     B^     Pv     G<@-   .      Yv",
+		"B>     .      .      Bv#Y   Pv     Bv",
+		".      .      .      P>@~   B<     P<",
+		".      Y^     P>     G^@~   Pv@~   ."
 	]
 }

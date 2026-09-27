@@ -1,39 +1,48 @@
-# Chain Escape — v0.4
+# Chain Escape — v0.5
 
 A one-handed portrait puzzle game built with **Godot 4.3 (GDScript)** for iOS, Android and mobile Web.
 
 > Tap a block → it escapes in its arrow direction → space opens → more blocks can leave → chain the exits. Clear the board.
 
-v0.4 turns the prototype into a game with long-term progression:
+v0.5 makes progression feel much stronger. **Every 10 levels is a new Chapter** with its own:
 
-- a real save / continue flow
-- five Worlds, each with its own look and music
-- a soft-currency economy with treasure chests, a Shop and two boosters
-- advanced spinners
-- a 100-level campaign ending in a Master Level
+- look (background, ambient decoration and particles, accents)
+- music identity
+- block material
 
-The feeling it aims for: *"I know how to play, I am getting better, and I want to see what comes next."*
+The Chapters build toward **Silver and Gold reward blocks**, a **Chapter Complete** moment and a **Chapter chest** that upgrades with your stars. The puzzles themselves keep getting harder.
 
-Not included, on purpose: real-money purchases, ads, leaderboards, accounts, backend, multiplayer, Daily Challenge, timed mode and store billing.
+The feeling it aims for: *"I progressed, the game changed, and I want to see the next Chapter."*
+
+Everything from v0.4 is kept:
+
+- 100 levels and the Master Level
+- save / continue
+- score, personal best, 3 stars and PERFECT
+- hearts, limited Undo and hints
+- spinners, locks and mystery
+- coins, the Shop, the Hint and Hammer boosters, and the inventory
+- the mobile Web audio unlock with Stream playback
+
+Not included, on purpose: leaderboards, country ranking, accounts/login, backend, real-money purchases, ads, Daily Challenge and multiplayer.
 
 ---
 
-## What's new in v0.4
+## What's new in v0.5
 
 | Area | Change |
 |---|---|
-| **Save / Continue** | A versioned save file (v2) with migration from v0.3, atomic writes and a backup fallback. The launch screen offers **CONTINUE – LEVEL X** and **LEVEL SELECT**. The game never resets to Level 1. |
-| **Mobile Web audio** | On the first real tap, a page-level script resumes the engine's AudioContext inside that gesture, which iOS Safari requires. It also sets iOS's playback audio session. Only once the context is running do music (if ON) and SFX (if ON) start. Tested in a real exported Web build in Chromium. See *Music system*. |
-| **Worlds** | Five Worlds of 20 levels, plus a Master theme for level 100. Each has its own background gradient, ambient decorations, board tint, HUD/accent colors and music. The transitions cross-fade and show a banner. |
-| **Music themes** | Six generated seamless loops (one per World plus Master), rising in tempo and tension, with cross-fades between them. |
-| **Advanced spinners** | Clockwise ↻ (the original), counter-clockwise ↺, alternating and pattern (↻↻↺). Always deterministic, and the ring shows the next turn. |
-| **Coins** | Soft currency, earned through skilled play. Only *improvements* pay (a first clear, new stars, a first PERFECT), and harder Worlds pay more. |
-| **Treasure chests** | Every 10 levels, three chests unlock at 20 / 24 / 27 stars. Each can be claimed once. |
-| **Shop and boosters** | **Hint** (30 coins) and **Hammer** (60 coins). The Hammer only works if the level stays solvable. All prices are in `data/economy.json`. |
-| **Inventory** | Boosters are saved and shown on the Hint and Hammer buttons. |
-| **100 levels** | New levels 61–100, all verified. **Level 100 – The Master** combines every mechanic. |
-| **Level Select** | Grouped by World, with chest rows and a crown on the Master Level. |
-| **Generator** | Understands spinner rules, has World 4–5 profiles, maps a level number to a profile and a target difficulty, and never auto-releases levels (groundwork for 101+). |
+| **Audio cleanup** | The verified iOS fix is kept unchanged: the page-level unlock inside the first gesture, and Stream playback on Web. The temporary diagnostics are removed: the test beep, `?audiotest`, `?audiodebug`, `?audiomode` and the `[CE-Audio]` logging. Only failures are logged now. |
+| **Chapters** | Ten Chapters of 10 levels, defined in `data/chapters.json`. Each Chapter has its own background, accent palette, ambient decoration, particles, music and block material. It is recalculated on every level load and applied through every entry point. |
+| **Music** | Ten Chapter music identities plus the Master theme: 5 harmonic families × 2 intensities, 88 → 126 BPM, with more layers as you go. Transitions are clean and sequential. The music is imported as QOA, so all 11 loops total 1.8 MB (v0.4's 6 loops were 5 MB). |
+| **Block material** | Saturation, gloss, rim and glow grow Chapter by Chapter. Hues never change, and arrows are drawn last. |
+| **Silver / Gold blocks** | Reward blocks that follow the normal rules. Silver pays **+5** (from Chapter 4) and Gold **+15** (from Chapter 6); both values are configurable. Each pays **once per save**, a Hammer never pays, and escaping one plays a premium burst and chime and flies "+N COINS" to the counter. **Diamond** is reserved in the data model. |
+| **Chapter Complete** | Fires **once** per Chapter. Shows the Chapter's stars / 30, coins earned, PERFECT levels, Silver/Gold found, the chest, and a preview of the next Chapter in its own colors. |
+| **Chapter chest** | One chest per Chapter that upgrades with stars: Bronze **20★**, Silver **25★**, Gold **30★** (the Gold tier adds a Hammer). Each tier is claimed once, from Level Select or the Chapter card. |
+| **Level Select** | Grouped by Chapter: headers in the Chapter's colors, stars / 30, a complete tick, chest tiers, and gems on levels with uncollected Silver/Gold. |
+| **Difficulty** | Levels 61–95 were tuned harder, so every Chapter's average difficulty now rises: 42.1 → 46.1 → 49.9 → 53.3 → 58.8 for Chapters 6–10. Before, Chapter 7 dipped to 37.5. The verifier enforces the rise. |
+| **Save v3** | Adds completed Chapters, collected reward blocks, coins per Chapter and tips seen. v0.4 saves migrate without losing or double-paying anything. |
+| **101+ architecture** | Chapters 11+ come from the data (`overflow.cycle`). The generator gets `chapter_plan(c)` (profile, difficulty band, reward frequency) and `classify(level)`. |
 
 ---
 
@@ -47,129 +56,193 @@ Not included, on purpose: real-money purchases, ads, leaderboards, accounts, bac
 - highest unlocked level (= highest completed + 1)
 - stars and best score per level, and PERFECT levels
 - coin balance and booster inventory
-- claimed chests, completed Worlds and achievements (for example `master`)
+- claimed chest tiers and achievements (for example `master`)
+- v0.5: completed Chapters, collected Silver/Gold blocks (`"level:block"`), coins earned per Chapter, and one-time tips seen
 - Music, Sound Effects and Vibration settings
 
 **Launch:**
 
-- A returning player sees **CONTINUE – LEVEL X** (with stars and coins) and **LEVEL SELECT**.
+- A returning player sees **CONTINUE – LEVEL X** with the Chapter (for example "CHAPTER 6 · MIDNIGHT TIDE"), stars and coins, plus **LEVEL SELECT**.
 - A new player sees **PLAY**.
 - The last played level is already loaded behind the title, so continuing is instant.
 
 **Robustness:**
 
-- **Version-aware:** `[meta] version = 2`. `_migrate()` upgrades older saves in place. v0.3 saves keep all progress, get the starting coins and booster, and 3-star levels are marked PERFECT so they aren't paid twice.
-- **Forward-safe:** keys a build doesn't know are kept when it re-saves, so a newer save opened by an older build isn't wiped.
-- **Atomic:** each save writes `progress.cfg.tmp`, keeps the previous file as `progress.cfg.bak`, then renames. If the main file is damaged, the loader falls back to the `.bak` copy.
+- **Version-aware:** `[meta] version = 3`. `_migrate()` upgrades older saves in place, step by step (v1 → v2 → v3). See *Compatibility* below.
+- **Forward-safe:** keys a build doesn't know are kept when it re-saves.
+- **Atomic:** each save writes `progress.cfg.tmp`, keeps the previous file as `progress.cfg.bak`, then renames. A damaged main file falls back to the `.bak` copy.
 
-## Music system
+## Chapters
 
-- `AudioManager` plays one theme per World: `music_w1` … `music_w5`, plus `music_master` for level 100.
-- The themes are generated by `tools/generate_music.py`. Tempo, key, harmony, rhythmic density and timbre rise from calm (World 1, 92 BPM, major) to tense and dramatic (Master, 84 BPM, C minor bells and deep drums).
-- Each is a sample-seamless loop with embedded WAV loop points. To replace one with a real track, drop `music_<theme>.ogg` into `assets/audio/`.
-- **Cross-fades:** two music players, so entering a new World fades the themes over 1.5 s.
-- Music ducks under the level-complete, PERFECT and Master jingles.
-- **Settings:** Music, Sound Effects and Vibration toggles are saved and restored on launch. Music and SFX use separate buses.
+Every 10 levels is a Chapter. The mapping is `Chapters.chapter_of(n) = (n − 1) / 10 + 1`, so it has no upper bound: Chapter 11 = 101–110, Chapter 12 = 111–120, and so on.
 
-**Mobile Web audio (iOS Safari first-class):**
+| Ch | Levels | Name | Look | Particles | Music | Block material |
+|---|---|---|---|---|---|---|
+| 1 | 1–10 | First Light | soft lilac, floating bubbles, orange accent | motes | c01 · light, welcoming · 88 BPM | matte |
+| 2 | 11–20 | Sunny Meadow | fresh mint, tumbling confetti, pink accent | petals | c02 · playful · 100 | light gloss |
+| 3 | 21–30 | Deep Current | calm blues, wave arcs | rising bubbles | c03 · focused · 96 | gloss + thin rim |
+| 4 | 31–40 | Ember Ridge | warm coral, drifting triangles | embers | c04 · more rhythmic · 108 | gloss + rim |
+| 5 | 41–50 | Twilight Grid | indigo dusk, tactical grid nodes, amber accent | dust | c05 · strategic tension · 100 | + first glow |
+| 6 | 51–60 | Midnight Tide | deep navy, concentric rings, cyan accent | glints | c06 · deeper, serious · 94 | stronger glow |
+| 7 | 61–70 | Neon Night | dark indigo, neon lines, cyan/magenta | sparks | c07 · energetic · 118 | neon glow |
+| 8 | 71–80 | Crimson Circuit | dark crimson, circuit traces, orange accent | pulses | c08 · advanced · 122 | bright rim |
+| 9 | 81–90 | Storm Summit | storm slate, aurora ribbons, violet accent | snow | c09 · intense · 126 | strong rim + glow |
+| 10 | 91–100 | Golden Summit | deep teal and gold, twinkling stars | gold dust | c10 · master, premium · 112 | gold edge, full finish |
+| ★ | 100 | Master Level | black and gold, slow golden rays | gold dust | master · the finale · 84 | gold edge, maximum |
 
-Godot creates its Web Audio `AudioContext` at engine start, before any tap, so browsers leave it **suspended**. iOS Safari only lets a page resume it synchronously *inside* a `touchend` / `click` / `pointerup` / `keydown` handler. Godot handles input a frame later, so it can't unlock by itself. On iOS, Web Audio is also muted by the silent switch unless the page asks for the "playback" audio session.
+The Chapters get gradually darker and richer. Chapters 1–4 are light, 5 is dusk and 6–10 are dark.
 
-The fix is a small page-level script, `web/audio_unlock.js`. It is inlined into the exported page head through the Web export preset (`html/head_include`), so no custom HTML shell is needed. After editing the script, run `python3 tools/sync_web_head.py`, then re-export.
+**Data-driven.** Every color, decoration, particle type, music id and block style lives in `data/chapters.json`. `scripts/core/chapters.gd` parses it, and no UI code contains a theme. Chapters past the list use `"overflow": {"cycle": [3, …, 10]}`: Chapter 11 is "Deep Current II", Chapter 19 is "Deep Current III", and so on. Adding a hand-made Chapter 11 means adding one entry to the list.
 
-The unlock sequence:
+**Readability rules** (enforced by a unit test for every theme):
 
-1. **Before the engine loads,** the script wraps the `AudioContext` / `webkitAudioContext` constructor so it can see the context Godot creates.
-2. **On every `touchend` / `pointerup` / `mouseup` / `click` / `keydown`,** until the context is running, the script runs synchronously inside the gesture:
-   - sets `navigator.audioSession.type = "playback"` (iOS 17+), so the silent switch doesn't mute the game
-   - on older iOS, plays a 50 ms silent `<audio playsinline>` once
-   - calls `resume()` on each context that isn't running (suspended or interrupted), and starts a one-frame silent buffer
-   - If a tap fails to unlock, the next tap retries. No reload is needed.
-3. **`AudioManager` polls the context state (every 0.15 s).** Only when it is **running** *and* at least one real gesture has happened does it mark audio unlocked. Then:
-   - it starts the music if Music is ON
-   - it allows sound effects if Sound Effects is ON
-   - SFX requested before that are dropped, so nothing plays before a gesture
-   - This happens once. Later taps never restart the music.
-4. Saved Music / Sound Effects / Vibration settings are applied as loaded. The unlock never changes them.
+- title text vs. background: contrast ratio ≥ 4.5
+- soft text: ≥ 2.6
+- every block color vs. the board: CIE ΔE ≥ 35
+- every arrow vs. its block: ≥ 2.0
 
-**Web playback type: Stream.**
+Block hues and arrows never change, and the ambient layers stay faint (alpha 0.05–0.35).
 
-- `project.godot` sets `audio/general/default_playback_type.web = Stream`. Godot's default for Web is Sample.
-- No `AudioStreamPlayer` node sets its own type; all of them use Default, so they follow this setting.
-- **Stream:** Godot mixes all audio itself and feeds one Web Audio node. This is the path Web exports used before Godot 4.3, and it is well proven on iOS.
-- **Sample:** each sound is a separate Web Audio buffer routed through a JS copy of the bus layout.
-- Why Stream:
-  - Sample mode has open iOS WebKit problems, including page crashes that go away with Stream ([godot#116750](https://github.com/godotengine/godot/issues/116750)).
-  - It also has loop and bus-effect limitations.
-  - In our Chromium test, the Sample path started the music buffer, but it reached the output silent. Stream produced a measurable signal in every case.
-- The cost: mixing runs on the main thread in this single-threaded build. For this light 2D game that's fine. If the audio ever crackles on a slow phone, raise `audio/driver/output_latency.web` (currently 50 ms).
-- The Web export is **single-threaded** (`variant/thread_support=false`) with no GDExtension support and no PWA. It needs no COOP/COEP headers or SharedArrayBuffer, so it runs on itch.io without the "SharedArrayBuffer support" option.
+**How a Chapter is applied** (no stale visuals):
 
-The first tap can be START / CONTINUE / PLAY on the title screen, or any in-game tap.
-
-**Temporary web audio diagnostics** (URL flags; remove before release):
-
-| Flag | Effect |
-|---|---|
-| `?audiodebug=1` | On-screen overlay of the `[CE-Audio]` log. The log itself always goes to the browser console. It covers the platform/browser, the first gesture, the context state before and after each unlock attempt, the `resume()` result, the unlock, the music decision and the SFX test. |
-| `?audiotest=1` | After unlock: a quiet 880 Hz beep straight through Web Audio, then Godot's `coin` sound effect. It also logs whether the audio clock is advancing. It also exposes `window.ceSetSetting(key, on)` for tests. |
-| `?audiomode=sample` | A/B test: forces Godot's SAMPLE playback on every player, i.e. the Godot default the project no longer uses. `?audiomode=stream` forces STREAM, which is the same as the new default. The log shows the playback type in use. |
-
-The page also exposes `window.ceAudio.state()` and `window.chainEscapeAudio` (unlocked / musicPlaying / theme / musicEnabled / sfxEnabled / context / sfxPlayed). To switch the logging off, set `AudioManager.web_audio_debug` to false.
-
-**Testing on an iPhone:**
-
-1. Serve `build/web/` over HTTPS, or over your LAN (for example, `python3 -m http.server` and open `http://<pc-ip>:8000`).
-2. Open `index.html?audiodebug=1&audiotest=1` in Safari.
-3. Tap CONTINUE / PLAY. The overlay should show:
-   - `first user gesture: touchend`
-   - `state before = suspended`
-   - `resume() resolved … running`
-   - `(godot) audio unlocked`
-   - `playback type: STREAM`
-   - `music play attempt: theme w1 (STREAM, context running) -> playing=true`
-   - `SFX play attempt #1: 'coin' (STREAM, context running)`
-   
-   You should then hear a beep, a coin sound and the music.
-4. Repeat with the ringer switch on silent, with Music OFF, and with SFX OFF. Then lock the phone, come back and tap once (an `interrupted` context resumes on that tap).
-5. For the full console, connect the iPhone to a Mac and use Safari → Develop → [iPhone] → the page.
-
-## Worlds
-
-| World | Levels | Name | Look | Music |
-|---|---|---|---|---|
-| 1 | 1–20 | First Light | bright, clean lilac-white, floating bubbles | calm, 92 BPM |
-| 2 | 21–40 | Deep Current | deeper blues, soft wave arcs | rhythmic, 100 BPM |
-| 3 | 41–60 | Ember Ridge | warm coral, stronger contrast, drifting triangles | driving, 108 BPM |
-| 4 | 61–80 | Neon Night | dark indigo, subtle neon lines and diamonds, cyan accent | intense, 116 BPM |
-| 5 | 81–99 | Master's Summit | premium deep teal and gold, twinkling stars, gold accent | advanced, 104 BPM |
-| ★ | 100 | Master Level | black and gold, slow golden rays, "MASTER LEVEL" label | distinct Master theme |
-
-- Only the surroundings change: the background, board and slot tint, HUD text and accent colors, the decoration and the music.
-- **Block colors and arrows never change**, so readability is identical everywhere. On dark Worlds the HUD text switches to light colors automatically.
-- Entering a new World cross-fades the background and music and shows a "WORLD 2 · DEEP CURRENT" banner.
-
-**How World changes are applied (robust against stale visuals):**
-
-- **Mapping:** `Worlds.world_of(n)`: 1–20 → World 1, 21–40 → 2, 41–60 → 3, 61–80 → 4, 81–100 → 5. Level 100 uses the Master theme inside World 5.
-- **Recalculated on every level load.** `GameManager.start_level()` is the single path used by NEXT LEVEL, Level Select, Continue, Replay, Restart, debug jumps and a relaunch. It calls `_apply_world_theme(n)`, which works out the World from the level number and **re-applies every World-specific surface unconditionally**:
-  - background gradient and ambient decoration
+- **Recalculated on every level load.** `GameManager.start_level()` is the single path used by NEXT LEVEL, Level Select, Continue, Replay, Restart, debug jumps and relaunch. It calls `_apply_chapter_theme(n)`, which re-applies **every** Chapter surface unconditionally:
+  - background gradient, decoration and particles (`ChapterBackground`)
   - board and slot tint
-  - HUD text colors
-  - accent colors: chain text, progress bar, NEXT LEVEL and CONTINUE buttons, the coin pill's "+" and the level-complete overlay tint
+  - block material (`Palette.block_style`, re-applied to every block view)
+  - HUD text and accent colors (progress bar, NEXT and CONTINUE buttons, coin pill, chain text)
   - celebration particles
   - the music theme
+- **No leftovers:** the background cross-fade starts from what is on screen and ends by snapping to the exact target. A settle guard snaps even if a fade is interrupted. `ChapterBackground.is_settled()` reports it.
+- **Entering a Chapter** shows a "CHAPTER 4 · EMBER RIDGE" banner and plays a short chime. The HUD line reads `LEVEL NAME · CHAPTER 4 · 5/10`.
+- **Debug:** debug builds print one line per load, for example `[Chapter] level=41 chapter=5 theme=Twilight Grid (id 5, prev 4) music=c05  <- transition`. `GameManager.chapter_state()` returns what is actually applied, and the tests use it.
 
-  Nothing depends on what the previous level showed; only the banner and sound depend on whether the World actually changed.
-- **No leftovers:** the background cross-fade always starts from what is on screen right now. It ends by snapping to the exact target colors, and a settle guard snaps to the target even if a fade is interrupted (for example by tapping NEXT twice quickly). `WorldBackground.is_settled()` reports it.
-- **Distinct late Worlds:** World 4 (indigo neon, cyan accent) and World 5 (deep teal and gold) use clearly different hues, so crossing 80 → 81 is unmistakable.
-- **Debug logging:** debug builds print one line per level load, for example:
+## Music progression
 
-  ```
-  [World] level=81 world=5 theme=Master's Summit (id 5, prev 4) music=w5  <- transition
-  ```
+`tools/generate_music.py` renders the loops from one shared engine (pad, arpeggio, bass, drums and optional layers). Instead of 10 unrelated songs, there are **five harmonic families**, each rendered twice at rising intensity. The second Chapter of a family keeps the harmony and adds tempo, percussion and layers:
 
-  Turn it off with `GameManager.world_log = false`. `GameManager.world_state()` returns what is actually applied (World, theme ids, background settled, board and accent colors, music), and the tests use it.
+| Family | Chapter | Feel | BPM | What changes |
+|---|---|---|---|---|
+| A (C maj7) | c01 | light, welcoming | 88 | soft pad, gentle arpeggio |
+| | c02 | playful | 100 | bouncy bass, syncopated arpeggio, light claps |
+| B (A minor) | c03 | focused | 96 | steady arpeggio, soft 16th hats |
+| | c04 | more rhythmic | 108 | four-on-the-floor, claps, eighth-note bass |
+| C (D minor) | c05 | strategic tension | 100 | suspended chords, bell motif, pulse bass |
+| | c06 | deeper, serious | 94 | lower register, long pad, sub bass, deep kick |
+| D (E minor) | c07 | energetic | 118 | 16th arpeggio, claps, bright timbre |
+| | c08 | advanced | 122 | + counter-melody lead, octave bass |
+| E (B minor) | c09 | intense | 126 | 16th bass, snare fills, double kick |
+| | c10 | master, premium | 112 | majestic pad, bells, shimmer and choir layers |
+| M (C minor) | master | the finale (Level 100) | 84 | bells, choir pad, deep drums, shimmer |
+
+- **Seamless loops:** each is rendered into a circular buffer with a WAV loop point.
+- **Compression:** all are imported as **QOA** (`compress/mode=2` in the `.import` files), which is decoded by Godot's mixer and so works with Web Stream playback. The 11 loops total 1.8 MB, and the Web `.pck` went from 5.3 MB to 2.1 MB.
+- **Clean transitions** (`AudioManager.set_music_theme`): the old theme fades out over 0.8 s, and the new one starts 0.55 s later and fades in over 1.1 s. Only a short tail overlaps, never two full themes. Rapid changes cut cleanly, and the playtest checks that exactly one player remains afterwards.
+- **Ducking:** music ducks under the level-complete, PERFECT, Chapter Complete and Master jingles.
+- **Settings:** Music, Sound Effects and Vibration are saved and restored, and Music and SFX use separate buses.
+- **Real tracks:** to replace a theme, drop `music_<id>.ogg` into `assets/audio/` and point the Chapter's `"music"` at it.
+
+**Mobile Web audio (iOS Safari, verified on device).** The v0.4.x fix is kept exactly. `web/audio_unlock.js` is inlined into the page head through the Web export preset:
+
+1. Before the engine loads, it wraps `AudioContext` so it can see the engine's context.
+2. On every `touchend` / `pointerup` / `mouseup` / `click` / `keydown` until audio runs, and synchronously inside the gesture, it:
+   - sets `navigator.audioSession.type = "playback"` (iOS 17+), so the silent switch doesn't mute the game
+   - plays a silent `<audio>` once on older iOS
+   - calls `resume()` on a suspended or interrupted context and starts a one-frame silent buffer
+   - A failed tap is retried on the next one.
+3. `AudioManager` polls the context. Only when it is **running** after a real gesture does it start the music (if ON) and allow SFX (if ON). This happens once, and music is never restarted.
+4. The Web playback type is **Stream** (`audio/general/default_playback_type.web = Stream`). The export is single-threaded, which is itch.io-compatible and needs no special headers.
+
+v0.5 removed the temporary diagnostics. Only failures are logged: `console.warn` from the page script, plus one `push_warning` if the browser keeps audio blocked after 3 taps. The page still publishes `window.chainEscapeAudio` (unlocked / musicPlaying / musicPos / theme / settings / context / sfxPlayed) and `window.ceAudio.state()/info()` for the automated browser test. These are state only, with no logging.
+
+After editing `web/audio_unlock.js`, run `python3 tools/sync_web_head.py`, then re-export.
+
+**Quick iPhone re-check:** serve `build/web/` over HTTPS or LAN, open it in Safari and tap PLAY. The music should start, and a block tap should click. Repeat with the silent switch on, and after locking and unlocking the phone.
+
+## Silver and Gold blocks
+
+Special **reward blocks** that follow the normal puzzle rules. They are still their color (locks depend on it), keep their arrow, and can be spinners or locked.
+
+| Rarity | Map token | Coins | First appears | In the campaign |
+|---|---|---|---|---|
+| Silver | `$S` | **+5** | Chapter 4 (level 32) | 39 blocks: 5–6 levels in each Chapter from 4 on |
+| Gold | `$G` | **+15** | Chapter 6 (level 51) | 18 blocks: 2–4 levels in each Chapter from 6 on, including 2 on the Master Level |
+| Diamond | `$D` | (40) | reserved | **disabled**; the data model, token and config exist, and no level uses it |
+
+- **Configurable:** coins, the first level and the on/off switch are in `data/economy.json` under `reward_blocks`.
+- **Look:** a thick metallic frame, a gem in the top-left corner (the padlock uses top-right) and a halo in the metal's color. A light sweep crosses the face every few seconds, more often on Gold. Everything sits around the edge, and the arrow is always drawn on top.
+- **Escape:** metal sparkles, an expanding ring and a short chime (Gold is richer). "+5 COINS" / "+15 COINS" pops at the block and flies into the coin counter in about 0.8 s. Nothing pauses, and input is never blocked.
+- **First encounter:** a single line, "Silver Block: let it escape for +5 coins" (and the same for Gold), shown once per save.
+- **Placement:** `tools/place_reward_blocks.gd` places them deterministically from the Chapter plan. Gold goes on a block that is cleared late in a correct solution, so earning it takes planning. Silver goes on one from the second half. Hidden blocks and the final block are never chosen.
+
+### Reward rules (anti-farming)
+
+| Situation | Result |
+|---|---|
+| Escaped by normal play, first time | Pays its coins **immediately** and is saved at once (`reward_blocks` in the save) |
+| Undo, then the same block escapes again | Nothing. It comes back drawn "spent" (a faint frame, no gem or halo). |
+| Restart / Replay / out of hearts / relaunch | Nothing. The block stays "spent" for this save. |
+| **Hammer** smashes it | **No coins** ("Smashed – Silver/Gold coins only pay when a block escapes"). It is not marked collected, so it can still be earned by play later. |
+| Level card | Counts reward coins in the attempt total ("Gold +15"). They are never paid twice. |
+| Level Select | A small gem on each level that still has an uncollected reward block |
+
+## Chapter completion
+
+- **When:** the first time **every level of a Chapter** is cleared. Usually that's the 10th level, but finishing out of order works too. The moment is recorded in `completed_chapters` and **never fires twice**, including after replays and relaunches.
+- **Flow:** the level card's primary button changes to **CONTINUE**, which opens the **Chapter Complete** card. That card's CONTINUE starts the next Chapter, with its banner and new music. If the player replays instead, the card waits for the next NEXT in that Chapter.
+- **The card shows:**
+  - "CHAPTER 4 / COMPLETE! / EMBER RIDGE"
+  - the Chapter's stars as ★ n / 30 with a bar
+  - coins earned in the Chapter, PERFECT levels, and Silver/Gold found
+  - the Chapter chest, whose tiers can be claimed right there
+  - an **UP NEXT** panel in the next Chapter's own colors, with its title and what's new (for example "NEW: Silver Blocks", "NEW: Gold Blocks", "NEW: the Master Level")
+- **Bonus:** +50 coins, once, per Chapter.
+- **Level 100** ends Chapter 10: the Master celebration comes first, then the Chapter 10 card ("More Chapters are coming").
+
+## Chapter rewards (Chapter chest)
+
+Each Chapter has 30 possible stars and **one chest that upgrades** with them. The values are configurable in `data/economy.json` under `chest_tiers`:
+
+| Tier | Stars | Reward |
+|---|---|---|
+| Bronze | 20★ | 25 coins |
+| Silver | 25★ | 50 coins |
+| Gold | 30★ | 90 coins + 1 Hammer |
+
+- Each tier is claimed once, from Level Select or the Chapter card. `Economy.claim_chest()` refuses anything already claimed.
+- The ids are `g<chapter-1>_t<tier>`. These are the same ids the v0.4 chests used, since v0.4 chests were already per 10 levels, so claims carry over.
+- The 25★ and 30★ tiers need near-perfect play. That, plus the Silver/Gold gems in Level Select, gives a reason to replay levels with missing stars.
+
+## Coin economy
+
+`scripts/core/economy.gd` reads every value from **`data/economy.json`**. These are prototype values, meant to be tuned.
+
+| Reward | Coins |
+|---|---|
+| First clear of a level | 3 × Chapter multiplier |
+| Each star earned for the first time | 4 × Chapter multiplier |
+| First PERFECT on a level | 10 × Chapter multiplier |
+| Silver / Gold block (escaped by play, once each) | 5 / 15 |
+| Chapter complete (once) | 50 |
+| Chapter chest (once per tier) | 25 / 50 / 90 + Hammer |
+| Clearing the Master Level | 300 (once, plus the `master` achievement) |
+| Starting grant | 60 coins + 1 Hint booster |
+
+- **Chapter multiplier:** 1.0, 1.1, 1.2, 1.35, 1.5, 1.6, 1.75, 1.85, 2.0, 2.2 for Chapters 1–10. Past that it rises 0.1 per Chapter, capped at 3.0.
+- **Only improvements pay.** Replaying without a new star or first PERFECT pays nothing, and every one-time reward (reward blocks, Chapter bonus, chest tiers, Master) is saved the moment it pays. Nothing can be farmed.
+- **Available in the campaign:** 195 coins from Silver blocks, 270 from Gold, 500 from Chapter bonuses, and up to 1,650 from chests.
+- The coin pill counts up, and tapping it opens the Shop. The level card shows "+N COINS (Clear · +2 stars · Gold +15 …)".
+- **Coins can't be bought** with real money.
+- **Coins per Chapter:** `PlayerProgress.add_coins(amount, chapter)` counts coins *earned* per Chapter for the Chapter card. Spending isn't counted.
+
+## Shop and boosters
+
+- **Shop:** tap the coin pill (or the Hammer button with none owned). Prices are in `data/economy.json`: Hint **30**, Hammer **60**. A purchase fails harmlessly if you can't afford it.
+- **Hint booster:** uses the existing Hint logic (one legal move that keeps the level solvable, highlighted, never played for you). Free hints are used first, then boosters; the badge shows `free+owned`. A booster hint costs −250 points, loses ★★ and PERFECT.
+- **Hammer booster:** tap HAMMER, then a block.
+  - It only works if the level stays solvable (`GameManager.is_hammer_safe`). A rejected smash doesn't use the Hammer.
+  - Limit 1 per level, −400 points, no ★★ and no PERFECT.
+  - **v0.5 rule:** a Hammer never collects a Silver/Gold reward.
+- **Inventory:** boosters are saved, and their counts are shown on the buttons. The Gold chest tier adds a Hammer.
 
 ## Advanced spinner rules
 
@@ -180,205 +253,159 @@ The page also exposes `window.ceAudio.state()` and `window.chainEscapeAudio` (un
 | Alternating | `@~` | ↻ ↺ ↻ ↺ … | 2-dot strip (● ○); the next turn's dot is bigger | Level 35 |
 | Pattern | `@*` | ↻ ↻ ↺, repeat | 3-dot strip (● ● ○); the next turn's dot is bigger | Level 52 |
 
-- **Never random.** A spinner's next turn depends only on its rule and how many turns it has already made (`BlockData.turn_is_cw(rule, step)`).
-- The ring's arrowheads always point the way the **next** turn will go. ALT and PATTERN show their sequence as dots, with the upcoming step enlarged.
-- Undo restores the step counter exactly.
+- **Never random.** A spinner's next turn depends only on its rule and how many turns it has made (`BlockData.turn_is_cw(rule, step)`).
+- The ring's arrowheads always point the way the **next** turn will go, and Undo restores the step counter exactly.
 - The solver includes the sequence position in its memo key, and the unit tests check that the model and solver agree turn by turn.
-- **Introductions keep the curated boards:** levels 31, 35 and 52 kept their layouts, with one spinner each converted to CCW, ALT and PATTERN (chosen so the level stays solvable and passes every rule), plus a one-line hint.
-- From 61 on, spinner types mix; from 71 all four can appear in one puzzle.
 - Mystery arrows are never on spinners, so a spinner's rule is always visible.
-
-## Coin economy
-
-`scripts/core/economy.gd` reads every value from **`data/economy.json`**. These are prototype values, meant to be tuned.
-
-| Reward | Coins (× World multiplier 1.0 / 1.25 / 1.5 / 1.75 / 2.0) |
-|---|---|
-| First clear of a level | 3 |
-| Each star earned for the first time | 4 |
-| First PERFECT on a level | 10 |
-| Completing every level of a World | 100 (once) |
-| Clearing the Master Level | 300 (once, plus the `master` achievement) |
-| Treasure chests | 20 / 40 / 70 per 10-level group |
-| Starting grant | 60 coins + 1 Hint booster |
-
-- **Only improvements pay.** Replaying a level without earning a new star or first PERFECT pays nothing, so easy levels can't be farmed.
-- Better performance pays more (3★ + PERFECT ≫ a plain clear), and harder Worlds multiply the reward.
-- Coins show in a small pill under the settings gear, and count up when they change. Tapping it opens the Shop. The complete card shows "+N COINS" with the reason.
-- **Coins can't be bought** with real money.
-
-## Treasure chests
-
-- The campaign is split into groups of 10 levels (30 possible stars each).
-- Each group has **three chests**: at **20★** (20 coins), **24★** (40 coins) and **27★** (70 coins).
-- Chests appear under each group in Level Select, shining gold when claimable.
-- Claiming records `g<group>_t<tier>` in the save file. `Economy.claim_chest()` refuses anything already claimed, so **a chest can never pay twice**, even after restarts.
-- The thresholds are reachable without perfection and reward going back for missing stars.
-
-## Shop and boosters
-
-- **Shop:** tap the coin pill (or the Hammer button with none owned). It lists the two items with prices, owned counts and BUY buttons, and a purchase fails harmlessly if you can't afford it.
-- Prices are in `data/economy.json`: Hint **30**, Hammer **60**. The Hammer always costs more than the Hint.
-
-**Hint booster**
-
-- It uses the existing Hint logic: one recommended legal move that keeps the level solvable, highlighted, never played for you.
-- The HINT button uses the level's free hints first (0 / 1 / 2 by level band), then Hint boosters from the inventory. The badge shows `free+owned`, for example `1+2`.
-- Hint boosters make hints available in levels 1–19 too.
-- A booster hint counts as a hint: −250 points, no ★★, no PERFECT.
-
-**Hammer booster**
-
-- Tap HAMMER (the board gets a red frame), then tap a block to smash it.
-- **Safety:** before removing anything, the game copies the board, removes the block and asks the solver whether the level is still solvable (`GameManager.is_hammer_safe`).
-  - If not, the smash is **rejected**, the Hammer **isn't consumed**, and the game says why.
-  - If the solver can't decide within its node limit, the smash is also refused.
-- A smashed block leaves like an escape: neighbors turn, reveal or unlock. But it earns no escape points and doesn't extend the chain.
-- **Limited:** 1 Hammer per level (tunable), −400 points, no ★★ and no PERFECT. So it rescues a stuck player without trivializing puzzles.
-- Undo can revert a smash (it's in the history), but the Hammer stays spent.
-
-## Inventory
-
-- Owned boosters are saved (`inventory = {hint, hammer}`), and their counts are shown on the gameplay buttons.
-- Using a booster removes one.
-- With none left:
-  - **Hint** explains gently and pulses the coin pill.
-  - **Hammer** opens the Shop.
-- Neither interrupts play aggressively.
 
 ## 100-level progression
 
-| Levels | Band | What makes it harder |
+Cosmetic progression never replaces puzzle progression. Every Chapter's **average difficulty** must be at least 2.0 above the previous Chapter's, and the verifier fails otherwise:
+
+| Chapter | 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 | 10 |
+|---|---|---|---|---|---|---|---|---|---|---|
+| Avg difficulty | 4.7 | 11.1 | 18.2 | 27.4 | 32.4 | 42.1 | **46.1** | **49.9** | **53.3** | **58.8** |
+| v0.4 | 4.7 | 11.1 | 18.2 | 27.4 | 32.4 | 42.1 | 37.5 | 46.5 | 48.1 | 56.5 |
+
+In v0.4, Chapter 7 (levels 61–70, the CCW/ALT introduction) was *easier* than Chapter 6, and Chapter 9 barely beat Chapter 8.
+
+v0.5 **tuned 34 levels (61–78, 80–95; ▲ in the table)** with `tools/strengthen_levels.gd`:
+
+- **How it tunes:** it hill-climbs each level toward a target using the generator's own mutations: turning an arrow, the spinner trap motif, toggling a spinner, changing a spinner rule within the kinds the level already uses, moving a block, or adding up to 3 blocks.
+- **What's kept:** each level keeps its size, name, mechanics and rule identity. The CCW and ALT introduction levels 61 and 63 stay the gentlest of their Chapter.
+- **What every step must pass:** solvable; ≤ 2 starting moves; depth ≥ 8; ≥ 4 decision points; all four directions, none on more than 45% of blocks.
+- **What the final version must pass:** every mechanic essential or impactful, mystery provably fair, and not similar to another board.
+
+The result: 61–100 now use **fewer obvious first moves** (always ≤ 2), **deeper ordering** (depth 10–25), **more decision points** (11–21), **mixed spinner rules with lock dependencies**, and fair mystery information every 10th level. Level 100 stays the hardest (67.7).
+
+| Levels | Chapter | What makes it harder |
 |---|---|---|
-| 1–20 | onboarding → medium | tap, blocking, chains; spinners (9); mystery (10); locks (16) |
-| 21–40 | medium → hard | lock depth, spinner traps; CCW (31) and ALT (35) spinners |
-| 41–60 | hard | spinner + lock combinations; PATTERN spinner (52); all mechanics at 50 and 60 |
-| 61–70 | very hard | 2 starting moves, a trap at the start, mixed CCW/ALT spinners with locks |
-| 71–80 | advanced | ALT + PATTERN spinners in the same puzzle, 3 locks, 11–15 decision points |
-| 81–90 | expert | 7×7 boards, all four spinner rules together, deep dependency chains |
-| 91–99 | master-level | 15–19 decision points, depth up to 21, difficulty 50–61 |
-| 100 | **Master Level** | 7×7, 7 spinners (4 rules), 3 locks, 3 fair hidden arrows, 21 decision points, highest difficulty (67.7) |
+| 1–10 | 1 · First Light | tap, blocking, chains; spinners (9); mystery (10) |
+| 11–20 | 2 · Sunny Meadow | order and traps; locks (16); lock depth |
+| 21–30 | 3 · Deep Current | spinner traps + lock-only planning boards |
+| 31–40 | 4 · Ember Ridge | CCW (31) and ALT (35) spinners, spinner + lock; **Silver blocks** |
+| 41–50 | 5 · Twilight Grid | spinner + lock combinations, key rings |
+| 51–60 | 6 · Midnight Tide | PATTERN spinner (52), 6×7 boards; **Gold blocks** |
+| 61–70 | 7 · Neon Night | mixed CCW/ALT with locks, a trap at the start, 2 starting moves |
+| 71–80 | 8 · Crimson Circuit | ALT + PATTERN in one puzzle, 3 locks, 12–16 decision points |
+| 81–90 | 9 · Storm Summit | 7×7 boards, all four spinner rules together, deep dependency chains |
+| 91–100 | 10 · Golden Summit | 14–21 decision points, depth up to 25, difficulty 55–68 |
 
-Difficulty comes from dependency depth, decision points, traps, spinner rules, locks and mystery reveals, not block count. Most late levels have 19–25 blocks, similar to level 40.
+**Level 100 – The Master** keeps its unique treatment:
 
-The verifier additionally requires, from level 61:
+- the black-and-gold theme with golden rays and gold dust
+- its own music (bells, choir pad and a shimmer layer)
+- a crown in Level Select
+- "MASTER LEVEL" in place of "LEVEL 100"
+- a 7×7 board with 7 spinners (4 rules), 3 locks and 3 fair hidden arrows
+- **2 Gold and 1 Silver** blocks, placed on blocks cleared late in a correct solution, so no luck is involved
 
-- at most 2 starting moves
-- depth ≥ 8
-- at least 4 decision points (misleading but fair options)
+On completion it gives a quadruple burst, a "MASTER!" stamp, the Master jingle, +300 coins and the `master` achievement, then the Chapter 10 card.
 
-Level 100 must combine 3+ spinner rules, locks and mystery, be fair, and have the highest difficulty score in the campaign.
+**All 100 levels** (✦ = Mystery, 👑 = Master, ▲ = tuned harder in v0.5; from `tools/verify_levels.gd`):
 
-**Level 100 – The Master** has:
-
-- a gold-and-black theme, its own music and a crown in Level Select
-- the label "MASTER LEVEL" in place of "LEVEL 100"
-- on completion: a quadruple celebration burst, a "MASTER!" stamp, the Master jingle, a "MASTER CLEARED!" card, +300 coins and the `master` achievement
-
-**All 100 levels** (✦ = Mystery, 👑 = Master; from `tools/verify_levels.gd`):
-
-| # | W | Name | Size | Blocks | Spinners (rules) | Locks | Hidden | Start | Traps | Decisions | Depth | Diff | Band |
+| # | Ch | Name | Size | Blocks | Spinners (rules) | Locks | Hidden | Start | Traps | Decisions | Depth | Diff | Reward |
 |---|---|---|---|---|---|---|---|---|---|---|---|---|---|
-| 1 | 1 | First Steps | 3×3 | 3 | 0 | 0 | 0 | 3 | 0 | 0 | 1 | 1.5 | Onboarding→medium |
-| 2 | 1 | In The Way | 3×3 | 3 | 0 | 0 | 0 | 1 | 0 | 0 | 2 | 3.1 | Onboarding→medium |
-| 3 | 1 | One After Another | 3×3 | 3 | 0 | 0 | 0 | 1 | 0 | 0 | 3 | 3.8 | Onboarding→medium |
-| 4 | 1 | Around The Corner | 4×4 | 4 | 0 | 0 | 0 | 1 | 0 | 0 | 4 | 4.5 | Onboarding→medium |
-| 5 | 1 | Two Ways In | 4×4 | 6 | 0 | 0 | 0 | 2 | 0 | 0 | 3 | 3.7 | Onboarding→medium |
-| 6 | 1 | Rush Hour | 5×5 | 15 | 0 | 0 | 0 | 6 | 0 | 0 | 5 | 5.2 | Onboarding→medium |
-| 7 | 1 | Crossroads | 5×5 | 9 | 0 | 0 | 0 | 2 | 0 | 0 | 7 | 6.5 | Onboarding→medium |
-| 8 | 1 | Look Closer | 5×5 | 13 | 0 | 0 | 0 | 1 | 0 | 0 | 9 | 8.8 | Onboarding→medium |
-| 9 | 1 | Spinner | 4×4 | 4 | 1 | 0 | 0 | 1 | 0 | 0 | 3 | 4.4 | Onboarding→medium |
-| 10 ✦ | 1 | Hidden Arrow | 4×4 | 5 | 0 | 0 | 1 | 1 | 0 | 0 | 4 | 5.2 | Onboarding→medium |
-| 11 | 1 | Order Matters | 4×4 | 5 | 1 | 0 | 0 | 2 | 1 | 1 | 4 | 7.6 | Onboarding→medium |
-| 12 | 1 | Quarter Turn | 4×4 | 9 | 1 | 0 | 0 | 2 | 0 | 2 | 5 | 9.7 | Onboarding→medium |
-| 13 | 1 | Wrong Way | 4×4 | 11 | 1 | 0 | 0 | 3 | 1 | 2 | 8 | 12.2 | Onboarding→medium |
-| 14 | 1 | Pinwheel | 5×5 | 13 | 2 | 0 | 0 | 1 | 0 | 1 | 10 | 12.3 | Onboarding→medium |
-| 15 | 1 | Tight Squeeze | 4×4 | 10 | 1 | 0 | 0 | 3 | 1 | 3 | 7 | 13.4 | Onboarding→medium |
-| 16 | 1 | Locked | 4×4 | 5 | 0 | 1 | 0 | 2 | 0 | 0 | 4 | 5.0 | Onboarding→medium |
-| 17 | 1 | Second Thoughts | 5×5 | 14 | 2 | 0 | 0 | 2 | 0 | 2 | 11 | 14.5 | Onboarding→medium |
-| 18 | 1 | Key Colors | 4×4 | 9 | 0 | 2 | 0 | 1 | 0 | 0 | 7 | 8.7 | Onboarding→medium |
-| 19 | 1 | Crosswind | 5×5 | 15 | 2 | 0 | 0 | 3 | 0 | 4 | 11 | 17.9 | Onboarding→medium |
-| 20 ✦ | 1 | Fog | 5×5 | 11 | 0 | 0 | 3 | 1 | 0 | 0 | 8 | 9.8 | Onboarding→medium |
-| 21 | 2 | Knots | 5×5 | 13 | 2 | 0 | 0 | 3 | 0 | 6 | 9 | 20.2 | Medium→hard |
-| 22 | 2 | Padlocks | 5×5 | 11 | 0 | 2 | 0 | 1 | 0 | 0 | 11 | 11.3 | Medium→hard |
-| 23 | 2 | Clockwork | 5×5 | 16 | 3 | 0 | 0 | 3 | 1 | 4 | 13 | 20.8 | Medium→hard |
-| 24 | 2 | Combination | 5×5 | 12 | 0 | 3 | 0 | 1 | 0 | 0 | 10 | 11.7 | Medium→hard |
-| 25 | 2 | Gridlock | 6×6 | 20 | 3 | 0 | 0 | 3 | 0 | 4 | 14 | 21.0 | Medium→hard |
-| 26 | 2 | Master Key | 5×5 | 12 | 0 | 3 | 0 | 1 | 0 | 0 | 11 | 12.3 | Medium→hard |
-| 27 | 2 | Domino Line | 5×5 | 13 | 2 | 0 | 0 | 3 | 2 | 7 | 10 | 25.9 | Medium→hard |
-| 28 | 2 | Safe House | 5×5 | 16 | 0 | 2 | 0 | 2 | 0 | 0 | 13 | 12.8 | Medium→hard |
-| 29 | 2 | Traffic Jam | 6×6 | 19 | 4 | 0 | 0 | 2 | 1 | 6 | 14 | 26.6 | Medium→hard |
-| 30 ✦ | 2 | Smoke and Mirrors | 6×6 | 17 | 2 | 0 | 3 | 2 | 1 | 2 | 14 | 19.6 | Medium→hard |
-| 31 | 2 | Twisted Lanes | 6×6 | 15 | 3 (1 CCW) | 0 | 0 | 3 | 1 | 8 | 12 | 27.9 | Medium→hard |
-| 32 | 2 | Vault | 5×5 | 17 | 0 | 4 | 0 | 2 | 0 | 0 | 12 | 13.9 | Medium→hard |
-| 33 | 2 | Hairpin | 5×5 | 19 | 3 | 0 | 0 | 2 | 0 | 7 | 17 | 28.8 | Medium→hard |
-| 34 | 2 | Strongroom | 6×6 | 17 | 0 | 4 | 0 | 1 | 0 | 0 | 16 | 16.8 | Medium→hard |
-| 35 | 2 | Gearbox | 6×6 | 21 | 4 (1 ALT) | 0 | 0 | 2 | 1 | 9 | 13 | 32.6 | Medium→hard |
-| 36 | 2 | Spin the Lock | 6×6 | 15 | 3 | 2 | 0 | 2 | 1 | 6 | 12 | 26.0 | Medium→hard |
-| 37 | 2 | Rush Order | 6×6 | 19 | 4 | 0 | 0 | 2 | 1 | 11 | 13 | 35.5 | Medium→hard |
-| 38 | 2 | Tumblers | 6×6 | 17 | 2 | 2 | 0 | 2 | 0 | 7 | 12 | 26.7 | Medium→hard |
-| 39 | 2 | Labyrinth | 6×6 | 19 | 3 | 0 | 0 | 2 | 1 | 11 | 16 | 36.9 | Medium→hard |
-| 40 ✦ | 2 | Night Shift | 6×6 | 19 | 2 | 0 | 3 | 2 | 0 | 7 | 13 | 28.6 | Medium→hard |
-| 41 | 3 | Gatekeeper | 6×6 | 14 | 3 | 2 | 0 | 2 | 0 | 8 | 10 | 27.4 | Hard |
-| 42 | 3 | Whirlpool | 6×6 | 20 | 4 | 0 | 0 | 2 | 1 | 11 | 17 | 38.1 | Hard |
-| 43 | 3 | Turnstile | 6×6 | 18 | 3 | 2 | 0 | 2 | 1 | 6 | 15 | 28.2 | Hard |
-| 44 | 3 | Chain Reaction | 6×6 | 23 | 5 | 0 | 0 | 2 | 1 | 11 | 17 | 39.5 | Hard |
-| 45 | 3 | Deadbolt | 5×5 | 14 | 3 | 2 | 0 | 2 | 1 | 10 | 13 | 34.0 | Hard |
-| 46 | 3 | Key Ring | 6×6 | 20 | 4 | 3 | 0 | 2 | 1 | 8 | 16 | 34.2 | Hard |
-| 47 | 3 | Grand Tangle | 6×6 | 21 | 3 | 0 | 0 | 2 | 1 | 15 | 14 | 43.5 | Hard |
-| 48 | 3 | Lockstep | 6×6 | 20 | 4 | 2 | 0 | 2 | 1 | 9 | 15 | 34.7 | Hard |
-| 49 | 3 | Long Way Round | 6×6 | 18 | 0 | 3 | 0 | 1 | 0 | 0 | 18 | 17.4 | Hard |
-| 50 ✦ | 3 | Eclipse | 6×6 | 17 | 3 | 1 | 3 | 2 | 0 | 6 | 13 | 26.9 | Hard |
-| 51 | 3 | Great Escape | 6×7 | 25 | 6 | 0 | 0 | 2 | 1 | 14 | 22 | 48.6 | Hard |
-| 52 | 3 | Clockmaker | 6×6 | 22 | 5 (1 PAT) | 3 | 0 | 2 | 1 | 10 | 15 | 39.0 | Hard |
-| 53 | 3 | Escape Room | 6×6 | 20 | 5 | 3 | 0 | 2 | 1 | 10 | 16 | 38.5 | Hard |
-| 54 | 3 | Mechanism | 6×6 | 18 | 4 | 3 | 0 | 2 | 1 | 12 | 16 | 41.5 | Hard |
-| 55 | 3 | Cyclone | 6×7 | 22 | 6 | 0 | 0 | 2 | 1 | 8 | 17 | 33.7 | Hard |
-| 56 | 3 | Pressure | 6×7 | 22 | 5 | 3 | 0 | 2 | 1 | 11 | 17 | 41.3 | Hard |
-| 57 | 3 | Grand Vault | 6×6 | 23 | 5 | 3 | 0 | 2 | 1 | 12 | 17 | 43.4 | Hard |
-| 58 | 3 | Last Lock | 6×6 | 18 | 4 | 2 | 0 | 2 | 1 | 15 | 14 | 45.2 | Hard |
-| 59 | 3 | Final Turn | 6×6 | 21 | 4 | 2 | 0 | 2 | 1 | 16 | 20 | 51.1 | Hard |
-| 60 ✦ | 3 | The Last Secret | 6×6 | 22 | 4 | 2 | 4 | 2 | 0 | 10 | 15 | 38.3 | Hard |
-| 61 | 4 | Neon Gate | 6×6 | 21 | 4 (1 CCW) | 2 | 0 | 2 | 1 | 8 | 17 | 34.4 | Very hard |
-| 62 | 4 | Afterglow | 6×6 | 19 | 4 (2 CCW) | 2 | 0 | 2 | 1 | 9 | 15 | 35.2 | Very hard |
-| 63 | 4 | Static | 6×6 | 17 | 4 (2 CCW, 1 ALT) | 1 | 0 | 2 | 1 | 10 | 13 | 35.4 | Very hard |
-| 64 | 4 | Night Circuit | 6×6 | 17 | 4 (1 CCW) | 2 | 0 | 2 | 1 | 10 | 14 | 35.9 | Very hard |
-| 65 | 4 | Flicker | 6×6 | 20 | 4 (1 CCW, 1 ALT) | 2 | 0 | 2 | 1 | 9 | 16 | 36.2 | Very hard |
-| 66 | 4 | Voltage | 6×6 | 22 | 4 (1 CCW, 1 ALT) | 2 | 0 | 2 | 1 | 8 | 19 | 36.4 | Very hard |
-| 67 | 4 | Backspin | 6×6 | 20 | 4 (1 CCW) | 2 | 0 | 2 | 1 | 11 | 16 | 39.4 | Very hard |
-| 68 | 4 | Glowline | 6×6 | 22 | 4 (2 CCW, 1 ALT) | 2 | 0 | 2 | 1 | 12 | 14 | 41.3 | Very hard |
-| 69 | 4 | Prism | 6×6 | 18 | 3 (2 CCW, 1 ALT) | 2 | 0 | 2 | 1 | 15 | 13 | 45.3 | Very hard |
-| 70 ✦ | 4 | Blackout | 6×7 | 22 | 4 (1 ALT) | 2 | 5 | 2 | 0 | 8 | 14 | 35.1 | Very hard |
-| 71 | 4 | Overdrive | 6×6 | 19 | 5 (2 ALT, 1 PAT) | 3 | 0 | 2 | 1 | 12 | 15 | 43.6 | Advanced |
-| 72 | 4 | Synthwave | 6×6 | 22 | 5 (1 ALT, 1 PAT) | 2 | 0 | 2 | 1 | 12 | 17 | 43.8 | Advanced |
-| 73 | 4 | Pulse Lock | 6×7 | 21 | 5 (1 CCW, 2 ALT, 1 PAT) | 2 | 0 | 2 | 1 | 11 | 20 | 44.4 | Advanced |
-| 74 | 4 | Arcade | 6×7 | 23 | 5 (2 ALT, 1 PAT) | 3 | 0 | 2 | 1 | 11 | 19 | 44.6 | Advanced |
-| 75 | 4 | Relay | 6×6 | 22 | 5 (2 ALT, 1 PAT) | 2 | 0 | 2 | 1 | 12 | 18 | 45.0 | Advanced |
-| 76 | 4 | Dynamo | 6×7 | 20 | 5 (1 ALT, 1 PAT) | 2 | 0 | 2 | 1 | 14 | 15 | 46.1 | Advanced |
-| 77 | 4 | Feedback | 6×6 | 19 | 5 (1 ALT, 1 PAT) | 3 | 0 | 2 | 1 | 15 | 15 | 48.6 | Advanced |
-| 78 | 4 | Wavelength | 6×7 | 19 | 5 (1 CCW, 1 ALT, 1 PAT) | 3 | 0 | 2 | 1 | 15 | 16 | 49.5 | Advanced |
-| 79 | 4 | Hyperloop | 6×7 | 20 | 5 (1 CCW, 2 ALT, 1 PAT) | 2 | 0 | 2 | 1 | 15 | 19 | 51.3 | Advanced |
-| 80 ✦ | 4 | Dark Matter | 6×7 | 21 | 5 (1 CCW, 1 ALT, 1 PAT) | 3 | 4 | 2 | 0 | 13 | 17 | 48.0 | Advanced |
-| 81 | 5 | Summit Path | 6×7 | 23 | 6 (2 CCW, 2 ALT, 1 PAT) | 3 | 0 | 2 | 1 | 11 | 16 | 43.9 | Expert |
-| 82 | 5 | Thin Air | 7×7 | 21 | 5 (1 CCW, 2 ALT, 1 PAT) | 3 | 0 | 2 | 1 | 13 | 15 | 46.0 | Expert |
-| 83 | 5 | Ridge Line | 6×7 | 24 | 6 (1 CCW, 1 ALT, 1 PAT) | 2 | 0 | 2 | 1 | 12 | 20 | 46.7 | Expert |
-| 84 | 5 | Iron Crown | 7×7 | 22 | 6 (1 CCW, 2 ALT, 1 PAT) | 2 | 0 | 2 | 1 | 13 | 18 | 47.7 | Expert |
-| 85 | 5 | Avalanche | 7×7 | 22 | 6 (2 CCW, 1 ALT, 1 PAT) | 3 | 0 | 2 | 1 | 13 | 18 | 48.2 | Expert |
-| 86 | 5 | Glacier | 7×7 | 23 | 6 (1 CCW, 2 ALT, 1 PAT) | 3 | 0 | 2 | 1 | 13 | 18 | 48.6 | Expert |
-| 87 | 5 | Stormwatch | 6×7 | 23 | 6 (1 CCW, 2 ALT, 1 PAT) | 3 | 0 | 2 | 1 | 13 | 19 | 49.2 | Expert |
-| 88 | 5 | High Pass | 6×7 | 27 | 5 (2 CCW, 1 ALT, 1 PAT) | 3 | 0 | 2 | 1 | 13 | 20 | 49.6 | Expert |
-| 89 | 5 | Keystone | 7×7 | 21 | 6 (1 CCW, 1 ALT, 1 PAT) | 3 | 0 | 2 | 1 | 15 | 16 | 50.3 | Expert |
-| 90 ✦ | 5 | Eclipse Peak | 6×6 | 24 | 4 (1 CCW, 1 ALT, 1 PAT) | 3 | 5 | 2 | 0 | 13 | 21 | 51.0 | Expert |
-| 91 | 5 | Grandmaster | 7×7 | 23 | 6 (2 CCW, 2 ALT, 1 PAT) | 3 | 0 | 2 | 1 | 13 | 17 | 50.4 | Master-level |
-| 92 | 5 | Checkmate | 7×7 | 23 | 6 (1 CCW, 1 ALT, 1 PAT) | 3 | 0 | 2 | 1 | 14 | 19 | 50.5 | Master-level |
-| 93 | 5 | Gordian Knot | 7×7 | 27 | 6 (2 CCW, 1 ALT, 1 PAT) | 2 | 0 | 2 | 1 | 13 | 23 | 51.1 | Master-level |
-| 94 | 5 | Clockwork Crown | 7×7 | 26 | 6 (1 CCW, 1 ALT, 2 PAT) | 2 | 0 | 2 | 1 | 14 | 20 | 53.2 | Master-level |
-| 95 | 5 | Paradox | 7×7 | 23 | 5 (1 CCW, 1 ALT, 1 PAT) | 3 | 0 | 2 | 1 | 16 | 19 | 53.8 | Master-level |
-| 96 | 5 | Endgame | 7×7 | 22 | 6 (1 CCW, 2 ALT, 1 PAT) | 3 | 0 | 2 | 1 | 18 | 18 | 58.0 | Master-level |
-| 97 | 5 | Apex | 7×7 | 22 | 6 (1 CCW, 1 ALT, 1 PAT) | 2 | 0 | 2 | 1 | 19 | 18 | 58.5 | Master-level |
-| 98 | 5 | Zenith | 6×7 | 23 | 6 (1 CCW, 1 ALT, 2 PAT) | 3 | 0 | 2 | 1 | 19 | 18 | 61.0 | Master-level |
-| 99 | 5 | Last Light | 6×7 | 25 | 6 (2 CCW, 1 ALT, 1 PAT) | 2 | 0 | 2 | 1 | 19 | 21 | 61.1 | Master-level |
-| 100 👑 | 5 | The Master | 7×7 | 24 | 7 (1 CCW, 2 ALT, 2 PAT) | 3 | 3 | 2 | 1 | 21 | 19 | 67.7 | Master |
+| 1 | 1 | First Steps | 3×3 | 3 | 0 | 0 | 0 | 3 | 0 | 0 | 1 | 1.5 |  |
+| 2 | 1 | In The Way | 3×3 | 3 | 0 | 0 | 0 | 1 | 0 | 0 | 2 | 3.1 |  |
+| 3 | 1 | One After Another | 3×3 | 3 | 0 | 0 | 0 | 1 | 0 | 0 | 3 | 3.8 |  |
+| 4 | 1 | Around The Corner | 4×4 | 4 | 0 | 0 | 0 | 1 | 0 | 0 | 4 | 4.5 |  |
+| 5 | 1 | Two Ways In | 4×4 | 6 | 0 | 0 | 0 | 2 | 0 | 0 | 3 | 3.7 |  |
+| 6 | 1 | Rush Hour | 5×5 | 15 | 0 | 0 | 0 | 6 | 0 | 0 | 5 | 5.2 |  |
+| 7 | 1 | Crossroads | 5×5 | 9 | 0 | 0 | 0 | 2 | 0 | 0 | 7 | 6.5 |  |
+| 8 | 1 | Look Closer | 5×5 | 13 | 0 | 0 | 0 | 1 | 0 | 0 | 9 | 8.8 |  |
+| 9 | 1 | Spinner | 4×4 | 4 | 1 | 0 | 0 | 1 | 0 | 0 | 3 | 4.4 |  |
+| 10 ✦ | 1 | Hidden Arrow | 4×4 | 5 | 0 | 0 | 1 | 1 | 0 | 0 | 4 | 5.2 |  |
+| 11 | 2 | Order Matters | 4×4 | 5 | 1 | 0 | 0 | 2 | 1 | 1 | 4 | 7.6 |  |
+| 12 | 2 | Quarter Turn | 4×4 | 9 | 1 | 0 | 0 | 2 | 0 | 2 | 5 | 9.7 |  |
+| 13 | 2 | Wrong Way | 4×4 | 11 | 1 | 0 | 0 | 3 | 1 | 2 | 8 | 12.2 |  |
+| 14 | 2 | Pinwheel | 5×5 | 13 | 2 | 0 | 0 | 1 | 0 | 1 | 10 | 12.3 |  |
+| 15 | 2 | Tight Squeeze | 4×4 | 10 | 1 | 0 | 0 | 3 | 1 | 3 | 7 | 13.4 |  |
+| 16 | 2 | Locked | 4×4 | 5 | 0 | 1 | 0 | 2 | 0 | 0 | 4 | 5.0 |  |
+| 17 | 2 | Second Thoughts | 5×5 | 14 | 2 | 0 | 0 | 2 | 0 | 2 | 11 | 14.5 |  |
+| 18 | 2 | Key Colors | 4×4 | 9 | 0 | 2 | 0 | 1 | 0 | 0 | 7 | 8.7 |  |
+| 19 | 2 | Crosswind | 5×5 | 15 | 2 | 0 | 0 | 3 | 0 | 4 | 11 | 17.9 |  |
+| 20 ✦ | 2 | Fog | 5×5 | 11 | 0 | 0 | 3 | 1 | 0 | 0 | 8 | 9.8 |  |
+| 21 | 3 | Knots | 5×5 | 13 | 2 | 0 | 0 | 3 | 0 | 6 | 9 | 20.2 |  |
+| 22 | 3 | Padlocks | 5×5 | 11 | 0 | 2 | 0 | 1 | 0 | 0 | 11 | 11.3 |  |
+| 23 | 3 | Clockwork | 5×5 | 16 | 3 | 0 | 0 | 3 | 1 | 4 | 13 | 20.8 |  |
+| 24 | 3 | Combination | 5×5 | 12 | 0 | 3 | 0 | 1 | 0 | 0 | 10 | 11.7 |  |
+| 25 | 3 | Gridlock | 6×6 | 20 | 3 | 0 | 0 | 3 | 0 | 4 | 14 | 21.0 |  |
+| 26 | 3 | Master Key | 5×5 | 12 | 0 | 3 | 0 | 1 | 0 | 0 | 11 | 12.3 |  |
+| 27 | 3 | Domino Line | 5×5 | 13 | 2 | 0 | 0 | 3 | 2 | 7 | 10 | 25.9 |  |
+| 28 | 3 | Safe House | 5×5 | 16 | 0 | 2 | 0 | 2 | 0 | 0 | 13 | 12.8 |  |
+| 29 | 3 | Traffic Jam | 6×6 | 19 | 4 | 0 | 0 | 2 | 1 | 6 | 14 | 26.6 |  |
+| 30 ✦ | 3 | Smoke and Mirrors | 6×6 | 17 | 2 | 0 | 3 | 2 | 1 | 2 | 14 | 19.6 |  |
+| 31 | 4 | Twisted Lanes | 6×6 | 15 | 3 (1 CCW) | 0 | 0 | 3 | 1 | 8 | 12 | 27.9 |  |
+| 32 | 4 | Vault | 5×5 | 17 | 0 | 4 | 0 | 2 | 0 | 0 | 12 | 13.9 | Silver |
+| 33 | 4 | Hairpin | 5×5 | 19 | 3 | 0 | 0 | 2 | 0 | 7 | 17 | 28.8 |  |
+| 34 | 4 | Strongroom | 6×6 | 17 | 0 | 4 | 0 | 1 | 0 | 0 | 16 | 16.8 | Silver |
+| 35 | 4 | Gearbox | 6×6 | 21 | 4 (1 ALT) | 0 | 0 | 2 | 1 | 9 | 13 | 32.6 |  |
+| 36 | 4 | Spin the Lock | 6×6 | 15 | 3 | 2 | 0 | 2 | 1 | 6 | 12 | 26.0 | Silver |
+| 37 | 4 | Rush Order | 6×6 | 19 | 4 | 0 | 0 | 2 | 1 | 11 | 13 | 35.5 |  |
+| 38 | 4 | Tumblers | 6×6 | 17 | 2 | 2 | 0 | 2 | 0 | 7 | 12 | 26.7 | Silver |
+| 39 | 4 | Labyrinth | 6×6 | 19 | 3 | 0 | 0 | 2 | 1 | 11 | 16 | 36.9 |  |
+| 40 ✦ | 4 | Night Shift | 6×6 | 19 | 2 | 0 | 3 | 2 | 0 | 7 | 13 | 28.6 | Silver |
+| 41 | 5 | Gatekeeper | 6×6 | 14 | 3 | 2 | 0 | 2 | 0 | 8 | 10 | 27.4 | Silver |
+| 42 | 5 | Whirlpool | 6×6 | 20 | 4 | 0 | 0 | 2 | 1 | 11 | 17 | 38.1 |  |
+| 43 | 5 | Turnstile | 6×6 | 18 | 3 | 2 | 0 | 2 | 1 | 6 | 15 | 28.2 | Silver |
+| 44 | 5 | Chain Reaction | 6×6 | 23 | 5 | 0 | 0 | 2 | 1 | 11 | 17 | 39.5 |  |
+| 45 | 5 | Deadbolt | 5×5 | 14 | 3 | 2 | 0 | 2 | 1 | 10 | 13 | 34.0 | Silver |
+| 46 | 5 | Key Ring | 6×6 | 20 | 4 | 3 | 0 | 2 | 1 | 8 | 16 | 34.2 | Silver |
+| 47 | 5 | Grand Tangle | 6×6 | 21 | 3 | 0 | 0 | 2 | 1 | 15 | 14 | 43.5 |  |
+| 48 | 5 | Lockstep | 6×6 | 20 | 4 | 2 | 0 | 2 | 1 | 9 | 15 | 34.7 | Silver |
+| 49 | 5 | Long Way Round | 6×6 | 18 | 0 | 3 | 0 | 1 | 0 | 0 | 18 | 17.4 |  |
+| 50 ✦ | 5 | Eclipse | 6×6 | 17 | 3 | 1 | 3 | 2 | 0 | 6 | 13 | 26.9 | Silver |
+| 51 | 6 | Great Escape | 6×7 | 25 | 6 | 0 | 0 | 2 | 1 | 14 | 22 | 48.6 | Gold |
+| 52 | 6 | Clockmaker | 6×6 | 22 | 5 (1 PAT) | 3 | 0 | 2 | 1 | 10 | 15 | 39.0 | Silver |
+| 53 | 6 | Escape Room | 6×6 | 20 | 5 | 3 | 0 | 2 | 1 | 10 | 16 | 38.5 |  |
+| 54 | 6 | Mechanism | 6×6 | 18 | 4 | 3 | 0 | 2 | 1 | 12 | 16 | 41.5 | Silver |
+| 55 | 6 | Cyclone | 6×7 | 22 | 6 | 0 | 0 | 2 | 1 | 8 | 17 | 33.7 |  |
+| 56 | 6 | Pressure | 6×7 | 22 | 5 | 3 | 0 | 2 | 1 | 11 | 17 | 41.3 | Silver + Gold |
+| 57 | 6 | Grand Vault | 6×6 | 23 | 5 | 3 | 0 | 2 | 1 | 12 | 17 | 43.4 |  |
+| 58 | 6 | Last Lock | 6×6 | 18 | 4 | 2 | 0 | 2 | 1 | 15 | 14 | 45.2 | Silver |
+| 59 | 6 | Final Turn | 6×6 | 21 | 4 | 2 | 0 | 2 | 1 | 16 | 20 | 51.1 |  |
+| 60 ✦ | 6 | The Last Secret | 6×6 | 22 | 4 | 2 | 4 | 2 | 0 | 10 | 15 | 38.3 | Silver |
+| 61 | 7 | Neon Gate | 6×6 | 23 | 5 (2 CCW) | 2 | 0 | 2 | 1 | 11 | 18 | 41.9 ▲ | Gold |
+| 62 | 7 | Afterglow | 6×6 | 22 | 5 (3 CCW) | 2 | 0 | 2 | 1 | 13 | 17 | 45.2 ▲ | Silver |
+| 63 | 7 | Static | 6×6 | 17 | 5 (2 CCW, 2 ALT) | 1 | 0 | 2 | 1 | 14 | 10 | 42.2 ▲ |  |
+| 64 | 7 | Night Circuit | 6×6 | 20 | 5 (2 CCW) | 2 | 0 | 2 | 1 | 15 | 15 | 47.2 ▲ | GS |
+| 65 | 7 | Flicker | 6×6 | 24 | 7 (2 CCW, 3 ALT) | 2 | 0 | 2 | 1 | 12 | 17 | 46.1 ▲ |  |
+| 66 | 7 | Voltage | 6×6 | 25 | 5 (2 CCW, 2 ALT) | 2 | 0 | 2 | 1 | 13 | 19 | 47.8 ▲ | Silver |
+| 67 | 7 | Backspin | 6×6 | 20 | 5 (1 CCW) | 2 | 0 | 2 | 1 | 15 | 16 | 47.5 ▲ |  |
+| 68 | 7 | Glowline | 6×6 | 25 | 4 (1 CCW, 2 ALT) | 2 | 0 | 2 | 1 | 14 | 16 | 47.1 ▲ | Silver + Gold |
+| 69 | 7 | Prism | 6×6 | 19 | 4 (2 CCW, 1 ALT) | 2 | 0 | 2 | 1 | 16 | 14 | 48.5 ▲ |  |
+| 70 ✦ | 7 | Blackout | 6×7 | 25 | 5 (2 ALT) | 2 | 5 | 2 | 0 | 12 | 20 | 47.9 ▲ | Silver |
+| 71 | 8 | Overdrive | 6×6 | 21 | 6 (1 ALT, 2 PAT) | 3 | 0 | 2 | 1 | 14 | 15 | 48.4 ▲ | GS |
+| 72 | 8 | Synthwave | 6×6 | 22 | 6 (1 ALT, 1 PAT) | 2 | 0 | 2 | 0 | 15 | 17 | 49.0 ▲ |  |
+| 73 | 8 | Pulse Lock | 6×7 | 24 | 6 (1 CCW, 3 ALT, 2 PAT) | 2 | 0 | 2 | 1 | 12 | 20 | 48.7 ▲ | Silver |
+| 74 | 8 | Arcade | 6×7 | 24 | 6 (2 ALT, 2 PAT) | 3 | 0 | 2 | 1 | 14 | 16 | 50.0 ▲ | Gold |
+| 75 | 8 | Relay | 6×6 | 23 | 5 (1 ALT, 3 PAT) | 2 | 0 | 2 | 1 | 14 | 18 | 50.0 ▲ | Silver |
+| 76 | 8 | Dynamo | 6×7 | 21 | 6 (2 ALT, 2 PAT) | 2 | 0 | 2 | 1 | 15 | 15 | 50.1 ▲ | Silver |
+| 77 | 8 | Feedback | 6×6 | 20 | 5 (2 PAT) | 3 | 0 | 2 | 1 | 16 | 15 | 50.9 ▲ |  |
+| 78 | 8 | Wavelength | 6×7 | 19 | 6 (1 CCW, 1 ALT, 1 PAT) | 3 | 0 | 2 | 1 | 15 | 16 | 50.0 ▲ | Silver + Gold |
+| 79 | 8 | Hyperloop | 6×7 | 20 | 5 (1 CCW, 2 ALT, 1 PAT) | 2 | 0 | 2 | 1 | 15 | 19 | 51.3 |  |
+| 80 ✦ | 8 | Dark Matter | 6×7 | 23 | 6 (1 CCW, 1 ALT, 1 PAT) | 3 | 4 | 2 | 0 | 14 | 17 | 50.7 ▲ | Silver |
+| 81 | 9 | Summit Path | 6×7 | 25 | 7 (2 CCW, 3 ALT, 2 PAT) | 3 | 0 | 2 | 1 | 12 | 17 | 51.0 ▲ | Silver + Gold |
+| 82 | 9 | Thin Air | 7×7 | 22 | 6 (1 CCW, 3 ALT, 2 PAT) | 3 | 0 | 2 | 1 | 15 | 16 | 52.5 ▲ |  |
+| 83 | 9 | Ridge Line | 6×7 | 27 | 7 (1 CCW, 1 ALT, 1 PAT) | 2 | 0 | 2 | 1 | 14 | 21 | 52.0 ▲ | GS |
+| 84 | 9 | Iron Crown | 7×7 | 23 | 7 (2 CCW, 2 ALT, 1 PAT) | 2 | 0 | 2 | 1 | 16 | 17 | 53.8 ▲ |  |
+| 85 | 9 | Avalanche | 7×7 | 24 | 7 (2 CCW, 1 ALT, 2 PAT) | 3 | 0 | 2 | 1 | 15 | 17 | 53.0 ▲ | Silver |
+| 86 | 9 | Glacier | 7×7 | 24 | 7 (3 ALT, 2 PAT) | 3 | 0 | 2 | 1 | 14 | 20 | 53.5 ▲ | GS |
+| 87 | 9 | Stormwatch | 6×7 | 24 | 7 (1 CCW, 3 ALT, 2 PAT) | 3 | 0 | 2 | 1 | 14 | 18 | 54.2 ▲ |  |
+| 88 | 9 | High Pass | 6×7 | 29 | 5 (3 CCW, 1 ALT, 1 PAT) | 3 | 0 | 2 | 1 | 15 | 20 | 54.0 ▲ | GS |
+| 89 | 9 | Keystone | 7×7 | 21 | 7 (1 CCW, 1 ALT, 2 PAT) | 3 | 0 | 2 | 1 | 17 | 15 | 54.9 ▲ |  |
+| 90 ✦ | 9 | Eclipse Peak | 6×6 | 24 | 5 (1 CCW, 2 ALT, 2 PAT) | 3 | 5 | 2 | 0 | 14 | 20 | 54.2 ▲ | Silver |
+| 91 | 10 | Grandmaster | 7×7 | 25 | 7 (1 CCW, 2 ALT, 2 PAT) | 3 | 0 | 2 | 1 | 15 | 17 | 55.9 ▲ | Silver + Gold |
+| 92 | 10 | Checkmate | 7×7 | 26 | 7 (2 CCW, 2 ALT, 2 PAT) | 3 | 0 | 2 | 1 | 15 | 19 | 55.1 ▲ |  |
+| 93 | 10 | Gordian Knot | 7×7 | 30 | 7 (1 CCW, 2 ALT, 2 PAT) | 2 | 0 | 2 | 1 | 14 | 25 | 56.3 ▲ | GS |
+| 94 | 10 | Clockwork Crown | 7×7 | 27 | 7 (1 CCW, 1 ALT, 2 PAT) | 2 | 0 | 2 | 1 | 15 | 20 | 56.5 ▲ |  |
+| 95 | 10 | Paradox | 7×7 | 24 | 6 (1 CCW, 2 PAT) | 3 | 0 | 2 | 1 | 18 | 18 | 57.9 ▲ | Silver |
+| 96 | 10 | Endgame | 7×7 | 22 | 6 (1 CCW, 2 ALT, 1 PAT) | 3 | 0 | 2 | 1 | 18 | 18 | 58.0 | GS |
+| 97 | 10 | Apex | 7×7 | 22 | 6 (1 CCW, 1 ALT, 1 PAT) | 2 | 0 | 2 | 1 | 19 | 18 | 58.5 |  |
+| 98 | 10 | Zenith | 6×7 | 23 | 6 (1 CCW, 1 ALT, 2 PAT) | 3 | 0 | 2 | 1 | 19 | 18 | 61.0 | Silver + Gold |
+| 99 | 10 | Last Light | 6×7 | 25 | 6 (2 CCW, 1 ALT, 1 PAT) | 2 | 0 | 2 | 1 | 19 | 21 | 61.1 |  |
+| 100 👑 | 10 | The Master | 7×7 | 24 | 7 (1 CCW, 2 ALT, 2 PAT) | 3 | 3 | 2 | 1 | 21 | 19 | 67.7 | Silver + 2 Gold |
 
 ## Score rules (`scripts/core/score_rules.gd`)
 
@@ -467,29 +494,41 @@ A PERFECT clear needs **no heart lost** (no blocked or locked tap), **no Undo**,
   - 50–90 and 100: mystery + spinners (including the new rules from 70) + locks
 - In level data it's written `Y>?`. Spinners and locked blocks can't be hidden.
 
-## Level generator (groundwork for 101+)
+## Level generator and levels 101+
 
 ```bash
 godot --headless --path . --script res://tools/generate_levels.gd -- --profile=w5_expert --count=3 --seed=7 [--out=user://generated]
+godot --headless --path . --script res://tools/strengthen_levels.gd -- --targets=62:45 [--steps=1200] [--write]
+godot --headless --path . --script res://tools/place_reward_blocks.gd [-- --write]
 ```
 
 The pipeline:
 
 1. Reverse construction (solvable by design).
-2. Hill-climbing mutations: arrows, spinners, **spinner rules**, locks, colors, hidden arrows.
+2. Hill-climbing mutations: arrows, spinners, spinner rules, locks, colors and hidden arrows.
 3. Solver validation.
-4. Metric rejection: start moves, direction diversity, depth, decision points, start traps, required mechanics and **required spinner rules**.
+4. Metric rejection: start moves, direction diversity, depth, decision points, start traps, and required mechanics and spinner rules.
 5. Repetition filter.
-6. `LevelAnalysis` gate: no decorative mechanic, and every mystery is proven fair.
+6. `LevelAnalysis` gate: no decorative mechanic, and every mystery proven fair.
 
-Profiles:
+**v0.5: Chapters continue past 100.**
 
-- v0.2 and v0.3 profiles, plus `w4_very_hard`, `w4_advanced`, `w5_expert`, `w5_master`, `w_mystery_late` and `master_100`.
-- `LevelGenerator.profile_for_level(n)` maps any level number, including **101+**, to a profile (every 10th is a mystery).
-- `target_difficulty(n)` gives the accepted difficulty band for that slot.
-- `generate_for_level(n)` combines both.
+- `Chapters.chapter_of(n)` is unbounded, and themes for Chapters 11+ come from `data/chapters.json` (`overflow.cycle`). The Chapter multiplier keeps rising, capped.
+- `LevelGenerator.chapter_plan(c)` returns, for any Chapter:
+  - the profile (mechanic mix and rejection rules)
+  - the difficulty band (`chapter_target(c)`: the campaign's measured Chapter averages, +3 per Chapter after 10)
+  - the reward frequency: how many of its 10 levels carry Silver / Gold, with Diamond reserved at 0
+  - the maximum rewards per level
+- `profile_for_level(n)`, `target_difficulty(n)` and `generate_for_level(n)` follow the plan, and every 10th level from 60 on is a mystery.
+- `reward_slots(c, count, phase)` and `assign_reward_blocks(level, silver, gold)` place reward blocks deterministically: Gold late in the solution, Silver in the second half, never on hidden blocks or the last block.
+- `LevelGenerator.classify(level, n)` sorts a level by:
+  - Chapter and difficulty
+  - spinner complexity (0 none, 1 clockwise only, 2 one extra rule, 3 mixed rules)
+  - lock complexity and mystery complexity (0–3)
+  - reward blocks and reward frequency
+  - solvability
 
-Generated levels are written to a separate folder for human curation, never released automatically. Levels 61–100 were produced this way and curated by difficulty; one candidate (difficulty 75.2) was set aside because it was harder than the Master Level.
+Generated levels go to a separate folder for human curation and are never released automatically.
 
 ---
 
@@ -537,120 +576,153 @@ The project uses the **Compatibility** renderer, a portrait orientation and `can
 
 ---
 
----
-
----
-
 ## Automated checks
 
-Run `godot --headless --path . --import` once on a fresh checkout so Godot registers the script classes.
+Run `godot --headless --path . --import` once on a fresh checkout, so Godot registers the script classes and imports the QOA music.
 
 ```bash
 godot --headless --path . --script res://tools/run_tests.gd        # unit tests
 godot --headless --path . --script res://tools/verify_levels.gd    # 100-level analysis + campaign rules
-godot --headless --path . res://tools/Playtest.tscn                # end-to-end play-through
+godot --headless --path . res://tools/Playtest.tscn                # end-to-end play-through (-- --chapters-only for the v0.5 part)
 godot --headless --path . --export-release "Web" build/web/index.html && node tools/web_audio_test.mjs   # real browser
+xvfb-run godot --path . res://tools/Capture.tscn -- --gallery=5,15,25,36,45,56,64,78,86,96,100 --out=/tmp/shots   # screenshots
 ```
 
-**Unit tests** (`run_tests.gd`) cover everything since v0.1, plus:
+**Unit tests** (`run_tests.gd`) cover everything since v0.1. v0.5 adds:
 
-- spinner rule sequences (fixed, never random) and exact undo inverses
-- the model and solver agreeing turn by turn on every typed-spinner level
-- **save migration** v1→v2, unknown keys preserved, the save version, and the damaged-file fallback
-- coin rewards (only improvements pay; harder Worlds pay more)
-- chests: a threshold, pay-once, and still unclaimable twice after a restart
-- the Shop: prices, affordability, inventory persistence
-- **Hammer safety** on real states from 7 levels: every accepted smash replays to an empty board, and unsafe smashes are detected
-- the World and music mapping, and generator profiles for 101+
-- hint safety across all 100 levels
+- **Chapters:** the boundaries 10/11 … 91–100 and 101+/111+; 10 distinct theme ids, music identities, decorations and block styles; block finish growing Chapter by Chapter; every music file present; the Master theme; the overflow themes for Chapter 11 and 12.
+- **Readability of every theme:** text contrast ≥ 4.5 (≥ 2.6 soft), every block color vs. the board ΔE ≥ 35, and every arrow on its block.
+- **Reward blocks:**
+  - the `$S` / `$G` / `$D` tokens, combined with other modifiers
+  - the round trip through JSON and the explicit block format
+  - rarity never changes the rules
+  - Silver +5 and Gold +15, Diamond disabled
+- **Anti-farming:** each block pays once, including after a repeat escape and a relaunch; rewards are counted per level; reward coins count toward the Chapter total.
+- **Chapter complete** fires and pays once, and persists.
+- **Chapter chest:** tiers at 20 / 25 / 30, upgrade level, the Hammer item, never duplicated, persisted, and v0.4 chest ids kept.
+- **Save migration v2 → v3** from a real v0.4 file (see *Compatibility*).
+- **Generator for 101+:**
+  - Chapter targets rising through Chapter 15
+  - the Chapter plan: Silver from Chapter 4, Gold from Chapter 6, no Diamond
+  - reward slots stay inside their Chapter
+  - `classify()` on levels 5 and 100
+  - reward placement on a generated level survives JSON and keeps it solvable
 
-**Playtest** (`Playtest.tscn`) clears **all 100 levels** through the real scene with injected touches. Per level it does a blocked tap, a hint where allowed, an Undo, a solver-driven clear, and checks the complete card with score, stars and coins. It also runs these scenarios:
+**Level verifier** (`verify_levels.gd`): all v0.4 campaign rules, plus the rising Chapter averages and the reward-placement rules (the first level for each rarity, at most 2 per level, 3 on the Master Level, no disabled rarity).
 
-- **Web audio gate**, simulated in-engine.
-- **World transitions**, through every entry point:
-  - **NEXT LEVEL** across 20→21, 40→41, 60→61, 80→81 and 99→100
-  - the same pairs via **Level Select** and **debug jumps** (also backwards: 100→99, 81→80, 61→60, 95→5, 5→95)
-  - **Replay** in each World
-  - **rapid** transitions that interrupt the cross-fade (79→80→81; 80→81→61→90)
-  - **Continue** after a real relaunch (levels 57 and 81)
+**Playtest** (`Playtest.tscn`) clears **all 100 levels** through the real scene with injected touches: a blocked tap, a hint, an Undo and a solver-driven clear per level. It also runs these scenarios:
 
-  After each one settles, the test checks the calculated World, the GameManager, background and UI theme ids, the exact background colors and decoration color, the board tint, the accent (progress bar, coin pill, particles) and the music theme. Nothing may be left from the previous World.
-- **Level Select:** grouped into 5 Worlds.
-- **Shop and Hammer:** an empty inventory opens the Shop, coins are spent, an unsafe smash is rejected and not consumed, a safe smash works, one per level, and no PERFECT.
-- **Hint booster** when no free hints are left.
-- **Coins:** paid for a first clear, nothing for a replay.
-- **Chests:** a claim can't be duplicated and is persisted.
-- **Master Level:** the achievement is recorded.
-- **Relaunch:** a genuine restart. The game is freed and rebuilt from the save file, the title shows **CONTINUE – LEVEL 57**, and coins, boosters, stars, bests, chests, Worlds and settings are all restored.
-- The v0.3 scenarios: PERFECT, bests, Replay, Undo/Hint limits, locks, mystery, hearts, Restart and a trap.
+- **Chapter transitions** 10→11, 20→21, 30→31, 40→41, 50→51, 60→61, 70→71, 80→81, 90→91 and 99→100, through:
+  - **NEXT LEVEL** and **Level Select**
+  - **Replay** and **Restart** (levels 11, 31, 51, 71, 91 and 100)
+  - **debug jumps**, including backwards and across Chapters
+  - **rapid** transitions that interrupt the fades (39→40→41, 70→71→61→90)
+  - **Continue** after a real relaunch (57 and 81)
 
-**Web audio test** (`tools/web_audio_test.mjs`): the exported Web build in Chromium with the strict `document-user-activation-required` autoplay policy. It runs these cases:
+  With music ON, it checks after each one:
+  - the calculated Chapter and every theme id
+  - the exact background colors, decoration and particle colors
+  - the board tint and accent (progress bar, coin pill)
+  - the block material, on the `Palette` and on **every real block view**
+  - the music theme, with exactly one player left playing
 
-- mobile emulation (touch), first visit
+  It also checks the HUD's "CHAPTER n · k/10" line and Level Select's 10 Chapter groups.
+- **Silver (level 32) and Gold (level 51):**
+  - the one-time tip
+  - +5 / +15 paid on escape, and "+N COINS" flying to the counter, which then updates
+  - **Undo** brings the block back spent and pays nothing again
+  - **Restart** shows it spent and pays nothing
+  - the level card counts the Gold
+  - **Hammer** on a Gold block pays nothing, doesn't mark it collected, and it can still be earned by play after a Restart
+  - persisted to disk
+- **Chapter complete:**
+  - clearing level 30 completes Chapter 3, the card says so, and the button reads CONTINUE
+  - the card shows stars / 30 and previews "CHAPTER 4 · EMBER RIDGE" with "NEW: Silver Blocks"
+  - chest tiers are claimed from the card, never twice
+  - CONTINUE starts Chapter 4 (fully applied)
+  - clearing level 30 again fires nothing, and NEXT goes straight on
+  - persisted to disk
+- **Relaunch:** CONTINUE – LEVEL 57, and the title shows "CHAPTER 6 · MIDNIGHT TIDE". Coins, boosters, stars, bests, chests, **completed Chapters and collected reward blocks** are all restored.
+- The v0.4 scenarios: web audio gate, Shop / Hammer, Hint booster, coins, chests and the Master Level. The v0.3 scenarios: PERFECT, bests, Replay, Undo/Hint limits, locks, mystery, hearts, Restart and a trap.
+
+**Web audio test** (`tools/web_audio_test.mjs`, real Chromium, strict autoplay policy). The game has **no test hooks**: the test taps the screen, reads `window.chainEscapeAudio` and measures the **real output signal** through an analyser on the audio destination. It runs these cases:
+
+- mobile first visit
 - returning player with Music ON
-- Music OFF and SFX OFF, each changed through the game's settings handler, synced to IndexedDB and reloaded
-- an iOS-like case where the engine's context is forced to start **suspended**
-- desktop with a mouse click
+- Music OFF and SFX OFF, set by editing the real save file in IndexedDB from a same-origin page, then reloading
+- an iOS-like context forced to start **suspended**
+- desktop mouse
 
 Each case checks:
 
-- no music and no SFX before the first gesture
+- nothing unlocked and silent output before the first gesture
 - the saved settings are restored
-- the context is running after one tap
-- Godot unlocks only then
-- music plays or stays off to match the setting
-- the SFX test runs or is skipped to match the setting
-- the `[CE-Audio]` log sequence is complete
-- extra taps don't restart anything
-- the output is silent (analyser peak 0) before the tap, and the music signal really reaches the output after it (STREAM)
-- the logged playback type
+- the context is running after one tap, and `resume()` ran inside the gesture (suspended case)
+- the music signal reaches the output, and the output stays silent with Music OFF
+- later taps never restart the music (its playback position keeps running)
+- the RESTART click plays a sound effect and reaches the output, or is silent with SFX OFF
+- **no `[CE-Audio]` logging and no test hooks** (`ceSetSetting`, `testTone`) remain
 
-An extra A/B case runs with `?audiomode=sample`.
-
-**Current results (v0.4):**
+**Current results (v0.5):**
 
 | Check | Result |
 |---|---|
-| Unit tests | `UNIT TESTS PASSED`: 9,423 checks, 0 failures |
-| Level verifier | `ALL 100 LEVELS SOLVABLE AND PASS CAMPAIGN RULES`. All 10 mystery levels are proven fair. Level 100 is the hardest (67.7). Levels 31, 35 and 52 still pass after their spinner-rule changes. |
-| Playtest | `PLAYTEST PASSED`: all 100 levels cleared through real touch input, plus 17 scenarios (save/continue relaunch, Worlds and music, web audio gate, coins, chests, Shop, Hammer, Hint booster, Master Level, and the v0.3 systems) |
-| Web audio (real browser) | `WEB AUDIO TEST PASSED`: 139 checks on the exported Web build (Chromium with strict autoplay): mobile first visit, returning player with Music ON / Music OFF / SFX OFF, a suspended (iOS-like) context, a Sample-mode A/B case, and desktop mouse. The music signal is measured at the output. |
-| Rendering | Screenshots at 720×1280 of the title, all 5 Worlds, the Master Level, the Shop and a World-grouped Level Select |
+| Unit tests | `UNIT TESTS PASSED`: 10,029 checks, 0 failures |
+| Level verifier | `ALL 100 LEVELS SOLVABLE AND PASS CAMPAIGN RULES`. Chapter difficulty rises C1 4.7 … C6 42.1, C7 46.1, C8 49.9, C9 53.3, C10 58.8. Level 100 is the hardest (67.7). All mystery levels are fair. There are 39 Silver and 18 Gold blocks, all within the placement rules. |
+| Playtest | `PLAYTEST PASSED`: all 100 levels cleared through real touch input, plus the Chapter transitions (10 boundaries × NEXT / Level Select / Replay / Restart / debug / rapid / relaunch, with music on), Silver/Gold rewards and anti-farming, Chapter Complete + chest, and every v0.3/v0.4 scenario |
+| Web audio (real browser) | `WEB AUDIO TEST PASSED`: 75 checks (Chromium, strict autoplay). Covers mobile first visit, returning player with Music ON / Music OFF / SFX OFF, a suspended (iOS-like) context and desktop mouse. The real output signal is measured, and it confirms no debug logging and no test hooks remain. |
+| Rendering | Screenshots at 720×1280 of one level from every Chapter and the Master Level, Silver/Gold blocks on light and dark Chapters, the Chapter Complete card and the Chapter-grouped Level Select |
 
 The tests write progress to separate files (`user://test_*.cfg`, `user://playtest_progress.cfg`), never to the player's save.
+
+## Compatibility
+
+- **v0.4 saves (v2)** load and migrate to v3 automatically. Nothing is lost:
+  - progress, bests, stars, PERFECTs, coins, inventory, settings and achievements are kept
+  - **completed Worlds 1–5 become Chapters 1–10 complete** (two each). Their World bonus was already paid, so no second bonus, and no old "Chapter Complete" card fires.
+  - a Chapter that was fully cleared inside an unfinished World never paid anything, so it gets its +50 once, silently, and is marked complete
+  - **chests:** v0.4 chests were already per 10 levels with the same ids, so every claimed tier stays claimed. The old 24★ / 27★ claims count as the new 25★ / 30★ tiers, so no tier pays twice.
+  - reward blocks start uncollected, so returning players can earn them on replays
+- **v0.3 saves (v1)** still migrate: v1 → v2 (starting coins, PERFECT from 3★), then v2 → v3.
+- **Tuned levels 61–78 and 80–95** kept their names, sizes and mechanics. Stars and best scores earned on the old versions are kept (they never go down). The 3-star score target follows the new layout.
+- **Economy retune:** Chapter multipliers replace World multipliers, the Chapter bonus (+50 per 10 levels) replaces the World bonus (+100 per 20), and the chest tiers moved to 20 / 25 / 30.
+- **Removed:** `scripts/core/worlds.gd` (replaced by `Chapters` + `data/chapters.json`), the `music_w1..w5` loops (replaced by `music_c01..c10`), and the temporary web-audio debug flags.
 
 ---
 
 ## Project structure
 
 ```
-data/economy.json             Tunable economy (prices, rewards, chest tiers, hammer limit)
-levels/level_01..100.json     Level data (map tokens: @ @- @~ @* spinners, ? hidden, #K locked)
-assets/audio/music_*.wav      Six generated music themes (w1..w5, master)
-export_presets.cfg            Web export preset
+data/economy.json             Tunable economy (prices, rewards, Chapter multipliers, chest tiers, reward blocks)
+data/chapters.json            Chapter themes: colors, decoration, particles, music, block material, 101+ overflow
+levels/level_01..100.json     Level data (map tokens: @ @- @~ @* spinners, ? hidden, #K locked, $S $G reward)
+assets/audio/music_*.wav      Eleven generated music loops (c01..c10, master), imported as QOA
+export_presets.cfg            Web export preset (single-threaded, head include = web/audio_unlock.js)
 scripts/
-  game_manager.gd             Orchestration: title/continue, worlds, rules, history, hearts, limits,
-                              score, stars, coins, chests, shop, boosters, master level
+  game_manager.gd             Orchestration: title/continue, Chapters, rules, history, hearts, limits,
+                              score, stars, coins, reward blocks, Chapter complete, chests, shop, boosters
   core/
-    block_data.gd             Block data incl. spinner rule + step (deterministic turns)
+    chapters.gd               Chapter mapping (unbounded) + themes from data/chapters.json
+    block_data.gd             Block data incl. spinner rule + step, reward rarity
     board_model.gd            Rules: lanes, spinners, locks, hidden arrows, snapshots
-    solver.gd                 Search solver (spinner rules in the memo key), hints, analysis, fairness
+    solver.gd                 Search solver, hints, analysis, fairness
     level_analysis.gd         Mechanic impact + fairness report
-    level_generator.gd        Generator: profiles, spinner rules, 101+ mapping, target difficulty
-    economy.gd                Coin rewards, chests, shop (reads data/economy.json)
-    player_progress.gd        Versioned save v2: migration, atomic write, backup
-    worlds.gd                 World themes + Master theme
+    level_generator.gd        Generator: profiles, Chapter plan, targets, reward placement, classify
+    economy.gd                Coins, reward blocks, Chapter chests + milestone, shop (reads data/economy.json)
+    player_progress.gd        Versioned save v3: migration, atomic write, backup
     score_rules.gd / level_manager.gd / level_data.gd / direction.gd / history.gd
-    board.gd / block_view.gd  Board + blocks (spinner rule badges, hammer smash, locks, reveals)
+    board.gd / block_view.gd  Board + blocks (Chapter material, Silver/Gold frame, gem, halo, sweep)
   ui/
-    ui_manager.gd             HUD, 4-button bar, coin pill, world banner, cards, stamps, settings
-    title_screen.gd           CONTINUE - LEVEL X / PLAY + LEVEL SELECT
-    level_select.gd           World-grouped grid, chest rows, Mystery marker, Master crown
-    shop_panel.gd / coin_pill.gd / world_background.gd
-    stars_row.gd / shapes.gd / hearts_bar.gd / pill_button.gd / progress_bar.gd / tutorial_hint.gd / palette.gd
-  audio/ audio_manager.gd (themes, cross-fades, web unlock), haptics.gd
+    ui_manager.gd             HUD, 4-button bar, coin pill + flying coins, Chapter banner, cards, settings
+    chapter_card.gd           Chapter Complete card (stars /30, coins, chest, next-Chapter preview)
+    chapter_background.gd     Gradient + ambient decoration + particles per Chapter
+    title_screen.gd           CONTINUE - LEVEL X (+ Chapter) / PLAY + LEVEL SELECT
+    level_select.gd           Chapter-grouped grid, chest tiers, Mystery marker, reward gems, Master crown
+    shop_panel.gd / coin_pill.gd / stars_row.gd / shapes.gd / hearts_bar.gd / pill_button.gd /
+    progress_bar.gd / tutorial_hint.gd / palette.gd (incl. block material + metals)
+  audio/ audio_manager.gd (Chapter themes, sequential fades, web unlock), haptics.gd
 tools/ run_tests.gd, verify_levels.gd, Playtest.tscn, Capture.tscn, generate_levels.gd,
-       generate_music.py, web_audio_test.mjs, sync_web_head.py
+       strengthen_levels.gd, place_reward_blocks.gd, generate_music.py, web_audio_test.mjs, sync_web_head.py
 web/   audio_unlock.js (page-level Web Audio unlock, inlined via export_presets.cfg)
 ```
 
@@ -664,7 +736,9 @@ web/   audio_unlock.js (page-level Web Audio unlock, inlined via export_presets.
     │                        ├──► UIManager   (hearts, chain, progress, cards, settings)
     └────────────────────────┤◄── UIManager signals: undo / hint / restart / next / setting
                              ├──► AudioManager (autoload: Music + SFX buses) + Haptics
-                             ├──► PlayerProgress (ConfigFile: progress, bests, stars, settings)
+                             ├──► Chapters (data/chapters.json) → ChapterBackground, Board, UI, music
+                             ├──► Economy (data/economy.json: coins, reward blocks, chests, milestones)
+                             ├──► PlayerProgress (ConfigFile v3: progress, bests, stars, rewards, settings)
                              ├──► ScoreRules (score, PERFECT, stars)
                              └──► TutorialHint, DebugPanel
 ```
@@ -675,6 +749,7 @@ web/   audio_unlock.js (page-level Web Audio unlock, inlined via export_presets.
 - **Locks and mystery in the model.** `BoardModel.move_state(id)` returns `ok`, `blocked`, `locked` or `hidden`. `remove()` reports turned spinners, `last_revealed` and `last_unlocked`, so the Board can animate them.
 - **Grid, not pixels.** The board fits any rows × columns. 3×3 up to 6×7 are in use.
 - **Logic first, animation second.** A tap updates the model immediately and the animation follows, so fast chains are never throttled.
+- **Rewards never touch the rules.** Rarity is data on `BlockData` that `BoardModel` and the `Solver` ignore. `GameManager._escape()` asks `Economy.collect_reward_block()`, which pays once and saves at once; `_smash()` never asks. So Undo snapshots, Restart and the solver need no reward state, and farming is impossible by construction.
 - **Chain system.** Unchanged: consecutive escapes without a blocked tap. As the chain grows, the pitch climbs a pentatonic scale, the text grows, the particles strengthen and exits get faster. Finishing a level with no blocked taps shows **PERFECT CHAIN!**
 
 ## Level format
@@ -699,7 +774,7 @@ One JSON file per level: `levels/level_NN.json`, discovered by number.
 }
 ```
 
-Each cell is `.` (empty) or a color letter + arrow, then optional modifiers in this order: `@` spinner (`@` clockwise, `@-` counter-clockwise, `@~` alternating, `@*` pattern), `?` hidden arrow (mystery), `#K` locked by color K. For example: `B>`, `R^@`, `R^@~`, `Y<?`, `G>#P`, `B>@*#R`.
+Each cell is `.` (empty) or a color letter + arrow, then optional modifiers in this order: `@` spinner (`@` clockwise, `@-` counter-clockwise, `@~` alternating, `@*` pattern), `?` hidden arrow (mystery), `#K` locked by color K, `$R` reward rarity (`$S` Silver, `$G` Gold, `$D` Diamond, reserved). For example: `B>`, `R^@`, `R^@~`, `Y<?`, `G>#P`, `B>@*#R`, `Y^#B$S`, `G^@~$G`.
 
 - Colors: `R` red, `B` blue, `G` green, `Y` yellow, `P` purple.
 - Arrows: `^` up, `v` down, `<` left, `>` right.
@@ -708,7 +783,7 @@ Each cell is `.` (empty) or a color letter + arrow, then optional modifiers in t
 
 ```json
 { "rows": 4, "columns": 4,
-  "blocks": [ { "row": 1, "column": 2, "color": "red", "direction": "up", "spinner": true, "spin": "alt", "lock": "green", "hidden": false } ] }
+  "blocks": [ { "row": 1, "column": 2, "color": "red", "direction": "up", "spinner": true, "spin": "alt", "lock": "green", "hidden": false, "rarity": "gold" } ] }
 ```
 
 Optional level keys:
@@ -722,23 +797,20 @@ Optional level keys:
 
 ## Known limitations
 
-- **Real iOS Safari, WebKit and Edge were not tested here.**
-  - The WebKit engine download is blocked in the build environment, and Edge isn't installed. Edge shares the Chromium engine that was tested.
-  - The iOS path (a suspended context resumed inside the gesture) is exercised in Chromium by forcing the context to start suspended.
-  - The iOS-only parts (`navigator.audioSession`, the silent-`<audio>` fallback, the silent switch and the `interrupted` state) need a real iPhone. Use the checklist in *Music system*.
-- **Web saves** live in the browser's IndexedDB (`user://`). Clearing site data or private browsing loses progress. There are no accounts or cloud sync (not in scope).
+- **Real devices:** the iOS Safari audio fix was verified on an iPhone (v0.4.x), and v0.5 keeps that mechanism unchanged. The v0.5 build itself was tested in Chromium (mobile emulation, touch, strict autoplay, and a forced-suspended context). WebKit and Edge can't run in this build environment; Edge uses the Chromium engine that was tested. Please re-check on an iPhone: the first tap starts the music, and a Chapter change fades the music cleanly.
+- **Stream playback mixes on the main thread** in the single-threaded Web build. If the frame rate collapses, the music can stutter. In this environment's software-rendered browser, v0.4 and v0.5 run at the same frame rate, and v0.5 draws its background gradient in a single call. On real phones the GPU does this work.
+- **Web saves** live in the browser's IndexedDB. Clearing site data or private browsing loses progress. There are no accounts or cloud sync (not in scope).
 - **Economy values are first guesses** (`data/economy.json`), not tuned with players.
-- **Locks depend on color.** The padlock, the key blocks' hop and the solver make them readable, but color-blind players may still find some lock boards harder. A symbol-per-color option is future work.
-- **Generated levels (18–100) were curated by metrics and screenshots**, not by human playtests. Worlds 4–5 are long, planning-heavy boards (19–27 blocks, depth up to 24).
+- **Levels 61–95 were tuned by metrics**, with every rule re-verified, but not by human playtests. Late Chapters are long, planning-heavy boards (19–30 blocks, depth up to 25).
+- **Locks depend on color.** Silver/Gold keep the block's color, so lock readability is unchanged. A symbol-per-color option is still future work.
 - **Mystery fairness** is proven along the solver's solution line, not for every possible detour.
-- **Level renumbering:** v0.3 kept levels 1–60 in place, so v0.3 saves carry over cleanly. Only levels 31, 35 and 52 changed: one spinner each became a new rule.
-- **Placeholder audio.** Music and sound effects are generated placeholders. The UI uses the system font.
+- **Placeholder audio and art.** The music and sound effects are generated, and the UI uses the system font.
 - **Headless runs print an exit warning** about leaked audio resources. It comes from the dummy audio driver and is harmless.
 
 ## Recommended next steps
 
-1. **Playtest v0.4 on real phones and mobile browsers.** Check the title → Continue flow, the first-tap music, whether the World changes feel like progress, and how often players use the Hammer.
-2. **Tune the economy** (`data/economy.json`) from real coin income and spending, and consider more booster types only if they add fun.
-3. **Human-curate Worlds 4–5**: re-order or replace boards that feel grindy.
-4. **Real music and SFX** per World (drop-in `music_w*.ogg`).
-5. **Then** the future phases: Daily Challenge (the generator's `generate_for_level` and a date seed), leaderboards, and store billing.
+1. **Playtest v0.5 on real phones:** do Chapter changes feel like "somewhere new"? Is Gold exciting, and is Silver too frequent? Do players replay for the 25★ / 30★ chest tiers?
+2. **Tune the economy** from real coin income: reward-block values, chest tiers and Chapter multipliers are all in `data/economy.json`.
+3. **Real music per Chapter family**, dropped in as `music_cNN.ogg`.
+4. **Chapter 11+:** add hand-made themes to `data/chapters.json`, generate with `generate_for_level(n)`, place rewards with `place_reward_blocks.gd`, and curate.
+5. **Then** the next phase: Daily Challenge, leaderboards and store billing (deliberately not in v0.5).

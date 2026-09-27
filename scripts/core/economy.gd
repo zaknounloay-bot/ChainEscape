@@ -1,8 +1,12 @@
 class_name Economy
 extends RefCounted
-## Soft-currency rules: coin rewards, treasure chests and the booster shop.
-## Every number comes from res://data/economy.json so the economy can be
-## tuned without touching code. Coins are never bought with real money.
+## Soft-currency rules: coin rewards, Silver/Gold reward blocks, Chapter
+## chests, Chapter milestones and the booster shop. Every number comes from
+## res://data/economy.json so the economy can be tuned without touching
+## code. Coins are never bought with real money.
+##
+## Anti-farming is a rule of every reward here: something pays only the
+## FIRST time it is earned, and that fact is saved immediately.
 
 const CONFIG_PATH := "res://data/economy.json"
 
@@ -20,18 +24,24 @@ static func price(item: String) -> int:
 	return int(config()["prices"][item])
 
 
-static func world_of(level_number: int) -> int:
-	return clampi((level_number - 1) / 20 + 1, 1, 5)
+## Level-reward multiplier for a Chapter (1-based). Chapters past the table
+## keep rising by "step" up to "max".
+static func chapter_multiplier(chapter: int) -> float:
+	var table: Array = config()["chapter_multiplier"]
+	if chapter <= table.size():
+		return float(table[maxi(chapter, 1) - 1])
+	var extra := (chapter - table.size()) * float(config().get("chapter_multiplier_step", 0.1))
+	return minf(float(table[-1]) + extra, float(config().get("chapter_multiplier_max", 3.0)))
 
 
 ## Coins for finishing a level. Only IMPROVEMENTS pay: a first clear, each
-## star earned for the first time, the first PERFECT. Harder worlds pay
+## star earned for the first time, the first PERFECT. Later Chapters pay
 ## more. Replaying without improving pays nothing, so easy levels can't be
 ## farmed. Returns {"coins": int, "lines": Array[String]}.
 static func level_reward(level_number: int, first_clear: bool, prev_stars: int, stars: int,
 		first_perfect: bool) -> Dictionary:
 	var r: Dictionary = config()["rewards"]
-	var mult: float = config()["world_multiplier"][world_of(level_number) - 1]
+	var mult := chapter_multiplier(Chapters.chapter_of(level_number))
 	var base := 0
 	var lines: Array[String] = []
 	if first_clear:
@@ -47,49 +57,82 @@ static func level_reward(level_number: int, first_clear: bool, prev_stars: int, 
 	return {"coins": int(round(base * mult)), "lines": lines}
 
 
-# --- Treasure chests -------------------------------------------------------
+# --- Reward blocks (Silver / Gold) ------------------------------------------
 
-static func group_count(total_levels: int) -> int:
-	return int(ceil(total_levels / float(config()["chest_group_size"])))
+## Coins a rarity pays (0 for normal blocks and disabled rarities).
+static func reward_block_coins(rarity: int) -> int:
+	if rarity <= BlockData.Rarity.NORMAL:
+		return 0
+	var cfg: Dictionary = config().get("reward_blocks", {}).get(BlockData.RARITY_NAMES[rarity], {})
+	if not bool(cfg.get("enabled", false)):
+		return 0
+	return int(cfg.get("coins", 0))
 
 
-static func group_range(group: int) -> Vector2i:
-	var size: int = config()["chest_group_size"]
-	return Vector2i(group * size + 1, (group + 1) * size)
+## Pays for a reward block that escaped by NORMAL play (never a Hammer).
+## Each block pays once per save: the key is recorded and saved at once, so
+## Undo, Restart, Replay, out-of-hearts and relaunching can never pay it
+## again. Returns the coins awarded (0 if already collected).
+static func collect_reward_block(progress: PlayerProgress, level_number: int, block: BlockData) -> int:
+	var coins := reward_block_coins(block.rarity)
+	if coins <= 0 or progress.has_reward_block(level_number, block.id):
+		return 0
+	progress.reward_blocks.append(PlayerProgress.reward_key(level_number, block.id))
+	progress.add_coins(coins, Chapters.chapter_of(level_number))
+	progress.save()
+	return coins
 
 
-static func group_stars(progress: PlayerProgress, group: int) -> int:
-	var rg := group_range(group)
+# --- Chapter chests --------------------------------------------------------
+
+static func chapter_stars(progress: PlayerProgress, chapter: int) -> int:
+	var rg := Chapters.chapter_range(chapter)
 	var t := 0
 	for n in range(rg.x, rg.y + 1):
 		t += progress.stars_for(n)
 	return t
 
 
-## For each tier: {"stars", "coins", "claimed", "claimable"}.
-static func chest_tiers(progress: PlayerProgress, group: int) -> Array:
-	var have := group_stars(progress, group)
+## For each tier: {"name", "stars", "coins", "items", "claimed", "claimable"}.
+static func chest_tiers(progress: PlayerProgress, chapter: int) -> Array:
+	var have := chapter_stars(progress, chapter)
 	var out := []
 	for i in config()["chest_tiers"].size():
 		var tier: Dictionary = config()["chest_tiers"][i]
-		var claimed := progress.claimed_chests.has(chest_id(group, i))
-		out.append({"stars": int(tier["stars"]), "coins": int(tier["coins"]), "claimed": claimed,
+		var claimed := progress.claimed_chests.has(chest_id(chapter, i))
+		out.append({"name": String(tier.get("name", "Tier %d" % (i + 1))), "stars": int(tier["stars"]),
+			"coins": int(tier["coins"]), "items": tier.get("items", {}), "claimed": claimed,
 			"claimable": not claimed and have >= int(tier["stars"])})
 	return out
 
 
-static func chest_id(group: int, tier: int) -> String:
-	return "g%d_t%d" % [group, tier]
+## "g3_t1" = Chapter 4, tier 2. Same ids as the v0.4 chests (which were
+## already per 10 levels), so chests claimed before v0.5 stay claimed.
+static func chest_id(chapter: int, tier: int) -> String:
+	return "g%d_t%d" % [chapter - 1, tier]
 
 
-## Claims a chest once. Returns the coins awarded (0 if not claimable or
-## already claimed - rewards can never be duplicated).
-static func claim_chest(progress: PlayerProgress, group: int, tier: int) -> int:
-	var tiers := chest_tiers(progress, group)
+## The best tier the Chapter's stars have reached (-1 = none yet).
+static func chest_level(progress: PlayerProgress, chapter: int) -> int:
+	var best := -1
+	for i in chest_tiers(progress, chapter).size():
+		if chapter_stars(progress, chapter) >= int(config()["chest_tiers"][i]["stars"]):
+			best = i
+	return best
+
+
+## Claims one chest tier once. Returns the coins awarded (0 if not claimable
+## or already claimed - rewards can never be duplicated). Booster items in
+## the tier go to the inventory.
+static func claim_chest(progress: PlayerProgress, chapter: int, tier: int) -> int:
+	var tiers := chest_tiers(progress, chapter)
 	if tier < 0 or tier >= tiers.size() or not tiers[tier]["claimable"]:
 		return 0
-	progress.claimed_chests.append(chest_id(group, tier))
-	progress.coins += tiers[tier]["coins"]
+	progress.claimed_chests.append(chest_id(chapter, tier))
+	progress.add_coins(tiers[tier]["coins"], chapter)
+	var items: Dictionary = tiers[tier]["items"]
+	for item in items:
+		progress.inventory[item] = int(progress.inventory.get(item, 0)) + int(items[item])
 	progress.save()
 	return tiers[tier]["coins"]
 
@@ -107,17 +150,25 @@ static func buy(progress: PlayerProgress, item: String) -> bool:
 	return true
 
 
-## World milestone: all levels of a world cleared. Pays once.
-static func check_world_complete(progress: PlayerProgress, world: int, total_levels: int) -> int:
-	if progress.completed_worlds.has(world):
-		return 0
-	var first := (world - 1) * 20 + 1
-	var last := mini(world * 20, total_levels)
-	for n in range(first, last + 1):
+# --- Chapter milestone ------------------------------------------------------
+
+static func is_chapter_cleared(progress: PlayerProgress, chapter: int, total_levels: int) -> bool:
+	var rg := Chapters.chapter_range(chapter)
+	if rg.x > total_levels:
+		return false
+	for n in range(rg.x, mini(rg.y, total_levels) + 1):
 		if not progress.best_scores.has(n):
-			return 0
-	progress.completed_worlds.append(world)
-	var coins := int(config()["rewards"]["world_complete"])
-	progress.coins += coins
+			return false
+	return true
+
+
+## Chapter milestone: every level of the Chapter cleared. Fires and pays
+## ONCE per save. Returns the coins awarded (0 = not complete / already).
+static func check_chapter_complete(progress: PlayerProgress, chapter: int, total_levels: int) -> int:
+	if progress.completed_chapters.has(chapter) or not is_chapter_cleared(progress, chapter, total_levels):
+		return 0
+	progress.completed_chapters.append(chapter)
+	var coins := int(config()["rewards"]["chapter_complete"])
+	progress.add_coins(coins, chapter)
 	progress.save()
 	return coins

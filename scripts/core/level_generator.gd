@@ -127,32 +127,133 @@ static func profile(name: String) -> Dictionary:
 
 
 ## Future levels (101+): which profile a campaign level number maps to.
+## Every 10th level from 60 on is a mystery level; otherwise the Chapter
+## plan decides.
 static func profile_for_level(n: int) -> Dictionary:
-	var name := "medium"
 	if n % 10 == 0 and n >= 60:
-		name = "w_mystery_late"
-	elif n <= 20:
-		name = "medium"
-	elif n <= 40:
-		name = "spin_lock"
-	elif n <= 60:
-		name = "spin_lock_hard"
-	elif n <= 70:
-		name = "w4_very_hard"
-	elif n <= 80:
-		name = "w4_advanced"
-	elif n <= 99:
-		name = "w5_expert"
-	else:
-		name = "w5_master"
-	return profile(name)
+		return profile("w_mystery_late")
+	return profile(chapter_plan(Chapters.chapter_of(n))["profile"])
 
 
-## Target difficulty curve (the scores the curated campaign follows). Used to
-## accept generated levels for a given slot, e.g. future levels 101+.
+## Average difficulty of each shipped Chapter (the campaign's measured curve,
+## see tools/verify_levels.gd). Future Chapters keep climbing.
+const CHAPTER_TARGETS := [4.7, 11.1, 18.2, 27.4, 32.4, 42.1, 46.1, 49.9, 53.3, 58.8]
+const FUTURE_CHAPTER_STEP := 3.0
+
+
+## Target difficulty curve for campaign slot `n`: the Chapter's average,
+## rising gently inside the Chapter. Used to accept generated levels for a
+## given slot (e.g. future levels 101+).
 static func target_difficulty(n: int) -> Vector2:
-	var center := 1.5 + 0.55 * n if n <= 60 else 34.0 + 0.45 * (n - 60)
-	return Vector2(center * 0.75, center * 1.35)
+	var center := chapter_target(Chapters.chapter_of(n))
+	var k := float((n - 1) % Chapters.levels_per_chapter()) / maxf(Chapters.levels_per_chapter() - 1, 1)
+	center *= 0.9 + 0.2 * k
+	return Vector2(center * 0.8, center * 1.25)
+
+
+static func chapter_target(chapter: int) -> float:
+	if chapter <= CHAPTER_TARGETS.size():
+		return CHAPTER_TARGETS[maxi(chapter, 1) - 1]
+	return CHAPTER_TARGETS[-1] + FUTURE_CHAPTER_STEP * (chapter - CHAPTER_TARGETS.size())
+
+
+## v0.5 Chapter plan: how a Chapter is built. Profile (mechanic mix and
+## rejection rules), difficulty band, and how many of its 10 levels carry a
+## Silver / Gold reward block. The campaign's placements were made from
+## this table (tools/place_reward_blocks.gd); Chapters 11+ extend it.
+static func chapter_plan(chapter: int) -> Dictionary:
+	var profiles := ["medium", "medium", "spin_lock", "spin_lock", "spin_lock_hard", "spin_lock_hard",
+		"w4_very_hard", "w4_advanced", "w5_expert", "w5_expert"]
+	var silver := [0, 0, 0, 5, 6, 5, 5, 6, 6, 6]
+	var gold := [0, 0, 0, 0, 0, 2, 3, 3, 4, 4]
+	var i := clampi(chapter, 1, profiles.size()) - 1
+	return {
+		"chapter": chapter,
+		"profile": profiles[i] if chapter <= profiles.size() else "w5_master",
+		"difficulty": Vector2(chapter_target(chapter) * 0.8, chapter_target(chapter) * 1.25),
+		"silver_levels": silver[i],
+		"gold_levels": gold[i],
+		# Reserved: a future Diamond tier would be one level per Chapter at most.
+		"diamond_levels": 0,
+		"max_rewards_per_level": 2,
+	}
+
+
+## Which levels of a Chapter carry a reward block: `count` of them, spread
+## evenly (`phase` shifts Gold away from Silver).
+static func reward_slots(chapter: int, count: int, phase: float) -> Array:
+	var rg := Chapters.chapter_range(chapter)
+	var size := rg.y - rg.x + 1
+	var out := []
+	for k in count:
+		var idx := int(floor((k + phase) * size / float(count))) % size
+		out.append(rg.x + idx)
+	return out
+
+
+## Marks reward blocks on a level: Gold on a block cleared late in the
+## solver's solution (it must wait for planning), Silver on one cleared in
+## the second half. Hidden blocks are skipped (a "?" should stay a clean
+## question) and the final block too (it would be a free reward). Existing
+## rarities are cleared first, so this is repeatable.
+func assign_reward_blocks(level: LevelData, silver: int, gold: int) -> void:
+	for b in level.blocks:
+		b.rarity = BlockData.Rarity.NORMAL
+	if silver + gold == 0:
+		return
+	var model := BoardModel.new()
+	model.setup(level.rows, level.columns, level.blocks)
+	var order := Solver.from_model(model).solve()
+	if order.is_empty():
+		return
+	var by_id := {}
+	for b in level.blocks:
+		by_id[b.id] = b
+	var eligible := []
+	for i in range(order.size() / 2, order.size() - 1):
+		if not by_id[order[i]].hidden:
+			eligible.append(order[i])
+	for g in gold:
+		if eligible.is_empty():
+			return
+		# Gold: from the latest third of the eligible blocks.
+		var from := maxi(eligible.size() * 2 / 3, 0)
+		var id: int = eligible[from + rng.randi() % maxi(eligible.size() - from, 1)]
+		by_id[id].rarity = BlockData.Rarity.GOLD
+		eligible.erase(id)
+	for sv in silver:
+		if eligible.is_empty():
+			return
+		var id: int = eligible[rng.randi() % eligible.size()]
+		by_id[id].rarity = BlockData.Rarity.SILVER
+		eligible.erase(id)
+
+
+## Classification a future generator (and the verifier) can sort by:
+## Chapter, difficulty, spinner / lock / mystery complexity (0 none ..
+## 3 heavy), reward-block frequency and solvability.
+static func classify(level: LevelData, number: int = 0) -> Dictionary:
+	var m := LevelAnalysis.analyze(level, false)
+	var n := number if number > 0 else level.number
+	var rule_kinds := int(m.get("rule_ccw", 0) > 0) + int(m.get("rule_alt", 0) > 0) + int(m.get("rule_pattern", 0) > 0)
+	var spinners: int = m.get("spinners", 0)
+	var locks: int = m.get("locks", 0)
+	var hidden: int = m.get("hidden", 0)
+	var rewards := {"silver": 0, "gold": 0, "diamond": 0}
+	for b in level.blocks:
+		if b.is_reward():
+			rewards[b.rarity_name()] += 1
+	var reward_count: int = rewards["silver"] + rewards["gold"] + rewards["diamond"]
+	return {
+		"chapter": Chapters.chapter_of(maxi(n, 1)),
+		"solvable": m["solvable"] and not m.get("aborted", false),
+		"difficulty": m.get("difficulty", 0.0),
+		"spinner_complexity": 0 if spinners == 0 else (1 if rule_kinds == 0 else (2 if rule_kinds == 1 else 3)),
+		"lock_complexity": 0 if locks == 0 else (1 if locks == 1 else (2 if locks <= 3 else 3)),
+		"mystery_complexity": 0 if hidden == 0 else (1 if hidden <= 2 else (2 if hidden <= 4 else 3)),
+		"rewards": rewards,
+		"reward_frequency": float(reward_count) / maxf(level.blocks.size(), 1.0),
+	}
 
 
 ## Generate a candidate for campaign slot `n`: right profile, difficulty in

@@ -1,11 +1,11 @@
 {
 	"name": "Synthwave",
 	"map": [
-		".       .       .       R>      R^@*    P>@",
-		"R>      Bv@     Y<@~#P  G^      P^      Yv#G",
+		".       .       .       B>      R^@*    .",
+		"R>      Bv@     Y<@~#P  G^      P^      Y>@#G",
 		".       .       G^      Rv      G^      .",
 		"B^      G>      .       .       .       Yv",
 		".       .       Yv      G<      .       Y<",
-		"B>      .       G>      Y>      G^@     ."
+		"B>      .       G>      Y>      G^@     P>@"
 	]
 }

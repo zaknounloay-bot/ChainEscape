@@ -5,7 +5,7 @@ extends Node2D
 
 const CYCLE := 1.3
 
-## Message color; follows the World theme (light text on dark Worlds).
+## Message color; follows the Chapter theme (light text on dark Chapters).
 static var text_color: Color = Palette.TEXT
 
 var _text: String = ""

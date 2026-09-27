@@ -1,11 +1,11 @@
 {
 	"name": "Overdrive",
 	"map": [
-		"P<#G  Pv@   .     Yv@*  .     .",
-		".     P^    .     P^@~  G>    Bv",
-		".     R^    R>    Yv#B  .     .",
-		"Yv#R  P<    .     .     G>    Bv",
-		".     .     .     Y^@~  Y^    .",
-		".     P^    R<@   B>    .     ."
+		"P<#G  Pv@   .     Yv@*  R<@   .",
+		".     B^    .     P^@*  G>    Bv",
+		"B^    R^    R>    Yv#B  .     .",
+		"Y<#R  P<$G  .     .     G>    Bv",
+		"Y>$S  .     .     Y^@~  P<@   .",
+		".     P^    .     Bv    .     ."
 	]
 }

@@ -7,16 +7,25 @@
 		"first_clear": 3,
 		"per_new_star": 4,
 		"first_perfect": 10,
-		"world_complete": 100,
+		"chapter_complete": 50,
 		"master_clear": 300
 	},
-	"world_multiplier": [1.0, 1.25, 1.5, 1.75, 2.0],
-	"chest_group_size": 10,
+	"_chapter_multiplier": "Level rewards scale with the Chapter. Chapters past the list add 'step' per Chapter up to 'max'.",
+	"chapter_multiplier": [1.0, 1.1, 1.2, 1.35, 1.5, 1.6, 1.75, 1.85, 2.0, 2.2],
+	"chapter_multiplier_step": 0.1,
+	"chapter_multiplier_max": 3.0,
+	"_chest_tiers": "One Chapter chest that upgrades with the Chapter's stars (30 possible). Each tier is claimed once.",
 	"chest_tiers": [
-		{"stars": 20, "coins": 20},
-		{"stars": 24, "coins": 40},
-		{"stars": 27, "coins": 70}
+		{"name": "Bronze", "stars": 20, "coins": 25},
+		{"name": "Silver", "stars": 25, "coins": 50},
+		{"name": "Gold", "stars": 30, "coins": 90, "items": {"hammer": 1}}
 	],
+	"_reward_blocks": "Coins for escaping a special block by normal play. Each block pays once per save; a Hammer smash pays nothing. 'from_level' is where the campaign starts using it. Diamond is reserved (disabled).",
+	"reward_blocks": {
+		"silver": {"coins": 5, "from_level": 31, "enabled": true},
+		"gold": {"coins": 15, "from_level": 51, "enabled": true},
+		"diamond": {"coins": 40, "from_level": 101, "enabled": false}
+	},
 	"hammer_per_level": 1,
 	"score_penalty": {"hint_booster": 250, "hammer": 400}
 }

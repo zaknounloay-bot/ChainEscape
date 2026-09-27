@@ -52,14 +52,21 @@ var booster_hints_used: int = 0
 var hammers_used: int = 0
 ## Hammer aimed: the next block tap smashes (if safe) instead of moving.
 var hammer_armed: bool = false
-## Current World theme (drives background, HUD colors and music).
+## Current Chapter theme (drives background, HUD colors, block material
+## and music).
 var theme: Dictionary = {}
-var background: WorldBackground
+var background: ChapterBackground
 
-## World of the loaded level (1-5), recalculated on every level load.
-var current_world: int = 1
-## Print "[World] ..." lines on every World application (debug builds).
-var world_log: bool = OS.is_debug_build()
+## Chapter of the loaded level, recalculated on every level load.
+var current_chapter: int = 1
+## Print "[Chapter] ..." lines on every Chapter application (debug builds).
+var chapter_log: bool = OS.is_debug_build()
+## Coins from Silver/Gold blocks collected during this attempt (level card).
+var reward_coins_attempt: int = 0
+var reward_notes: Array = []
+## Chapter whose "Chapter Complete" moment waits for the next NEXT tap
+## (0 = none). Set once, when the Chapter is completed for the first time.
+var pending_chapter_card: int = 0
 
 ## Tests and --level=N skip the title screen.
 static var skip_title := false
@@ -74,7 +81,7 @@ var _solving := false
 
 func _ready() -> void:
 	progress = PlayerProgress.new().load_from_disk()
-	background = WorldBackground.new()
+	background = ChapterBackground.new()
 	add_child(background)
 	_apply_settings()
 	board.block_tapped.connect(_on_block_tapped)
@@ -92,6 +99,7 @@ func _ready() -> void:
 	ui.buy_requested.connect(buy)
 	ui.shop_open_requested.connect(open_shop)
 	ui.chest_claim.connect(claim_chest)
+	ui.chapter_continue.connect(_after_chapter_card)
 	ui.continue_pressed.connect(continue_game)
 	ui.title_level_select.connect(open_level_select)
 	ui.title_tapped.connect(debug_panel.register_title_tap)
@@ -111,34 +119,13 @@ func _ready() -> void:
 	if not skip_title and not direct:
 		ui.show_title(progress.has_progress(), current_level, progress.total_stars(), progress.coins)
 	AudioManager.start_music()
-	_install_web_test_hook()
-
-
-## TEMPORARY (web, only with ?audiotest=1): lets the browser audio test flip
-## Music / Sound Effects through the real settings path (saved like a tap).
-var _web_test_cb: JavaScriptObject
-
-
-func _install_web_test_hook() -> void:
-	if not OS.has_feature("web") or not str(JavaScriptBridge.eval("location.search")).contains("audiotest"):
-		return
-	_web_test_cb = JavaScriptBridge.create_callback(func(args: Array):
-		# Deferred: run on the main loop like a real settings tap.
-		_apply_test_setting.call_deferred(String(args[0]), bool(args[1])))
-	JavaScriptBridge.get_interface("window").ceSetSetting = _web_test_cb
-
-
-func _apply_test_setting(key: String, on: bool) -> void:
-	_on_setting_toggled(key, on)
-	ui.apply_settings(progress.music_on, progress.sfx_on, progress.haptics_on)
 
 
 ## Title "CONTINUE - LEVEL X" / "PLAY": the level is already loaded behind it.
 func continue_game() -> void:
 	ui.hide_title()
 	AudioManager.play_ui_tap()
-	ui.show_world_banner("WORLD %d  ·  %s" % [Worlds.world_of(current_level), String(theme["name"]).to_upper()]
-		if current_level != Worlds.MASTER_LEVEL else "MASTER LEVEL")
+	ui.show_chapter_banner("MASTER LEVEL" if Chapters.is_master(current_level) else Chapters.title(current_chapter))
 
 
 func _initial_level() -> int:
@@ -178,11 +165,16 @@ func start_level(number: int) -> void:
 	_locked_hint_shown = false
 	_hidden_hint_shown = false
 	_total_blocks = model.block_count()
+	reward_coins_attempt = 0
+	reward_notes = []
+	if pending_chapter_card != 0 and Chapters.chapter_of(number) != pending_chapter_card:
+		pending_chapter_card = 0  # the player moved on to another Chapter
 	max_hearts = level.hearts if level.hearts >= 0 else (MAX_HEARTS if number >= HEARTS_FROM_LEVEL else 0)
 	hearts = max_hearts
 
-	_apply_world_theme(number)
+	_apply_chapter_theme(number)
 	board.mystery = level.mystery
+	board.spent_rewards = progress.collected_rewards(number)
 	board.build(level.rows, level.columns, level.blocks, true)
 	board.refresh_locks(model)
 	board.input_enabled = true
@@ -194,6 +186,8 @@ func start_level(number: int) -> void:
 	_layout()
 	if level.hint != "":
 		_show_start_hint()
+	else:
+		_maybe_explain_rewards()
 	progress.current_level = number
 	progress.save()
 	debug_panel.set_current_level(number)
@@ -211,6 +205,9 @@ func replay() -> void:
 
 func next_level() -> void:
 	AudioManager.play_ui_tap()
+	if pending_chapter_card != 0:
+		_show_chapter_card(pending_chapter_card)
+		return
 	start_level(current_level % level_manager.level_count + 1)
 
 
@@ -252,6 +249,7 @@ func _on_block_tapped(id: int) -> void:
 func _escape(id: int) -> void:
 	history.push(_capture_state())
 	var at := board.get_view(id).home
+	var escaped: BlockData = model.blocks[id]
 	var turned := model.remove(id)
 	var revealed := model.last_revealed.duplicate()
 	var unlocked := model.last_unlocked.duplicate()
@@ -263,6 +261,8 @@ func _escape(id: int) -> void:
 
 	board.play_escape(id, chain, turned)
 	board.show_points(at, "+%d" % points)
+	if escaped.is_reward():
+		_collect_reward(escaped, at)
 	AudioManager.play_escape(chain)
 	if not turned.is_empty():
 		AudioManager.play_turn()
@@ -367,21 +367,31 @@ func _on_board_cleared() -> void:
 	var rec := progress.record_result(current_level, r["score"], r["stars"], r["perfect"])
 	r.merge(rec, true)
 	# Coins: only improvements pay (see Economy.level_reward).
+	var chapter := Chapters.chapter_of(current_level)
 	var reward := Economy.level_reward(current_level, rec["first_clear"], rec["previous_stars"], r["stars"], rec["first_perfect"])
 	var coins: int = reward["coins"]
 	var notes: Array = reward["lines"]
-	var world_bonus := Economy.check_world_complete(progress, Worlds.world_of(current_level), level_manager.level_count)
-	if world_bonus > 0:
-		coins += world_bonus
-		notes.append("World %d complete!" % Worlds.world_of(current_level))
-	r["master"] = current_level == Worlds.MASTER_LEVEL
+	progress.add_coins(coins, chapter)
+	r["master"] = Chapters.is_master(current_level)
 	if r["master"] and not progress.achievements.has("master"):
 		progress.achievements.append("master")
 		var mc := int(Economy.config()["rewards"]["master_clear"])
+		progress.add_coins(mc, chapter)
 		coins += mc
 		notes.append("MASTER")
-	progress.coins += coins - world_bonus  # the World bonus was credited by Economy
+	# Chapter milestone: fires (and pays) once per save.
+	var chapter_bonus := Economy.check_chapter_complete(progress, chapter, level_manager.level_count)
+	if chapter_bonus > 0:
+		coins += chapter_bonus
+		notes.append("Chapter %d complete!" % chapter)
+		pending_chapter_card = chapter
 	progress.save()
+	# Silver/Gold coins were paid the moment each block escaped; the card
+	# shows them too so the attempt's total is honest.
+	coins += reward_coins_attempt
+	notes.append_array(reward_notes)
+	r["chapter_complete"] = chapter if chapter_bonus > 0 else 0
+	r["reward_coins"] = reward_coins_attempt
 	r["coins"] = coins
 	r["coin_notes"] = " · ".join(notes)
 	r["best"] = progress.best_score(current_level)
@@ -415,7 +425,7 @@ func _on_board_cleared() -> void:
 	if session != _session_id:
 		return
 	ui.show_complete(r)
-	if coins > 0:
+	if coins > reward_coins_attempt:
 		AudioManager.play_coin()
 	_refresh_buttons()
 
@@ -554,6 +564,9 @@ func _smash(id: int) -> void:
 	progress.save()
 	hammers_used += 1
 	history.push(_capture_state())
+	# Reward rule: a Hammer never collects a Silver/Gold reward (the block is
+	# not marked collected either, so it can still be earned by play later).
+	var smashed_reward: bool = model.blocks[id].is_reward() and not progress.has_reward_block(current_level, id)
 	var turned := model.remove(id)
 	var revealed := model.last_revealed.duplicate()
 	var unlocked := model.last_unlocked.duplicate()
@@ -562,6 +575,8 @@ func _smash(id: int) -> void:
 	board.animate_turns(turned)
 	AudioManager.play_hammer()
 	Haptics.medium()
+	if smashed_reward:
+		_show_message("Smashed - Silver/Gold coins only pay when a block escapes", 2.8)
 	if not revealed.is_empty():
 		board.play_reveals(revealed)
 	if not unlocked.is_empty():
@@ -601,77 +616,179 @@ func buy(item: String) -> void:
 	_refresh_buttons()
 
 
-func claim_chest(group: int, tier: int) -> void:
-	var coins := Economy.claim_chest(progress, group, tier)
+func claim_chest(chapter: int, tier: int) -> void:
+	var coins := Economy.claim_chest(progress, chapter, tier)
 	if coins > 0:
 		AudioManager.play_chest()
 		ui.set_coins(progress.coins)
-		open_level_select()  # refresh the grid (chest now shows as claimed)
+		_refresh_buttons()
+		# Refresh whatever shows the chest (now claimed).
+		if ui.is_chapter_card_open():
+			ui.refresh_chapter_card(chapter_summary(ui.chapter_card_chapter()))
+		if ui.is_level_select_open():
+			open_level_select()
 
 
-# --- Worlds ------------------------------------------------------------------------
+# --- Chapters ----------------------------------------------------------------------
 
-## Applies the World (or Master) theme for `number`: background, ambient
-## decoration, board, HUD accent colors, particles and music.
+## Applies the Chapter (or Master) theme for `number`: background, ambient
+## decoration and particles, board, block material, HUD accent colors and
+## music.
 ##
 ## Called from start_level(), which every entry point goes through (NEXT
 ## LEVEL, Level Select, Continue, Replay, Restart, debug jumps, relaunch).
-## The World is RECALCULATED from the level number every time and every
-## World-specific surface is re-applied unconditionally - nothing depends
+## The Chapter is RECALCULATED from the level number every time and every
+## Chapter-specific surface is re-applied unconditionally - nothing depends
 ## on what the previous level showed. Only the banner/sound depend on
-## whether the World actually changed.
-func _apply_world_theme(number: int) -> void:
-	var t := Worlds.theme_for_level(number)
+## whether the Chapter actually changed.
+func _apply_chapter_theme(number: int) -> void:
+	var t := Chapters.theme_for_level(number)
 	var previous_id: int = theme.get("id", 0)
 	var first: bool = theme.is_empty()
 	theme = t
-	current_world = Worlds.world_of(number)
+	current_chapter = Chapters.chapter_of(number)
 	background.apply_theme(t, not first and previous_id != t["id"])
 	board.set_theme(t)
 	ui.apply_theme(t)
 	AudioManager.set_music_theme(t["music"])
-	_log_world(number, previous_id)
+	_log_chapter(number, previous_id)
 	if previous_id != t["id"] and not first:
-		AudioManager.play_world()
-		ui.show_world_banner("MASTER LEVEL" if number == Worlds.MASTER_LEVEL
-			else "WORLD %d  ·  %s" % [current_world, String(t["name"]).to_upper()])
+		AudioManager.play_chapter()
+		ui.show_chapter_banner("MASTER LEVEL" if Chapters.is_master(number) else Chapters.title(current_chapter))
 
 
-## Debug log of every World application (debug builds / editor only).
-func _log_world(number: int, previous_id: int) -> void:
-	if not world_log:
+## Debug log of every Chapter application (debug builds / editor only).
+func _log_chapter(number: int, previous_id: int) -> void:
+	if not chapter_log:
 		return
-	print("[World] level=%d world=%d theme=%s (id %d, prev %d) music=%s%s" % [
-		number, current_world, theme["name"], theme["id"], previous_id, AudioManager.music_theme,
+	print("[Chapter] level=%d chapter=%d theme=%s (id %d, prev %d) music=%s%s" % [
+		number, current_chapter, theme["name"], theme["id"], previous_id, AudioManager.music_theme,
 		"  <- transition" if previous_id != theme["id"] else ""])
 
 
 ## What is actually applied right now (for tests and debugging).
-func world_state() -> Dictionary:
-	return {"level": current_level, "world": current_world, "theme_id": theme.get("id", 0),
+func chapter_state() -> Dictionary:
+	return {"level": current_level, "chapter": current_chapter, "theme_id": theme.get("id", 0),
 		"background_theme_id": background.theme["id"], "background_settled": background.is_settled(),
 		"board_color": board.board_color, "accent": board.accent_color, "ui_theme_id": ui.theme["id"],
+		"block_style_id": board.block_style_id, "block_style": Palette.block_style,
 		"music": AudioManager.music_theme}
+
+
+# --- Reward blocks ----------------------------------------------------------------
+
+## A Silver/Gold block escaped by normal play: pay once (Economy decides and
+## saves), then celebrate briefly without interrupting play.
+func _collect_reward(b: BlockData, at: Vector2) -> void:
+	var coins := Economy.collect_reward_block(progress, current_level, b)
+	if coins <= 0:
+		return  # already collected on an earlier run / attempt
+	board.spent_rewards[b.id] = true
+	reward_coins_attempt += coins
+	reward_notes.append("%s +%d" % [b.rarity_name().capitalize(), coins])
+	board.play_reward(at, b.rarity)
+	AudioManager.play_reward(b.rarity)
+	Haptics.light()
+	ui.fly_coins(board.get_global_transform_with_canvas() * at, coins, b.rarity, progress.coins)
+
+
+## First level with an uncollected Silver (or Gold) block: one short line
+## explaining it. Shown once per save.
+func _maybe_explain_rewards() -> void:
+	var collected := progress.collected_rewards(current_level)
+	for rarity in [BlockData.Rarity.GOLD, BlockData.Rarity.SILVER]:
+		var tip: String = BlockData.RARITY_NAMES[rarity]
+		if progress.tips_seen.has(tip):
+			continue
+		if level.blocks.any(func(b): return b.rarity == rarity and not collected.has(b.id)):
+			progress.tips_seen.append(tip)
+			progress.save()
+			_show_message("%s Block: let it escape for +%d coins" % [tip.capitalize(), Economy.reward_block_coins(rarity)], 3.4)
+			return
+
+
+# --- Chapter complete ---------------------------------------------------------------
+
+## Everything the Chapter Complete card and Level Select show for a Chapter.
+func chapter_summary(chapter: int) -> Dictionary:
+	var rg := Chapters.chapter_range(chapter)
+	var last := mini(rg.y, level_manager.level_count)
+	var perfect := 0
+	var score := 0
+	var rewards_total := 0
+	var rewards_got := 0
+	for n in range(rg.x, last + 1):
+		if progress.perfect_levels.has(n):
+			perfect += 1
+		score += progress.best_score(n)
+		var info := level_manager.level_info(n)
+		rewards_total += info["rewards"].size()
+		for id in info["rewards"]:
+			if progress.has_reward_block(n, id):
+				rewards_got += 1
+	var next := chapter + 1
+	var has_next := Chapters.chapter_range(next).x <= level_manager.level_count
+	return {"chapter": chapter, "title": Chapters.title(chapter), "theme": Chapters.theme_for_chapter(chapter),
+		"stars": Economy.chapter_stars(progress, chapter), "max_stars": (last - rg.x + 1) * 3,
+		"coins": int(progress.chapter_coins.get(chapter, 0)), "perfect": perfect, "levels": last - rg.x + 1,
+		"score": score, "rewards_total": rewards_total, "rewards_got": rewards_got,
+		"tiers": Economy.chest_tiers(progress, chapter),
+		"next_title": Chapters.title(next) if has_next else "", "next_theme": Chapters.theme_for_chapter(next),
+		"next_new": _chapter_news(next) if has_next else "", "completed": progress.completed_chapters.has(chapter)}
+
+
+## What is new in a Chapter (for the preview line).
+func _chapter_news(chapter: int) -> String:
+	var rg := Chapters.chapter_range(chapter)
+	var news := []
+	var blocks: Dictionary = Economy.config().get("reward_blocks", {})
+	for name in blocks:
+		var from := int(blocks[name].get("from_level", 0))
+		if bool(blocks[name].get("enabled", false)) and from >= rg.x and from <= rg.y:
+			news.append("%s Blocks" % String(name).capitalize())
+	if Chapters.master_level() >= rg.x and Chapters.master_level() <= rg.y:
+		news.append("the Master Level")
+	return "NEW: " + " & ".join(news) if not news.is_empty() else ""
+
+
+func _show_chapter_card(chapter: int) -> void:
+	pending_chapter_card = 0
+	AudioManager.play_chapter_complete()
+	Haptics.medium()
+	ui.show_chapter_card(chapter_summary(chapter))
+
+
+## CONTINUE on the Chapter card: straight into the next Chapter.
+func _after_chapter_card() -> void:
+	start_level(current_level % level_manager.level_count + 1)
 
 
 # --- Level select --------------------------------------------------------------
 
 func open_level_select() -> void:
-	var levels := []
-	for n in range(1, level_manager.level_count + 1):
-		levels.append({
-			"number": n, "stars": progress.stars_for(n),
-			"unlocked": progress.is_unlocked(n) or debug_panel.visible,
-			"completed": progress.best_scores.has(n),
-			"mystery": level_manager.is_mystery(n),
-			"current": n == current_level,
-		})
-	var chests := {}
-	var group_stars := {}
-	for g in Economy.group_count(level_manager.level_count):
-		chests[g] = Economy.chest_tiers(progress, g)
-		group_stars[g] = Economy.group_stars(progress, g)
-	ui.open_level_select(levels, progress.total_stars(), chests, group_stars)
+	var chapters := []
+	for c in range(1, Chapters.chapter_count(level_manager.level_count) + 1):
+		var info := chapter_summary(c)
+		var rg := Chapters.chapter_range(c)
+		var levels := []
+		for n in range(rg.x, mini(rg.y, level_manager.level_count) + 1):
+			var li := level_manager.level_info(n)
+			var best_rarity := 0
+			for id in li["rewards"]:
+				if not progress.has_reward_block(n, id):
+					best_rarity = maxi(best_rarity, li["rewards"][id])
+			levels.append({
+				"number": n, "stars": progress.stars_for(n),
+				"unlocked": progress.is_unlocked(n) or debug_panel.visible,
+				"completed": progress.best_scores.has(n),
+				"mystery": li["mystery"], "reward": best_rarity,
+				"master": Chapters.is_master(n),
+				"current": n == current_level,
+			})
+		info["levels"] = levels
+		info["unlocked"] = levels.any(func(l): return l["unlocked"])
+		chapters.append(info)
+	ui.open_level_select(chapters, progress.total_stars(), level_manager.level_count * 3, current_chapter)
 
 
 # --- Settings ----------------------------------------------------------------
@@ -695,9 +812,13 @@ func _on_setting_toggled(key: String, on: bool) -> void:
 
 # --- Tutorial / messages -----------------------------------------------------
 
-func _show_start_hint() -> void:
+func _message_position() -> Vector2:
 	var rect := board.get_board_rect()
-	var text_pos := Vector2(rect.get_center().x, rect.end.y + 56.0)
+	return Vector2(rect.get_center().x, minf(rect.end.y + 56.0, ui.get_board_area().end.y + 12.0))
+
+
+func _show_start_hint() -> void:
+	var text_pos := _message_position()
 	if not level.hint_finger:
 		tutorial.show_hint(level.hint, text_pos)
 		return
@@ -707,10 +828,10 @@ func _show_start_hint() -> void:
 	tutorial.show_hint(level.hint, text_pos, board.block_screen_position(target), true)
 
 
-## One line of text under the board that fades out by itself.
+## One line of text under the board that fades out by itself. Kept above
+## the bottom buttons even when a big board fills the play area.
 func _show_message(text: String, seconds: float) -> void:
-	var rect := board.get_board_rect()
-	tutorial.show_hint(text, Vector2(rect.get_center().x, rect.end.y + 56.0))
+	tutorial.show_hint(text, _message_position())
 	var session := _session_id
 	get_tree().create_timer(seconds).timeout.connect(func():
 		if session == _session_id and tutorial._text == text:

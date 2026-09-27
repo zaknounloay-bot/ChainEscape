@@ -7,7 +7,7 @@ const HEART_SIZE := 34.0
 const GAP := 12.0
 
 var max_hearts: int = 3
-## Color of lost-heart outlines (lighter on dark Worlds).
+## Color of lost-heart outlines (lighter on dark Chapters).
 var empty_color: Color = Palette.SLOT
 var hearts: int = 3
 ## Per-heart animation state: scale, y offset, alpha of the "falling" copy.

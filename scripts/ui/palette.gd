@@ -32,6 +32,35 @@ const BLOCKS := {
 }
 
 
+## v0.5 reward metals: [frame, highlight, deep] per rarity (index 1..3).
+const METALS := [
+	[],
+	[Color("#C9D3DE"), Color("#FFFFFF"), Color("#7D8A99")],  # silver
+	[Color("#F2B51B"), Color("#FFF1B8"), Color("#A86A00")],  # gold
+	[Color("#9EEBFF"), Color("#FFFFFF"), Color("#3F9FC4")],  # diamond (future)
+]
+
+## v0.5: block MATERIAL of the current Chapter (data/chapters.json
+## "block_style"): saturation, gloss, rim and glow. Hues never change, so a
+## red block is red in every Chapter (locks depend on colors).
+static var block_style: Dictionary = {"saturation": 1.0, "gloss": 0.0, "rim": 0.0, "glow": 0.0, "edge": Color.WHITE}
+
+
+static func styled_face(color_name: String) -> Color:
+	return _saturate(face(color_name))
+
+
+static func styled_side(color_name: String) -> Color:
+	return _saturate(side(color_name))
+
+
+static func _saturate(c: Color) -> Color:
+	var sat: float = block_style.get("saturation", 1.0)
+	if is_equal_approx(sat, 1.0):
+		return c
+	return Color.from_hsv(c.h, clampf(c.s * sat, 0.0, 1.0), c.v, c.a)
+
+
 static func arrow(color_name: String) -> Color:
 	return BLOCKS.get(color_name, BLOCKS["blue"])[2]
 

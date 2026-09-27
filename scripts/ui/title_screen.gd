@@ -39,13 +39,15 @@ func _ready() -> void:
 	_stats = Label.new()
 	_stats.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	_stats.add_theme_font_override("font", Palette.font(800))
+	_stats.add_theme_constant_override("line_spacing", 6)
 	_stats.add_theme_font_size_override("font_size", 24)
 	box.add_child(_stats)
 
 
 func open(has_progress: bool, level: int, stars: int, coins: int, theme: Dictionary) -> void:
 	_continue.text = ("CONTINUE  -  LEVEL %d" % level) if has_progress else "PLAY"
-	_stats.text = ("%d ★    %d COINS" % [stars, coins]) if has_progress else "Tap a block. Let it escape."
+	var where := "MASTER LEVEL" if Chapters.is_master(level) else Chapters.title(Chapters.chapter_of(level))
+	_stats.text = ("%s\n%d ★    %d COINS" % [where, stars, coins]) if has_progress else "Tap a block. Let it escape."
 	_stats.add_theme_color_override("font_color", theme["text_soft"])
 	_title_color = theme["text"]
 	_continue.set_background(theme["accent"].darkened(0.1) if theme["dark"] else theme["accent"])
@@ -72,9 +74,8 @@ func _process(delta: float) -> void:
 ## Logo: the name plus three little blocks escaping in a loop.
 func _draw() -> void:
 	# Opaque World-tinted backdrop so nothing of the game shows through.
-	var bands := 32
-	for i in bands:
-		draw_rect(Rect2(0, size.y * i / bands, size.x, size.y / bands + 1.0), _bg_top.lerp(_bg_bottom, float(i) / (bands - 1)))
+	draw_polygon(PackedVector2Array([Vector2.ZERO, Vector2(size.x, 0), size, Vector2(0, size.y)]),
+		PackedColorArray([_bg_top, _bg_top, _bg_bottom, _bg_bottom]))
 	var cx := size.x * 0.5
 	var y := size.y * 0.5 - 260.0
 	var font := Palette.font(900)
