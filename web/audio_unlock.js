@@ -1,32 +1,3 @@
-[preset.0]
-
-name="Web"
-platform="Web"
-runnable=true
-advanced_options=false
-dedicated_server=false
-custom_features=""
-export_filter="all_resources"
-include_filter="levels/*.json, data/*.json"
-exclude_filter="tools/*"
-export_path="build/web/index.html"
-encryption_include_filters=""
-encryption_exclude_filters=""
-encrypt_pck=false
-encrypt_directory=false
-script_export_mode=2
-
-[preset.0.options]
-
-custom_template/debug=""
-custom_template/release=""
-variant/extensions_support=false
-variant/thread_support=false
-vram_texture_compression/for_desktop=true
-vram_texture_compression/for_mobile=true
-html/export_icon=true
-html/custom_html_shell=""
-html/head_include="<script>
 /*
  * Chain Escape - Web audio unlock (iOS Safari first, all browsers).
  *
@@ -35,23 +6,23 @@ html/head_include="<script>
  * tools/sync_web_head.py after editing this file).
  *
  * Why this exists: Godot creates its AudioContext at engine start, before
- * any tap, so browsers create it \"suspended\". iOS Safari only lets a page
+ * any tap, so browsers create it "suspended". iOS Safari only lets a page
  * start audio from inside an activation event (touchend / click / pointerup
  * / keydown), and plays Web Audio through the ringer/silent switch unless
- * the page asks for the \"playback\" audio session. The engine does not
+ * the page asks for the "playback" audio session. The engine does not
  * expose its context, so we capture it here and unlock it ourselves.
  *
  * On EVERY activation event until audio runs (and again if iOS later
  * interrupts it):
- *   1. navigator.audioSession.type = \"playback\"   (iOS 17+: ignore mute switch)
+ *   1. navigator.audioSession.type = "playback"   (iOS 17+: ignore mute switch)
  *   2. iOS without audioSession: play a 50 ms silent <audio> once
- *   3. ctx.resume() on every captured AudioContext that is not \"running\"
+ *   3. ctx.resume() on every captured AudioContext that is not "running"
  *   4. start a 1-frame silent buffer on it (older iOS needs a real start)
  * Godot polls window.ceAudio.state() and starts music only once it reports
- * \"running\". Nothing audible is played here unless ?audiotest=1 asks for a
+ * "running". Nothing audible is played here unless ?audiotest=1 asks for a
  * test tone.
  *
- * TEMPORARY DEBUG: logs go to the console (\"[CE-Audio]\"); add ?audiodebug=1
+ * TEMPORARY DEBUG: logs go to the console ("[CE-Audio]"); add ?audiodebug=1
  * to the URL to also see them on screen (useful on an iPhone).
  */
 (function () {
@@ -62,8 +33,8 @@ html/head_include="<script>
   var box = null;
   var ua = navigator.userAgent || '';
   var isIOS = /iPad|iPhone|iPod/.test(ua) || (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
-  var browser = /Edg\\//.test(ua) ? 'Edge' : /CriOS|Chrome\\//.test(ua) ? 'Chrome'
-    : /FxiOS|Firefox\\//.test(ua) ? 'Firefox' : /Safari\\//.test(ua) ? 'Safari' : 'other';
+  var browser = /Edg\//.test(ua) ? 'Edge' : /CriOS|Chrome\//.test(ua) ? 'Chrome'
+    : /FxiOS|Firefox\//.test(ua) ? 'Firefox' : /Safari\//.test(ua) ? 'Safari' : 'other';
   var platform = (isIOS ? 'iOS' : /Android/.test(ua) ? 'Android' : 'desktop') + ' ' + browser;
 
   function log(msg) {
@@ -78,7 +49,7 @@ html/head_include="<script>
           'background:rgba(0,0,0,.78);color:#9f9;font:11px/1.35 monospace;padding:6px;pointer-events:none;white-space:pre-wrap';
         document.body.appendChild(box);
       }
-      if (box) { box.textContent = lines.join('\\n'); box.scrollTop = box.scrollHeight; }
+      if (box) { box.textContent = lines.join('\n'); box.scrollTop = box.scrollHeight; }
     }
   }
 
@@ -167,7 +138,7 @@ html/head_include="<script>
   window.ceAudio = {
     platform: platform,
     isIOS: isIOS,
-    /** \"running\" when every engine AudioContext runs; \"none\" before creation. */
+    /** "running" when every engine AudioContext runs; "none" before creation. */
     state: function () {
       if (!contexts.length) return 'none';
       return allRunning() ? 'running' : contexts[0].state;
@@ -194,8 +165,3 @@ html/head_include="<script>
     }
   };
 })();
-</script>"
-html/canvas_resize_policy=2
-html/focus_canvas_on_start=true
-html/experimental_virtual_keyboard=false
-progressive_web_app/enabled=false

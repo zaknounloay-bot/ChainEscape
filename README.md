@@ -23,7 +23,7 @@ Not included, on purpose: real-money purchases, ads, leaderboards, accounts, bac
 | Area | Change |
 |---|---|
 | **Save / Continue** | A versioned save file (v2) with migration from v0.3, atomic writes and a backup fallback. The launch screen offers **CONTINUE – LEVEL X** and **LEVEL SELECT**. The game never resets to Level 1. |
-| **Mobile Web audio** | Music starts on the first real tap, inside that gesture, as mobile browsers require. After that it loops normally. It was tested in a real exported Web build in Chromium with mobile emulation. |
+| **Mobile Web audio** | On the first real tap, a page-level script resumes the engine's AudioContext inside that gesture, which iOS Safari requires. It also sets iOS's playback audio session. Only once the context is running do music (if ON) and SFX (if ON) start. Tested in a real exported Web build in Chromium. See *Music system*. |
 | **Worlds** | Five Worlds of 20 levels, plus a Master theme for level 100. Each has its own background gradient, ambient decorations, board tint, HUD/accent colors and music. The transitions cross-fade and show a banner. |
 | **Music themes** | Six generated seamless loops (one per World plus Master), rising in tempo and tension, with cross-fades between them. |
 | **Advanced spinners** | Clockwise ↻ (the original), counter-clockwise ↺, alternating and pattern (↻↻↺). Always deterministic, and the ring shows the next turn. |
@@ -71,13 +71,53 @@ Not included, on purpose: real-money purchases, ads, leaderboards, accounts, bac
 - Music ducks under the level-complete, PERFECT and Master jingles.
 - **Settings:** Music, Sound Effects and Vibration toggles are saved and restored on launch. Music and SFX use separate buses.
 
-**Mobile Web autoplay:**
+**Mobile Web audio (iOS Safari first-class):**
 
-- On the Web build, `AudioManager.require_gesture` is on. Music doesn't start until the first real tap, click or key press. The music is then started **inside that input event**, which is what iOS/Android browsers allow.
-- The first tap can be CONTINUE / PLAY on the title screen.
-- After that, music keeps looping, and it's restarted if the tab or app regains focus.
-- You never have to re-enable it.
-- The Web build publishes `window.chainEscapeAudio` (unlocked / musicPlaying / theme) so it can be tested.
+Godot creates its Web Audio `AudioContext` at engine start, before any tap, so browsers leave it **suspended**. iOS Safari only lets a page resume it synchronously *inside* a `touchend` / `click` / `pointerup` / `keydown` handler. Godot handles input a frame later, so it can't unlock by itself. On iOS, Web Audio is also muted by the silent switch unless the page asks for the "playback" audio session.
+
+The fix is a small page-level script, `web/audio_unlock.js`. It is inlined into the exported page head through the Web export preset (`html/head_include`), so no custom HTML shell is needed. After editing the script, run `python3 tools/sync_web_head.py`, then re-export.
+
+The unlock sequence:
+
+1. **Before the engine loads,** the script wraps the `AudioContext` / `webkitAudioContext` constructor so it can see the context Godot creates.
+2. **On every `touchend` / `pointerup` / `mouseup` / `click` / `keydown`,** until the context is running, the script runs synchronously inside the gesture:
+   - sets `navigator.audioSession.type = "playback"` (iOS 17+), so the silent switch doesn't mute the game
+   - on older iOS, plays a 50 ms silent `<audio playsinline>` once
+   - calls `resume()` on each context that isn't running (suspended or interrupted), and starts a one-frame silent buffer
+   - If a tap fails to unlock, the next tap retries. No reload is needed.
+3. **`AudioManager` polls the context state (every 0.15 s).** Only when it is **running** *and* at least one real gesture has happened does it mark audio unlocked. Then:
+   - it starts the music if Music is ON
+   - it allows sound effects if Sound Effects is ON
+   - SFX requested before that are dropped, so nothing plays before a gesture
+   - This happens once. Later taps never restart the music.
+4. Saved Music / Sound Effects / Vibration settings are applied as loaded. The unlock never changes them.
+
+The first tap can be START / CONTINUE / PLAY on the title screen, or any in-game tap.
+
+**Temporary web audio diagnostics** (URL flags; remove before release):
+
+| Flag | Effect |
+|---|---|
+| `?audiodebug=1` | On-screen overlay of the `[CE-Audio]` log. The log itself always goes to the browser console. It covers the platform/browser, the first gesture, the context state before and after each unlock attempt, the `resume()` result, the unlock, the music decision and the SFX test. |
+| `?audiotest=1` | After unlock: a quiet 880 Hz beep straight through Web Audio, then Godot's `coin` sound effect. It also logs whether the audio clock is advancing. It also exposes `window.ceSetSetting(key, on)` for tests. |
+| `?audiomode=stream` | Forces Godot's STREAM playback instead of Web Audio samples. This is a fallback experiment if the context runs but nothing is heard. |
+
+The page also exposes `window.ceAudio.state()` and `window.chainEscapeAudio` (unlocked / musicPlaying / theme / musicEnabled / sfxEnabled / context / sfxPlayed). To switch the logging off, set `AudioManager.web_audio_debug` to false.
+
+**Testing on an iPhone:**
+
+1. Serve `build/web/` over HTTPS, or over your LAN (for example, `python3 -m http.server` and open `http://<pc-ip>:8000`).
+2. Open `index.html?audiodebug=1&audiotest=1` in Safari.
+3. Tap CONTINUE / PLAY. The overlay should show:
+   - `first user gesture: touchend`
+   - `state before = suspended`
+   - `resume() resolved … running`
+   - `(godot) audio unlocked`
+   - `music: started`
+   
+   You should then hear a beep, a coin sound and the music.
+4. Repeat with the ringer switch on silent, with Music OFF, and with SFX OFF. Then lock the phone, come back and tap once (an `interrupted` context resumes on that tap).
+5. For the full console, connect the iPhone to a Mac and use Safari → Develop → [iPhone] → the page.
 
 ## Worlds
 
@@ -529,12 +569,24 @@ godot --headless --path . --export-release "Web" build/web/index.html && node to
 - **Relaunch:** a genuine restart. The game is freed and rebuilt from the save file, the title shows **CONTINUE – LEVEL 57**, and coins, boosters, stars, bests, chests, Worlds and settings are all restored.
 - The v0.3 scenarios: PERFECT, bests, Replay, Undo/Hint limits, locks, mystery, hearts, Restart and a trap.
 
-**Web audio test** (`tools/web_audio_test.mjs`): the exported Web build in Chromium with mobile emulation (Pixel 7 viewport, touch) and the strict `document-user-activation-required` autoplay policy. It checks, on a first visit and after a reload:
+**Web audio test** (`tools/web_audio_test.mjs`): the exported Web build in Chromium with the strict `document-user-activation-required` autoplay policy. It runs these cases:
 
-- no music before the first interaction
-- one touch-tap unlocks audio and starts the music
-- an AudioContext is running
-- the music is still playing seconds later
+- mobile emulation (touch), first visit
+- returning player with Music ON
+- Music OFF and SFX OFF, each changed through the game's settings handler, synced to IndexedDB and reloaded
+- an iOS-like case where the engine's context is forced to start **suspended**
+- desktop with a mouse click
+
+Each case checks:
+
+- no music and no SFX before the first gesture
+- the saved settings are restored
+- the context is running after one tap
+- Godot unlocks only then
+- music plays or stays off to match the setting
+- the SFX test runs or is skipped to match the setting
+- the `[CE-Audio]` log sequence is complete
+- extra taps don't restart anything
 
 **Current results (v0.4):**
 
@@ -543,7 +595,7 @@ godot --headless --path . --export-release "Web" build/web/index.html && node to
 | Unit tests | `UNIT TESTS PASSED`: 9,423 checks, 0 failures |
 | Level verifier | `ALL 100 LEVELS SOLVABLE AND PASS CAMPAIGN RULES`. All 10 mystery levels are proven fair. Level 100 is the hardest (67.7). Levels 31, 35 and 52 still pass after their spinner-rule changes. |
 | Playtest | `PLAYTEST PASSED`: all 100 levels cleared through real touch input, plus 17 scenarios (save/continue relaunch, Worlds and music, web audio gate, coins, chests, Shop, Hammer, Hint booster, Master Level, and the v0.3 systems) |
-| Web audio (real browser) | `WEB AUDIO TEST PASSED`: 12 checks on the exported Web build (Chromium, mobile emulation, strict autoplay), on a first visit and after a reload |
+| Web audio (real browser) | `WEB AUDIO TEST PASSED`: 92 checks on the exported Web build (Chromium with strict autoplay): mobile first visit, returning player with Music ON / Music OFF / SFX OFF, a suspended (iOS-like) context, and desktop mouse |
 | Rendering | Screenshots at 720×1280 of the title, all 5 Worlds, the Master Level, the Shop and a World-grouped Level Select |
 
 The tests write progress to separate files (`user://test_*.cfg`, `user://playtest_progress.cfg`), never to the player's save.
@@ -579,7 +631,8 @@ scripts/
     stars_row.gd / shapes.gd / hearts_bar.gd / pill_button.gd / progress_bar.gd / tutorial_hint.gd / palette.gd
   audio/ audio_manager.gd (themes, cross-fades, web unlock), haptics.gd
 tools/ run_tests.gd, verify_levels.gd, Playtest.tscn, Capture.tscn, generate_levels.gd,
-       generate_music.py, web_audio_test.mjs
+       generate_music.py, web_audio_test.mjs, sync_web_head.py
+web/   audio_unlock.js (page-level Web Audio unlock, inlined via export_presets.cfg)
 ```
 
 ## Architecture
@@ -650,7 +703,10 @@ Optional level keys:
 
 ## Known limitations
 
-- **Real iOS Safari was not tested.** The web audio test uses Chromium's strict autoplay policy with mobile emulation. Under Playwright, navigation marks the page as "user-activated", so the *browser-level* pre-tap state can't be asserted there. The *game-level* gate (no music before the first real input, music started inside that input) is verified in the browser and in-engine. Please confirm on a real iPhone and Android phone.
+- **Real iOS Safari, WebKit and Edge were not tested here.**
+  - The WebKit engine download is blocked in the build environment, and Edge isn't installed. Edge shares the Chromium engine that was tested.
+  - The iOS path (a suspended context resumed inside the gesture) is exercised in Chromium by forcing the context to start suspended.
+  - The iOS-only parts (`navigator.audioSession`, the silent-`<audio>` fallback, the silent switch and the `interrupted` state) need a real iPhone. Use the checklist in *Music system*.
 - **Web saves** live in the browser's IndexedDB (`user://`). Clearing site data or private browsing loses progress. There are no accounts or cloud sync (not in scope).
 - **Economy values are first guesses** (`data/economy.json`), not tuned with players.
 - **Locks depend on color.** The padlock, the key blocks' hop and the solver make them readable, but color-blind players may still find some lock boards harder. A symbol-per-color option is future work.

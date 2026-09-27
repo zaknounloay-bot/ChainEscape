@@ -111,6 +111,26 @@ func _ready() -> void:
 	if not skip_title and not direct:
 		ui.show_title(progress.has_progress(), current_level, progress.total_stars(), progress.coins)
 	AudioManager.start_music()
+	_install_web_test_hook()
+
+
+## TEMPORARY (web, only with ?audiotest=1): lets the browser audio test flip
+## Music / Sound Effects through the real settings path (saved like a tap).
+var _web_test_cb: JavaScriptObject
+
+
+func _install_web_test_hook() -> void:
+	if not OS.has_feature("web") or not str(JavaScriptBridge.eval("location.search")).contains("audiotest"):
+		return
+	_web_test_cb = JavaScriptBridge.create_callback(func(args: Array):
+		# Deferred: run on the main loop like a real settings tap.
+		_apply_test_setting.call_deferred(String(args[0]), bool(args[1])))
+	JavaScriptBridge.get_interface("window").ceSetSetting = _web_test_cb
+
+
+func _apply_test_setting(key: String, on: bool) -> void:
+	_on_setting_toggled(key, on)
+	ui.apply_settings(progress.music_on, progress.sfx_on, progress.haptics_on)
 
 
 ## Title "CONTINUE - LEVEL X" / "PLAY": the level is already loaded behind it.

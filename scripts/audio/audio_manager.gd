@@ -70,6 +70,7 @@ func _ready() -> void:
 		else:
 			_music_b = mp
 	_music.stream = _theme_stream(music_theme)
+	_init_web_audio()
 
 
 func _exit_tree() -> void:
@@ -79,53 +80,146 @@ func _exit_tree() -> void:
 		mp.stream = null
 
 
-## First real user gesture unlocks audio on the web. Music is started from
-## inside this input event, which is what mobile browsers require.
+## Web audio unlock (iOS Safari first).
+##
+## The real unlock happens in JavaScript (web/audio_unlock.js, injected into
+## the page head): it runs synchronously inside the browser's own touchend /
+## click / keydown event, which is the only place iOS Safari accepts it.
+## Godot's input events arrive a frame later, outside that gesture, so the
+## game never tries to unlock from here - it only POLLS the context state
+## and starts music / allows SFX once the context reports "running".
+## If the page has no bridge (old export), it falls back to unlocking on the
+## first gesture as before.
+var _web: bool = OS.has_feature("web")
+var _bridge: bool = false
+var _gesture_seen: bool = false
+var _poll_timer := 0.0
+var _last_ctx_state := ""
+## Sound effects actually sent to a player (for tests / diagnostics).
+var sfx_played: int = 0
+var _audio_test: bool = false
+## TEMPORARY: extra [CE-Audio] logging on web builds (console + ?audiodebug overlay).
+var web_audio_debug: bool = true
+
+
+func _init_web_audio() -> void:
+	if not _web:
+		return
+	_bridge = str(JavaScriptBridge.eval("typeof window.ceAudio")) == "object"
+	var search := str(JavaScriptBridge.eval("location.search"))
+	_audio_test = search.contains("audiotest")
+	_wlog("Godot audio: bridge=%s platform=%s music=%s sfx=%s" % [_bridge,
+		str(JavaScriptBridge.eval("window.ceAudio ? window.ceAudio.platform : navigator.userAgent")),
+		"ON" if music_enabled else "OFF", "ON" if sfx_enabled else "OFF"])
+	if search.contains("audiomode=stream"):
+		# Diagnostic switch: play through Godot's mixer instead of Web Audio samples.
+		for p in _players + [_music, _music_b]:
+			p.playback_type = AudioServer.PLAYBACK_TYPE_STREAM
+		_wlog("playback type forced to STREAM (diagnostic)")
+
+
+func _wlog(msg: String) -> void:
+	if not (_web and web_audio_debug):
+		return
+	print("[CE-Audio] " + msg)
+	if _bridge:
+		JavaScriptBridge.eval("window.ceAudio.log(%s)" % JSON.stringify("(godot) " + msg), true)
+
+
 func _input(event: InputEvent) -> void:
 	if unlocked:
 		return
 	var gesture: bool = (event is InputEventScreenTouch and event.pressed) \
 		or (event is InputEventMouseButton and event.pressed) \
 		or (event is InputEventKey and event.pressed)
-	if gesture:
-		unlock_audio()
+	if not gesture:
+		return
+	if not _gesture_seen:
+		_gesture_seen = true
+		_wlog("user gesture received by Godot (context: %s)" % _ctx_state())
+	if not _bridge:
+		unlock_audio()  # desktop / old export fallback
+
+
+func _page_gestures() -> int:
+	return int(JavaScriptBridge.eval("window.ceAudio.gestures()"))
+
+
+func _ctx_state() -> String:
+	if not _bridge:
+		return "n/a"
+	return str(JavaScriptBridge.eval("window.ceAudio.state()"))
 
 
 ## Web builds publish their audio state to the page (window.chainEscapeAudio)
 ## so automated browser tests - and curious developers - can check it.
 func _publish_web_state() -> void:
-	if not OS.has_feature("web"):
+	if not _web:
 		return
-	JavaScriptBridge.eval("window.chainEscapeAudio = {unlocked: %s, musicPlaying: %s, theme: '%s', musicEnabled: %s};" % [
-		str(unlocked).to_lower(), str(_music.playing).to_lower(), music_theme, str(music_enabled).to_lower()], true)
+	JavaScriptBridge.eval("window.chainEscapeAudio = {unlocked: %s, musicPlaying: %s, theme: '%s', musicEnabled: %s, sfxEnabled: %s, context: '%s', sfxPlayed: %d};" % [
+		str(unlocked).to_lower(), str(_music.playing).to_lower(), music_theme, str(music_enabled).to_lower(),
+		str(sfx_enabled).to_lower(), _ctx_state(), sfx_played], true)
 
 
 var _publish_timer := 0.0
 
 
 func _process(delta: float) -> void:
-	if OS.has_feature("web"):
-		_publish_timer += delta
-		if _publish_timer >= 0.5:
-			_publish_timer = 0.0
-			_publish_web_state()
+	if not _web:
+		return
+	_poll_timer += delta
+	if _bridge and _poll_timer >= 0.15:
+		_poll_timer = 0.0
+		var state := _ctx_state()
+		if state != _last_ctx_state:
+			_wlog("AudioContext state: %s" % state)
+			_last_ctx_state = state
+		# Some browsers create the context already "running" (e.g. high media
+		# engagement); still wait for a real user gesture before any sound.
+		if state == "running" and not unlocked and _page_gestures() > 0:
+			unlock_audio()
+	_publish_timer += delta
+	if _publish_timer >= 0.5:
+		_publish_timer = 0.0
+		_publish_web_state()
 
 
+## Audio is usable: start music (if ON) and allow SFX (if ON). Runs once;
+## later taps never restart music.
 func unlock_audio() -> void:
 	if unlocked:
 		return
 	unlocked = true
-	if OS.has_feature("web"):
-		# Belt and braces: resume any suspended WebAudio context.
-		JavaScriptBridge.eval("(function(){try{var c=window.GodotAudio&&GodotAudio.ctx;if(c&&c.state!=='running'){c.resume();}}catch(e){}})()", true)
+	_wlog("audio unlocked (context: %s)" % _ctx_state())
 	audio_unlocked.emit()
 	start_music()
+	_wlog("music: %s" % ("started (theme %s, playing=%s)" % [music_theme, _music.playing] if music_enabled else "OFF in settings - not started"))
+	_wlog("sound effects: %s" % ("enabled" if sfx_enabled else "OFF in settings"))
+	if _audio_test:
+		_run_audio_test()
 	_publish_web_state()
+
+
+## TEMPORARY (?audiotest=1): one short, quiet test through Web Audio
+## directly, then one through Godot's SFX path, to prove audio is live.
+func _run_audio_test() -> void:
+	if _bridge:
+		JavaScriptBridge.eval("window.ceAudio.testTone()", true)
+	await get_tree().create_timer(0.4).timeout
+	if sfx_enabled:
+		play("coin", 1.0, -6.0)
+		var t0 := float(str(JavaScriptBridge.eval("window.ceAudio ? window.ceAudio.time() : -1")))
+		await get_tree().create_timer(0.3).timeout
+		var t1 := float(str(JavaScriptBridge.eval("window.ceAudio ? window.ceAudio.time() : -1")))
+		_wlog("SFX test: Godot 'coin' played; audio clock %.2f -> %.2f (%s)" % [t0, t1, "advancing" if t1 > t0 else "NOT advancing"])
+	else:
+		_wlog("SFX test skipped: Sound Effects are OFF in settings")
 
 
 func _notification(what: int) -> void:
 	# Coming back to the tab / app: make sure the loop is still running.
 	if what == NOTIFICATION_APPLICATION_FOCUS_IN or what == NOTIFICATION_APPLICATION_RESUMED:
+		_wlog("app focus/resume: context %s" % _ctx_state())
 		start_music()
 
 
@@ -320,8 +414,11 @@ static func chain_pitch(chain: int) -> float:
 # --- Core ------------------------------------------------------------------
 
 func play(id: String, pitch: float = 1.0, volume_db: float = 0.0) -> void:
-	if not sfx_enabled or not _streams.has(id):
+	# Before the (web) audio unlock nothing may play: a suspended context
+	# would otherwise queue sounds and burst them out on unlock.
+	if not unlocked or not sfx_enabled or not _streams.has(id):
 		return
+	sfx_played += 1
 	var p := _players[_next_voice]
 	_next_voice = (_next_voice + 1) % _players.size()
 	p.stream = _streams[id]
