@@ -1,12 +1,12 @@
 {
 	"name": "Paragon",
 	"map": [
-		"G>     .      .      .      .      XD     .",
-		".      Gv+C   P<@    .      .      .      P<",
-		"Y^     .      .      Bv     XC     .      .",
-		"R^     Bv@*   Yv+D   G<     Y<@-   R>=    P^+D",
-		".      .      .      .      Bv+C   P<#G   .",
-		".      .      R>@~   R^@$S  .      .      G^@",
-		".      B<     P<=    B>     .      P>     B^"
+		".       Yv@     P^$S=   G^#Y+C  P>@#Y   .       G<",
+		".       R<      B<+C    Rv@-    .       .       P<+C",
+		".       .       .       .       .       .       .",
+		".       .       Pv      P<      Gv      .       .",
+		"P^=     .       .       Gv@     .       .       B^",
+		"Bv      .       P<      .       G>@*    XC      .",
+		"G>      B>      .       .       .       .       B^@~"
 	]
 }
