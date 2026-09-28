@@ -1,11 +1,12 @@
 {
 	"name": "Cracked Glass",
 	"map": [
-		".      .      Y>     .      Yv     .",
-		"P>     .      Y^     .      Y<@-   .",
-		"G<#R   Gv     .      G<$G=  B>     .",
-		".      .      .      P>     Rv@    Pv",
-		".      Yv     Gv@    Y<@$S  .      Pv",
-		"Y^     B<     B<@    B>     P>     Y>"
+		".       .       Yv      .       .       .       B<",
+		"G^$G=   .       .       .       Gv      .       .",
+		"R<$S    B<      Yv      .       .       .       .",
+		"G>@~    .       .       .       P>      .       P^@",
+		".       .       .       .       Yv      .       .",
+		"P^@     P>@     Rv      .       B<      B>      Y^@-#G",
+		".       Gv      Y<      .       Y<      .       P<@"
 	]
 }

@@ -119,10 +119,13 @@ func _play_level(n: int) -> void:
 		_check(hinted != -1 and game.hints_used == 1, "L%d hint shown and counted" % n)
 		_check(game.model.block_count() == count_before, "L%d hint must not play the move" % n)
 		if hinted != -1:
-			_check(game.model.can_escape(hinted), "L%d hint %d is a legal move" % [n, hinted])
+			_check(game.model.is_playable(hinted), "L%d hint %d is a legal move" % [n, hinted])
 			var after := BoardModel.new()
 			after.setup(game.model.rows, game.model.columns, game.model.snapshot())
-			after.remove(hinted)
+			if after.move_state(hinted) == "ram":
+				after.ram(hinted)  # v0.6: a hint can be a ram
+			else:
+				after.remove(hinted)
 			_check(Solver.from_model(after).is_solvable(), "L%d hint keeps the board solvable" % n)
 			_check(game.board.get_view(hinted).hinted, "L%d hinted block is highlighted" % n)
 			_shot("L%02d_hint" % n)
@@ -138,6 +141,7 @@ func _play_level(n: int) -> void:
 		var snapshot := _state()
 		var before_count := game.model.block_count()
 		var kind := game.model.move_state(id)
+		var chain_before_tap := game.chain
 		await _tap(id)
 		if kind == "ram":
 			# v0.6: a ram cracks a shell and removes nothing.
@@ -150,7 +154,7 @@ func _play_level(n: int) -> void:
 			_shot("L%02d_chain" % n)
 		if taps == 2 and not undo_tested and not game.model.is_empty():
 			undo_tested = true
-			var chain_before_last: int = game.chain - 1
+			var chain_before_last: int = chain_before_tap
 			game.undo()
 			await _wait(0.05)
 			_check(game.model.blocks.has(id), "L%d undo did not restore block %d" % [n, id])
@@ -161,7 +165,8 @@ func _play_level(n: int) -> void:
 			taps -= 1
 		await _wait(0.07)
 	# PERFECT and the Master Level celebrate longer before the card.
-	await _wait(2.4 if Chapters.is_master(n) else (1.0 if not game.last_result.get("perfect", false) else 1.6))
+	var extra := 1.3 if Chapters.is_milestone(n) else 0.0
+	await _wait(extra + (2.8 if Chapters.is_master(n) else (1.0 if not game.last_result.get("perfect", false) else 1.6)))
 	_shot("L%02d_complete" % n)
 	var r := game.last_result
 	_check(game.ui.is_complete_visible(), "L%d complete card not shown" % n)

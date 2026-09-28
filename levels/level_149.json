@@ -1,11 +1,12 @@
 {
 	"name": "Capacitor",
 	"map": [
-		".       .       .       R>      P>      Bv",
-		"Y^      R>      Pv@*#G  Y>@~    Yv      .",
-		"G^      P<      Pv@     .       B<      .",
-		"R^      .       .       P>@     .       Y>%A",
-		"Rv@     .       .       Bv&A    .       B<#Y",
-		"P^      R<      Y<      P<      .       ."
+		".     .     Yv    R<    .     .",
+		".     .     .     Rv@   .     Rv",
+		".     G>@   .     B^&A  G>    Y>%A",
+		".     .     G^@*  .     Rv    .",
+		"Bv    .     B<    .     P<    .",
+		"R>@   .     Y>@~  .     P>    .",
+		".     B^#Y  .     G^    .     G<"
 	]
 }

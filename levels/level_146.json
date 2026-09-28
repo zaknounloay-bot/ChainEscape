@@ -1,11 +1,12 @@
 {
 	"name": "Static",
 	"map": [
-		"Y<     P>@~   .      B>     Yv@-   Yv+C",
-		"G^+C   B^+C   Gv     .      Y<     .",
-		"B>     .      .      .      G^     .",
-		"R^&A   Y<     .      R>     .      Pv",
-		"Y>@    R^$S   XC     R^%A   R<     .",
-		".      G^@#B  .      .      Y>     Gv@*"
+		"R<#Y    R^#B    P<      Rv      B>$S%A  .",
+		".       .       .       .       Y^      P<",
+		"Rv@     .       P<      Y<      .       R<@",
+		".       Bv&A    .       R<      .       .",
+		".       Bv      .       Rv      .       .",
+		".       Y>@*    .       B>@~    Y>      G^",
+		"B>      G>      .       Yv@     .       ."
 	]
 }

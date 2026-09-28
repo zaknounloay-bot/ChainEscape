@@ -3,12 +3,12 @@
 	"hint": "Cracking a shell is free - aim first, then clear.",
 	"hint_finger": false,
 	"map": [
-		".     B<=   G<    B<    .     R<",
-		"Y>    .     P<@-  P^    .     .",
-		".     .     .     Gv#Y  .     .",
-		"R^@   .     .     .     B^=   B^",
-		".     .     .     Bv@   G<    .",
-		"B>@   .     .     .     Bv@   R>@~",
-		"Y^    .     B^    B>    Gv#P  ."
+		".     Pv    .     G<@   .     P<@~",
+		"G^=   Bv@   G<    .     G<    Y^",
+		"Gv    .     B<    .     .     G^",
+		".     Gv    P<@   B>    .     .",
+		"Rv#Y  G>@*  .     .     B<    .",
+		"Yv    Rv    G>=   .     .     .",
+		"Y>    .     .     .     .     P^@-"
 	]
 }

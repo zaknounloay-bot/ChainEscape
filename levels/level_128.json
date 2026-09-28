@@ -1,11 +1,11 @@
 {
 	"name": "Cog Line",
 	"map": [
-		".     Bv+C  Y>@~  Rv    .     R^@",
-		".     .     B^    Y>@   G>$G  Bv@",
-		"R>    .     B>    .     .     .",
-		".     .     XC    G<    R<    B<",
-		".     .     .     .     B>    Yv+C",
-		"Y^    R<+C  G<    .     .     R<"
+		".       B>      Rv      P>      B<@~    .",
+		"Gv$G+C  Y^      .       Y^      Gv      Gv@",
+		".       XC      P<@     .       .       Y^@",
+		".       .       Y<      .       R>      Pv",
+		"R>      G>      .       B^      .       .",
+		".       B<+C    .       .       P<      G<"
 	]
 }
