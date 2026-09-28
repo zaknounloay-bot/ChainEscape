@@ -2,11 +2,12 @@
 	"name": "Halfway Deep",
 	"mystery": true,
 	"map": [
-		".     Gv    .     .     .     Y<$S",
-		"Bv    R<    .     .     .     P^@",
-		"R>@   Pv    .     P^%A  Y>    P^&A",
-		"Y>@   .     R>    Bv+C  P^?   P<&A",
-		"Pv    .     .     .     .     XC",
-		"B<    P<?   .     B<#P  B^#G  ."
+		"B<%A  .     P<    .     Gv@   B>@",
+		"Rv@   .     .     P>    Y^@   P>?",
+		".     .     .     R>&A  G^$S  .",
+		"XC    P<&A  B<    .     .     .",
+		".     .     .     .     G^+C  Gv?",
+		"Y<#G  .     Y^#G  .     Y^    .",
+		".     B>+C  .     .     R>?   ."
 	]
 }

@@ -1,11 +1,12 @@
 {
 	"name": "Flywheel",
 	"map": [
-		".       R>#P+C  .       G>#B    G>      Pv+C",
-		"XC      .       .       .       Y<@     .",
-		".       .       .       Gv      B^      .",
-		".       Y<%A    P>@$S   .       Y^      .",
-		"G^      G<      B<@     R^@~    B<&A    Gv+C",
-		".       .       .       .       .       P>"
+		"Yv      R<+C    R<      P<+C    G>$S%A  .",
+		"Bv      .       .       .       .       .",
+		".       R>&A    Bv#G    .       .       .",
+		".       .       Y>@-    .       Gv#R    .",
+		"R^@     .       .       .       .       .",
+		"Pv      XC      G<&A    .       R<      .",
+		"P>@     G>+C    .       Y>@     Gv      ."
 	]
 }

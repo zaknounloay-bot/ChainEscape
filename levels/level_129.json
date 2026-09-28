@@ -1,11 +1,11 @@
 {
 	"name": "Hinge Works",
 	"map": [
-		".     .     .     .     .     Yv",
-		"R^    .     .     Y<    .     Pv",
-		".     Bv@~  .     .     .     Yv",
-		"G^    R<    Y>+C  B^+C  .     .",
-		".     .     .     Pv$S  .     B<@",
-		"Y<    R^@   G<    R>@   XC    ."
+		".     .     Rv+C  B<$S  .     .",
+		".     .     Pv    R>@   .     Y<+C",
+		"B>    .     Gv    .     Y>    B^",
+		".     Y>@   Bv    XC    Rv    P<",
+		".     Gv    Y<    .     .     Y^",
+		"P^    .     .     .     Y<@~  R>@"
 	]
 }

@@ -182,14 +182,14 @@ static func profile(name: String) -> Dictionary:
 				"switches": Vector2i(1, 1), "flips": Vector2i(1, 2), "gates": Vector2i(1, 1), "links": Vector2i(1, 2),
 				"max_start_moves": 2, "min_depth": 10, "min_decision_points": 7, "max_direction_share": 0.34, "refine_steps": 340}, true)
 		"armor_intro":
-			base.merge({"sizes": [Vector2i(6, 6), Vector2i(6, 7)], "blocks": Vector2i(18, 22), "spinners": Vector2i(4, 5),
-				"locks": Vector2i(0, 1), "spin_rules": {"ccw": Vector2i(0, 1)}, "armored": Vector2i(1, 1), "min_new_impact": 2.0,
-				"max_start_moves": 2, "min_depth": 11, "min_decision_points": 8, "min_start_traps": 1,
+			base.merge({"sizes": [Vector2i(6, 7), Vector2i(7, 7)], "blocks": Vector2i(19, 23), "spinners": Vector2i(5, 6),
+				"locks": Vector2i(0, 2), "spin_rules": {"ccw": Vector2i(0, 1), "alt": Vector2i(0, 1)}, "armored": Vector2i(1, 1), "min_new_impact": 2.0,
+				"max_start_moves": 2, "min_depth": 13, "min_decision_points": 12, "min_start_traps": 1,
 				"max_direction_share": 0.34, "refine_steps": 320}, true)
 		"armor_routes":
-			base.merge({"sizes": [Vector2i(6, 7), Vector2i(7, 7)], "blocks": Vector2i(20, 24), "spinners": Vector2i(4, 6),
-				"locks": Vector2i(0, 2), "spin_rules": {"ccw": Vector2i(0, 1), "alt": Vector2i(0, 1)}, "armored": Vector2i(1, 2),
-				"max_start_moves": 2, "min_depth": 13, "min_decision_points": 11, "min_start_traps": 1,
+			base.merge({"sizes": [Vector2i(6, 7), Vector2i(7, 7)], "blocks": Vector2i(21, 25), "spinners": Vector2i(5, 6),
+				"locks": Vector2i(1, 2), "spin_rules": {"ccw": Vector2i(0, 1), "alt": Vector2i(0, 1), "pattern": Vector2i(0, 1)}, "armored": Vector2i(1, 2),
+				"max_start_moves": 2, "min_depth": 14, "min_decision_points": 14, "min_start_traps": 1,
 				"max_direction_share": 0.33, "refine_steps": 340}, true)
 		"armor_mix":
 			base.merge({"sizes": [Vector2i(6, 7), Vector2i(7, 7)], "blocks": Vector2i(19, 24), "spinners": Vector2i(3, 5),

@@ -1,11 +1,12 @@
 {
 	"name": "Void Prism",
 	"map": [
-		".     R<    .     .     Y<    .",
-		"B>=   G^@   R>@   .     .     Pv",
-		"P^=   R^    P<    Rv    .     .",
-		".     .     Bv@   .     .     .",
-		"Yv    Rv    Y^    R<@~  R^    .",
-		"B>    Y>    .     B>    G>@   Rv"
+		".     Pv    .     P<=   G^#B  R<",
+		"G^@-  G>@   G>    .     .     R^",
+		"G^    B>@   .     .     Pv    Yv@",
+		".     .     .     .     .     G^",
+		".     .     .     .     Yv#B  .",
+		".     P<=   .     Pv    Rv    P<",
+		"G^    P<    .     Y<@~  R>@   ."
 	]
 }

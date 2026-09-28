@@ -1,11 +1,12 @@
 {
 	"name": "Deep Shard",
 	"map": [
-		".      B<     Gv     P<     .      .",
-		"R>     B>@    .      .      .      Y^@",
-		".      G^     .      .      .      B^=",
-		"R^     Yv@-   .      Y<     .      P<",
-		".      B>     .      Pv     Bv     .",
-		"G^     R<@#Y  P<     P>     B>@    P^"
+		".      G^=    Bv     .      .      .",
+		"R>     Y>     .      Y<@    Yv     .",
+		"Yv@-   .      .      B^     Gv     .",
+		".      G>     .      R^     Yv     .",
+		"G<@#Y  B<@    .      .      .      .",
+		".      P^     R<     .      Rv     P<",
+		"B^@    Gv     R<     .      .      ."
 	]
 }

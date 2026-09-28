@@ -1,12 +1,12 @@
 {
 	"name": "Gold Standard",
 	"map": [
-		".     Bv    G<+C  .     B<@   P<    .",
-		"R>@-  .     B>+C  .     B>    R^    .",
-		"Pv#B  Yv    Y^=   .     .     B^$S  Yv@*",
-		".     .     .     .     G^#R  .     R>@",
-		".     .     .     .     .     .     .",
-		".     Gv    .     .     .     .     R^@",
-		"Pv=   .     .     .     XC    .     G<@~"
+		".      XC     Y>     .      G^     Yv@",
+		"B^+C   Y^     Y^#P   .      Rv     .",
+		"G^+C   .      Y<@+C  R<     .      .",
+		".      .      Y>@    .      R<     .",
+		"P<#R   Y^     .      Pv@-   B>=    .",
+		".      .      Gv$S=  B>@*   R<     Y<",
+		".      R^     .      .      G<@    ."
 	]
 }

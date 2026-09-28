@@ -1,11 +1,11 @@
 {
 	"name": "Coil",
 	"map": [
-		".       R<      .       B<      Rv      R<",
-		"B>@     .       .       P^&A    .       .",
-		"P^      G^@-    B>@~#R  P<#B    Pv      .",
-		"Rv      R<      Y>      R>      .       Gv",
-		"Rv@     G<      .       .       Yv      G<",
-		"P>@     Y>      .       .       R>%A    ."
+		".       .       B<%A    .       G>&A    Pv",
+		"R>      .       R^@     .       B^      .",
+		".       .       .       Pv%B    G^&A    .",
+		"R^&B    Rv#G    Y<      Bv@     Y<@     .",
+		"B^      Gv      Y>@*#G  .       .       .",
+		"B>@~    R<      .       Y>      P^      Yv"
 	]
 }

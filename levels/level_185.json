@@ -1,12 +1,12 @@
 {
 	"name": "Crown Line",
 	"map": [
-		"Y<+D   .      R<     .      .      G<@",
-		"G>@*   R>     Y^@-   R>+D   .      Y^+C",
-		"G^+C   .      .      .      .      Bv",
-		"P^     .      .      Yv     .      .",
-		".      .      Yv@~   P^@    .      B>",
-		"G^     .      Rv     P<=    .      R<@#G",
-		".      XC     XD     .      .      ."
+		"G>@-    .       B>+C    P>=     G>=     .",
+		"Y^      G<      .       .       .       .",
+		".       Yv@     .       G<      B<      .",
+		".       .       Yv      Pv+C    .       .",
+		"Pv@     .       .       B<      .       .",
+		"Gv@     G^      Y<      .       Y>      XC",
+		"P^@#B   .       .       .       P>@*#Y  Rv"
 	]
 }

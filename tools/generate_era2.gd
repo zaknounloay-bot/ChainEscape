@@ -62,6 +62,15 @@ func _initialize() -> void:
 			failed.append(n)
 			print("L%d: NO CANDIDATE" % n)
 			continue
+		if write and _target > 0.0 and args.get("keep_better", "1") == "1" and FileAccess.file_exists(LevelManager.LEVEL_PATH % n):
+			# Curation never makes a slot worse: keep the existing level if it
+			# is already closer to the target.
+			var old := LevelManager.parse_level(JSON.parse_string(FileAccess.get_file_as_string(LevelManager.LEVEL_PATH % n)), n)
+			var old_d: float = LevelAnalysis.analyze(old, false)["difficulty"]
+			var new_d: float = _last_difficulty
+			if absf(old_d - _target) <= absf(new_d - _target):
+				print("L%d: kept the existing level (%.1f is closer to %.1f than %.1f)" % [n, old_d, _target, new_d])
+				continue
 		if write:
 			var dest: String = (args["outdir"] + "/level_%d.json" % n) if args.has("outdir") else LevelManager.LEVEL_PATH % n
 			var f := FileAccess.open(dest, FileAccess.WRITE)
@@ -72,6 +81,7 @@ func _initialize() -> void:
 
 
 var _target := 0.0
+var _last_difficulty := 0.0
 
 
 func _build_slot(n: int, seed: int, rounds: int, attempts: int, budget_s: int = 420) -> LevelData:
@@ -135,6 +145,7 @@ func _build_slot(n: int, seed: int, rounds: int, attempts: int, budget_s: int = 
 		sv = 1 if n in [107, 109, 110] else 0
 		gd = 1 if n == 108 else 0
 	gen.assign_reward_blocks(best, sv, gd)
+	_last_difficulty = best_m["difficulty"]
 	var in_band: bool = best_m["difficulty"] >= band.x and best_m["difficulty"] <= band.y
 	print("L%d C%d %-16s %-17s %dx%d blk=%d spn=%d lck=%d hid=%d sw=%d gate=%d arm=%d start=%d dec=%d dep=%d diff=%.1f band=%.0f-%.0f%s rwd=%dS%dG %ds" % [
 		n, c, best.name.left(16), p["name"], best.columns, best.rows, best_m["blocks"], best_m["spinners"], best_m["locks"], best_m["hidden"],

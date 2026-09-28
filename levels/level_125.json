@@ -1,11 +1,11 @@
 {
 	"name": "Gatekeeper",
 	"map": [
-		"P>@   .     .     Gv    .     .",
-		"G<    Y<    .     .     .     Y>@",
-		".     Rv    .     Rv    .     B^+C",
-		"R^    Gv    P<    .     .     R^@",
-		"XC    .     Y<    P<@   Bv+C  .",
-		".     B>    .     .     Y>    B^+C"
+		".     XC    .     .     G>+D  Pv",
+		".     Y>    .     .     G<@   Yv+C",
+		".     B>@~  P>+C  Yv    .     .",
+		"XD    R<    .     Pv@   Y^    Yv",
+		".     .     .     Bv    P^    R>@",
+		"R>    Y^    R^+C  .     B^+D  ."
 	]
 }
