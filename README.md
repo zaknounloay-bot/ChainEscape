@@ -179,6 +179,15 @@ The fields are:
 4. Settings → BACKUP CODE shows a code.
 5. Then the save is deleted, keeping the beacon: the **recovery screen** appears, writes are held (nothing is written), and **RESTORE FROM BACKUP CODE** brings the progress back.
 
+**v0.5.2 results:**
+
+| Check | Result |
+|---|---|
+| Unit tests | 10,071 checks, 0 failures (adds: writes held, missing save with a beacon, backup code, merge) |
+| Playtest | `PLAYTEST PASSED`: all 100 levels, with the TOTAL SCORE display checked on every level, plus NEXT / worse replay / improvement (+delta) |
+| Web persistence | `WEB PERSISTENCE TEST PASSED` (43 checks): A–F as in v0.5.1, plus the iPhone flow at 20 / 45 / 100 and recovery with a backup code |
+| Web audio | `WEB AUDIO TEST PASSED` (75 checks), unchanged |
+
 What this environment can't do is run real Safari. So the WebKit-specific erase-on-close is covered by the gate (nothing is played in the embed without an explicit choice), not reproduced. Please run the manual test below on the iPhone.
 
 ---

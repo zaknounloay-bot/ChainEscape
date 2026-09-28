@@ -348,7 +348,7 @@ try {
       `L${target}: one tap on OPEN GAME IN SAFARI -> progress restored ('${st.continue_text}', unlocked ${after.highest_unlocked}, source ${st.save_source})`);
     check(after.total === before.total && after.coins === before.coins && after.stars === before.stars,
       `L${target}: TOTAL SCORE ${after.total} (was ${before.total}), coins and stars unchanged after closing Safari`);
-    check(st.save_diag.includes(`UNLOCKED ${after.highest_unlocked}`) && st.save_diag.includes('STANDALONE') && !st.writes_held,
+    check(st.save_diag.includes(`UNLOCKED ${Math.min(after.highest_unlocked, 100)}`) && st.save_diag.includes('STANDALONE') && !st.writes_held,
       `L${target}: title diagnostic '${st.save_diag}'`);
     await g.page.close();
     await enterGame(tg);

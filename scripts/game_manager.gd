@@ -156,7 +156,7 @@ func _show_title() -> void:
 func save_diagnostic() -> String:
 	var st := PlayerProgress.storage_status()
 	return "SAVE %s · v%d · #%d · UNLOCKED %d · LAST PLAYED %d · TOTAL %s · SAVED %s · %s%s" % [
-		progress.load_source.to_upper(), progress.version, progress.seq, progress.highest_unlocked, progress.current_level,
+		progress.load_source.to_upper(), progress.version, progress.seq, mini(progress.highest_unlocked, maxi(level_manager.level_count, 1)), progress.current_level,
 		UIManager._fmt(progress.total_score()), progress.saved_text(), String(st.get("context", "device")).to_upper(),
 		" · WRITES HELD" if progress.hold_writes else ""]
 
