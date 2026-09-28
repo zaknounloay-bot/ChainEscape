@@ -236,6 +236,29 @@ Every anti-farming rule is unchanged: each block pays once per save, and Undo, R
 - Effects are one-shot and freed.
 - The music cache holds one stream per theme, with exactly one music player playing.
 
+### Solver fix found during validation
+
+The final unit run found a real solver bug: Level 174 was reported unsolvable, but the hint still found the solution.
+
+The cause was the solver's shortcut for "safe" moves. An escape that turns no spinner and fires no switch was taken without branching. But with armored shells left on the board, that escape can remove the only block that could still be aimed at a shell.
+
+The fix is in `Solver._is_risky` and the safe-move rule. While any shell is intact, an escape by a block that a spinner or switch can turn is treated as a real decision. After the fix:
+- the metrics of the armor levels changed
+- Levels 163, 165, 194 and 197 were re-curated with `generate_era2.gd --target`
+- every check below was re-run from scratch
+
+### v0.6 results
+
+| Check | Result |
+|---|---|
+| Unit tests | `UNIT TESTS PASSED`: 19,754 checks, 0 failures. Adds switch / gate / armor rules and Undo, the new map tokens, v4 → v5 save migration, and ram-aware hints on every campaign level. |
+| Level verifier | `ALL 200 LEVELS SOLVABLE AND PASS CAMPAIGN RULES`. First Era unchanged (C1 4.7 … C10 58.8). Second Era: C11 17.3 (lessons), C12 43.9, C13 46.9, C14 52.9, C15 55.2, C16 57.4, C17 61.0, C18 63.9, C19 67.3, C20 69.7. Level 200 is the hardest Second Era level (79.2). Switches on 74 levels, gates on 48, armor on 33; no mechanic is decorative. |
+| Playtest | `PLAYTEST PASSED`: all 200 levels cleared through real touch input. Also checked: switch flips, gate opening, rams and Undo, 20 Chapter headers and the era divider, milestones 125/150/175, the Level 200 GRAND MASTER flow, and the score card. |
+| Soak | `SOAK PASSED`: 400 levels (1 → 200 twice) in one process, about 15 minutes. 0 orphan nodes. Between cycles: objects +0, nodes +0, resources +0, memory +0.0 MB (44.2 MB). |
+| Web persistence (real browser) | `WEB PERSISTENCE TEST PASSED`: 47 checks. Scenarios A-F plus the iPhone flow. **G:** a v0.5.2 save that cleared Level 100 shows CONTINUE - LEVEL 101, then 101 → 140 play in one page with no reload and no page error. |
+| Browser memory | Levels 11 → 70: WebAssembly 46 → 55 MB, JS 60 → 75 MB. Second Era 102 → 140: WebAssembly 46 → 55 MB, JS 65 → 73 MB. Both stay bounded (a one-time +9 MB step, then flat). |
+| Web audio (real browser) | `WEB AUDIO TEST PASSED`: 75 checks, unchanged from v0.5.2 |
+
 ---
 
 ## v0.5.2
@@ -1147,7 +1170,7 @@ Each case checks:
 
 **Web persistence test** (`tools/web_persistence_test.mjs`, real Chromium). The game runs inside a cross-origin iframe, like itch.io, with a persistent browser profile that is really closed and reopened. It runs scenarios A–F from *How to test on itch.io and on phones*, tracks memory, and checks the iPhone-in-embed detection and banner. `QUICK=1` runs a shorter version.
 
-**Current results (v0.5.1):**
+**Results at v0.5.1** (for v0.6, see *v0.6 results* above):
 
 | Check | Result |
 |---|---|
