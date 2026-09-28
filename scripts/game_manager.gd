@@ -85,6 +85,7 @@ var _solving := false
 
 func _ready() -> void:
 	progress = PlayerProgress.new().load_from_disk()
+	_take_web_transfer()
 	background = ChapterBackground.new()
 	add_child(background)
 	_apply_settings()
@@ -107,6 +108,9 @@ func _ready() -> void:
 	ui.continue_pressed.connect(continue_game)
 	ui.title_level_select.connect(open_level_select)
 	ui.title_tapped.connect(debug_panel.register_title_tap)
+	ui.backup_requested.connect(show_backup_code)
+	ui.restore_requested.connect(request_restore)
+	ui.recovery_new_game.connect(_recovery_start_new)
 	debug_panel.level_count = level_manager.level_count
 	debug_panel.level_requested.connect(func(n): start_level(wrapi(n, 1, level_manager.level_count + 1), "debug"))
 	debug_panel.restart_requested.connect(restart)
@@ -123,10 +127,137 @@ func _ready() -> void:
 	# Real-app launch: show the title with CONTINUE - LEVEL X. (Music waits
 	# for the first tap on the web, see AudioManager.)
 	if not skip_title and not direct:
-		ui.show_title(progress.has_progress(), current_level, progress.total_stars(), progress.coins, progress.total_score())
+		_show_title()
 		_update_storage_notice()
 	publish_state.call_deferred()
 	AudioManager.start_music()
+
+
+## Title with CONTINUE, the save diagnostic line and, when a save existed
+## but can't be read or found, the recovery choice instead of a silent
+## fresh start.
+func _show_title() -> void:
+	ui.show_title(progress.has_progress(), current_level, progress.total_stars(), progress.coins, progress.total_score())
+	ui.set_save_diagnostic(save_diagnostic())
+	if progress.hold_writes:
+		var what := ("Your saved progress could not be read." if progress.hold_reason == "unreadable"
+			else "Your saved progress is missing from this browser.")
+		var had := ""
+		if not progress.beacon.is_empty():
+			had = "\nLast save: level %d completed, TOTAL SCORE %s." % [int(progress.beacon.get("highest_completed", 0)),
+				UIManager._fmt(int(progress.beacon.get("total_score", 0)))]
+		ui.show_recovery("%s%s\nNothing has been overwritten. Restore it from a backup code, or start a new game." % [what, had])
+	else:
+		ui.hide_recovery()
+
+
+## One line for testing on real devices: where the save came from and what
+## it holds (title screen, debug panel, console).
+func save_diagnostic() -> String:
+	var st := PlayerProgress.storage_status()
+	return "SAVE %s · v%d · #%d · UNLOCKED %d · LAST PLAYED %d · TOTAL %s · SAVED %s · %s%s" % [
+		progress.load_source.to_upper(), progress.version, progress.seq, progress.highest_unlocked, progress.current_level,
+		UIManager._fmt(progress.total_score()), progress.saved_text(), String(st.get("context", "device")).to_upper(),
+		" · WRITES HELD" if progress.hold_writes else ""]
+
+
+# --- Backup code / transfer / recovery (v0.5.2) ---------------------------------
+
+var _awaiting_import := false
+var _import_poll := 0.0
+
+
+## Web: progress handed over from an itch.io embed (OPEN GAME IN SAFARI)
+## is merged into this tab's save - keeping the best of both.
+func _take_web_transfer() -> void:
+	if not OS.has_feature("web") or not WebBridge.available():
+		return
+	var text := str(WebBridge.call_api("takeTransfer"))
+	if text == "" or text == "<null>":
+		return
+	var other := PlayerProgress.from_text(text)
+	if other == null:
+		print("[Save] transfer ignored: not a Chain Escape save")
+		return
+	var r := progress.merge_from(other)
+	progress.release_hold()
+	progress.save()
+	print("[Save] transfer from embed: +%d levels, total %d -> %d" % [r["levels_added"], r["total_before"], r["total_after"]])
+
+
+func show_backup_code() -> void:
+	var code := progress.backup_code()
+	print("[Save] backup code made (%d chars, seq %d)" % [code.length(), progress.seq])
+	if OS.has_feature("web") and WebBridge.available():
+		WebBridge.call_api("backupDialog", ["show", code])
+	else:
+		DisplayServer.clipboard_set(code)
+		_show_message("Backup code copied to the clipboard", 2.6)
+
+
+func request_restore() -> void:
+	if OS.has_feature("web") and WebBridge.available():
+		WebBridge.call_api("backupDialog", ["restore"])
+		_awaiting_import = true
+		_import_poll = 0.0
+	else:
+		apply_restore(DisplayServer.clipboard_get())
+
+
+var _published_panels := ""
+
+
+func _process(delta: float) -> void:
+	if OS.has_feature("web"):
+		# Re-publish the state snapshot when a panel opens or closes (its
+		# button positions are only laid out while it is visible).
+		var panels := "%s%s" % [ui.is_settings_open(), ui.is_recovery_open()]
+		if panels != _published_panels:
+			_published_panels = panels
+			get_tree().create_timer(0.2).timeout.connect(publish_state)
+	if not _awaiting_import:
+		return
+	_import_poll += delta
+	if _import_poll < 0.25:
+		return
+	_import_poll = 0.0
+	var text := str(WebBridge.call_api("takeImport"))
+	if text != "" and text != "<null>":
+		_awaiting_import = false
+		apply_restore(text)
+	elif not bool(WebBridge.call_api("dialogOpen")):
+		_awaiting_import = false
+
+
+## Restores a backup code (or pasted save text). Merges: never loses what
+## this device already has, never pays a reward twice. Returns true if the
+## code was valid.
+func apply_restore(code: String) -> bool:
+	var other := PlayerProgress.from_text(PlayerProgress.decode_backup(code))
+	if other == null:
+		_show_message("That is not a valid backup code", 2.8)
+		print("[Save] restore rejected: invalid code")
+		return false
+	var r := progress.merge_from(other)
+	progress.release_hold()
+	progress.save()
+	ui.set_coins(progress.coins, false)
+	var target := clampi(progress.current_level, 1, maxi(level_manager.level_count, 1))
+	if ui.is_title_open() or current_level != target:
+		start_level(target, "restore")
+		_show_title()
+	print("[Save] restored: +%d levels, total %d -> %d" % [r["levels_added"], r["total_before"], r["total_after"]])
+	_show_message("Progress restored - TOTAL SCORE %s" % UIManager._fmt(progress.total_score()), 3.0)
+	publish_state.call_deferred()
+	return true
+
+
+## Recovery screen: the player confirmed START NEW GAME.
+func _recovery_start_new() -> void:
+	progress.release_hold()
+	progress.save()
+	_show_title()
+	publish_state.call_deferred()
 
 
 ## Title "CONTINUE - LEVEL X" / "PLAY": the level is already loaded behind it.
@@ -188,6 +319,7 @@ func start_level(number: int, via: String = "load") -> void:
 	board.refresh_locks(model)
 	board.input_enabled = true
 	ui.set_level(number, level_manager.level_count, level.name, level.mystery)
+	ui.set_total_score(progress.total_score())
 	ui.set_progress(0.0, false)
 	ui.set_hearts(max_hearts, hearts)
 	_refresh_buttons()
@@ -745,7 +877,7 @@ func chapter_summary(chapter: int) -> Dictionary:
 	return {"chapter": chapter, "title": Chapters.title(chapter), "theme": Chapters.theme_for_chapter(chapter),
 		"stars": Economy.chapter_stars(progress, chapter), "max_stars": (last - rg.x + 1) * 3,
 		"coins": int(progress.chapter_coins.get(chapter, 0)), "perfect": perfect, "levels": last - rg.x + 1,
-		"score": score, "rewards_total": rewards_total, "rewards_got": rewards_got,
+		"score": score, "total_score": progress.total_score(), "rewards_total": rewards_total, "rewards_got": rewards_got,
 		"tiers": Economy.chest_tiers(progress, chapter),
 		"next_title": Chapters.title(next) if has_next else "", "next_theme": Chapters.theme_for_chapter(next),
 		"next_new": _chapter_news(next) if has_next else "", "completed": progress.completed_chapters.has(chapter)}
@@ -843,11 +975,12 @@ func _update_storage_notice() -> void:
 		return
 	var st := PlayerProgress.storage_status()
 	print("[Save] storage: %s" % str(st))
-	if st["persistent"]:
+	print("[Save] " + save_diagnostic())
+	# Safari embeds get the full-screen "open in its own tab" gate from the
+	# page script (web/audio_unlock.js) before anything is played.
+	if st["persistent"] or st.get("ephemeral", false):
 		return
-	var text := ("Safari deletes progress saved inside this embedded page when it closes. Open the game in its own tab to keep your progress."
-		if st["ephemeral"] else "This browser is blocking saved data (private browsing?). Progress may not be kept.")
-	WebBridge.call_api("saveNotice", [true, text, "OPEN GAME"])
+	WebBridge.call_api("saveNotice", [true, "This browser is blocking saved data (private browsing?). Progress may not be kept - use BACKUP CODE in Settings.", "OPEN GAME"])
 
 
 ## Web: a read-only snapshot of the game for automated browser tests and
@@ -871,6 +1004,12 @@ func publish_state() -> void:
 		"next": center.call(ui._next_button), "chapter_continue": center.call(ui._chapter_card._continue),
 		"title_continue": center.call(ui._title._continue), "levels_button": center.call(ui._levels_button),
 		"music": AudioManager.music_theme, "diag": last_diag,
+		"hud_total": ui.hud_total_text(), "card_big": ui._card_score.text, "card_caption": ui._card_score_caption.text,
+		"card_level": ui._card_total.text, "recovery_open": ui.is_recovery_open(), "writes_held": progress.hold_writes,
+		"save_diag": save_diagnostic(), "settings_open": ui.is_settings_open(),
+		"settings_button": center.call(ui._settings_button), "backup_button": center.call(ui._backup_button),
+		"restore_button": center.call(ui._restore_button), "recovery_restore": center.call(ui._recovery_restore),
+		"recovery_new": center.call(ui._recovery_new),
 		"select_open": ui.is_level_select_open(), "select_unlocked": select_shown.get("unlocked", []).size(),
 		"select_max_unlocked": (select_shown.get("unlocked", []) as Array).max() if not select_shown.get("unlocked", []).is_empty() else 0,
 		"select_locked_first": (select_shown.get("locked", []) as Array).min() if not select_shown.get("locked", []).is_empty() else 0,
@@ -881,9 +1020,10 @@ func publish_state() -> void:
 ## Text for the debug panel (tap the level title 5 times on a phone).
 func debug_info() -> String:
 	var st := PlayerProgress.storage_status()
-	return "%s\nSave: source=%s seq=%d v%d  last_played=%d  highest_completed=%d  highest_unlocked=%d  total_score=%d  coins=%d\nStorage: %s\n%s" % [
+	return "%s\nSave: source=%s seq=%d v%d  last_played=%d  highest_completed=%d  highest_unlocked=%d  total_score=%d  coins=%d  saved=%s%s\nStorage: %s\n%s" % [
 		Diagnostics.last_line, progress.load_source, progress.seq, progress.version, progress.current_level,
-		progress.highest_completed, progress.highest_unlocked, progress.total_score(), progress.coins, str(st),
+		progress.highest_completed, progress.highest_unlocked, progress.total_score(), progress.coins, progress.saved_text(),
+		("  HELD(%s) beacon=%s" % [progress.hold_reason, JSON.stringify(progress.beacon)]) if progress.hold_writes else "", str(st),
 		("Previous session: " + Diagnostics.previous_session) if Diagnostics.previous_session != "" else "Previous session: closed normally / first run"]
 
 

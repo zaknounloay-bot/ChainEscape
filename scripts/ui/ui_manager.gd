@@ -20,6 +20,9 @@ signal level_chosen(number: int)
 signal levels_opened  # GameManager fills the grid via open_level_select()
 signal setting_toggled(key: String, on: bool)  # "music" | "sfx" | "haptics"
 signal title_tapped  # used as a hidden debug gesture on devices
+signal backup_requested  # Settings: BACKUP CODE
+signal restore_requested  # Settings / recovery: RESTORE FROM CODE
+signal recovery_new_game  # recovery: START NEW GAME (confirmed)
 
 const TOP_HEIGHT := 290.0
 const BOTTOM_HEIGHT := 190.0
@@ -40,13 +43,22 @@ var _settings_button: PillButton
 var _settings_overlay: ColorRect
 var _setting_buttons: Dictionary = {}  # key -> PillButton
 var _settings: Dictionary = {"music": true, "sfx": true, "haptics": true}
-var _card_reward: Label  # "NEW BEST!" / "BEST 1234"
-var _card_score: Label
-## Score model (v0.5.1) - every number on the card says what it is:
-## LEVEL SCORE (this run), BEST (this level's personal best) and TOTAL SCORE
-## (sum of the best score of every completed level; never goes down).
-var _card_score_caption: Label
-var _card_total: Label
+## Score model (v0.5.2) - every number says what it is:
+##   TOTAL SCORE = sum of the best score of every completed level. It never
+##                 goes down. It is THE big number on the level card and the
+##                 one shown in the HUD, title and Level Select.
+##   LEVEL SCORE = this attempt on this level (a smaller, labelled line).
+##   LEVEL BEST  = this level's personal best.
+var _card_reward: Label  # "NEW BEST!" / "LEVEL BEST  1,234"
+var _card_score: Label  # the big number: TOTAL SCORE
+var _card_score_caption: Label  # "TOTAL SCORE"
+var _card_gain: Label  # "+800" (how much this run added to the total)
+var _card_total: Label  # "LEVEL SCORE  6,000"
+var _card_count: Tween
+## HUD chip (top-left, opposite the coin pill): "TOTAL SCORE / 229,653".
+var _hud_total: VBoxContainer
+var _hud_total_caption: Label
+var _hud_total_value: Label
 var _card_stars: StarsRow
 var _card_buttons: HBoxContainer
 var _replay_button: PillButton
@@ -187,6 +199,15 @@ func set_coins(coins: int, animate: bool = true) -> void:
 	_coin_pill.set_coins(coins, animate)
 
 
+## HUD TOTAL SCORE (sum of every level's best; never goes down).
+func set_total_score(total: int) -> void:
+	_hud_total_value.text = _fmt(total)
+
+
+func hud_total_text() -> String:
+	return "%s %s" % [_hud_total_caption.text, _hud_total_value.text]
+
+
 func open_shop(coins: int, inventory: Dictionary) -> void:
 	_shop.open(coins, inventory)
 
@@ -205,6 +226,7 @@ func pulse_coins() -> void:
 
 func show_title(has_progress: bool, level: int, stars: int, coins: int, total_score: int = 0) -> void:
 	_title.open(has_progress, level, stars, coins, theme, total_score)
+	set_total_score(total_score)
 	_top.modulate.a = 0.0
 	_bottom.modulate.a = 0.0
 
@@ -234,6 +256,8 @@ func apply_theme(t: Dictionary) -> void:
 	var accent_btn: Color = t["accent"].darkened(0.1) if t["dark"] else t["accent"]
 	_next_button.set_background(accent_btn)
 	_coin_pill.accent = t["accent"]
+	_hud_total_caption.add_theme_color_override("font_color", t["text_soft"])
+	_hud_total_value.add_theme_color_override("font_color", t["text"])
 	_chain_label.add_theme_color_override("font_color", t["accent"])
 
 
@@ -372,9 +396,13 @@ func show_complete(r: Dictionary) -> void:
 	# TOTAL SCORE only ever grows: it rises by the improvement over this
 	# level's previous best, and stays put on a worse run or a replay.
 	var total_after: int = r.get("total_after", 0)
+	var total_before: int = mini(r.get("total_before", total_after), total_after)
 	var gain: int = r.get("total_gain", 0)
-	_card_total.text = "TOTAL SCORE  %s%s" % [_fmt(total_after), ("   +%s" % _fmt(gain)) if gain > 0 else ""]
-	_card_total.add_theme_color_override("font_color", Palette.ACCENT if gain > 0 else Palette.TEXT)
+	_card_score.text = _fmt(total_before)
+	_card_gain.text = ("+%s" % _fmt(gain)) if gain > 0 else ""
+	_card_gain.visible = gain > 0
+	_card_total.text = "LEVEL SCORE  %s" % _fmt(r["score"])
+	set_total_score(total_after)
 	_next_button.text = "NEXT LEVEL" if not r["is_last"] else "PLAY AGAIN"
 	if r.get("chapter_complete", 0) > 0:
 		_next_button.text = "CONTINUE"  # opens the Chapter Complete card
@@ -387,10 +415,15 @@ func show_complete(r: Dictionary) -> void:
 	t.tween_property(_overlay, "color:a", 0.72, 0.25)
 	t.tween_property(_card, "scale", Vector2.ONE, 0.32).set_trans(Tween.TRANS_BACK).set_ease(Tween.EASE_OUT)
 	t.tween_property(_card, "modulate:a", 1.0, 0.18)
-	# Score counts up; NEW BEST pulses after it lands.
-	var score: int = r["score"]
+	# TOTAL SCORE counts up from the previous total by this run's gain -
+	# never from 0, so the big number can only ever rise. NEW BEST pulses
+	# after it lands.
+	if _card_count and _card_count.is_valid():
+		_card_count.kill()
 	var c := create_tween()
-	c.tween_method(func(v): _card_score.text = _fmt(int(v)), 0.0, float(score), 0.6).set_delay(0.2).set_trans(Tween.TRANS_CUBIC).set_ease(Tween.EASE_OUT)
+	_card_count = c
+	c.tween_method(func(v): _card_score.text = _fmt(int(v)), float(total_before), float(total_after), 0.6).set_delay(0.2).set_trans(Tween.TRANS_CUBIC).set_ease(Tween.EASE_OUT)
+	c.tween_callback(func(): _card_score.text = _fmt(total_after))
 	if r["new_best"]:
 		_card_reward.pivot_offset = _card_reward.size * 0.5
 		c.tween_callback(func(): AudioManager.play_new_best())
@@ -434,6 +467,7 @@ func _set_card_mode(complete: bool) -> void:
 	_card_stars.visible = complete
 	_card_score.visible = complete
 	_card_score_caption.visible = complete
+	_card_gain.visible = complete and _card_gain.text != ""
 	_card_total.visible = complete
 	_card_reward.visible = complete
 	_card_buttons.visible = complete
@@ -563,15 +597,17 @@ func _build() -> void:
 	_card_stars = StarsRow.new(36)
 	_card_stars.size_flags_horizontal = Control.SIZE_SHRINK_CENTER
 	card_box.add_child(_card_stars)
-	_card_score_caption = _make_label(20, Palette.TEXT_SOFT, 900)
-	_card_score_caption.text = "LEVEL SCORE"
+	_card_score_caption = _make_label(22, Palette.TEXT_SOFT, 900)
+	_card_score_caption.text = "TOTAL SCORE"
 	card_box.add_child(_card_score_caption)
 	_card_score = _make_label(64, Palette.TEXT, 900)
 	card_box.add_child(_card_score)
-	_card_reward = _make_label(30, Palette.ACCENT, 900)
-	card_box.add_child(_card_reward)
-	_card_total = _make_label(24, Palette.TEXT, 900)
+	_card_gain = _make_label(26, Palette.ACCENT, 900)
+	card_box.add_child(_card_gain)
+	_card_total = _make_label(28, Palette.TEXT, 900)
 	card_box.add_child(_card_total)
+	_card_reward = _make_label(24, Palette.ACCENT, 900)
+	card_box.add_child(_card_reward)
 	_card_stats = _make_label(22, Palette.TEXT_SOFT, 800)
 	_card_coins = _make_label(26, Color("#D98A00"), 900)
 	_card_coins.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
@@ -620,6 +656,19 @@ func _build() -> void:
 	_coin_pill.set_anchors_and_offsets_preset(Control.PRESET_TOP_RIGHT)
 	_coin_pill.pressed.connect(func(): shop_open_requested.emit())
 	_root.add_child(_coin_pill)
+	_hud_total = VBoxContainer.new()
+	_hud_total.set_anchors_and_offsets_preset(Control.PRESET_TOP_LEFT)
+	_hud_total.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	_hud_total.add_theme_constant_override("separation", -4)
+	_hud_total_caption = _make_label(15, Palette.TEXT_SOFT, 900)
+	_hud_total_caption.text = "TOTAL SCORE"
+	_hud_total_caption.horizontal_alignment = HORIZONTAL_ALIGNMENT_LEFT
+	_hud_total.add_child(_hud_total_caption)
+	_hud_total_value = _make_label(26, Palette.TEXT, 900)
+	_hud_total_value.text = "0"
+	_hud_total_value.horizontal_alignment = HORIZONTAL_ALIGNMENT_LEFT
+	_hud_total.add_child(_hud_total_value)
+	_root.add_child(_hud_total)
 	_banner = _make_label(44, Palette.ACCENT, 900)
 	_banner.add_theme_color_override("font_outline_color", Color(0, 0, 0, 0.35))
 	_banner.add_theme_constant_override("outline_size", 10)
@@ -639,6 +688,7 @@ func _build() -> void:
 	_shop = ShopPanel.new()
 	_shop.buy_requested.connect(func(item): buy_requested.emit(item))
 	_root.add_child(_shop)
+	_build_recovery()
 
 
 func _build_settings() -> void:
@@ -678,11 +728,110 @@ func _build_settings() -> void:
 			setting_toggled.emit(key, _settings[key]))
 		box.add_child(b)
 		_setting_buttons[key] = b
+	# Save safety (v0.5.2): a copyable code with the whole save, and restore.
+	var save_row := HBoxContainer.new()
+	save_row.add_theme_constant_override("separation", 12)
+	box.add_child(save_row)
+	var backup := PillButton.new("BACKUP CODE", PillButton.Icon.NONE, Palette.BACKGROUND, Palette.TEXT, 22)
+	_backup_button = backup
+	backup.custom_minimum_size = Vector2(0, 76)
+	backup.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	backup.pressed.connect(func():
+		_close_settings()
+		backup_requested.emit())
+	save_row.add_child(backup)
+	var restore := PillButton.new("RESTORE", PillButton.Icon.NONE, Palette.BACKGROUND, Palette.TEXT, 22)
+	_restore_button = restore
+	restore.custom_minimum_size = Vector2(0, 76)
+	restore.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	restore.pressed.connect(func():
+		_close_settings()
+		restore_requested.emit())
+	save_row.add_child(restore)
 	var done := PillButton.new("DONE", PillButton.Icon.NONE, Palette.ACCENT, Palette.WHITE, 30)
 	done.custom_minimum_size = Vector2(0, 90)
 	done.pressed.connect(_close_settings)
 	box.add_child(done)
 	_refresh_setting_buttons()
+
+
+# --- Recovery (v0.5.2) ---------------------------------------------------------
+
+var _recovery: ColorRect
+var _recovery_text: Label
+var _recovery_new: PillButton
+var _recovery_restore: PillButton
+var _backup_button: PillButton
+var _restore_button: PillButton
+var _recovery_confirm := false
+
+
+func _build_recovery() -> void:
+	_recovery = ColorRect.new()
+	_recovery.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
+	_recovery.color = Color(Palette.TEXT, 0.55)
+	_recovery.mouse_filter = Control.MOUSE_FILTER_STOP
+	_recovery.visible = false
+	_root.add_child(_recovery)
+	var center := CenterContainer.new()
+	center.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
+	center.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	_recovery.add_child(center)
+	var card := PanelContainer.new()
+	var st := StyleBoxFlat.new()
+	st.bg_color = Palette.WHITE
+	st.set_corner_radius_all(40)
+	st.anti_aliasing = true
+	st.set_content_margin_all(36)
+	card.add_theme_stylebox_override("panel", st)
+	card.custom_minimum_size = Vector2(600, 0)
+	center.add_child(card)
+	var box := VBoxContainer.new()
+	box.add_theme_constant_override("separation", 18)
+	card.add_child(box)
+	var title := _make_label(38, Palette.TEXT, 900)
+	title.text = "SAVED PROGRESS"
+	box.add_child(title)
+	_recovery_text = _make_label(24, Palette.TEXT_SOFT, 800)
+	_recovery_text.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+	_recovery_text.custom_minimum_size = Vector2(520, 0)
+	box.add_child(_recovery_text)
+	var restore := PillButton.new("RESTORE FROM BACKUP CODE", PillButton.Icon.NONE, Palette.ACCENT, Palette.WHITE, 26)
+	restore.custom_minimum_size = Vector2(0, 92)
+	restore.pressed.connect(func(): restore_requested.emit())
+	box.add_child(restore)
+	_recovery_restore = restore
+	_recovery_new = PillButton.new("", PillButton.Icon.NONE, Palette.BACKGROUND, Palette.TEXT, 24)
+	_recovery_new.custom_minimum_size = Vector2(0, 84)
+	_recovery_new.pressed.connect(func():
+		# Two taps: starting over is never one accidental tap away.
+		if not _recovery_confirm:
+			_recovery_confirm = true
+			_recovery_new.text = "TAP AGAIN TO START OVER"
+			return
+		hide_recovery()
+		recovery_new_game.emit())
+	box.add_child(_recovery_new)
+
+
+func show_recovery(text: String) -> void:
+	_recovery_text.text = text
+	_recovery_confirm = false
+	_recovery_new.text = "START NEW GAME"
+	_recovery.visible = true
+
+
+func hide_recovery() -> void:
+	_recovery.visible = false
+
+
+func is_recovery_open() -> bool:
+	return _recovery.visible
+
+
+## Title-screen save diagnostic (testing on real devices).
+func set_save_diagnostic(text: String) -> void:
+	_title.set_diagnostic(text)
 
 
 func _refresh_setting_buttons() -> void:
@@ -734,6 +883,11 @@ func _apply_safe_area() -> void:
 	_levels_button.offset_right = 24.0 + 76.0
 	_levels_button.offset_top = _safe_top + 28.0
 	_levels_button.offset_bottom = _safe_top + 28.0 + 76.0
+	if _hud_total:
+		_hud_total.offset_left = 30.0
+		_hud_total.offset_right = 30.0 + 190.0
+		_hud_total.offset_top = _safe_top + 148.0
+		_hud_total.offset_bottom = _safe_top + 148.0 + 60.0
 	if _coin_pill:
 		_coin_pill.offset_left = -150.0 - 24.0
 		_coin_pill.offset_right = -24.0

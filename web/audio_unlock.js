@@ -123,6 +123,162 @@
     if (navigator.storage && navigator.storage.persist) navigator.storage.persist().catch(function () {});
   } catch (e) { /* optional */ }
 
+  // --- v0.5.2: where can progress live? ---------------------------------------
+  // Safari / every iOS browser (WebKit) gives a CROSS-ORIGIN IFRAME - the
+  // itch.io embed - storage that is partitioned (separate from the game's
+  // own tab) and ephemeral (erased when Safari closes). Nothing written
+  // there survives, so on WebKit-in-an-embed the game must run in its own
+  // tab (first-party storage, kept on disk) BEFORE any progress is made.
+  var ephemeralEmbed = isWebKit && crossOrigin;
+  var context = !inIframe ? 'standalone' : (crossOrigin ? (ephemeralEmbed ? 'embed-ephemeral' : 'embed-partitioned') : 'iframe-same-origin');
+  var SAVE_KEY = 'chain_escape_save';
+  var gateChoice = ephemeralEmbed ? 'pending' : 'none'; // pending | tab | here | none
+
+  // Progress transferred from an embed arrives in the URL fragment (never
+  // sent to any server). Taken once, then removed from the address bar.
+  var transfer = '';
+  try {
+    var m = /[#&]ce_transfer=([^&]*)/.exec(location.hash || '');
+    if (m) {
+      transfer = decodeURIComponent(escape(atob(decodeURIComponent(m[1]).replace(/-/g, '+').replace(/_/g, '/'))));
+      history.replaceState(null, '', location.pathname + location.search);
+    }
+  } catch (e) { warn('transfer data unreadable: ' + e); transfer = ''; }
+
+  function standaloneUrl(withProgress) {
+    var url = location.href.split('#')[0];
+    if (!withProgress) return url;
+    var text = '';
+    try { text = localStorage.getItem(SAVE_KEY) || ''; } catch (e) { text = ''; }
+    if (!text) return url;
+    var b64 = btoa(unescape(encodeURIComponent(text))).replace(/\+/g, '-').replace(/\//g, '_').replace(/=+$/, '');
+    return url + '#ce_transfer=' + b64;
+  }
+
+  var ui = 'font-family:-apple-system,system-ui,sans-serif;';
+  function btnCss(bg, fg) {
+    return 'display:block;width:100%;border:0;border-radius:16px;padding:15px 12px;margin-top:10px;background:' + bg + ';color:' + fg + ';' + ui + 'font-weight:800;font-size:17px';
+  }
+
+  // Opens the game in its own Safari tab from inside a real tap (never
+  // popup-blocked). Falls back to navigating the whole page, then to
+  // showing the address to copy.
+  function openInTab(withProgress, fallbackHost) {
+    var url = standaloneUrl(withProgress);
+    var w = null;
+    try { w = window.open(url, '_blank'); } catch (e) { w = null; }
+    if (w) { gateChoice = 'tab'; return; }
+    try { window.top.location.href = url; gateChoice = 'tab'; return; } catch (e) { /* sandboxed */ }
+    if (fallbackHost) {
+      var p = document.createElement('p');
+      p.style.cssText = 'margin:12px 0 0;font-size:13px;word-break:break-all;user-select:all;-webkit-user-select:all';
+      p.textContent = 'Copy this address into Safari: ' + url.split('#')[0];
+      fallbackHost.appendChild(p);
+    }
+  }
+
+  function showNotSavedPill() {
+    if (document.getElementById('ce-unsaved')) return;
+    var pill = document.createElement('button');
+    pill.id = 'ce-unsaved';
+    pill.textContent = 'NOT SAVED · OPEN IN SAFARI';
+    // Top edge, above the HUD title: never under the home indicator or a
+    // browser toolbar, and never over the game's buttons.
+    pill.style.cssText = 'position:fixed;left:50%;top:max(4px,env(safe-area-inset-top));transform:translateX(-50%);z-index:9998;border:0;' +
+      'border-radius:999px;padding:6px 12px;background:#D7263D;color:#fff;' + ui + 'font-weight:800;font-size:12px;box-shadow:0 4px 14px rgba(0,0,0,.3)';
+    pill.addEventListener('click', function () { openInTab(true, null); });
+    document.body.appendChild(pill);
+  }
+
+  // The gate: shown before the game can be played in an ephemeral embed.
+  function showGate() {
+    if (document.getElementById('ce-gate')) return;
+    var g = document.createElement('div');
+    g.id = 'ce-gate';
+    g.style.cssText = 'position:fixed;inset:0;z-index:10001;display:flex;align-items:center;justify-content:center;background:rgba(18,16,30,.94);' +
+      'color:#fff;' + ui + 'padding:20px';
+    var card = document.createElement('div');
+    card.style.cssText = 'max-width:420px;width:100%;text-align:center';
+    card.innerHTML = '<div style="font-size:28px;font-weight:900;letter-spacing:.5px">CHAIN ESCAPE</div>' +
+      '<div style="font-size:20px;font-weight:800;margin:18px 0 8px">Save your progress</div>' +
+      '<div style="font-size:15px;line-height:1.45;opacity:.9">On iPhone, iPad and in Safari, the browser <b>erases games played inside the itch.io page</b> when Safari closes.<br><br>' +
+      'Open Chain Escape in its own Safari tab: your levels, stars, coins and score are kept there, even after closing Safari. ' +
+      'Next time, open the game the same way - tap <b>OPEN GAME IN SAFARI</b> and your progress is waiting.</div>';
+    var open = document.createElement('button');
+    open.id = 'ce-gate-open';
+    open.textContent = 'OPEN GAME IN SAFARI';
+    open.style.cssText = btnCss('#FF5A1F', '#fff') + ';margin-top:22px';
+    open.addEventListener('click', function () { openInTab(true, card); });
+    var here = document.createElement('button');
+    here.id = 'ce-gate-here';
+    here.textContent = 'Play here without saving';
+    here.style.cssText = btnCss('transparent', 'rgba(255,255,255,.8)') + ';font-weight:700;font-size:15px;text-decoration:underline';
+    here.addEventListener('click', function () {
+      gateChoice = 'here';
+      g.style.display = 'none';
+      showNotSavedPill();
+    });
+    card.appendChild(open);
+    card.appendChild(here);
+    g.appendChild(card);
+    document.body.appendChild(g);
+  }
+  if (ephemeralEmbed) {
+    if (document.body) showGate(); else document.addEventListener('DOMContentLoaded', showGate);
+  }
+
+  // Backup code dialog (native, so copy/paste and the keyboard work on
+  // every phone). mode 'show': the code with COPY; mode 'restore': paste.
+  var pendingImport = '';
+  var dialogOpen = false;
+  function backupDialog(mode, code) {
+    var old = document.getElementById('ce-backup');
+    if (old) old.remove();
+    dialogOpen = true;
+    var d = document.createElement('div');
+    d.id = 'ce-backup';
+    d.style.cssText = 'position:fixed;inset:0;z-index:10002;display:flex;align-items:center;justify-content:center;background:rgba(18,16,30,.9);' + ui + 'padding:18px';
+    var c = document.createElement('div');
+    c.style.cssText = 'background:#fff;color:#2B2440;border-radius:22px;padding:20px;max-width:440px;width:100%';
+    var title = document.createElement('div');
+    title.style.cssText = 'font-size:20px;font-weight:900;margin-bottom:8px';
+    title.textContent = mode === 'show' ? 'BACKUP CODE' : 'RESTORE FROM BACKUP CODE';
+    var help = document.createElement('div');
+    help.style.cssText = 'font-size:14px;line-height:1.4;margin-bottom:10px;color:#5C5475';
+    help.textContent = mode === 'show'
+      ? 'Copy this code and keep it somewhere safe (Notes, a message to yourself). Paste it into RESTORE on any browser or phone to get your progress back.'
+      : 'Paste your backup code. Your progress is combined with it - nothing you already have is lost.';
+    var ta = document.createElement('textarea');
+    ta.id = 'ce-backup-text';
+    ta.style.cssText = 'width:100%;box-sizing:border-box;height:120px;border:2px solid #E4DEF2;border-radius:12px;padding:8px;font:12px/1.3 ui-monospace,monospace;word-break:break-all';
+    if (mode === 'show') { ta.value = code; ta.readOnly = true; }
+    var main = document.createElement('button');
+    main.id = 'ce-backup-main';
+    main.textContent = mode === 'show' ? 'COPY CODE' : 'RESTORE';
+    main.style.cssText = btnCss('#FF5A1F', '#fff');
+    main.addEventListener('click', function () {
+      if (mode === 'show') {
+        ta.focus(); ta.select(); ta.setSelectionRange(0, ta.value.length);
+        var ok = false;
+        try { ok = document.execCommand('copy'); } catch (e) { ok = false; }
+        try { if (navigator.clipboard) navigator.clipboard.writeText(ta.value).then(function () {}, function () {}); ok = true; } catch (e) { /* select+copy above */ }
+        main.textContent = ok ? 'COPIED' : 'SELECT THE CODE AND COPY IT';
+      } else {
+        pendingImport = ta.value;
+        close();
+      }
+    });
+    var cancel = document.createElement('button');
+    cancel.id = 'ce-backup-close';
+    cancel.textContent = mode === 'show' ? 'DONE' : 'CANCEL';
+    cancel.style.cssText = btnCss('#F1EDF9', '#2B2440');
+    function close() { dialogOpen = false; d.remove(); }
+    cancel.addEventListener('click', close);
+    c.appendChild(title); c.appendChild(help); c.appendChild(ta); c.appendChild(main); c.appendChild(cancel);
+    d.appendChild(c);
+    document.body.appendChild(d);
+  }
+
   // --- capture every AudioContext the engine creates -----------------------
   var contexts = [];
   var Orig = window.AudioContext || window.webkitAudioContext;
@@ -209,8 +365,16 @@
       var ls = false;
       try { localStorage.setItem('__ce_probe', '1'); ls = localStorage.getItem('__ce_probe') === '1'; localStorage.removeItem('__ce_probe'); }
       catch (e) { ls = false; }
-      return { localStorage: ls, iframe: inIframe, crossOrigin: crossOrigin, webkit: isWebKit, ephemeral: isWebKit && crossOrigin };
+      return { localStorage: ls, iframe: inIframe, crossOrigin: crossOrigin, webkit: isWebKit, ephemeral: ephemeralEmbed,
+        context: context, gate: gateChoice, ios: isIOS };
     },
+    /** Save text handed over from an embed (URL fragment), once; '' if none. */
+    takeTransfer: function () { var t = transfer; transfer = ''; return t; },
+    /** Backup code dialog: mode 'show' (with the code) or 'restore'. */
+    backupDialog: function (mode, code) { backupDialog(mode, code || ''); },
+    /** Text pasted into RESTORE, once; '' if none. */
+    takeImport: function () { var t = pendingImport; pendingImport = ''; return t; },
+    dialogOpen: function () { return dialogOpen; },
     /** Game -> page calls (plain function calls; the game never evals generated source). */
     publish: function (name, json) { try { window[name] = JSON.parse(json); } catch (e) { /* ignore */ } },
     lsSet: function (key, value) {

@@ -1,4 +1,4 @@
-# Chain Escape — v0.5.1
+# Chain Escape — v0.5.2
 
 A one-handed portrait puzzle game built with **Godot 4.3 (GDScript)** for iOS, Android and mobile Web.
 
@@ -21,6 +21,8 @@ The feeling it aims for: *"I progressed, the game changed, and I want to see the
 - a score that seemed to drop between levels
 
 See *v0.5.1 stabilization* below.
+
+**v0.5.2 fixes the two issues left after a real-iPhone test of v0.5.1** (the crash fix held for all 100 levels): the displayed score still seemed to drop between levels, and iPhone progress was lost after closing Safari and reopening the itch.io link. See *v0.5.2* below.
 
 Everything from v0.4 is kept:
 
@@ -51,6 +53,133 @@ Not included, on purpose: leaderboards, country ranking, accounts/login, backend
 | **Difficulty** | Levels 61–95 were tuned harder, so every Chapter's average difficulty now rises: 42.1 → 46.1 → 49.9 → 53.3 → 58.8 for Chapters 6–10. Before, Chapter 7 dipped to 37.5. The verifier enforces the rise. |
 | **Save v3** | Adds completed Chapters, collected reward blocks, coins per Chapter and tips seen. v0.4 saves migrate without losing or double-paying anything. |
 | **101+ architecture** | Chapters 11+ come from the data (`overflow.cycle`). The generator gets `chapter_plan(c)` (profile, difficulty band, reward frequency) and `classify(level)`. |
+
+---
+
+## v0.5.2
+
+No new gameplay, levels, rewards or progression. The audio fix, Chapter music and themes, Silver/Gold, the puzzles and the 100 levels are untouched.
+
+### 1. The displayed score still dropped (8,200 → 6,000)
+
+**Root cause.** v0.5.1 labelled the numbers but kept the wrong one big. On the level-complete card, the large 64 pt number that counts up from 0 was still **LEVEL SCORE**, the score of that one level. Its caption was small and grey, and TOTAL SCORE was a small line underneath. The HUD showed no score at all during play. So the number a player followed from level to level was each level's own score (8,200 on one level, 6,000 on the next), even though the stored Total Score was correct and never decreased. A second, smaller bug: the card's `+gain` line decided whether to show itself before its new text was set, so it could show the previous run's gain.
+
+**Fix: TOTAL SCORE is the number the player sees, everywhere.**
+
+| Screen | Big / prominent number | Also shown (labelled) |
+|---|---|---|
+| Level HUD (top-left, opposite the coins) | **TOTAL SCORE** | — |
+| Level-complete card | **TOTAL SCORE**, counting up from the previous total (never from 0) | `+gain` (what this run added), **LEVEL SCORE**, **LEVEL BEST** / **NEW BEST!** |
+| Chapter Complete card | **TOTAL SCORE** first | CHAPTER SCORE (sum of the Chapter's bests) |
+| Title | **TOTAL SCORE** | Chapter, stars, coins |
+| Level Select | **TOTAL SCORE** | stars per Chapter |
+
+The model is unchanged and strict:
+
+- **LEVEL SCORE** is the current attempt on the current level.
+- **LEVEL BEST** is the highest score ever achieved on that level.
+- **TOTAL SCORE** is the sum of the best score of every completed level, and it **never decreases**:
+  - a first clear adds its score
+  - an improvement adds only the difference
+  - a worse replay, a repeat, NEXT LEVEL or a reload change nothing
+
+**New automated assertions** (`tools/playtest.gd`, through the real card and HUD):
+
+- On **every one of the 100 levels**:
+  - the HUD shows TOTAL SCORE at the start of the level
+  - after the clear, the big card number is captioned TOTAL SCORE and is never below the total from before the level
+  - the LEVEL SCORE line shows the run's score
+  - the HUD shows the new total
+- **NEXT LEVEL:**
+  - clear level 21 cleanly, tap NEXT, and the HUD still shows the same total
+  - clear level 22 with a mistake, for a lower level score: the total still rises, and the big number is the total, not the level score (Total and Level Score are never swapped)
+- **Worse replay** of 21: the total and the big number are unchanged, and no `+gain` is shown.
+- **Improved replay** of 22: the total rises by exactly the improvement, and the card shows `+delta`.
+- **Level Select:** shows the same TOTAL SCORE.
+
+### 2. iPhone progress reset after closing Safari and reopening the itch.io link
+
+**Root cause: the game was running in a storage context Safari wipes.**
+
+- itch.io runs HTML5 games in an `<iframe>` served from another domain (`html-classic.itch.zone`) inside the `itch.io` page. That is a cross-origin (third-party) iframe.
+- Safari's WebKit, which every iPhone and iPad browser uses, gives a third-party iframe **partitioned and ephemeral** storage: localStorage, IndexedDB and Godot's `user://` all live in memory for that browser session and are **erased when Safari is closed or removed from the background** ([WebKit tracking prevention](https://webkit.org/tracking-prevention/)).
+- v0.5.1's durable writes, localStorage mirror and backups were all written correctly, but into a store the browser deletes. No save format can survive that inside the embed.
+- The v0.5.1 banner ("open the game in its own tab") only warned. It could be ignored, so a player could finish 100 levels in storage that was about to be wiped.
+
+**The five storage contexts, measured / confirmed:**
+
+| Context | Storage used | Survives closing Safari / removing it from the background? |
+|---|---|---|
+| **A.** itch.io embedded iframe (the public link) | third-party, partitioned under itch.io, **ephemeral** on WebKit | **No** (that is the reported bug) |
+| **B.** the game in its own tab (`html-classic.itch.zone/…/index.html`) | **first-party** storage of the game's origin, on disk | **Yes** |
+| **C.** Safari's own storage for itch.io | not reachable from the game (different origin) | — |
+| **D.** a page reload | same context as before | yes, in both A and B (until Safari closes) |
+| **E.** app/background termination | A is erased; B is kept | B only |
+
+A and B are **different storage buckets**: reopening the public itch.io link runs the game in A again, which can never see what B saved (partitioning). Chromium partitions the embed the same way, which the automated test uses.
+
+**Fix: never let progress start in a context that will be wiped.**
+
+- **Gate before play:** when the page script detects **WebKit (iPhone/iPad/Safari) in a cross-origin iframe**, a full-screen gate appears before the game can be played. It explains that Safari erases games played inside the itch.io page and offers:
+  - **OPEN GAME IN SAFARI:** opens the same build in its own tab (context B, first-party storage that Safari keeps). The button is a real DOM tap, so it is never popup-blocked. If a popup is refused, it navigates the whole page instead; failing that, it shows the address to copy.
+  - **Play here without saving:** explicit. A red **NOT SAVED · OPEN IN SAFARI** button then stays at the top edge the whole session.
+- **Reopening the public link:** the gate appears again, and **one tap on OPEN GAME IN SAFARI opens the tab with the saved progress** (CONTINUE – LEVEL X, same Total Score). The standalone address is stable across itch uploads, because storage is per origin (`html-classic.itch.zone`), not per build path.
+- **Progress transfer:** progress made in the embed ("Play here without saving") is handed to the new tab in the URL fragment. The fragment is never sent to a server, and it is removed from the address bar at once. The tab **merges** it, keeping the better value of every field.
+- **Backup code** (fallback for everything else: private browsing, clearing site data, a new phone, the 7-day rule below):
+  - **Settings → BACKUP CODE** shows the whole save as one compact code (`CE1-…`, about 600 characters at level 20) in a native dialog with COPY.
+  - **Settings → RESTORE** takes a pasted code.
+  - Restoring **merges** too:
+    - best scores, stars and unlocks keep the maximum
+    - claimed chests, completed Chapters and collected Silver/Gold are united, so nothing pays twice
+    - coins and boosters keep the maximum (never summed)
+  - So a code can never lose progress or duplicate rewards.
+- **Chrome / Android / desktop** in the embed: no gate. Their embed storage is persistent (partitioned per site), as tested in v0.5.1.
+
+Browser storage **can't** be made durable inside the iPhone embed, and a backend is out of scope. So the safe path is the standalone tab (enforced by the gate), with the backup code as the safety net. A cloud save needs an account/backend (future: the backup code format is the natural payload for it).
+
+### 3. Save recovery safety
+
+- **Beacon:** every save also writes a tiny beacon (`progress.cfg.beacon` plus a `chain_escape_beacon` localStorage key) saying how far the save got.
+- **Writes held:** if a save existed but can't be read, or the save is gone while its beacon survived, the game **holds all writes**. Nothing blank is ever written over it.
+- **Recovery screen:** the game shows **SAVED PROGRESS** with what the last save contained, plus two buttons:
+  - **RESTORE FROM BACKUP CODE**
+  - **START NEW GAME**, which needs two taps
+- Only START NEW GAME, or a successful restore or transfer, releases the hold. Unreadable copies stay quarantined as before.
+
+**Visible diagnostic for testing** (bottom of the title screen, also in the debug panel and the console):
+
+```
+SAVE FILE · v4 · #64 · UNLOCKED 20 · LAST PLAYED 20 · TOTAL 86,580 · SAVED 2026-09-28 12:21:23 · STANDALONE
+```
+
+The fields are:
+- the save source: `file` / `bak` / `tmp` / `mirror` / `salvaged:…` / `new` / `missing` / `unreadable`
+- the save version and sequence number
+- the highest unlocked and last played levels
+- the Total Score
+- the local time of the last successful save
+- the storage context: `STANDALONE`, `EMBED-EPHEMERAL`, `EMBED-PARTITIONED` or `DEVICE`
+
+`WRITES HELD` is appended while a recovery choice is pending.
+
+### 4. Real-iPhone acceptance test (automated equivalent passes)
+
+`tools/web_persistence_test.mjs` runs it with an iPhone user agent, an itch-like cross-origin embed and a persistent browser profile that is really closed:
+
+1. Open the public (embed) link: the gate is shown, and taps never reach the game underneath.
+2. "Play here without saving" to level 4, then tap **NOT SAVED · OPEN IN SAFARI**: a standalone tab opens with CONTINUE – LEVEL 4 and the same Total Score (transfer).
+3. For each of **level 20, 45 and 100**:
+   - play there in the tab and check Level Select (1–N unlocked)
+   - **close the browser completely** and reopen the **public embed link**: the gate is shown
+   - tap **OPEN GAME IN SAFARI**:
+     - **CONTINUE – LEVEL N**
+     - the same TOTAL SCORE, coins and stars
+     - Level Select 1–N
+     - the diagnostic line shows `STANDALONE` and the right unlock
+4. Settings → BACKUP CODE shows a code.
+5. Then the save is deleted, keeping the beacon: the **recovery screen** appears, writes are held (nothing is written), and **RESTORE FROM BACKUP CODE** brings the progress back.
+
+What this environment can't do is run real Safari. So the WebKit-specific erase-on-close is covered by the gate (nothing is played in the embed without an explicit choice), not reproduced. Please run the manual test below on the iPhone.
 
 ---
 
@@ -145,7 +274,7 @@ Migration: v1 (v0.3) → v2 (v0.4) → v3 (v0.5) → v4 happens automatically, k
 
 | Name | Where | Rule |
 |---|---|---|
-| **LEVEL SCORE** | level card (big number) | this run of this level |
+| **LEVEL SCORE** | level card (v0.5.1: the big number; v0.5.2: a labelled line, the big number is now TOTAL SCORE) | this run of this level |
 | **LEVEL BEST** / **NEW BEST!** | level card | best score ever on this level; never goes down |
 | **TOTAL SCORE** | level card, title, Level Select | **sum of the best score of every completed level**. It only grows: a first clear adds the level's score, a better replay adds the improvement ("+800"), and a worse replay, a repeat or moving to the next level changes nothing. |
 | CHAPTER SCORE | Chapter Complete card | sum of the Chapter's best scores |
@@ -159,20 +288,36 @@ There is no separate "session score". Replays can't farm Total Score, because it
 - Export with the **Web** preset (`build/web/`: `index.html`, `.js`, `.wasm`, `.pck`, `.audio.worklet.js`), zip the folder contents, and upload as an HTML game. Leave *SharedArrayBuffer support* off; the build is single-threaded.
 - Recommended itch settings: *Mobile friendly*, *Fullscreen button*.
 
-**Where saving works**
+**Where saving works (v0.5.2)**
 
 | Where it runs | Saves survive… |
 |---|---|
-| Chrome / Edge / Firefox / Android, embedded on itch.io | reload, closing the tab, closing the browser, sleep/wake (storage is partitioned per site, but persistent) |
-| **Safari / any iPhone browser, embedded on itch.io** | reload and sleep/wake only. **Closing Safari clears the embed's storage** (browser policy). The title shows a banner with **OPEN GAME**, which opens the game in its own tab, where everything persists. |
-| Any browser, game opened in its own tab (the OPEN GAME button, or the itch iframe URL opened directly) | everything: reload, closing the tab or browser, returning later |
-| Private / incognito browsing | the current session only (the title warns) |
+| Chrome / Edge / Firefox / Android, embedded on itch.io | reload, closing the tab, closing the browser, sleep/wake (storage is partitioned per site, but persistent). No gate. |
+| **Safari / any iPhone or iPad browser, embedded on itch.io** | nothing once Safari closes (browser policy). **The gate appears before play**: tap **OPEN GAME IN SAFARI**. |
+| The game in its own Safari tab (from the gate) | everything: reload, closing the tab, closing Safari, removing it from the background, locking the phone, reopening the public link later (then one tap on the gate). Safari may clear a site's data after **7 days of Safari use without visiting it**, so keep a backup code. |
+| Private / incognito browsing | the current session only (the title warns; use BACKUP CODE) |
 
-**Manual checklist (iPhone Safari and Android Chrome)**
+**The real-iPhone acceptance test (v0.5.2)**
+
+1. Open the public itch.io link in Safari. The **Save your progress** gate appears. Tap **OPEN GAME IN SAFARI**. A new tab opens: this is where you play.
+2. Play to **Level 20**. Level Select must show 1–20 unlocked. Note the TOTAL SCORE (top-left of the HUD) and the diagnostic line at the bottom of the title.
+3. Close Safari completely, swipe it away from the app switcher, and lock the phone for a few minutes.
+4. Open the **same public itch.io link** again. The gate appears again; that is expected, because the embed never holds progress. Tap **OPEN GAME IN SAFARI**.
+5. Expect:
+   - **CONTINUE – LEVEL 20**
+   - the same TOTAL SCORE, coins and stars
+   - Level Select 1–20
+   - the diagnostic line `SAVE FILE … UNLOCKED 20 … STANDALONE`
+6. Repeat with **Level 45** and **Level 100**.
+7. **Backup:** Settings → **BACKUP CODE** → COPY, and paste it into Notes. In a private tab, open the game, then Settings → **RESTORE**, and paste. The progress appears.
+
+If progress is ever missing, the title shows the diagnostic line and, if a save existed, the **SAVED PROGRESS** recovery screen. A screenshot of both is enough to diagnose it.
+
+**Manual checklist (all browsers)**
 
 1. **A:** Open the itch page and play to Level 12. Close the browser app completely, then reopen the page.
    - Chrome: expect **CONTINUE – LEVEL 12**.
-   - Safari embed: expect the banner. Tap **OPEN GAME**, play to Level 12 in that tab, close Safari, reopen that tab, and expect CONTINUE – LEVEL 12.
+   - Safari: the gate. Tap **OPEN GAME IN SAFARI** and expect CONTINUE – LEVEL 12.
 2. **B:** Play to Level 45, close the tab and reopen. Level Select must show 1–45 unlocked and 46+ locked.
 3. **C:** Note your coins, stars and boosters, reload, and compare. They must be identical.
 4. **D:** Note the **TOTAL SCORE** on the title. Complete another level. The card's TOTAL SCORE must be equal or higher, and never lower.
@@ -209,6 +354,8 @@ A screenshot of the debug panel text is enough to diagnose a real-phone failure.
 - **Atomic and durable:** a verified `.tmp` file is renamed over the main file, the previous copy is kept as `.bak`, and on the Web a synchronous `localStorage` mirror is written too.
 - **Newest-copy load:** every copy is read, and the intact one with the highest save sequence number wins.
 - **No silent reset:** an unreadable copy is quarantined, the next copy is used, and failing that, intact entries are salvaged. Unlocks are re-derived and never lowered.
+- **Writes held on doubt (v0.5.2):** if a save existed but can't be read, or only its beacon survived, nothing is written until the player restores a backup code or confirms START NEW GAME.
+- **Backup code and transfer (v0.5.2):** `backup_code()` / `decode_backup()` / `merge_from()`. A restore or an embed → tab transfer merges, keeping the best of both, and never pays a reward twice.
 - **Version-aware:** `_migrate()` upgrades v1 → v2 → v3 → v4 in place. Unknown keys are preserved.
 
 ## Chapters
@@ -953,9 +1100,14 @@ Optional level keys:
 
 - **Real devices:** the iOS Safari audio fix was verified on an iPhone (v0.4.x), and v0.5 keeps that mechanism unchanged. The v0.5 build itself was tested in Chromium (mobile emulation, touch, strict autoplay, and a forced-suspended context). WebKit and Edge can't run in this build environment; Edge uses the Chromium engine that was tested. Please re-check on an iPhone: the first tap starts the music, and a Chapter change fades the music cleanly.
 - **Stream playback mixes on the main thread** in the single-threaded Web build. If the frame rate collapses, the music can stutter.
-- **Real-phone crash confirmation:** the WebGL id leak was measured and fixed in Chromium. iPhone Safari can't run here, so the long-session fix needs one real 40 → 70 session on an iPhone. If anything still ends a session, the debug panel names how it ended.
+- **Real-phone crash confirmation:** confirmed by the v0.5.1 iPhone test (all 100 levels without being kicked out).
+- **iPhone saves need the game's own tab.** Inside the itch.io embed, Safari erases storage when it closes, and nothing in a web page can change that. The gate sends players to the standalone tab before they play.
+  - **Needs a real iPhone check:** that itch.io lets the standalone address open (it is the same file the embed loads). If a popup is refused, the gate navigates the whole page instead; failing that, it shows the address to copy.
+  - **7-day rule:** Safari may delete a site's data after 7 days of Safari use without visiting it. Adding the standalone tab to the Home Screen avoids that. The backup code covers everything else.
+  - **Cloud save** needs accounts/backend (not in scope); the backup code format is ready to be its payload.
+- **The title's save diagnostic line** is for device testing. Remove it (`TitleScreen.set_diagnostic`) before a public release if unwanted.
 - **Short UI tweens still redraw** (hearts, stars, the coin counter) for a fraction of a second per event. That growth is tiny and bounded per level, unlike the per-frame animations that were fixed.
-- **Web saves** live in the browser's IndexedDB plus a localStorage mirror. Clearing site data or private browsing loses progress, and **Safari clears storage inside itch.io's embed when it closes** (the game shows an OPEN GAME banner there). There are no accounts or cloud sync (not in scope).
+- **Web saves** live in the browser's IndexedDB plus a localStorage mirror. Clearing site data or private browsing loses progress, and **Safari clears storage inside itch.io's embed when it closes** (the game gates play there and sends players to its own tab). Settings → BACKUP CODE / RESTORE carries progress anywhere. There are no accounts or cloud sync (not in scope).
 - **Economy values are first guesses** (`data/economy.json`), not tuned with players.
 - **Levels 61–95 were tuned by metrics**, with every rule re-verified, but not by human playtests. Late Chapters are long, planning-heavy boards (19–30 blocks, depth up to 25).
 - **Locks depend on color.** Silver/Gold keep the block's color, so lock readability is unchanged. A symbol-per-color option is still future work.

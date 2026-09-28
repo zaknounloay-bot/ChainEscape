@@ -44,6 +44,7 @@ const root = path.resolve(process.argv[2] || 'build/web');
 const types = { '.html': 'text/html', '.js': 'text/javascript', '.wasm': 'application/wasm', '.pck': 'application/octet-stream', '.png': 'image/png' };
 const gameServer = http.createServer((req, res) => {
   const rel = decodeURIComponent(req.url.split('?')[0]);
+  if (rel === '/blank') { res.writeHead(200, { 'Content-Type': 'text/html' }); res.end('<!doctype html><title>blank</title>'); return; }
   const file = path.join(root, rel === '/' ? 'index.html' : rel);
   fs.readFile(file, (err, data) => {
     if (err) { res.writeHead(404); res.end(); return; }
@@ -54,7 +55,7 @@ const gameServer = http.createServer((req, res) => {
 const GAME_URL = 'http://127.0.0.1:8765/index.html';
 const hostServer = http.createServer((req, res) => {
   res.writeHead(200, { 'Content-Type': 'text/html' });
-  res.end(`<!doctype html><html><body style="margin:0;background:#222">
+  res.end(`<!doctype html><html><head><meta name="viewport" content="width=device-width,initial-scale=1"></head><body style="margin:0;background:#222">
 <iframe id="game" src="${GAME_URL}" style="border:0;width:100vw;height:100vh;display:block"
  allow="autoplay; fullscreen; gamepad" allowfullscreen></iframe></body></html>`);
 }).listen(8766, 'localhost');
@@ -88,7 +89,7 @@ async function waitFor(frame, pred, what, ms = 90000) {
     if (s && pred(s)) return s;
     await new Promise((r) => setTimeout(r, 250));
   }
-  throw new Error(`timeout waiting for ${what} (last state: ${JSON.stringify(s && { level: s.level, card: s.card_open, title: s.title_open })})`);
+  throw new Error(`timeout waiting for ${what} (last state: ${JSON.stringify(s && { level: s.level, card: s.card_open, title: s.title_open, chapter_card: s.chapter_card_open, select: s.select_open, settings: s.settings_open, recovery: s.recovery_open })})`);
 }
 
 // Taps a normalized (0..1) position inside the game frame.
@@ -114,6 +115,21 @@ async function openGame(context, embedded) {
     else await page.waitForTimeout(500);
   }
   if (!frame) throw new Error('game did not start');
+  await frame.evaluate(() => { window.__ceBoot = window.__ceBoot || Date.now(); });
+  return { page, frame, errors };
+}
+
+// A page that is already open (a new tab, or after goto): wait for the game.
+async function attach(page) {
+  const errors = [];
+  page.on('pageerror', (e) => errors.push(e.message));
+  let frame = null;
+  for (let i = 0; i < 240 && !frame; i++) {
+    const f = gameFrame(page);
+    if (await f.evaluate(() => !!window.chainEscapeState).catch(() => false)) frame = f;
+    else await page.waitForTimeout(500);
+  }
+  if (!frame) throw new Error('game did not start in ' + page.url());
   await frame.evaluate(() => { window.__ceBoot = window.__ceBoot || Date.now(); });
   return { page, frame, errors };
 }
@@ -174,11 +190,13 @@ async function notReloaded(g, label) {
 
 const track = { total: 0, mem: [], chapters: [], chapterCards: 0 };
 try {
+  let ctx, g, st;
+  if (!process.env.IOS_ONLY) {
   // ===== itch-like embed, persistent profile: A, B, C, D ======================
   const profile = fs.mkdtempSync(path.join(os.tmpdir(), 'ce-profile-'));
-  let ctx = await chromium.launchPersistentContext(profile, { ...LAUNCH, ...VIEW });
-  let g = await openGame(ctx, true);
-  let st = await state(g.frame);
+  ctx = await chromium.launchPersistentContext(profile, { ...LAUNCH, ...VIEW });
+  g = await openGame(ctx, true);
+  st = await state(g.frame);
   check(st.title_open && st.continue_text === 'PLAY' && st.highest_unlocked === 1, 'fresh profile: title offers PLAY, only level 1 unlocked');
   const storage = await g.frame.evaluate(() => window.ceAudio.storage());
   info(`embedded storage: ${JSON.stringify(storage)}`);
@@ -253,21 +271,152 @@ try {
   check(late[1] - early[1] <= 64, `E: WebAssembly heap stays bounded over the session (+${late[1] - early[1]} MB)`);
   await ctx.close();
   fs.rmSync(profile2, { recursive: true, force: true });
-
-  // ===== iOS Safari detection (user-agent spoof) ===============================
-  const IPHONE_UA = 'Mozilla/5.0 (iPhone; CPU iPhone OS 17_5 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/17.5 Mobile/15E148 Safari/604.1';
-  const browser = await chromium.launch(LAUNCH);
-  for (const embedded of [true, false]) {
-    const c = await browser.newContext({ ...VIEW, userAgent: IPHONE_UA });
-    g = await openGame(c, embedded);
-    await waitFor(g.frame, (x) => x.title_open, 'title');
-    await g.page.waitForTimeout(500);
-    const s2 = await g.frame.evaluate(() => window.ceAudio.storage());
-    const shown = await g.frame.evaluate(() => { const e = document.getElementById('ce-save-notice'); return !!e && e.style.display !== 'none'; });
-    if (embedded) check(s2.ephemeral && shown, `iPhone UA in a cross-origin iframe: storage reported ephemeral and the "open in its own tab" notice is shown`);
-    else check(!s2.ephemeral && !shown, 'iPhone UA first-party: storage persistent, no notice');
-    await c.close();
   }
+
+  // ===== iPhone acceptance flow (iPhone user agent, v0.5.2) ====================
+  // Safari gives the itch.io embed partitioned, EPHEMERAL storage, separate
+  // from the game's own tab. Chromium partitions the embed the same way
+  // (third-party storage partitioning), so the embed and the standalone tab
+  // really are two different storage buckets here too. What Chromium can't
+  // do is erase the embed on close - the gate makes that irrelevant: on
+  // WebKit-in-an-embed nothing is played there before the player chooses.
+  const IPHONE_UA = 'Mozilla/5.0 (iPhone; CPU iPhone OS 17_5 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/17.5 Mobile/15E148 Safari/604.1';
+  const IOS = { ...LAUNCH, ...VIEW, userAgent: IPHONE_UA };
+  const profile3 = fs.mkdtempSync(path.join(os.tmpdir(), 'ce-profile-'));
+  ctx = await chromium.launchPersistentContext(profile3, IOS);
+  g = await openGame(ctx, true);
+  await waitFor(g.frame, (x) => x.title_open, 'title');
+  await g.page.waitForTimeout(500);
+  const gate = async (fr) => fr.evaluate(() => { const e = document.getElementById('ce-gate'); return !!e && e.style.display !== 'none'; });
+  const s3 = await g.frame.evaluate(() => window.ceAudio.storage());
+  check(s3.ephemeral && s3.context === 'embed-ephemeral' && await gate(g.frame), `iPhone in the itch.io embed: context ${s3.context}, the "open in Safari" gate is shown before play`);
+  // The gate blocks the game: a tap on CONTINUE does nothing.
+  st = await state(g.frame);
+  await tapN(g.page, g.frame, st.title_continue);
+  await g.page.waitForTimeout(600);
+  check((await state(g.frame)).title_open, 'gate: taps never reach the game underneath');
+  // "Play here without saving" (explicit), a few levels, then the red pill.
+  await g.frame.click('#ce-gate-here');
+  check(!(await gate(g.frame)) && await g.frame.evaluate(() => !!document.getElementById('ce-unsaved')), 'Play here without saving: gate closes, a NOT SAVED pill stays visible');
+  await enterGame(g);
+  await toggleDebug(g);
+  const iosTrack = { total: 0, mem: [], chapters: [], chapterCards: 0 };
+  await playTo(g, 4, iosTrack);
+  const embedTotal = (await state(g.frame)).total_score;
+  // OPEN IN SAFARI from the pill: a new first-party tab, with the embed's progress handed over.
+  let [tab] = await Promise.all([ctx.waitForEvent('page'), g.frame.click('#ce-unsaved')]);
+  let tg = await attach(tab);
+  st = await waitFor(tg.frame, (x) => x.title_open, 'standalone title');
+  const s4 = await tg.frame.evaluate(() => window.ceAudio.storage());
+  check(s4.context === 'standalone' && !s4.ephemeral && !(await gate(tg.frame)) && !tab.url().includes('ce_transfer'),
+    `OPEN IN SAFARI: standalone tab (context ${s4.context}), no gate, transfer data removed from the address`);
+  check(st.highest_completed === 3 && st.total_score === embedTotal && st.continue_text === 'CONTINUE  -  LEVEL 4',
+    `embed progress transferred to the standalone tab (${st.continue_text}, total ${st.total_score})`);
+  await g.page.close();
+  // Real acceptance test: play to N in the tab, close Safari, reopen the PUBLIC itch link.
+  const targets = QUICK ? [20] : [20, 45, 100];
+  let backupCode = '';
+  for (const target of targets) {
+    await enterGame(tg);
+    await toggleDebug(tg);
+    await playTo(tg, target, iosTrack);
+    if (target === 100) {
+      // Level 100 is the last: clear it too, so all 100 are completed.
+      await tg.page.keyboard.press('s');
+      await waitFor(tg.frame, (x) => x.card_open && x.level === 100, 'level 100 cleared');
+    }
+    await toggleDebug(tg);  // close the debug panel (it covers the Level Select button)
+    const before = await snapshot(tg.frame);
+    const unlocked = target === 100 ? 100 : target;
+    if (target < 100) {
+      await tapN(tg.page, tg.frame, (await state(tg.frame)).levels_button);
+      st = await waitFor(tg.frame, (x) => x.select_open, 'level select');
+      check(st.select_unlocked === unlocked, `L${target}: Level Select shows 1-${unlocked} unlocked before closing (${st.select_unlocked})`);
+    }
+    await tg.page.waitForTimeout(1500);
+    await ctx.close();  // close Safari completely
+    ctx = await chromium.launchPersistentContext(profile3, IOS);
+    // Reopen the SAME public itch.io link: the gate again (the embed never holds progress) ...
+    g = await openGame(ctx, true);
+    check(await gate(g.frame), `L${target}: reopening the public itch.io link shows the gate`);
+    [tab] = await Promise.all([ctx.waitForEvent('page'), g.frame.click('#ce-gate-open')]);
+    tg = await attach(tab);
+    st = await waitFor(tg.frame, (x) => x.title_open, 'standalone title');
+    const after = await snapshot(tg.frame);
+    const expect = `CONTINUE  -  LEVEL ${target}`;
+    check(st.continue_text === expect && after.highest_unlocked >= unlocked,
+      `L${target}: one tap on OPEN GAME IN SAFARI -> progress restored ('${st.continue_text}', unlocked ${after.highest_unlocked}, source ${st.save_source})`);
+    check(after.total === before.total && after.coins === before.coins && after.stars === before.stars,
+      `L${target}: TOTAL SCORE ${after.total} (was ${before.total}), coins and stars unchanged after closing Safari`);
+    check(st.save_diag.includes(`UNLOCKED ${after.highest_unlocked}`) && st.save_diag.includes('STANDALONE') && !st.writes_held,
+      `L${target}: title diagnostic '${st.save_diag}'`);
+    await g.page.close();
+    await enterGame(tg);
+    if (target === targets[0]) {
+      // Backup code from Settings (native dialog with the code).
+      await tapN(tg.page, tg.frame, st.settings_button);
+      st = await waitFor(tg.frame, (x) => x.settings_open, 'settings');
+      await tapN(tg.page, tg.frame, st.backup_button);
+      await tg.frame.waitForSelector('#ce-backup-text', { timeout: 10000 });
+      backupCode = await tg.frame.$eval('#ce-backup-text', (e) => e.value);
+      await tg.frame.click('#ce-backup-close');
+      check(/^CE1-[A-Za-z0-9_-]{40,}$/.test(backupCode), `Settings > BACKUP CODE shows a code (${backupCode.length} chars)`);
+      await tg.page.waitForTimeout(500);
+    }
+    await tapN(tg.page, tg.frame, (await state(tg.frame)).levels_button);
+    st = await waitFor(tg.frame, (x) => x.select_open, 'level select');
+    check(st.select_unlocked === unlocked, `L${target}: after reopening, Level Select shows 1-${unlocked} unlocked (${st.select_unlocked})`);
+    // Back to a fresh title for the next round (a reload of the tab).
+    await tg.page.reload();
+    tg = await attach(tg.page);
+  }
+
+  // Recovery safety: the save disappears (site data cleared) but its beacon survives.
+  const goodTotal = (await state(tg.frame)).total_score;
+  const goodLevel = (await state(tg.frame)).last_played;
+  await tg.page.waitForTimeout(2500);  // let the last IndexedDB sync land
+  await tg.page.goto('http://127.0.0.1:8765/blank');
+  await tg.page.evaluate(async () => {
+    localStorage.removeItem('chain_escape_save');
+    const db = await new Promise((r) => { const q = indexedDB.open('/userfs'); q.onsuccess = () => r(q.result); });
+    const store = db.transaction('FILE_DATA', 'readwrite').objectStore('FILE_DATA');
+    const keys = await new Promise((r) => { const q = store.getAllKeys(); q.onsuccess = () => r(q.result); });
+    for (const k of keys) if (/progress\.cfg(\.bak|\.tmp)?$/.test(k)) store.delete(k);
+    await new Promise((r) => { store.transaction.oncomplete = r; });
+    db.close();
+  });
+  await tg.page.goto(GAME_URL);
+  tg = await attach(tg.page);
+  st = await waitFor(tg.frame, (x) => x.title_open, 'title after data loss');
+  await tg.page.waitForTimeout(800);
+  st = await state(tg.frame);
+  check(st.recovery_open && st.writes_held && st.save_source === 'missing',
+    `save missing but beacon found: recovery screen, writes held (source ${st.save_source})`);
+  const idbHasSave = await tg.frame.evaluate(async () => {
+    const db = await new Promise((r) => { const q = indexedDB.open('/userfs'); q.onsuccess = () => r(q.result); });
+    const keys = await new Promise((r) => { const q = db.transaction('FILE_DATA').objectStore('FILE_DATA').getAllKeys(); q.onsuccess = () => r(q.result); });
+    db.close();
+    return keys.some((k) => /progress\.cfg$/.test(k)) || !!localStorage.getItem('chain_escape_save');
+  });
+  check(!idbHasSave, 'nothing blank was written over the missing save while the choice is pending');
+  // RESTORE FROM BACKUP CODE on the recovery screen.
+  await tapN(tg.page, tg.frame, st.recovery_restore);
+  await tg.frame.waitForSelector('#ce-backup-text', { timeout: 10000 });
+  await tg.frame.fill('#ce-backup-text', backupCode);
+  await tg.frame.click('#ce-backup-main');
+  st = await waitFor(tg.frame, (x) => !x.writes_held && !x.recovery_open && x.highest_completed >= targets[0] - 1, 'restored');
+  check(st.total_score >= (targets.length === 1 ? goodTotal : 1) && st.highest_unlocked >= targets[0],
+    `RESTORE FROM BACKUP CODE: progress back (unlocked ${st.highest_unlocked}, total ${st.total_score}; code made at level ${targets[0]}, last good level ${goodLevel})`);
+  await ctx.close();
+  fs.rmSync(profile3, { recursive: true, force: true });
+
+  // Android / desktop Chrome in the embed: no gate (storage there is kept).
+  const browser = await chromium.launch(LAUNCH);
+  const c = await browser.newContext(VIEW);
+  g = await openGame(c, true);
+  await waitFor(g.frame, (x) => x.title_open, 'title');
+  check(!(await gate(g.frame)) && !(await g.frame.evaluate(() => window.ceAudio.storage())).ephemeral, 'Chrome in the embed: no gate (its storage is kept)');
+  await c.close();
   await browser.close();
 } catch (e) {
   check(false, 'exception: ' + e.message);

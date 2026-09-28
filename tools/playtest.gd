@@ -32,7 +32,7 @@ func _ready() -> void:
 		if arg.begins_with("--shots="):
 			shots_dir = arg.get_slice("=", 1)
 	# Never touch the real player's progress.
-	for suffix in ["", ".bak", ".tmp"]:
+	for suffix in ["", ".bak", ".tmp", ".beacon"]:
 		DirAccess.remove_absolute(ProjectSettings.globalize_path(PROGRESS_PATH + suffix))
 	PlayerProgress.default_path = PROGRESS_PATH
 	GameManager.skip_title = true
@@ -59,6 +59,7 @@ func _run() -> void:
 		return
 	await _test_perfect_and_bests()
 	await _test_replay_and_level_select()
+	await _test_score_display()
 	await _test_undo_limit()
 	await _test_hint_limits()
 	await _test_locked_block()
@@ -87,8 +88,11 @@ func _run() -> void:
 
 
 func _play_level(n: int) -> void:
+	var total_prev := game.progress.total_score()
 	game.start_level(n)
 	await _wait(0.45)
+	_check(game.ui.hud_total_text() == "TOTAL SCORE %s" % UIManager._fmt(total_prev),
+		"L%d HUD shows TOTAL SCORE %d at start (%s)" % [n, total_prev, game.ui.hud_total_text()])
 	_shot("L%02d_start" % n)
 	var start_count := game.model.block_count()
 	var expected_hearts := 3 if n >= GameManager.HEARTS_FROM_LEVEL else 0
@@ -157,6 +161,7 @@ func _play_level(n: int) -> void:
 	_check(r.get("level", -1) == n and r["score"] > 0 and r["stars"] >= 1, "L%d settled with score and stars" % n)
 	_check(not r["perfect"], "L%d is not PERFECT after mistake/undo" % n)
 	_check(game.progress.best_score(n) >= r["score"] and game.progress.stars_for(n) >= r["stars"], "L%d best saved" % n)
+	_check_score_card(n, total_prev, r)
 	print("Level %3d C%-2d %-18s blocks=%2d spn=%d rules=%s lck=%d hid=%d score=%5d stars=%d coins=+%d" % [
 		n, Chapters.chapter_of(n), game.level.name, start_count, _count(func(b): return b.is_spinner()),
 		",".join(game.level.blocks.filter(func(b): return b.is_spinner()).map(func(b): return ["cw", "ccw", "alt", "pat"][b.spin_rule])),
@@ -632,6 +637,7 @@ func _test_perfect_and_bests() -> void:
 	await _wait(0.4)
 	await _solve_cleanly()
 	await _wait(1.8)
+	await _card_settled()
 	_shot("perfect_card")
 	var r := game.last_result
 	_check(r["perfect"] and r["stars"] == 3, "clean solve is PERFECT with 3 stars")
@@ -639,22 +645,124 @@ func _test_perfect_and_bests() -> void:
 	_check(r["first_clear"], "first clear flagged")
 	var best := game.progress.best_score(13)
 	var total := game.progress.total_score()
-	_check(game.ui._card_score_caption.text == "LEVEL SCORE" and game.ui._card_total.text.begins_with("TOTAL SCORE  %s" % UIManager._fmt(total)),
-		"card labels LEVEL SCORE and TOTAL SCORE (%s)" % game.ui._card_total.text)
+	_check(game.ui._card_score_caption.text == "TOTAL SCORE" and game.ui._card_score.text == UIManager._fmt(total)
+		and game.ui._card_total.text == "LEVEL SCORE  %s" % UIManager._fmt(r["score"]),
+		"card: big number is TOTAL SCORE %s, LEVEL SCORE labelled (%s / %s)" % [UIManager._fmt(total), game.ui._card_score.text, game.ui._card_total.text])
 	# Worse run: one blocked tap.
 	game.start_level(13)
 	await _wait(0.4)
 	await _tap(_first_in_state("blocked"))
 	await _solve_cleanly()
 	await _wait(1.2)
+	await _card_settled()
 	r = game.last_result
 	_check(not r["perfect"] and not r["new_best"] and r["score"] < best, "worse run is not NEW BEST")
 	_check(game.progress.best_score(13) == best and game.progress.stars_for(13) == 3, "best score/stars kept after a worse run")
-	_check(game.progress.total_score() == total and r["total_gain"] == 0 and game.ui._card_reward.text.begins_with("LEVEL BEST"),
-		"a worse run leaves TOTAL SCORE unchanged and shows the level best (%s)" % game.ui._card_total.text)
+	_check(game.progress.total_score() == total and r["total_gain"] == 0 and game.ui._card_reward.text.begins_with("LEVEL BEST")
+		and game.ui._card_score.text == UIManager._fmt(total) and not game.ui._card_gain.visible,
+		"a worse run leaves TOTAL SCORE unchanged and shows the level best (%s / %s)" % [game.ui._card_score.text, game.ui._card_reward.text])
 	var disk := PlayerProgress.new(PROGRESS_PATH).load_from_disk()
 	_check(disk.best_score(13) == best and disk.stars_for(13) == 3, "best score/stars persisted to disk")
 	print("PERFECT / score / personal best / stars OK (best=%d)" % best)
+
+
+## v0.5.2 score display. The big card number is TOTAL SCORE and can never
+## show less than the total before the level; LEVEL SCORE is its own
+## labelled line; the HUD always shows TOTAL SCORE.
+func _check_score_card(n: int, total_prev: int, r: Dictionary) -> void:
+	var total := game.progress.total_score()
+	_check(total >= total_prev, "L%d TOTAL SCORE decreased (%d -> %d)" % [n, total_prev, total])
+	_check(r["total_before"] == total_prev and r["total_after"] == total, "L%d result carries total before/after (%d/%d vs %d/%d)" % [n, r["total_before"], r["total_after"], total_prev, total])
+	_check(game.ui._card_score_caption.text == "TOTAL SCORE", "L%d big card number is captioned TOTAL SCORE" % n)
+	var shown := _num(game.ui._card_score.text)
+	_check(shown >= total_prev and shown <= total, "L%d big card number %d outside [total before %d, total after %d]" % [n, shown, total_prev, total])
+	_check(game.ui._card_total.text == "LEVEL SCORE  %s" % UIManager._fmt(r["score"]), "L%d LEVEL SCORE line (%s)" % [n, game.ui._card_total.text])
+	_check(game.ui.hud_total_text() == "TOTAL SCORE %s" % UIManager._fmt(total), "L%d HUD TOTAL SCORE after the card (%s)" % [n, game.ui.hud_total_text()])
+
+
+static func _num(text: String) -> int:
+	return int(text.replace(",", ""))
+
+
+## Level card after a clear: the big number has finished counting.
+func _card_settled() -> void:
+	await _wait(1.0)
+
+
+## NEXT LEVEL, a lower-scoring next level, a worse replay and an improved
+## replay, through the real card and HUD.
+func _test_score_display() -> void:
+	# Level 21 cleanly (high score), then NEXT to 22.
+	game.start_level(21)
+	await _wait(0.4)
+	var t0 := game.progress.total_score()
+	await _solve_cleanly()
+	await _wait(1.6)
+	await _card_settled()
+	var r21 := game.last_result
+	var t1 := game.progress.total_score()
+	_check(t1 == t0 + r21["score"] and game.ui._card_score.text == UIManager._fmt(t1),
+		"first clear: big number = TOTAL SCORE %d (shows %s)" % [t1, game.ui._card_score.text])
+	_check(game.ui._card_gain.visible and game.ui._card_gain.text == "+%s" % UIManager._fmt(r21["score"]), "first clear shows +gain (%s)" % game.ui._card_gain.text)
+	game.ui.next_pressed.emit()
+	await _wait(0.4)
+	_check(game.current_level == 22, "NEXT LEVEL goes to 22")
+	_check(game.ui.hud_total_text() == "TOTAL SCORE %s" % UIManager._fmt(t1), "after NEXT the HUD still shows TOTAL SCORE %d (%s)" % [t1, game.ui.hud_total_text()])
+	# Level 22 with a mistake: its LEVEL SCORE is lower than level 21's.
+	var blocked := _first_in_state("blocked")
+	if blocked != -1:
+		await _tap(blocked)
+		await _wait(0.2)
+	await _solve_cleanly()
+	await _wait(1.6)
+	await _card_settled()
+	var r22 := game.last_result
+	var t2 := game.progress.total_score()
+	_check(t2 == t1 + r22["score"] and t2 >= t1, "TOTAL SCORE never decreases after NEXT LEVEL (%d -> %d)" % [t1, t2])
+	_check(game.ui._card_score.text == UIManager._fmt(t2) and _num(game.ui._card_score.text) >= t1,
+		"level 22 card: big number is TOTAL SCORE %d, not the level score %d (shows %s)" % [t2, r22["score"], game.ui._card_score.text])
+	_check(game.ui._card_total.text == "LEVEL SCORE  %s" % UIManager._fmt(r22["score"]), "level 22 card: LEVEL SCORE line (%s)" % game.ui._card_total.text)
+	# Worse replay of 21: nothing changes.
+	game.start_level(21)
+	await _wait(0.4)
+	blocked = _first_in_state("blocked")
+	if blocked != -1:
+		await _tap(blocked)
+		await _wait(0.2)
+	else:
+		# No blocked tap on this board: an Undo also costs points.
+		var id := Solver.from_model(game.model).recommend_move()
+		await _tap(id)
+		await _wait(0.3)
+		game.undo()
+		await _wait(0.3)
+	await _solve_cleanly()
+	await _wait(1.6)
+	await _card_settled()
+	var rw := game.last_result
+	_check(rw["score"] < r21["score"], "replay of 21 scored lower (%d < %d)" % [rw["score"], r21["score"]])
+	_check(game.progress.total_score() == t2 and rw["total_gain"] == 0 and game.ui._card_score.text == UIManager._fmt(t2) and not game.ui._card_gain.visible,
+		"a worse replay does not reduce TOTAL SCORE (%d, shows %s)" % [game.progress.total_score(), game.ui._card_score.text])
+	# Improved replay of 22: TOTAL SCORE rises by exactly the improvement.
+	var old_best := game.progress.best_score(22)
+	game.start_level(22)
+	await _wait(0.4)
+	await _solve_cleanly()
+	await _wait(1.6)
+	await _card_settled()
+	var ri := game.last_result
+	var delta: int = ri["score"] - old_best
+	_check(delta > 0 and ri["new_best"], "clean replay of 22 beats its best (%d > %d)" % [ri["score"], old_best])
+	_check(game.progress.total_score() == t2 + delta and ri["total_gain"] == delta and game.ui._card_gain.text == "+%s" % UIManager._fmt(delta),
+		"an improvement adds only the delta +%d (total %d, card %s)" % [delta, game.progress.total_score(), game.ui._card_gain.text])
+	_check(game.ui._card_score.text == UIManager._fmt(t2 + delta), "improved card shows TOTAL SCORE %d (%s)" % [t2 + delta, game.ui._card_score.text])
+	# Title and Level Select say TOTAL SCORE with the same number.
+	var tot := UIManager._fmt(game.progress.total_score())
+	game.ui.levels_opened.emit()
+	await _frames(3)
+	_check(game.ui._level_select._total_label.text == "TOTAL SCORE  %s" % tot, "Level Select shows TOTAL SCORE %s (%s)" % [tot, game.ui._level_select._total_label.text])
+	game.ui._level_select.close()
+	print("Score display OK: TOTAL SCORE never decreases (NEXT, worse replay, improvement +%d)" % delta)
 
 
 func _test_replay_and_level_select() -> void:

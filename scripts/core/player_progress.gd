@@ -70,6 +70,16 @@ var sfx_on: bool = true
 var haptics_on: bool = true
 ## True if a save existed when loaded (drives CONTINUE on the title).
 var existed: bool = false
+## Unix time of the last write that reached at least one durable copy.
+var last_ok_unix: int = 0
+## Recovery safety (v0.5.2): while true, save() writes NOTHING. Set when a
+## save existed but could not be read (or only its beacon survived), so a
+## fresh blank game never overwrites it before the player decides.
+var hold_writes: bool = false
+## Why writes are held ("" = not held): shown on the recovery screen.
+var hold_reason: String = ""
+## What the beacon said the last good save contained (recovery screen).
+var beacon: Dictionary = {}
 ## Where the loaded data came from: "file", "bak", "tmp", "mirror",
 ## "salvaged:<source>", "new" or "unreadable" (diagnostics).
 var load_source: String = "new"
@@ -108,18 +118,40 @@ func load_from_disk() -> PlayerProgress:
 			best = cfg
 			best_rank = rank
 			load_source = source
+	beacon = _beacon_read()
 	if best == null:
 		# Nothing readable. Start fresh WITHOUT touching the old files
-		# (unreadable ones were copied aside above).
+		# (unreadable ones were copied aside above) - and if a save is known
+		# to have existed, hold every write until the player chooses (restore
+		# from a backup code, or start a new game).
 		_start_fresh()
 		load_source = "unreadable" if any_found else "new"
-		_log("load: %s -> fresh progress%s" % [load_source, " (%s)" % ", ".join(load_issues) if not load_issues.is_empty() else ""])
+		if any_found:
+			hold_writes = true
+			hold_reason = "unreadable"
+		elif int(beacon.get("highest_completed", 0)) > 0 or int(beacon.get("seq", 0)) > 1:
+			hold_writes = true
+			hold_reason = "missing"
+			load_source = "missing"
+		_log("load: %s -> fresh progress%s%s" % [load_source, " (%s)" % ", ".join(load_issues) if not load_issues.is_empty() else "",
+			" - WRITES HELD until the player confirms (beacon: %s)" % JSON.stringify(beacon) if hold_writes else ""])
 		return self
-	_cfg = best
+	_apply_cfg(best)
+	load_issues.push_front("copies: " + " ".join(seen))
+	_log("load: source=%s version=%d seq=%d last_played=%d highest_completed=%d highest_unlocked=%d total_score=%d coins=%d stars=%d saved=%s%s" % [
+		load_source, version, seq, current_level, highest_completed, highest_unlocked, total_score(), coins, total_stars(), saved_text(),
+		" issues=[%s]" % ", ".join(load_issues) if not load_issues.is_empty() else ""])
+	return self
+
+
+## Reads every field from a parsed save (then migrates and repairs it).
+func _apply_cfg(cfg: ConfigFile) -> void:
+	_cfg = cfg
 	existed = true
 	version = int(_cfg.get_value("meta", "version", 1))
 	seq = int(_cfg.get_value("meta", "seq", 0))
 	saved_unix = int(_cfg.get_value("meta", "saved_unix", 0))
+	last_ok_unix = saved_unix
 	current_level = int(_cfg.get_value("progress", "current_level", 1))
 	highest_completed = int(_cfg.get_value("progress", "highest_completed", 0))
 	last_completed_level = int(_cfg.get_value("progress", "last_completed_level", highest_completed))
@@ -146,11 +178,6 @@ func load_from_disk() -> PlayerProgress:
 	var stored_total := int(_cfg.get_value("progress", "total_score", -1))
 	_migrate()
 	_check_integrity(stored_total)
-	load_issues.push_front("copies: " + " ".join(seen))
-	_log("load: source=%s version=%d seq=%d last_played=%d highest_completed=%d highest_unlocked=%d total_score=%d coins=%d stars=%d%s" % [
-		load_source, version, seq, current_level, highest_completed, highest_unlocked, total_score(), coins, total_stars(),
-		" issues=[%s]" % ", ".join(load_issues) if not load_issues.is_empty() else ""])
-	return self
 
 
 ## Every copy of the save that exists: main file, backup, unfinished temp
@@ -321,10 +348,29 @@ func _start_fresh() -> void:
 ## and mirrors it to localStorage on the Web. Returns true if at least one
 ## durable copy was written.
 func save() -> bool:
+	if hold_writes:
+		_log("write held (%s save - waiting for the player to restore or start new): last_played=%d highest_completed=%d" % [
+			hold_reason, current_level, highest_completed])
+		return false
 	seq += 1
 	saved_unix = int(Time.get_unix_time_from_system())
-	# Known keys are written into the loaded ConfigFile, so unknown keys
-	# from other versions survive.
+	_fill_cfg()
+	var text := _cfg.encode_to_text()
+	var file_ok := _write_file(text)
+	var mirror_ok := _mirror_write(text)
+	existed = existed or file_ok or mirror_ok
+	if file_ok or mirror_ok:
+		last_ok_unix = saved_unix
+		_beacon_write()
+	_log("write #%d: last_played=%d highest_completed=%d highest_unlocked=%d total_score=%d coins=%d file=%s%s" % [
+		seq, current_level, highest_completed, highest_unlocked, total_score(), coins, "ok" if file_ok else "FAILED",
+		(" mirror=%s" % ("ok" if mirror_ok else "FAILED")) if OS.has_feature("web") else ""])
+	return file_ok or mirror_ok
+
+
+## Known keys are written into the loaded ConfigFile, so unknown keys from
+## other versions survive.
+func _fill_cfg() -> void:
 	_cfg.set_value("meta", "version", SAVE_VERSION)
 	_cfg.set_value("meta", "seq", seq)
 	_cfg.set_value("meta", "saved_unix", saved_unix)
@@ -350,14 +396,6 @@ func save() -> bool:
 		_cfg.set_value("scores", str(n), best_scores[n])
 	for n in best_stars:
 		_cfg.set_value("stars", str(n), best_stars[n])
-	var text := _cfg.encode_to_text()
-	var file_ok := _write_file(text)
-	var mirror_ok := _mirror_write(text)
-	existed = existed or file_ok or mirror_ok
-	_log("write #%d: last_played=%d highest_completed=%d highest_unlocked=%d total_score=%d coins=%d file=%s%s" % [
-		seq, current_level, highest_completed, highest_unlocked, total_score(), coins, "ok" if file_ok else "FAILED",
-		(" mirror=%s" % ("ok" if mirror_ok else "FAILED")) if OS.has_feature("web") else ""])
-	return file_ok or mirror_ok
 
 
 func _write_file(text: String) -> bool:
@@ -411,16 +449,149 @@ func _mirror_read() -> String:
 	return WebBridge.ls_get(MIRROR_KEY)
 
 
+## Beacon: a tiny "a save exists, this far" note kept apart from the save
+## (its own file and its own localStorage key). If the save itself is ever
+## gone but the beacon survived, the game knows progress is MISSING - not a
+## new player - and holds writes instead of starting over.
+const BEACON_KEY := "chain_escape_beacon"
+
+
+func _beacon_write() -> void:
+	var b := JSON.stringify({"seq": seq, "highest_completed": highest_completed, "highest_unlocked": highest_unlocked,
+		"total_score": total_score(), "unix": saved_unix})
+	var f := FileAccess.open(path + ".beacon", FileAccess.WRITE)
+	if f:
+		f.store_string(b)
+		f.close()
+	if OS.has_feature("web") and path == default_path:
+		WebBridge.ls_set(BEACON_KEY, b)
+
+
+func _beacon_read() -> Dictionary:
+	var best := {}
+	var texts := []
+	if FileAccess.file_exists(path + ".beacon"):
+		texts.append(FileAccess.get_file_as_string(path + ".beacon"))
+	if OS.has_feature("web") and path == default_path:
+		texts.append(WebBridge.ls_get(BEACON_KEY))
+	for t in texts:
+		var d = JSON.parse_string(t) if t != "" else null
+		if typeof(d) == TYPE_DICTIONARY and int(d.get("seq", 0)) >= int(best.get("seq", 0)):
+			best = d
+	return best
+
+
+## The player chose START NEW GAME on the recovery screen: writes resume
+## (the unreadable copies stay quarantined next to the save).
+func release_hold() -> void:
+	if hold_writes:
+		_log("recovery: player chose to start new (%s save)" % hold_reason)
+	hold_writes = false
+	hold_reason = ""
+
+
+## "2026-09-28 14:32:10" (local time) of the last successful save, or "never".
+func saved_text() -> String:
+	if last_ok_unix <= 0:
+		return "never"
+	var bias := int(Time.get_time_zone_from_system().get("bias", 0)) * 60
+	return Time.get_datetime_string_from_unix_time(last_ok_unix + bias, true)
+
+
+# --- Backup code / transfer (v0.5.2) -----------------------------------------------
+
+const BACKUP_PREFIX := "CE1-"
+
+
+## A text code holding the whole save (compressed). The player can copy it
+## and restore it anywhere: another browser, another tab, a new phone.
+func backup_code() -> String:
+	var raw := _encode_current().to_utf8_buffer()
+	var packed := raw.compress(FileAccess.COMPRESSION_DEFLATE)
+	return BACKUP_PREFIX + Marshalls.raw_to_base64(packed).replace("+", "-").replace("/", "_").replace("=", "")
+
+
+## Save text from a backup code, or from a raw save file text. "" if invalid.
+static func decode_backup(code: String) -> String:
+	var c := code.strip_edges().replace(" ", "").replace("\n", "").replace("\r", "")
+	if c.begins_with(BACKUP_PREFIX):
+		var b64 := c.substr(BACKUP_PREFIX.length()).replace("-", "+").replace("_", "/")
+		while b64.length() % 4 != 0:
+			b64 += "="
+		var packed := Marshalls.base64_to_raw(b64)
+		if packed.is_empty():
+			return ""
+		var raw := packed.decompress_dynamic(4 * 1024 * 1024, FileAccess.COMPRESSION_DEFLATE)
+		return raw.get_string_from_utf8() if not raw.is_empty() else ""
+	var cfg := ConfigFile.new()
+	return code if code.find("[meta]") != -1 and cfg.parse(code) == OK else ""
+
+
+## Parses save text into a detached PlayerProgress (never saved). null if
+## the text is not a Chain Escape save.
+static func from_text(text: String) -> PlayerProgress:
+	var cfg := ConfigFile.new()
+	if text == "" or cfg.parse(text) != OK or not cfg.has_section("meta"):
+		return null
+	var p := PlayerProgress.new("user://__detached_import.cfg")
+	p._apply_cfg(cfg)
+	return p
+
+
+## Merges another save INTO this one, keeping the better value of every
+## field, so a restore or a transfer can never lose progress or pay twice:
+## best scores / stars per level (max), unlocks and completions (max),
+## PERFECTs, chests, Chapters, reward blocks and tips (union - already
+## claimed stays claimed), coins and boosters (max, never summed).
+## Returns a summary for the message and the log.
+func merge_from(o: PlayerProgress) -> Dictionary:
+	var before := {"total": total_score(), "highest_completed": highest_completed, "levels": best_scores.size()}
+	for n in o.best_scores:
+		best_scores[n] = maxi(int(best_scores.get(n, 0)), int(o.best_scores[n]))
+	for n in o.best_stars:
+		best_stars[n] = maxi(int(best_stars.get(n, 0)), int(o.best_stars[n]))
+	highest_completed = maxi(highest_completed, o.highest_completed)
+	highest_unlocked = maxi(highest_unlocked, o.highest_unlocked)
+	last_completed_level = maxi(last_completed_level, o.last_completed_level)
+	if o.highest_completed > before["highest_completed"]:
+		current_level = maxi(current_level, o.current_level)
+	coins = maxi(coins, o.coins)
+	for k in o.inventory:
+		inventory[k] = maxi(int(inventory.get(k, 0)), int(o.inventory[k]))
+	for n in o.chapter_coins:
+		chapter_coins[n] = maxi(int(chapter_coins.get(n, 0)), int(o.chapter_coins[n]))
+	for pair in [[perfect_levels, o.perfect_levels], [claimed_chests, o.claimed_chests], [completed_worlds, o.completed_worlds],
+			[completed_chapters, o.completed_chapters], [reward_blocks, o.reward_blocks], [tips_seen, o.tips_seen],
+			[achievements, o.achievements]]:
+		for v in pair[1]:
+			if not pair[0].has(v):
+				pair[0].append(v)
+	existed = true
+	_check_integrity(-1)
+	var out := {"total_before": before["total"], "total_after": total_score(),
+		"levels_added": best_scores.size() - before["levels"], "highest_completed": highest_completed}
+	_log("merge: +%d levels, highest_completed %d -> %d, total %d -> %d, coins %d" % [
+		out["levels_added"], before["highest_completed"], highest_completed, before["total"], out["total_after"], coins])
+	return out
+
+
+## The current state as save text (without writing it).
+func _encode_current() -> String:
+	_fill_cfg()
+	return _cfg.encode_to_text()
+
+
 ## Where saves can go right now (title warning, diagnostics).
 static func storage_status() -> Dictionary:
 	if not OS.has_feature("web"):
-		return {"persistent": true, "userfs": true, "mirror": false, "ephemeral": false}
+		return {"persistent": true, "userfs": true, "mirror": false, "ephemeral": false, "context": "device"}
 	var userfs := OS.is_userfs_persistent()
 	var info := WebBridge.call_json("storage")
 	var mirror: bool = info.get("localStorage", false)
 	var ephemeral: bool = info.get("ephemeral", false)
 	return {"persistent": (userfs or mirror) and not ephemeral, "userfs": userfs, "mirror": mirror,
-		"ephemeral": ephemeral, "iframe": info.get("iframe", false), "cross_origin": info.get("crossOrigin", false)}
+		"ephemeral": ephemeral, "iframe": info.get("iframe", false), "cross_origin": info.get("crossOrigin", false),
+		"context": info.get("context", "browser"), "gate": info.get("gate", "none")}
 
 
 func _log(msg: String) -> void:

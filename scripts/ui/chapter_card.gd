@@ -124,7 +124,9 @@ func open(s: Dictionary) -> void:
 func refresh(s: Dictionary) -> void:
 	_stars.text = "★ %d / %d" % [s["stars"], s["max_stars"]]
 	_bar.set_progress(float(s["stars"]) / maxf(s["max_stars"], 1.0), false)
-	var parts := ["CHAPTER SCORE %s" % UIManager._fmt(s["score"]), "COINS EARNED %d" % s["coins"], "PERFECT %d/%d" % [s["perfect"], s["levels"]]]
+	# TOTAL SCORE (all levels) first, so the Chapter's own sum is never
+	# mistaken for it.
+	var parts := ["TOTAL SCORE %s" % UIManager._fmt(s.get("total_score", 0)), "CHAPTER SCORE %s" % UIManager._fmt(s["score"]),"COINS EARNED %d" % s["coins"], "PERFECT %d/%d" % [s["perfect"], s["levels"]]]
 	if s["rewards_total"] > 0:
 		parts.append("SILVER/GOLD %d/%d" % [s["rewards_got"], s["rewards_total"]])
 	_stats.text = "   ·   ".join(parts)

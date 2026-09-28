@@ -43,6 +43,8 @@ func _initialize() -> void:
 	test_newest_copy_wins()
 	test_corrupt_save_recovery()
 	test_save_migration_v3()
+	test_missing_save_holds_writes()
+	test_backup_code_and_merge()
 	print("%d checks, %d failures" % [_checks, _fails])
 	print("UNIT TESTS PASSED" if _fails == 0 else "UNIT TESTS FAILED")
 	quit(0 if _fails == 0 else 1)
@@ -57,7 +59,7 @@ func check(cond: bool, msg: String) -> void:
 
 ## Deletes a save and its backup/temp files (the loader falls back to .bak).
 func wipe_save(path: String) -> void:
-	for suffix in ["", ".bak", ".tmp"]:
+	for suffix in ["", ".bak", ".tmp", ".beacon"]:
 		DirAccess.remove_absolute(ProjectSettings.globalize_path(path + suffix))
 
 
@@ -861,6 +863,78 @@ func test_corrupt_save_recovery() -> void:
 	f.close()
 	var s := PlayerProgress.new(path).load_from_disk()
 	check(s.load_source == "unreadable" and not s.existed, "nothing readable: reported, not hidden (source %s)" % s.load_source)
+	check(s.hold_writes and not s.save() and FileAccess.get_file_as_string(path) == "garbage ]]] === {{",
+		"nothing readable: writes are HELD - the unreadable save is never overwritten by a blank one")
+	s.release_hold()
+	check(s.save() and s.seq == 1, "START NEW GAME (release_hold) lets writes resume")
+	wipe_save(path)
+
+
+## v0.5.2 recovery safety: the save is gone but its beacon survived, so the
+## game knows progress existed - it must not start over and overwrite.
+func test_missing_save_holds_writes() -> void:
+	var path := "user://test_missing.cfg"
+	var p := _fresh(path)
+	for n in range(1, 21):
+		p.record_result(n, 3000, 2)
+	p.current_level = 21
+	p.save()
+	check(FileAccess.file_exists(path + ".beacon"), "every save writes a beacon next to it")
+	for suffix in ["", ".bak", ".tmp"]:
+		DirAccess.remove_absolute(ProjectSettings.globalize_path(path + suffix))
+	var q := PlayerProgress.new(path).load_from_disk()
+	check(q.load_source == "missing" and q.hold_writes and q.hold_reason == "missing" and int(q.beacon.get("highest_completed", 0)) == 20,
+		"save gone, beacon says level 20 was completed: reported as MISSING (source %s)" % q.load_source)
+	check(not q.save() and not FileAccess.file_exists(path), "no blank save is written while the recovery choice is pending")
+	# A brand-new player (no beacon) is NOT held.
+	var fresh := _fresh("user://test_new_player.cfg")
+	check(fresh.load_source == "new" and not fresh.hold_writes and fresh.save(), "a new player starts normally")
+	wipe_save("user://test_new_player.cfg")
+	wipe_save(path)
+
+
+## v0.5.2 backup code: the whole save as a copyable text code. Restoring
+## MERGES (best of both), so it can never lose progress or pay twice.
+func test_backup_code_and_merge() -> void:
+	var path := "user://test_backup.cfg"
+	var p := _fresh(path)
+	for n in range(1, 46):
+		p.record_result(n, 4000 + n, 2)
+	p.record_result(3, 9000, 3, true)
+	p.coins = 1234
+	p.inventory = {"hint": 4, "hammer": 2}
+	p.claimed_chests = ["c1_t0", "c2_t1"]
+	p.completed_chapters = [1, 2, 3, 4]
+	p.reward_blocks = ["32:4"]
+	p.current_level = 46
+	p.save()
+	var code := p.backup_code()
+	check(code.begins_with(PlayerProgress.BACKUP_PREFIX) and code.length() < 4000 and code.find(" ") == -1, "backup code is one compact token (%d chars)" % code.length())
+	var text := PlayerProgress.decode_backup(code)
+	var d := PlayerProgress.from_text(text)
+	check(d != null and d.highest_completed == 45 and d.total_score() == p.total_score() and d.coins == 1234 and d.best_score(3) == 9000,
+		"backup code decodes to the same progress")
+	check(PlayerProgress.decode_backup("CE1-not!!valid") == "" and PlayerProgress.decode_backup("hello") == "" and PlayerProgress.from_text("") == null,
+		"invalid codes are rejected")
+	# Restore into a device that has its own, partly better progress.
+	var other := _fresh("user://test_backup_other.cfg")
+	other.record_result(1, 99999, 3)
+	other.record_result(50, 5000, 2)
+	other.coins = 50
+	other.claimed_chests = ["c5_t0"]
+	var r := other.merge_from(d)
+	check(other.best_score(1) == 99999 and other.best_score(3) == 9000 and other.best_score(50) == 5000 and other.best_score(45) == 4045,
+		"merge keeps the better best score of every level")
+	check(other.highest_completed == 50 and other.highest_unlocked == 51 and other.coins == 1234 and other.inventory["hint"] == 4,
+		"merge: unlocks max, coins/boosters max (never summed)")
+	check(other.claimed_chests.has("c1_t0") and other.claimed_chests.has("c5_t0") and other.has_reward_block(32, 4) and other.completed_chapters.size() == 4,
+		"merge: claimed chests / Chapters / reward blocks united - already paid stays paid")
+	check(r["total_after"] >= r["total_before"] and r["total_after"] == other.total_score(), "merge never lowers TOTAL SCORE")
+	var again := other.merge_from(PlayerProgress.from_text(text))
+	check(again["total_after"] == r["total_after"] and other.coins == 1234 and again["levels_added"] == 0, "merging the same code twice changes nothing")
+	# Raw save text (the Web transfer from an embed) is accepted too.
+	check(PlayerProgress.decode_backup(text) == text, "raw save text is accepted as a transfer")
+	wipe_save("user://test_backup_other.cfg")
 	wipe_save(path)
 
 

@@ -30,7 +30,7 @@ func _ready() -> void:
 			to = int(a.get_slice("=", 1))
 		elif a.begins_with("--cycles="):
 			cycles = int(a.get_slice("=", 1))
-	for suffix in ["", ".bak", ".tmp"]:
+	for suffix in ["", ".bak", ".tmp", ".beacon"]:
 		DirAccess.remove_absolute(ProjectSettings.globalize_path(PROGRESS_PATH + suffix))
 	PlayerProgress.default_path = PROGRESS_PATH
 	GameManager.skip_title = true

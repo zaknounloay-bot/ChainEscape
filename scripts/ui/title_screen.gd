@@ -42,6 +42,27 @@ func _ready() -> void:
 	_stats.add_theme_constant_override("line_spacing", 6)
 	_stats.add_theme_font_size_override("font_size", 24)
 	box.add_child(_stats)
+	# Save diagnostic for device testing (source, version, unlocks, total,
+	# time of the last successful save, storage context).
+	_diag = Label.new()
+	_diag.set_anchors_and_offsets_preset(Control.PRESET_BOTTOM_WIDE)
+	_diag.offset_top = -96.0
+	_diag.offset_bottom = -24.0
+	_diag.offset_left = 24.0
+	_diag.offset_right = -24.0
+	_diag.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	_diag.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+	_diag.add_theme_font_override("font", Palette.font(700))
+	_diag.add_theme_font_size_override("font_size", 15)
+	_diag.modulate.a = 0.75
+	add_child(_diag)
+
+
+var _diag: Label
+
+
+func set_diagnostic(text: String) -> void:
+	_diag.text = text
 
 
 func open(has_progress: bool, level: int, stars: int, coins: int, theme: Dictionary, total_score: int = 0) -> void:
@@ -49,6 +70,7 @@ func open(has_progress: bool, level: int, stars: int, coins: int, theme: Diction
 	var where := "MASTER LEVEL" if Chapters.is_master(level) else Chapters.title(Chapters.chapter_of(level))
 	_stats.text = ("%s\nTOTAL SCORE %s\n%d ★    %d COINS" % [where, UIManager._fmt(total_score), stars, coins]) if has_progress else "Tap a block. Let it escape."
 	_stats.add_theme_color_override("font_color", theme["text_soft"])
+	_diag.add_theme_color_override("font_color", theme["text_soft"])
 	_title_color = theme["text"]
 	_continue.set_background(theme["accent"].darkened(0.1) if theme["dark"] else theme["accent"])
 	_bg_top = theme["bg_top"]
