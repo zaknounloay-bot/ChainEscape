@@ -1,12 +1,12 @@
 {
 	"name": "Crystal Ward",
 	"map": [
-		".       .       .       R^      G>#B    .",
-		".       .       .       P^      .       P<",
-		".       .       .       Y<@~#P  Y^      .",
-		"Bv      Y>@     R>      Bv      .       R^",
-		"P>      B>      .       Y>      .       R<@",
-		"Bv=     .       .       .       .       Rv",
-		".       G^@     Gv      .       G<@     R^@"
+		".     Rv@~  .     B>    .     R>#G",
+		"B<@   .     R<    Gv    .     G<",
+		".     .     .     .     .     Gv@",
+		".     Bv    P^    .     Gv    .",
+		"B^@   Y<    .     Y>#P  Pv    .",
+		"Yv@-  .     .     G>=   .     .",
+		".     .     R^@   G<    G<    B^"
 	]
 }

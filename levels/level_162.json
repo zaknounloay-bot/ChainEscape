@@ -1,12 +1,12 @@
 {
 	"name": "Hard Case",
 	"map": [
-		".      R>@    .      Pv@#Y  G>     .",
-		"B^     G^     .      .      .      B<",
-		"Y^     R<     Yv@    Gv     .      .",
-		".      .      P^     .      .      .",
-		".      Gv     P<     Rv$S   .      .",
-		"G^     Rv     P<     B^@-   R<     .",
-		"P^     R<     .      G>=    .      ."
+		".     Bv@~  B<@-  .     Pv@   G^",
+		".     .     Y<=   R>    .     Bv@",
+		"G>    Rv    .     .     .     .",
+		".     B>    P>    R^    .     .",
+		".     .     .     .     Pv    .",
+		"Y^    .     P>@   .     R<#Y  Pv",
+		"P^#Y  .     G<$S  G>    .     Yv"
 	]
 }
