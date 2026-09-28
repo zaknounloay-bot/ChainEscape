@@ -1,4 +1,4 @@
-# Chain Escape — v0.5.2
+# Chain Escape — v0.6
 
 A one-handed portrait puzzle game built with **Godot 4.3 (GDScript)** for iOS, Android and mobile Web.
 
@@ -22,11 +22,13 @@ The feeling it aims for: *"I progressed, the game changed, and I want to see the
 
 See *v0.5.1 stabilization* below.
 
+**v0.6 opens the Second Era: levels 101-200**, with three new mechanics (Switch, Chain Gate, Armored), ten new Chapter worlds in five visual families, new music, milestone levels and a second Master Level (200). See *v0.6* below.
+
 **v0.5.2 fixes the two issues left after a real-iPhone test of v0.5.1** (the crash fix held for all 100 levels): the displayed score still seemed to drop between levels, and iPhone progress was lost after closing Safari and reopening the itch.io link. See *v0.5.2* below.
 
 Everything from v0.4 is kept:
 
-- 100 levels and the Master Level
+- 100 levels and the Master Level (now 200 levels and two Master Levels)
 - save / continue
 - score, personal best, 3 stars and PERFECT
 - hearts, limited Undo and hints
@@ -53,6 +55,182 @@ Not included, on purpose: leaderboards, country ranking, accounts/login, backend
 | **Difficulty** | Levels 61–95 were tuned harder, so every Chapter's average difficulty now rises: 42.1 → 46.1 → 49.9 → 53.3 → 58.8 for Chapters 6–10. Before, Chapter 7 dipped to 37.5. The verifier enforces the rise. |
 | **Save v3** | Adds completed Chapters, collected reward blocks, coins per Chapter and tips seen. v0.4 saves migrate without losing or double-paying anything. |
 | **101+ architecture** | Chapters 11+ come from the data (`overflow.cycle`). The generator gets `chapter_plan(c)` (profile, difficulty band, reward frequency) and `classify(level)`. |
+
+---
+
+## v0.6 — the Second Era (levels 101-200)
+
+Chain Escape doubles to **200 levels**. Levels 101-200 are a **Second Era**: the same game, the same square blocks and arrows, but three new mechanics, new Chapter worlds, new music and a second Master Level. Everything stable from v0.5.2 is unchanged:
+- the crash fix (draw once, animate transforms)
+- the iPhone standalone save flow
+- the audio unlock and Stream playback
+- the score model
+- Silver/Gold anti-farming
+- save/continue
+- levels 1-100 themselves (verified with identical difficulty numbers)
+
+### Structure
+
+| Chapters | Levels | Family | What the player learns |
+|---|---|---|---|
+| 11 Neon Glass, 12 Prism City | 101-120 | **Neon Glass** | 101-105 the **Switch** in small lessons (the switch is essential), 106-110 switch + normal routes, 111-120 switch + spinners / locks / Silver-Gold |
+| 13 Iron Foundry, 14 Steel Works | 121-140 | **Industrial** | 121-125 one **Chain Gate** with one link, 126-130 gates with several links, 131-140 gates + switches + spinners |
+| 15 Plasma Field, 16 Storm Core | 141-160 | **Energy / Plasma** | no new mechanic: deeper combinations, move order, mystery every 5th level |
+| 17 Crystal Deep, 18 Star Vault | 161-180 | **Crystal / Deep Space** | 161-165 the **Armored** block, 166-170 armor on real routes, 171-180 armor + switch + gate |
+| 19 Elite Court, 20 Grand Apex | 181-200 | **Elite / Master** | expert levels, each focused on one mechanic deeply, two interacting, or (every third level) three; **200 = Grand Master** |
+
+**Milestones:** levels 125, 150 and 175 are milestone levels. Each has:
+- a harder, curated board
+- its Chapter's look with a golden ray backdrop and glints
+- its own music
+- a golden level title
+- a MILESTONE stamp and a one-time bonus of +120 coins
+
+### The three new mechanics (exact rules)
+
+All three are deterministic and fully visible. Each relationship is shown by a colour **and** a letter, never colour alone:
+- Switches use **A / B** (cyan / pink).
+- Chain Gates use **C / D** (lime / orange).
+
+**SWITCH block** (`R>%A`, introduced at 101)
+- A normal arrow block with a toggle chip in its corner (the knob plus its letter).
+- Every block marked **⇅A** (`&A`) is a **flip target**.
+- When the switch **escapes**, every flip target of its group reverses its arrow (180°, animated, with its own sound).
+- It fires once, and a hammer smash fires it too.
+- Switches and targets are plain arrows (never spinners or hidden), and a block is never both.
+- The solver treats a switch escape as a real decision: firing too early or too late can trap a block.
+
+**CHAIN GATE** (`XC`, links `R>+C`, introduced at 121)
+- A dark steel slab with a chain icon, its letter and a counter ("C 2").
+- It has no arrow, blocks lanes like any block, and **can't be tapped**. Tapping it is free and explains it.
+- Linked blocks carry a chain badge with the gate's letter.
+- When the **last linked block has escaped**, the gate opens: it drops away, and its cell and lane are free.
+- A switch can be a link, so "fire this switch" can be a gate condition.
+- Opening a gate is not an escape: it turns no spinner and reveals nothing.
+- The Hammer can't smash a gate.
+
+**ARMORED block** (`R>=`, introduced at 161)
+- Shows a riveted steel frame, with the arrow fully visible.
+- It **can't escape** while the shell is intact. Tapping it is free and explains it.
+- To crack the shell, tap a block whose lane runs **straight into** the armored block: that block is launched into it (a **ram**), bounces back, and the shell shatters.
+- A ram is a real move, never a mistake:
+  - no heart is lost
+  - the chain is kept
+  - it earns no escape points
+  - Undo restores the shell
+- The strategy is aiming: which block, turned by which spinner or switch, can reach the shell, and when.
+- It is not "tap twice": the armored block itself can't break its own shell.
+
+Players who jump in through Level Select get a one-time line the first time they meet each mechanic. Lesson levels 101, 102, 106, 111, 121, 126, 131, 161, 166 and 171 carry their own lesson text.
+
+### How the 100 new levels were made
+
+Nothing was hand-coded blindly. `tools/generate_era2.gd` builds each campaign slot with the existing generator:
+1. **Construction:** backwards construction, so every base board is solvable by construction.
+2. **Decoration:** switches, gates and shells are added for the slot's profile.
+3. **Refinement:** hill-climbing with mutations that move switches, flip targets, links and shells.
+4. **Validation:** every candidate is solved and analysed.
+
+The profile for each slot is in `LevelGenerator.era2_profile`. A candidate is rejected if:
+- it is unsolvable
+- it has more than 2 obvious starting moves (3 in the lessons)
+- it is too shallow or has too few decisions
+- one direction dominates
+- mystery is unfair
+- it is similar to any existing level
+- **any mechanic changes nothing about how the level is solved** (see below)
+
+Among accepted candidates, the one closest to the slot's difficulty target wins. A curation pass (`--target`) then re-shaped individual slots until the Chapter curve rose. Every level is re-checked by `tools/verify_levels.gd`.
+
+### How difficulty is measured
+
+`LevelGenerator.difficulty()` extends the v0.5 score with the new mechanics. Levels 1-100 score exactly as before. It combines:
+- dependency depth and solution length
+- decision points (states with a trap move) and trap moves
+- traps at the start and the number of obvious starting moves
+- branching factor (legal moves per step)
+- spinner count and rules, locks and hidden arrows
+- switches, flip targets and **switch decisions** (switch firings that would trap)
+- gates and gate links
+- armored blocks and rams
+
+Each mechanic's **impact** is measured by solving the level again without it:
+- Switch, gate and armor impact is **structural**: depth, decisions, traps, start moves and rams, not how many of the mechanic there are.
+- A mechanic that adds less than 1.0 is decoration and is rejected.
+- The switch lessons 101-105 must be **unsolvable without their switch**.
+
+### Visual families
+
+Blocks keep their geometry, hues and arrows. Only the **material** changes, drawn once per state change and always under the arrow:
+
+| Family | Finish (`block_style`) | Backdrop (decoration / particles) |
+|---|---|---|
+| Neon Glass | `neon` inner light line + `glass` reflection | neon hex outlines / rising light streaks |
+| Industrial | `metal`: brushed top band, bevel, bolts | turning gears / embers, sparks |
+| Energy / Plasma | `plasma`: charged double inner ring | orbiting plasma rings / pulses, sparks |
+| Crystal / Deep Space | `facet` crystal cuts + glass | drifting crystal shards / falling crystals, glints |
+| Elite / Master | `elite` gold corner filigree + metal | crowns and laurels / gold dust |
+
+All decorations are drawn once and moved by transform and alpha only, so the Web memory fix stays in place.
+
+### Music
+
+Five new harmonic families, each at two intensities (`tools/generate_music.py`, QOA):
+
+| Chapters | Feel | BPM |
+|---|---|---|
+| 11-12 | clean futuristic / neon night drive | 110 → 116 |
+| 13-14 | mechanical / rhythmic | 104 → 112 |
+| 15-16 | energy / electronic | 120 → 126 |
+| 17-18 | deep / atmospheric / crystal | 90 → 96 |
+| 19-20 | intense / elite | 124 → 130 |
+| Level 200 `master2` | the Master harmony raised, bells, choir, drums | 92 |
+| Milestones | triumphant | 104 |
+
+The new tracks add about 1.9 MB. The audio path is unchanged (Stream playback, page-level unlock).
+
+### Level 200: the Grand Master
+
+A 7×7 board that combines every family of both eras:
+- spinners of 3+ rules
+- locks and hidden arrows
+- a switch, a Chain Gate and an armored block
+
+It is required to be the **hardest level of the Second Era** by measurement, with strong move-order dependency and not many blocks (21 arrows).
+
+Presentation:
+- its own theme (black and gold, golden rays)
+- its own music (`master2`)
+- a GRAND MASTER title and banner
+- the biggest celebration in the game (GRAND MASTER! stamp, five bursts)
+
+Reward: +600 coins once, and 1 Silver + 2 Gold blocks on the board.
+
+### Silver / Gold in the Second Era
+
+Silver/Gold are used about as often as in Chapters 7-10, but placed more strategically:
+- **Gold** goes on a block cleared late that is tied to a mechanic: armored, gate-linked or flipped.
+- **Silver** prefers a switch or a spinner neighbour, where timing matters.
+- The switch lessons carry none.
+
+Every anti-farming rule is unchanged: each block pays once per save, and Undo, Restart, Replay and the Hammer never pay twice.
+
+### Save and progression
+
+- **Save format v5.** Nothing is renamed or reset. A **v0.5.2 player who cleared Level 100** keeps:
+  - score, stars and coins
+  - inventory and chests
+  - Chapters, Silver/Gold and settings
+- **Level 101 is unlocked** for them. If they had not played past 100, **CONTINUE leads to Level 101** (unit test `test_save_migration_v4_to_v6`).
+- **Chapters 11-20:** Continue, Level Select, stars, bests, TOTAL SCORE, Chapter Complete, the Chapter chests (20★ / 25★ / 30★), coins and Silver/Gold all extend to 200 levels.
+- **One-time bonuses:** Master clears are tracked per Master Level (`master` = 100, `master_200` = 200), and milestones as `milestone_125` / `_150` / `_175`. Each pays once.
+- **Level Select:** a simple **FIRST ERA / SECOND ERA** divider, 20 Chapter groups, and a golden ring on milestone tiles.
+
+### Performance and memory safety
+
+- Every new visual follows the v0.5.1 rule: geometry is drawn once (on a state change), and animation is transform and alpha only. Nothing is created per frame.
+- Effects are one-shot and freed.
+- The music cache holds one stream per theme, with exactly one music player playing.
 
 ---
 

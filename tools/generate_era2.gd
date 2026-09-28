@@ -49,6 +49,7 @@ func _initialize() -> void:
 		if a.begins_with("--") and "=" in a:
 			args[a.substr(2).get_slice("=", 0)] = a.get_slice("=", 1)
 	var write := "--write" in OS.get_cmdline_user_args()
+	_target = float(args.get("target", "0"))
 	# Fail fast on candidates the solver can't settle; the verifier re-checks
 	# every written level with the full limit.
 	Solver.default_limit = 20000
@@ -70,6 +71,9 @@ func _initialize() -> void:
 	quit(0 if failed.is_empty() else 1)
 
 
+var _target := 0.0
+
+
 func _build_slot(n: int, seed: int, rounds: int, attempts: int, budget_s: int = 420) -> LevelData:
 	var gen := LevelGenerator.new(seed * 1000 + n)
 	# Time budget per slot: the best accepted candidate so far wins.
@@ -85,6 +89,11 @@ func _build_slot(n: int, seed: int, rounds: int, attempts: int, budget_s: int = 
 	var p := LevelGenerator.profile_for_level(n)
 	var band := LevelGenerator.target_difficulty(n)
 	var center := (band.x + minf(band.y, band.x * 1.6)) * 0.5
+	# Curation: --target=X steers one slot to an exact difficulty (used to
+	# shape the Chapter curve after a first pass).
+	if _target > 0.0:
+		center = _target
+		band = Vector2(_target - 3.5, _target + 3.5) if n != 200 else Vector2(_target, 999.0)
 	var best: LevelData = null
 	var best_m := {}
 	var best_err := INF
