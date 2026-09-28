@@ -172,17 +172,25 @@ func test_hints_never_invalid() -> void:
 					hint_checks += 1
 					check(hint != -1, "L%d: hint exists on a solvable board" % n)
 					if hint != -1:
-						check(m.can_escape(hint), "L%d: hint %d is a legal move" % [n, hint])
+						# v0.6: a hint is an escape or a ram (both are real moves).
+						check(m.is_playable(hint), "L%d: hint %d is a legal move" % [n, hint])
 						var after := BoardModel.new()
 						after.setup(m.rows, m.columns, m.snapshot())
-						after.remove(hint)
+						if after.move_state(hint) == "ram":
+							after.ram(hint)
+						else:
+							after.remove(hint)
 						check(Solver.from_model(after).is_solvable(), "L%d: hint keeps board solvable" % n)
 				else:
 					check(hint == -1, "L%d: no hint offered on an unsolvable board" % n)
-				var free := m.free_block_ids()
+				var free := m.playable_ids()
 				if free.is_empty():
 					break  # stuck (only reachable after a bad move)
-				m.remove(free[rng.randi() % free.size()])
+				var pick: int = free[rng.randi() % free.size()]
+				if m.move_state(pick) == "ram":
+					m.ram(pick)
+				else:
+					m.remove(pick)
 	check(hint_checks > 100, "hint checked on many states (%d)" % hint_checks)
 	lm.free()
 
@@ -354,19 +362,25 @@ func test_typed_spinners_in_solver() -> void:
 		if not level.blocks.any(func(b): return b.is_spinner() and b.spin_rule != BlockData.SpinRule.CW):
 			continue
 		var m := model_of(level)
-		var sol := Solver.from_model(m).solve()
+		var sol := Solver.from_model(m).solve_moves()
 		check(not sol.is_empty(), "L%d with typed spinners solvable" % n)
-		for id in sol:
+		for mv in sol:
+			var id: int = mv & Solver.ID_MASK
 			var snap := m.snapshot()
-			check(m.can_escape(id), "L%d solver move %d legal in the model" % [n, id])
-			m.remove(id)
+			if mv & Solver.RAM:
+				# v0.6: a ram (the solver marks it; the model agrees it is one).
+				check(m.move_state(id) == "ram", "L%d solver ram %d is a ram in the model" % [n, id])
+				m.ram(id)
+			else:
+				check(m.can_escape(id), "L%d solver move %d legal in the model" % [n, id])
+				m.remove(id)
 			var back := BoardModel.new()
 			back.setup(m.rows, m.columns, snap)
 			var s2 := Solver.from_model(back)
-			s2._apply(id)
+			s2._do(mv)
 			var agree := true
 			for b in m.snapshot():
-				agree = agree and s2._dir[b.id] == b.direction and s2._step[b.id] == b.spin_step
+				agree = agree and s2._dir[b.id] == b.direction and s2._step[b.id] == b.spin_step and s2._armor[b.id] == int(b.armored)
 			check(agree, "L%d model and solver agree after move %d" % [n, id])
 		check(m.is_empty(), "L%d cleared by replaying the solution" % n)
 		checked += 1

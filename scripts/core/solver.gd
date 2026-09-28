@@ -8,7 +8,10 @@ extends RefCounted
 ## Key pruning rule: a move that can never hurt is applied greedily without
 ## branching. Safe moves are:
 ##   * escaping a free block that has NO adjacent spinner and is not a
-##     switch (it only frees space, unlocks, reveals and opens gates)
+##     switch (it only frees space, unlocks, reveals and opens gates) -
+##     while armored shells remain, only if the block's own direction can
+##     never change (not a spinner, not a flip target): a block that may
+##     later turn toward a shell could be the rammer it needs
 ##   * a ram (it only removes an armored block's shell)
 ## The search only branches on moves that turn spinners or fire a switch,
 ## and remembers dead states. Normal levels without spinners/switches solve
@@ -62,6 +65,8 @@ var _switch: PackedInt32Array  # switch group index, -1 = not a switch
 var _link: PackedInt32Array  # gate group index this block counts toward, -1
 var _armor: PackedByteArray  # 1 = shell intact
 var _armored_ids: PackedInt32Array
+var _turnable: PackedByteArray  # 1 = its direction can change (spinner or flip target)
+var _shells: int = 0  # shells still intact
 var _flip_ids: Array = [[], [], [], []]  # group -> ids that reverse
 var _gate_ids: Array = [[], [], [], []]  # group -> gate ids
 var _links_alive := PackedInt32Array([0, 0, 0, 0])
@@ -97,6 +102,7 @@ func _init(p_rows: int, p_columns: int, blocks: Array) -> void:
 	_link.fill(-1)
 	_armor = PackedByteArray(); _armor.resize(n)
 	_armored_ids = PackedInt32Array()
+	_turnable = PackedByteArray(); _turnable.resize(n)
 	_neighbours.resize(n)
 	for b in blocks:
 		_rule[b.id] = b.spin_rule
@@ -119,6 +125,9 @@ func _init(p_rows: int, p_columns: int, blocks: Array) -> void:
 		if b.armored:
 			_armor[b.id] = 1
 			_armored_ids.append(b.id)
+			_shells += 1
+		if b.is_spinner() or b.flip_link != "":
+			_turnable[b.id] = 1
 	for b in blocks:
 		var idx: int = b.cell.y * columns + b.cell.x
 		_grid[idx] = b.id
@@ -398,7 +407,7 @@ func _dfs() -> bool:
 			if _alive[id] == 0:
 				continue
 			if _is_legal(id):
-				if _spinner_neighbours(id) == 0 and _switch[id] < 0:
+				if _spinner_neighbours(id) == 0 and _switch[id] < 0 and (_shells == 0 or _turnable[id] == 0):
 					_apply(id)
 					safe.append(id)
 					_path.append(id)
@@ -458,11 +467,12 @@ func _key() -> String:
 	return ":".join(parts)
 
 
-## A move that may hurt: it turns spinners or fires a switch.
+## A move that may hurt: it turns spinners, fires a switch, or (while shells
+## remain) removes a block that could still turn into a rammer.
 func _is_risky(move: int) -> bool:
 	if move & RAM:
 		return false
-	return _spinner_neighbours(move) > 0 or _switch[move] >= 0
+	return _spinner_neighbours(move) > 0 or _switch[move] >= 0 or (_shells > 0 and _turnable[move] == 1)
 
 
 ## Can escape now: not a gate, not hidden, not locked, not armored, lane clear.
@@ -539,6 +549,7 @@ func _spinner_neighbours(id: int) -> int:
 func _do(move: int) -> void:
 	if move & RAM:
 		_armor[_first_in_lane(move & ID_MASK)] = 0
+		_shells -= 1
 	else:
 		_apply(move)
 
@@ -547,6 +558,7 @@ func _do(move: int) -> void:
 func _undo_move(move: int) -> void:
 	if move & RAM:
 		_armor[_first_in_lane(move & ID_MASK)] = 1
+		_shells += 1
 	else:
 		_undo(move)
 
