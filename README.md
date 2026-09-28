@@ -70,15 +70,29 @@ No new gameplay, levels, rewards or progression. This release fixes the three pr
 - **Real browser** (`tools/web_persistence_test.mjs`): levels 1 → 70 continuously in one page. No reload, no page error, and the WebAssembly heap stays bounded (see *Test results*).
 - **Known engine issue ruled out:** the iOS audio-worklet leak that reloads pages ([godot#107390](https://github.com/godotengine/godot/issues/107390), fixed by [#107948](https://github.com/godotengine/godot/pull/107948)) affects **Sample** playback in Godot **4.4+**. This build is 4.3 with Stream playback.
 
-**Root cause (most likely; not reproducible outside an iPhone).** Nothing in the game accumulates, so the session is being ended by the browser. The two iOS events that do this are:
+- **Browser heap (the finding):** Chromium heap snapshots over time, with forced garbage collection. The JS heap of the v0.5 build kept **3–5 MB per minute** of retained memory, even while the game sat idle on the title. An empty Godot 4.3 project stays flat. A heap diff put the growth in eight Emscripten WebGL object tables (+5.6 MB of array slots in 60 s).
 
-- Safari discarding or reloading the page (backgrounding, memory pressure).
-- A GPU reset. On a GPU reset, Godot 4.3's Web runtime shows a blocking `alert("WebGL context lost, please reload the page")` and **never recovers** (confirmed in the exported engine code).
+**Root cause: a WebGL id leak from redrawing geometry every frame.**
 
-Either way the page reloads. With the save loss below, the reload looked like "kicked out and back to level 1". The new forensics name the exact event the next time it happens.
+- In Godot 4.3's Web runtime, every WebGL buffer, vertex array and similar object gets an id from `GL.counter++`, and Emscripten pads **every** GL table up to that counter. **Ids are never reused.**
+- Any `CanvasItem` that redraws non-rectangle geometry (polygons, arcs, circles, anti-aliased lines, rounded `StyleBoxFlat`s) **every frame** makes the renderer create new GL buffers every frame. The tables grow without limit.
+- v0.5 had many such per-frame redraws:
+  - the animated Chapter background (a gradient polygon, decorations and particles)
+  - every spinner block (the ring's idle wobble) and every Silver/Gold block (shine sweep and gem twinkle)
+  - the hint ring, the escape ghosts, the reward ring
+  - the tutorial finger
+  - the title logo
+- The later Chapters have more spinners, reward blocks and particles, so memory grew faster exactly there. After 30–60 minutes of play (around levels 45–58), iOS Safari's per-tab memory limit kills or reloads the page. On a GPU reset, Godot 4.3's Web runtime also shows a blocking `alert("WebGL context lost, please reload the page")` and **never recovers** (confirmed in the exported engine code).
+- The page reload, together with the save loss below, looked like "kicked out and back to level 1".
 
 **Fixes**
 
+- **Draw once, animate transforms.** Everything that moves is now drawn once, as a child node, and animated only through `position`, `rotation`, `scale` and `modulate`, which create no GL objects. Geometry is redrawn only on a real state change (a Chapter change, a block turn, a lock opening, a mystery reveal).
+  - `chapter_background.gd`: the gradient is rect bands; decorations and particles are draw-once shapes.
+  - `block_view.gd`: the arrow, spinner ring, shine, gem twinkle, overlay, hint ring and tap flash are separate parts.
+  - `escape_ghost.gd`, Board's reward ring, `tutorial_hint.gd` and the title logo work the same way.
+  - **Result:** the retained JS heap is now flat (title and in-game idle, 60 s each: 56.6 → 56.6 MB, 56.7 → 56.8 MB), like the empty project.
+- **No generated JavaScript at runtime.** Every game → page call (audio state, save mirror, diagnostics) is a function call on one cached object (`scripts/core/web_bridge.gd`), not `JavaScriptBridge.eval()` of a new source string.
 - **WebGL context loss:** replaced the engine's dead-end alert with a short native note ("The browser reset the graphics. Reloading – your progress is saved.") and a reload. The progress is now safely stored (see 2), so the player lands on **CONTINUE – LEVEL X**.
 - **Diagnostics that name the cause on a real phone:**
   - **Per level:** one `[Diag]` line per level transition, never per frame. It covers memory, objects, nodes, orphan nodes, resources, tweens, effect nodes, music and SFX players, the save sequence number, and on Web the WebAssembly and JS heap sizes.
@@ -137,6 +151,38 @@ Migration: v1 (v0.3) → v2 (v0.4) → v3 (v0.5) → v4 happens automatically, k
 | CHAPTER SCORE | Chapter Complete card | sum of the Chapter's best scores |
 
 There is no separate "session score". Replays can't farm Total Score, because it counts each level's best once.
+
+### How to test on itch.io and on phones
+
+**Upload**
+
+- Export with the **Web** preset (`build/web/`: `index.html`, `.js`, `.wasm`, `.pck`, `.audio.worklet.js`), zip the folder contents, and upload as an HTML game. Leave *SharedArrayBuffer support* off; the build is single-threaded.
+- Recommended itch settings: *Mobile friendly*, *Fullscreen button*.
+
+**Where saving works**
+
+| Where it runs | Saves survive… |
+|---|---|
+| Chrome / Edge / Firefox / Android, embedded on itch.io | reload, closing the tab, closing the browser, sleep/wake (storage is partitioned per site, but persistent) |
+| **Safari / any iPhone browser, embedded on itch.io** | reload and sleep/wake only. **Closing Safari clears the embed's storage** (browser policy). The title shows a banner with **OPEN GAME**, which opens the game in its own tab, where everything persists. |
+| Any browser, game opened in its own tab (the OPEN GAME button, or the itch iframe URL opened directly) | everything: reload, closing the tab or browser, returning later |
+| Private / incognito browsing | the current session only (the title warns) |
+
+**Manual checklist (iPhone Safari and Android Chrome)**
+
+1. **A:** Open the itch page and play to Level 12. Close the browser app completely, then reopen the page.
+   - Chrome: expect **CONTINUE – LEVEL 12**.
+   - Safari embed: expect the banner. Tap **OPEN GAME**, play to Level 12 in that tab, close Safari, reopen that tab, and expect CONTINUE – LEVEL 12.
+2. **B:** Play to Level 45, close the tab and reopen. Level Select must show 1–45 unlocked and 46+ locked.
+3. **C:** Note your coins, stars and boosters, reload, and compare. They must be identical.
+4. **D:** Note the **TOTAL SCORE** on the title. Complete another level. The card's TOTAL SCORE must be equal or higher, and never lower.
+5. **E / F:** Play 40 → 70 in one sitting, including the Chapter changes. If the game ever reloads or freezes, reopen it, tap the level title **5 times** to open the debug panel, and read the lines under the buttons:
+   - *Previous session:* how the last session ended (GRAPHICS RESET / CRASHED WHILE VISIBLE / page was in the background / ENGINE ABORT / JS ERROR / closed normally), at which level and after how long, and the last `[Diag]` line (memory and resource counts)
+   - *Save:* where the save loaded from (`file`, `mirror`, `bak` …), its sequence number, last played / highest completed / highest unlocked, the total score and coins
+   - *Storage:* whether this browser context can keep data
+6. **Mobile audio:** the first tap still starts the music; Chapter changes fade the music.
+
+A screenshot of the debug panel text is enough to diagnose a real-phone failure. On desktop, the same lines are in the browser console (`[Diag]`, `[Save]`).
 
 ## Save / Continue
 
@@ -677,7 +723,9 @@ Run `godot --headless --path . --import` once on a fresh checkout, so Godot regi
 godot --headless --path . --script res://tools/run_tests.gd        # unit tests
 godot --headless --path . --script res://tools/verify_levels.gd    # 100-level analysis + campaign rules
 godot --headless --path . res://tools/Playtest.tscn                # end-to-end play-through (-- --chapters-only for the v0.5 part)
+godot --headless --path . res://tools/Soak.tscn -- --cycles=2        # long session: 1 -> 100 twice in one process
 godot --headless --path . --export-release "Web" build/web/index.html && node tools/web_audio_test.mjs   # real browser
+node tools/web_persistence_test.mjs                                  # Web save scenarios A-F (itch-like iframe)
 xvfb-run godot --path . res://tools/Capture.tscn -- --gallery=5,15,25,36,45,56,64,78,86,96,100 --out=/tmp/shots   # screenshots
 ```
 
@@ -802,9 +850,13 @@ scripts/
     level_analysis.gd         Mechanic impact + fairness report
     level_generator.gd        Generator: profiles, Chapter plan, targets, reward placement, classify
     economy.gd                Coins, reward blocks, Chapter chests + milestone, shop (reads data/economy.json)
-    player_progress.gd        Versioned save v3: migration, atomic write, backup
+    player_progress.gd        Authoritative save v4: seq-numbered atomic write, .bak, Web localStorage
+                              mirror, newest-copy load, quarantine + salvage, migration v1..v3
+    diagnostics.gd            [Diag] line per level transition, session marker, how the last session ended
+    web_bridge.gd             Game -> page calls on one cached JS object (no runtime eval)
     score_rules.gd / level_manager.gd / level_data.gd / direction.gd / history.gd
-    board.gd / block_view.gd  Board + blocks (Chapter material, Silver/Gold frame, gem, halo, sweep)
+    board.gd / block_view.gd  Board + blocks (Chapter material, Silver/Gold frame, gem, halo, shine);
+                              animated parts drawn once, moved by transform/modulate only
   ui/
     ui_manager.gd             HUD, 4-button bar, coin pill + flying coins, Chapter banner, cards, settings
     chapter_card.gd           Chapter Complete card (stars /30, coins, chest, next-Chapter preview)
@@ -814,9 +866,11 @@ scripts/
     shop_panel.gd / coin_pill.gd / stars_row.gd / shapes.gd / hearts_bar.gd / pill_button.gd /
     progress_bar.gd / tutorial_hint.gd / palette.gd (incl. block material + metals)
   audio/ audio_manager.gd (Chapter themes, sequential fades, web unlock), haptics.gd
-tools/ run_tests.gd, verify_levels.gd, Playtest.tscn, Capture.tscn, generate_levels.gd,
-       strengthen_levels.gd, place_reward_blocks.gd, generate_music.py, web_audio_test.mjs, sync_web_head.py
-web/   audio_unlock.js (page-level Web Audio unlock, inlined via export_presets.cfg)
+tools/ run_tests.gd, verify_levels.gd, Playtest.tscn, Soak.tscn, Capture.tscn, generate_levels.gd,
+       strengthen_levels.gd, place_reward_blocks.gd, generate_music.py, web_audio_test.mjs,
+       web_persistence_test.mjs, sync_web_head.py
+web/   audio_unlock.js (page-level Web Audio unlock, save mirror, page-event forensics, WebGL
+       context-loss reload; inlined via export_presets.cfg)
 ```
 
 ## Architecture
@@ -831,7 +885,7 @@ web/   audio_unlock.js (page-level Web Audio unlock, inlined via export_presets.
                              ├──► AudioManager (autoload: Music + SFX buses) + Haptics
                              ├──► Chapters (data/chapters.json) → ChapterBackground, Board, UI, music
                              ├──► Economy (data/economy.json: coins, reward blocks, chests, milestones)
-                             ├──► PlayerProgress (ConfigFile v3: progress, bests, stars, rewards, settings)
+                             ├──► PlayerProgress (ConfigFile v4: progress, bests, stars, rewards, settings)
                              ├──► ScoreRules (score, PERFECT, stars)
                              └──► TutorialHint, DebugPanel
 ```
@@ -891,8 +945,10 @@ Optional level keys:
 ## Known limitations
 
 - **Real devices:** the iOS Safari audio fix was verified on an iPhone (v0.4.x), and v0.5 keeps that mechanism unchanged. The v0.5 build itself was tested in Chromium (mobile emulation, touch, strict autoplay, and a forced-suspended context). WebKit and Edge can't run in this build environment; Edge uses the Chromium engine that was tested. Please re-check on an iPhone: the first tap starts the music, and a Chapter change fades the music cleanly.
-- **Stream playback mixes on the main thread** in the single-threaded Web build. If the frame rate collapses, the music can stutter. In this environment's software-rendered browser, v0.4 and v0.5 run at the same frame rate, and v0.5 draws its background gradient in a single call. On real phones the GPU does this work.
-- **Web saves** live in the browser's IndexedDB. Clearing site data or private browsing loses progress. There are no accounts or cloud sync (not in scope).
+- **Stream playback mixes on the main thread** in the single-threaded Web build. If the frame rate collapses, the music can stutter.
+- **Real-phone crash confirmation:** the WebGL id leak was measured and fixed in Chromium. iPhone Safari can't run here, so the long-session fix needs one real 40 → 70 session on an iPhone. If anything still ends a session, the debug panel names how it ended.
+- **Short UI tweens still redraw** (hearts, stars, the coin counter) for a fraction of a second per event. That growth is tiny and bounded per level, unlike the per-frame animations that were fixed.
+- **Web saves** live in the browser's IndexedDB plus a localStorage mirror. Clearing site data or private browsing loses progress, and **Safari clears storage inside itch.io's embed when it closes** (the game shows an OPEN GAME banner there). There are no accounts or cloud sync (not in scope).
 - **Economy values are first guesses** (`data/economy.json`), not tuned with players.
 - **Levels 61–95 were tuned by metrics**, with every rule re-verified, but not by human playtests. Late Chapters are long, planning-heavy boards (19–30 blocks, depth up to 25).
 - **Locks depend on color.** Silver/Gold keep the block's color, so lock readability is unchanged. A symbol-per-color option is still future work.

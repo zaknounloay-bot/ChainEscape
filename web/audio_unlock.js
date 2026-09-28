@@ -211,6 +211,14 @@
       catch (e) { ls = false; }
       return { localStorage: ls, iframe: inIframe, crossOrigin: crossOrigin, webkit: isWebKit, ephemeral: isWebKit && crossOrigin };
     },
+    /** Game -> page calls (plain function calls; the game never evals generated source). */
+    publish: function (name, json) { try { window[name] = JSON.parse(json); } catch (e) { /* ignore */ } },
+    lsSet: function (key, value) {
+      try { localStorage.setItem(key, value); return localStorage.getItem(key) !== null; } catch (e) { return false; }
+    },
+    lsGet: function (key) { try { return localStorage.getItem(key) || ''; } catch (e) { return ''; } },
+    /** JSON of an object-returning method (storage, memory, info). */
+    json: function (method) { try { return JSON.stringify(window.ceAudio[method]()); } catch (e) { return '{}'; } },
     /** What the PREVIOUS page load recorded (JSON string, '' if none). */
     pageEvents: function () { return prevEvents; },
     /** Heap sizes in MB (WebAssembly linear memory; Chrome-only JS heap). */

@@ -268,7 +268,7 @@ func sync_to(blocks: Array) -> void:
 			if existing.data.hidden != wanted[id].hidden:
 				# A mystery arrow hidden again by Undo.
 				existing.data.hidden = wanted[id].hidden
-				existing.queue_redraw()
+				existing.refresh()
 			continue
 		var view := _create_view(wanted[id])
 		view.play_return(_offscreen_point(view.home, Direction.vector(view.data.direction)).lerp(view.home, 0.55))
@@ -303,21 +303,21 @@ func play_reward(at_local: Vector2, rarity: int) -> void:
 
 
 class RewardRing extends Node2D:
+	## Drawn once at full size; the tween only scales and fades it (a
+	## per-frame redraw would create new GPU buffers every frame on Web).
 	var color := Color.WHITE
 	var max_radius := 60.0
-	var k := 0.0:
-		set(v):
-			k = v
-			queue_redraw()
 
 	func _ready() -> void:
 		z_index = 30
+		scale = Vector2.ONE * 0.3
 		var t := create_tween()
-		t.tween_property(self, "k", 1.0, 0.42).set_trans(Tween.TRANS_CUBIC).set_ease(Tween.EASE_OUT)
+		t.tween_property(self, "scale", Vector2.ONE, 0.42).set_trans(Tween.TRANS_CUBIC).set_ease(Tween.EASE_OUT)
+		t.parallel().tween_property(self, "modulate:a", 0.0, 0.42).set_trans(Tween.TRANS_CUBIC).set_ease(Tween.EASE_OUT)
 		t.tween_callback(queue_free)
 
 	func _draw() -> void:
-		draw_arc(Vector2.ZERO, max_radius * (0.3 + 0.7 * k), 0.0, TAU, 40, Color(color, 0.9 * (1.0 - k)), 6.0 * (1.0 - k) + 1.0, true)
+		draw_arc(Vector2.ZERO, max_radius, 0.0, TAU, 40, Color(color, 0.9), 4.0, true)
 
 
 ## Hammer smash: shake, crack burst, then the block is gone.

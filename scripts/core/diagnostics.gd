@@ -33,11 +33,10 @@ static func snapshot(tree: SceneTree = null) -> Dictionary:
 	}
 	if OS.has_feature("web"):
 		# Filled by web/audio_unlock.js (WebAssembly memory + Chrome's JS heap).
-		var mem = JavaScriptBridge.eval("window.ceAudio && window.ceAudio.memory ? JSON.stringify(window.ceAudio.memory()) : '{}'", true)
-		var parsed = JSON.parse_string(str(mem))
-		if typeof(parsed) == TYPE_DICTIONARY:
-			d["wasm_mb"] = parsed.get("wasm", 0)
-			d["js_mb"] = parsed.get("js", 0)
+		var mem := WebBridge.call_json("memory")
+		if not mem.is_empty():
+			d["wasm_mb"] = mem.get("wasm", 0)
+			d["js_mb"] = mem.get("js", 0)
 	return d
 
 
@@ -80,8 +79,8 @@ static func start_session() -> void:
 static func _how_it_ended() -> String:
 	if not OS.has_feature("web"):
 		return "process ended without a clean quit"
-	var raw = JavaScriptBridge.eval("window.ceAudio && window.ceAudio.pageEvents ? window.ceAudio.pageEvents() : ''", true)
-	var e = JSON.parse_string(str(raw)) if raw != null and str(raw) != "" else null
+	var raw := str(WebBridge.call_api("pageEvents")) if WebBridge.available() else ""
+	var e = JSON.parse_string(raw) if raw != "" and raw != "<null>" else null
 	if typeof(e) != TYPE_DICTIONARY:
 		return "no page events recorded"
 	if e.get("context_lost_at", 0):
@@ -114,7 +113,7 @@ static func growth(tree: SceneTree) -> Dictionary:
 
 static func _store(key: String, value: String) -> void:
 	if OS.has_feature("web"):
-		JavaScriptBridge.eval("try{localStorage.setItem(%s,%s)}catch(e){}" % [JSON.stringify(key), JSON.stringify(value)], true)
+		WebBridge.ls_set(key, value)
 	else:
 		var f := FileAccess.open("user://%s.json" % key, FileAccess.WRITE)
 		if f:
@@ -123,8 +122,7 @@ static func _store(key: String, value: String) -> void:
 
 static func _load(key: String) -> String:
 	if OS.has_feature("web"):
-		var v = JavaScriptBridge.eval("(function(){try{return localStorage.getItem(%s)||''}catch(e){return ''}})()" % JSON.stringify(key), true)
-		return str(v) if v != null else ""
+		return WebBridge.ls_get(key)
 	if FileAccess.file_exists("user://%s.json" % key):
 		return FileAccess.get_file_as_string("user://%s.json" % key)
 	return ""

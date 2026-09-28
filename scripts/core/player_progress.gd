@@ -402,16 +402,13 @@ func _direct_write(text: String) -> bool:
 func _mirror_write(text: String) -> bool:
 	if not OS.has_feature("web") or path != default_path:
 		return false
-	var ok = JavaScriptBridge.eval("(function(){try{localStorage.setItem(%s,%s);return localStorage.getItem(%s)!==null}catch(e){return false}})()" % [
-		JSON.stringify(MIRROR_KEY), JSON.stringify(text), JSON.stringify(MIRROR_KEY)], true)
-	return ok == true
+	return WebBridge.ls_set(MIRROR_KEY, text)
 
 
 func _mirror_read() -> String:
 	if not OS.has_feature("web") or path != default_path:
 		return ""
-	var v = JavaScriptBridge.eval("(function(){try{return localStorage.getItem(%s)||''}catch(e){return ''}})()" % JSON.stringify(MIRROR_KEY), true)
-	return str(v) if v != null else ""
+	return WebBridge.ls_get(MIRROR_KEY)
 
 
 ## Where saves can go right now (title warning, diagnostics).
@@ -419,9 +416,7 @@ static func storage_status() -> Dictionary:
 	if not OS.has_feature("web"):
 		return {"persistent": true, "userfs": true, "mirror": false, "ephemeral": false}
 	var userfs := OS.is_userfs_persistent()
-	var js = JavaScriptBridge.eval("JSON.stringify(window.ceAudio && window.ceAudio.storage ? window.ceAudio.storage() : {})", true)
-	var st = JSON.parse_string(str(js))
-	var info: Dictionary = st if typeof(st) == TYPE_DICTIONARY else {}
+	var info := WebBridge.call_json("storage")
 	var mirror: bool = info.get("localStorage", false)
 	var ephemeral: bool = info.get("ephemeral", false)
 	return {"persistent": (userfs or mirror) and not ephemeral, "userfs": userfs, "mirror": mirror,

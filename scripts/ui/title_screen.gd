@@ -54,28 +54,56 @@ func open(has_progress: bool, level: int, stars: int, coins: int, theme: Diction
 	_bg_top = theme["bg_top"]
 	_bg_bottom = theme["bg_bottom"]
 	visible = true
+	queue_redraw()
 
 
 func close() -> void:
 	visible = false
 
 
-var _title_color := Palette.TEXT
+var _title_color := Palette.TEXT:
+	set(v):
+		_title_color = v
+		queue_redraw()
 var _bg_top := Palette.BACKGROUND
 var _bg_bottom := Palette.BACKGROUND
+## The three escaping logo blocks: drawn once, animated by position/alpha
+## only (a per-frame redraw would create new GPU buffers every frame on Web).
+var _logo_blocks: Array[Node2D] = []
 
 
 func _process(delta: float) -> void:
-	if visible:
-		_time += delta
+	if not visible:
+		return
+	_time += delta
+	if _logo_blocks.is_empty():
+		for i in 3:
+			var b := LogoBlock.new()
+			b.color_name = ["red", "blue", "yellow"][i]
+			add_child(b)
+			_logo_blocks.append(b)
+	var cx := size.x * 0.5
+	var y := size.y * 0.5 - 260.0
+	for i in 3:
+		var t := fmod(_time * 0.6 + i * 0.33, 1.0)
+		_logo_blocks[i].position = Vector2(cx - 90 + i * 90 + (t * t) * 160.0, y + 180)
+		_logo_blocks[i].modulate.a = 1.0 - t
+
+
+func _notification(what: int) -> void:
+	if what == NOTIFICATION_RESIZED:
 		queue_redraw()
 
 
-## Logo: the name plus three little blocks escaping in a loop.
+## Backdrop and the name. Redrawn only when the theme or size changes.
 func _draw() -> void:
-	# Opaque World-tinted backdrop so nothing of the game shows through.
-	draw_polygon(PackedVector2Array([Vector2.ZERO, Vector2(size.x, 0), size, Vector2(0, size.y)]),
-		PackedColorArray([_bg_top, _bg_top, _bg_bottom, _bg_bottom]))
+	# Opaque Chapter-tinted backdrop so nothing of the game shows through.
+	# Rect bands, not a gradient polygon (no new GPU buffers per draw).
+	var bands := 32
+	for b in bands:
+		var y0 := size.y * b / bands
+		var y1 := size.y * (b + 1) / bands
+		draw_rect(Rect2(0, y0, size.x, y1 - y0 + 1.0), _bg_top.lerp(_bg_bottom, (b + 0.5) / bands))
 	var cx := size.x * 0.5
 	var y := size.y * 0.5 - 260.0
 	var font := Palette.font(900)
@@ -83,16 +111,17 @@ func _draw() -> void:
 		var word: String = ["CHAIN", "ESCAPE"][i]
 		var w := font.get_string_size(word, HORIZONTAL_ALIGNMENT_LEFT, -1, 92).x
 		draw_string(font, Vector2(cx - w * 0.5, y + i * 96), word, HORIZONTAL_ALIGNMENT_LEFT, -1, 92, _title_color)
-	var colors := ["red", "blue", "yellow"]
-	for i in 3:
-		var t := fmod(_time * 0.6 + i * 0.33, 1.0)
-		var x := cx - 90 + i * 90 + (t * t) * 160.0
-		var a := 1.0 - t
+
+
+class LogoBlock extends Node2D:
+	var color_name := "red"
+
+	func _draw() -> void:
 		var st := StyleBoxFlat.new()
-		st.bg_color = Color(Palette.face(colors[i]), a)
+		st.bg_color = Palette.face(color_name)
 		st.set_corner_radius_all(14)
 		st.anti_aliasing = true
-		st.draw(get_canvas_item(), Rect2(Vector2(x - 30, y + 150), Vector2(60, 60)))
-		var ac := Color(Palette.arrow(colors[i]), a)
-		draw_colored_polygon(PackedVector2Array([Vector2(x + 16, y + 180), Vector2(x - 6, y + 166), Vector2(x - 6, y + 194)]), ac)
-		draw_rect(Rect2(Vector2(x - 18, y + 175), Vector2(14, 10)), ac)
+		st.draw(get_canvas_item(), Rect2(Vector2(-30, -30), Vector2(60, 60)))
+		var ac := Palette.arrow(color_name)
+		draw_colored_polygon(PackedVector2Array([Vector2(16, 0), Vector2(-6, -14), Vector2(-6, 14)]), ac)
+		draw_rect(Rect2(Vector2(-18, -5), Vector2(14, 10)), ac)

@@ -107,7 +107,7 @@ var sfx_played: int = 0
 func _init_web_audio() -> void:
 	if not _web:
 		return
-	_bridge = str(JavaScriptBridge.eval("typeof window.ceAudio")) == "object"
+	_bridge = WebBridge.available()
 	if not _bridge:
 		push_warning("[CE-Audio] page unlock script missing - unlocking on the first Godot input instead")
 
@@ -123,21 +123,21 @@ func _input(event: InputEvent) -> void:
 
 
 func _page_gestures() -> int:
-	return int(JavaScriptBridge.eval("window.ceAudio.gestures()"))
+	return int(WebBridge.api().gestures())
 
 
 func _ctx_state() -> String:
 	if not _bridge:
 		return "n/a"
-	return str(JavaScriptBridge.eval("window.ceAudio.state()"))
+	return str(WebBridge.api().state())
 
 
 ## Web builds publish their audio state to the page (window.chainEscapeAudio)
 ## so automated browser tests can check it.
 func _publish_web_state() -> void:
-	JavaScriptBridge.eval("window.chainEscapeAudio = {unlocked: %s, musicPlaying: %s, musicPos: %.3f, theme: '%s', musicEnabled: %s, sfxEnabled: %s, context: '%s', sfxPlayed: %d};" % [
-		str(unlocked).to_lower(), str(_music.playing).to_lower(), _music.get_playback_position() if _music.playing else 0.0,
-		music_theme, str(music_enabled).to_lower(), str(sfx_enabled).to_lower(), _ctx_state(), sfx_played], true)
+	WebBridge.publish("chainEscapeAudio", {"unlocked": unlocked, "musicPlaying": _music.playing,
+		"musicPos": snappedf(_music.get_playback_position(), 0.001) if _music.playing else 0.0, "theme": music_theme,
+		"musicEnabled": music_enabled, "sfxEnabled": sfx_enabled, "context": _ctx_state(), "sfxPlayed": sfx_played})
 
 
 func _process(delta: float) -> void:

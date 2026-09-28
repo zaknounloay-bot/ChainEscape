@@ -831,7 +831,7 @@ func _hide_title() -> void:
 	ui.hide_title()
 	publish_state.call_deferred()
 	if OS.has_feature("web"):
-		JavaScriptBridge.eval("window.ceAudio && window.ceAudio.saveNotice(false)", true)
+		WebBridge.call_api("saveNotice", [false])
 
 
 ## Web only: when this browser context can't keep progress (Safari/iOS in a
@@ -847,7 +847,7 @@ func _update_storage_notice() -> void:
 		return
 	var text := ("Safari deletes progress saved inside this embedded page when it closes. Open the game in its own tab to keep your progress."
 		if st["ephemeral"] else "This browser is blocking saved data (private browsing?). Progress may not be kept.")
-	JavaScriptBridge.eval("window.ceAudio && window.ceAudio.saveNotice(true, %s, %s)" % [JSON.stringify(text), JSON.stringify("OPEN GAME")], true)
+	WebBridge.call_api("saveNotice", [true, text, "OPEN GAME"])
 
 
 ## Web: a read-only snapshot of the game for automated browser tests and
@@ -875,7 +875,7 @@ func publish_state() -> void:
 		"select_max_unlocked": (select_shown.get("unlocked", []) as Array).max() if not select_shown.get("unlocked", []).is_empty() else 0,
 		"select_locked_first": (select_shown.get("locked", []) as Array).min() if not select_shown.get("locked", []).is_empty() else 0,
 	}
-	JavaScriptBridge.eval("window.chainEscapeState = %s;" % JSON.stringify(st), true)
+	WebBridge.publish("chainEscapeState", st)
 
 
 ## Text for the debug panel (tap the level title 5 times on a phone).
