@@ -191,12 +191,16 @@ The new tracks add about 1.9 MB. The audio path is unchanged (Stream playback, p
 
 ### Level 200: the Grand Master
 
-A 7×7 board that combines every family of both eras:
-- spinners of 3+ rules
-- locks and hidden arrows
-- a switch, a Chain Gate and an armored block
+A 7×7 board with 24 blocks that combines every family of both eras:
+- 6 spinners using all 4 rules (3 clockwise, 1 counter-clockwise, 1 alternating, 1 pattern)
+- 2 locks and 2 hidden arrows
+- 2 switches, 1 Chain Gate and 2 armored blocks
 
-It is required to be the **hardest level of the Second Era** by measurement, with strong move-order dependency and not many blocks (21 arrows).
+It is required to be the **hardest level of the Second Era** by measurement, and it is:
+- difficulty **79.2** (the next hardest, Level 192, is 76.8)
+- dependency depth 23 and 17 decision points
+- the switches are essential: it can't be solved without them
+- armor impact 9.0 and gate impact 1.1
 
 Presentation:
 - its own theme (black and gold, golden rays)
@@ -1055,11 +1059,12 @@ Run `godot --headless --path . --import` once on a fresh checkout, so Godot regi
 
 ```bash
 godot --headless --path . --script res://tools/run_tests.gd        # unit tests
-godot --headless --path . --script res://tools/verify_levels.gd    # 100-level analysis + campaign rules
-godot --headless --path . res://tools/Playtest.tscn                # end-to-end play-through (-- --chapters-only for the v0.5 part)
-godot --headless --path . res://tools/Soak.tscn -- --cycles=2        # long session: 1 -> 100 twice in one process
+godot --headless --path . --script res://tools/verify_levels.gd    # 200-level analysis + campaign rules
+godot --headless --path . res://tools/Playtest.tscn                # end-to-end play-through of levels 1-200 (-- --chapters-only for the v0.5 part)
+godot --headless --path . res://tools/Soak.tscn -- --cycles=2        # long session: 1 -> 200 twice in one process
 godot --headless --path . --export-release "Web" build/web/index.html && node tools/web_audio_test.mjs   # real browser
-node tools/web_persistence_test.mjs                                  # Web save scenarios A-F (itch-like iframe)
+node tools/web_persistence_test.mjs                                  # Web save scenarios A-G (itch-like iframe)
+godot --headless --path . --script res://tools/generate_era2.gd -- --from=150 --to=150 --target=60   # re-curate a Second Era slot (dry run; add --write)
 xvfb-run godot --path . res://tools/Capture.tscn -- --gallery=5,15,25,36,45,56,64,78,86,96,100 --out=/tmp/shots   # screenshots
 ```
 
@@ -1177,22 +1182,23 @@ The tests write progress to separate files (`user://test_*.cfg`, `user://playtes
 ```
 data/economy.json             Tunable economy (prices, rewards, Chapter multipliers, chest tiers, reward blocks)
 data/chapters.json            Chapter themes: colors, decoration, particles, music, block material, 101+ overflow
-levels/level_01..100.json     Level data (map tokens: @ @- @~ @* spinners, ? hidden, #K locked, $S $G reward)
-assets/audio/music_*.wav      Eleven generated music loops (c01..c10, master), imported as QOA
+levels/level_01..200.json     Level data (map tokens: @ @- @~ @* spinners, ? hidden, #K locked, $S $G reward,
+                              %A switch, &A flip target, XC gate, +C gate link, = armored)
+assets/audio/music_*.wav      Generated music loops (c01..c20, master, master2, milestone), imported as QOA
 export_presets.cfg            Web export preset (single-threaded, head include = web/audio_unlock.js)
 scripts/
   game_manager.gd             Orchestration: title/continue, Chapters, rules, history, hearts, limits,
                               score, stars, coins, reward blocks, Chapter complete, chests, shop, boosters
   core/
     chapters.gd               Chapter mapping (unbounded) + themes from data/chapters.json
-    block_data.gd             Block data incl. spinner rule + step, reward rarity
-    board_model.gd            Rules: lanes, spinners, locks, hidden arrows, snapshots
+    block_data.gd             Block data incl. spinner rule + step, reward rarity, switch/flip/gate/armor
+    board_model.gd            Rules: lanes, spinners, locks, hidden arrows, switches, gates, rams, snapshots
     solver.gd                 Search solver, hints, analysis, fairness
     level_analysis.gd         Mechanic impact + fairness report
     level_generator.gd        Generator: profiles, Chapter plan, targets, reward placement, classify
     economy.gd                Coins, reward blocks, Chapter chests + milestone, shop (reads data/economy.json)
-    player_progress.gd        Authoritative save v4: seq-numbered atomic write, .bak, Web localStorage
-                              mirror, newest-copy load, quarantine + salvage, migration v1..v3
+    player_progress.gd        Authoritative save v5: seq-numbered atomic write, .bak, Web localStorage
+                              mirror, newest-copy load, quarantine + salvage, migration v1..v4
     diagnostics.gd            [Diag] line per level transition, session marker, how the last session ended
     web_bridge.gd             Game -> page calls on one cached JS object (no runtime eval)
     score_rules.gd / level_manager.gd / level_data.gd / direction.gd / history.gd
@@ -1208,7 +1214,8 @@ scripts/
     progress_bar.gd / tutorial_hint.gd / palette.gd (incl. block material + metals)
   audio/ audio_manager.gd (Chapter themes, sequential fades, web unlock), haptics.gd
 tools/ run_tests.gd, verify_levels.gd, Playtest.tscn, Soak.tscn, Capture.tscn, generate_levels.gd,
-       strengthen_levels.gd, place_reward_blocks.gd, generate_music.py, web_audio_test.mjs,
+       strengthen_levels.gd, place_reward_blocks.gd, generate_era2.gd (levels 101-200),
+       generate_music.py, web_audio_test.mjs,
        web_persistence_test.mjs, sync_web_head.py
 web/   audio_unlock.js (page-level Web Audio unlock, save mirror, page-event forensics, WebGL
        context-loss reload; inlined via export_presets.cfg)
@@ -1296,6 +1303,9 @@ Optional level keys:
 - **Short UI tweens still redraw** (hearts, stars, the coin counter) for a fraction of a second per event. That growth is tiny and bounded per level, unlike the per-frame animations that were fixed.
 - **Web saves** live in the browser's IndexedDB plus a localStorage mirror. Clearing site data or private browsing loses progress, and **Safari clears storage inside itch.io's embed when it closes** (the game gates play there and sends players to its own tab). Settings → BACKUP CODE / RESTORE carries progress anywhere. There are no accounts or cloud sync (not in scope).
 - **Economy values are first guesses** (`data/economy.json`), not tuned with players.
+- **Levels 101-200 were generated and curated by metrics**, with every rule re-verified by the solver and the verifier, but not by human playtests. The difficulty numbers are a model, and real players may find some boards harder or easier than their number says.
+- **Chain Gate impact is modest by design.** A gate only ever holds a lane closed, so removing it makes a level easier but rarely changes the solution much (median impact: gate 1.7, armor 6.7, switch 39.5).
+- **Second Era mechanics were tested in Chromium and headless Godot.** Please check readability on a real phone: the switch chip, the ⇅ flip badge, the chain badge letters and the armor frame.
 - **Levels 61–95 were tuned by metrics**, with every rule re-verified, but not by human playtests. Late Chapters are long, planning-heavy boards (19–30 blocks, depth up to 25).
 - **Locks depend on color.** Silver/Gold keep the block's color, so lock readability is unchanged. A symbol-per-color option is still future work.
 - **Mystery fairness** is proven along the solver's solution line, not for every possible detour.
