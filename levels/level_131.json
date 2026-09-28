@@ -1,0 +1,14 @@
+{
+	"name": "Piston",
+	"hint": "Switches can be gate links too.",
+	"hint_finger": false,
+	"map": [
+		".        XC       .        .        .        R<",
+		".        G>@-     Y^%A     B>       Yv#R     Gv@$G+C",
+		"Rv       .        P<       .        .        .",
+		".        Y^@#R    .        .        Y<       .",
+		".        Pv       .        .        .        .",
+		"Bv@      .        G^       G<       .        G<",
+		"P>       R>&A     .        .        P>&A     Rv"
+	]
+}

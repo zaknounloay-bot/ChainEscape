@@ -23,6 +23,22 @@ as "the same world, getting more focused":
             c10      master, premium      112  majestic pad, bells + shimmer layer
     master  L100     the finale            84  C minor bells, choir pad, deep drums
 
+v0.6 Second Era (Chapters 11-20): five NEW families, a clear step up in
+tempo, drive and texture, still two intensities each:
+
+    F (F#m9)  c11  neon glass, clean futuristic   110  glassy 16th arp, bells
+              c12  neon night drive               116  + octave bass, lead, shimmer
+    G (Gm)    c13  industrial, mechanical         104  eighth bass, 4/4 kick, hats
+              c14  steel works, rhythmic          112  16th bass, broken kick, fills
+    H (Ebm)   c15  energy / plasma, electronic    120  16th arp, sub bass, bright
+              c16  storm core                     126  + 16th bass, lead, fills
+    I (D lyd) c17  crystal, deep space, airy       90  wide arp, bells, shimmer, choir
+              c18  star vault, atmospheric         96  bell motif, deeper pad
+    J (E)     c19  elite, intense                 124  octave bass, lead, choir
+              c20  apex, the most intense         130  16th bass, broken kick, lead
+    master2   L200  the Grand Master               92  Master harmony raised, bells + choir + drums
+    milestone 125/150/175  triumphant              104  bells, choir, wide pad
+
 Everything is rendered into a circular buffer, so note tails wrap around
 and each loop is sample-seamless. A RIFF 'smpl' chunk marks the loop so
 Godot loops it automatically (the .import files compress it as QOA).
@@ -48,6 +64,12 @@ FAMILY = {
     "D": [[52, 59, 64, 67], [48, 55, 60, 64], [43, 50, 55, 59], [50, 57, 62, 66]],   # Em - C - G - D
     "E": [[47, 54, 59, 62], [43, 50, 55, 59], [50, 57, 62, 66], [45, 52, 57, 61]],   # Bm - G - D - A
     "M": [[48, 55, 60, 63], [44, 51, 56, 60], [51, 58, 63, 67], [43, 50, 55, 59]],   # Cm - Ab - Eb - G
+    # v0.6 Second Era
+    "F": [[54, 61, 64, 68], [50, 57, 61, 64], [52, 59, 64, 66], [49, 56, 61, 64]],   # F#m9 - D - E - C#m
+    "G": [[43, 50, 55, 58], [39, 46, 51, 55], [41, 48, 53, 57], [38, 45, 50, 53]],   # Gm - Eb - F - Dm
+    "H": [[51, 58, 63, 66], [47, 54, 59, 63], [49, 56, 61, 65], [46, 53, 58, 61]],   # Ebm - B - Db - Bbm
+    "I": [[50, 57, 61, 64], [52, 59, 62, 67], [55, 62, 66, 69], [50, 57, 62, 68]],   # D(add9) - Em - G - D(#11)
+    "J": [[52, 59, 64, 68], [49, 56, 61, 64], [45, 52, 57, 61], [47, 54, 59, 63]],   # E - C#m - A - B
 }
 
 BASE = dict(transpose=0, arp="eighths", bass="half", kick=[0, 2], clap=[], snare_fill=False, hat=0.035,
@@ -75,6 +97,33 @@ THEMES = {
                 bright=0.5, pad=0.08, arp_vol=0.06, bells=0.06, shimmer=0.03, choir=0.03, sub=True, kick_len=0.5),
     "master": dict(family="M", bpm=84, arp="bells", bass="half", kick=[0, 2.5], clap=[2], hat=0.02, bright=0.4,
                    pad=0.08, arp_vol=0.08, bells=0.05, shimmer=0.035, choir=0.05, sub=True, kick_len=0.5),
+    # --- v0.6 Second Era ---
+    "c11": dict(family="F", bpm=110, arp="sixteenths", bass="pulse", kick=[0, 2], clap=[1, 3], hat=0.04, hat_div=4,
+                bright=0.6, pad=0.05, arp_vol=0.055, bells=0.03),
+    "c12": dict(family="F", bpm=116, transpose=2, arp="syncopated", bass="octaves", kick=[0, 1, 2, 3], clap=[1, 3],
+                hat=0.05, hat_div=4, bright=0.7, pad=0.045, arp_vol=0.06, lead=[0, 4, 2, 5, 4, 2, 0, 1], shimmer=0.02),
+    "c13": dict(family="G", bpm=104, arp="eighths", bass="eighths", kick=[0, 1, 2, 3], clap=[1, 3], hat=0.05,
+                hat_div=4, bright=0.45, pad=0.04, arp_vol=0.06),
+    "c14": dict(family="G", bpm=112, transpose=1, arp="syncopated", bass="sixteenths", kick=[0, 0.75, 1, 2, 2.75, 3],
+                clap=[1, 3], snare_fill=True, hat=0.055, hat_div=4, bright=0.55, pad=0.04, arp_vol=0.055),
+    "c15": dict(family="H", bpm=120, arp="sixteenths", bass="pulse", kick=[0, 1, 2, 3], clap=[1, 3], hat=0.05,
+                hat_div=4, bright=0.8, pad=0.045, arp_vol=0.05, sub=True),
+    "c16": dict(family="H", bpm=126, transpose=2, arp="sixteenths", bass="sixteenths", kick=[0, 1, 2, 3], clap=[1, 3],
+                snare_fill=True, hat=0.055, hat_div=4, bright=0.85, pad=0.04, arp_vol=0.05, lead=[4, 5, 4, 2, 0, 2, 4, 7]),
+    "c17": dict(family="I", bpm=90, arp="wide", bass="half", kick=[0, 2.5], clap=[], hat=0.025, bright=0.35,
+                pad=0.08, arp_vol=0.065, bells=0.06, shimmer=0.04, choir=0.03, sub=True, kick_len=0.5),
+    "c18": dict(family="I", bpm=96, transpose=-2, arp="bells", bass="pulse", kick=[0, 2, 2.5], clap=[3], hat=0.03,
+                bright=0.4, pad=0.085, arp_vol=0.07, bells=0.05, shimmer=0.045, choir=0.04, sub=True, kick_len=0.5),
+    "c19": dict(family="J", bpm=124, arp="sixteenths", bass="octaves", kick=[0, 1, 2, 3], clap=[1, 3], snare_fill=True,
+                hat=0.05, hat_div=4, bright=0.75, pad=0.045, arp_vol=0.05, lead=[0, 2, 4, 5, 4, 2, 4, 7], choir=0.03),
+    "c20": dict(family="J", bpm=130, transpose=2, arp="sixteenths", bass="sixteenths", kick=[0, 0.75, 1, 2, 2.75, 3],
+                clap=[1, 3], snare_fill=True, hat=0.055, hat_div=4, bright=0.8, pad=0.045, arp_vol=0.05,
+                lead=[7, 5, 4, 2, 4, 5, 7, 9], choir=0.04, shimmer=0.03),
+    "master2": dict(family="M", bpm=92, transpose=3, arp="bells", bass="pulse", kick=[0, 1.5, 2.5], clap=[2],
+                    snare_fill=True, hat=0.03, bright=0.5, pad=0.085, arp_vol=0.08, bells=0.06, shimmer=0.045,
+                    choir=0.06, sub=True, kick_len=0.5, lead=[0, 2, 3, 5, 7, 5, 3, 2]),
+    "milestone": dict(family="J", bpm=104, arp="wide", bass="half", kick=[0, 2], clap=[2], hat=0.03, bright=0.5,
+                      pad=0.07, arp_vol=0.065, bells=0.05, choir=0.04, shimmer=0.03),
 }
 
 

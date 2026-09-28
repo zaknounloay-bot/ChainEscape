@@ -1,0 +1,13 @@
+{
+	"name": "First Gate",
+	"hint": "New: CHAIN GATE. It opens once every block with its chain mark escapes.",
+	"hint_finger": false,
+	"map": [
+		"B>      G>      .       .       Pv      XC",
+		"B^#R$G  Y<      .       Y<@     .       .",
+		".       Pv      .       .       B>      P^",
+		".       Yv@     .       .       .       R<+C",
+		".       .       .       P^@     .       B<",
+		".       P<      .       Y>      .       ."
+	]
+}

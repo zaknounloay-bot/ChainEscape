@@ -102,7 +102,8 @@ func get_board_area() -> Rect2:
 
 func set_level(number: int, total: int, level_name: String, mystery: bool = false) -> void:
 	var master := Chapters.is_master(number)
-	_level_label.text = "MASTER LEVEL" if master else "LEVEL %d" % number
+	var grand := master and number > Chapters.master_level()
+	_level_label.text = ("GRAND MASTER" if grand else "MASTER LEVEL") if master else "LEVEL %d" % number
 	_level_label.add_theme_font_size_override("font_size", 50 if master else 64)
 	# "DEADBOLT  ·  CHAPTER 5  ·  5/10": where you are inside the Chapter.
 	var per := Chapters.levels_per_chapter()
@@ -114,7 +115,7 @@ func set_level(number: int, total: int, level_name: String, mystery: bool = fals
 	_name_label.add_theme_font_size_override("font_size", 24 if _name_label.text.length() <= 40 else 20)
 	var mystery_col := Color("#C9A8FF") if theme["dark"] else Palette.PURPLE_BADGE
 	_name_label.add_theme_color_override("font_color", mystery_col if mystery else theme["text_soft"])
-	_level_label.add_theme_color_override("font_color", Palette.GOLD if master else theme["text"])
+	_level_label.add_theme_color_override("font_color", Palette.GOLD if master or Chapters.is_milestone(number) else theme["text"])
 	hide_complete()
 	_chain_label.modulate.a = 0.0
 
@@ -267,7 +268,14 @@ func show_chapter_banner(text: String) -> void:
 	_banner.text = text
 	_banner.add_theme_color_override("font_color", theme["accent"])
 	_banner.visible = true
+	# Long titles ("SECOND ERA" + a Chapter name) shrink to fit the screen.
+	var fs := 44
+	_banner.add_theme_font_size_override("font_size", fs)
 	_banner.reset_size()
+	while _banner.size.x > vis.size.x - 40.0 and fs > 26:
+		fs -= 2
+		_banner.add_theme_font_size_override("font_size", fs)
+		_banner.reset_size()
 	_banner.position = Vector2((vis.size.x - _banner.size.x) * 0.5, vis.size.y * 0.30)
 	_banner.modulate.a = 0.0
 	_banner.pivot_offset = _banner.size * 0.5
@@ -372,7 +380,9 @@ func show_complete(r: Dictionary) -> void:
 	var perfect: bool = r["perfect"]
 	_card_title.text = "PERFECT!" if perfect else "LEVEL COMPLETE"
 	if r.get("master", false):
-		_card_title.text = "MASTER CLEARED!"
+		_card_title.text = "GRAND MASTER!" if r.get("level", 0) > Chapters.master_level() else "MASTER CLEARED!"
+	elif r.get("milestone", false):
+		_card_title.text = "MILESTONE CLEARED!"
 	_card_title.add_theme_color_override("font_color", Palette.GOLD if perfect else Palette.TEXT)
 	_card_style.border_color = Palette.GOLD
 	_card_style.set_border_width_all(8 if perfect else 0)

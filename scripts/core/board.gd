@@ -265,13 +265,17 @@ func sync_to(blocks: Array) -> void:
 				var undone_cw := BlockData.turn_is_cw(wanted[id].spin_rule, wanted[id].spin_step)
 				existing.play_turn(wanted[id].direction, not undone_cw)
 			existing.data.spin_step = wanted[id].spin_step
-			if existing.data.hidden != wanted[id].hidden:
-				# A mystery arrow hidden again by Undo.
+			if existing.data.hidden != wanted[id].hidden or existing.data.armored != wanted[id].armored:
+				# A mystery arrow hidden again / a shell restored by Undo.
 				existing.data.hidden = wanted[id].hidden
+				existing.data.armored = wanted[id].armored
 				existing.refresh()
 			continue
 		var view := _create_view(wanted[id])
-		view.play_return(_offscreen_point(view.home, Direction.vector(view.data.direction)).lerp(view.home, 0.55))
+		if view.data.is_gate():
+			view.play_appear(0.0)  # a gate closed again by Undo
+		else:
+			view.play_return(_offscreen_point(view.home, Direction.vector(view.data.direction)).lerp(view.home, 0.55))
 
 
 ## Chapter look: board and slot tint, accent, and the block material
@@ -337,10 +341,55 @@ func play_smash(id: int) -> void:
 	_pulse(0.02)
 
 
-## Shows every view's padlock according to the model (no animation).
+## Shows every view's padlock according to the model (no animation), and
+## (v0.6) every Chain Gate's counter.
 func refresh_locks(model: BoardModel) -> void:
 	for id in _views:
 		_views[id].set_locked(model.is_locked(id), false)
+		if _views[id].data.is_gate():
+			_views[id].gate_count = model.gate_remaining(_views[id].data.gate_group)
+
+
+## v0.6: a switch escaped - its linked arrows reverse (one after another).
+func play_flips(ids: Array, model: BoardModel) -> void:
+	for i in ids.size():
+		var v: BlockView = _views.get(ids[i])
+		if v and model.blocks.has(ids[i]):
+			v.play_flip(model.blocks[ids[i]].direction, 0.06 + 0.05 * i)
+			_burst(v.home, Vector2.UP, Palette.link(v.data.flip_link), 8, 0.8, 180.0)
+
+
+## v0.6: Chain Gates whose last link escaped open: the slab drops away.
+func play_gate_opens(gates: Array) -> void:
+	for g in gates:
+		var v: BlockView = _views.get(g["id"])
+		if v == null:
+			continue
+		_views.erase(g["id"])
+		var t := v.create_tween()
+		t.tween_interval(0.12)
+		t.tween_property(v, "scale", Vector2(1.12, 1.12), 0.08)
+		t.tween_property(v, "scale", Vector2(0.1, 0.1), 0.22).set_trans(Tween.TRANS_BACK).set_ease(Tween.EASE_IN)
+		t.parallel().tween_property(v, "modulate:a", 0.0, 0.22)
+		t.tween_callback(v.queue_free)
+		_burst(v.home, Vector2.UP, Palette.link(g["group"]), 18, 1.2, 180.0)
+		_burst(v.home, Vector2.DOWN, Palette.GATE[2], 10, 1.0, 180.0)
+
+
+## v0.6: `id` is launched into the shelled block `target`: it dashes up to
+## it and bounces back, and the shell shatters.
+func play_ram(id: int, target: int) -> void:
+	var v: BlockView = _views.get(id)
+	var t: BlockView = _views.get(target)
+	if v == null or t == null:
+		return
+	var gap := (t.home - v.home).length() - cell_size
+	v.play_ram(maxf(gap, 0.0) + cell_size * 0.15)
+	t.play_crack(0.09)
+	var dir := Direction.vector(v.data.direction)
+	_burst(t.home - dir * cell_size * 0.4, -dir, Palette.ARMOR[1], 16, 1.1, 120.0)
+	_burst(t.home, Vector2.UP, Palette.ARMOR[0], 12, 1.0, 180.0)
+	_pulse(0.012)
 
 
 func play_unlocks(ids: Array) -> void:

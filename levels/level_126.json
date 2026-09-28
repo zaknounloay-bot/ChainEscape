@@ -1,0 +1,13 @@
+{
+	"name": "Twin Links",
+	"hint": "The number on a gate shows how many linked blocks are left.",
+	"hint_finger": false,
+	"map": [
+		"R>    P>    .     .     Y>    Rv",
+		"G^+C  Yv+D  .     Y<+D  .     Bv+C",
+		"R^    G^@   XC    .     .     .",
+		"G^@   .     Bv    .     .     .",
+		".     .     .     .     .     .",
+		"XD    .     G<@   R>    Gv@~  R>"
+	]
+}

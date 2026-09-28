@@ -15,8 +15,16 @@ extends Node
 ##    "R>#G" = LOCKED: cannot escape while any green block remains
 ##    "R>$S" / "R>$G" = SILVER / GOLD reward block (v0.5; "$D" = future
 ##           Diamond). Plays by the normal rules, pays coins once.
-##    Modifiers can be combined in the order  @ ? #K $R  (spinners cannot
-##    be hidden, and hidden blocks cannot be locked).
+##    v0.6 (Second Era), group letter A-D (switches A / B, gates C / D):
+##    "R>%A" = SWITCH of group A: when it escapes, blocks marked &A reverse
+##    "R>&A" = reverses its arrow when switch A escapes
+##    "XA"   = CHAIN GATE of group A (no color / arrow; can't be tapped)
+##    "R>+A" = LINK of gate A: the gate opens when every +A block is gone
+##    "R>="  = ARMORED: launch another block into it to crack the shell
+##    Modifiers can be combined in the order  @ ? #K $R %A &A +A =
+##    (spinners cannot be hidden, hidden blocks cannot be locked; switches,
+##    flip targets and armored blocks are plain arrows: no spinner, no
+##    hidden; armored blocks are never locked or switches).
 ##      { "name": "Hello", "map": ["R> . .", ". B^ ."] }
 ##
 ## 2) Explicit block list:
@@ -102,7 +110,7 @@ static var _token_re: RegEx
 
 static func _parse_map(map: Array, level: LevelData) -> void:
 	if _token_re == null:
-		_token_re = RegEx.create_from_string("^([RBGYPrbgyp])([\\^v<>])(@[-~*]?)?(\\?)?(#[RBGYPrbgyp])?(\\$[SGD])?$")
+		_token_re = RegEx.create_from_string("^([RBGYPrbgyp])([\\^v<>])(@[-~*]?)?(\\?)?(#[RBGYPrbgyp])?(\\$[SGD])?(%[ABCD])?(&[ABCD])?(\\+[ABCD])?(=)?$")
 	level.rows = map.size()
 	level.columns = 0
 	var next_id := 0
@@ -112,6 +120,12 @@ static func _parse_map(map: Array, level: LevelData) -> void:
 		for c in tokens.size():
 			var t := tokens[c]
 			if t == "." or t == "..":
+				continue
+			if t.length() == 2 and t[0] == "X" and "ABCD".contains(t[1]):
+				var g := BlockData.new(next_id, Vector2i(c, r), GATE_COLOR, Direction.UP, BlockData.Kind.GATE)
+				g.gate_group = t[1]
+				level.blocks.append(g)
+				next_id += 1
 				continue
 			var m := _token_re.search(t)
 			if m == null:
@@ -128,9 +142,57 @@ static func _parse_map(map: Array, level: LevelData) -> void:
 				b.lock_color = COLOR_LETTERS[m.get_string(5).substr(1).to_upper()]
 			if m.get_string(6) != "":
 				b.rarity = BlockData.RARITY_TOKENS.find(m.get_string(6).substr(1))
+			b.switch_group = m.get_string(7).substr(1)
+			b.flip_link = m.get_string(8).substr(1)
+			b.gate_link = m.get_string(9).substr(1)
+			b.armored = m.get_string(10) != ""
 			_validate_block(b, level)
 			level.blocks.append(b)
 			next_id += 1
+	_validate_links(level)
+
+
+## Gates are colorless: this color is never a lock key and never drawn.
+const GATE_COLOR := "gate"
+
+
+## v0.6: every link must lead somewhere visible. A switch needs at least one
+## block to flip, a gate needs at least one link, and every link needs its
+## switch / gate. Broken links are removed (and reported).
+static func _validate_links(level: LevelData) -> void:
+	var switches := {}
+	var gates := {}
+	var flips := {}
+	var links := {}
+	for b in level.blocks:
+		if b.switch_group != "":
+			switches[b.switch_group] = true
+		if b.is_gate():
+			gates[b.gate_group] = true
+		if b.flip_link != "":
+			flips[b.flip_link] = true
+		if b.gate_link != "":
+			links[b.gate_link] = true
+	for b in level.blocks:
+		if b.flip_link != "" and not switches.has(b.flip_link):
+			push_error("Level %d: block at %s flips with switch %s, which does not exist" % [level.number, b.cell, b.flip_link])
+			b.flip_link = ""
+		if b.gate_link != "" and not gates.has(b.gate_link):
+			push_error("Level %d: block at %s links gate %s, which does not exist" % [level.number, b.cell, b.gate_link])
+			b.gate_link = ""
+		if b.switch_group != "" and not flips.has(b.switch_group):
+			push_error("Level %d: switch %s at %s has nothing to flip" % [level.number, b.switch_group, b.cell])
+			b.switch_group = ""
+	var kept := []
+	for b in level.blocks:
+		if b.is_gate() and not links.has(b.gate_group):
+			push_error("Level %d: gate %s at %s has no links" % [level.number, b.gate_group, b.cell])
+			continue
+		kept.append(b)
+	if kept.size() != level.blocks.size():
+		level.blocks = kept
+		for i in kept.size():
+			kept[i].id = i
 
 
 static func _validate_block(b: BlockData, level: LevelData) -> void:
@@ -143,6 +205,18 @@ static func _validate_block(b: BlockData, level: LevelData) -> void:
 	if b.lock_color == b.color:
 		push_error("Level %d: block at %s is locked by its own color" % [level.number, b.cell])
 		b.lock_color = ""
+	# v0.6 mechanics stay readable: one special role per arrow.
+	if (b.switch_group != "" or b.flip_link != "" or b.armored) and (b.is_spinner() or b.hidden):
+		push_error("Level %d: switch / flip / armored block at %s cannot be a spinner or hidden" % [level.number, b.cell])
+		b.switch_group = ""
+		b.flip_link = ""
+		b.armored = false
+	if b.switch_group != "" and b.flip_link != "":
+		push_error("Level %d: block at %s cannot be a switch and a flip target" % [level.number, b.cell])
+		b.flip_link = ""
+	if b.armored and (b.lock_color != "" or b.switch_group != ""):
+		push_error("Level %d: armored block at %s cannot be locked or a switch" % [level.number, b.cell])
+		b.armored = false
 
 
 static func _parse_block_list(json: Dictionary, level: LevelData) -> void:
@@ -158,9 +232,18 @@ static func _parse_block_list(json: Dictionary, level: LevelData) -> void:
 		block.spin_rule = ["cw", "ccw", "alt", "pattern"].find(String(b.get("spin", "cw")))
 		block.spin_rule = maxi(block.spin_rule, 0)
 		block.rarity = maxi(0, BlockData.RARITY_NAMES.find(String(b.get("rarity", "normal"))))
+		block.switch_group = String(b.get("switch", ""))
+		block.flip_link = String(b.get("flip", ""))
+		block.gate_link = String(b.get("gate_link", ""))
+		block.armored = bool(b.get("armored", false))
+		if b.has("gate"):
+			block.kind = BlockData.Kind.GATE
+			block.gate_group = String(b["gate"])
+			block.color = GATE_COLOR
 		_validate_block(block, level)
 		level.blocks.append(block)
 		next_id += 1
+	_validate_links(level)
 
 
 ## Serializes a level back to the "map" JSON form (used by the generator).
@@ -178,15 +261,23 @@ static func to_json_text(level: LevelData) -> String:
 	for k in Direction.MAP_CHARS:
 		arrows[Direction.MAP_CHARS[k]] = k
 	for b in level.blocks:
+		if b.is_gate():
+			grid[b.cell.y][b.cell.x] = "X" + b.gate_group
+			continue
 		grid[b.cell.y][b.cell.x] = (letters.get(b.color, "B") + arrows[b.direction] + ("@" + BlockData.RULE_SUFFIX[b.spin_rule] if b.is_spinner() else "")
 				+ ("?" if b.hidden else "") + ("#" + letters[b.lock_color] if b.lock_color != "" else "")
-				+ ("$" + BlockData.RARITY_TOKENS[b.rarity] if b.is_reward() else ""))
+				+ ("$" + BlockData.RARITY_TOKENS[b.rarity] if b.is_reward() else "")
+				+ ("%" + b.switch_group if b.switch_group != "" else "") + ("&" + b.flip_link if b.flip_link != "" else "")
+				+ ("+" + b.gate_link if b.gate_link != "" else "") + ("=" if b.armored else ""))
 	var rows := []
 	for row in grid:
 		rows.append(" ".join(PackedStringArray(row)))
 	var json := {"name": level.name, "map": rows}
 	if level.mystery:
 		json["mystery"] = true
+	if level.hint != "":
+		json["hint"] = level.hint
+		json["hint_finger"] = level.hint_finger
 	return format_level_json(json)
 
 

@@ -46,7 +46,7 @@ func _run() -> void:
 	AudioManager.set_music_enabled(false)
 	var total: int = game.level_manager.level_count
 	print("Levels found: %d" % total)
-	_check(total >= 100, "expected at least 100 levels")
+	_check(total >= 200, "expected at least 200 levels")
 	await _test_web_audio_gate()
 	if "--chapters-only" in OS.get_cmdline_user_args():
 		await _test_chapters_and_music()
@@ -60,6 +60,7 @@ func _run() -> void:
 	await _test_perfect_and_bests()
 	await _test_replay_and_level_select()
 	await _test_score_display()
+	await _test_second_era_mechanics()
 	await _test_undo_limit()
 	await _test_hint_limits()
 	await _test_locked_block()
@@ -136,8 +137,14 @@ func _play_level(n: int) -> void:
 			return
 		var snapshot := _state()
 		var before_count := game.model.block_count()
+		var kind := game.model.move_state(id)
 		await _tap(id)
-		_check(game.model.block_count() == before_count - 1, "L%d tap on block %d did not remove it" % [n, id])
+		if kind == "ram":
+			# v0.6: a ram cracks a shell and removes nothing.
+			_check(game.model.block_count() == before_count and game.model.blocks.has(id), "L%d ram by block %d must not remove it" % [n, id])
+		else:
+			# An escape removes the block (and opens any Chain Gate it completed).
+			_check(game.model.block_count() == before_count - 1 - game.model.last_opened_gates.size(), "L%d tap on block %d did not remove it" % [n, id])
 		taps += 1
 		if taps == 3:
 			_shot("L%02d_chain" % n)
@@ -200,7 +207,10 @@ func _test_web_audio_gate() -> void:
 ## over from the previous Chapter.
 func _test_chapters_and_music() -> void:
 	AudioManager.set_music_enabled(true)  # real music transitions (dummy driver)
-	var pairs := [[10, 11], [20, 21], [30, 31], [40, 41], [50, 51], [60, 61], [70, 71], [80, 81], [90, 91], [99, 100]]
+	var pairs := [[10, 11], [20, 21], [30, 31], [40, 41], [50, 51], [60, 61], [70, 71], [80, 81], [90, 91], [99, 100],
+		# v0.6 Second Era: into the new era, every Chapter, the milestones and Level 200.
+		[100, 101], [110, 111], [120, 121], [124, 125], [125, 126], [130, 131], [140, 141], [149, 150], [150, 151],
+		[160, 161], [170, 171], [174, 175], [180, 181], [190, 191], [199, 200]]
 	# 1) NEXT LEVEL
 	for pr in pairs:
 		game.start_level(pr[0])
@@ -259,10 +269,19 @@ func _test_chapters_and_music() -> void:
 	await _settle()
 	_check(game.ui._level_label.text == "MASTER LEVEL", "Level 100 shows the Master Level label")
 	_shot("L100_master_theme")
+	game.start_level(200)
+	await _settle()
+	_check(game.ui._level_label.text == "GRAND MASTER" and AudioManager.music_theme == "master2", "Level 200 shows GRAND MASTER with its own music")
+	_expect_chapter(200, "Level 200 theme")
+	game.start_level(150)
+	await _settle()
+	_check(game.ui._level_label.text == "LEVEL 150" and AudioManager.music_theme == "milestone", "milestone 150 has milestone music")
 	game.ui.levels_opened.emit()
 	await _frames(3)
 	var headers := game.ui._level_select._list.get_children().filter(func(c): return c.has_meta("chapter"))
-	_check(headers.size() == 10, "Level Select groups levels into 10 Chapters (%d)" % headers.size())
+	_check(headers.size() == 20, "Level Select groups levels into 20 Chapters (%d)" % headers.size())
+	var eras := game.ui._level_select._list.get_children().filter(func(c): return c.has_meta("era"))
+	_check(eras.size() == 2 and eras[1].get_meta("era") == 2, "Level Select shows a First Era and a Second Era divider")
 	_check(_count_tiles(game.ui._level_select._list) == game.level_manager.level_count, "Level Select still shows every level")
 	_shot("level_select_chapters")
 	game.ui._level_select.close()
@@ -278,7 +297,7 @@ func _settle() -> void:
 func _expect_chapter(n: int, label: String) -> void:
 	var t := Chapters.theme_for_level(n)
 	var w := game.chapter_state()
-	var expect_chapter := (n - 1) / 10 + 1  # 1-10 = 1 ... 91-100 = 10
+	var expect_chapter := (n - 1) / 10 + 1  # 1-10 = 1 ... 91-100 = 10 ... 191-200 = 20
 	var ok: bool = (w["level"] == n and w["chapter"] == expect_chapter and w["theme_id"] == t["id"]
 		and w["background_theme_id"] == t["id"] and w["background_settled"]
 		and game.background._top.is_equal_approx(t["bg_top"]) and game.background._bottom.is_equal_approx(t["bg_bottom"])
@@ -293,7 +312,7 @@ func _expect_chapter(n: int, label: String) -> void:
 	var views_ok := true
 	for id in game.model.blocks:
 		var v := game.board.get_view(id)
-		if v:
+		if v and not v.data.is_gate():
 			views_ok = views_ok and v._face_style.bg_color.is_equal_approx(Palette.styled_face(v.data.color))
 	_check(views_ok, "%s: block views use Chapter %d's material" % [label, expect_chapter])
 	# Music: the right theme, and exactly one player left once settled.
@@ -564,7 +583,13 @@ func _test_chests_and_coins() -> void:
 func _test_master_level_result() -> void:
 	var r := game.progress.achievements.has("master")
 	_check(r, "Master Level clear recorded as an achievement")
-	print("Master Level achievement OK")
+	# v0.6: the Grand Master (200) and the milestones pay their own one-time bonus.
+	_check(game.progress.achievements.has("master_200"), "Level 200 (Grand Master) clear recorded")
+	for n in [125, 150, 175]:
+		_check(game.progress.achievements.has("milestone_%d" % n), "milestone %d clear recorded" % n)
+	# The v0.5.2 -> v0.6 unlock: completing 100 opens 101.
+	_check(game.progress.is_unlocked(101) and game.progress.highest_unlocked >= 201, "all 200 levels cleared unlock through 200")
+	print("Master Level achievements OK (100, 200, milestones)")
 
 
 ## Simulates closing and reopening the app: a fresh GameManager built from
@@ -765,6 +790,86 @@ func _test_score_display() -> void:
 	print("Score display OK: TOTAL SCORE never decreases (NEXT, worse replay, improvement +%d)" % delta)
 
 
+## v0.6: the three Second Era mechanics through real taps.
+func _test_second_era_mechanics() -> void:
+	# SWITCH (101): firing it reverses its linked arrows, model and view.
+	game.start_level(101)
+	await _wait(0.5)
+	var sw := -1
+	for id in game.model.blocks:
+		if game.model.blocks[id].is_switch():
+			sw = id
+	_check(sw != -1, "level 101 has a switch")
+	var targets := game.model.blocks.values().filter(func(b): return b.flip_link != "").map(func(b): return b.id)
+	var before := {}
+	for t in targets:
+		before[t] = game.model.blocks[t].direction
+	# Play the solver's line up to the switch.
+	var guard := 0
+	while game.model.blocks.has(sw) and guard < 30:
+		guard += 1
+		await _tap(Solver.from_model(game.model).recommend_move())
+		await _wait(0.1)
+	await _wait(0.5)
+	var flipped_ok := true
+	for t in targets:
+		if game.model.blocks.has(t):
+			flipped_ok = flipped_ok and game.model.blocks[t].direction == Direction.opposite(before[t]) and game.board.get_view(t).data.direction == game.model.blocks[t].direction
+	_check(not game.model.blocks.has(sw) and flipped_ok, "switch escaped: its linked arrows reversed (model and view)")
+	_shot("L101_after_switch")
+	# CHAIN GATE (121): tapping it is free; its counter follows the links; it opens.
+	game.start_level(121)
+	await _wait(0.5)
+	var gate := -1
+	for id in game.model.blocks:
+		if game.model.blocks[id].is_gate():
+			gate = id
+	_check(gate != -1, "level 121 has a Chain Gate")
+	var group: String = game.model.blocks[gate].gate_group
+	_check(game.board.get_view(gate).gate_count == game.model.gate_remaining(group), "gate counter shows the links left")
+	var hearts := game.hearts
+	await _tap(gate)
+	await _wait(0.1)
+	_check(game.hearts == hearts and game.mistakes == 0 and game.tutorial._text.begins_with("Chain Gate"), "tapping a gate is free and explains it")
+	guard = 0
+	while game.model.blocks.has(gate) and guard < 40:
+		guard += 1
+		await _tap(Solver.from_model(game.model).recommend_move())
+		await _wait(0.1)
+	await _wait(0.6)
+	_check(not game.model.blocks.has(gate) and game.board.get_view(gate) == null, "the gate opened when its last link escaped")
+	# ARMOR (161): a ram is not a mistake; the shell breaks; Undo restores it.
+	game.start_level(161)
+	await _wait(0.5)
+	var armored := -1
+	for id in game.model.blocks:
+		if game.model.blocks[id].armored:
+			armored = id
+	_check(armored != -1, "level 161 has an armored block")
+	await _tap(armored)
+	await _wait(0.1)
+	_check(game.mistakes == 0 and game.tutorial._text.begins_with("Armored"), "tapping a shell is free and explains the ram")
+	guard = 0
+	var rammed := false
+	while game.model.blocks.has(armored) and game.model.blocks[armored].armored and guard < 40:
+		guard += 1
+		var id := Solver.from_model(game.model).recommend_move()
+		var kind := game.model.move_state(id)
+		var h := game.hearts
+		await _tap(id)
+		await _wait(0.15)
+		if kind == "ram":
+			rammed = true
+			_check(game.hearts == h and game.mistakes == 0 and game.model.blocks.has(id), "a ram costs no heart and removes nothing")
+	await _wait(0.4)
+	_check(rammed and not game.model.blocks[armored].armored and not game.board.get_view(armored).data.armored, "the shell broke (model and view)")
+	_shot("L161_after_ram")
+	game.undo()
+	await _wait(0.3)
+	_check(game.model.blocks[armored].armored and game.board.get_view(armored).data.armored, "Undo restores the shell")
+	print("Second Era mechanics OK (switch flip, gate open, armor ram + undo)")
+
+
 func _test_replay_and_level_select() -> void:
 	game.ui.replay_pressed.emit()
 	await _wait(0.3)
@@ -930,7 +1035,7 @@ func _state() -> Dictionary:
 	var d := {}
 	for id in game.model.blocks:
 		var b: BlockData = game.model.blocks[id]
-		d[id] = [b.direction, b.hidden, game.model.is_locked(id)]
+		d[id] = [b.direction, b.hidden, game.model.is_locked(id), b.armored]
 	return d
 
 

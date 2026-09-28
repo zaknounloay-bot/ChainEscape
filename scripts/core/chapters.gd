@@ -3,6 +3,11 @@ class_name Chapters
 ## accent colors, ambient decoration and particles, music and block
 ## material. Level 100 keeps a unique Master theme.
 ##
+## v0.6 Second Era: Chapters 11-20 (levels 101-200) have their own themes,
+## Level 200 is a second Master Level (its own theme and music), and levels
+## 125 / 150 / 175 are milestones (their Chapter's look with a golden ray
+## backdrop and milestone music). Eras group Chapters for Level Select.
+##
 ## Everything visual comes from res://data/chapters.json - no theme lives in
 ## UI code. Chapters past the defined list (101+) reuse the themes named in
 ## "overflow.cycle" with a round number ("Deep Current II"), so the game can
@@ -18,6 +23,7 @@ const MASTER_ID := 1000
 static var _config: Dictionary = {}
 static var _themes: Array = []  # parsed chapter themes 1..N (Colors, ids)
 static var _master: Dictionary = {}
+static var _masters: Dictionary = {}  # level -> parsed Master theme
 
 
 static func config() -> Dictionary:
@@ -30,6 +36,13 @@ static func config() -> Dictionary:
 			_themes.append(_parse(list[i], i + 1))
 		_master = _parse(_config.get("master", list[-1] if not list.is_empty() else {}), MASTER_ID)
 		_master["chapter"] = chapter_of(master_level())
+		_masters.clear()
+		_masters[master_level()] = _master
+		var extra: Dictionary = _config.get("masters", {})
+		for k in extra:
+			var m := _parse(extra[k], MASTER_ID + int(k))
+			m["chapter"] = chapter_of(int(k))
+			_masters[int(k)] = m
 	return _config
 
 
@@ -61,8 +74,33 @@ static func chapter_count(total_levels: int) -> int:
 	return chapter_of(maxi(total_levels, 1))
 
 
+## Every Master Level (100, and since v0.6 200).
+static func master_levels() -> Array:
+	var list: Array = config().get("master_levels", [master_level()])
+	return list.map(func(x): return int(x))
+
+
 static func is_master(level_number: int) -> bool:
-	return level_number == master_level()
+	return master_levels().has(level_number)
+
+
+## v0.6 milestone levels (125 / 150 / 175).
+static func is_milestone(level_number: int) -> bool:
+	return config().get("milestone_levels", []).map(func(x): return int(x)).has(level_number)
+
+
+## Era of a level: 1 (levels 1-100) or 2 (101-200). {"index", "name", "from", "to"}
+static func era_of(level_number: int) -> Dictionary:
+	var eras: Array = config().get("eras", [])
+	for i in eras.size():
+		if level_number >= int(eras[i]["from"]) and level_number <= int(eras[i]["to"]):
+			return {"index": i + 1, "name": String(eras[i]["name"]), "from": int(eras[i]["from"]), "to": int(eras[i]["to"])}
+	return {"index": 1, "name": "", "from": 1, "to": 100}
+
+
+## Era of a Chapter (by its first level).
+static func era_of_chapter(chapter: int) -> Dictionary:
+	return era_of(chapter_range(chapter).x)
 
 
 ## Theme of a chapter (1-based). Chapters past the defined list cycle.
@@ -85,7 +123,17 @@ static func theme_for_chapter(chapter: int) -> Dictionary:
 static func theme_for_level(level_number: int) -> Dictionary:
 	config()
 	if is_master(level_number):
-		return _master
+		return _masters.get(level_number, _master)
+	if is_milestone(level_number):
+		# The Chapter's look (colors, block material) + milestone presentation.
+		var t := theme_for_chapter(chapter_of(level_number)).duplicate(true)
+		var ms: Dictionary = config().get("milestone", {})
+		for k in ["deco", "particles", "music"]:
+			if ms.has(k):
+				t[k] = ms[k]
+		t["id"] = int(t["id"]) * 100 + level_number  # a distinct look to apply
+		t["milestone"] = true
+		return t
 	return theme_for_chapter(chapter_of(level_number))
 
 
@@ -106,7 +154,10 @@ static func _parse(raw: Dictionary, id: int) -> Dictionary:
 		t[k] = Color(String(raw.get(k, "#FFFFFF")))
 	var style: Dictionary = raw.get("block_style", {}).duplicate()
 	style["edge"] = Color(String(style.get("edge", "#FFFFFF")))
-	for k in ["saturation", "gloss", "rim", "glow"]:
+	# v0.6 Second Era finishes: neon (inner light line), glass (reflection),
+	# metal (brushed band + bevel), plasma (energy ring), facet (crystal
+	# cuts), elite (gold corner filigree). All static, all under the arrow.
+	for k in ["saturation", "gloss", "rim", "glow", "neon", "glass", "metal", "plasma", "facet", "elite"]:
 		style[k] = float(style.get(k, 1.0 if k == "saturation" else 0.0))
 	t["block_style"] = style
 	t["dark"] = bool(raw.get("dark", false))

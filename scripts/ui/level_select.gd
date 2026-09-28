@@ -65,7 +65,13 @@ func _ready() -> void:
 func open(chapters: Array, total_stars: int, max_stars: int, current_chapter: int, total_score: int = 0) -> void:
 	for c in _list.get_children():
 		c.queue_free()
+	var era_shown := 0
 	for info in chapters:
+		# v0.6: a simple divider where each era begins.
+		var era := Chapters.era_of_chapter(info["chapter"])
+		if era["index"] != era_shown and String(era["name"]) != "":
+			era_shown = era["index"]
+			_list.add_child(_era_divider(era, info))
 		_list.add_child(_chapter_header(info))
 		var grid := GridContainer.new()
 		grid.columns = COLUMNS
@@ -93,6 +99,27 @@ func open(chapters: Array, total_stars: int, max_stars: int, current_chapter: in
 
 func close() -> void:
 	visible = false
+
+
+## "SECOND ERA  ·  LEVELS 101-200" between the eras.
+func _era_divider(era: Dictionary, info: Dictionary) -> Control:
+	var box := VBoxContainer.new()
+	box.add_theme_constant_override("separation", 2)
+	box.set_meta("era", era["index"])
+	if era["index"] > 1:
+		var gap := Control.new()
+		gap.custom_minimum_size = Vector2(0, 18)
+		box.add_child(gap)
+	var t: Dictionary = info["theme"]
+	var title := _label(String(era["name"]).to_upper(), 34, t["accent"] if era["index"] > 1 else Palette.TEXT)
+	box.add_child(title)
+	var sub := _label("LEVELS %d-%d" % [era["from"], era["to"]], 18, Palette.TEXT_SOFT)
+	box.add_child(sub)
+	var line := ColorRect.new()
+	line.custom_minimum_size = Vector2(0, 4)
+	line.color = Color(t["accent"], 0.8) if era["index"] > 1 else Color(Palette.TEXT_SOFT, 0.4)
+	box.add_child(line)
+	return box
 
 
 func _chapter_header(info: Dictionary) -> Control:
@@ -211,6 +238,9 @@ class LevelTile extends Button:
 			body.bg_color = Palette.TEXT_SOFT
 			body.set_corner_radius_all(6)
 			body.draw(get_canvas_item(), Rect2(c + Vector2(-20, -8), Vector2(40, 30)))
+		if info.get("milestone", false) and info["unlocked"]:
+			# v0.6 milestone: a small golden ring on top.
+			draw_arc(Vector2(size.x * 0.5, 14), 9, 0.0, TAU, 20, Palette.GOLD, 4, true)
 		if master:
 			# Crown.
 			var c2 := Vector2(size.x * 0.5, 16)

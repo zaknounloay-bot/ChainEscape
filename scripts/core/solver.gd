@@ -1,24 +1,37 @@
 class_name Solver
 extends RefCounted
-## Exhaustive solver for Chain Escape boards (spinners, locks, mystery).
+## Exhaustive solver for Chain Escape boards (spinners, locks, mystery and,
+## since v0.6, switches, Chain Gates and armored blocks).
 ##
 ## Used by the Hint button, the level verifier and the LevelGenerator.
 ##
-## Key pruning rule: removing a free block that has NO adjacent spinner can
-## never hurt (it only frees space and turns nothing), so such "safe" moves
-## are applied greedily without branching. The search only branches on moves
-## that turn spinners, and remembers dead states. Normal levels without
-## spinners therefore solve in linear time.
+## Key pruning rule: a move that can never hurt is applied greedily without
+## branching. Safe moves are:
+##   * escaping a free block that has NO adjacent spinner and is not a
+##     switch (it only frees space, unlocks, reveals and opens gates)
+##   * a ram (it only removes an armored block's shell)
+## The search only branches on moves that turn spinners or fire a switch,
+## and remembers dead states. Normal levels without spinners/switches solve
+## in linear time.
 ##
-## Locks and hidden arrows keep that rule valid: removing a block can only
-## lower color counts (unlocking) and reveal neighbours - never hurt. Both
-## are derived from the alive set, so the memo key stays exact.
+## Locks, hidden arrows, switch flips and open gates are all derived from the
+## alive set, so the memo key (alive set + spinner directions/steps + armor
+## shells) stays exact.
+##
+## Moves are block ids (what the player taps). Internally a ram is marked
+## with the RAM bit; the public results are plain tap ids (a block that is
+## first used to ram and later escapes appears twice).
 
 const DEFAULT_NODE_LIMIT := 60000
+## Node limit for new solvers. Level generation lowers it so hopeless
+## candidates are rejected quickly; the game and the verifier keep 60000.
+static var default_limit: int = DEFAULT_NODE_LIMIT
+const RAM := 1 << 20
+const ID_MASK := RAM - 1
 
 var rows: int
 var columns: int
-var node_limit: int = DEFAULT_NODE_LIMIT
+var node_limit: int = default_limit
 var nodes: int = 0
 ## True if the last search hit node_limit (result unknown, treated as unsolved).
 var aborted: bool = false
@@ -38,11 +51,20 @@ var _step: PackedInt32Array  # spinner turns made so far
 var _color: PackedInt32Array  # color index per block
 var _lock: PackedInt32Array  # key color index, -1 = not locked
 var _hidden: PackedByteArray  # concealed at construction time
-var _neighbours: Array = []  # per block: neighbour ids at construction
+var _neighbours: Array = []  # per block: neighbour ids at construction (gates excluded)
 var _color_count := PackedInt32Array([0, 0, 0, 0, 0, 0, 0, 0])
 var _color_names: Array = []
 var _failed: Dictionary = {}
 var _path: Array[int] = []
+# v0.6
+var _gate: PackedByteArray  # 1 = Chain Gate
+var _switch: PackedInt32Array  # switch group index, -1 = not a switch
+var _link: PackedInt32Array  # gate group index this block counts toward, -1
+var _armor: PackedByteArray  # 1 = shell intact
+var _armored_ids: PackedInt32Array
+var _flip_ids: Array = [[], [], [], []]  # group -> ids that reverse
+var _gate_ids: Array = [[], [], [], []]  # group -> gate ids
+var _links_alive := PackedInt32Array([0, 0, 0, 0])
 
 
 ## Build from a list of BlockData (e.g. BoardModel.snapshot()).
@@ -68,6 +90,13 @@ func _init(p_rows: int, p_columns: int, blocks: Array) -> void:
 	_lock = PackedInt32Array(); _lock.resize(n)
 	_lock.fill(-1)
 	_hidden = PackedByteArray(); _hidden.resize(n)
+	_gate = PackedByteArray(); _gate.resize(n)
+	_switch = PackedInt32Array(); _switch.resize(n)
+	_switch.fill(-1)
+	_link = PackedInt32Array(); _link.resize(n)
+	_link.fill(-1)
+	_armor = PackedByteArray(); _armor.resize(n)
+	_armored_ids = PackedInt32Array()
 	_neighbours.resize(n)
 	for b in blocks:
 		_rule[b.id] = b.spin_rule
@@ -77,6 +106,19 @@ func _init(p_rows: int, p_columns: int, blocks: Array) -> void:
 		if b.lock_color != "":
 			_lock[b.id] = _color_index(b.lock_color)
 		_hidden[b.id] = 1 if b.hidden else 0
+		if b.is_gate():
+			_gate[b.id] = 1
+			_gate_ids[_group(b.gate_group)].append(b.id)
+		if b.switch_group != "":
+			_switch[b.id] = _group(b.switch_group)
+		if b.flip_link != "":
+			_flip_ids[_group(b.flip_link)].append(b.id)
+		if b.gate_link != "":
+			_link[b.id] = _group(b.gate_link)
+			_links_alive[_link[b.id]] += 1
+		if b.armored:
+			_armor[b.id] = 1
+			_armored_ids.append(b.id)
 	for b in blocks:
 		var idx: int = b.cell.y * columns + b.cell.x
 		_grid[idx] = b.id
@@ -93,8 +135,14 @@ func _init(p_rows: int, p_columns: int, blocks: Array) -> void:
 			var x: int = b.cell.x + step.x
 			var y: int = b.cell.y + step.y
 			if x >= 0 and y >= 0 and x < columns and y < rows and _grid[y * columns + x] != -1:
-				nb.append(_grid[y * columns + x])
+				var o := _grid[y * columns + x]
+				if _gate[o] == 0:
+					nb.append(o)
 		_neighbours[b.id] = nb
+
+
+static func _group(letter: String) -> int:
+	return maxi(0, BlockData.LINK_GROUPS.find(letter))
 
 
 func _color_index(c: String) -> int:
@@ -111,10 +159,15 @@ static func from_model(model: BoardModel) -> Solver:
 
 # --- Public API ------------------------------------------------------------
 
-## Returns a full solution (list of block ids in tap order), or [] if the
-## board cannot be cleared (check `aborted` to tell "unsolvable" from
-## "gave up"). An already-empty board returns [] with is_solved() true.
+## Returns a full solution (block ids in tap order), or [] if the board
+## cannot be cleared (check `aborted` to tell "unsolvable" from "gave up").
+## An already-empty board returns [] with is_solved() true.
 func solve() -> Array[int]:
+	return _strip(solve_moves())
+
+
+## Like solve(), with rams marked by the RAM bit.
+func solve_moves() -> Array[int]:
 	nodes = 0
 	aborted = false
 	_failed.clear()
@@ -127,36 +180,47 @@ func solve() -> Array[int]:
 	return []
 
 
+static func _strip(moves: Array) -> Array[int]:
+	var out: Array[int] = []
+	for m in moves:
+		out.append(m & ID_MASK)
+	return out
+
+
 func is_solvable() -> bool:
 	if _alive_count == 0:
 		return true
-	return not solve().is_empty()
+	return not solve_moves().is_empty()
 
 
-## Ids of blocks that could escape right now.
+## Moves available right now: escapes (plain ids) and rams (RAM bit set).
 func legal_moves() -> Array[int]:
 	var out: Array[int] = []
 	for id in _alive.size():
-		if _alive[id] == 1 and _is_legal(id):
-			out.append(id)
+		if _alive[id] == 1:
+			if _is_legal(id):
+				out.append(id)
+			elif _ram_target(id) != -1:
+				out.append(id | RAM)
 	return out
 
 
 ## Best move for a hint: a legal move after which the board is still
-## solvable. Prefers moves that turn spinners (the real decisions) over
-## always-safe moves. Returns -1 if no legal move keeps the board solvable.
+## solvable. Prefers the real decisions (moves that turn spinners or fire a
+## switch) over always-safe moves. Returns the block id to tap, or -1 if no
+## legal move keeps the board solvable.
 func recommend_move() -> int:
 	var safe_pick := -1
-	for id in legal_moves():
-		var turned := _apply(id)
+	for mv in legal_moves():
+		_do(mv)
 		var ok := _alive_count == 0 or not _solve_keep_state().is_empty()
-		_undo(id, turned)
+		_undo_move(mv)
 		if not ok:
 			continue
-		if turned.size() > 0:
-			return id
+		if _is_risky(mv):
+			return mv & ID_MASK
 		if safe_pick == -1:
-			safe_pick = id
+			safe_pick = mv & ID_MASK
 	return safe_pick
 
 
@@ -172,24 +236,37 @@ func analyze() -> Dictionary:
 		"depth": 0, "direction_share": 0.0, "directions_used": 0,
 		"locks": 0, "hidden": 0,
 		"rule_cw": 0, "rule_ccw": 0, "rule_alt": 0, "rule_pattern": 0,
+		# v0.6
+		"switches": 0, "flip_targets": 0, "gates": 0, "gate_links": 0, "armored": 0, "rams": 0,
+		"switch_decisions": 0, "branching": 0.0,
 	}
 	for sid in _spinner_ids:
 		m["rule_" + ["cw", "ccw", "alt", "pattern"][_rule[sid]]] += 1
+	var arrows := 0
 	for id in _alive.size():
 		if _alive[id] == 1:
 			m["locks"] += 1 if _lock[id] >= 0 else 0
 			m["hidden"] += 1 if _is_concealed(id) else 0
-	# Direction diversity.
+			m["switches"] += 1 if _switch[id] >= 0 else 0
+			m["gates"] += _gate[id]
+			m["gate_links"] += 1 if _link[id] >= 0 else 0
+			m["armored"] += _armor[id]
+			if _gate[id] == 0:
+				arrows += 1
+	for g in 4:
+		m["flip_targets"] += _flip_ids[g].size()
+	# Gates are not arrows: they don't count as blocks to clear or directions.
+	m["blocks"] = arrows
 	var counts := [0, 0, 0, 0]
 	for id in _alive.size():
-		if _alive[id] == 1:
+		if _alive[id] == 1 and _gate[id] == 0:
 			counts[_dir[id]] += 1
-	m["direction_share"] = float(counts.max()) / maxf(_alive_count, 1)
+	m["direction_share"] = float(counts.max()) / maxf(arrows, 1)
 	m["directions_used"] = counts.filter(func(c): return c > 0).size()
 
-	var solution := solve()
+	var solution := solve_moves()
 	m["solvable"] = _alive_count == 0 or not solution.is_empty()
-	m["solution"] = solution
+	m["solution"] = _strip(solution)
 	if not m["solvable"]:
 		return m
 	# Walk the solution; at every state count legal moves that are traps
@@ -197,31 +274,39 @@ func analyze() -> Dictionary:
 	var applied: Array = []
 	var round_free: Array[int] = legal_moves()
 	var depth := 1
+	var legal_sum := 0
 	for step in solution.size():
 		var traps := 0
 		var legal := legal_moves()
-		for id in legal:
-			if _spinner_neighbours(id) == 0:
+		legal_sum += legal.size()
+		for mv in legal:
+			if not _is_risky(mv):
 				continue  # safe moves are never traps
-			var t := _apply(id)
+			_do(mv)
 			var ok := _alive_count == 0 or not _solve_keep_state().is_empty()
-			_undo(id, t)
+			_undo_move(mv)
 			if not ok:
 				traps += 1
+				if _switch[mv & ID_MASK] >= 0:
+					m["switch_decisions"] += 1
 		if step == 0:
 			m["start_traps"] = traps
 		if traps > 0:
 			m["decision_points"] += 1
 			m["trap_moves"] += traps
 		var move: int = solution[step]
+		if move & RAM:
+			m["rams"] += 1
 		if not round_free.has(move):
 			depth += 1
 			round_free = legal
-		applied.append([move, _apply(move)])
+		_do(move)
+		applied.append(move)
 	m["depth"] = depth
+	m["branching"] = snappedf(float(legal_sum) / maxf(solution.size(), 1), 0.01)
 	# Restore the starting state.
 	for i in range(applied.size() - 1, -1, -1):
-		_undo(applied[i][0], applied[i][1])
+		_undo_move(applied[i])
 	return m
 
 
@@ -229,13 +314,13 @@ func analyze() -> Dictionary:
 ##
 ## Walks the solution. At every state with concealed blocks, it takes each
 ## concealed block, tries its three other possible directions, and checks
-## that every risky visible move (one that turns a spinner) keeps the same
-## "trap / not trap" status. If so, a player can always pick a good move
-## from visible information only; hidden arrows are uncovered, not guessed.
-## (Alternatives that would make the level unsolvable are skipped.)
+## that every risky visible move keeps the same "trap / not trap" status. If
+## so, a player can always pick a good move from visible information only;
+## hidden arrows are uncovered, not guessed. (Alternatives that would make
+## the level unsolvable are skipped.)
 func mystery_fairness() -> Dictionary:
 	var result := {"fair": true, "states_checked": 0, "reason": ""}
-	var solution := solve()
+	var solution := solve_moves()
 	if solution.is_empty() and _alive_count > 0:
 		return {"fair": false, "states_checked": 0, "reason": "unsolvable"}
 	var applied: Array = []
@@ -246,7 +331,7 @@ func mystery_fairness() -> Dictionary:
 				concealed.append(id)
 		if not concealed.is_empty():
 			result["states_checked"] += 1
-			var risky := legal_moves().filter(func(x): return _spinner_neighbours(x) > 0)
+			var risky := legal_moves().filter(func(x): return _is_risky(x))
 			if not risky.is_empty():
 				var base := _trap_map(risky)
 				for h in concealed:
@@ -261,18 +346,18 @@ func mystery_fairness() -> Dictionary:
 						_dir[h] = true_dir
 		var move: int = solution[step]
 		applied.append(move)
-		_apply(move)
+		_do(move)
 	for i in range(applied.size() - 1, -1, -1):
-		_undo(applied[i])
+		_undo_move(applied[i])
 	return result
 
 
 func _trap_map(moves: Array) -> Array:
 	var out := []
-	for id in moves:
-		_apply(id)
+	for mv in moves:
+		_do(mv)
 		out.append(_alive_count > 0 and _solve_keep_state().is_empty())
-		_undo(id)
+		_undo_move(mv)
 	return out
 
 
@@ -304,37 +389,45 @@ func _dfs() -> bool:
 	if nodes > node_limit:
 		aborted = true
 		return false
-	# 1) Greedily apply safe moves (free, and turning no spinner).
+	# 1) Greedily apply safe moves: plain escapes and rams.
 	var safe: Array[int] = []
 	var progress := true
 	while progress:
 		progress = false
 		for id in _alive.size():
-			if _alive[id] == 1 and _spinner_neighbours(id) == 0 and _is_legal(id):
-				_apply(id)
-				safe.append(id)
-				_path.append(id)
+			if _alive[id] == 0:
+				continue
+			if _is_legal(id):
+				if _spinner_neighbours(id) == 0 and _switch[id] < 0:
+					_apply(id)
+					safe.append(id)
+					_path.append(id)
+					progress = true
+			elif not _armored_ids.is_empty() and _ram_target(id) != -1:
+				_do(id | RAM)
+				safe.append(id | RAM)
+				_path.append(id | RAM)
 				progress = true
 	if _alive_count == 0:
 		return true
 	var key := _key()
 	if not _failed.has(key):
-		# 2) Branch on moves that turn spinners.
+		# 2) Branch on moves that turn spinners or fire a switch.
 		for id in _alive.size():
 			if _alive[id] == 1 and _is_legal(id):
-				var turned := _apply(id)
+				_apply(id)
 				_path.append(id)
 				if _dfs():
 					return true
 				_path.pop_back()
-				_undo(id, turned)
+				_undo(id)
 				if aborted:
 					break
 		if not aborted:
 			_failed[key] = true
 	# Backtrack the safe moves too.
 	for i in range(safe.size() - 1, -1, -1):
-		_undo(safe[i], [])
+		_undo_move(safe[i])
 		_path.pop_back()
 	return false
 
@@ -357,16 +450,43 @@ func _key() -> String:
 		if period > 1:
 			dirs = dirs * period + posmod(_step[sid], period)
 	parts.append(str(dirs))
+	if not _armored_ids.is_empty():
+		var shells := 0
+		for i in _armored_ids.size():
+			shells |= _armor[_armored_ids[i]] << (i % 62)
+		parts.append(str(shells))
 	return ":".join(parts)
 
 
-## Can escape now: not hidden, not locked, and the lane is clear.
+## A move that may hurt: it turns spinners or fires a switch.
+func _is_risky(move: int) -> bool:
+	if move & RAM:
+		return false
+	return _spinner_neighbours(move) > 0 or _switch[move] >= 0
+
+
+## Can escape now: not a gate, not hidden, not locked, not armored, lane clear.
 func _is_legal(id: int) -> bool:
+	if _gate[id] == 1 or _armor[id] == 1:
+		return false
 	if _hidden[id] == 1 and _is_concealed(id):
 		return false
 	if _lock[id] >= 0 and _color_count[_lock[id]] > 0:
 		return false
 	return _is_free(id)
+
+
+## If `id` could be tapped and its lane runs straight into a shelled block,
+## that block's id (a ram); else -1.
+func _ram_target(id: int) -> int:
+	if _gate[id] == 1 or _armor[id] == 1:
+		return -1
+	if _hidden[id] == 1 and _is_concealed(id):
+		return -1
+	if _lock[id] >= 0 and _color_count[_lock[id]] > 0:
+		return -1
+	var t := _first_in_lane(id)
+	return t if t != -1 and _armor[t] == 1 else -1
 
 
 ## Still hidden: no neighbour (at construction time) has escaped yet.
@@ -380,6 +500,11 @@ func _is_concealed(id: int) -> bool:
 
 
 func _is_free(id: int) -> bool:
+	return _first_in_lane(id) == -1
+
+
+## The first block in `id`'s arrow direction, or -1 if the lane is clear.
+func _first_in_lane(id: int) -> int:
 	var idx := _cell[id]
 	var c := idx % columns
 	var r := idx / columns
@@ -387,11 +512,12 @@ func _is_free(id: int) -> bool:
 	c += step.x
 	r += step.y
 	while c >= 0 and r >= 0 and c < columns and r < rows:
-		if _grid[r * columns + c] != -1:
-			return false
+		var o := _grid[r * columns + c]
+		if o != -1:
+			return o
 		c += step.x
 		r += step.y
-	return true
+	return -1
 
 
 func _spinner_neighbours(id: int) -> int:
@@ -409,7 +535,24 @@ func _spinner_neighbours(id: int) -> int:
 	return n
 
 
-## Removes `id` and turns adjacent spinners. Returns the turned spinner ids.
+## Applies a move (escape, or ram with the RAM bit).
+func _do(move: int) -> void:
+	if move & RAM:
+		_armor[_first_in_lane(move & ID_MASK)] = 0
+	else:
+		_apply(move)
+
+
+## Exact inverse of _do (LIFO order).
+func _undo_move(move: int) -> void:
+	if move & RAM:
+		_armor[_first_in_lane(move & ID_MASK)] = 1
+	else:
+		_undo(move)
+
+
+## Removes `id`: turns adjacent spinners, fires its switch, and opens its
+## Chain Gate if it was the last link. Returns the turned spinner ids.
 func _apply(id: int) -> Array:
 	var idx := _cell[id]
 	_grid[idx] = -1
@@ -429,18 +572,41 @@ func _apply(id: int) -> Array:
 				_dir[other] = Direction.rotate_cw(_dir[other]) if cw else Direction.rotate_ccw(_dir[other])
 				_step[other] += 1
 				turned.append(other)
+	if _switch[id] >= 0:
+		for t in _flip_ids[_switch[id]]:
+			_dir[t] = Direction.opposite(_dir[t])
+	if _link[id] >= 0:
+		var g := _link[id]
+		_links_alive[g] -= 1
+		if _links_alive[g] == 0:
+			for gid in _gate_ids[g]:
+				_grid[_cell[gid]] = -1
+				_alive[gid] = 0
+				_alive_count -= 1
 	return turned
 
 
 ## Undo a successful search's moves (the search leaves them applied).
 func _rewind(path: Array[int]) -> void:
 	for i in range(path.size() - 1, -1, -1):
-		_undo(path[i])
+		_undo_move(path[i])
 
 
-## Puts `id` back and turns its alive spinner neighbours back. Must be called
-## in reverse order of _apply, so the neighbours are exactly those turned.
+## Puts `id` back: closes the gate it opened, un-flips its switch targets
+## and turns its spinner neighbours back. Must be called in reverse order
+## of _apply, so the neighbours are exactly those turned.
 func _undo(id: int, _turned: Array = []) -> void:
+	if _link[id] >= 0:
+		var g := _link[id]
+		if _links_alive[g] == 0:
+			for gid in _gate_ids[g]:
+				_grid[_cell[gid]] = gid
+				_alive[gid] = 1
+				_alive_count += 1
+		_links_alive[g] += 1
+	if _switch[id] >= 0:
+		for t in _flip_ids[_switch[id]]:
+			_dir[t] = Direction.opposite(_dir[t])
 	var idx := _cell[id]
 	var c := idx % columns
 	var r := idx / columns

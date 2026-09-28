@@ -45,6 +45,11 @@ func _initialize() -> void:
 	test_save_migration_v3()
 	test_missing_save_holds_writes()
 	test_backup_code_and_merge()
+	test_switch_block()
+	test_chain_gate()
+	test_armored_block()
+	test_second_era_tokens()
+	test_save_migration_v4_to_v6()
 	print("%d checks, %d failures" % [_checks, _fails])
 	print("UNIT TESTS PASSED" if _fails == 0 else "UNIT TESTS FAILED")
 	quit(0 if _fails == 0 else 1)
@@ -505,7 +510,7 @@ func test_chapters() -> void:
 		check(rg == Vector2i((c - 1) * 10 + 1, c * 10) and Chapters.chapter_of(rg.x) == c and Chapters.chapter_of(rg.y) == c,
 			"chapter %d = levels %d-%d" % [c, rg.x, rg.y])
 	check(Chapters.chapter_of(101) == 11 and Chapters.chapter_of(120) == 12, "101-110 = Chapter 11, 111-120 = Chapter 12")
-	check(Chapters.defined_count() == 10, "ten hand-made Chapter themes")
+	check(Chapters.defined_count() == 20, "twenty hand-made Chapter themes (ten per era)")
 	check(Chapters.theme_for_level(100)["id"] == Chapters.MASTER_ID and Chapters.theme_for_level(100)["music"] == "master", "level 100 has the Master theme")
 	var ids := {}
 	var musics := {}
@@ -527,10 +532,43 @@ func test_chapters() -> void:
 	for c in range(2, 11):
 		gloss_rises = gloss_rises and Chapters.theme_for_chapter(c)["block_style"]["gloss"] >= Chapters.theme_for_chapter(c - 1)["block_style"]["gloss"]
 	check(gloss_rises, "block finish grows Chapter by Chapter")
-	# 101+: data-driven overflow, unique ids, names with a round number.
+	# v0.6 Second Era: Chapters 11-20 have their own themes, music and
+	# materials (five families, two Chapters each).
 	var t11 := Chapters.theme_for_chapter(11)
-	check(t11["id"] == 11 and String(t11["name"]).ends_with(" II") and t11["music"] != "", "Chapter 11 reuses a theme as a new round (%s)" % t11["name"])
+	check(t11["id"] == 11 and t11["name"] == "Neon Glass" and t11["music"] == "c11", "Chapter 11 is Neon Glass with its own music (%s)" % t11["name"])
 	check(Chapters.theme_for_chapter(12)["id"] == 12 and Chapters.theme_for_level(115)["id"] == 12, "Chapter 12 = levels 111-120")
+	var ids2 := {}
+	var musics2 := {}
+	var families := {}
+	var finish_keys := {}
+	for c in range(11, 21):
+		var t := Chapters.theme_for_chapter(c)
+		ids2[t["id"]] = true
+		musics2[t["music"]] = true
+		families[t.get("family", "")] = true
+		check(ResourceLoader.exists("res://assets/audio/music_%s.wav" % t["music"]), "music file for chapter %d (%s) exists" % [c, t["music"]])
+		for k in ["neon", "glass", "metal", "plasma", "facet", "elite"]:
+			if float(t["block_style"][k]) > 0.0:
+				finish_keys[k] = true
+		check(not musics.has(t["music"]), "Chapter %d music is new in the Second Era" % c)
+	check(ids2.size() == 10 and musics2.size() == 10, "every Second Era Chapter has its own theme id and music")
+	check(families.size() == 5 and families.has("Neon Glass") and families.has("Industrial") and families.has("Energy")
+		and families.has("Crystal") and families.has("Elite"), "five visual families (%s)" % str(families.keys()))
+	check(finish_keys.size() == 6, "all six Second Era finishes are used (%s)" % str(finish_keys.keys()))
+	check(Chapters.theme_for_chapter(21)["name"].ends_with(" II"), "Chapters past 20 cycle with a round number")
+	# Two Master Levels, milestones and eras.
+	check(Chapters.is_master(100) and Chapters.is_master(200) and not Chapters.is_master(150), "Master Levels 100 and 200")
+	var m200 := Chapters.theme_for_level(200)
+	check(m200["music"] == "master2" and m200["id"] != Chapters.theme_for_level(100)["id"] and ResourceLoader.exists("res://assets/audio/music_master2.wav"),
+		"Level 200 has its own Master theme and music")
+	for n in [125, 150, 175]:
+		var ms := Chapters.theme_for_level(n)
+		var base := Chapters.theme_for_chapter(Chapters.chapter_of(n))
+		check(Chapters.is_milestone(n) and ms["music"] == "milestone" and ms["deco"] == "rays" and ms["id"] != base["id"]
+			and ms["bg_top"] == base["bg_top"] and ms["block_style"] == base["block_style"], "milestone %d keeps its Chapter's look with milestone presentation" % n)
+	check(not Chapters.is_milestone(124) and ResourceLoader.exists("res://assets/audio/music_milestone.wav"), "milestone music exists")
+	check(Chapters.era_of(100)["index"] == 1 and Chapters.era_of(101)["index"] == 2 and Chapters.era_of(101)["name"] == "Second Era"
+		and Chapters.era_of_chapter(20)["to"] == 200, "eras: 1-100 and 101-200")
 	check(Chapters.title(4) == "CHAPTER 4  ·  EMBER RIDGE", "chapter title text")
 
 
@@ -587,22 +625,32 @@ static func _lin(v: float) -> float:
 
 
 func test_generator_future_levels() -> void:
-	check(LevelGenerator.profile_for_level(121)["name"] == "w5_master", "101+ maps to the hardest profile")
-	check(LevelGenerator.profile_for_level(110)["name"] == "w_mystery_late", "every 10th future level is a mystery")
+	# v0.6 Second Era plan.
+	check(LevelGenerator.profile_for_level(101)["name"] == "sw_intro" and LevelGenerator.profile_for_level(101)["essential"] == ["switch"],
+		"101 teaches the Switch (essential)")
+	check(LevelGenerator.profile_for_level(121)["name"] == "gate_intro" and LevelGenerator.profile_for_level(161)["name"] == "armor_intro",
+		"121 introduces the Chain Gate, 161 the Armored block")
+	check(LevelGenerator.profile_for_level(145)["switches"].y > 0 and LevelGenerator.profile_for_level(145)["armored"].y == 0,
+		"141-160 deepen without the third mechanic")
+	check(LevelGenerator.profile_for_level(200)["name"] == "master_200", "200 is the Master profile")
 	var band := LevelGenerator.target_difficulty(150)
 	check(band.x > LevelGenerator.target_difficulty(100).x, "target difficulty keeps rising past 100")
 	var prev := 0.0
 	var ok := true
-	for c in range(1, 16):
+	for c in range(1, 11):
 		ok = ok and LevelGenerator.chapter_target(c) > prev
 		prev = LevelGenerator.chapter_target(c)
-	check(ok, "chapter difficulty targets rise through Chapter 15")
+	prev = 0.0
+	for c in range(11, 21):
+		ok = ok and LevelGenerator.chapter_target(c) > prev
+		prev = LevelGenerator.chapter_target(c)
+	check(ok, "chapter difficulty targets rise through each era")
 	var p3 := LevelGenerator.chapter_plan(3)
 	var p4 := LevelGenerator.chapter_plan(4)
 	var p6 := LevelGenerator.chapter_plan(6)
 	var p12 := LevelGenerator.chapter_plan(12)
 	check(p3["silver_levels"] == 0 and p4["silver_levels"] > 0 and p4["gold_levels"] == 0 and p6["gold_levels"] > 0, "Silver from Chapter 4, Gold from Chapter 6")
-	check(p12["gold_levels"] > 0 and p12["diamond_levels"] == 0 and p12["profile"] == "w5_master", "Chapter 12 plan exists (no Diamond yet)")
+	check(p12["gold_levels"] > 0 and p12["diamond_levels"] == 0 and p12["profile"] == "sw_mix", "Chapter 12 plan exists (no Diamond yet)")
 	var slots := LevelGenerator.reward_slots(4, 5, 0.5)
 	check(slots.size() == 5 and slots.all(func(n): return n >= 31 and n <= 40), "reward slots stay inside the Chapter")
 	# Classification of real campaign levels.
@@ -969,4 +1017,155 @@ func test_save_migration_v3() -> void:
 	p.save()
 	var q := PlayerProgress.new(path).load_from_disk()
 	check(q.coins == 910 and q.total_score() == expect_total and q.seq == 1, "re-saved in v4 without changes")
+	wipe_save(path)
+
+
+# --- v0.6 Second Era mechanics ---------------------------------------------------
+
+## SWITCH: escaping it reverses every linked arrow; the solver branches on
+## it (a real decision) and a level can depend on it.
+func test_switch_block() -> void:
+	# B and P face each other (deadlock). Only the switch R frees them: it
+	# reverses B, which then leaves to the left.
+	var level := level_from_map([". . R^%A", "B>&A P< ."])
+	var m := model_of(level)
+	var r: BlockData = level.blocks[0]
+	var b: BlockData = level.blocks[1]
+	check(r.is_switch() and r.switch_group == "A" and b.flip_link == "A", "switch / flip tokens parsed")
+	check(m.move_state(b.id) == "blocked" and m.move_state(2) == "blocked", "B and P start blocked by each other")
+	var s := Solver.from_model(m)
+	var sol := s.solve()
+	check(sol.size() == 3 and sol[0] == r.id, "solver fires the switch first (%s)" % str(sol))
+	check(Solver.from_model(m).recommend_move() == r.id, "hint points at the switch")
+	var snap := m.snapshot()
+	m.remove(r.id)
+	check(m.last_flipped == [b.id] and m.blocks[b.id].direction == Direction.LEFT, "switch escape reverses its linked arrow")
+	check(m.can_escape(b.id), "the reversed block is free")
+	m.restore(snap)
+	check(m.blocks[b.id].direction == Direction.RIGHT, "undo restores the arrow")
+	var a := LevelAnalysis.analyze(level)
+	check(a["switches"] == 1 and a["flip_targets"] == 1 and a["switch_impact"] >= LevelAnalysis.ESSENTIAL, "switch impact: ESSENTIAL here (%s)" % str(a["switch_impact"]))
+	# A switch can also be a trap: firing it too early can deadlock a block.
+	var trap := level_from_map(["Gv%A . .", ". Y<&A Rv", ". . ."])
+	var t := Solver.from_model(model_of(trap)).analyze()
+	check(t["solvable"], "switch trap level solvable")
+
+
+## CHAIN GATE: a solid slab with a visible counter; it opens (is removed)
+## the moment its last linked block escapes.
+func test_chain_gate() -> void:
+	var level := level_from_map(["XA Bv", "R<+A .", "Y^ ."])
+	var m := model_of(level)
+	var gate: BlockData = level.blocks[0]
+	var r: BlockData = level.blocks[2]
+	var y: BlockData = level.blocks[3]
+	check(gate.is_gate() and gate.gate_group == "A" and r.gate_link == "A", "gate / link tokens parsed")
+	check(m.move_state(gate.id) == "gate" and m.gate_remaining("A") == 1, "gate is never tappable; counter = 1")
+	check(m.move_state(y.id) == "blocked", "the gate blocks Y's lane")
+	var snap := m.snapshot()
+	m.remove(r.id)
+	check(m.last_opened_gates.size() == 1 and not m.blocks.has(gate.id), "last link escaped: the gate opens")
+	check(m.can_escape(y.id), "Y's lane is open")
+	m.restore(snap)
+	check(m.blocks.has(gate.id) and m.gate_remaining("A") == 1, "undo closes the gate again")
+	var sol := Solver.from_model(m).solve()
+	check(sol.size() == 3 and not sol.has(gate.id), "solver clears the arrows; the gate is never a move (%s)" % str(sol))
+	var a := LevelAnalysis.analyze(level)
+	check(a["gates"] == 1 and a["gate_links"] == 1 and a["blocks"] == 3, "gates are not counted as blocks to clear")
+	# A gate with two links opens only after both.
+	var two := model_of(level_from_map(["XB R<+B", "Y^ G>+B"]))
+	two.remove(1)
+	check(two.gate_remaining("B") == 1 and two.move_state(0) == "gate", "one of two links gone: still closed")
+	two.remove(3)
+	check(not two.blocks.has(0) and two.can_escape(2), "both links gone: open")
+	# Broken definitions are rejected at load.
+	var bad := level_from_map(["XC R^"])
+	check(bad.blocks.size() == 1 and not bad.blocks[0].is_gate(), "a gate without links is dropped")
+
+
+## ARMORED: can't escape while shelled; launching a block into it (a ram)
+## breaks the shell and is never a mistake.
+func test_armored_block() -> void:
+	var level := level_from_map(["R> B^="])
+	var m := model_of(level)
+	check(level.blocks[1].armored, "armor token parsed")
+	check(m.move_state(1) == "armored" and m.move_state(0) == "ram", "shelled block can't leave; R's tap is a ram")
+	check(m.playable_ids().size() == 1 and m.free_block_ids().is_empty(), "the ram is the only move")
+	var snap := m.snapshot()
+	check(m.ram(0) == 1 and not m.blocks[1].armored and m.blocks.has(0), "ram breaks the shell; R stays put")
+	check(m.can_escape(1) and m.move_state(0) == "blocked", "the block is free now")
+	m.restore(snap)
+	check(m.blocks[1].armored, "undo restores the shell")
+	var sol := Solver.from_model(m).solve()
+	check(sol == [0, 1, 0], "solution: ram, escape, escape (%s)" % str(sol))
+	var mv := Solver.from_model(m).solve_moves()
+	check(mv.size() == 3 and mv[0] & Solver.RAM, "the first move is a ram")
+	var a := LevelAnalysis.analyze(level)
+	check(a["armored"] == 1 and a["rams"] == 1, "armor metrics (armored %d, rams %d)" % [a["armored"], a["rams"]])
+	# Unreachable armor = unsolvable (nothing can be aimed at it).
+	check(not Solver.from_model(model_of(level_from_map(["R^ B^="]))).is_solvable(), "armor with no rammer is unsolvable")
+
+
+## Tokens round-trip through the level serializer; invalid combinations are
+## refused at load.
+func test_second_era_tokens() -> void:
+	var level := level_from_map(["R>%A XB Bv&A$S", "Y<+B G^= P>#R", ". Rv+B ."])
+	var text := LevelManager.to_json_text(level)
+	var again := LevelManager.parse_level(JSON.parse_string(text), 0)
+	check(again.blocks.size() == level.blocks.size(), "round trip keeps every block")
+	for i in level.blocks.size():
+		var x: BlockData = level.blocks[i]
+		var y: BlockData = again.blocks[i]
+		check(x.cell == y.cell and x.kind == y.kind and x.switch_group == y.switch_group and x.flip_link == y.flip_link
+			and x.gate_group == y.gate_group and x.gate_link == y.gate_link and x.armored == y.armored and x.rarity == y.rarity,
+			"round trip block %d" % i)
+	var bad := level_from_map(["R>@%A B^&A"])
+	check(not bad.blocks[0].is_switch() and bad.blocks[1].flip_link == "", "a spinner can't be a switch (and its orphan link is dropped)")
+	var bad2 := level_from_map(["R>=#B B^"])
+	check(not bad2.blocks[0].armored, "armored blocks are never locked")
+
+
+## v0.5.2 (save v4) -> v0.6 (save v5): a player who finished all 100 levels
+## keeps everything, has Level 101 unlocked and continues there.
+func test_save_migration_v4_to_v6() -> void:
+	var path := "user://test_migrate_v4.cfg"
+	wipe_save(path)
+	var old := ConfigFile.new()
+	old.set_value("meta", "version", 4)
+	old.set_value("meta", "seq", 812)
+	old.set_value("progress", "current_level", 1)  # v0.5.2 wrapped to 1 after PLAY AGAIN on 100
+	old.set_value("progress", "highest_completed", 100)
+	old.set_value("progress", "last_completed_level", 100)
+	old.set_value("progress", "highest_unlocked", 101)
+	var total := 0
+	for n in range(1, 101):
+		old.set_value("scores", str(n), 6000 + n)
+		old.set_value("stars", str(n), 3)
+		total += 6000 + n
+	old.set_value("progress", "total_score", total)
+	old.set_value("progress", "achievements", ["master"])
+	old.set_value("economy", "coins", 4321)
+	old.set_value("economy", "inventory", {"hint": 7, "hammer": 3})
+	old.set_value("economy", "claimed_chests", ["c10_t2", "c9_t2"])
+	old.set_value("chapters", "completed", [1, 2, 3, 4, 5, 6, 7, 8, 9, 10])
+	old.set_value("chapters", "reward_blocks", ["32:4", "100:7"])
+	old.set_value("settings", "music", false)
+	old.save(path)
+	var p := PlayerProgress.new(path).load_from_disk()
+	check(p.version == PlayerProgress.SAVE_VERSION and p.version == 5, "v4 save migrated to v5")
+	check(p.highest_completed == 100 and p.is_unlocked(101) and not p.is_unlocked(102), "Level 101 unlocked, 102 still locked")
+	check(p.current_level == 101 and p.has_progress(), "CONTINUE leads into the Second Era (101)")
+	check(p.total_score() == total and p.coins == 4321 and p.inventory == {"hint": 7, "hammer": 3} and p.total_stars() == 300,
+		"score, coins, inventory and stars unchanged")
+	check(p.claimed_chests.size() == 2 and p.completed_chapters.size() == 10 and p.has_reward_block(100, 7) and p.achievements.has("master")
+		and not p.music_on, "chests, Chapters, Silver/Gold, achievements and settings kept")
+	p.save()
+	var q := PlayerProgress.new(path).load_from_disk()
+	check(q.current_level == 101 and q.seq == 813 and q.total_score() == total, "re-saved as v5, nothing changes on the next load")
+	# A player already in the Second Era keeps their own CONTINUE level.
+	q.record_result(101, 5000, 2)
+	q.current_level = 104
+	q.save()
+	var r := PlayerProgress.new(path).load_from_disk()
+	check(r.current_level == 104 and r.is_unlocked(102), "Second Era progress continues where it was")
 	wipe_save(path)

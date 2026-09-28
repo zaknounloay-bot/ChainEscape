@@ -1,0 +1,11 @@
+{
+	"name": "Glass Knot",
+	"map": [
+		".     Yv    .     .     .     Pv",
+		"B>    .     .     B>    .     G>",
+		"P>@-  Bv@   .     .     .     Pv#R",
+		"P^&A  B<&A  R<&B  Bv    Y<&B  B<#G",
+		"B^    Y<%B  .     Pv    .     .",
+		".     .     .     B^@   P>%A  ."
+	]
+}

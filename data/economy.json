@@ -8,7 +8,10 @@
 		"per_new_star": 4,
 		"first_perfect": 10,
 		"chapter_complete": 50,
-		"master_clear": 300
+		"master_clear": 300,
+		"_v06": "Level 200 (Grand Master) pays its own bonus once; milestones 125 / 150 / 175 pay a one-time bonus.",
+		"master_clear_200": 600,
+		"milestone_clear": 120
 	},
 	"_chapter_multiplier": "Level rewards scale with the Chapter. Chapters past the list add 'step' per Chapter up to 'max'.",
 	"chapter_multiplier": [1.0, 1.1, 1.2, 1.35, 1.5, 1.6, 1.75, 1.85, 2.0, 2.2],

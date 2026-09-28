@@ -188,6 +188,21 @@ func _animate_deco(size: Vector2) -> void:
 				p = Vector2(size.x * 0.5, size.y * 0.42)
 				node.rotation = TAU * i / SHAPES + _time * 0.03
 				a = 0.05 * _deco_alpha
+			# v0.6 Second Era decorations (rotation / drift / alpha only).
+			"hexglass":
+				node.rotation = s.w + _time * 0.04 * (1.0 if i % 2 == 0 else -1.0)
+				a *= 1.1
+			"gears":
+				node.rotation = _time * 0.18 * (1.0 if i % 2 == 0 else -1.0) / (0.6 + s.z)
+			"plasma":
+				node.rotation = _time * 0.35 * s.z + s.w
+				a *= 0.8 + 0.4 * sin(_time * 1.6 + s.w)
+			"shards":
+				node.rotation = s.w + sin(_time * 0.2 + s.w) * 0.4
+				p.y += sin(_time * 0.3 + s.w) * 14.0
+			"crowns":
+				node.rotation = sin(_time * 0.25 + s.w) * 0.12
+				a *= 0.9
 		node.position = p
 		node.modulate = Color(_deco_color, a)
 
@@ -235,6 +250,16 @@ func _animate_particles(size: Vector2) -> void:
 			"snow":
 				pos.y = fposmod(t * size.y, size.y)
 				a *= 0.8
+			"streaks":
+				# Neon light streaks rising diagonally.
+				var life := fposmod(t * 1.6, 1.0)
+				pos = Vector2(fposmod(s.y * size.x + life * 120.0, size.x), size.y * (1.05 - life * 1.1))
+				node.rotation = -PI * 0.35
+				a *= sin(life * PI)
+			"crystals":
+				pos.y = fposmod(t * size.y * 0.7, size.y)
+				node.rotation = _time * 0.5 * s.z + s.w
+				a *= 0.6 + 0.4 * sin(_time * 2.0 + s.w)
 		node.position = pos
 		node.scale = Vector2(sc, sc)
 		node.modulate = Color(_particle_color, a)
@@ -305,6 +330,44 @@ class Shape extends Node2D:
 			"deco_rays":
 				var len := screen.y
 				draw_colored_polygon(PackedVector2Array([Vector2.ZERO, Vector2.from_angle(-0.05) * len, Vector2.from_angle(0.05) * len]), w)
+			# --- v0.6 Second Era decorations ---
+			"deco_hexglass":
+				var hex := PackedVector2Array()
+				for k in 7:
+					hex.append(Vector2.from_angle(TAU * k / 6.0) * r)
+				draw_polyline(hex, Color(w, 0.9), 3.0, true)
+				var inner := PackedVector2Array()
+				for k in 7:
+					inner.append(Vector2.from_angle(TAU * k / 6.0) * r * 0.6)
+				draw_polyline(inner, Color(w, 0.45), 2.0, true)
+			"deco_gears":
+				var teeth := 8
+				var pts := PackedVector2Array()
+				for k in teeth * 2 + 1:
+					var ang := TAU * k / (teeth * 2.0)
+					pts.append(Vector2.from_angle(ang) * (r if k % 2 == 0 else r * 0.78))
+				draw_polyline(pts, Color(w, 0.85), 4.0, true)
+				draw_arc(Vector2.ZERO, r * 0.32, 0.0, TAU, 20, Color(w, 0.7), 4.0, true)
+			"deco_plasma":
+				draw_arc(Vector2.ZERO, r, 0.0, TAU, 32, Color(w, 0.8), 2.5, true)
+				draw_arc(Vector2.ZERO, r * 0.55, 0.3, TAU * 0.75, 20, Color(w, 0.6), 2.0, true)
+				draw_circle(Vector2(r, 0), 4.0, w)
+				draw_circle(Vector2.ZERO, 5.0, Color(w, 0.9))
+			"deco_shards":
+				draw_colored_polygon(PackedVector2Array([Vector2(0, -r), Vector2(r * 0.35, -r * 0.1), Vector2(r * 0.12, r * 0.8),
+					Vector2(-r * 0.3, r * 0.2)]), Color(w, 0.55))
+				draw_polyline(PackedVector2Array([Vector2(0, -r), Vector2(r * 0.12, r * 0.8)]), Color(w, 0.9), 2.0, true)
+			"deco_crowns":
+				if index % 2 == 0:
+					var cr := r * 0.7
+					draw_colored_polygon(PackedVector2Array([Vector2(-cr, cr * 0.4), Vector2(-cr, -cr * 0.3), Vector2(-cr * 0.5, cr * 0.05),
+						Vector2(0, -cr * 0.6), Vector2(cr * 0.5, cr * 0.05), Vector2(cr, -cr * 0.3), Vector2(cr, cr * 0.4)]), Color(w, 0.8))
+				else:
+					# Laurel: two arcs of small leaves.
+					for side in [-1.0, 1.0]:
+						for k in 5:
+							var ang: float = PI * 0.5 + side * (0.35 + 0.28 * k)
+							draw_circle(Vector2.from_angle(ang) * r * 0.8, 4.0 + 1.5 * (4 - k) * 0.5, Color(w, 0.8))
 			# --- particles ---
 			"part_motes", "part_dust":
 				draw_circle(Vector2.ZERO, 2.0 + 2.0 * s.z, w)
@@ -323,3 +386,8 @@ class Shape extends Node2D:
 				draw_line(Vector2.ZERO, Vector2.from_angle(s.w) * 8.0, w, 2.0, true)
 			"part_snow":
 				draw_circle(Vector2.ZERO, 1.5 + 2.0 * s.z, w)
+			"part_streaks":
+				draw_line(Vector2(-10.0 - 8.0 * s.z, 0), Vector2(10.0 + 8.0 * s.z, 0), w, 2.0, true)
+			"part_crystals":
+				var cr := 3.0 + 3.0 * s.z
+				draw_colored_polygon(PackedVector2Array([Vector2(0, -cr * 1.4), Vector2(cr, 0), Vector2(0, cr * 1.4), Vector2(-cr, 0)]), w)

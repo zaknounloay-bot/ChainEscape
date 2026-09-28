@@ -1,0 +1,11 @@
+{
+	"name": "Star Frost",
+	"map": [
+		"R>     .      G>     .      P^     .",
+		"P^     .      P<     .      B<     .",
+		".      B<=    Yv     B>@    .      G<@",
+		".      Yv@    B>     G>     R^     P>$S=",
+		"P^     B<@    G<     Y<@-   .      .",
+		".      Gv     P>     P^     .      ."
+	]
+}

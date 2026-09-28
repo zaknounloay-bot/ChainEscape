@@ -12,7 +12,9 @@ extends Node
 
 const SOUND_IDS := ["escape", "invalid", "combo", "level_complete", "ui_tap", "undo",
 	"turn", "heart_lost", "hint", "try_again", "unlock", "reveal", "star", "perfect", "new_best",
-	"coin", "hammer", "chest", "master", "chapter", "silver", "gold", "chapter_complete"]
+	"coin", "hammer", "chest", "master", "chapter", "silver", "gold", "chapter_complete",
+	# v0.6 Second Era
+	"switch", "gate", "crack", "milestone"]
 const MUSIC_ID := "music"
 const MUSIC_VOLUME_DB := -15.0  # background level: present but never in the way
 const DUCK_DB := -8.0  # extra attenuation while ducked
@@ -408,6 +410,27 @@ func play_reward(rarity: int) -> void:
 		play("silver", 1.0, -5.0)
 
 
+## v0.6: a switch fired (its arrows reverse).
+func play_switch() -> void:
+	play("switch", 1.0, -6.0)
+
+
+## v0.6: a Chain Gate opened.
+func play_gate() -> void:
+	play("gate", 1.0, -4.0)
+
+
+## v0.6: an armor shell cracked by a ram.
+func play_crack() -> void:
+	play("crack", 1.0, -4.0)
+
+
+## v0.6: a milestone level (125 / 150 / 175) cleared.
+func play_milestone() -> void:
+	duck_music(2.2)
+	play("milestone", 1.0, -2.0)
+
+
 static func chain_pitch(chain: int) -> float:
 	var idx := maxi(chain - 1, 0)
 	if idx >= CHAIN_SCALE.size():
@@ -494,6 +517,17 @@ func _load_or_synthesize(id: String) -> AudioStream:
 			return _synth_notes([[523.0, 0.0], [659.0, 0.1], [784.0, 0.2], [1047.0, 0.32], [784.0, 0.5], [1047.0, 0.6], [1319.0, 0.72], [1568.0, 0.86]], 1.6, 3.2)
 		"try_again":
 			return _synth_notes([[523.0, 0.0], [466.0, 0.12], [392.0, 0.24]], 0.7, 6.0)
+		"switch":
+			# Electric toggle: a quick up-down blip pair.
+			return _synth_notes([[1245.0, 0.0], [1865.0, 0.05], [1245.0, 0.1]], 0.3, 18.0)
+		"gate":
+			# Heavy latch, then a rising open chord.
+			return _synth_notes([[196.0, 0.0], [392.0, 0.02], [784.0, 0.12], [988.0, 0.2], [1175.0, 0.28]], 0.8, 6.5)
+		"crack":
+			# Metal crack: a sharp high burst over a dull knock.
+			return _synth([[150.0, 1.0], [2900.0, 0.35], [4100.0, 0.2]], 0.22, 24.0, -0.5)
+		"milestone":
+			return _synth_notes([[587.0, 0.0], [740.0, 0.1], [880.0, 0.2], [1175.0, 0.32], [1480.0, 0.46], [1760.0, 0.62]], 1.5, 3.4)
 	return null
 
 

@@ -264,7 +264,7 @@ func _recovery_start_new() -> void:
 func continue_game() -> void:
 	_hide_title()
 	AudioManager.play_ui_tap()
-	ui.show_chapter_banner("MASTER LEVEL" if Chapters.is_master(current_level) else Chapters.title(current_chapter))
+	ui.show_chapter_banner(level_banner(current_level))
 
 
 func _initial_level() -> int:
@@ -327,6 +327,11 @@ func start_level(number: int, via: String = "load") -> void:
 	_layout()
 	if level.hint != "":
 		_show_start_hint()
+		# A lesson level explains its own mechanic: no extra tip later.
+		for pair in [["switch", level.blocks.any(func(x): return x.is_switch())],
+				["gate", level.blocks.any(func(x): return x.is_gate())], ["armor", level.blocks.any(func(x): return x.armored)]]:
+			if pair[1] and not progress.tips_seen.has(pair[0]):
+				progress.tips_seen.append(pair[0])
 	else:
 		_maybe_explain_rewards()
 	progress.current_level = number
@@ -389,6 +394,9 @@ func _on_block_tapped(id: int) -> void:
 		"blocked": _blocked(id)
 		"locked": _locked_tap(id)
 		"hidden": _hidden_tap(id)
+		"ram": _ram(id)
+		"gate": _gate_tap(id)
+		"armored": _armored_tap(id)
 
 
 func _escape(id: int) -> void:
@@ -398,6 +406,7 @@ func _escape(id: int) -> void:
 	var turned := model.remove(id)
 	var revealed := model.last_revealed.duplicate()
 	var unlocked := model.last_unlocked.duplicate()
+	_play_second_era_effects()
 	chain += 1
 	best_chain = maxi(best_chain, chain)
 	var points := ScoreRules.escape_points(chain)
@@ -427,7 +436,7 @@ func _escape(id: int) -> void:
 
 	if model.is_empty():
 		_on_board_cleared()
-	elif model.free_block_ids().is_empty():
+	elif model.playable_ids().is_empty():
 		# Spinners can lock the board. Never punish: point at Undo/Restart.
 		if undos_used < MAX_UNDOS:
 			_show_message("No moves left - tap Undo", 3.0)
@@ -463,6 +472,50 @@ func _hidden_tap(id: int) -> void:
 	if not _hidden_hint_shown:
 		_hidden_hint_shown = true
 		_show_message("Hidden arrow - clear a neighbor to reveal it", 2.8)
+
+
+## v0.6: the effects of a switch firing and gates opening (after any
+## removal: escape or Hammer), plus every gate counter.
+func _play_second_era_effects() -> void:
+	var flipped := model.last_flipped.duplicate()
+	var opened := model.last_opened_gates.duplicate()
+	if not flipped.is_empty():
+		board.play_flips(flipped, model)
+		AudioManager.play_switch()
+	if not opened.is_empty():
+		board.play_gate_opens(opened)
+		AudioManager.play_gate()
+		Haptics.medium()
+	board.refresh_locks(model)
+
+
+## v0.6 ARMORED: launching a block into a shell cracks it. A productive
+## move, never a mistake: no heart, the chain is kept (but earns nothing).
+func _ram(id: int) -> void:
+	history.push(_capture_state())
+	var target := model.ram(id)
+	_clear_hint()
+	board.play_ram(id, target)
+	AudioManager.play_crack()
+	Haptics.medium()
+	_refresh_buttons()
+	if model.playable_ids().is_empty():
+		_show_message("No moves left - tap Undo", 3.0)
+		ui.pulse_undo_button()
+
+
+## Chain Gates never move: tapping one is free and explains what opens it.
+func _gate_tap(id: int) -> void:
+	board.play_hidden_tap(id)
+	var g: BlockData = model.blocks[id]
+	var left := model.gate_remaining(g.gate_group)
+	_show_message("Chain Gate %s: clear the %d block%s with its %s chain mark" % [g.gate_group, left, "" if left == 1 else "s", g.gate_group], 2.8)
+
+
+## A shelled block can't leave yet: free tap, explains the ram.
+func _armored_tap(id: int) -> void:
+	board.play_hidden_tap(id)
+	_show_message("Armored - launch another block into it to crack the shell", 2.8)
 
 
 ## Shared mistake handling. Returns true if the attempt just ended.
@@ -518,12 +571,24 @@ func _on_board_cleared() -> void:
 	var notes: Array = reward["lines"]
 	progress.add_coins(coins, chapter)
 	r["master"] = Chapters.is_master(current_level)
-	if r["master"] and not progress.achievements.has("master"):
-		progress.achievements.append("master")
-		var mc := int(Economy.config()["rewards"]["master_clear"])
+	# Each Master Level pays its bonus once per save ("master" = Level 100,
+	# kept from v0.5; "master_200" = the Grand Master).
+	var master_key := "master" if current_level == Chapters.master_level() else "master_%d" % current_level
+	if r["master"] and not progress.achievements.has(master_key):
+		progress.achievements.append(master_key)
+		var mc := int(Economy.config()["rewards"].get("master_clear_%d" % current_level, Economy.config()["rewards"]["master_clear"]))
 		progress.add_coins(mc, chapter)
 		coins += mc
-		notes.append("MASTER")
+		notes.append("GRAND MASTER" if current_level > Chapters.master_level() else "MASTER")
+	# v0.6 milestone levels (125 / 150 / 175): a one-time bonus.
+	r["milestone"] = Chapters.is_milestone(current_level)
+	var ms_key := "milestone_%d" % current_level
+	if r["milestone"] and not progress.achievements.has(ms_key):
+		progress.achievements.append(ms_key)
+		var bonus := int(Economy.config()["rewards"].get("milestone_clear", 0))
+		progress.add_coins(bonus, chapter)
+		coins += bonus
+		notes.append("MILESTONE")
 	# Chapter milestone: fires (and pays) once per save.
 	var chapter_bonus := Economy.check_chapter_complete(progress, chapter, level_manager.level_count)
 	if chapter_bonus > 0:
@@ -550,13 +615,22 @@ func _on_board_cleared() -> void:
 		return
 	board.celebrate()
 	if r["master"]:
-		# Level 100: the biggest celebration in the game.
-		for i in 3:
+		# Master Levels: the biggest celebration in the game (Level 200 the
+		# biggest of all).
+		var grand := current_level > Chapters.master_level()
+		for i in (5 if grand else 3):
 			board.celebrate()
-		ui.show_perfect_stamp("MASTER!", 1.2)
+		ui.show_perfect_stamp("GRAND MASTER!" if grand else "MASTER!", 1.6 if grand else 1.2)
 		AudioManager.play_master()
 		Haptics.medium()
-		await get_tree().create_timer(1.6).timeout
+		await get_tree().create_timer(2.0 if grand else 1.6).timeout
+	elif r["milestone"]:
+		for i in 2:
+			board.celebrate()
+		ui.show_perfect_stamp("MILESTONE!", 0.9)
+		AudioManager.play_milestone()
+		Haptics.medium()
+		await get_tree().create_timer(1.3).timeout
 	elif r["perfect"]:
 		board.celebrate()
 		ui.show_perfect_stamp()
@@ -631,7 +705,7 @@ func request_hint() -> void:
 		return
 	var id := Solver.from_model(model).recommend_move()
 	if id == -1:
-		if model.free_block_ids().is_empty():
+		if model.playable_ids().is_empty():
 			_show_message("No moves left - tap Undo", 2.6)
 		else:
 			_show_message("This board can't be cleared from here - try Undo", 3.0)
@@ -700,6 +774,12 @@ func toggle_hammer() -> void:
 func _smash(id: int) -> void:
 	hammer_armed = false
 	board.hammer_mode = false
+	if model.blocks.has(id) and model.blocks[id].is_gate():
+		AudioManager.play_invalid()
+		board.play_hidden_tap(id)
+		_show_message("Chain Gates can't be smashed - clear their links - Hammer kept", 2.8)
+		_refresh_buttons()
+		return
 	if not is_hammer_safe(id):
 		AudioManager.play_invalid()
 		board.play_hidden_tap(id)
@@ -716,6 +796,7 @@ func _smash(id: int) -> void:
 	var turned := model.remove(id)
 	var revealed := model.last_revealed.duplicate()
 	var unlocked := model.last_unlocked.duplicate()
+	_play_second_era_effects()
 	_clear_hint()
 	board.play_smash(id)
 	board.animate_turns(turned)
@@ -800,7 +881,7 @@ func _apply_chapter_theme(number: int) -> void:
 	_log_chapter(number, previous_id)
 	if previous_id != t["id"] and not first:
 		AudioManager.play_chapter()
-		ui.show_chapter_banner("MASTER LEVEL" if Chapters.is_master(number) else Chapters.title(current_chapter))
+		ui.show_chapter_banner(level_banner(number))
 
 
 ## Debug log of every Chapter application (debug builds / editor only).
@@ -841,6 +922,8 @@ func _collect_reward(b: BlockData, at: Vector2) -> void:
 ## First level with an uncollected Silver (or Gold) block: one short line
 ## explaining it. Shown once per save.
 func _maybe_explain_rewards() -> void:
+	if _maybe_explain_mechanics():
+		return
 	var collected := progress.collected_rewards(current_level)
 	for rarity in [BlockData.Rarity.GOLD, BlockData.Rarity.SILVER]:
 		var tip: String = BlockData.RARITY_NAMES[rarity]
@@ -851,6 +934,26 @@ func _maybe_explain_rewards() -> void:
 			progress.save()
 			_show_message("%s Block: let it escape for +%d coins" % [tip.capitalize(), Economy.reward_block_coins(rarity)], 3.4)
 			return
+
+
+## v0.6: the first time a player meets a Second Era mechanic outside its
+## lesson level (e.g. via Level Select), one short line explains it. Shown
+## once per save. Returns true if a line was shown.
+func _maybe_explain_mechanics() -> bool:
+	var tips := [
+		["switch", func(b): return b.is_switch(), "SWITCH: when it escapes, every arrow with its mark reverses"],
+		["gate", func(b): return b.is_gate(), "CHAIN GATE: it opens once every block with its chain mark escapes"],
+		["armor", func(b): return b.armored, "ARMORED: launch another block into it to crack the shell"],
+	]
+	for tip in tips:
+		if progress.tips_seen.has(tip[0]):
+			continue
+		if level.blocks.any(tip[1]):
+			progress.tips_seen.append(tip[0])
+			progress.save()
+			_show_message(tip[2], 3.6)
+			return true
+	return false
 
 
 # --- Chapter complete ---------------------------------------------------------------
@@ -884,16 +987,34 @@ func chapter_summary(chapter: int) -> Dictionary:
 
 
 ## What is new in a Chapter (for the preview line).
+## Banner when a new look starts: Master / milestone / "SECOND ERA" at the
+## era's first level / the Chapter title.
+func level_banner(number: int) -> String:
+	if Chapters.is_master(number):
+		return "GRAND MASTER LEVEL" if number > Chapters.master_level() else "MASTER LEVEL"
+	if Chapters.is_milestone(number):
+		return "MILESTONE  ·  LEVEL %d" % number
+	var era := Chapters.era_of(number)
+	if era["index"] > 1 and number == era["from"]:
+		return "%s\n%s" % [String(era["name"]).to_upper(), Chapters.title(Chapters.chapter_of(number))]
+	return Chapters.title(Chapters.chapter_of(number))
+
+
 func _chapter_news(chapter: int) -> String:
 	var rg := Chapters.chapter_range(chapter)
 	var news := []
+	# v0.6 Second Era mechanics, where each is introduced.
+	for intro in [[101, "Switch Blocks"], [121, "Chain Gates"], [161, "Armored Blocks"]]:
+		if intro[0] >= rg.x and intro[0] <= rg.y:
+			news.append(intro[1])
 	var blocks: Dictionary = Economy.config().get("reward_blocks", {})
 	for name in blocks:
 		var from := int(blocks[name].get("from_level", 0))
 		if bool(blocks[name].get("enabled", false)) and from >= rg.x and from <= rg.y:
 			news.append("%s Blocks" % String(name).capitalize())
-	if Chapters.master_level() >= rg.x and Chapters.master_level() <= rg.y:
-		news.append("the Master Level")
+	for m in Chapters.master_levels():
+		if m >= rg.x and m <= rg.y:
+			news.append("the Grand Master" if m > Chapters.master_level() else "the Master Level")
 	return "NEW: " + " & ".join(news) if not news.is_empty() else ""
 
 
@@ -930,6 +1051,7 @@ func open_level_select() -> void:
 				"completed": progress.best_scores.has(n),
 				"mystery": li["mystery"], "reward": best_rarity,
 				"master": Chapters.is_master(n),
+				"milestone": Chapters.is_milestone(n),
 				"current": n == current_level,
 			})
 		info["levels"] = levels

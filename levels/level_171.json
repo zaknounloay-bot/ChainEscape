@@ -1,0 +1,14 @@
+{
+	"name": "Nebula",
+	"hint": "Switch, gate and shell: read every mark before you tap.",
+	"hint_finger": false,
+	"map": [
+		".       .       .       B^=     Y<#B    .",
+		".       P>%A    .       .       .       .",
+		"B>@~    Gv@*    .       B<      .       Bv",
+		"Rv      .       Rv#Y    B^$G&A  G<      Bv",
+		"P>+C    .       R>      .       Y>=     .",
+		".       .       R^@     P^@-    .       .",
+		".       R^      .       .       .       XC"
+	]
+}

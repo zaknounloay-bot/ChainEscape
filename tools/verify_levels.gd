@@ -27,6 +27,19 @@ extends SceneTree
 ##     never replaces puzzle progression)
 ##   * v0.5 reward blocks: only from their "from_level" (economy.json), at
 ##     most 2 per level (3 on the Master Level), never on a disabled rarity
+##   * v0.6 Second Era (101-200):
+##       - switches only from 101, Chain Gates from 121, armored blocks from
+##         161 (a mechanic is always introduced before it is combined)
+##       - every switch / gate / shell must change how the level is solved
+##         (structural impact >= 1.0) - no decoration
+##       - the Switch lessons 101-105 need the switch (unsolvable without)
+##         and may be small (<= 3 start moves, depth >= 3); from 106 the
+##         late-game rules apply
+##       - Chapter averages rise inside each era; Chapter 11 starts the
+##         Second Era lower on purpose (it teaches a new mechanic)
+##       - each Master Level (100, 200) is the hardest level of its era, and
+##         Level 200 uses switches, gates, armor, spinners of 3+ rules,
+##         locks and mystery
 
 const HIGH_LEVEL := 21
 const LATE_LEVEL := 61
@@ -69,17 +82,28 @@ func _initialize() -> void:
 				status = issue
 				problems.append("L%d %s" % [n, issue])
 		var rules := "c%da%dp%d" % [m["rule_ccw"], m["rule_alt"], m["rule_pattern"]] if m["spinners"] > 0 else "-"
-		print("%3d %2d %-17s %dx%d %3d %3d %-6s %3d %3d %5d %3d %3d %3d %3d %4d %5.1f %4s %4s %4s  %-4s %-3s %s" % [
+		var era2 := ""
+		if m["switches"] + m["gates"] + m["armored"] > 0:
+			era2 = " sw%d:%s gt%d:%s ar%d:%s" % [m["switches"], _imp(m["switch_impact"], m["switches"]), m["gates"], _imp(m["gate_impact"], m["gates"]),
+				m["armored"], _imp(m["armor_impact"], m["armored"])]
+		print("%3d %2d %-17s %dx%d %3d %3d %-6s %3d %3d %5d %3d %3d %3d %3d %4d %5.1f %4s %4s %4s  %-4s %-3s %s%s" % [
 			n, Chapters.chapter_of(n), level.name.left(17), level.columns, level.rows, m["blocks"], m["spinners"], rules, m["locks"], m["hidden"],
 			m["start_moves"], m["start_traps"], m["decision_points"], m["depth"], m["solution_length"],
 			int(m["direction_share"] * 100), m["difficulty"],
 			_imp(m["spinner_impact"], m["spinners"]), _imp(m["lock_impact"], m["locks"]), _imp(m["mystery_impact"], m["hidden"]),
-			("yes" if m["mystery_fair"] else "NO") if m["hidden"] > 0 else "-", rwd, status])
-	var master := Chapters.master_level()
-	if campaign and diffs.has(master):
-		var top: float = diffs.values().max()
-		if diffs[master] < top:
-			problems.append("L100 (Master) is not the hardest level (%.1f < %.1f)" % [diffs[master], top])
+			("yes" if m["mystery_fair"] else "NO") if m["hidden"] > 0 else "-", rwd, status, era2])
+	if campaign:
+		# Each Master Level is the hardest level of its era.
+		for master in Chapters.master_levels():
+			if not diffs.has(master):
+				continue
+			var era := Chapters.era_of(master)
+			var top := 0.0
+			for k in diffs:
+				if k >= era["from"] and k <= era["to"]:
+					top = maxf(top, diffs[k])
+			if diffs[master] < top:
+				problems.append("L%d (Master) is not the hardest level of the %s (%.1f < %.1f)" % [master, era["name"], diffs[master], top])
 	if campaign:
 		# Chapter difficulty curve.
 		var line := PackedStringArray()
@@ -93,6 +117,8 @@ func _initialize() -> void:
 				cnt += 1
 			var avg := sum / maxf(cnt, 1)
 			line.append("C%d %.1f" % [c, avg])
+			if Chapters.era_of_chapter(c)["from"] == Chapters.chapter_range(c).x and c > 1:
+				prev = -1.0  # a new era starts its own curve
 			if prev >= 0.0 and avg < prev + MIN_CHAPTER_STEP:
 				problems.append("Chapter %d average difficulty %.1f is not above Chapter %d (%.1f) by %.1f" % [c, avg, c - 1, prev, MIN_CHAPTER_STEP])
 			prev = avg
@@ -111,6 +137,29 @@ func _initialize() -> void:
 
 
 static func _rule_issue(n: int, m: Dictionary) -> String:
+	# v0.6 Second Era.
+	if m["switches"] > 0 and n < 101:
+		return "SWITCH BEFORE 101"
+	if m["gates"] > 0 and n < 121:
+		return "CHAIN GATE BEFORE 121"
+	if m["armored"] > 0 and n < 161:
+		return "ARMOR BEFORE 161"
+	if m["switches"] > 0 and m["switch_impact"] < 1.0:
+		return "SWITCH DECORATIVE"
+	if m["gates"] > 0 and m["gate_impact"] < 1.0:
+		return "GATE DECORATIVE"
+	if m["armored"] > 0 and m["armor_impact"] < 1.0:
+		return "ARMOR DECORATIVE"
+	if n >= 101 and n <= 105:
+		if m["switches"] == 0 or m["switch_impact"] < LevelAnalysis.ESSENTIAL:
+			return "SWITCH LESSON NEEDS AN ESSENTIAL SWITCH"
+		if m["start_moves"] > 3 or m["depth"] < 3:
+			return "SWITCH LESSON SHAPE"
+		return ""
+	if n == 200:
+		var kinds := int(m["rule_cw"] > 0) + int(m["rule_ccw"] > 0) + int(m["rule_alt"] > 0) + int(m["rule_pattern"] > 0)
+		if kinds < 3 or m["locks"] == 0 or m["hidden"] == 0 or m["switches"] == 0 or m["gates"] == 0 or m["armored"] == 0:
+			return "GRAND MASTER NEEDS EVERY MECHANIC FAMILY"
 	if n >= LATE_LEVEL:
 		if m["start_moves"] > 2:
 			return "TOO MANY START MOVES (61+)"
@@ -152,7 +201,7 @@ static func _reward_issue(n: int, level: LevelData) -> String:
 			return "DISABLED REWARD RARITY"
 		if n < int(cfg.get("from_level", 0)):
 			return "%s BLOCK BEFORE LEVEL %d" % [b.rarity_name().to_upper(), int(cfg["from_level"])]
-	if count > (3 if n == Chapters.master_level() else 2):
+	if count > (3 if Chapters.is_master(n) else 2):
 		return "TOO MANY REWARD BLOCKS"
 	return ""
 

@@ -1,0 +1,11 @@
+{
+	"name": "Crank Shaft",
+	"map": [
+		"G>@   .     .     B>%A  .     .",
+		".     .     .     .     .     Pv#G",
+		".     XC    R<    Bv+C  .     .",
+		".     G<#Y  .     Pv    R^    P<@",
+		"Rv    Y<@-  R<@   Pv    .     P<",
+		"G>    .     Y>&A  P>    P^    ."
+	]
+}

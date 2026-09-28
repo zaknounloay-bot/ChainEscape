@@ -40,6 +40,19 @@ const METALS := [
 	[Color("#9EEBFF"), Color("#FFFFFF"), Color("#3F9FC4")],  # diamond (future)
 ]
 
+## v0.6 Second Era mechanics. Each link group has its own color AND letter
+## (color is never the only cue): switches A / B, Chain Gates C / D.
+const LINKS := {"A": Color("#00E5FF"), "B": Color("#FF4FD8"), "C": Color("#B6F23A"), "D": Color("#FF9F1C")}
+## Chain Gate slab: [face, side, text/icon].
+const GATE := [Color("#3D4459"), Color("#23283A"), Color("#E9EDF5")]
+## Armor shell: [frame, highlight, deep].
+const ARMOR := [Color("#AEB8C8"), Color("#F2F6FC"), Color("#4E586A")]
+
+
+static func link(group: String) -> Color:
+	return LINKS.get(group, Color.WHITE)
+
+
 ## v0.5: block MATERIAL of the current Chapter (data/chapters.json
 ## "block_style"): saturation, gloss, rim and glow. Hues never change, so a
 ## red block is red in every Chapter (locks depend on colors).
@@ -62,14 +75,20 @@ static func _saturate(c: Color) -> Color:
 
 
 static func arrow(color_name: String) -> Color:
+	if color_name == "gate":
+		return GATE[2]
 	return BLOCKS.get(color_name, BLOCKS["blue"])[2]
 
 
 static func face(color_name: String) -> Color:
+	if color_name == "gate":
+		return GATE[0]
 	return BLOCKS.get(color_name, BLOCKS["blue"])[0]
 
 
 static func side(color_name: String) -> Color:
+	if color_name == "gate":
+		return GATE[1]
 	return BLOCKS.get(color_name, BLOCKS["blue"])[1]
 
 

@@ -3,8 +3,10 @@ extends RefCounted
 ## Plain data for one block on the board. No visuals, no nodes.
 
 ## NORMAL blocks keep their arrow. SPINNER blocks turn 90 degrees clockwise
-## every time an orthogonally adjacent block escapes.
-enum Kind { NORMAL, SPINNER }
+## every time an orthogonally adjacent block escapes. GATE (v0.6, Chain
+## Gate) is a solid slab with no arrow: it can't be tapped, blocks lanes, and
+## opens (disappears) once every block linked to it has escaped.
+enum Kind { NORMAL, SPINNER, GATE }
 
 ## v0.4 spinner rules. Deterministic, never random: the direction of the
 ## next turn depends only on the rule and how many turns the spinner has
@@ -42,6 +44,28 @@ var spin_rule: int = SpinRule.CW
 var spin_step: int = 0
 var rarity: int = Rarity.NORMAL
 
+## --- v0.6 "Second Era" mechanics. Links use a group letter A / B / C, shown
+## with the group's color AND letter, so every relationship is visible. ---
+## SWITCH: when this block escapes, every block with flip_link == this group
+## reverses its arrow (180 degrees). "" = not a switch.
+var switch_group: String = ""
+## Reverses its arrow when the switch of this group escapes. "" = none.
+var flip_link: String = ""
+## GATE blocks: the gate's group (its links carry gate_link == this group).
+var gate_group: String = ""
+## Counts toward the Chain Gate of this group: the gate opens when every
+## block of the group has escaped. "" = not a link.
+var gate_link: String = ""
+## ARMORED: cannot escape while its shell is intact. The shell cracks when
+## the player launches another block straight into it (see BoardModel.ram).
+var armored: bool = false
+
+const LINK_GROUPS := ["A", "B", "C", "D"]
+## Switches use A / B, Chain Gates C / D (their own letters and colors, so a
+## switch is never mistaken for a gate).
+const SWITCH_GROUPS := ["A", "B"]
+const GATE_GROUPS := ["C", "D"]
+
 
 func _init(p_id: int, p_cell: Vector2i, p_color: String, p_direction: int, p_kind: int = Kind.NORMAL) -> void:
 	id = p_id
@@ -53,6 +77,14 @@ func _init(p_id: int, p_cell: Vector2i, p_color: String, p_direction: int, p_kin
 
 func is_spinner() -> bool:
 	return kind == Kind.SPINNER
+
+
+func is_gate() -> bool:
+	return kind == Kind.GATE
+
+
+func is_switch() -> bool:
+	return switch_group != ""
 
 
 ## Is turn number `step` (0-based) of `rule` clockwise?
@@ -107,4 +139,9 @@ func duplicate_data() -> BlockData:
 	b.spin_rule = spin_rule
 	b.spin_step = spin_step
 	b.rarity = rarity
+	b.switch_group = switch_group
+	b.flip_link = flip_link
+	b.gate_group = gate_group
+	b.gate_link = gate_link
+	b.armored = armored
 	return b

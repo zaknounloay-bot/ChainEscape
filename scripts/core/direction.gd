@@ -33,6 +33,11 @@ static func rotate_ccw(dir: int) -> int:
 	return [LEFT, RIGHT, DOWN, UP][dir]
 
 
+## The reverse direction (a Switch flips its linked arrows).
+static func opposite(dir: int) -> int:
+	return [DOWN, UP, RIGHT, LEFT][dir]
+
+
 ## Screen angle (radians) of an arrow pointing in `dir`, with RIGHT = 0.
 static func angle(dir: int) -> float:
 	return vector(dir).angle()

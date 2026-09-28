@@ -4,7 +4,7 @@ extends Node
 ## button, Chapter Complete cards, Silver/Gold rewards, music and SFX on,
 ## a save after every step - and watches for leaks.
 ##
-##   godot --headless --path . res://tools/Soak.tscn [-- --from=1 --to=100 --cycles=2]
+##   godot --headless --path . res://tools/Soak.tscn [-- --from=1 --to=200 --cycles=2]
 ##
 ## Every level transition logs one [Diag] line (memory, objects, nodes,
 ## orphan nodes, resources, tweens, effect nodes, playing audio players).
@@ -18,7 +18,7 @@ const PROGRESS_PATH := "user://soak_progress.cfg"
 var game: GameManager
 var failures: Array[String] = []
 var from := 1
-var to := 100
+var to := 200
 var cycles := 1
 
 

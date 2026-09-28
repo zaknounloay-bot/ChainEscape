@@ -273,6 +273,42 @@ try {
   fs.rmSync(profile2, { recursive: true, force: true });
   }
 
+  // ===== G (v0.6): a continuous Second Era session ============================
+  // Starts from a save that has cleared Level 100 (as a returning v0.5.2
+  // player would), then plays 101 -> 140 in one page: switches, gates,
+  // the Neon Glass / Industrial themes and music, memory sampled per level.
+  {
+    const profileG = fs.mkdtempSync(path.join(os.tmpdir(), 'ce-profile-'));
+    let lines = ['[meta]', '', 'version=4', 'seq=5', '', '[progress]', '', 'current_level=100', 'highest_completed=100',
+      'highest_unlocked=101', '', '[scores]', ''];
+    for (let n = 1; n <= 100; n++) lines.push(`${n}=5000`);
+    lines.push('', '[stars]', '');
+    for (let n = 1; n <= 100; n++) lines.push(`${n}=3`);
+    lines.push('', '[economy]', '', 'coins=777', '');
+    const saveText = lines.join('\n');
+    ctx = await chromium.launchPersistentContext(profileG, { ...LAUNCH, ...VIEW });
+    await ctx.addInitScript((t) => { try { if (!localStorage.getItem('chain_escape_save')) localStorage.setItem('chain_escape_save', t); } catch (e) {} }, saveText);
+    g = await openGame(ctx, false);
+    st = await waitFor(g.frame, (x) => x.title_open, 'title');
+    check(st.continue_text === 'CONTINUE  -  LEVEL 101' && st.highest_unlocked === 101 && st.coins === 777,
+      `G: a save that cleared Level 100 continues at 101 ('${st.continue_text}', unlocked ${st.highest_unlocked}, coins ${st.coins})`);
+    await enterGame(g);
+    await toggleDebug(g);
+    const eraTrack = { total: 0, mem: [], chapters: [], chapterCards: 0 };
+    const endG = QUICK ? 106 : 140;
+    st = await playTo(g, endG, eraTrack);
+    await notReloaded(g, `G: continuous Second Era session 101-${endG}`);
+    check(st.level === endG && st.music === (endG > 130 ? 'c14' : (endG > 120 ? 'c13' : (endG > 110 ? 'c12' : 'c11'))),
+      `G: reached level ${endG} with its Chapter's music (${st.music})`);
+    const em = eraTrack.mem;
+    if (em.length > 2) {
+      info(`G memory: level ${em[0][0]} wasm ${em[0][1]} MB / js ${em[0][2]} MB -> level ${em[em.length - 1][0]} wasm ${em[em.length - 1][1]} MB / js ${em[em.length - 1][2]} MB`);
+      check(em[em.length - 1][1] - em[0][1] <= 64, `G: WebAssembly heap bounded in the Second Era (+${em[em.length - 1][1] - em[0][1]} MB)`);
+    }
+    await ctx.close();
+    fs.rmSync(profileG, { recursive: true, force: true });
+  }
+
   // ===== iPhone acceptance flow (iPhone user agent, v0.5.2) ====================
   // Safari gives the itch.io embed partitioned, EPHEMERAL storage, separate
   // from the game's own tab. Chromium partitions the embed the same way
@@ -327,7 +363,8 @@ try {
     }
     await toggleDebug(tg);  // close the debug panel (it covers the Level Select button)
     const before = await snapshot(tg.frame);
-    const unlocked = target === 100 ? 100 : target;
+    // v0.6: clearing 100 unlocks the Second Era (101).
+    const unlocked = target === 100 ? 101 : target;
     if (target < 100) {
       await tapN(tg.page, tg.frame, (await state(tg.frame)).levels_button);
       st = await waitFor(tg.frame, (x) => x.select_open, 'level select');
@@ -348,7 +385,7 @@ try {
       `L${target}: one tap on OPEN GAME IN SAFARI -> progress restored ('${st.continue_text}', unlocked ${after.highest_unlocked}, source ${st.save_source})`);
     check(after.total === before.total && after.coins === before.coins && after.stars === before.stars,
       `L${target}: TOTAL SCORE ${after.total} (was ${before.total}), coins and stars unchanged after closing Safari`);
-    check(st.save_diag.includes(`UNLOCKED ${Math.min(after.highest_unlocked, 100)}`) && st.save_diag.includes('STANDALONE') && !st.writes_held,
+    check(st.save_diag.includes(`UNLOCKED ${Math.min(after.highest_unlocked, 200)}`) && st.save_diag.includes('STANDALONE') && !st.writes_held,
       `L${target}: title diagnostic '${st.save_diag}'`);
     await g.page.close();
     await enterGame(tg);

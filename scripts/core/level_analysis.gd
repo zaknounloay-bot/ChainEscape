@@ -6,7 +6,8 @@ extends RefCounted
 ## On top of Solver.analyze() it measures how much each advanced mechanic
 ## actually contributes, by re-analysing the level with that mechanic
 ## switched off:
-##   spinner_impact / lock_impact / mystery_impact =
+##   spinner_impact / lock_impact / mystery_impact and (v0.6)
+##   switch_impact / gate_impact / armor_impact =
 ##       difficulty(level) - difficulty(level without the mechanic)
 ##   (ESSENTIAL if the level becomes unsolvable without it).
 ## A mechanic that adds no difficulty/decisions is "decoration" and is
@@ -25,10 +26,23 @@ static func analyze(level: LevelData, with_impacts: bool = true) -> Dictionary:
 	m["lock_impact"] = 0.0
 	m["mystery_impact"] = 0.0
 	m["mystery_fair"] = true
+	m["switch_impact"] = 0.0
+	m["gate_impact"] = 0.0
+	m["armor_impact"] = 0.0
 	if not m["solvable"] or not with_impacts:
 		return m
+	# v0.6 mechanics are measured STRUCTURALLY (depth, decisions, traps,
+	# start moves, rams) - their own count terms don't count, so a switch,
+	# gate or shell that changes nothing about how the level is solved is
+	# reported as decoration.
+	if m["switches"] > 0:
+		m["switch_impact"] = _impact(level, m, _strip_switch, false, true)
+	if m["gates"] > 0:
+		m["gate_impact"] = _impact(level, m, _strip_gate_link, true, true)
+	if m["armored"] > 0:
+		m["armor_impact"] = _impact(level, m, _strip_armor, false, true)
 	if m["spinners"] > 0:
-		m["spinner_impact"] = _impact(level, m, func(b): b.kind = BlockData.Kind.NORMAL)
+		m["spinner_impact"] = _impact(level, m, _strip_spinner)
 	if m["locks"] > 0:
 		m["lock_impact"] = _impact(level, m, func(b): b.lock_color = "")
 	if m["hidden"] > 0:
@@ -41,6 +55,24 @@ static func analyze(level: LevelData, with_impacts: bool = true) -> Dictionary:
 	return m
 
 
+static func _strip_switch(b: BlockData) -> void:
+	b.switch_group = ""
+	b.flip_link = ""
+
+
+static func _strip_gate_link(b: BlockData) -> void:
+	b.gate_link = ""
+
+
+static func _strip_armor(b: BlockData) -> void:
+	b.armored = false
+
+
+static func _strip_spinner(b: BlockData) -> void:
+	if b.is_spinner():
+		b.kind = BlockData.Kind.NORMAL
+
+
 static func _base(rows: int, columns: int, blocks: Array) -> Dictionary:
 	var model := BoardModel.new()
 	model.setup(rows, columns, blocks)
@@ -50,13 +82,17 @@ static func _base(rows: int, columns: int, blocks: Array) -> Dictionary:
 	return m
 
 
-static func _impact(level: LevelData, full: Dictionary, strip: Callable) -> float:
+static func _impact(level: LevelData, full: Dictionary, strip: Callable, drop_gates: bool = false, structural: bool = false) -> float:
 	var blocks := []
 	for b in level.blocks:
+		if drop_gates and b.is_gate():
+			continue
 		var c: BlockData = b.duplicate_data()
 		strip.call(c)
 		blocks.append(c)
 	var v := _base(level.rows, level.columns, blocks)
 	if not v["solvable"]:
 		return ESSENTIAL
+	if structural:
+		return snappedf(LevelGenerator.structural_difficulty(full) - LevelGenerator.structural_difficulty(v), 0.1)
 	return snappedf(full["difficulty"] - LevelGenerator.difficulty(v), 0.1)

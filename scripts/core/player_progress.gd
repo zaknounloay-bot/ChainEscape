@@ -22,8 +22,11 @@ extends RefCounted
 ## v4 (v0.5.1): + explicit highest_unlocked, last_completed_level,
 ##            total_score (sum of best scores, cross-checked), save sequence
 ##            number and timestamp, Web localStorage mirror.
+## v5 (v0.6): 200 levels. Nothing is renamed or reset. A player who had
+##            finished Level 100 (the old end) and not yet played past it
+##            continues at Level 101, the start of the Second Era.
 
-const SAVE_VERSION := 4
+const SAVE_VERSION := 5
 ## localStorage key of the Web mirror (a full copy of the save file).
 const MIRROR_KEY := "chain_escape_save"
 
@@ -297,6 +300,15 @@ func _migrate() -> void:
 			c += 1
 	# v3 -> v4: highest_unlocked / last_completed_level are derived in
 	# _check_integrity(); nothing else changes.
+	if version < 5:
+		# v0.5.x -> v0.6: the campaign grows from 100 to 200 levels. Level 101
+		# is already unlocked for anyone who cleared 100 (highest_unlocked =
+		# highest_completed + 1); if they have not played past 100 yet,
+		# CONTINUE now leads into the Second Era instead of an old level.
+		var played_past := best_scores.keys().any(func(k): return int(k) > 100)
+		if highest_completed >= 100 and not played_past:
+			load_issues.append("v0.6: continue %d -> 101 (Second Era)" % current_level)
+			current_level = 101
 	if version < SAVE_VERSION:
 		load_issues.append("migrated v%d -> v%d" % [version, SAVE_VERSION])
 	version = SAVE_VERSION

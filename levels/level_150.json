@@ -1,0 +1,12 @@
+{
+	"name": "Halfway Deep",
+	"mystery": true,
+	"map": [
+		".     Gv    .     .     .     Y<$S",
+		"Bv    R<    .     .     .     P^@",
+		"R>@   Pv    .     P^%A  Y>    P^&A",
+		"Y>@   .     R>    Bv+C  P^?   P<&A",
+		"Pv    .     .     .     .     XC",
+		"B<    P<?   .     B<#P  B^#G  ."
+	]
+}

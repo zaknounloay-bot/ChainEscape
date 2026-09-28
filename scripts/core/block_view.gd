@@ -71,6 +71,15 @@ var flash: float = 0.0:
 			_flash.modulate.a = v
 			_flash.visible = v > 0.0
 
+## v0.6 Chain Gate counter: linked blocks still on the board (redrawn only
+## when it changes).
+var gate_count: int = 0:
+	set(v):
+		if v != gate_count:
+			gate_count = v
+			if _over:
+				_over.queue_redraw()
+
 # Parts drawn once, in this order (later = on top).
 var _shine: Part  # Silver/Gold glint band (alpha pulses)
 var _arrow: Part  # the arrow (rotates)
@@ -135,8 +144,8 @@ func set_cell_size(value: float) -> void:
 		s.set_corner_radius_all(radius)
 		s.anti_aliasing = true
 		s.anti_aliasing_size = 1.2
-	_face_style.bg_color = Palette.styled_face(data.color)
-	_side_style.bg_color = Palette.styled_side(data.color)
+	_face_style.bg_color = Palette.styled_face(data.color) if not data.is_gate() else Palette.GATE[0]
+	_side_style.bg_color = Palette.styled_side(data.color) if not data.is_gate() else Palette.GATE[1]
 	# Chapter material: on dark Chapters a soft glow in the block's own
 	# color replaces part of the drop shadow.
 	var glow: float = Palette.block_style.get("glow", 0.0)
@@ -167,7 +176,7 @@ func refresh() -> void:
 	_shine.visible = reward
 	_twinkle.visible = reward
 	_badge.visible = data.is_spinner() and not data.hidden
-	_arrow.visible = not data.hidden
+	_arrow.visible = not data.hidden and not data.is_gate()
 	for p in get_children():
 		if p is Part:
 			p.queue_redraw()
@@ -221,6 +230,77 @@ func _draw_material(face_rect: Rect2, size: float) -> void:
 		edge.set_border_width_all(maxi(2, int(size * 0.028)))
 		edge.border_color = Color(Palette.block_style.get("edge", Color.WHITE), 0.5 * rim)
 		edge.draw(get_canvas_item(), face_rect)
+	if not data.is_gate():
+		_draw_era2_material(face_rect, size, radius)
+
+
+## v0.6 Second Era finishes (Chapters 11-20). Same square, same arrow: only
+## the surface treatment changes, drawn once per state change, always under
+## the arrow and at low contrast so direction still reads first.
+func _draw_era2_material(f: Rect2, size: float, radius: int) -> void:
+	var st: Dictionary = Palette.block_style
+	var ci := get_canvas_item()
+	var light := Palette.styled_face(data.color).lightened(0.55)
+	var neon: float = st.get("neon", 0.0)
+	if neon > 0.0:
+		# Neon glass: a bright inner light line in the block's own hue.
+		var line := StyleBoxFlat.new()
+		line.draw_center = false
+		line.anti_aliasing = true
+		line.set_corner_radius_all(maxi(radius - 3, 2))
+		line.set_border_width_all(maxi(2, int(size * 0.03)))
+		line.border_color = Color(light, 0.75 * neon)
+		line.draw(ci, f.grow(-size * 0.07))
+	var glass: float = st.get("glass", 0.0)
+	if glass > 0.0:
+		# Glass reflection: a soft diagonal band across the upper-left face.
+		var a := f.position + Vector2(size * 0.1, size * 0.1)
+		draw_colored_polygon(PackedVector2Array([a, a + Vector2(size * 0.42, 0), a + Vector2(0, size * 0.42)]), Color(1, 1, 1, 0.16 * glass))
+	var metal: float = st.get("metal", 0.0)
+	if metal > 0.0:
+		# Industrial metal: a brushed band along the top and a dark bevel
+		# along the bottom, plus two small bolts.
+		draw_rect(Rect2(f.position + Vector2(radius, size * 0.05), Vector2(size - radius * 2.0, size * 0.05)), Color(1, 1, 1, 0.22 * metal))
+		draw_rect(Rect2(f.position + Vector2(radius, size * 0.9), Vector2(size - radius * 2.0, size * 0.045)), Color(0, 0, 0, 0.18 * metal))
+		for x in [0.14, 0.86]:
+			draw_rect(Rect2(f.position + Vector2(size * x - size * 0.025, size * 0.86), Vector2(size * 0.05, size * 0.05)), Color(1, 1, 1, 0.35 * metal))
+	var plasma: float = st.get("plasma", 0.0)
+	if plasma > 0.0:
+		# Energy / plasma: a double inner ring, like a charged cell.
+		var ring := StyleBoxFlat.new()
+		ring.draw_center = false
+		ring.anti_aliasing = true
+		ring.set_corner_radius_all(maxi(radius - 6, 2))
+		ring.set_border_width_all(maxi(1, int(size * 0.018)))
+		ring.border_color = Color(light, 0.55 * plasma)
+		ring.draw(ci, f.grow(-size * 0.13))
+		ring.border_color = Color(1, 1, 1, 0.25 * plasma)
+		ring.draw(ci, f.grow(-size * 0.2))
+	var facet: float = st.get("facet", 0.0)
+	if facet > 0.0:
+		# Crystal: faint facet cuts from the corners toward a center diamond.
+		var ctr := f.get_center()
+		var d := size * 0.2
+		var col := Color(1, 1, 1, 0.18 * facet)
+		for corner in [f.position + Vector2(size * 0.12, size * 0.12), f.position + Vector2(size * 0.88, size * 0.12),
+				f.position + Vector2(size * 0.88, size * 0.88), f.position + Vector2(size * 0.12, size * 0.88)]:
+			draw_line(corner, ctr + (corner - ctr).normalized() * d, col, maxf(1.5, size * 0.015), true)
+		draw_polyline(PackedVector2Array([ctr + Vector2(0, -d), ctr + Vector2(d, 0), ctr + Vector2(0, d), ctr + Vector2(-d, 0), ctr + Vector2(0, -d)]),
+			Color(1, 1, 1, 0.12 * facet), maxf(1.5, size * 0.015), true)
+	var elite: float = st.get("elite", 0.0)
+	if elite > 0.0:
+		# Elite / Master: thin gold filigree on all four corners.
+		var g := Color(Palette.block_style.get("edge", Color("#FFE08A")), 0.85 * elite)
+		var w := maxf(2.0, size * 0.03)
+		var l := size * 0.16
+		var k := size * 0.09
+		for cx in [0, 1]:
+			for cy in [0, 1]:
+				var p: Vector2 = f.position + Vector2(k + cx * (size - 2 * k), k + cy * (size - 2 * k))
+				var sx: float = 1.0 if cx == 0 else -1.0
+				var sy: float = 1.0 if cy == 0 else -1.0
+				draw_line(p, p + Vector2(l * sx, 0), g, w, true)
+				draw_line(p, p + Vector2(0, l * sy), g, w, true)
 
 
 ## Silver/Gold glint: a soft diagonal band inside the face; its alpha pulses.
@@ -240,7 +320,7 @@ func _draw_shine(c: CanvasItem) -> void:
 ## Chunky white arrow pointing RIGHT around the part's origin; the part
 ## rotates to the block's direction.
 func _draw_arrow_part(c: CanvasItem) -> void:
-	if data.hidden:
+	if data.hidden or data.is_gate():
 		return
 	var size := cell_size * FACE_RATIO * (0.78 if data.is_spinner() else 1.0)
 	var length := size * 0.50
@@ -293,12 +373,24 @@ func _draw_overlay(c: CanvasItem) -> void:
 		_draw_mystery(c, f, size)
 	elif data.is_spinner():
 		_draw_rule_strip(c, f.get_center(), size)
+	if data.is_gate():
+		_draw_gate(c, f, size)
+		return
+	if data.is_switch():
+		_draw_switch_chip(c, f, size)
+	elif data.flip_link != "":
+		_draw_flip_badge(c, f, size)
+	if data.gate_link != "":
+		_draw_link_badge(c, f, size)
 	if locked_visual:
 		_draw_lock(c, f, size)
 	# Metal frame + gem sit above the lock veil so rewards read on locked
 	# blocks too; they only cover the rim, never the arrow.
 	if data.is_reward():
 		_draw_reward(c, f, size)
+	# The shell is the rule: it is drawn above everything else.
+	if data.armored:
+		_draw_armor(c, f, size)
 
 
 ## Hidden arrow: a "?" and a dashed inner border. Color stays visible
@@ -366,6 +458,130 @@ func _draw_lock(c: CanvasItem, face_rect: Rect2, size: float) -> void:
 	st.shadow_size = 3
 	st.draw(c.get_canvas_item(), body)
 	c.draw_circle(body.get_center() + Vector2(0, -s * 0.04), s * 0.09, Color(1, 1, 1, a))
+
+
+## v0.6 CHAIN GATE: a dark steel slab (no arrow) with a big chain icon, the
+## group letter and the number of linked blocks still on the board, all in
+## the group's color.
+func _draw_gate(c: CanvasItem, f: Rect2, size: float) -> void:
+	var col := Palette.link(data.gate_group)
+	var ci := c.get_canvas_item()
+	# Diagonal hazard stripes, clipped to the inner plate.
+	var inner := f.grow(-size * 0.1)
+	var stripe := size * 0.14
+	var k := -inner.size.y
+	while k < inner.size.x:
+		var a := Vector2(maxf(k, 0.0), maxf(-k, 0.0))
+		var b := Vector2(minf(k + inner.size.y, inner.size.x), minf(inner.size.x - k, inner.size.y))
+		if a.x < b.x:
+			c.draw_line(inner.position + a, inner.position + b, Color(col, 0.10), stripe * 0.5)
+		k += stripe * 1.4
+	var frame := StyleBoxFlat.new()
+	frame.draw_center = false
+	frame.anti_aliasing = true
+	frame.set_corner_radius_all(int(size * CORNER_RATIO))
+	frame.set_border_width_all(maxi(3, int(size * 0.06)))
+	frame.border_color = Color(col, 0.9)
+	frame.draw(ci, f)
+	# Chain: two interlocked rounded links.
+	var ctr := f.get_center() + Vector2(0, -size * 0.1)
+	var lw := maxf(3.0, size * 0.06)
+	for i in 2:
+		var o := Vector2((i - 0.5) * size * 0.2, 0)
+		var link := StyleBoxFlat.new()
+		link.draw_center = false
+		link.anti_aliasing = true
+		link.set_corner_radius_all(int(size * 0.09))
+		link.set_border_width_all(int(lw))
+		link.border_color = Palette.GATE[2] if i == 0 else col
+		link.draw(ci, Rect2(ctr + o - Vector2(size * 0.15, size * 0.09), Vector2(size * 0.3, size * 0.18)))
+	# "C  2": group letter + links left.
+	var font := Palette.font(900)
+	var fs := int(size * 0.24)
+	var txt := "%s %d" % [data.gate_group, gate_count]
+	var w := font.get_string_size(txt, HORIZONTAL_ALIGNMENT_LEFT, -1, fs).x
+	c.draw_string(font, f.get_center() + Vector2(-w * 0.5, size * 0.33), txt, HORIZONTAL_ALIGNMENT_LEFT, -1, fs, col)
+
+
+## A round badge in a corner: link color, dark outline, white letter.
+func _draw_badge_at(c: CanvasItem, at: Vector2, size: float, group: String, glyph: String) -> void:
+	var r := size * 0.155
+	c.draw_circle(at, r * 1.18, Color(0.06, 0.05, 0.12, 0.8))
+	c.draw_circle(at, r, Palette.link(group))
+	var font := Palette.font(900)
+	var fs := int(size * 0.21)
+	var txt := glyph + group if glyph != "" else group
+	var w := font.get_string_size(txt, HORIZONTAL_ALIGNMENT_LEFT, -1, fs).x
+	c.draw_string(font, at + Vector2(-w * 0.5, fs * 0.36), txt, HORIZONTAL_ALIGNMENT_LEFT, -1, fs, Color("#101018"))
+
+
+## SWITCH: a toggle chip in the bottom-left corner ("toggle knob + letter").
+func _draw_switch_chip(c: CanvasItem, f: Rect2, size: float) -> void:
+	var col := Palette.link(data.switch_group)
+	var chip := Rect2(f.position + Vector2(size * 0.05, size * 0.69), Vector2(size * 0.5, size * 0.26))
+	var st := StyleBoxFlat.new()
+	st.bg_color = Color(0.06, 0.05, 0.12, 0.8)
+	st.border_color = col
+	st.set_border_width_all(maxi(2, int(size * 0.025)))
+	st.set_corner_radius_all(int(chip.size.y * 0.5))
+	st.anti_aliasing = true
+	st.draw(c.get_canvas_item(), chip)
+	c.draw_circle(chip.position + Vector2(chip.size.y * 0.5, chip.size.y * 0.5), chip.size.y * 0.32, col)
+	var font := Palette.font(900)
+	var fs := int(size * 0.21)
+	c.draw_string(font, chip.position + Vector2(chip.size.y * 1.05, chip.size.y * 0.5 + fs * 0.36), data.switch_group,
+		HORIZONTAL_ALIGNMENT_LEFT, -1, fs, col)
+
+
+## FLIP TARGET: a badge "⇅A" in the bottom-left corner (same color as its switch).
+func _draw_flip_badge(c: CanvasItem, f: Rect2, size: float) -> void:
+	var at := f.position + Vector2(size * 0.19, size * 0.81)
+	_draw_badge_at(c, at, size, data.flip_link, "")
+	# Two tiny opposite arrows around the badge: "this one reverses".
+	var col := Palette.link(data.flip_link)
+	var r := size * 0.23
+	c.draw_arc(at, r, -PI * 0.9, -PI * 0.1, 10, col, maxf(1.5, size * 0.02), true)
+	c.draw_arc(at, r, PI * 0.1, PI * 0.9, 10, col, maxf(1.5, size * 0.02), true)
+
+
+## GATE LINK: a chain badge in the bottom-right corner (gate's color + letter).
+func _draw_link_badge(c: CanvasItem, f: Rect2, size: float) -> void:
+	var at := f.position + Vector2(size * 0.8, size * 0.8)
+	var col := Palette.link(data.gate_link)
+	c.draw_circle(at, size * 0.18, Color(0.06, 0.05, 0.12, 0.8))
+	var link := StyleBoxFlat.new()
+	link.draw_center = false
+	link.anti_aliasing = true
+	link.set_corner_radius_all(int(size * 0.05))
+	link.set_border_width_all(maxi(2, int(size * 0.03)))
+	link.border_color = col
+	link.draw(c.get_canvas_item(), Rect2(at - Vector2(size * 0.12, size * 0.13), Vector2(size * 0.24, size * 0.11)))
+	var font := Palette.font(900)
+	var fs := int(size * 0.18)
+	var w := font.get_string_size(data.gate_link, HORIZONTAL_ALIGNMENT_LEFT, -1, fs).x
+	c.draw_string(font, at + Vector2(-w * 0.5, size * 0.13), data.gate_link, HORIZONTAL_ALIGNMENT_LEFT, -1, fs, col)
+
+
+## ARMORED: a thick riveted steel frame around the face. The arrow stays
+## fully visible in the middle.
+func _draw_armor(c: CanvasItem, f: Rect2, size: float) -> void:
+	var frame := StyleBoxFlat.new()
+	frame.draw_center = false
+	frame.anti_aliasing = true
+	frame.set_corner_radius_all(int(size * CORNER_RATIO))
+	var w := maxi(5, int(size * 0.12))
+	frame.set_border_width_all(w)
+	frame.border_color = Palette.ARMOR[2]
+	frame.draw(c.get_canvas_item(), f)
+	frame.set_border_width_all(maxi(3, int(w * 0.6)))
+	frame.border_color = Palette.ARMOR[0]
+	frame.draw(c.get_canvas_item(), f.grow(-w * 0.2))
+	var hl := f.position + Vector2(size * CORNER_RATIO, w * 0.35)
+	c.draw_line(hl, hl + Vector2(size * (1.0 - 2.0 * CORNER_RATIO), 0), Color(Palette.ARMOR[1], 0.8), maxf(2.0, w * 0.25), true)
+	for p in [Vector2(0.12, 0.12), Vector2(0.88, 0.12), Vector2(0.88, 0.88), Vector2(0.12, 0.88)]:
+		var at: Vector2 = f.position + p * size
+		c.draw_circle(at, size * 0.035, Palette.ARMOR[2])
+		c.draw_circle(at + Vector2(-1, -1), size * 0.022, Palette.ARMOR[1])
 
 
 ## Silver / Gold reward block: a thick metallic frame and a gem in the
@@ -502,6 +718,44 @@ func play_turn(new_direction: int, clockwise: bool = true, delay: float = 0.0) -
 	_turn_tween.tween_property(self, "arrow_angle", target, 0.24).set_trans(Tween.TRANS_BACK).set_ease(Tween.EASE_OUT)
 	_badge.queue_redraw()
 	_over.queue_redraw()
+
+
+## v0.6: a switch escaped - this arrow reverses (half a turn).
+func play_flip(new_direction: int, delay: float = 0.0) -> void:
+	data.direction = new_direction
+	if _turn_tween and _turn_tween.is_valid():
+		_turn_tween.kill()
+	var exact := Direction.angle(new_direction)
+	var target := arrow_angle + PI
+	target = exact + TAU * roundf((target - exact) / TAU)
+	_turn_tween = create_tween()
+	if delay > 0.0:
+		_turn_tween.tween_interval(delay)
+	_turn_tween.tween_property(self, "arrow_angle", target, 0.32).set_trans(Tween.TRANS_BACK).set_ease(Tween.EASE_OUT)
+	flash = 0.8
+	create_tween().tween_property(self, "flash", 0.0, 0.3).set_delay(delay)
+
+
+## v0.6: this block rammed a shelled block - dash forward and bounce back.
+func play_ram(amount: float) -> void:
+	position = home
+	var fwd := Direction.vector(data.direction)
+	var t := _new_tween()
+	t.tween_property(self, "position", home + fwd * amount, 0.09).set_trans(Tween.TRANS_QUAD).set_ease(Tween.EASE_IN)
+	t.tween_property(self, "position", home, 0.2).set_trans(Tween.TRANS_BACK).set_ease(Tween.EASE_OUT)
+
+
+## v0.6: the shell breaks (the overlay is redrawn without it).
+func play_crack(delay: float) -> void:
+	var t := create_tween()
+	t.tween_interval(delay)
+	t.tween_callback(func():
+		data.armored = false
+		flash = 1.0
+		_over.queue_redraw())
+	t.tween_property(self, "scale", Vector2(1.12, 1.12), 0.08)
+	t.tween_property(self, "scale", Vector2.ONE, 0.2).set_trans(Tween.TRANS_BACK).set_ease(Tween.EASE_OUT)
+	t.parallel().tween_property(self, "flash", 0.0, 0.3)
 
 
 func _new_tween() -> Tween:

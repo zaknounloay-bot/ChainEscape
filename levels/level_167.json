@@ -1,0 +1,11 @@
+{
+	"name": "Ice Vault",
+	"map": [
+		"Y>@   .     G>    .     .     .",
+		".     .     Y^    .     .     .",
+		"P^    B<    .     .     Y>    .",
+		"G>    P^$S  P>    Y>@~  B^@   Bv",
+		"Bv=   Yv@   Rv    .     P^    .",
+		"Gv=   B^@   G<    Y<    .     P<"
+	]
+}
