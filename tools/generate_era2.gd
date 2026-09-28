@@ -62,7 +62,8 @@ func _initialize() -> void:
 			print("L%d: NO CANDIDATE" % n)
 			continue
 		if write:
-			var f := FileAccess.open(LevelManager.LEVEL_PATH % n, FileAccess.WRITE)
+			var dest: String = (args["outdir"] + "/level_%d.json" % n) if args.has("outdir") else LevelManager.LEVEL_PATH % n
+			var f := FileAccess.open(dest, FileAccess.WRITE)
 			f.store_string(LevelManager.to_json_text(level))
 			f.close()
 	print("DONE %d-%d%s" % [from, to, (" FAILED: %s" % str(failed)) if not failed.is_empty() else ""])

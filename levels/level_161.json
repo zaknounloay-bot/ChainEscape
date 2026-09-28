@@ -1,0 +1,14 @@
+{
+	"name": "First Shell",
+	"hint": "New: ARMORED block. Launch another block into it to crack the shell.",
+	"hint_finger": false,
+	"map": [
+		"Rv     R<@    .      .      P^     P<",
+		".      .      .      .      .      .",
+		"P>     B>     P>     .      G^     .",
+		".      .      .      B>     .      P^",
+		".      P^     Pv     G<$G=  .      .",
+		".      Y^     Y>@    .      Rv@-   Pv#Y",
+		".      Y^     P<     Rv@    P<@    ."
+	]
+}
