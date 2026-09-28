@@ -67,6 +67,10 @@ var reward_notes: Array = []
 ## Chapter whose "Chapter Complete" moment waits for the next NEXT tap
 ## (0 = none). Set once, when the Chapter is completed for the first time.
 var pending_chapter_card: int = 0
+## Diagnostics snapshot of the last level transition (tests / debug panel).
+var last_diag: Dictionary = {}
+## Levels the Level Select grid last showed unlocked / locked.
+var select_shown: Dictionary = {}
 
 ## Tests and --level=N skip the title screen.
 static var skip_title := false
@@ -93,8 +97,8 @@ func _ready() -> void:
 	ui.setting_toggled.connect(_on_setting_toggled)
 	ui.levels_opened.connect(open_level_select)
 	ui.level_chosen.connect(func(n):
-		ui.hide_title()
-		start_level(n))
+		_hide_title()
+		start_level(n, "select"))
 	ui.hammer_pressed.connect(toggle_hammer)
 	ui.buy_requested.connect(buy)
 	ui.shop_open_requested.connect(open_shop)
@@ -104,26 +108,30 @@ func _ready() -> void:
 	ui.title_level_select.connect(open_level_select)
 	ui.title_tapped.connect(debug_panel.register_title_tap)
 	debug_panel.level_count = level_manager.level_count
-	debug_panel.level_requested.connect(func(n): start_level(wrapi(n, 1, level_manager.level_count + 1)))
+	debug_panel.level_requested.connect(func(n): start_level(wrapi(n, 1, level_manager.level_count + 1), "debug"))
 	debug_panel.restart_requested.connect(restart)
 	debug_panel.coords_toggled.connect(func(on): board.show_coords = on)
 	debug_panel.hint_requested.connect(play_hint_move)
 	debug_panel.solve_requested.connect(auto_solve)
 	debug_panel.visibility_changed.connect(_refresh_buttons)
+	debug_panel.info_source = debug_info
 	get_viewport().size_changed.connect(_layout)
 	var direct: bool = Array(OS.get_cmdline_user_args()).any(func(a): return a.begins_with("--level="))
-	start_level(_initial_level())
+	Diagnostics.start_session()
+	start_level(_initial_level(), "launch")
 	ui.set_coins(progress.coins, false)
 	# Real-app launch: show the title with CONTINUE - LEVEL X. (Music waits
 	# for the first tap on the web, see AudioManager.)
 	if not skip_title and not direct:
-		ui.show_title(progress.has_progress(), current_level, progress.total_stars(), progress.coins)
+		ui.show_title(progress.has_progress(), current_level, progress.total_stars(), progress.coins, progress.total_score())
+		_update_storage_notice()
+	publish_state.call_deferred()
 	AudioManager.start_music()
 
 
 ## Title "CONTINUE - LEVEL X" / "PLAY": the level is already loaded behind it.
 func continue_game() -> void:
-	ui.hide_title()
+	_hide_title()
 	AudioManager.play_ui_tap()
 	ui.show_chapter_banner("MASTER LEVEL" if Chapters.is_master(current_level) else Chapters.title(current_chapter))
 
@@ -137,7 +145,8 @@ func _initial_level() -> int:
 
 # --- Level flow ------------------------------------------------------------
 
-func start_level(number: int) -> void:
+## `via` says how the level was entered (diagnostics only).
+func start_level(number: int, via: String = "load") -> void:
 	var data := level_manager.load_level(number)
 	if data == null:
 		return
@@ -191,16 +200,20 @@ func start_level(number: int) -> void:
 	progress.current_level = number
 	progress.save()
 	debug_panel.set_current_level(number)
+	last_diag = Diagnostics.level_transition(number, current_chapter, via, get_tree(), {
+		"fx": board.fx_count(), "music": AudioManager.music_theme, "music_players": AudioManager.music_playing_count(),
+		"sfx": AudioManager.sfx_playing_count(), "save_seq": progress.seq})
+	publish_state()
 
 
 func restart() -> void:
 	AudioManager.play_ui_tap()
-	start_level(current_level)
+	start_level(current_level, "restart")
 
 
 func replay() -> void:
 	AudioManager.play_ui_tap()
-	start_level(current_level)
+	start_level(current_level, "replay")
 
 
 func next_level() -> void:
@@ -208,7 +221,7 @@ func next_level() -> void:
 	if pending_chapter_card != 0:
 		_show_chapter_card(pending_chapter_card)
 		return
-	start_level(current_level % level_manager.level_count + 1)
+	start_level(current_level % level_manager.level_count + 1, "next")
 
 
 func _layout() -> void:
@@ -351,7 +364,7 @@ func _out_of_hearts() -> void:
 	await get_tree().create_timer(1.3).timeout
 	if session != _session_id:
 		return
-	start_level(current_level)
+	start_level(current_level, "retry")
 
 
 func _on_board_cleared() -> void:
@@ -427,6 +440,7 @@ func _on_board_cleared() -> void:
 	ui.show_complete(r)
 	if coins > reward_coins_attempt:
 		AudioManager.play_coin()
+	publish_state.call_deferred()
 	_refresh_buttons()
 
 
@@ -756,11 +770,12 @@ func _show_chapter_card(chapter: int) -> void:
 	AudioManager.play_chapter_complete()
 	Haptics.medium()
 	ui.show_chapter_card(chapter_summary(chapter))
+	publish_state.call_deferred()
 
 
 ## CONTINUE on the Chapter card: straight into the next Chapter.
 func _after_chapter_card() -> void:
-	start_level(current_level % level_manager.level_count + 1)
+	start_level(current_level % level_manager.level_count + 1, "chapter")
 
 
 # --- Level select --------------------------------------------------------------
@@ -788,7 +803,88 @@ func open_level_select() -> void:
 		info["levels"] = levels
 		info["unlocked"] = levels.any(func(l): return l["unlocked"])
 		chapters.append(info)
-	ui.open_level_select(chapters, progress.total_stars(), level_manager.level_count * 3, current_chapter)
+	ui.open_level_select(chapters, progress.total_stars(), level_manager.level_count * 3, current_chapter, progress.total_score())
+	# What the grid actually shows (diagnostics / browser tests).
+	select_shown = {"unlocked": [], "locked": []}
+	for c in chapters:
+		for lv in c["levels"]:
+			select_shown["unlocked" if lv["unlocked"] else "locked"].append(lv["number"])
+	publish_state.call_deferred()
+
+
+# --- Persistence & diagnostics -------------------------------------------------
+
+## Leaving the app / tab / closing: save now (every change is already saved
+## the moment it happens; this is the belt-and-braces flush).
+func _notification(what: int) -> void:
+	match what:
+		NOTIFICATION_APPLICATION_FOCUS_OUT, NOTIFICATION_APPLICATION_PAUSED, NOTIFICATION_WM_GO_BACK_REQUEST:
+			if progress:
+				progress.save()
+		NOTIFICATION_WM_CLOSE_REQUEST:
+			if progress:
+				progress.save()
+			Diagnostics.end_session()
+
+
+func _hide_title() -> void:
+	ui.hide_title()
+	publish_state.call_deferred()
+	if OS.has_feature("web"):
+		JavaScriptBridge.eval("window.ceAudio && window.ceAudio.saveNotice(false)", true)
+
+
+## Web only: when this browser context can't keep progress (Safari/iOS in a
+## cross-origin iframe such as an itch.io embed, or storage blocked), say so
+## on the title and offer to open the game in its own tab, where saving
+## works. Never shown when saving works.
+func _update_storage_notice() -> void:
+	if not OS.has_feature("web"):
+		return
+	var st := PlayerProgress.storage_status()
+	print("[Save] storage: %s" % str(st))
+	if st["persistent"]:
+		return
+	var text := ("Safari deletes progress saved inside this embedded page when it closes. Open the game in its own tab to keep your progress."
+		if st["ephemeral"] else "This browser is blocking saved data (private browsing?). Progress may not be kept.")
+	JavaScriptBridge.eval("window.ceAudio && window.ceAudio.saveNotice(true, %s, %s)" % [JSON.stringify(text), JSON.stringify("OPEN GAME")], true)
+
+
+## Web: a read-only snapshot of the game for automated browser tests and
+## remote debugging (window.chainEscapeState). Publishing it never changes
+## the game. Button centers are normalized (0..1) screen positions.
+func publish_state() -> void:
+	if not OS.has_feature("web"):
+		return
+	var vis := get_viewport().get_visible_rect().size
+	var center := func(c: Control) -> Array:
+		var p := c.get_global_rect().get_center()
+		return [snappedf(p.x / vis.x, 0.0001), snappedf(p.y / vis.y, 0.0001)]
+	var st := {
+		"level": current_level, "chapter": current_chapter, "completed": completed,
+		"level_score": last_result.get("score", 0) if completed else 0,
+		"total_score": progress.total_score(), "coins": progress.coins, "stars": progress.total_stars(),
+		"highest_completed": progress.highest_completed, "highest_unlocked": progress.highest_unlocked,
+		"last_played": progress.current_level, "save_seq": progress.seq, "save_source": progress.load_source,
+		"inventory": progress.inventory, "title_open": ui.is_title_open(), "card_open": ui.is_complete_visible(),
+		"chapter_card_open": ui.is_chapter_card_open(), "continue_text": ui._title._continue.text,
+		"next": center.call(ui._next_button), "chapter_continue": center.call(ui._chapter_card._continue),
+		"title_continue": center.call(ui._title._continue), "levels_button": center.call(ui._levels_button),
+		"music": AudioManager.music_theme, "diag": last_diag,
+		"select_open": ui.is_level_select_open(), "select_unlocked": select_shown.get("unlocked", []).size(),
+		"select_max_unlocked": (select_shown.get("unlocked", []) as Array).max() if not select_shown.get("unlocked", []).is_empty() else 0,
+		"select_locked_first": (select_shown.get("locked", []) as Array).min() if not select_shown.get("locked", []).is_empty() else 0,
+	}
+	JavaScriptBridge.eval("window.chainEscapeState = %s;" % JSON.stringify(st), true)
+
+
+## Text for the debug panel (tap the level title 5 times on a phone).
+func debug_info() -> String:
+	var st := PlayerProgress.storage_status()
+	return "%s\nSave: source=%s seq=%d v%d  last_played=%d  highest_completed=%d  highest_unlocked=%d  total_score=%d  coins=%d\nStorage: %s\n%s" % [
+		Diagnostics.last_line, progress.load_source, progress.seq, progress.version, progress.current_level,
+		progress.highest_completed, progress.highest_unlocked, progress.total_score(), progress.coins, str(st),
+		("Previous session: " + Diagnostics.previous_session) if Diagnostics.previous_session != "" else "Previous session: closed normally / first run"]
 
 
 # --- Settings ----------------------------------------------------------------

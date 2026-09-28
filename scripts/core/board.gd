@@ -119,6 +119,11 @@ func get_board_rect() -> Rect2:
 	return Rect2(_rest_position - Vector2(pad, pad), Vector2(columns, rows) * cell_size + Vector2(pad, pad) * 2.0)
 
 
+## Live effect + block nodes (diagnostics: must not grow across levels).
+func fx_count() -> int:
+	return _fx_root.get_child_count() + _blocks_root.get_child_count()
+
+
 func get_view(id: int) -> BlockView:
 	return _views.get(id)
 

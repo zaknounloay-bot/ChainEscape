@@ -14,6 +14,7 @@ const COLUMNS := 5
 
 var _list: VBoxContainer
 var _title_stars: Label
+var _total_label: Label
 var _scroll: ScrollContainer
 
 
@@ -46,6 +47,8 @@ func _ready() -> void:
 	_title_stars.custom_minimum_size = Vector2(150, 0)
 	_title_stars.horizontal_alignment = HORIZONTAL_ALIGNMENT_RIGHT
 	header.add_child(_title_stars)
+	_total_label = _label("", 22, Palette.TEXT_SOFT)
+	box.add_child(_total_label)
 	_scroll = ScrollContainer.new()
 	_scroll.size_flags_vertical = Control.SIZE_EXPAND_FILL
 	_scroll.horizontal_scroll_mode = ScrollContainer.SCROLL_MODE_DISABLED
@@ -59,7 +62,7 @@ func _ready() -> void:
 ## `chapters`: Array of GameManager.chapter_summary() dictionaries, each
 ## with "levels" (Array of {number, stars, unlocked, completed, mystery,
 ## reward, master, current}) and "unlocked".
-func open(chapters: Array, total_stars: int, max_stars: int, current_chapter: int) -> void:
+func open(chapters: Array, total_stars: int, max_stars: int, current_chapter: int, total_score: int = 0) -> void:
 	for c in _list.get_children():
 		c.queue_free()
 	for info in chapters:
@@ -79,6 +82,7 @@ func open(chapters: Array, total_stars: int, max_stars: int, current_chapter: in
 					close())
 			grid.add_child(tile)
 	_title_stars.text = "%d / %d ★" % [total_stars, max_stars]
+	_total_label.text = "TOTAL SCORE  %s" % UIManager._fmt(total_score)
 	visible = true
 	# Scroll to the current Chapter.
 	await get_tree().process_frame

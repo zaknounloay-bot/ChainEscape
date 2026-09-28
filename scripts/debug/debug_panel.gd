@@ -15,6 +15,9 @@ var level_count: int = 1
 var _panel: PanelContainer
 var _spin: SpinBox
 var _title_taps: Array[float] = []
+var _info: Label
+## Returns the diagnostics text to show (set by GameManager).
+var info_source: Callable
 
 
 func _ready() -> void:
@@ -25,11 +28,21 @@ func _ready() -> void:
 
 func toggle() -> void:
 	visible = not visible
+	refresh_info()
+
+
+## Stability diagnostics for real-phone testing: last [Diag] line, save
+## source/sequence, storage status and how the previous session ended.
+func refresh_info() -> void:
+	if _info and info_source.is_valid():
+		_info.text = info_source.call()
 
 
 func set_current_level(number: int) -> void:
 	if _spin:
 		_spin.set_value_no_signal(number)
+	if visible:
+		refresh_info()
 
 
 ## Counts rapid taps on the title (the device gesture to open the panel).
@@ -78,7 +91,7 @@ func _build() -> void:
 	row.add_child(_button("<", func(): level_requested.emit(int(_spin.value) - 1)))
 	_spin = SpinBox.new()
 	_spin.min_value = 1
-	_spin.max_value = 99
+	_spin.max_value = 100
 	_spin.custom_minimum_size = Vector2(110, 0)
 	row.add_child(_spin)
 	row.add_child(_button(">", func(): level_requested.emit(int(_spin.value) + 1)))
@@ -95,6 +108,12 @@ func _build() -> void:
 	coords.add_theme_color_override("font_color", Color.WHITE)
 	coords.toggled.connect(func(on): coords_toggled.emit(on))
 	box.add_child(coords)
+	_info = Label.new()
+	_info.add_theme_color_override("font_color", Color("#B8F5C8"))
+	_info.add_theme_font_size_override("font_size", 15)
+	_info.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+	_info.custom_minimum_size = Vector2(620, 0)
+	box.add_child(_info)
 
 
 func _button(text: String, cb: Callable) -> Button:

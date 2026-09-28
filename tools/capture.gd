@@ -6,6 +6,7 @@ extends Node
 ##   (add --coords to draw grid coordinates, --debug to open the debug panel,
 ##    --settings to open the settings card, --hint to show a hint,
 ##    --title / --shop / --levels for the title screen, Shop and Level Select,
+##    --solve to auto-solve the level and save the level card,
 ##    --gallery=5,15,25 to save the start frame of several levels (one per
 ##    Chapter shows every theme), --chapter-card=4 for a Chapter Complete card)
 ##
@@ -54,6 +55,10 @@ func _run() -> void:
 		game.open_level_select()
 	if "--settings" in OS.get_cmdline_user_args():
 		game.ui._open_settings()
+	if "--solve" in OS.get_cmdline_user_args():
+		await game.auto_solve()
+		await get_tree().create_timer(2.5).timeout
+		_save("solved")
 	for arg in OS.get_cmdline_user_args():
 		if arg.begins_with("--gallery="):
 			for n in arg.get_slice("=", 1).split(",", false):

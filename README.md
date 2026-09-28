@@ -1,4 +1,4 @@
-# Chain Escape — v0.5
+# Chain Escape — v0.5.1
 
 A one-handed portrait puzzle game built with **Godot 4.3 (GDScript)** for iOS, Android and mobile Web.
 
@@ -13,6 +13,14 @@ v0.5 makes progression feel much stronger. **Every 10 levels is a new Chapter** 
 The Chapters build toward **Silver and Gold reward blocks**, a **Chapter Complete** moment and a **Chapter chest** that upgrades with your stars. The puzzles themselves keep getting harder.
 
 The feeling it aims for: *"I progressed, the game changed, and I want to see the next Chapter."*
+
+**v0.5.1 is a stabilization release** (no new features). It fixes three problems testers reported:
+
+- sessions ending unexpectedly
+- saves / CONTINUE lost with levels relocked, especially on iPhone inside itch.io
+- a score that seemed to drop between levels
+
+See *v0.5.1 stabilization* below.
 
 Everything from v0.4 is kept:
 
@@ -46,31 +54,116 @@ Not included, on purpose: leaderboards, country ranking, accounts/login, backend
 
 ---
 
+## v0.5.1 stabilization
+
+No new gameplay, levels, rewards or progression. This release fixes the three problems real testers reported.
+
+### 1. "Kicked out" around levels 45–58
+
+**What was measured**
+
+- **In-engine soak** (`tools/Soak.tscn`): 200 levels in one process (1 → 100 twice) through real touch input, the real NEXT button and every Chapter Complete card, with music and SFX on and a save after every step.
+  - Nodes, objects and resources are **identical** between cycles, and there are **0 orphan nodes**.
+  - Tweens and effect nodes settle back to 0.
+  - Memory rises only in cycle 1, while each Chapter's music loads once (to 37.7 MB), and then **stays flat** through cycle 2.
+  - The game itself doesn't leak.
+- **Real browser** (`tools/web_persistence_test.mjs`): levels 1 → 70 continuously in one page. No reload, no page error, and the WebAssembly heap stays bounded (see *Test results*).
+- **Known engine issue ruled out:** the iOS audio-worklet leak that reloads pages ([godot#107390](https://github.com/godotengine/godot/issues/107390), fixed by [#107948](https://github.com/godotengine/godot/pull/107948)) affects **Sample** playback in Godot **4.4+**. This build is 4.3 with Stream playback.
+
+**Root cause (most likely; not reproducible outside an iPhone).** Nothing in the game accumulates, so the session is being ended by the browser. The two iOS events that do this are:
+
+- Safari discarding or reloading the page (backgrounding, memory pressure).
+- A GPU reset. On a GPU reset, Godot 4.3's Web runtime shows a blocking `alert("WebGL context lost, please reload the page")` and **never recovers** (confirmed in the exported engine code).
+
+Either way the page reloads. With the save loss below, the reload looked like "kicked out and back to level 1". The new forensics name the exact event the next time it happens.
+
+**Fixes**
+
+- **WebGL context loss:** replaced the engine's dead-end alert with a short native note ("The browser reset the graphics. Reloading – your progress is saved.") and a reload. The progress is now safely stored (see 2), so the player lands on **CONTINUE – LEVEL X**.
+- **Diagnostics that name the cause on a real phone:**
+  - **Per level:** one `[Diag]` line per level transition, never per frame. It covers memory, objects, nodes, orphan nodes, resources, tweens, effect nodes, music and SFX players, the save sequence number, and on Web the WebAssembly and JS heap sizes.
+  - **Page events:** `web/audio_unlock.js` records backgrounding, page hide, JS errors, engine aborts and context loss in localStorage.
+  - **At the next launch** the game states how the previous session ended: *closed normally*, *page was in the background (browser discarded it)*, *GRAPHICS RESET*, *ENGINE ABORT: …*, *JS ERROR: …*, or *CRASHED WHILE VISIBLE* (no page-hide event, the signature of a browser web-process crash). It also gives the level, the time played and the last `[Diag]` line.
+  - **On a phone:** tap the level title 5 times to open the debug panel, which shows all of it.
+
+### 2. Save / Continue lost, levels relocked
+
+**Root cause, from two Web behaviors confirmed in this environment and in the engine source**
+
+- **The save reached browser storage late or not at all.** Godot 4.3 stores `user://` in IndexedDB through an **asynchronous** whole-filesystem sync that runs a frame or more after each write.
+  - **Measured on the shipped v0.5:** closing the browser 300 ms after finishing a level kept the *previous* save (level 4 instead of 5), while after 3 s it was kept. A crash or tab close inside that window loses the newest progress.
+  - **If IndexedDB can't be opened,** Godot only prints "IndexedDB not available" and silently runs from memory: everything is gone on reload.
+- **Safari (every iPhone browser) makes storage in a cross-origin iframe ephemeral.** itch.io embeds HTML5 games in an iframe on another domain (itch.zone). WebKit partitions that iframe's storage and clears it when Safari closes ([WebKit tracking prevention](https://webkit.org/tracking-prevention/): third-party localStorage and IndexedDB are "partitioned… and also made ephemeral"; [godot#38498](https://github.com/godotengine/godot/issues/38498)). No save format can survive that inside the embed. It's a browser policy.
+
+**Fixes: one authoritative model, `PlayerProgress` (save v4)**
+
+- **Durable writes.** Every change saves immediately. Each save is written atomically (a `.tmp` file, verified, renamed, with the previous copy kept as `.bak`). On Web it is also mirrored **synchronously** into `localStorage` (`chain_escape_save`), so the copy exists the moment the save returns, before any IndexedDB sync.
+- **Newest-copy load.** The loader reads **every** copy (main, `.bak`, `.tmp`, Web mirror) and keeps the intact one with the highest **save sequence number**. That handles an interrupted rename, a lagging IndexedDB, or a crash mid-write.
+- **Never a silent reset.** An unreadable copy is kept aside (`progress.cfg.corrupt-<source>-<hash>`), the next-best copy is used, and if none parse, every intact entry is **salvaged** (multi-line values included). A blank start happens only when nothing at all is readable, and it is logged as `source=unreadable`.
+- **Never relocked.** `highest_unlocked` is stored explicitly, only ever raised, and re-derived on load from completions and best scores. A partial save can't grey out levels.
+- **Save points:** level start (last played), level completion (unlock, stars, best score, total, coins), every coin earn or spend, chest claims, booster use or purchase, reward blocks, settings, and leaving the app (focus out, pause, close request).
+- **Safari embed:** when the game detects Safari/WebKit in a cross-origin iframe, the title shows a small native banner: *"Safari deletes progress saved inside this embedded page when it closes. Open the game in its own tab to keep your progress."* The **OPEN GAME** button opens the same build as a normal page, where saving works. The button is a real DOM tap, so it is never popup-blocked. The banner never appears where saving works, and it also warns when storage is blocked entirely (for example private browsing).
+- `navigator.storage.persist()` is requested, which makes browsers less likely to evict saves.
+- **Logging:** `[Save] load: source=mirror version=4 seq=13 last_played=5 … issues=[copies: file#12 bak#11 mirror#13]` and `[Save] write #14: … file=ok mirror=ok`.
+
+**Save model (v4), everything in `scripts/core/player_progress.gd`:**
+
+| Field | Meaning |
+|---|---|
+| `meta/version`, `meta/seq`, `meta/saved_unix` | format version, save sequence number (+1 per write), timestamp |
+| `progress/current_level` | last played level (the CONTINUE target) |
+| `progress/last_completed_level` | the last level finished (any clear) |
+| `progress/highest_completed` | furthest level ever completed |
+| `progress/highest_unlocked` | every level up to this is playable (never lowered) |
+| `progress/total_score` | stored copy of the Total Score (cross-checked on load) |
+| `[scores]`, `[stars]`, `progress/perfect_levels` | best score and best stars per level, PERFECT levels |
+| `economy/coins`, `economy/inventory`, `economy/claimed_chests` | coins, boosters, chest tiers |
+| `[chapters]` | completed Chapters, collected Silver/Gold blocks, coins per Chapter, tips seen |
+| `[settings]` | Music, Sound Effects, Vibration |
+
+Migration: v1 (v0.3) → v2 (v0.4) → v3 (v0.5) → v4 happens automatically, keeping everything. Unknown keys are preserved.
+
+### 3. Score "dropped" from 8,200 to 6,000
+
+**Root cause.** The level-complete card showed one big unlabeled number: *that level's* score. Level 12 might score 8,200 and level 13 6,000, so moving on *looked* like losing points. There was no running total anywhere.
+
+**Score model.** Every number now says what it is:
+
+| Name | Where | Rule |
+|---|---|---|
+| **LEVEL SCORE** | level card (big number) | this run of this level |
+| **LEVEL BEST** / **NEW BEST!** | level card | best score ever on this level; never goes down |
+| **TOTAL SCORE** | level card, title, Level Select | **sum of the best score of every completed level**. It only grows: a first clear adds the level's score, a better replay adds the improvement ("+800"), and a worse replay, a repeat or moving to the next level changes nothing. |
+| CHAPTER SCORE | Chapter Complete card | sum of the Chapter's best scores |
+
+There is no separate "session score". Replays can't farm Total Score, because it counts each level's best once.
+
 ## Save / Continue
 
-`scripts/core/player_progress.gd`, saved to `user://progress.cfg` (IndexedDB on the Web).
+`scripts/core/player_progress.gd` is the single authoritative progress model (save **v4**). It is saved to `user://progress.cfg`, which is IndexedDB on the Web, plus a synchronous `localStorage` mirror there.
 
 **What is saved:**
 
-- last played level (the CONTINUE target) and highest completed level
-- highest unlocked level (= highest completed + 1)
-- stars and best score per level, and PERFECT levels
+- the last played level (the CONTINUE target), the last completed level, the highest completed level and the **highest unlocked level** (explicit, never lowered)
+- stars and best score per level, PERFECT levels, and the Total Score (a cross-checked copy)
 - coin balance and booster inventory
 - claimed chest tiers and achievements (for example `master`)
-- v0.5: completed Chapters, collected Silver/Gold blocks (`"level:block"`), coins earned per Chapter, and one-time tips seen
+- completed Chapters, collected Silver/Gold blocks (`"level:block"`), coins earned per Chapter, and one-time tips seen
 - Music, Sound Effects and Vibration settings
+- the save sequence number and timestamp
 
 **Launch:**
 
-- A returning player sees **CONTINUE – LEVEL X** with the Chapter (for example "CHAPTER 6 · MIDNIGHT TIDE"), stars and coins, plus **LEVEL SELECT**.
+- A returning player sees **CONTINUE – LEVEL X** with the Chapter, Total Score, stars and coins, plus **LEVEL SELECT**.
 - A new player sees **PLAY**.
 - The last played level is already loaded behind the title, so continuing is instant.
 
-**Robustness:**
+**Robustness** (details in *v0.5.1 stabilization*):
 
-- **Version-aware:** `[meta] version = 3`. `_migrate()` upgrades older saves in place, step by step (v1 → v2 → v3). See *Compatibility* below.
-- **Forward-safe:** keys a build doesn't know are kept when it re-saves.
-- **Atomic:** each save writes `progress.cfg.tmp`, keeps the previous file as `progress.cfg.bak`, then renames. A damaged main file falls back to the `.bak` copy.
+- **Atomic and durable:** a verified `.tmp` file is renamed over the main file, the previous copy is kept as `.bak`, and on the Web a synchronous `localStorage` mirror is written too.
+- **Newest-copy load:** every copy is read, and the intact one with the highest save sequence number wins.
+- **No silent reset:** an unreadable copy is quarantined, the next copy is used, and failing that, intact entries are salvaged. Unlocks are re-derived and never lowered.
+- **Version-aware:** `_migrate()` upgrades v1 → v2 → v3 → v4 in place. Unknown keys are preserved.
 
 ## Chapters
 

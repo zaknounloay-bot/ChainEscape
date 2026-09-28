@@ -38,6 +38,11 @@ func _initialize() -> void:
 	test_chapter_complete_once()
 	test_chest_items()
 	test_save_migration_v2()
+	test_total_score_model()
+	test_unlocks_never_regress()
+	test_newest_copy_wins()
+	test_corrupt_save_recovery()
+	test_save_migration_v3()
 	print("%d checks, %d failures" % [_checks, _fails])
 	print("UNIT TESTS PASSED" if _fails == 0 else "UNIT TESTS FAILED")
 	quit(0 if _fails == 0 else 1)
@@ -381,7 +386,7 @@ func test_save_migration() -> void:
 	check(not p.music_on, "settings kept through migration")
 	check(p.coins == int(Economy.config()["starting_coins"]), "migration grants starting coins")
 	check(p.perfect_levels.has(5), "3-star levels count as already PERFECT (no double reward)")
-	check(p.has_progress() and p.highest_unlocked() == 23, "continue/unlock state after migration")
+	check(p.has_progress() and p.highest_unlocked == 23, "continue/unlock state after migration")
 	p.coins = 777
 	p.inventory["hammer"] = 3
 	p.claimed_chests.append("g0_t0")
@@ -715,7 +720,7 @@ func test_save_migration_v2() -> void:
 	old.save(path)
 	var p := PlayerProgress.new(path).load_from_disk()
 	var bonus := int(Economy.config()["rewards"]["chapter_complete"])
-	check(p.version == 3, "v2 save migrated to v3")
+	check(p.version == PlayerProgress.SAVE_VERSION, "v2 save migrated to the current version")
 	check(p.current_level == 57 and p.highest_completed == 56 and p.best_score(40) == 3000 and p.stars_for(56) == 2, "v0.4 progress kept")
 	check(p.inventory == {"hint": 2, "hammer": 1} and not p.sfx_on, "inventory and settings kept")
 	check([1, 2, 3, 4].all(func(c): return p.completed_chapters.has(c)), "completed Worlds 1-2 = Chapters 1-4 complete (no second bonus)")
@@ -726,4 +731,168 @@ func test_save_migration_v2() -> void:
 	p.save()
 	var q := PlayerProgress.new(path).load_from_disk()
 	check(q.coins == 480 + bonus and q.completed_chapters.size() == 5, "re-loading a migrated save pays nothing again")
+	wipe_save(path)
+
+
+# --- v0.5.1 stabilization ------------------------------------------------------
+
+func _fresh(path: String) -> PlayerProgress:
+	wipe_save(path)
+	for f in DirAccess.get_files_at(ProjectSettings.globalize_path("user://")):
+		if f.begins_with(path.get_file() + ".corrupt"):
+			DirAccess.remove_absolute(ProjectSettings.globalize_path("user://" + f))
+	return PlayerProgress.new(path).load_from_disk()
+
+
+## TOTAL SCORE = sum of the best score of every completed level. It only
+## ever grows, by exactly the improvement, and never drops when moving on.
+func test_total_score_model() -> void:
+	var path := "user://test_total.cfg"
+	var p := _fresh(path)
+	check(p.total_score() == 0, "fresh total score is 0")
+	var r1 := p.record_result(1, 8200, 3)
+	check(p.total_score() == 8200 and r1["total_gain"] == 8200 and r1["total_after"] == 8200, "first clear adds its score to the total")
+	var r2 := p.record_result(2, 6000, 2)
+	check(p.total_score() == 14200 and r2["total_before"] == 8200, "the next level's lower score ADDS to the total (8200 -> 14200), never replaces it")
+	var r3 := p.record_result(1, 5000, 1)
+	check(p.total_score() == 14200 and r3["total_gain"] == 0, "a worse replay changes nothing")
+	var r4 := p.record_result(1, 9000, 3)
+	check(p.total_score() == 15000 and r4["total_gain"] == 800, "a better replay adds only the improvement (+800)")
+	for i in 5:
+		p.record_result(2, 6000, 2)
+	check(p.total_score() == 15000, "replaying the same result can't farm total score")
+	var q := PlayerProgress.new(path).load_from_disk()
+	check(q.total_score() == 15000, "total score persists")
+	var raw := ConfigFile.new()
+	raw.load(path)
+	check(int(raw.get_value("progress", "total_score", -1)) == 15000, "total score stored in the save for integrity checks")
+	wipe_save(path)
+
+
+## highest_unlocked / last played / last completed are explicit and never
+## go backwards, even if a save is partial or inconsistent.
+func test_unlocks_never_regress() -> void:
+	var path := "user://test_unlock.cfg"
+	var p := _fresh(path)
+	for n in range(1, 46):
+		p.record_result(n, 3000, 2)
+	p.current_level = 46
+	p.save()
+	check(p.highest_unlocked == 46 and p.last_completed_level == 45 and p.highest_completed == 45, "explicit unlock fields after 45 clears")
+	p.record_result(10, 5000, 3)
+	check(p.highest_unlocked == 46 and p.highest_completed == 45 and p.last_completed_level == 10, "replaying an old level never lowers unlocks")
+	# A damaged / inconsistent save: highest fields say 1, but best scores exist up to 45.
+	var cfg := ConfigFile.new()
+	cfg.set_value("meta", "version", 4)
+	cfg.set_value("progress", "highest_completed", 0)
+	cfg.set_value("progress", "highest_unlocked", 1)
+	cfg.set_value("progress", "current_level", 46)
+	for n in range(1, 46):
+		cfg.set_value("scores", str(n), 3000)
+	wipe_save(path)
+	cfg.save(path)
+	var q := PlayerProgress.new(path).load_from_disk()
+	check(q.highest_completed == 45 and q.highest_unlocked == 46 and q.is_unlocked(45) and not q.is_unlocked(47), "unlocks re-derived from best scores (never relocked)")
+	check(q.current_level == 46 and q.has_progress(), "CONTINUE target kept")
+	wipe_save(path)
+
+
+## Loading picks the NEWEST intact copy (main, .bak, .tmp), by save
+## sequence - e.g. a crash between writing the temp file and renaming it.
+func test_newest_copy_wins() -> void:
+	var path := "user://test_copies.cfg"
+	var p := _fresh(path)
+	p.record_result(1, 1000, 1)
+	p.current_level = 2
+	p.save()
+	var seq_main := p.seq
+	# A newer temp file left behind by an interrupted save.
+	var newer := ConfigFile.new()
+	newer.load(path)
+	newer.set_value("meta", "seq", seq_main + 5)
+	newer.set_value("progress", "current_level", 9)
+	newer.set_value("progress", "highest_completed", 8)
+	newer.save(path + ".tmp")
+	var q := PlayerProgress.new(path).load_from_disk()
+	check(q.load_source == "tmp" and q.current_level == 9 and q.highest_unlocked == 9, "a newer .tmp copy wins (source %s)" % q.load_source)
+	check(q.seq == seq_main + 5, "sequence number restored")
+	q.save()
+	check(q.seq == seq_main + 6 and not FileAccess.file_exists(path + ".tmp"), "next save continues the sequence and cleans up")
+	var before := q.seq
+	q.save()
+	q.save()
+	check(q.seq == before + 2 and q.saved_unix > 0, "every save increments the sequence and stamps the time")
+	wipe_save(path)
+
+
+## A damaged save is never silently replaced by a blank one: it is copied
+## aside, the backup is used, and if nothing parses the readable lines are
+## salvaged.
+func test_corrupt_save_recovery() -> void:
+	var path := "user://test_corrupt.cfg"
+	var p := _fresh(path)
+	for n in range(1, 13):
+		p.record_result(n, 2000, 2)
+	p.coins = 345
+	p.current_level = 13
+	p.save()
+	p.save()  # .bak now holds a good copy too
+	var f := FileAccess.open(path, FileAccess.WRITE)
+	f.store_string("[[[ torn write")
+	f.close()
+	var q := PlayerProgress.new(path).load_from_disk()
+	check(q.load_source == "bak" and q.current_level == 13 and q.coins == 345 and q.highest_unlocked == 13, "damaged main file: the backup is used (source %s)" % q.load_source)
+	var quarantined := Array(DirAccess.get_files_at(ProjectSettings.globalize_path("user://"))).filter(func(x): return x.begins_with("test_corrupt.cfg.corrupt"))
+	check(quarantined.size() >= 1, "the damaged copy is kept aside for recovery (%s)" % str(quarantined))
+	# Everything damaged, but most lines intact: salvage them.
+	var good := FileAccess.get_file_as_string(path + ".bak")
+	wipe_save(path)
+	f = FileAccess.open(path, FileAccess.WRITE)
+	f.store_string(good.replace("[economy]", "[economy]\ncoins=%%%%broken\n{{{"))
+	f.close()
+	var r := PlayerProgress.new(path).load_from_disk()
+	check(r.load_source.begins_with("salvaged") and r.highest_completed == 12 and r.current_level == 13 and r.best_score(5) == 2000,
+		"unreadable save: intact lines salvaged (source %s, highest %d)" % [r.load_source, r.highest_completed])
+	check(r.existed and r.has_progress(), "salvaged progress offers CONTINUE (not a blank start)")
+	# Nothing readable at all: fresh progress, but the file is preserved.
+	wipe_save(path)
+	f = FileAccess.open(path, FileAccess.WRITE)
+	f.store_string("garbage ]]] === {{")
+	f.close()
+	var s := PlayerProgress.new(path).load_from_disk()
+	check(s.load_source == "unreadable" and not s.existed, "nothing readable: reported, not hidden (source %s)" % s.load_source)
+	wipe_save(path)
+
+
+## v0.5 (save v3) files migrate to v4 with everything kept.
+func test_save_migration_v3() -> void:
+	var path := "user://test_migrate_v3.cfg"
+	var p := _fresh(path)
+	var old := ConfigFile.new()
+	old.set_value("meta", "version", 3)
+	old.set_value("progress", "current_level", 58)
+	old.set_value("progress", "highest_completed", 57)
+	for n in range(1, 58):
+		old.set_value("scores", str(n), 4000 + n)
+		old.set_value("stars", str(n), 2)
+	old.set_value("economy", "coins", 910)
+	old.set_value("economy", "inventory", {"hint": 3, "hammer": 2})
+	old.set_value("economy", "claimed_chests", ["g0_t0", "g4_t2"])
+	old.set_value("chapters", "completed", [1, 2, 3, 4, 5])
+	old.set_value("chapters", "reward_blocks", ["32:4", "51:7"])
+	old.set_value("settings", "music", false)
+	wipe_save(path)
+	old.save(path)
+	p = PlayerProgress.new(path).load_from_disk()
+	var expect_total := 0
+	for n in range(1, 58):
+		expect_total += 4000 + n
+	check(p.version == PlayerProgress.SAVE_VERSION and p.load_source == "file", "v3 save migrated to v%d" % PlayerProgress.SAVE_VERSION)
+	check(p.current_level == 58 and p.highest_completed == 57 and p.highest_unlocked == 58 and p.last_completed_level == 57, "v3 progress + derived unlock fields")
+	check(p.coins == 910 and p.inventory == {"hint": 3, "hammer": 2} and p.claimed_chests.size() == 2 and p.completed_chapters.size() == 5, "coins, inventory, chests, Chapters kept")
+	check(p.has_reward_block(32, 4) and p.has_reward_block(51, 7) and not p.music_on, "reward blocks and settings kept")
+	check(p.total_score() == expect_total, "total score = sum of v3 best scores (%d)" % p.total_score())
+	p.save()
+	var q := PlayerProgress.new(path).load_from_disk()
+	check(q.coins == 910 and q.total_score() == expect_total and q.seq == 1, "re-saved in v4 without changes")
 	wipe_save(path)

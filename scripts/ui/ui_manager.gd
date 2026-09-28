@@ -42,6 +42,11 @@ var _setting_buttons: Dictionary = {}  # key -> PillButton
 var _settings: Dictionary = {"music": true, "sfx": true, "haptics": true}
 var _card_reward: Label  # "NEW BEST!" / "BEST 1234"
 var _card_score: Label
+## Score model (v0.5.1) - every number on the card says what it is:
+## LEVEL SCORE (this run), BEST (this level's personal best) and TOTAL SCORE
+## (sum of the best score of every completed level; never goes down).
+var _card_score_caption: Label
+var _card_total: Label
 var _card_stars: StarsRow
 var _card_buttons: HBoxContainer
 var _replay_button: PillButton
@@ -198,8 +203,8 @@ func pulse_coins() -> void:
 	_pulse(_coin_pill)
 
 
-func show_title(has_progress: bool, level: int, stars: int, coins: int) -> void:
-	_title.open(has_progress, level, stars, coins, theme)
+func show_title(has_progress: bool, level: int, stars: int, coins: int, total_score: int = 0) -> void:
+	_title.open(has_progress, level, stars, coins, theme, total_score)
 	_top.modulate.a = 0.0
 	_bottom.modulate.a = 0.0
 
@@ -251,8 +256,8 @@ func show_chapter_banner(text: String) -> void:
 	t.tween_callback(func(): _banner.visible = false)
 
 
-func open_level_select(chapters: Array, total_stars: int, max_stars: int, current_chapter: int) -> void:
-	_level_select.open(chapters, total_stars, max_stars, current_chapter)
+func open_level_select(chapters: Array, total_stars: int, max_stars: int, current_chapter: int, total_score: int = 0) -> void:
+	_level_select.open(chapters, total_stars, max_stars, current_chapter, total_score)
 
 
 func show_chapter_card(summary: Dictionary) -> void:
@@ -362,8 +367,14 @@ func show_complete(r: Dictionary) -> void:
 		_card_reward.text = "NEW BEST!"
 		_card_reward.add_theme_color_override("font_color", Palette.ACCENT)
 	else:
-		_card_reward.text = "BEST  %s" % _fmt(r["best"])
+		_card_reward.text = "LEVEL BEST  %s" % _fmt(r["best"])
 		_card_reward.add_theme_color_override("font_color", Palette.TEXT_SOFT)
+	# TOTAL SCORE only ever grows: it rises by the improvement over this
+	# level's previous best, and stays put on a worse run or a replay.
+	var total_after: int = r.get("total_after", 0)
+	var gain: int = r.get("total_gain", 0)
+	_card_total.text = "TOTAL SCORE  %s%s" % [_fmt(total_after), ("   +%s" % _fmt(gain)) if gain > 0 else ""]
+	_card_total.add_theme_color_override("font_color", Palette.ACCENT if gain > 0 else Palette.TEXT)
 	_next_button.text = "NEXT LEVEL" if not r["is_last"] else "PLAY AGAIN"
 	if r.get("chapter_complete", 0) > 0:
 		_next_button.text = "CONTINUE"  # opens the Chapter Complete card
@@ -422,6 +433,8 @@ func _set_card_mode(complete: bool) -> void:
 	_card_coins.visible = complete and _card_coins.text != ""
 	_card_stars.visible = complete
 	_card_score.visible = complete
+	_card_score_caption.visible = complete
+	_card_total.visible = complete
 	_card_reward.visible = complete
 	_card_buttons.visible = complete
 
@@ -550,10 +563,15 @@ func _build() -> void:
 	_card_stars = StarsRow.new(36)
 	_card_stars.size_flags_horizontal = Control.SIZE_SHRINK_CENTER
 	card_box.add_child(_card_stars)
+	_card_score_caption = _make_label(20, Palette.TEXT_SOFT, 900)
+	_card_score_caption.text = "LEVEL SCORE"
+	card_box.add_child(_card_score_caption)
 	_card_score = _make_label(64, Palette.TEXT, 900)
 	card_box.add_child(_card_score)
 	_card_reward = _make_label(30, Palette.ACCENT, 900)
 	card_box.add_child(_card_reward)
+	_card_total = _make_label(24, Palette.TEXT, 900)
+	card_box.add_child(_card_total)
 	_card_stats = _make_label(22, Palette.TEXT_SOFT, 800)
 	_card_coins = _make_label(26, Color("#D98A00"), 900)
 	_card_coins.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART

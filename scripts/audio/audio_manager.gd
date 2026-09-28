@@ -207,6 +207,16 @@ func set_music_enabled(on: bool) -> void:
 
 # --- Music -----------------------------------------------------------------
 
+## Music players currently playing (diagnostics: 1, or 2 during a fade).
+func music_playing_count() -> int:
+	return [_music, _music_b].filter(func(p): return p.playing).size()
+
+
+## SFX voices currently sounding (diagnostics; the pool is fixed at VOICES).
+func sfx_playing_count() -> int:
+	return _players.filter(func(p): return p.playing).size()
+
+
 func is_music_playing() -> bool:
 	return _music.playing
 

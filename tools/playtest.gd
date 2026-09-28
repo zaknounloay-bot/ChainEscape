@@ -588,7 +588,7 @@ func _test_relaunch_continue() -> void:
 	_check(game.progress.reward_blocks == expect["rewards"] and not expect["rewards"].is_empty(), "collected Silver/Gold blocks restored")
 	_check(game.ui._title._stats.text.begins_with("CHAPTER 6  ·  MIDNIGHT TIDE"), "title shows the Chapter to continue ('%s')" % game.ui._title._stats.text)
 	_check(not game.progress.haptics_on and not Haptics.enabled, "settings restored after relaunch")
-	_check(game.progress.highest_unlocked() > 57, "unlock progress restored (not reset to level 1)")
+	_check(game.progress.highest_unlocked > 57, "unlock progress restored (not reset to level 1)")
 	game.ui.continue_pressed.emit()
 	await _frames(2)
 	_check(not game.ui.is_title_open() and game.current_level == 57, "CONTINUE resumes level 57")
@@ -638,6 +638,9 @@ func _test_perfect_and_bests() -> void:
 	_check(r["score"] == ScoreRules.max_score(game.level.blocks.size()), "PERFECT unbroken chain scores the maximum (%d vs %d)" % [r["score"], ScoreRules.max_score(game.level.blocks.size())])
 	_check(r["first_clear"], "first clear flagged")
 	var best := game.progress.best_score(13)
+	var total := game.progress.total_score()
+	_check(game.ui._card_score_caption.text == "LEVEL SCORE" and game.ui._card_total.text.begins_with("TOTAL SCORE  %s" % UIManager._fmt(total)),
+		"card labels LEVEL SCORE and TOTAL SCORE (%s)" % game.ui._card_total.text)
 	# Worse run: one blocked tap.
 	game.start_level(13)
 	await _wait(0.4)
@@ -647,6 +650,8 @@ func _test_perfect_and_bests() -> void:
 	r = game.last_result
 	_check(not r["perfect"] and not r["new_best"] and r["score"] < best, "worse run is not NEW BEST")
 	_check(game.progress.best_score(13) == best and game.progress.stars_for(13) == 3, "best score/stars kept after a worse run")
+	_check(game.progress.total_score() == total and r["total_gain"] == 0 and game.ui._card_reward.text.begins_with("LEVEL BEST"),
+		"a worse run leaves TOTAL SCORE unchanged and shows the level best (%s)" % game.ui._card_total.text)
 	var disk := PlayerProgress.new(PROGRESS_PATH).load_from_disk()
 	_check(disk.best_score(13) == best and disk.stars_for(13) == 3, "best score/stars persisted to disk")
 	print("PERFECT / score / personal best / stars OK (best=%d)" % best)

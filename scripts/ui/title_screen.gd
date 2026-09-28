@@ -44,10 +44,10 @@ func _ready() -> void:
 	box.add_child(_stats)
 
 
-func open(has_progress: bool, level: int, stars: int, coins: int, theme: Dictionary) -> void:
+func open(has_progress: bool, level: int, stars: int, coins: int, theme: Dictionary, total_score: int = 0) -> void:
 	_continue.text = ("CONTINUE  -  LEVEL %d" % level) if has_progress else "PLAY"
 	var where := "MASTER LEVEL" if Chapters.is_master(level) else Chapters.title(Chapters.chapter_of(level))
-	_stats.text = ("%s\n%d ★    %d COINS" % [where, stars, coins]) if has_progress else "Tap a block. Let it escape."
+	_stats.text = ("%s\nTOTAL SCORE %s\n%d ★    %d COINS" % [where, UIManager._fmt(total_score), stars, coins]) if has_progress else "Tap a block. Let it escape."
 	_stats.add_theme_color_override("font_color", theme["text_soft"])
 	_title_color = theme["text"]
 	_continue.set_background(theme["accent"].darkened(0.1) if theme["dark"] else theme["accent"])
