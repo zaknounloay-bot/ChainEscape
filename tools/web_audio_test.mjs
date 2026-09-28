@@ -87,6 +87,18 @@ function signalProbe() {
         mute.gain.value = 0;
         origConnect.call(a, mute);
         origConnect.call(mute, ctx.destination);
+        // The analyser only shows its last 46 ms when sampled, so a short
+        // click can fall between samples on a busy main thread. A script
+        // processor is handed EVERY block of audio, so nothing is missed.
+        const tap = ctx.createScriptProcessor(1024, 2, 2);
+        tap.onaudioprocess = (e) => {
+          for (let c = 0; c < e.inputBuffer.numberOfChannels; c++) {
+            const d = e.inputBuffer.getChannelData(c);
+            for (let i = 0; i < d.length; i++) { const v = Math.abs(d[i]); if (v > window.__maxPeak) window.__maxPeak = v; }
+          }
+        };
+        origConnect.call(a, tap);
+        origConnect.call(tap, mute);
         probes.set(ctx, a);
       }
       origConnect.call(this, a);

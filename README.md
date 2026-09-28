@@ -804,15 +804,22 @@ Each case checks:
 - the RESTART click plays a sound effect and reaches the output, or is silent with SFX OFF
 - **no `[CE-Audio]` logging and no test hooks** (`ceSetSetting`, `testTone`) remain
 
-**Current results (v0.5):**
+**Soak test** (`Soak.tscn`) plays levels in one process without restarting (`--from`, `--to`, `--cycles`), through real taps, the real NEXT button and every Chapter Complete card, with music and SFX on. After every level it checks: no orphan nodes, effect nodes and tweens bounded, at most 2 music players, the completion recorded and the save on disk in step with the Total Score. After each cycle it checks that nodes, objects and resources did not grow.
+
+**Web persistence test** (`tools/web_persistence_test.mjs`, real Chromium). The game runs inside a cross-origin iframe, like itch.io, with a persistent browser profile that is really closed and reopened. It runs scenarios A–F from *How to test on itch.io and on phones*, tracks memory, and checks the iPhone-in-embed detection and banner. `QUICK=1` runs a shorter version.
+
+**Current results (v0.5.1):**
 
 | Check | Result |
 |---|---|
-| Unit tests | `UNIT TESTS PASSED`: 10,029 checks, 0 failures |
-| Level verifier | `ALL 100 LEVELS SOLVABLE AND PASS CAMPAIGN RULES`. Chapter difficulty rises C1 4.7 … C6 42.1, C7 46.1, C8 49.9, C9 53.3, C10 58.8. Level 100 is the hardest (67.7). All mystery levels are fair. There are 39 Silver and 18 Gold blocks, all within the placement rules. |
-| Playtest | `PLAYTEST PASSED`: all 100 levels cleared through real touch input, plus the Chapter transitions (10 boundaries × NEXT / Level Select / Replay / Restart / debug / rapid / relaunch, with music on), Silver/Gold rewards and anti-farming, Chapter Complete + chest, and every v0.3/v0.4 scenario |
-| Web audio (real browser) | `WEB AUDIO TEST PASSED`: 75 checks (Chromium, strict autoplay). Covers mobile first visit, returning player with Music ON / Music OFF / SFX OFF, a suspended (iOS-like) context and desktop mouse. The real output signal is measured, and it confirms no debug logging and no test hooks remain. |
-| Rendering | Screenshots at 720×1280 of one level from every Chapter and the Master Level, Silver/Gold blocks on light and dark Chapters, the Chapter Complete card and the Chapter-grouped Level Select |
+| Unit tests | `UNIT TESTS PASSED`: 10,056 checks, 0 failures (adds the Total Score model, unlocks never regress, newest save copy wins, corrupt-save recovery, v3 → v4 migration) |
+| Level verifier | `ALL 100 LEVELS SOLVABLE AND PASS CAMPAIGN RULES`. Chapter difficulty rises C1 4.7 … C6 42.1, C7 46.1, C8 49.9, C9 53.3, C10 58.8. Level 100 is the hardest (67.7). |
+| Playtest | `PLAYTEST PASSED`: all 100 levels cleared through real touch input, plus every Chapter transition, reward, Chapter Complete, relaunch and score-label scenario |
+| Soak | `SOAK PASSED`: 1 → 100 continuously (and 200 levels with `--cycles=2`), 0 orphan nodes, no growth between cycles |
+| Web persistence (real browser) | `WEB PERSISTENCE TEST PASSED`: 18 checks. A: CONTINUE – LEVEL 12 after closing the browser. B: Level Select 1–45 unlocked after closing the tab. C: coins, stars, boosters and Total Score identical. D: the total never drops. E/F: 1 → 70 in one page, with no reload, no page error and a new theme and music at every Chapter. |
+| Browser memory | Idle 60 s on the title and in-game: JS heap flat (56.6 → 56.6 MB, 56.7 → 56.8 MB). Levels 11 → 70 in one page: JS 58 → 74 MB (v0.5: 61 → 116 MB and still rising), WebAssembly 46 → 55 MB. |
+| Web audio (real browser) | `WEB AUDIO TEST PASSED`: 75 checks. The signal probe now receives every audio block, so a 40 ms click can't fall between samples. |
+| Rendering | Screenshots of levels 5, 25, 45, 64 and 86 (spinners, rule strips, locks, Silver/Gold) match the v0.5 look |
 
 The tests write progress to separate files (`user://test_*.cfg`, `user://playtest_progress.cfg`), never to the player's save.
 
