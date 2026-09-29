@@ -318,7 +318,9 @@ func _expect_chapter(n: int, label: String) -> void:
 	for id in game.model.blocks:
 		var v := game.board.get_view(id)
 		if v and not v.data.is_gate():
-			views_ok = views_ok and v._face_style.bg_color.is_equal_approx(Palette.styled_face(v.data.color))
+			# v0.6.2: an uncollected Silver/Gold block is metal all over.
+			var want: Color = Palette.REWARD_BODY[v.data.rarity][1] if v._metal_body() else Palette.styled_face(v.data.color)
+			views_ok = views_ok and v._face_style.bg_color.is_equal_approx(want)
 	_check(views_ok, "%s: block views use Chapter %d's material" % [label, expect_chapter])
 	# Music: the right theme, and exactly one player left once settled.
 	if not AudioManager.music_enabled:

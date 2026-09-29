@@ -49,6 +49,7 @@ func _initialize() -> void:
 	test_chain_gate()
 	test_armored_block()
 	test_armor_safety()
+	test_reward_vs_armor_look()
 	test_second_era_tokens()
 	test_save_migration_v4_to_v6()
 	print("%d checks, %d failures" % [_checks, _fails])
@@ -1162,6 +1163,31 @@ func test_armor_safety() -> void:
 			checked += 1
 		n += 1
 	check(checked >= 30, "armor levels audited (%d)" % checked)
+
+
+## v0.6.2 (QA): Silver / Gold must never read like Armor. The reward body
+## is bright metal, the shell is dark matte plating; the navy arrow reads
+## on both reward metals (WCAG AAA 7:1).
+func test_reward_vs_armor_look() -> void:
+	for rarity in [BlockData.Rarity.SILVER, BlockData.Rarity.GOLD]:
+		var body: Color = Palette.REWARD_BODY[rarity][1]
+		var plate: Color = Palette.ARMOR[0]
+		check(body.get_luminance() - plate.get_luminance() > 0.35, "%s body much brighter than the Armor plate (%.2f vs %.2f)" % [BlockData.RARITY_NAMES[rarity], body.get_luminance(), plate.get_luminance()])
+		check(_contrast(Palette.REWARD_ARROW, body) >= 7.0, "%s arrow contrast >= 7:1 (%.1f)" % [BlockData.RARITY_NAMES[rarity], _contrast(Palette.REWARD_ARROW, body)])
+	# Gold is not a plain yellow block, and no campaign reward sits on a shell.
+	check(not Palette.REWARD_BODY[BlockData.Rarity.GOLD][1].is_equal_approx(Palette.face("yellow")), "Gold body differs from a yellow block")
+	var n := 1
+	while FileAccess.file_exists(LevelManager.LEVEL_PATH % n):
+		var level := LevelManager.parse_level(JSON.parse_string(FileAccess.get_file_as_string(LevelManager.LEVEL_PATH % n)), n)
+		for b in level.blocks:
+			check(not (b.is_reward() and b.armored), "L%d: no reward on an armored block" % n)
+		n += 1
+	var view := BlockView.new()
+	var data := BlockData.new(0, Vector2i.ZERO, "red", Direction.RIGHT)
+	data.rarity = BlockData.Rarity.GOLD
+	view.setup(data, 100.0)
+	check(view._face_style.bg_color.is_equal_approx(Palette.REWARD_BODY[BlockData.Rarity.GOLD][1]) and view._arrow_color() == Palette.REWARD_ARROW, "a Gold view is metal with a navy arrow")
+	view.free()
 
 
 ## Tokens round-trip through the level serializer; invalid combinations are

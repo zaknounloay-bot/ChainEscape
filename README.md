@@ -64,7 +64,49 @@ Scope is kept tight: no new mechanics, no new levels, no scoring change, and no 
 
 ### 1. Level 200 is the hardest level
 
-LEVEL200_SECTION
+**The problem:** Level 200 scored highest (79.2), but mostly because of *how many* mechanics it had. Measured by reasoning alone (structural difficulty: dependency depth, decision points, trap moves, opening traps, rams and switch timing, but not block or mechanic counts), it was **63.6**. That put it below Level 190 (66.5) and Level 192 (65.5), with 183 (63.3) close behind. It had only 17 decision points, against 21 in Levels 194 and 197.
+
+**The redesign:** `generate_era2.gd --repair --maximize` started from the old board and **climbed on structural difficulty**, not block count. The Master profile rules still apply:
+- 22-27 blocks on 7×7
+- every mechanic must matter
+- fair mystery
+- armor safety
+
+Four seeds ran for 25 minutes each; the deepest result was kept.
+
+| | Old Level 200 | **New Level 200** | Hardest other level |
+|---|---|---|---|
+| Blocks | 24 | **24** (same) | 20-25 |
+| Difficulty | 79.2 | **108.1** | 77.4 (L192) |
+| Structural (reasoning) difficulty | 63.6 | **91.7** | 66.5 (L190) |
+| Decision points | 17 | **24** | 21 |
+| Trap moves along the solution | 17 | **54** | 22 |
+| Switch decisions | 17 | **22** | 21 (L190) |
+| Dependency depth | 23 | **21** | 21 |
+| Opening moves / opening traps | 2 / 1 | 2 / 1 | 2 / 1 |
+
+**What is on the board:**
+- 7 spinners using all four rules (3 clockwise, 2 counter-clockwise, 1 alternating, 1 pattern)
+- 2 locks (blue and green keys)
+- 2 hidden arrows
+- 2 switches (A and B), each reversing two arrows, one of which is Silver
+- 1 Chain Gate with 2 links, one of which is Gold
+- 2 armored blocks
+- 1 Silver and 2 Gold blocks, none of them armored
+
+**How much each mechanic matters:**
+- switches and spinners are **essential**: the level can't be solved without them
+- mystery impact 81.4 (and fair)
+- armor impact 11.9
+- lock impact 9.4
+- gate impact 5.4
+
+**Fairness:**
+- The level is deterministic and fully visible, apart from the two hidden arrows, which are provably fair.
+- The armor audit walks all 1,154 reachable states: no tap order can strand a shell.
+- Traps (wrong moves) are the challenge, and Undo, hints and Restart work as on every level.
+
+**New verifier rule:** each Master Level must be the hardest of its era **by structural difficulty too**. Level 100 passes it (54.5 vs 52.0 for Level 99); Level 200 passes with 91.7 vs 66.5. Chapter 20's average rises from 69.8 to 72.7.
 
 ### 2. Silver / Gold look nothing like Armor
 
@@ -319,16 +361,12 @@ The new tracks add about 1.9 MB. The audio path is unchanged (Stream playback, p
 
 ### Level 200: the Grand Master
 
-A 7×7 board with 24 blocks that combines every family of both eras:
-- 6 spinners using all 4 rules (3 clockwise, 1 counter-clockwise, 1 alternating, 1 pattern)
+*Redesigned in v0.6.2 (see above).* A 7×7 board with 24 blocks that combines every family of both eras:
+- 7 spinners using all 4 rules
 - 2 locks and 2 hidden arrows
 - 2 switches, 1 Chain Gate and 2 armored blocks
 
-It is required to be the **hardest level of the Second Era** by measurement, and it is:
-- difficulty **79.2** (the next hardest, Level 192, is 76.8)
-- dependency depth 23 and 17 decision points
-- the switches are essential: it can't be solved without them
-- armor impact 9.0 and gate impact 1.1
+It must be the **hardest level of the Second Era** by difficulty (108.1; next: L192 at 77.4) **and** by structural difficulty (91.7; next: L190 at 66.5). The switches and spinners are essential.
 
 Presentation:
 - its own theme (black and gold, golden rays)
@@ -1456,6 +1494,8 @@ Optional level keys:
 - **Short UI tweens still redraw** (hearts, stars, the coin counter) for a fraction of a second per event. That growth is tiny and bounded per level, unlike the per-frame animations that were fixed.
 - **Web saves** live in the browser's IndexedDB plus a localStorage mirror. Clearing site data or private browsing loses progress, and **Safari clears storage inside itch.io's embed when it closes** (the game gates play there and sends players to its own tab). Settings → BACKUP CODE / RESTORE carries progress anywhere. There are no accounts or cloud sync (not in scope).
 - **Economy values are first guesses** (`data/economy.json`), not tuned with players.
+- **Level 200's difficulty is measured, not yet human-tested.** Its 24 decision points and 54 trap moves are solver metrics, and the difficulty jump from Level 199 is large (structural difficulty 91.7 vs about 60-66). If it feels too punishing on a phone, the same tool can aim lower (`--repair --target=`).
+- **The first-time lessons guide every move up to the key action** (6 moves at 101, 11 at 121, 7 at 161), so the player can't fall into a trap before seeing the mechanic. After that the level is played freely.
 - **Levels 101-200 were generated and curated by metrics**, with every rule re-verified by the solver and the verifier, but not by human playtests. The difficulty numbers are a model, and real players may find some boards harder or easier than their number says.
 - **Chain Gate impact is modest by design.** A gate only ever holds a lane closed, so removing it makes a level easier but rarely changes the solution much (median impact: gate 1.7, armor 6.7, switch 39.5).
 - **Second Era mechanics were tested in Chromium and headless Godot.** Please check readability on a real phone: the switch chip, the ⇅ flip badge, the chain badge letters and the armor frame.
