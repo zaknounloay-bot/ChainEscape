@@ -1,4 +1,4 @@
-# Chain Escape — v0.6.2
+# Chain Escape — v0.6.3
 
 A one-handed portrait puzzle game built with **Godot 4.3 (GDScript)** for iOS, Android and mobile Web.
 
@@ -55,6 +55,86 @@ Not included, on purpose: leaderboards, country ranking, accounts/login, backend
 | **Difficulty** | Levels 61–95 were tuned harder, so every Chapter's average difficulty now rises: 42.1 → 46.1 → 49.9 → 53.3 → 58.8 for Chapters 6–10. Before, Chapter 7 dipped to 37.5. The verifier enforces the rise. |
 | **Save v3** | Adds completed Chapters, collected reward blocks, coins per Chapter and tips seen. v0.4 saves migrate without losing or double-paying anything. |
 | **101+ architecture** | Chapters 11+ come from the data (`overflow.cycle`). The generator gets `chapter_plan(c)` (profile, difficulty band, reward frequency) and `classify(level)`. |
+
+---
+
+## v0.6.3 — final UX polish (second real-iPhone QA)
+
+No new gameplay, no new levels, no tutorial change, and no change to the Safari save / Stream audio architecture.
+
+### 1. Silver / Gold are coins
+
+**The problem:** on a real iPhone, a square block with a metal finish still read as "another special block", next to Armor.
+
+**The fix:** an uncollected reward block is now a **round, milled metal coin** in its cell (`BlockView._draw_coin`).
+- **The silhouette carries the meaning.** Every other block is a rounded square, so a round coin reads as "reward" at a glance, before colour or detail. The cell, arrow direction, hit area and gameplay are unchanged.
+- **The body itself is the metal:**
+  - a 3D coin edge in dark metal
+  - a milled rim of 40 ridges
+  - a domed, polished face with an up-left highlight
+  - a bright glint band that pulses (alpha only)
+  - static sparkles, the twinkling star badge, and a metal-coloured halo (wider and warmer on Gold)
+- **Colours (`Palette.REWARD_BODY`):**
+  - Silver: #FBFDFF → #D2DAE4 → #97A3B4
+  - Gold: #FFF6C2 → #F7C838 → #CC8A00
+- **The arrow is deep navy #12204A:** 11.2:1 on silver and 10.0:1 on gold (WCAG AAA is 7:1).
+- **A coloured inlay ring** shows the block's own colour, because locks count reward blocks by colour.
+- **A lock on a coin** is drawn as a round veil with the padlock.
+- **After collection** (replaying a level), the block is a normal square with a faint metal frame, as before.
+
+### 2. Armor is a shell with a "hit this" badge
+
+**The problem:** the dark frame said "special", but not "protected, hit it first".
+
+**The fix:** `BlockView._draw_armor` now draws a sealed **steel shell**:
+- **Plating over the whole face** (60% gunmetal, brushed lines), so the arrow shows only dimly and comes back bright when the shell cracks.
+- **A riveted frame** with hex bolts.
+- **Two stress cracks** that say it can break.
+- **An orange impact burst on a dark disc** on the top edge, meaning "hit this" (`Palette.ARMOR_IMPACT`). A bomb icon was considered and rejected: it suggests the block explodes, when the player is meant to launch another block into it.
+
+It is square, dark and matte, so it can't be confused with the round, bright coins. The tap reminder and the crack animation are unchanged.
+
+### 3. Level Select scrolling on iPhone
+
+**Root cause:**
+- Only the containers in the list let touches pass through. Every **level tile and chest button** (Buttons) and every **Chapter header** (PanelContainer) had `mouse_filter = STOP`.
+- A swipe that started on one of those was consumed by it and never reached the ScrollContainer. Only swipes that started in the small gaps scrolled.
+- On a phone, where most of the screen is tiles and headers, scrolling worked "sometimes" and otherwise felt stuck.
+
+**The fix** (`LevelSelect._input`): every touch that starts inside the list is handled once, before any control sees it.
+- **A drag:** after 12 px of movement, the list follows the finger from that point, with no jump.
+- **Momentum:** on release it keeps gliding, slowing down like an iOS list (a flick's speed is measured over its last few moves). A finger that stops before lifting doesn't glide.
+- **A tap:** less than 12 px of movement is a tap, which opens the tile (or claims the chest) under the finger. Locked tiles do nothing, as before.
+- **No double handling:** everything inside the list ignores the mouse, so no control can swallow a gesture. The emulated mouse copy of each touch is consumed.
+- **Desktop:** mouse-wheel scrolling still works.
+
+The layout is unchanged.
+
+**Test** (`tools/web_level_select_test.mjs`): the Web build in real Chromium at iPhone size (390×844), with **real touch events** (touch start, moves, touch end):
+- **Before the fix:** 10 of 23 checks failed. Every swipe starting on a tile or header did nothing.
+- **After:** 24/24 pass:
+  - fast flicks and slow drags, up and down, starting on a tile, a Chapter header or empty space
+  - swipes never open a level; a tap still does
+  - Level 1 → 200 in 16 flicks, and back to the top in 17
+
+### 4. Music regression audit
+
+**The audit** (`tools/music_audit.gd`, `MusicAudit.tscn`) drives the real game through 11 transition scenarios plus a relaunch. It samples both music players every frame for silence, abrupt stops of an audible track, restarts, the player count, and the settled theme, volume and duck state.
+
+**Two real bugs found and fixed** (they explain "occasionally slightly off"):
+1. **A cut on quick Chapter changes.** A second theme change during the first 0.55 s of a fade (quick NEXT taps, or Level Select into another Chapter) stopped the still-fading old track dead. Now the audible track always fades out.
+2. **A restart when focus returns mid-fade.** Safari focus / resume events call `start_music()`. During a fade, that started the incoming theme early at full volume, and the fade then restarted it from the beginning. Now `start_music()` leaves a running fade alone.
+
+A side case found while fixing #2: switching music off during a fade and on again had nothing restart. Switching music off now cancels the fade.
+
+Everything else was already correct:
+- Chapter, era, milestone (125) and Master (200) transitions
+- restart and replay (the theme keeps playing, one player)
+- the level-complete duck always recovers
+- Level Select
+- relaunch
+
+The two-player cross-fade, Stream playback and the page-level first-gesture unlock are unchanged.
 
 ---
 
@@ -1266,6 +1346,8 @@ godot --headless --path . res://tools/Soak.tscn -- --cycles=2        # long sess
 godot --headless --path . --export-release "Web" build/web/index.html && node tools/web_audio_test.mjs   # real browser
 node tools/web_persistence_test.mjs                                  # Web save scenarios A-G (itch-like iframe)
 godot --headless --path . --script res://tools/armor_audit.gd       # every reachable state of every armor level, solver vs game rules
+godot --headless --path . res://tools/MusicAudit.tscn                # every music transition, sampled every frame (cuts, gaps, restarts)
+node tools/web_level_select_test.mjs                                 # Level Select with real touch events at iPhone size
 godot --headless --path . --script res://tools/generate_era2.gd -- --from=150 --to=150 --target=60   # re-curate a Second Era slot (dry run; add --write)
 xvfb-run godot --path . res://tools/Capture.tscn -- --gallery=5,15,25,36,45,56,64,78,86,96,100 --out=/tmp/shots   # screenshots
 ```
@@ -1417,7 +1499,7 @@ scripts/
   audio/ audio_manager.gd (Chapter themes, sequential fades, web unlock), haptics.gd
 tools/ run_tests.gd, verify_levels.gd, Playtest.tscn, Soak.tscn, Capture.tscn, generate_levels.gd,
        strengthen_levels.gd, place_reward_blocks.gd, generate_era2.gd (levels 101-200, --repair),
-       armor_audit.gd,
+       armor_audit.gd, music_audit.gd + MusicAudit.tscn, web_level_select_test.mjs,
        generate_music.py, web_audio_test.mjs,
        web_persistence_test.mjs, sync_web_head.py
 web/   audio_unlock.js (page-level Web Audio unlock, save mirror, page-event forensics, WebGL
