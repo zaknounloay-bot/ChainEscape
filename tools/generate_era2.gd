@@ -13,6 +13,11 @@ extends SceneTree
 ## introduction levels, and its Silver / Gold blocks from the Chapter plan.
 ## Without --write nothing is saved (dry run). tools/verify_levels.gd then
 ## re-checks the whole campaign.
+##
+## --repair (v0.6.1) keeps the existing level instead of starting over: it
+## mutates it (the generator's own mutations) until every rule passes,
+## including armor safety, staying as close as it can to --target (default:
+## the level's current difficulty). Name, lesson text and Silver / Gold stay.
 
 const NAMES := {
 	11: ["First Switch", "Mirror Turn", "Flip Side", "Reverse Gear", "Two Ways", "Neon Hinge", "Glass Relay", "Backlight", "Switchback", "Prism Row"],
@@ -56,8 +61,13 @@ func _initialize() -> void:
 	var from := int(args["from"])
 	var to := int(args["to"])
 	var failed := []
+	var repair := "--repair" in OS.get_cmdline_user_args()
 	for n in range(from, to + 1):
-		var level := _build_slot(n, int(args["seed"]), int(args["rounds"]), int(args["attempts"]), int(args["budget"]))
+		var level: LevelData
+		if repair:
+			level = _repair_slot(n, int(args["seed"]), int(args["budget"]))
+		else:
+			level = _build_slot(n, int(args["seed"]), int(args["rounds"]), int(args["attempts"]), int(args["budget"]))
 		if level == null:
 			failed.append(n)
 			print("L%d: NO CANDIDATE" % n)
@@ -152,3 +162,67 @@ func _build_slot(n: int, seed: int, rounds: int, attempts: int, budget_s: int = 
 		best_m["switches"], best_m["gates"], best_m["armored"], best_m["start_moves"], best_m["decision_points"], best_m["depth"],
 		best_m["difficulty"], band.x, minf(band.y, 999), "" if in_band else " OUT-OF-BAND", sv, gd, (Time.get_ticks_msec() - t0) / 1000])
 	return best
+
+
+## Hill-climbs from the existing level: first toward no stranded shell,
+## then toward passing every rule, then toward the target difficulty.
+func _repair_slot(n: int, seed: int, budget_s: int) -> LevelData:
+	var gen := LevelGenerator.new(seed * 1000 + n)
+	var k := 1
+	while FileAccess.file_exists(LevelManager.LEVEL_PATH % k):
+		if k != n:
+			gen.known_boards.append(LevelManager.parse_level(JSON.parse_string(FileAccess.get_file_as_string(LevelManager.LEVEL_PATH % k)), k))
+		k += 1
+	var original := LevelManager.parse_level(JSON.parse_string(FileAccess.get_file_as_string(LevelManager.LEVEL_PATH % n)), n)
+	var p := LevelGenerator.profile_for_level(n)
+	var t0 := Time.get_ticks_msec()
+	var deadline := t0 + budget_s * 1000
+	var om := gen.evaluate(original)
+	var target := _target if _target > 0.0 else float(om["difficulty"])
+	var current := original
+	var cur_score := _repair_score(gen, original, om, p, target)
+	var best: LevelData = null
+	var best_m := {}
+	var best_err := INF
+	var tries := 0
+	while Time.get_ticks_msec() < deadline:
+		tries += 1
+		var cand := gen._mutate(current, p)
+		if cand == null:
+			continue
+		var m := gen.evaluate(cand)
+		if not m["solvable"] or m["aborted"]:
+			continue
+		var sc := _repair_score(gen, cand, m, p, target)
+		if sc <= cur_score:
+			current = cand
+			cur_score = sc
+		if sc < 1000.0 and absf(m["difficulty"] - target) < best_err:
+			best = cand
+			best_m = m
+			best_err = absf(m["difficulty"] - target)
+			if best_err <= 1.0:
+				break
+	if best == null:
+		print("L%d repair: no valid candidate in %d tries (best score %.1f)" % [n, tries, cur_score])
+		return null
+	best.number = n
+	best.name = original.name
+	best.hint = original.hint
+	best.hint_finger = original.hint_finger
+	best.mystery = best_m.get("hidden", 0) > 0
+	_last_difficulty = best_m["difficulty"]
+	print("L%d repair: %.1f -> %.1f (target %.1f), armor dead ends %d -> 0, blk=%d spn=%d arm=%d dec=%d dep=%d, %d tries %ds" % [
+		n, om["difficulty"], best_m["difficulty"], target, om["armor_dead_ends"], best_m["blocks"], best_m["spinners"],
+		best_m["armored"], best_m["decision_points"], best_m["depth"], tries, (Time.get_ticks_msec() - t0) / 1000])
+	return best
+
+
+## Lower is better. >= 1000 means a rule still fails.
+func _repair_score(gen: LevelGenerator, level: LevelData, m: Dictionary, p: Dictionary, target: float) -> float:
+	var err := absf(float(m["difficulty"]) - target)
+	if m["armor_dead_ends"] > 0:
+		return 100000.0 + 1000.0 * m["armor_dead_ends"] + err
+	if gen.rejection_reason(m, p, level) != "":
+		return 1000.0 + err
+	return err

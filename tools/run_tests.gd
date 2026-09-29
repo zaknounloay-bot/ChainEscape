@@ -48,6 +48,7 @@ func _initialize() -> void:
 	test_switch_block()
 	test_chain_gate()
 	test_armored_block()
+	test_armor_safety()
 	test_second_era_tokens()
 	test_save_migration_v4_to_v6()
 	print("%d checks, %d failures" % [_checks, _fails])
@@ -1118,6 +1119,49 @@ func test_armored_block() -> void:
 	check(a["armored"] == 1 and a["rams"] == 1, "armor metrics (armored %d, rams %d)" % [a["armored"], a["rams"]])
 	# Unreachable armor = unsolvable (nothing can be aimed at it).
 	check(not Solver.from_model(model_of(level_from_map(["R^ B^="]))).is_solvable(), "armor with no rammer is unsolvable")
+
+
+## v0.6.1 (QA: Levels 161/162): no order of taps may strand a shell.
+## armor_audit walks every reachable state and finds dead ends that still
+## hold an intact shell - the case that needed the Hammer.
+func test_armor_safety() -> void:
+	# The spinner B is the only possible rammer. Tapping it first (it points
+	# up, lane clear) lets it escape; then G leaves and Y is stranded.
+	var unsafe := level_from_map(["Y<= B^@-", ". Gv"])
+	var um := model_of(unsafe)
+	check(Solver.from_model(um).is_solvable(), "the unsafe board is still solvable (G, ram, Y, B)")
+	var r := Solver.from_model(um).armor_audit()
+	check(r["complete"] and r["armor_dead_ends"] == 1, "audit finds the stranded shell (%s)" % str(r))
+	var ex: Array = r["example"]
+	for mv in ex:
+		if mv & Solver.RAM:
+			um.ram(mv & Solver.ID_MASK)
+		else:
+			um.remove(mv)
+	check(um.block_count() == 1 and um.blocks.values()[0].armored and um.playable_ids().is_empty(),
+		"replayed in the game model, the example leaves only the shell (%s)" % str(ex))
+	# A rammer aimed at the shell can't leave before cracking it: safe.
+	var safe := Solver.from_model(model_of(level_from_map(["Y<= B<", ". Gv"]))).armor_audit()
+	check(safe["complete"] and safe["armor_dead_ends"] == 0, "pinned rammer: no stranded shell (%s)" % str(safe))
+	# The generator scores and rejects stranding boards.
+	var gen := LevelGenerator.new(1)
+	var m := gen.evaluate(unsafe)
+	check(m["armor_dead_ends"] == 1, "generator sees the stranded shell")
+	check(gen.rejection_reason(m, LevelGenerator.profile_for_level(161), unsafe) == "armor_uncrackable", "generator rejects it")
+	# Every campaign level with armor is safe, and the search finishes.
+	var n := 1
+	var checked := 0
+	while FileAccess.file_exists(LevelManager.LEVEL_PATH % n):
+		var level := LevelManager.parse_level(JSON.parse_string(FileAccess.get_file_as_string(LevelManager.LEVEL_PATH % n)), n)
+		var has_armor := false
+		for b in level.blocks:
+			has_armor = has_armor or b.armored
+		if has_armor:
+			var a := Solver.from_model(model_of(level)).armor_audit()
+			check(a["complete"] and a["armor_dead_ends"] == 0, "L%d: no order of taps strands a shell (%d dead ends with a shell)" % [n, a["armor_dead_ends"]])
+			checked += 1
+		n += 1
+	check(checked >= 30, "armor levels audited (%d)" % checked)
 
 
 ## Tokens round-trip through the level serializer; invalid combinations are

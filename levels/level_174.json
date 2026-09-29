@@ -1,12 +1,12 @@
 {
 	"name": "Cold Star",
 	"map": [
-		"P>@-      P<        .         Y<$S      .         G<",
-		"Bv        .         Y<@       G<@       Y<        Bv@~#R+C",
-		".         .         B^        .         P^        .",
-		"Bv%A      .         .         .         B>        XC",
-		".         .         .         .         Y>=       Rv",
-		".         .         .         .         Rv@*      Pv=",
-		".         R>#P      B>        .         P^&A      ."
+		"G>#R    .       .       .       Bv      .       .",
+		"Y^      R>      G>      P>      .       .       Pv@*",
+		".       .       .       .       Yv&A    Y<      .",
+		".       Y^@     B<$S%A  .       Rv      G>@     Rv",
+		".       B<      P^@     .       XC      .       .",
+		".       .       G^      .       .       .       Gv=",
+		"P^      R^+C    .       .       .       G<@~#B  ."
 	]
 }

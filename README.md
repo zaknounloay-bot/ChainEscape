@@ -58,6 +58,41 @@ Not included, on purpose: leaderboards, country ranking, accounts/login, backend
 
 ---
 
+## v0.6.1 — Armor safety fix (QA: Levels 161-162)
+
+Real-iPhone QA found that the Armor levels could reach a state the player can't get out of:
+- **Level 161:** the green armored block was left as the last block on the board.
+- **Level 162:** the yellow block was still armored, and every block that could have hit it was gone.
+
+Both needed the Hammer.
+
+**Diagnosis.** It was a **level-design problem**, not an Armor logic or solver bug:
+- The Armor rules work as designed. A shelled block can't leave, even with a clear lane, until another block is launched into it.
+- The solver agrees with the game: it found a solution for both levels without the Hammer.
+- The missing check: a level was verified as *solvable*, but nothing checked that **no order of taps** strands a shell.
+  - In 161, the only possible rammer was the red spinner at row 7, column 4. It must turn to face up before it leaves. Clearing it first left the green shell alone.
+  - In 162, the only rammer was the blue spinner right above the yellow block. It must turn to face down. Some tap orders made that impossible.
+- The same failure existed in **15 of the 33** armor levels.
+
+**New rule: armor safety** (`Solver.armor_audit`).
+
+The verifier walks **every state a player can reach** without the Hammer: every escape and every ram, in every order. The armor levels have 40-1,500 reachable states, so the full search takes milliseconds.
+
+A level is rejected if any reachable dead end still holds an intact shell. This one rule covers every case:
+- a shell left as the last block
+- a shell whose every possible rammer escaped, or was turned away, first
+- a level that could only be finished with the Hammer
+
+A shell that can never be cracked always ends in such a dead end, whatever the player does next.
+
+The search must finish; hitting the state cap is itself a failure. `tools/armor_audit.gd` repeats the same walk with the game's own rules (`BoardModel`, the code the tap handler runs) and checks that both find exactly the same dead-end boards. This guards against the solver trusting a level that a player could actually get stuck in.
+
+The generator uses the same rule: stranding boards are scored down during refinement and rejected.
+
+Dead ends that don't involve armor (a spinner turned the wrong way) are still part of the puzzle design, as in levels 1-160, and the game still points at Undo when one happens.
+
+---
+
 ## v0.6 — the Second Era (levels 101-200)
 
 Chain Escape doubles to **200 levels**. Levels 101-200 are a **Second Era**: the same game, the same square blocks and arrows, but three new mechanics, new Chapter worlds, new music and a second Master Level. Everything stable from v0.5.2 is unchanged:
