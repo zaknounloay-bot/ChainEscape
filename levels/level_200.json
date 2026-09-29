@@ -4,12 +4,12 @@
 	"hint": "The Grand Master. Every rule of both eras.",
 	"hint_finger": false,
 	"map": [
-		".         .         G^#B$G&B  .         P>@*      .         P<$G&A",
-		"B<+C      .         Y<        Gv$S      .         G^%A      .",
-		".         P>@       .         R>@~      P^?       .         .",
-		".         G^#B      Y^&B      Pv&A      R<        .         .",
-		".         .         .         Gv@-      Gv?       Yv        .",
-		".         .         Y>        G<@       .         .         P>=",
-		"P^%B      .         P<@       B<+C      Y>=       XC        ."
+		".        .        R^@#B$G  .        P<@*     .        P<$G+C",
+		"P^%B     .        Yv       Rv$S&B   .        G>%A     .",
+		".        .        .        P>@~#G   R>?      .        .",
+		"G^@      G>@      .        Pv&A     .        .        .",
+		".        .        P>       Rv@-     Pv?      Pv&A     .",
+		".        .        Y>       Y<@-     .        G^&B     R>=",
+		"R^       .        B<+C     B<       Rv=      XC       ."
 	]
 }

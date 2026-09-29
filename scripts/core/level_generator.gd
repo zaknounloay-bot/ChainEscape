@@ -393,23 +393,25 @@ func assign_reward_blocks(level: LevelData, silver: int, gold: int) -> void:
 
 
 ## v0.6 Second Era placement: more strategic, not more frequent.
-## Gold goes on a block cleared late that is tied to a mechanic (armored,
-## gate-linked or flipped by a switch): earning it means mastering that
+## Gold goes on a block cleared late that is tied to a mechanic
+## (gate-linked or flipped by a switch): earning it means mastering that
 ## dependency. Silver prefers a SWITCH or a spinner neighbour - a block
 ## whose timing is a real decision. Never hidden, never the last block,
-## never a gate. Rewards never change the rules (solvability unchanged).
+## never a gate, never armored. Rewards never change the rules (solvability unchanged).
 func _assign_strategic(level: LevelData, order: Array, by_id: Dictionary, silver: int, gold: int) -> void:
 	var last_pos := {}
 	for i in order.size():
 		last_pos[order[i]] = i
 	var final_id: int = order[-1]
-	var ids := last_pos.keys().filter(func(id): return id != final_id and not by_id[id].hidden and not by_id[id].is_gate())
+	# v0.6.2: never on an armored block (a reward must never be confused
+	# with a shell).
+	var ids := last_pos.keys().filter(func(id): return id != final_id and not by_id[id].hidden and not by_id[id].is_gate() and not by_id[id].armored)
 	ids.sort_custom(func(x, y): return last_pos[x] < last_pos[y])
 	var model := BoardModel.new()
 	model.setup(level.rows, level.columns, level.blocks)
 	var late := ids.slice(ids.size() / 2)
 	for g in gold:
-		var role := late.filter(func(id): return by_id[id].armored or by_id[id].gate_link != "" or by_id[id].flip_link != "")
+		var role := late.filter(func(id): return by_id[id].gate_link != "" or by_id[id].flip_link != "")
 		var pool := role if not role.is_empty() else late
 		if pool.is_empty():
 			break

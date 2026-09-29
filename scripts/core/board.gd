@@ -454,6 +454,12 @@ func clear_hint() -> void:
 	set_hint(-1)
 
 
+## v0.6.2 first-time lessons: static brackets on the blocks that matter.
+func set_marks(ids: Array) -> void:
+	for vid in _views:
+		_views[vid].marked = ids.has(vid)
+
+
 ## Screen position of a block's center (for tutorial fingers etc.).
 func block_screen_position(id: int) -> Vector2:
 	var view: BlockView = _views.get(id)

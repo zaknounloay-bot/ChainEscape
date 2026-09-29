@@ -44,6 +44,13 @@ var hinted: bool = false:
 		if _ring:
 			_ring.visible = v
 		set_process(_needs_process())
+## v0.6.2 first-time lesson: "this block matters" (static brackets, drawn
+## once; no per-frame work).
+var marked: bool = false:
+	set(v):
+		marked = v
+		if _mark:
+			_mark.visible = v
 var _hint_time: float = 0.0
 var _spin_time: float = 0.0
 var _turn_tween: Tween
@@ -87,6 +94,7 @@ var _badge: Part  # spinner ring (wobbles)
 var _over: Part  # static overlay: "?", lock veil + padlock, reward frame, rule strip
 var _twinkle: Part  # gem highlight (pulses)
 var _ring: Part  # hint ring (pulses)
+var _mark: Part  # v0.6.2 lesson marker: static corner brackets
 var _flash: Part  # tap flash (fades)
 
 
@@ -98,6 +106,8 @@ func setup(p_data: BlockData, p_cell_size: float) -> void:
 	_over = _part(_draw_overlay)
 	_twinkle = _part(_draw_twinkle)
 	_ring = _part(_draw_hint_ring)
+	_mark = _part(_draw_lesson_mark)
+	_mark.visible = false
 	_flash = _part(_draw_flash)
 	_ring.visible = false
 	_flash.visible = false
@@ -152,8 +162,11 @@ func set_cell_size(value: float) -> void:
 	_side_style.shadow_color = Palette.SHADOW.lerp(Color(Palette.styled_face(data.color), 0.45), glow)
 	_side_style.shadow_size = int(cell_size * (0.08 + 0.07 * glow))
 	_side_style.shadow_offset = Vector2(0, cell_size * 0.04 * (1.0 - glow))
-	if data.is_reward() and not reward_spent:
-		# Uncollected Silver/Gold: a halo in the metal's color (Gold wider).
+	if _metal_body():
+		# v0.6.2: uncollected Silver/Gold is metal all over, with a halo in
+		# the metal's color (Gold wider).
+		_face_style.bg_color = Palette.REWARD_BODY[data.rarity][1]
+		_side_style.bg_color = Palette.REWARD_BODY[data.rarity][3]
 		var gold := data.rarity >= BlockData.Rarity.GOLD
 		_side_style.shadow_color = Color(Palette.METALS[data.rarity][0], 0.75 if gold else 0.6)
 		_side_style.shadow_size = int(cell_size * (0.2 if gold else 0.15))
@@ -169,7 +182,7 @@ func refresh_style() -> void:
 ## Redraws every part once (a state change: reveal, lock, turn, reward...).
 func refresh() -> void:
 	var center := _face_rect().get_center()
-	for p in [_arrow, _badge, _ring]:
+	for p in [_arrow, _badge, _ring, _mark]:
 		p.position = center
 	_twinkle.position = _gem_center()
 	var reward := data.is_reward() and not reward_spent
@@ -203,7 +216,55 @@ func _draw() -> void:
 	var side_rect := Rect2(face_rect.position + Vector2(0, cell_size * DEPTH_RATIO), face_rect.size)
 	_side_style.draw(get_canvas_item(), side_rect)
 	_face_style.draw(get_canvas_item(), face_rect)
-	_draw_material(face_rect, size)
+	if _metal_body():
+		_draw_metal_body(face_rect, size)
+	else:
+		_draw_material(face_rect, size)
+
+
+## v0.6.2: uncollected Silver/Gold (draw-once like every other part).
+func _metal_body() -> bool:
+	return data != null and data.is_reward() and not reward_spent
+
+
+## Arrow, spinner ring, rule strip and "?" color: deep navy on a metal body
+## (readable on silver and gold alike), else the block color's own arrow.
+func _arrow_color() -> Color:
+	return Palette.REWARD_ARROW if _metal_body() else Palette.arrow(data.color)
+
+
+## Polished metal: light top, shaded bottom, a mirror streak. Drawn under
+## the arrow, once per state change.
+func _draw_metal_body(f: Rect2, size: float) -> void:
+	var body: Array = Palette.REWARD_BODY[data.rarity]
+	var ci := get_canvas_item()
+	var radius := int(round(size * CORNER_RATIO))
+	var top := StyleBoxFlat.new()
+	top.anti_aliasing = true
+	top.bg_color = body[0]
+	top.corner_radius_top_left = radius
+	top.corner_radius_top_right = radius
+	top.draw(ci, Rect2(f.position, Vector2(size, size * 0.34)))
+	# Soft step between the light top and the body color.
+	draw_rect(Rect2(f.position + Vector2(0, size * 0.3), Vector2(size, size * 0.08)), body[0].lerp(body[1], 0.5))
+	var bottom := StyleBoxFlat.new()
+	bottom.anti_aliasing = true
+	bottom.bg_color = body[2]
+	bottom.corner_radius_bottom_left = radius
+	bottom.corner_radius_bottom_right = radius
+	bottom.draw(ci, Rect2(f.position + Vector2(0, size * 0.74), Vector2(size, size * 0.26)))
+	draw_rect(Rect2(f.position + Vector2(0, size * 0.68), Vector2(size, size * 0.07)), body[1].lerp(body[2], 0.5))
+	# Mirror streak across the upper-right.
+	var a := f.position + Vector2(size * 0.56, size * 0.06)
+	draw_colored_polygon(PackedVector2Array([a, a + Vector2(size * 0.16, 0), a + Vector2(-size * 0.3, size * 0.52), a + Vector2(-size * 0.42, size * 0.52)]), Color(1, 1, 1, 0.38))
+	# Bright polished rim.
+	var rim := StyleBoxFlat.new()
+	rim.draw_center = false
+	rim.anti_aliasing = true
+	rim.set_corner_radius_all(radius)
+	rim.set_border_width_all(maxi(2, int(size * 0.035)))
+	rim.border_color = Color(body[0], 0.95)
+	rim.draw(ci, f)
 
 
 ## Chapter finish: a gloss band on the upper face and a thin light rim.
@@ -332,7 +393,7 @@ func _draw_arrow_part(c: CanvasItem) -> void:
 	var neck := tip - Vector2(head_len, 0)
 	var shaft := PackedVector2Array([base + Vector2(0, shaft_w), neck + Vector2(0, shaft_w), neck - Vector2(0, shaft_w), base - Vector2(0, shaft_w)])
 	var head := PackedVector2Array([tip, neck + Vector2(0, head_w), neck - Vector2(0, head_w)])
-	var col := Palette.arrow(data.color)
+	var col := _arrow_color()
 	c.draw_colored_polygon(shaft, col)
 	c.draw_colored_polygon(head, col)
 	# Anti-aliased outlines smooth the polygon edges.
@@ -349,7 +410,7 @@ func _draw_badge(c: CanvasItem) -> void:
 	if not data.is_spinner() or data.hidden:
 		return
 	var size := cell_size * FACE_RATIO
-	var col := Color(Palette.arrow(data.color), 0.85)
+	var col := Color(_arrow_color(), 0.85)
 	var r := size * 0.39
 	var w := maxf(2.0, size * 0.045)
 	var cw := data.next_turn_cw()
@@ -396,7 +457,7 @@ func _draw_overlay(c: CanvasItem) -> void:
 ## Hidden arrow: a "?" and a dashed inner border. Color stays visible
 ## (locks may depend on it); only the direction is unknown.
 func _draw_mystery(c: CanvasItem, face_rect: Rect2, size: float) -> void:
-	var col := Palette.arrow(data.color)
+	var col := _arrow_color()
 	var inner := face_rect.grow(-size * 0.12)
 	var dash := size * 0.08
 	var pts := [inner.position, Vector2(inner.end.x, inner.position.y), inner.end, Vector2(inner.position.x, inner.end.y), inner.position]
@@ -415,7 +476,7 @@ func _draw_rule_strip(c: CanvasItem, center: Vector2, size: float) -> void:
 	var period := BlockData.rule_period(data.spin_rule)
 	if period <= 1:
 		return
-	var col := Color(Palette.arrow(data.color), 0.85)
+	var col := Color(_arrow_color(), 0.85)
 	var dot := size * 0.05
 	var y := center.y + size * 0.40
 	var x0 := center.x - (period - 1) * dot * 1.6
@@ -562,67 +623,98 @@ func _draw_link_badge(c: CanvasItem, f: Rect2, size: float) -> void:
 	c.draw_string(font, at + Vector2(-w * 0.5, size * 0.13), data.gate_link, HORIZONTAL_ALIGNMENT_LEFT, -1, fs, col)
 
 
-## ARMORED: a thick riveted steel frame around the face. The arrow stays
+## ARMORED (v0.6.2 look): dark, matte gunmetal plating - a thick frame of
+## plates with seams and hex bolts, and a faint dark veil on the face. It
+## reads "protected / must be broken", never "reward". The arrow stays
 ## fully visible in the middle.
 func _draw_armor(c: CanvasItem, f: Rect2, size: float) -> void:
-	var frame := StyleBoxFlat.new()
-	frame.draw_center = false
-	frame.anti_aliasing = true
-	frame.set_corner_radius_all(int(size * CORNER_RATIO))
-	var w := maxi(5, int(size * 0.12))
-	frame.set_border_width_all(w)
-	frame.border_color = Palette.ARMOR[2]
-	frame.draw(c.get_canvas_item(), f)
-	frame.set_border_width_all(maxi(3, int(w * 0.6)))
-	frame.border_color = Palette.ARMOR[0]
-	frame.draw(c.get_canvas_item(), f.grow(-w * 0.2))
-	var hl := f.position + Vector2(size * CORNER_RATIO, w * 0.35)
-	c.draw_line(hl, hl + Vector2(size * (1.0 - 2.0 * CORNER_RATIO), 0), Color(Palette.ARMOR[1], 0.8), maxf(2.0, w * 0.25), true)
-	for p in [Vector2(0.12, 0.12), Vector2(0.88, 0.12), Vector2(0.88, 0.88), Vector2(0.12, 0.88)]:
-		var at: Vector2 = f.position + p * size
-		c.draw_circle(at, size * 0.035, Palette.ARMOR[2])
-		c.draw_circle(at + Vector2(-1, -1), size * 0.022, Palette.ARMOR[1])
-
-
-## Silver / Gold reward block: a thick metallic frame and a gem in the
-## top-left corner (the padlock uses top-right). The block's own color
-## stays fully visible (locks depend on it).
-func _draw_reward(c: CanvasItem, face_rect: Rect2, size: float) -> void:
-	var metal: Array = Palette.METALS[data.rarity]
-	var radius := int(round(size * CORNER_RATIO))
+	var ci := c.get_canvas_item()
+	var radius := int(size * CORNER_RATIO)
+	var veil := StyleBoxFlat.new()
+	veil.anti_aliasing = true
+	veil.set_corner_radius_all(radius)
+	veil.bg_color = Color(Palette.ARMOR[2], 0.22)
+	veil.draw(ci, f)
 	var frame := StyleBoxFlat.new()
 	frame.draw_center = false
 	frame.anti_aliasing = true
 	frame.set_corner_radius_all(radius)
+	var w := maxi(6, int(size * 0.15))
+	frame.set_border_width_all(w)
+	frame.border_color = Palette.ARMOR[2]
+	frame.draw(ci, f)
+	frame.set_border_width_all(maxi(4, int(w * 0.72)))
+	frame.border_color = Palette.ARMOR[0]
+	frame.draw(ci, f.grow(-w * 0.14))
+	# Plate seams: short dark cuts across the frame, two per side.
+	var seam := Color(Palette.ARMOR[2], 0.95)
+	var sw := maxf(2.0, size * 0.025)
+	for t in [0.36, 0.64]:
+		var x: float = f.position.x + size * t
+		var y: float = f.position.y + size * t
+		c.draw_line(Vector2(x, f.position.y), Vector2(x, f.position.y + w), seam, sw, true)
+		c.draw_line(Vector2(x, f.end.y - w), Vector2(x, f.end.y), seam, sw, true)
+		c.draw_line(Vector2(f.position.x, y), Vector2(f.position.x + w, y), seam, sw, true)
+		c.draw_line(Vector2(f.end.x - w, y), Vector2(f.end.x, y), seam, sw, true)
+	# Hex bolts in the corners.
+	for p in [Vector2(0.11, 0.11), Vector2(0.89, 0.11), Vector2(0.89, 0.89), Vector2(0.11, 0.89)]:
+		var at: Vector2 = f.position + p * size
+		var hexo := PackedVector2Array()
+		var hexi := PackedVector2Array()
+		for i in 6:
+			hexo.append(at + Vector2.from_angle(i * PI / 3.0) * size * 0.05)
+			hexi.append(at + Vector2.from_angle(i * PI / 3.0) * size * 0.032)
+		c.draw_colored_polygon(hexo, Palette.ARMOR[2])
+		c.draw_colored_polygon(hexi, Palette.ARMOR[1])
+
+
+## Silver / Gold reward block (v0.6.2). The body is metal (see
+## _draw_metal_body); here: a thin inner ring in the block's OWN color
+## (locks still depend on it) and a star badge in the top-left corner (the
+## padlock uses top-right). Nothing like the dark riveted Armor frame.
+func _draw_reward(c: CanvasItem, face_rect: Rect2, size: float) -> void:
+	var radius := int(round(size * CORNER_RATIO))
+	var frame := StyleBoxFlat.new()
+	frame.draw_center = false
+	frame.anti_aliasing = true
 	if reward_spent:
+		var metal: Array = Palette.METALS[data.rarity]
+		frame.set_corner_radius_all(radius)
 		frame.set_border_width_all(maxi(2, int(size * 0.03)))
 		frame.border_color = Color(metal[0], 0.45)
 		frame.draw(c.get_canvas_item(), face_rect)
 		return
-	var w := maxi(4, int(size * 0.09))
-	frame.set_border_width_all(w)
-	frame.border_color = metal[2]
-	frame.draw(c.get_canvas_item(), face_rect)
-	frame.set_border_width_all(maxi(3, int(w * 0.62)))
-	frame.border_color = metal[0]
-	frame.draw(c.get_canvas_item(), face_rect.grow(-w * 0.18))
-	var hl := face_rect.position + Vector2(radius, w * 0.4)
-	c.draw_line(hl, hl + Vector2(size - radius * 2.0, 0), Color(metal[1], 0.9), maxf(2.0, w * 0.3), true)
-	# Gem badge with a dark outline so it reads on every block color.
+	var body: Array = Palette.REWARD_BODY[data.rarity]
+	# Color identity ring.
+	var inset := size * 0.1
+	frame.set_corner_radius_all(maxi(radius - int(inset), 3))
+	frame.set_border_width_all(maxi(3, int(size * 0.055)))
+	frame.border_color = Palette.styled_face(data.color)
+	frame.draw(c.get_canvas_item(), face_rect.grow(-inset))
+	frame.set_border_width_all(1)
+	frame.border_color = Color(body[3], 0.8)
+	frame.draw(c.get_canvas_item(), face_rect.grow(-inset - maxi(3, int(size * 0.055))))
+	# Star badge: a four-point sparkle with a dark outline.
 	var g := _gem_center()
-	var gs := size * 0.14
-	c.draw_colored_polygon(PackedVector2Array([g + Vector2(0, -gs * 1.22), g + Vector2(gs * 1.22, 0), g + Vector2(0, gs * 1.22), g + Vector2(-gs * 1.22, 0)]), Color(0.08, 0.06, 0.16, 0.55))
-	c.draw_colored_polygon(PackedVector2Array([g + Vector2(0, -gs), g + Vector2(gs, 0), g + Vector2(0, gs), g + Vector2(-gs, 0)]), metal[2])
-	c.draw_colored_polygon(PackedVector2Array([g + Vector2(0, -gs * 0.66), g + Vector2(gs * 0.66, 0), g + Vector2(0, gs * 0.66), g + Vector2(-gs * 0.66, 0)]), metal[0])
+	var gs := size * 0.15
+	c.draw_colored_polygon(_star(g, gs * 1.3, gs * 0.5), Color(body[3], 0.95))
+	c.draw_colored_polygon(_star(g, gs, gs * 0.34), Color.WHITE)
+
+
+static func _star(ctr: Vector2, r_out: float, r_in: float) -> PackedVector2Array:
+	var pts := PackedVector2Array()
+	for i in 8:
+		var r := r_out if i % 2 == 0 else r_in
+		pts.append(ctr + Vector2.from_angle(-PI * 0.5 + i * PI * 0.25) * r)
+	return pts
 
 
 ## Gem highlight dot (the part pulses in size and alpha).
 func _draw_twinkle(c: CanvasItem) -> void:
 	if not data.is_reward() or reward_spent:
 		return
-	var metal: Array = Palette.METALS[data.rarity]
-	var gs := cell_size * FACE_RATIO * 0.14
-	c.draw_circle(Vector2(-gs * 0.2, -gs * 0.22), gs * 0.21, metal[1])
+	var gs := cell_size * FACE_RATIO * 0.15
+	c.draw_circle(Vector2.ZERO, gs * 0.22, Color(1, 1, 1, 0.95))
 
 
 ## Two-tone hint ring around the face (reads on every block color).
@@ -641,6 +733,21 @@ func _draw_hint_ring(c: CanvasItem) -> void:
 	ring.set_border_width_all(width)
 	ring.border_color = Palette.HINT.lerp(Palette.WHITE, 0.2)
 	ring.draw(c.get_canvas_item(), local.grow(grow))
+
+
+## Four corner brackets just outside the face (lesson marker): white with a
+## dark outline so they read on every theme, clearly not a hint ring.
+func _draw_lesson_mark(c: CanvasItem) -> void:
+	var f := _face_rect()
+	var half := f.size.x * 0.5 + cell_size * 0.06
+	var l := f.size.x * 0.3
+	var w := maxf(3.0, cell_size * 0.05)
+	for sx in [-1.0, 1.0]:
+		for sy in [-1.0, 1.0]:
+			var corner := Vector2(sx * half, sy * half)
+			var pts := PackedVector2Array([corner + Vector2(0, -sy * l), corner, corner + Vector2(-sx * l, 0)])
+			c.draw_polyline(pts, Color(Palette.TEXT, 0.85), w + 4.0, true)
+			c.draw_polyline(pts, Color.WHITE, w, true)
 
 
 func _draw_flash(c: CanvasItem) -> void:

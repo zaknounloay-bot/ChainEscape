@@ -3,11 +3,11 @@
 	"mystery": true,
 	"map": [
 		".       .       B^%A    .       .       .       Gv@-#R",
-		".       Gv@     Pv$S    Y<      Yv?     .       Y<@",
-		".       .       .       Y^      .       P>&A    G>+C",
-		"Yv&A    .       B<+C    .       B>?     B^$G=   .",
+		".       Gv@     Pv      Y<      Yv?     .       Y<@",
+		".       .       .       Y^      .       P>&A    G>$G+C",
+		"Yv&A    .       B<+C    .       B>?     B^=     .",
 		"XC      B<@~    .       .       .       R>      R>#P",
-		".       R^@*    .       .       .       .       .",
+		".       R^@*$S  .       .       .       .       .",
 		".       .       .       .       .       B^@     R<"
 	]
 }

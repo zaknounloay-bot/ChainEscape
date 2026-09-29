@@ -62,6 +62,7 @@ func _initialize() -> void:
 	var to := int(args["to"])
 	var failed := []
 	var repair := "--repair" in OS.get_cmdline_user_args()
+	_maximize = "--maximize" in OS.get_cmdline_user_args()
 	for n in range(from, to + 1):
 		var level: LevelData
 		if repair:
@@ -206,11 +207,11 @@ func _repair_slot(n: int, seed: int, budget_s: int) -> LevelData:
 		if sc <= cur_score:
 			current = cand
 			cur_score = sc
-		if sc < 1000.0 and absf(m["difficulty"] - target) < best_err:
+		if sc < 1000.0 and sc < best_err:
 			best = cand
 			best_m = m
-			best_err = absf(m["difficulty"] - target)
-			if best_err <= 1.0:
+			best_err = sc
+			if best_err <= 1.0 and not _maximize:
 				break
 	if best == null:
 		print("L%d repair: no valid candidate in %d tries (best score %.1f) rules failing: %s" % [n, tries, cur_score, str(_repair_reasons)])
@@ -221,19 +222,23 @@ func _repair_slot(n: int, seed: int, budget_s: int) -> LevelData:
 	best.hint_finger = original.hint_finger
 	best.mystery = best_m.get("hidden", 0) > 0
 	_last_difficulty = best_m["difficulty"]
-	print("L%d repair: %.1f -> %.1f (target %.1f), armor dead ends %d -> 0, blk=%d spn=%d arm=%d dec=%d dep=%d, %d tries %ds" % [
+	print("L%d repair: %.1f -> %.1f (target %.1f), armor dead ends %d -> 0, blk=%d spn=%d arm=%d dec=%d dep=%d start=%d stt=%d struct %.1f -> %.1f, %d tries %ds" % [
 		n, om["difficulty"], best_m["difficulty"], target, om["armor_dead_ends"], best_m["blocks"], best_m["spinners"],
-		best_m["armored"], best_m["decision_points"], best_m["depth"], tries, (Time.get_ticks_msec() - t0) / 1000])
+		best_m["armored"], best_m["decision_points"], best_m["depth"], best_m["start_moves"], best_m["start_traps"],
+		LevelGenerator.structural_difficulty(om), LevelGenerator.structural_difficulty(best_m), tries, (Time.get_ticks_msec() - t0) / 1000])
 	return best
 
 
 var _repair_reasons := {}
+var _maximize := false
 
 
 ## Lower is better. >= 1000 means a rule still fails.
 func _repair_score(gen: LevelGenerator, level: LevelData, m: Dictionary, p: Dictionary, target: float) -> float:
 	var err := absf(float(m["difficulty"]) - target)
 	if m["armor_dead_ends"] > 0:
+		if _maximize:
+			return 1e9
 		return 100000.0 + 1000.0 * m["armor_dead_ends"] + err
 	var reason := gen.rejection_reason(m, p, level)
 	if reason != "":
@@ -243,4 +248,9 @@ func _repair_score(gen: LevelGenerator, level: LevelData, m: Dictionary, p: Dict
 		off += 3.0 * maxi(0, p["min_decision_points"] - m["decision_points"]) + 3.0 * maxi(0, p["min_depth"] - m["depth"])
 		off += 3.0 * maxi(0, p["min_start_traps"] - m["start_traps"]) + 40.0 * maxf(0.0, m["direction_share"] - p["max_direction_share"])
 		return 1000.0 + off + err * 0.1
+	if _maximize:
+		# --maximize: the hardest board to REASON about (structural
+		# difficulty: depth, decisions, traps, start traps, rams, switch
+		# decisions), not the most blocks. Negative = better.
+		return -LevelGenerator.structural_difficulty(m)
 	return err

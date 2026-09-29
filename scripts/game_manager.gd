@@ -77,6 +77,11 @@ static var skip_title := false
 
 var _total_blocks: int = 0
 var _blocked_hint_shown := false
+## v0.6.2 first-time guided lesson on the level that introduces a Second Era
+## mechanic ("switch" / "gate" / "armor"; "" = none). Finished once per
+## save: stored as "lesson_<kind>" in progress.tips_seen.
+const LESSONS := {101: "switch", 121: "gate", 161: "armor"}
+var _lesson := ""
 var _locked_hint_shown := false
 var _hidden_hint_shown := false
 var _session_id: int = 0  # bumps on every level start; cancels stale timers
@@ -324,9 +329,16 @@ func start_level(number: int, via: String = "load") -> void:
 	ui.set_hearts(max_hearts, hearts)
 	_refresh_buttons()
 	tutorial.hide_hint(true)
+	_lesson = ""
+	board.set_marks([])
 	_layout()
-	if level.hint != "":
+	var lesson: String = LESSONS.get(number, "")
+	if lesson != "" and not progress.tips_seen.has("lesson_" + lesson) and _lesson_blocks(lesson).size() > 0:
+		_lesson = lesson
+		_lesson_step()
+	elif level.hint != "":
 		_show_start_hint()
+	if level.hint != "":
 		# A lesson level explains its own mechanic: no extra tip later.
 		for pair in [["switch", level.blocks.any(func(x): return x.is_switch())],
 				["gate", level.blocks.any(func(x): return x.is_gate())], ["armor", level.blocks.any(func(x): return x.armored)]]:
@@ -363,7 +375,9 @@ func next_level() -> void:
 
 func _layout() -> void:
 	board.layout(ui.get_board_area())
-	if tutorial.is_showing() and level and level.hint != "" and not completed:
+	if _lesson != "" and level and not completed:
+		_lesson_step()
+	elif tutorial.is_showing() and level and level.hint != "" and not completed:
 		_show_start_hint()
 
 
@@ -389,7 +403,8 @@ func _on_block_tapped(id: int) -> void:
 	if hammer_armed:
 		_smash(id)
 		return
-	match model.move_state(id):
+	var tap_state := model.move_state(id)
+	match tap_state:
 		"ok": _escape(id)
 		"blocked": _blocked(id)
 		"locked": _locked_tap(id)
@@ -397,6 +412,10 @@ func _on_block_tapped(id: int) -> void:
 		"ram": _ram(id)
 		"gate": _gate_tap(id)
 		"armored": _armored_tap(id)
+	# Free "explain" taps (gate, shell, hidden, locked) keep their message;
+	# the lesson moves on after real moves.
+	if _lesson != "" and not completed and not game_over and tap_state in ["ok", "ram", "blocked"]:
+		_lesson_step()
 
 
 func _escape(id: int) -> void:
@@ -406,6 +425,8 @@ func _escape(id: int) -> void:
 	var turned := model.remove(id)
 	var revealed := model.last_revealed.duplicate()
 	var unlocked := model.last_unlocked.duplicate()
+	if (_lesson == "switch" and not model.last_flipped.is_empty()) or (_lesson == "gate" and not model.last_opened_gates.is_empty()):
+		_finish_lesson()
 	_play_second_era_effects()
 	chain += 1
 	best_chain = maxi(best_chain, chain)
@@ -495,6 +516,8 @@ func _ram(id: int) -> void:
 	history.push(_capture_state())
 	var target := model.ram(id)
 	_clear_hint()
+	if _lesson == "armor":
+		_finish_lesson()
 	board.play_ram(id, target)
 	AudioManager.play_crack()
 	Haptics.medium()
@@ -674,6 +697,8 @@ func undo() -> void:
 	_clear_hint()
 	board.sync_to(model.snapshot())
 	board.refresh_locks(model)
+	if _lesson != "":
+		_lesson_step()
 	AudioManager.play_undo()
 	ui.show_chain(0)
 	ui.set_progress(1.0 - float(model.block_count()) / maxf(_total_blocks, 1.0))
@@ -1184,6 +1209,76 @@ func _show_start_hint() -> void:
 	if target == -1:
 		return
 	tutorial.show_hint(level.hint, text_pos, board.block_screen_position(target), true)
+
+
+## v0.6.2 guided lesson: the blocks that matter for the mechanic (marked
+## with brackets) - the switch and every arrow it reverses, the gate and
+## every block chained to it, or the armored block.
+func _lesson_blocks(kind: String) -> Array:
+	var out := []
+	var groups := {}
+	for b in model.blocks.values():
+		if (kind == "switch" and b.is_switch()) or (kind == "gate" and b.is_gate()) or (kind == "armor" and b.armored):
+			out.append(b.id)
+			groups[b.switch_group if kind == "switch" else b.gate_group] = true
+	for b in model.blocks.values():
+		if (kind == "switch" and groups.has(b.flip_link)) or (kind == "gate" and groups.has(b.gate_link)):
+			out.append(b.id)
+	return out
+
+
+## One lesson beat: brackets on the mechanic's blocks, a finger on the next
+## correct move (the solver's pick, so never a trap) and one short line.
+## Called at the start and after every tap / undo until the player has
+## done the mechanic's key action once.
+func _lesson_step() -> void:
+	var marks := _lesson_blocks(_lesson)
+	var next := Solver.from_model(model).recommend_move()
+	var text := ""
+	var is_key := false
+	match _lesson:
+		"switch":
+			is_key = next != -1 and model.blocks[next].is_switch()
+			var g: String = model.blocks[marks[0]].switch_group if not marks.is_empty() else "A"
+			text = ("Tap the SWITCH - every arrow marked %s turns around" % g) if is_key else ("SWITCH %s reverses its marked arrows - clear its way first" % g)
+		"gate":
+			var gid: int = marks[0] if not marks.is_empty() else -1
+			var g: String = model.blocks[gid].gate_group if gid != -1 else "C"
+			text = "GATE %s opens when every block chained %s escapes (%d left)" % [g, g, model.gate_remaining(g)]
+		"armor":
+			is_key = next != -1 and model.move_state(next) == "ram"
+			# Mark the block that will be launched (the solution's first ram).
+			for mv in Solver.from_model(model).solve_moves():
+				if mv & Solver.RAM:
+					marks.append(mv & Solver.ID_MASK)
+					break
+			if is_key:
+				text = "Hit the armored block to break its shell"
+			else:
+				text = "Armored: can't escape. Clear a path for the marked block to hit it"
+	board.set_marks(marks)
+	if next == -1:
+		board.set_hint(-1)
+		tutorial.show_hint("No correct move here - tap Undo", _message_position())
+		ui.pulse_undo_button()
+		return
+	board.set_hint(next)
+	tutorial.show_hint(text, _message_position(), board.block_screen_position(next), true)
+
+
+## The player did the key action once: remove the lesson for good.
+func _finish_lesson() -> void:
+	var kind := _lesson
+	_lesson = ""
+	board.set_marks([])
+	board.set_hint(-1)
+	if not progress.tips_seen.has("lesson_" + kind):
+		progress.tips_seen.append("lesson_" + kind)
+		progress.save()
+	var done: String = {"switch": "The marked arrows turned around - now plan your switches!",
+		"gate": "The gate is open - its lane is free!",
+		"armor": "Shell cracked! Now it moves like any other block"}[kind]
+	_show_message(done, 2.8)
 
 
 ## One line of text under the board that fades out by itself. Kept above

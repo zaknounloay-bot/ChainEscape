@@ -624,6 +624,7 @@ func _test_relaunch_continue() -> void:
 	_check(game.ui._title._stats.text.begins_with("CHAPTER 6  ·  MIDNIGHT TIDE"), "title shows the Chapter to continue ('%s')" % game.ui._title._stats.text)
 	_check(not game.progress.haptics_on and not Haptics.enabled, "settings restored after relaunch")
 	_check(game.progress.highest_unlocked > 57, "unlock progress restored (not reset to level 1)")
+	_check(["lesson_switch", "lesson_gate", "lesson_armor"].all(func(t): return game.progress.tips_seen.has(t)), "finished lessons survive a relaunch")
 	game.ui.continue_pressed.emit()
 	await _frames(2)
 	_check(not game.ui.is_title_open() and game.current_level == 57, "CONTINUE resumes level 57")
@@ -806,6 +807,12 @@ func _test_second_era_mechanics() -> void:
 			sw = id
 	_check(sw != -1, "level 101 has a switch")
 	var targets := game.model.blocks.values().filter(func(b): return b.flip_link != "").map(func(b): return b.id)
+	# v0.6.2 first-time lesson: switch + its arrows marked, a finger on the
+	# next correct move, one short line.
+	_check(game._lesson == "switch" and game.board.get_view(sw).marked and targets.all(func(t): return game.board.get_view(t).marked),
+		"L101 lesson: the switch and its arrows are marked")
+	_check(game.tutorial.is_showing() and game.tutorial._show_finger and game.tutorial._text.contains("SWITCH"), "L101 lesson: finger + SWITCH line")
+	_shot("L101_lesson")
 	var before := {}
 	for t in targets:
 		before[t] = game.model.blocks[t].direction
@@ -822,6 +829,11 @@ func _test_second_era_mechanics() -> void:
 			flipped_ok = flipped_ok and game.model.blocks[t].direction == Direction.opposite(before[t]) and game.board.get_view(t).data.direction == game.model.blocks[t].direction
 	_check(not game.model.blocks.has(sw) and flipped_ok, "switch escaped: its linked arrows reversed (model and view)")
 	_shot("L101_after_switch")
+	_check(game._lesson == "" and game.progress.tips_seen.has("lesson_switch"), "L101 lesson finished by firing the switch, and saved")
+	_check(not game.board.get_view(targets[0]).marked if game.board.get_view(targets[0]) else true, "L101 lesson marks removed")
+	game.start_level(101)
+	await _wait(0.3)
+	_check(game._lesson == "" and not game.tutorial._show_finger, "L101 replay: the lesson does not repeat")
 	# CHAIN GATE (121): tapping it is free; its counter follows the links; it opens.
 	game.start_level(121)
 	await _wait(0.5)
@@ -832,6 +844,10 @@ func _test_second_era_mechanics() -> void:
 	_check(gate != -1, "level 121 has a Chain Gate")
 	var group: String = game.model.blocks[gate].gate_group
 	_check(game.board.get_view(gate).gate_count == game.model.gate_remaining(group), "gate counter shows the links left")
+	var links := game.model.blocks.values().filter(func(b): return b.gate_link == group).map(func(b): return b.id)
+	_check(game._lesson == "gate" and game.board.get_view(gate).marked and links.all(func(t): return game.board.get_view(t).marked)
+		and game.tutorial._show_finger and game.tutorial._text.begins_with("GATE %s opens" % group), "L121 lesson: gate + chained blocks marked, finger, line")
+	_shot("L121_lesson")
 	var hearts := game.hearts
 	await _tap(gate)
 	await _wait(0.1)
@@ -843,6 +859,7 @@ func _test_second_era_mechanics() -> void:
 		await _wait(0.1)
 	await _wait(0.6)
 	_check(not game.model.blocks.has(gate) and game.board.get_view(gate) == null, "the gate opened when its last link escaped")
+	_check(game._lesson == "" and game.progress.tips_seen.has("lesson_gate"), "L121 lesson finished when the gate opened, and saved")
 	# ARMOR (161): a ram is not a mistake; the shell breaks; Undo restores it.
 	game.start_level(161)
 	await _wait(0.5)
@@ -851,6 +868,14 @@ func _test_second_era_mechanics() -> void:
 		if game.model.blocks[id].armored:
 			armored = id
 	_check(armored != -1, "level 161 has an armored block")
+	var source := -1
+	for mv in Solver.from_model(game.model).solve_moves():
+		if mv & Solver.RAM:
+			source = mv & Solver.ID_MASK
+			break
+	_check(game._lesson == "armor" and game.board.get_view(armored).marked and source != -1 and game.board.get_view(source).marked
+		and game.tutorial._show_finger, "L161 lesson: the armored target and the block to launch are marked, finger shown")
+	_shot("L161_lesson")
 	await _tap(armored)
 	await _wait(0.1)
 	_check(game.mistakes == 0 and game.tutorial._text.begins_with("Armored"), "tapping a shell is free and explains the ram")
@@ -864,6 +889,7 @@ func _test_second_era_mechanics() -> void:
 		await _tap(id)
 		await _wait(0.15)
 		if kind == "ram":
+			_check(game.tutorial._text == "" or game.tutorial._text.begins_with("Shell cracked"), "L161 lesson: success line after the first ram ('%s')" % game.tutorial._text)
 			rammed = true
 			_check(game.hearts == h and game.mistakes == 0 and game.model.blocks.has(id), "a ram costs no heart and removes nothing")
 	await _wait(0.4)
@@ -872,6 +898,16 @@ func _test_second_era_mechanics() -> void:
 	game.undo()
 	await _wait(0.3)
 	_check(game.model.blocks[armored].armored and game.board.get_view(armored).data.armored, "Undo restores the shell")
+	_check(game._lesson == "" and game.progress.tips_seen.has("lesson_armor"), "L161 lesson finished by the first ram and stays finished after Undo")
+	# Later Armor levels: no lesson; tapping a shell gives the short reminder.
+	game.start_level(166)
+	await _wait(0.3)
+	_check(game._lesson == "", "L166: no lesson")
+	var shell := _first_in_state("armored")
+	if shell != -1:
+		await _tap(shell)
+		await _wait(0.1)
+		_check(game.tutorial._text.begins_with("Armored") and game.mistakes == 0, "L166: tapping a shell shows the short reminder")
 	print("Second Era mechanics OK (switch flip, gate open, armor ram + undo)")
 
 

@@ -26,7 +26,8 @@ extends SceneTree
 ##     MIN_CHAPTER_STEP above the previous Chapter's (cosmetic progression
 ##     never replaces puzzle progression)
 ##   * v0.5 reward blocks: only from their "from_level" (economy.json), at
-##     most 2 per level (3 on the Master Level), never on a disabled rarity
+##     most 2 per level (3 on the Master Level), never on a disabled rarity,
+##     never on an armored block (v0.6.2: a reward must never read as a shell)
 ##   * v0.6 Second Era (101-200):
 ##       - switches only from 101, Chain Gates from 121, armored blocks from
 ##         161 (a mechanic is always introduced before it is combined)
@@ -37,7 +38,8 @@ extends SceneTree
 ##         late-game rules apply
 ##       - Chapter averages rise inside each era; Chapter 11 starts the
 ##         Second Era lower on purpose (it teaches a new mechanic)
-##       - each Master Level (100, 200) is the hardest level of its era, and
+##       - each Master Level (100, 200) is the hardest level of its era -
+##         by difficulty AND by structural difficulty (v0.6.2) - and
 ##         Level 200 uses switches, gates, armor, spinners of 3+ rules,
 ##         locks and mystery
 ##   * v0.6.1 armor safety (every level, campaign or --file): the verifier
@@ -70,6 +72,7 @@ func _initialize() -> void:
 	var levels: Array = []
 	print("  # C name               size blk spn rules  lck hid start trp dec dep len dir%  diff   S    L    M  fair rwd status")
 	var diffs := {}
+	var structs := {}
 	for i in files.size():
 		var json = JSON.parse_string(FileAccess.get_file_as_string(files[i]))
 		var level := LevelManager.parse_level(json, i + 1)
@@ -77,6 +80,7 @@ func _initialize() -> void:
 		var m := LevelAnalysis.analyze(level)
 		var n := i + 1
 		diffs[n] = m["difficulty"]
+		structs[n] = LevelGenerator.structural_difficulty(m)
 		var status := "OK"
 		var rwd := _reward_text(level)
 		if not m["solvable"] or m["aborted"]:
@@ -115,6 +119,18 @@ func _initialize() -> void:
 					top = maxf(top, diffs[k])
 			if diffs[master] < top:
 				problems.append("L%d (Master) is not the hardest level of the %s (%.1f < %.1f)" % [master, era["name"], diffs[master], top])
+			# v0.6.2: and the hardest to REASON about (structural difficulty:
+			# depth, decisions, traps, start traps, rams, switch decisions),
+			# so its rank does not come from mechanic counts alone.
+			var top_s := 0.0
+			var top_n := 0
+			for k in structs:
+				if k != master and k >= era["from"] and k <= era["to"] and structs[k] > top_s:
+					top_s = structs[k]
+					top_n = k
+			print("L%d (Master) structural difficulty %.1f; next: L%d %.1f" % [master, structs[master], top_n, top_s])
+			if structs[master] <= top_s:
+				problems.append("L%d (Master) is not the hardest to reason about in the %s (structural %.1f <= L%d %.1f)" % [master, era["name"], structs[master], top_n, top_s])
 	if campaign:
 		# Chapter difficulty curve.
 		var line := PackedStringArray()
@@ -207,6 +223,8 @@ static func _reward_issue(n: int, level: LevelData) -> String:
 		if not b.is_reward():
 			continue
 		count += 1
+		if b.armored:
+			return "REWARD ON ARMORED BLOCK"
 		var cfg: Dictionary = Economy.config()["reward_blocks"].get(b.rarity_name(), {})
 		if not bool(cfg.get("enabled", false)):
 			return "DISABLED REWARD RARITY"

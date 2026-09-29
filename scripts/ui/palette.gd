@@ -46,7 +46,23 @@ const LINKS := {"A": Color("#00E5FF"), "B": Color("#FF4FD8"), "C": Color("#B6F23
 ## Chain Gate slab: [face, side, text/icon].
 const GATE := [Color("#3D4459"), Color("#23283A"), Color("#E9EDF5")]
 ## Armor shell: [frame, highlight, deep].
-const ARMOR := [Color("#AEB8C8"), Color("#F2F6FC"), Color("#4E586A")]
+## v0.6.2 ARMORED shell: dark, matte gunmetal plating [plate, rivet light,
+## deep edge] - deliberately darker and duller than any reward metal.
+const ARMOR := [Color("#4A5263"), Color("#B9C2D0"), Color("#1F242E")]
+
+## v0.6.2 reward bodies: the WHOLE block is polished metal (index = rarity):
+## [top light, body, bottom shade, side]. Distinct from Armor (bright and
+## glossy vs dark and matte) and from plain yellow blocks (gradient + sheen).
+const REWARD_BODY := [
+	[],
+	[Color("#FBFDFF"), Color("#D2DAE4"), Color("#97A3B4"), Color("#667285")],  # silver
+	[Color("#FFF6C2"), Color("#F7C838"), Color("#CC8A00"), Color("#8C5A00")],  # gold
+	[Color("#E9FBFF"), Color("#9EEBFF"), Color("#4FB3D6"), Color("#2C7A99")],  # diamond (future)
+]
+
+## Arrow on every uncollected reward block: deep navy, >= 8:1 contrast on
+## both the silver and the gold body (WCAG AAA is 7:1).
+const REWARD_ARROW := Color("#12204A")
 
 
 static func link(group: String) -> Color:

@@ -58,6 +58,79 @@ Not included, on purpose: leaderboards, country ranking, accounts/login, backend
 
 ---
 
+## v0.6.2 — polish from the real-iPhone 1-200 playthrough
+
+Scope is kept tight: no new mechanics, no new levels, no scoring change, and no change to the Safari save or audio architecture.
+
+### 1. Level 200 is the hardest level
+
+LEVEL200_SECTION
+
+### 2. Silver / Gold look nothing like Armor
+
+**The problem:** the old Silver frame (#C9D3DE / #7D8A99) was almost the same grey as the Armor frame (#AEB8C8 / #4E586A), and both were drawn as a thick rim with a highlight line and corner dots.
+
+**Silver / Gold now** (`BlockView._draw_metal_body`, `_draw_reward`, `Palette.REWARD_BODY`):
+- **The whole block is polished metal:**
+  - a light top, a shaded bottom and a mirror streak
+  - a bright rim and a metal-coloured halo (wider for Gold)
+  - the side face (the 3D edge) in dark metal
+- **The arrow is deep navy #12204A**, and so are the spinner ring, the rule strip and the "?". Contrast: 11.2:1 on the silver body and 10.0:1 on the gold body (WCAG AAA is 7:1).
+- **A white four-point star badge** in the top-left corner, twinkling (transform and alpha only).
+- **A thin inner ring in the block's own colour.** Locks depend on block colour, so a reward block still shows which colour it counts as.
+- **Gold is a gradient metal with a sheen**, so it no longer reads like a flat yellow block (#FFB800).
+
+**Armor now** (`BlockView._draw_armor`, `Palette.ARMOR`) is dark, matte gunmetal plating:
+- a thick frame of plates with seams
+- four hex bolts
+- a faint dark veil on the face
+
+It reads as "protected", never as shiny.
+
+**Rewards are never placed on armored blocks.** The generator excludes them, and the verifier fails a level that does it. Levels 182, 186 and 188 had one; their rewards were re-placed with the same rules and counts.
+
+Everything is still drawn once per state change: no per-frame drawing or resource creation.
+
+### 3. First-time lessons at 101 / 121 / 161
+
+These use the existing tutorial system: the finger, one short line under the board, and a new static marker made of four white corner brackets, drawn once.
+
+| Level | Marked | Finger | Line | Finished when |
+|---|---|---|---|---|
+| 101 Switch | the switch and every arrow it reverses | the next correct move | "SWITCH A reverses its marked arrows - clear its way first", then "Tap the SWITCH - every arrow marked A turns around" | the switch fires; then "The marked arrows turned around - now plan your switches!" |
+| 121 Chain Gate | the gate and every block chained to it | the next correct move | "GATE C opens when every block chained C escapes (N left)" (the count updates live) | the gate opens; then "The gate is open - its lane is free!" |
+| 161 Armor | the armored block and the block that will be launched into it | the next correct move | "Armored: can't escape. Clear a path for the marked block to hit it", then "Hit the armored block to break its shell" | the first shell cracks; then "Shell cracked! Now it moves like any other block" |
+
+How the lessons behave:
+- **The finger follows the solver's next correct move**, so the lesson never leads into a trap.
+- **Free taps keep their own message.** Tapping a gate or a shell still shows its explanation; the lesson moves on after real moves (escape, ram, blocked tap) and after Undo.
+- **Stored once per save.** Completion is written as `lesson_switch` / `lesson_gate` / `lesson_armor` in `tips_seen`, which is already part of the save and backup code. There is no save format change.
+- **Leaving before the key action** means the lesson shows again next time.
+- **After completion it never repeats:** replay, restart and relaunch all show the level's normal one-line hint only.
+- **Later Armor levels have no lesson.** Tapping an intact shell shows the short reminder "ARMORED: launch another block into it to crack the shell".
+
+### 4. "Clear all red blocks to unlock": the Lock mechanic
+
+**What it is:** the existing **Locked block** (map token `#K`, since Level 16, with its own lesson line: "A lock opens when all blocks of its color are gone").
+- A locked block carries a padlock in its key colour and can't move until **every block of that colour has escaped**.
+- Tapping it is a mistake like a blocked tap. The key blocks hop, and the line "Locked until every red block escapes" appears once per level.
+- It is deterministic and fully visible, and the solver and verifier have handled it since v0.4.
+- It is not an accident and not a one-off.
+
+**It is not rare either.** Locks are on **148 of 200 levels**; red locks alone are on 58. By key colour: yellow 71, red 67, green 64, blue 61, purple 46.
+
+**Why it felt like it appeared once:** it only *matters* in some levels. The verifier measures each lock's impact by solving the level without it:
+- The median is **2.7**, a mild nudge. In about 90 levels the key colour leaves early anyway, so the padlock opens before the player needs that block, and the lock message never appears.
+- It drives the solution in **57 levels** (impact 5 or more).
+- In the high 190s, the strong red-lock levels are **195** (a blue block locked until all red blocks escape, impact 43.0) and **198** (a green spinner-lock that is also Gold and chain-linked, impact 30.9). One of these is almost certainly the level you remembered.
+
+**Decision:**
+- **Nothing was added.** It is already a deliberate, frequent mechanic, so more of it would be overuse.
+- **It is safe and logically clear.** The armor-safety and mystery-fairness checks don't depend on it, and it never produces an unsolvable level (the verifier re-solves every level).
+- **What would make it feel intentional:** giving the weak locks real work, in place of adding locks elsewhere. That is a level-by-level redesign, outside this polish pass (see *Recommended next steps*).
+
+---
+
 ## v0.6.1 — Armor safety fix (QA: Levels 161-162)
 
 Real-iPhone QA found that the Armor levels could reach a state the player can't get out of:
