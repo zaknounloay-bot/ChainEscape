@@ -106,6 +106,21 @@ Everything is one-shot (freed particles, rings drawn once and only scaled and fa
 
 A lesson whose mechanic block is smashed ends quietly and returns the next time.
 
+### v0.6.4 results
+
+| Check | Result |
+|---|---|
+| Unit tests | `UNIT TESTS PASSED`: 24,943 checks, 0 failures. The new Hammer test covers 1,053 smashes on real boards from 12 levels, including 31 lost boards, 18 Chain Gates and 15 armored blocks. `Solver.hammer_safe` allows exactly the smashes that don't make the puzzle unsolvable; every allowed smash on a live board replays to an empty board; on a deliberately lost board every block may be smashed. |
+| Level verifier | `ALL 200 LEVELS SOLVABLE AND PASS CAMPAIGN RULES` |
+| Armor audit | `ARMOR AUDIT: 0 unsafe` (all 33 armor levels) |
+| Playtest | `PLAYTEST PASSED`, all 200 levels. New checks: the intact shell hides the big arrow; the burst reveals it; every other block is identical after the burst; a rejected smash keeps the Hammer armed, consumes nothing and shows no text; a smashed Gold block pays no coins. |
+| Phone-size captures | Level 161's hit, frame by frame: bomb shell, then fire, sparks and rings, then the arrow pops in, then a normal block. Levels 186 and 200: the bomb, the coins and normal blocks are all distinct. |
+| Soak (memory) | `SOAK PASSED`: 400 levels, 0 orphans; nodes and resources flat; objects +7 once (as in v0.6.2 and v0.6.3), memory +0.3 MB |
+| Music audit | `MUSIC AUDIT PASSED` |
+| Web persistence | `WEB PERSISTENCE TEST PASSED`: 47 checks; WebAssembly +9 MB then flat |
+| Web audio | `WEB AUDIO TEST PASSED`: 75 checks |
+| Level Select touch | `LEVEL SELECT TOUCH TEST PASSED`: 24 checks |
+
 ---
 
 ## v0.6.3 — final UX polish (second real-iPhone QA)
