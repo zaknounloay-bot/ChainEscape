@@ -1,4 +1,4 @@
-# Chain Escape — v0.6
+# Chain Escape — v0.6.1
 
 A one-handed portrait puzzle game built with **Godot 4.3 (GDScript)** for iOS, Android and mobile Web.
 
@@ -90,6 +90,26 @@ The search must finish; hitting the state cap is itself a failure. `tools/armor_
 The generator uses the same rule: stranding boards are scored down during refinement and rejected.
 
 Dead ends that don't involve armor (a spinner turned the wrong way) are still part of the puzzle design, as in levels 1-160, and the game still points at Undo when one happens.
+
+**Levels fixed.** The Armor rules, the tap handling, scoring and Levels 1-160 are unchanged. The 15 unsafe levels were rebuilt:
+- **174 and 177** were regenerated from scratch under the new rule.
+- **The other 13** were repaired with `generate_era2.gd --repair`. It keeps each level's name, lesson text and Silver / Gold, and hill-climbs from the old board with the generator's own mutations. It first removes every stranded-shell dead end, then satisfies every campaign rule, then gets as close as it can to the old difficulty. When it gets stuck it restarts from the original board.
+
+| Level | 161 | 162 | 164 | 166 | 171 | 174 | 177 | 179 | 180 | 186 | 188 | 191 | 192 | 194 | 197 |
+|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|
+| Difficulty before | 57.3 | 60.6 | 63.7 | 56.3 | 59.7 | 56.1 | 61.2 | 62.2 | 68.9 | 66.8 | 63.9 | 65.6 | 76.8 | 66.5 | 65.0 |
+| Difficulty after | 57.3 | 59.8 | 62.3 | 55.7 | 59.2 | 52.8 | 61.0 | 62.5 | 69.4 | 60.1 | 63.3 | 65.0 | 77.4 | 66.6 | 66.0 |
+
+Chapter averages after the fix: C17 60.7, C18 63.6, C19 66.6, C20 69.8. Every rise rule still holds, and Level 200 (79.2) is still the hardest.
+
+**v0.6.1 results**
+
+| Check | Result |
+|---|---|
+| Armor audit (`tools/armor_audit.gd`) | `ARMOR AUDIT: 0 unsafe`: all 33 armor levels. The solver and `BoardModel` find identical dead-end boards on every level. |
+| Level verifier | `ALL 200 LEVELS SOLVABLE AND PASS CAMPAIGN RULES`, including the new armor-safety rule |
+| Unit tests | `UNIT TESTS PASSED`: 19,898 checks, 0 failures. New `test_armor_safety`: a stranding board is found, and its tap order replayed in the game model leaves only the shell; a pinned rammer is safe; the generator rejects the stranding board; every campaign armor level is safe. |
+| Playtest | `PLAYTEST PASSED`: all 200 levels cleared through real touch input, including the 15 rebuilt armor levels (rams, cracks and Undo) and the full Chapter 17-20 flow |
 
 ---
 
@@ -1122,6 +1142,7 @@ godot --headless --path . res://tools/Playtest.tscn                # end-to-end 
 godot --headless --path . res://tools/Soak.tscn -- --cycles=2        # long session: 1 -> 200 twice in one process
 godot --headless --path . --export-release "Web" build/web/index.html && node tools/web_audio_test.mjs   # real browser
 node tools/web_persistence_test.mjs                                  # Web save scenarios A-G (itch-like iframe)
+godot --headless --path . --script res://tools/armor_audit.gd       # every reachable state of every armor level, solver vs game rules
 godot --headless --path . --script res://tools/generate_era2.gd -- --from=150 --to=150 --target=60   # re-curate a Second Era slot (dry run; add --write)
 xvfb-run godot --path . res://tools/Capture.tscn -- --gallery=5,15,25,36,45,56,64,78,86,96,100 --out=/tmp/shots   # screenshots
 ```
@@ -1272,7 +1293,8 @@ scripts/
     progress_bar.gd / tutorial_hint.gd / palette.gd (incl. block material + metals)
   audio/ audio_manager.gd (Chapter themes, sequential fades, web unlock), haptics.gd
 tools/ run_tests.gd, verify_levels.gd, Playtest.tscn, Soak.tscn, Capture.tscn, generate_levels.gd,
-       strengthen_levels.gd, place_reward_blocks.gd, generate_era2.gd (levels 101-200),
+       strengthen_levels.gd, place_reward_blocks.gd, generate_era2.gd (levels 101-200, --repair),
+       armor_audit.gd,
        generate_music.py, web_audio_test.mjs,
        web_persistence_test.mjs, sync_web_head.py
 web/   audio_unlock.js (page-level Web Audio unlock, save mirror, page-event forensics, WebGL
