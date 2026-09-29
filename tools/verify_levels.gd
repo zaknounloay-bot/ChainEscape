@@ -40,6 +40,14 @@ extends SceneTree
 ##       - each Master Level (100, 200) is the hardest level of its era, and
 ##         Level 200 uses switches, gates, armor, spinners of 3+ rules,
 ##         locks and mystery
+##   * v0.6.1 armor safety (every level, campaign or --file): the verifier
+##     walks EVERY state a player can reach without the Hammer (all escapes
+##     and rams, in every order, cross-checked by BoardModel in
+##     tools/armor_audit.gd). The level fails if any reachable dead end still
+##     holds an intact shell - that covers a shell left as the last block, a
+##     shell whose every possible rammer escaped or turned away first, and
+##     so any level that could only be finished with the Hammer. The search
+##     must finish (no state cap reached).
 
 const HIGH_LEVEL := 21
 const LATE_LEVEL := 61
@@ -74,6 +82,9 @@ func _initialize() -> void:
 		if not m["solvable"] or m["aborted"]:
 			status = "GAVE UP" if m["aborted"] else "UNSOLVABLE"
 			problems.append("L%d %s" % [n, status])
+		elif m["armored"] > 0 and _armor_issue(level) != "":
+			status = "ARMOR UNCRACKABLE"
+			problems.append("L%d %s" % [n, _armor_issue(level)])
 		elif campaign:
 			var issue := _rule_issue(n, m)
 			if issue == "":
@@ -221,3 +232,19 @@ static func _imp(v: float, count: int) -> String:
 	if v >= LevelAnalysis.ESSENTIAL:
 		return "ESS"
 	return "%.1f" % v
+
+
+## Empty if no order of taps can strand a shell; else the reason and one
+## tap sequence into such a dead end (block ids, R = ram).
+func _armor_issue(level: LevelData) -> String:
+	var model := BoardModel.new()
+	model.setup(level.rows, level.columns, level.blocks)
+	var r := Solver.from_model(model).armor_audit()
+	if not r["complete"]:
+		return "ARMOR AUDIT INCOMPLETE (%d states)" % r["states"]
+	if r["armor_dead_ends"] == 0:
+		return ""
+	var taps := PackedStringArray()
+	for mv in r["example"]:
+		taps.append(("R" if mv & Solver.RAM else "") + str(mv & Solver.ID_MASK))
+	return "ARMOR UNCRACKABLE: %d dead end(s) with an intact shell, e.g. taps %s" % [r["armor_dead_ends"], " ".join(taps)]

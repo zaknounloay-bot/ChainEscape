@@ -598,6 +598,59 @@ func _apply(id: int) -> Array:
 	return turned
 
 
+## v0.6.1 armor safety: walks EVERY state a player can reach (every escape
+## and ram, in every order) and looks for dead ends that still hold an intact
+## shell. Such a shell can never be cracked again, so the level would need
+## the Hammer. Returns {"states", "complete", "dead_ends", "armor_dead_ends",
+## "example", "boards"} ("boards": each dead-end board as "id =id ...", "="
+## marking an intact shell) where "example" is one tap sequence (RAM-marked) into an armor
+## dead end. "complete" is false if `state_limit` states were not enough.
+func armor_audit(state_limit: int = 400000) -> Dictionary:
+	var out := {"states": 0, "complete": true, "dead_ends": 0, "armor_dead_ends": 0, "example": [], "boards": {}}
+	if _armored_ids.is_empty():
+		return out
+	var seen := {}
+	var path: Array[int] = []
+	_audit_walk(seen, path, out, state_limit)
+	out["states"] = seen.size()
+	return out
+
+
+func _audit_walk(seen: Dictionary, path: Array[int], out: Dictionary, limit: int) -> void:
+	var key := _key()
+	if seen.has(key):
+		return
+	if seen.size() >= limit:
+		out["complete"] = false
+		return
+	seen[key] = true
+	if _alive_count == 0:
+		return
+	var moves := legal_moves()
+	if moves.is_empty():
+		# Count boards, not search states (a spinner that already left keeps
+		# its last direction in the key).
+		var board := PackedStringArray()
+		for id in _alive.size():
+			if _alive[id] == 1:
+				board.append(("=" if _armor[id] == 1 else "") + str(id))
+		var desc := " ".join(board)
+		if not (out["boards"] as Dictionary).has(desc):
+			out["boards"][desc] = true
+			out["dead_ends"] += 1
+			if _shells > 0:
+				out["armor_dead_ends"] += 1
+				if (out["example"] as Array).is_empty():
+					out["example"] = path.duplicate()
+		return
+	for mv in moves:
+		_do(mv)
+		path.append(mv)
+		_audit_walk(seen, path, out, limit)
+		path.pop_back()
+		_undo_move(mv)
+
+
 ## Undo a successful search's moves (the search leaves them applied).
 func _rewind(path: Array[int]) -> void:
 	for i in range(path.size() - 1, -1, -1):

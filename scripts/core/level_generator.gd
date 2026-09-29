@@ -538,7 +538,7 @@ func _score(m: Dictionary, p: Dictionary) -> float:
 	var over_start: int = maxi(0, m["start_moves"] - p["max_start_moves"])
 	var over_share: float = maxf(0.0, m["direction_share"] - p["max_direction_share"])
 	var decisions: int = mini(m["decision_points"], p["min_decision_points"] + 3)
-	return (-8.0 * missing - 6.0 * over_start - 40.0 * over_share - 1.0 * m["start_moves"]
+	return (-8.0 * missing - 6.0 * over_start - 12.0 * m.get("armor_dead_ends", 0) - 40.0 * over_share - 1.0 * m["start_moves"]
 		+ 2.0 * decisions + 2.0 * mini(m["start_traps"], 2) + 0.6 * m["depth"]
 		+ 1.0 * m["directions_used"] + 1.5 * mini(m.get("switch_decisions", 0), 3) + 0.5 * mini(m.get("rams", 0), 2))
 
@@ -782,6 +782,9 @@ func evaluate(level: LevelData) -> Dictionary:
 	var m := s.analyze()
 	m["aborted"] = s.aborted or s.any_aborted
 	m["difficulty"] = difficulty(m)
+	# v0.6.1: no order of taps may strand a shell (see Solver.armor_audit).
+	var audit := Solver.from_model(model).armor_audit()
+	m["armor_dead_ends"] = audit["armor_dead_ends"] + (0 if audit["complete"] else 1)
 	return m
 
 
@@ -789,6 +792,8 @@ func evaluate(level: LevelData) -> Dictionary:
 func rejection_reason(m: Dictionary, p: Dictionary, level: LevelData = null) -> String:
 	if not m["solvable"] or m["aborted"]:
 		return "unsolvable"
+	if m.get("armor_dead_ends", 0) > 0:
+		return "armor_uncrackable"
 	if m["start_moves"] < p["min_start_moves"] or m["start_moves"] > p["max_start_moves"]:
 		return "start_moves"
 	if m["direction_share"] > p["max_direction_share"] or m["directions_used"] < 4:
