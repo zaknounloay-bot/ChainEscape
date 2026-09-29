@@ -524,11 +524,16 @@ func _test_shop_and_hammer() -> void:
 	if unsafe != -1:
 		game.toggle_hammer()
 		var count := game.model.block_count()
+		game.tutorial.hide_hint(true)
 		await _tap(unsafe)
+		await _wait(0.1)
 		_check(game.model.block_count() == count and game.progress.inventory["hammer"] == 2, "unsafe smash rejected, hammer not consumed")
+		_check(game.hammer_armed and game.board.hammer_mode, "after a rejected smash the Hammer stays armed (pick another block)")
+		_check(not game.tutorial.is_showing(), "a rejected smash shows no explanatory text")
 	else:
 		print("  (no unsafe smash on L31's first state - checked in unit tests)")
-	game.toggle_hammer()
+	if not game.hammer_armed:
+		game.toggle_hammer()
 	_check(game.board.hammer_mode, "hammer armed")
 	var before := game.model.block_count()
 	await _tap(safe)
@@ -888,9 +893,23 @@ func _test_second_era_mechanics() -> void:
 		var id := Solver.from_model(game.model).recommend_move()
 		var kind := game.model.move_state(id)
 		var h := game.hearts
+		var others := {}
+		if kind == "ram":
+			_check(not game.board.get_view(armored).get("_arrow").visible, "the intact shell hides the big arrow")
+			for oid in game.model.blocks:
+				if oid != armored:
+					var ob: BlockData = game.model.blocks[oid]
+					others[oid] = [ob.cell, ob.direction, ob.armored]
 		await _tap(id)
 		await _wait(0.15)
 		if kind == "ram":
+			await _wait(0.4)
+			var same := others.size() == game.model.blocks.size() - 1
+			for oid in others:
+				var ob: BlockData = game.model.blocks.get(oid)
+				same = same and ob != null and others[oid] == [ob.cell, ob.direction, ob.armored]
+			_check(same, "the shell burst is visual only: every other block is unchanged")
+			_check(game.board.get_view(armored).get("_arrow").visible, "the burst reveals the block's arrow")
 			_check(game.tutorial._text == "" or game.tutorial._text.begins_with("Shell cracked"), "L161 lesson: success line after the first ram ('%s')" % game.tutorial._text)
 			rammed = true
 			_check(game.hearts == h and game.mistakes == 0 and game.model.blocks.has(id), "a ram costs no heart and removes nothing")

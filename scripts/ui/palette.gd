@@ -51,6 +51,9 @@ const GATE := [Color("#3D4459"), Color("#23283A"), Color("#E9EDF5")]
 const ARMOR := [Color("#4A5263"), Color("#B9C2D0"), Color("#1F242E")]
 ## v0.6.3 Armor "hit this" badge: [burst, disc].
 const ARMOR_IMPACT := [Color("#FF7A1A"), Color("#2A1408")]
+## v0.6.4 bomb shell: [bomb body, fuse, spark core]; explosion [fire, glow, smoke].
+const BOMB := [Color("#14161B"), Color("#C9A46A"), Color("#FFF3B0")]
+const EXPLOSION := [Color("#FF7A1A"), Color("#FFD34D"), Color("#9AA3B2")]
 
 ## v0.6.2 reward bodies: the WHOLE block is polished metal (index = rarity):
 ## [top light, body, bottom shade, side]. Distinct from Armor (bright and

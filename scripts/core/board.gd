@@ -386,10 +386,20 @@ func play_ram(id: int, target: int) -> void:
 	var gap := (t.home - v.home).length() - cell_size
 	v.play_ram(maxf(gap, 0.0) + cell_size * 0.15)
 	t.play_crack(0.09)
+	# v0.6.4: the shell bursts - fire, sparks, shell fragments, smoke and a
+	# shockwave ring, all one-shot. Purely visual: neighbours are untouched.
 	var dir := Direction.vector(v.data.direction)
-	_burst(t.home - dir * cell_size * 0.4, -dir, Palette.ARMOR[1], 16, 1.1, 120.0)
-	_burst(t.home, Vector2.UP, Palette.ARMOR[0], 12, 1.0, 180.0)
-	_pulse(0.012)
+	_burst(t.home, Vector2.UP, Palette.EXPLOSION[0], 26, 1.25, 180.0)
+	_burst(t.home, Vector2.UP, Palette.EXPLOSION[1], 16, 1.0, 180.0)
+	_burst(t.home - dir * cell_size * 0.4, -dir, Palette.ARMOR[1], 14, 1.1, 120.0)
+	_burst(t.home, Vector2.UP, Palette.EXPLOSION[2], 10, 0.8, 180.0)
+	for k in 2:
+		var ring := RewardRing.new()
+		ring.color = Palette.EXPLOSION[k]
+		ring.max_radius = cell_size * (1.05 if k == 0 else 0.7)
+		ring.position = t.home
+		_fx_root.add_child(ring)
+	_pulse(0.02)
 
 
 func play_unlocks(ids: Array) -> void:

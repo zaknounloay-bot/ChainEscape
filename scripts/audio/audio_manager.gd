@@ -434,7 +434,7 @@ func play_gate() -> void:
 
 ## v0.6: an armor shell cracked by a ram.
 func play_crack() -> void:
-	play("crack", 1.0, -4.0)
+	play("crack", 1.0, -2.0)
 
 
 ## v0.6: a milestone level (125 / 150 / 175) cleared.
@@ -536,8 +536,8 @@ func _load_or_synthesize(id: String) -> AudioStream:
 			# Heavy latch, then a rising open chord.
 			return _synth_notes([[196.0, 0.0], [392.0, 0.02], [784.0, 0.12], [988.0, 0.2], [1175.0, 0.28]], 0.8, 6.5)
 		"crack":
-			# Metal crack: a sharp high burst over a dull knock.
-			return _synth([[150.0, 1.0], [2900.0, 0.35], [4100.0, 0.2]], 0.22, 24.0, -0.5)
+			# v0.6.4 shell burst: a short explosion (noise + low thump).
+			return _synth_boom(0.55)
 		"milestone":
 			return _synth_notes([[587.0, 0.0], [740.0, 0.1], [880.0, 0.2], [1175.0, 0.32], [1480.0, 0.46], [1760.0, 0.62]], 1.5, 3.4)
 	return null
@@ -561,6 +561,30 @@ func _synth(partials: Array, length: float, decay: float, glide: float) -> Audio
 			phases[k] += TAU * partials[k][0] * bend / MIX_RATE
 			s += sin(phases[k]) * partials[k][1]
 		data.encode_s16(i * 2, int(clampf(s * env * 0.45, -1.0, 1.0) * 32767.0))
+	return _wav(data)
+
+
+## Short explosion: a sharp noise crack that darkens as it fades, over a
+## low thump that drops in pitch. Deterministic (seeded) noise.
+func _synth_boom(length: float) -> AudioStreamWAV:
+	var n := int(length * MIX_RATE)
+	var data := PackedByteArray()
+	data.resize(n * 2)
+	var rng := RandomNumberGenerator.new()
+	rng.seed = 4242
+	var lp := 0.0
+	var phase := 0.0
+	for i in n:
+		var t := float(i) / MIX_RATE
+		var attack := minf(1.0, t * 900.0)
+		# Noise through a one-pole low-pass that closes over time.
+		var k := lerpf(0.55, 0.06, minf(t / length, 1.0))
+		lp += (rng.randf_range(-1.0, 1.0) - lp) * k
+		var noise := lp * exp(-t * 9.0) * 1.6
+		phase += TAU * lerpf(95.0, 42.0, minf(t / 0.35, 1.0)) / MIX_RATE
+		var thump := sin(phase) * exp(-t * 7.0) * 0.9
+		var s := (noise + thump) * attack
+		data.encode_s16(i * 2, int(clampf(s * 0.55, -1.0, 1.0) * 32767.0))
 	return _wav(data)
 
 

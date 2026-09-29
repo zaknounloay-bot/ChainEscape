@@ -794,23 +794,21 @@ func toggle_hammer() -> void:
 	_refresh_buttons()
 
 
-## Smashes block `id` if (and only if) the level stays solvable. A rejected
-## smash does not use up the Hammer.
+## v0.6.4 Hammer: removes ANY block the player picks (normal, reward,
+## armored, even a Chain Gate), unless that smash would MAKE the puzzle
+## unsolvable. A rejected smash costs nothing, keeps the Hammer armed (pick
+## another block or CANCEL) and only gives a short shake + buzz.
 func _smash(id: int) -> void:
-	hammer_armed = false
-	board.hammer_mode = false
-	if model.blocks.has(id) and model.blocks[id].is_gate():
-		AudioManager.play_invalid()
-		board.play_hidden_tap(id)
-		_show_message("Chain Gates can't be smashed - clear their links - Hammer kept", 2.8)
-		_refresh_buttons()
+	if not model.blocks.has(id):
 		return
 	if not is_hammer_safe(id):
 		AudioManager.play_invalid()
 		board.play_hidden_tap(id)
-		_show_message("That would make the level unsolvable - Hammer kept", 2.8)
-		_refresh_buttons()
+		Haptics.medium()
 		return
+	hammer_armed = false
+	board.hammer_mode = false
+	tutorial.hide_hint()
 	progress.inventory["hammer"] = progress.inventory.get("hammer", 0) - 1
 	progress.save()
 	hammers_used += 1
@@ -834,23 +832,22 @@ func _smash(id: int) -> void:
 	if not unlocked.is_empty():
 		board.play_unlocks(unlocked)
 		AudioManager.play_unlock()
+	# A lesson whose mechanic block was smashed can't be shown any more: end
+	# it quietly without marking it learned (it returns next time).
+	if _lesson != "" and _lesson_blocks(_lesson).is_empty():
+		_lesson = ""
+		board.set_marks([])
+		board.set_hint(-1)
 	ui.set_progress(1.0 - float(model.block_count()) / maxf(_total_blocks, 1.0))
 	_refresh_buttons()
 	if model.is_empty():
 		_on_board_cleared()
 
 
-## True if removing `id` leaves a solvable (or empty) board.
+## True if smashing `id` does not MAKE the puzzle unsolvable (the rule is
+## Solver.hammer_safe, shared with the tests).
 func is_hammer_safe(id: int) -> bool:
-	if not model.blocks.has(id):
-		return false
-	var test := BoardModel.new()
-	test.setup(model.rows, model.columns, model.snapshot())
-	test.remove(id)
-	if test.is_empty():
-		return true
-	var s := Solver.from_model(test)
-	return s.is_solvable() and not s.aborted
+	return Solver.hammer_safe(model, id)
 
 
 # --- Economy: Shop & chests -----------------------------------------------------

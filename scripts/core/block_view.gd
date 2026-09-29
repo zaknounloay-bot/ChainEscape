@@ -189,7 +189,9 @@ func refresh() -> void:
 	_shine.visible = reward
 	_twinkle.visible = reward
 	_badge.visible = data.is_spinner() and not data.hidden
-	_arrow.visible = not data.hidden and not data.is_gate()
+	# v0.6.4: an intact shell hides the big arrow (its direction shows on a
+	# small chip); the crack reveals it.
+	_arrow.visible = not data.hidden and not data.is_gate() and not data.armored
 	for p in get_children():
 		if p is Part:
 			p.queue_redraw()
@@ -627,58 +629,54 @@ func _draw_link_badge(c: CanvasItem, f: Rect2, size: float) -> void:
 	c.draw_string(font, at + Vector2(-w * 0.5, size * 0.13), data.gate_link, HORIZONTAL_ALIGNMENT_LEFT, -1, fs, col)
 
 
-## ARMORED (v0.6.3 look): the block is sealed in a steel SHELL - plating
-## over the whole face (the arrow shows only dimly through it, and comes
-## back bright once the shell cracks), a riveted frame, stress cracks, and
-## an orange IMPACT badge on the top edge meaning "hit this". Square, dark
-## and matte: nothing like the round, bright reward coins.
+## ARMORED (v0.6.4 look): a BOMB SHELL. The block's face is sealed under a
+## dark steel casing with a big bomb on it (lit fuse + spark): "this must be
+## blown open first". A thin band of the block's own color stays visible
+## around it (locks count armored blocks by color), and a small chip in the
+## corner shows which way the block will go once free. When another block
+## hits it, the shell bursts (Board.play_ram + play_crack) and the full
+## arrow appears. Square, dark and matte: nothing like the round coins.
 func _draw_armor(c: CanvasItem, f: Rect2, size: float) -> void:
 	var ci := c.get_canvas_item()
 	var radius := int(size * CORNER_RATIO)
-	var plate := StyleBoxFlat.new()
-	plate.anti_aliasing = true
-	plate.set_corner_radius_all(radius)
-	plate.bg_color = Color(Palette.ARMOR[0], 0.6)
-	plate.draw(ci, f)
-	# Brushed steel lines across the plate.
-	for i in 5:
-		var y := f.position.y + size * (0.22 + 0.14 * i)
-		c.draw_line(Vector2(f.position.x + size * 0.14, y), Vector2(f.end.x - size * 0.14, y), Color(Palette.ARMOR[1], 0.12), maxf(1.0, size * 0.012), true)
-	var frame := StyleBoxFlat.new()
-	frame.draw_center = false
-	frame.anti_aliasing = true
-	frame.set_corner_radius_all(radius)
-	var w := maxi(6, int(size * 0.15))
-	frame.set_border_width_all(w)
-	frame.border_color = Palette.ARMOR[2]
-	frame.draw(ci, f)
-	frame.set_border_width_all(maxi(4, int(w * 0.72)))
-	frame.border_color = Palette.ARMOR[0]
-	frame.draw(ci, f.grow(-w * 0.14))
-	# Hex bolts in the corners.
-	for p in [Vector2(0.11, 0.11), Vector2(0.89, 0.11), Vector2(0.89, 0.89), Vector2(0.11, 0.89)]:
-		var at: Vector2 = f.position + p * size
-		var hexo := PackedVector2Array()
-		var hexi := PackedVector2Array()
-		for i in 6:
-			hexo.append(at + Vector2.from_angle(i * PI / 3.0) * size * 0.05)
-			hexi.append(at + Vector2.from_angle(i * PI / 3.0) * size * 0.032)
-		c.draw_colored_polygon(hexo, Palette.ARMOR[2])
-		c.draw_colored_polygon(hexi, Palette.ARMOR[1])
-	# Stress cracks from the frame inward: it CAN break.
-	var crack := Color(Palette.ARMOR[2], 0.95)
-	var cw := maxf(2.0, size * 0.028)
-	c.draw_polyline(PackedVector2Array([f.position + Vector2(size * 0.14, size * 0.62), f.position + Vector2(size * 0.26, size * 0.57),
-		f.position + Vector2(size * 0.3, size * 0.68), f.position + Vector2(size * 0.4, size * 0.66)]), crack, cw, true)
-	c.draw_polyline(PackedVector2Array([f.position + Vector2(size * 0.86, size * 0.34), f.position + Vector2(size * 0.75, size * 0.4),
-		f.position + Vector2(size * 0.71, size * 0.31), f.position + Vector2(size * 0.62, size * 0.35)]), crack, cw, true)
-	# Impact badge on the top edge: an orange burst on a dark disc.
-	var at := Vector2(f.get_center().x, f.position.y + size * 0.04)
-	var br := size * 0.17
-	c.draw_circle(at, br * 1.12, Color.WHITE)
-	c.draw_circle(at, br, Palette.ARMOR_IMPACT[1])
-	c.draw_colored_polygon(_burst(at, br * 0.86, br * 0.4, 8), Palette.ARMOR_IMPACT[0])
-	c.draw_colored_polygon(_burst(at, br * 0.46, br * 0.2, 8), Color.WHITE)
+	var casing := StyleBoxFlat.new()
+	casing.anti_aliasing = true
+	casing.set_corner_radius_all(maxi(radius - 3, 3))
+	casing.bg_color = Palette.ARMOR[0]
+	casing.border_color = Palette.ARMOR[2]
+	casing.set_border_width_all(maxi(2, int(size * 0.035)))
+	casing.draw(ci, f.grow(-size * 0.07))
+	# Rivets in the casing corners.
+	for p in [Vector2(0.17, 0.17), Vector2(0.83, 0.17), Vector2(0.17, 0.83)]:
+		c.draw_circle(f.position + p * size, size * 0.03, Palette.ARMOR[1])
+	# The bomb: a black sphere with a steel rim and a shine.
+	var bc := f.get_center() + Vector2(-size * 0.02, size * 0.05)
+	var br := size * 0.25
+	c.draw_circle(bc, br + size * 0.025, Palette.ARMOR[2])
+	c.draw_circle(bc, br, Palette.BOMB[0])
+	c.draw_circle(bc + Vector2(-br * 0.38, -br * 0.4), br * 0.26, Color(1, 1, 1, 0.35))
+	# Cap and fuse toward the top-right, with a lit spark.
+	var cap := bc + Vector2.from_angle(-PI * 0.25) * br
+	var cd := Vector2.from_angle(-PI * 0.25)
+	var cn := Vector2(-cd.y, cd.x)
+	var cw := size * 0.06
+	c.draw_colored_polygon(PackedVector2Array([cap - cn * cw, cap + cn * cw, cap + cn * cw + cd * cw * 1.2, cap - cn * cw + cd * cw * 1.2]), Palette.ARMOR[0])
+	var fuse_start := cap + cd * cw * 1.2
+	var spark := fuse_start + Vector2(size * 0.06, -size * 0.12)
+	c.draw_polyline(PackedVector2Array([fuse_start, fuse_start + Vector2(size * 0.05, -size * 0.02), spark]), Palette.BOMB[1], maxf(2.0, size * 0.035), true)
+	c.draw_colored_polygon(_burst(spark, size * 0.1, size * 0.045, 8), Palette.ARMOR_IMPACT[0])
+	c.draw_colored_polygon(_burst(spark, size * 0.05, size * 0.022, 8), Palette.BOMB[2])
+	# Direction chip (bottom-right): where the block goes once it is free.
+	var chip := f.position + Vector2(size * 0.8, size * 0.8)
+	var chr := size * 0.13
+	c.draw_circle(chip, chr + 2.0, Palette.ARMOR[2])
+	c.draw_circle(chip, chr, Color.WHITE)
+	var d := Direction.vector(data.direction)
+	var dn := Vector2(-d.y, d.x)
+	var tip := chip + d * chr * 0.62
+	var back := chip - d * chr * 0.55
+	c.draw_line(back, tip - d * chr * 0.2, Palette.ARMOR[2], maxf(2.0, chr * 0.28), true)
+	c.draw_colored_polygon(PackedVector2Array([tip, tip - d * chr * 0.5 + dn * chr * 0.42, tip - d * chr * 0.5 - dn * chr * 0.42]), Palette.ARMOR[2])
 
 
 static func _burst(ctr: Vector2, r_out: float, r_in: float, points: int) -> PackedVector2Array:
@@ -853,6 +851,8 @@ func play_flip(new_direction: int, delay: float = 0.0) -> void:
 	_turn_tween.tween_property(self, "arrow_angle", target, 0.32).set_trans(Tween.TRANS_BACK).set_ease(Tween.EASE_OUT)
 	flash = 0.8
 	create_tween().tween_property(self, "flash", 0.0, 0.3).set_delay(delay)
+	if data.armored:
+		_over.queue_redraw()  # the shell's direction chip
 
 
 ## v0.6: this block rammed a shelled block - dash forward and bounce back.
@@ -871,9 +871,12 @@ func play_crack(delay: float) -> void:
 	t.tween_callback(func():
 		data.armored = false
 		flash = 1.0
-		_over.queue_redraw())
-	t.tween_property(self, "scale", Vector2(1.12, 1.12), 0.08)
+		refresh()  # shell gone, full arrow visible
+		_arrow.scale = Vector2.ONE * 0.3)
+	t.tween_property(self, "scale", Vector2(1.14, 1.14), 0.08)
+	t.parallel().tween_property(_arrow, "scale", Vector2.ONE * 1.25, 0.16).set_trans(Tween.TRANS_BACK).set_ease(Tween.EASE_OUT)
 	t.tween_property(self, "scale", Vector2.ONE, 0.2).set_trans(Tween.TRANS_BACK).set_ease(Tween.EASE_OUT)
+	t.parallel().tween_property(_arrow, "scale", Vector2.ONE, 0.2)
 	t.parallel().tween_property(self, "flash", 0.0, 0.3)
 
 

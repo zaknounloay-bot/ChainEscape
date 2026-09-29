@@ -168,6 +168,37 @@ static func from_model(model: BoardModel) -> Solver:
 
 # --- Public API ------------------------------------------------------------
 
+## Search budget for the Hammer check (well above what any campaign state
+## needs; the starting boards of all 200 levels settle in < 60k nodes).
+const HAMMER_NODE_LIMIT := 400000
+
+
+## v0.6.4 Hammer rule: smashing `id` (ANY block - normal, reward, armored,
+## even a Chain Gate) is allowed unless it would MAKE the puzzle unsolvable:
+## - the board after the smash is solvable (or empty) -> allowed;
+## - the board was already lost before the smash (a trap was walked into)
+##   -> allowed: the Hammer can't make it worse, and may rescue it;
+## - solvable before but not after -> rejected.
+## If the solver can't settle the "after" board within its budget, the
+## smash is allowed only when the board is provably lost already (a live
+## board is never risked).
+static func hammer_safe(model: BoardModel, id: int) -> bool:
+	if not model.blocks.has(id):
+		return false
+	var test := BoardModel.new()
+	test.setup(model.rows, model.columns, model.snapshot())
+	test.remove(id)
+	if test.is_empty():
+		return true
+	var after := Solver.from_model(test)
+	after.node_limit = HAMMER_NODE_LIMIT
+	if after.is_solvable():
+		return true
+	var now := Solver.from_model(model)
+	now.node_limit = HAMMER_NODE_LIMIT
+	return not now.is_solvable() and not now.aborted
+
+
 ## Returns a full solution (block ids in tap order), or [] if the board
 ## cannot be cleared (check `aborted` to tell "unsolvable" from "gave up").
 ## An already-empty board returns [] with is_solved() true.

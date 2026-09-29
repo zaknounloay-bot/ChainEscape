@@ -481,8 +481,11 @@ func test_shop() -> void:
 	wipe_save(path)
 
 
-## Hammer safety, exhaustively on real board states: the rule the game uses
-## must accept exactly the smashes that keep the level solvable.
+## v0.6.4 Hammer rule, on real board states (normal, gate and armor levels,
+## plus boards already lost to a trap): Solver.hammer_safe must allow a
+## smash exactly when it does not MAKE the puzzle unsolvable - any block
+## type, Chain Gates included - and an allowed smash of a live board must
+## really replay to an empty board.
 func test_hammer_safety() -> void:
 	var lm := LevelManager.new()
 	lm._ready()
@@ -490,32 +493,76 @@ func test_hammer_safety() -> void:
 	rng.seed = 99
 	var accepted := 0
 	var rejected := 0
-	for n in [11, 31, 45, 61, 75, 88, 97]:
+	var lost_boards := 0
+	var gates_ok := 0
+	var armored_ok := 0
+	for n in [11, 31, 45, 61, 75, 88, 97, 121, 135, 161, 174, 200]:
 		if n > lm.level_count:
 			continue
 		var m := model_of(lm.load_level(n))
-		for step in 6:
+		for step in 5:
+			var before := Solver.from_model(m).is_solvable()
 			for id in m.blocks.keys():
 				var t := BoardModel.new()
 				t.setup(m.rows, m.columns, m.snapshot())
 				t.remove(id)
-				var ok := t.is_empty() or Solver.from_model(t).is_solvable()
-				if ok:
+				var after := t.is_empty() or Solver.from_model(t).is_solvable()
+				var allowed := Solver.hammer_safe(m, id)
+				check(allowed == (after or not before), "L%d step %d: smash of %d allowed=%s (before %s, after %s)" % [n, step, id, allowed, before, after])
+				if allowed:
 					accepted += 1
+					if m.blocks[id].is_gate():
+						gates_ok += 1
+					if m.blocks[id].armored:
+						armored_ok += 1
 				else:
 					rejected += 1
-				# Whatever the rule accepts must replay to an empty board.
-				if ok and not t.is_empty():
-					var sol := Solver.from_model(t).solve()
-					for x in sol:
-						t.remove(x)
-					check(t.is_empty(), "L%d accepted smash of %d really stays solvable" % [n, id])
-			var free := m.free_block_ids()
-			if free.is_empty():
+				# Never create an unsolvable board: an allowed smash of a live
+				# board replays to empty.
+				if allowed and before and not t.is_empty():
+					for x in Solver.from_model(t).solve_moves():
+						if x & Solver.RAM:
+							t.ram(x & Solver.ID_MASK)
+						else:
+							t.remove(x)
+					check(t.is_empty(), "L%d allowed smash of %d really stays solvable" % [n, id])
+			if not before:
+				lost_boards += 1
+			# Next state: a random playable move (sometimes a trap).
+			var moves := m.playable_ids()
+			if moves.is_empty():
 				break
-			m.remove(free[rng.randi() % free.size()])
-	check(accepted > 50, "many safe smashes found (%d)" % accepted)
-	check(rejected > 0, "unsafe smashes exist and are detected (%d)" % rejected)
+			var mv: int = moves[rng.randi() % moves.size()]
+			if m.move_state(mv) == "ram":
+				m.ram(mv)
+			else:
+				m.remove(mv)
+	# A deliberately lost board: every block may be smashed.
+	var trap := model_of(lm.load_level(61))
+	for guard in 30:
+		var moves := trap.playable_ids()
+		var lost := false
+		for mv in moves:
+			var t := BoardModel.new()
+			t.setup(trap.rows, trap.columns, trap.snapshot())
+			if t.move_state(mv) == "ram":
+				t.ram(mv)
+			else:
+				t.remove(mv)
+			if not t.is_empty() and not Solver.from_model(t).is_solvable():
+				trap = t
+				lost = true
+				break
+		if lost:
+			break
+		trap.remove(Solver.from_model(trap).recommend_move())
+	check(not Solver.from_model(trap).is_solvable(), "built a board already lost to a trap")
+	check(trap.blocks.keys().all(func(id): return Solver.hammer_safe(trap, id)), "on a lost board every block may be smashed")
+	check(accepted > 150, "many allowed smashes (%d)" % accepted)
+	check(rejected > 0, "unsafe smashes exist and are rejected (%d)" % rejected)
+	check(gates_ok > 0, "a Chain Gate can be smashed when safe (%d)" % gates_ok)
+	check(armored_ok > 0, "an armored block can be smashed when safe (%d)" % armored_ok)
+	print("  hammer rule: %d allowed, %d rejected, %d lost boards, %d gates, %d armored" % [accepted, rejected, lost_boards, gates_ok, armored_ok])
 	lm.free()
 
 
