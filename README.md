@@ -1,4 +1,4 @@
-# Chain Escape — v0.6.1
+# Chain Escape — v0.6.2
 
 A one-handed portrait puzzle game built with **Godot 4.3 (GDScript)** for iOS, Android and mobile Web.
 
@@ -170,6 +170,18 @@ How the lessons behave:
 - **Nothing was added.** It is already a deliberate, frequent mechanic, so more of it would be overuse.
 - **It is safe and logically clear.** The armor-safety and mystery-fairness checks don't depend on it, and it never produces an unsolvable level (the verifier re-solves every level).
 - **What would make it feel intentional:** giving the weak locks real work, in place of adding locks elsewhere. That is a level-by-level redesign, outside this polish pass (see *Recommended next steps*).
+
+### v0.6.2 results
+
+| Check | Result |
+|---|---|
+| Level verifier | `ALL 200 LEVELS SOLVABLE AND PASS CAMPAIGN RULES`, including the new rules: Master Levels are hardest by structural difficulty (L100 54.5 vs 52.0; L200 91.7 vs 66.5), and no reward sits on an armored block. Chapter 20's average is 72.7. |
+| Armor audit | `ARMOR AUDIT: 0 unsafe`: all 33 armor levels, with the solver and the game rules agreeing on every level. The new Level 200 has 1,154 reachable states and no stranded shell. |
+| Unit tests | `UNIT TESTS PASSED`: 23,684 checks, 0 failures. New `test_reward_vs_armor_look`: Silver/Gold bodies are much brighter than the Armor plate, the navy arrow is at least 7:1 on both metals, Gold is not a yellow block, and no campaign reward is on a shell. |
+| Playtest | `PLAYTEST PASSED`: all 200 levels by real taps. Lessons at 101/121/161 checked: marks, finger and line; finished by the key action; saved; not repeated on replay; restored after relaunch. Later Armor levels show only the reminder. The block material check now expects metal on uncollected rewards. |
+| Soak (memory) | `SOAK PASSED`: 600 levels (1-200 ×3) in one process. 0 orphans; nodes and resources flat. Objects 2611 → 2618 → 2618 (a one-time +7 after the first cycle, then flat); memory 44.1 → 44.4 → 44.4 MB. |
+| Web persistence (real browser) | `WEB PERSISTENCE TEST PASSED`: 47 checks, A-G and the iPhone flow. WebAssembly 46 → 55 MB (+9 MB, then flat) over 101 → 140. |
+| Web audio | `WEB AUDIO TEST PASSED`: 75 checks, unchanged |
 
 ---
 
