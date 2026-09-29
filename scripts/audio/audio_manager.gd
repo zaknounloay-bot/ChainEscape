@@ -203,6 +203,10 @@ func set_music_enabled(on: bool) -> void:
 	if on:
 		start_music()
 	else:
+		# Cancel a Chapter fade in progress too, so turning music back on
+		# starts the current theme right away.
+		if _fade_tween:
+			_fade_tween.kill()
 		_music.stop()
 		_music_b.stop()
 
@@ -227,6 +231,11 @@ func is_music_playing() -> bool:
 func start_music() -> void:
 	if not music_enabled or not unlocked:
 		return
+	# v0.6.3: a Chapter fade in progress starts the next theme itself; an
+	# early play() here (e.g. focus regained mid-fade) would start it at full
+	# volume and then restart it when the fade's scheduled start fires.
+	if is_music_transitioning():
+		return
 	if _music.stream and not _music.playing:
 		_music.volume_db = MUSIC_VOLUME_DB
 		_music.play()
@@ -246,29 +255,32 @@ func set_music_theme(theme: String) -> void:
 		return
 	music_theme = theme
 	var stream := _theme_stream(theme)
-	if not music_enabled or not unlocked or not _music.playing:
-		if _fade_tween:
-			_fade_tween.kill()
+	# The track the player hears now. v0.6.3: during the first part of a
+	# previous fade the new theme has not started yet and the OLD one is
+	# still fading on the other player - fade that one out (it used to be
+	# stopped dead: an audible cut on quick Chapter changes).
+	var outgoing: AudioStreamPlayer = _music if _music.playing else (_music_b if _music_b.playing else null)
+	if _fade_tween:
+		_fade_tween.kill()
+	if not music_enabled or not unlocked or outgoing == null:
 		_music_b.stop()
 		_music.stop()
 		_music.stream = stream
 		start_music()
 		return
-	if _fade_tween:
-		_fade_tween.kill()
-	var old := _music
-	_music = _music_b
-	_music_b = old
-	_music.stop()
-	_music.stream = stream
-	_music.volume_db = -40.0
+	var incoming: AudioStreamPlayer = _music_b if outgoing == _music else _music
+	_music = incoming
+	_music_b = outgoing
+	incoming.stop()
+	incoming.stream = stream
+	incoming.volume_db = -40.0
 	_fade_tween = create_tween().set_parallel()
-	_fade_tween.tween_property(old, "volume_db", -40.0, FADE_OUT).set_trans(Tween.TRANS_SINE).set_ease(Tween.EASE_IN)
-	_fade_tween.tween_callback(old.stop).set_delay(FADE_OUT)
+	_fade_tween.tween_property(outgoing, "volume_db", -40.0, FADE_OUT).set_trans(Tween.TRANS_SINE).set_ease(Tween.EASE_IN)
+	_fade_tween.tween_callback(outgoing.stop).set_delay(FADE_OUT)
 	_fade_tween.tween_callback(func():
 		if music_enabled and unlocked:
-			_music.play()).set_delay(FADE_IN_DELAY)
-	_fade_tween.tween_property(_music, "volume_db", MUSIC_VOLUME_DB, FADE_IN).set_delay(FADE_IN_DELAY).set_trans(Tween.TRANS_SINE).set_ease(Tween.EASE_OUT)
+			incoming.play()).set_delay(FADE_IN_DELAY)
+	_fade_tween.tween_property(incoming, "volume_db", MUSIC_VOLUME_DB, FADE_IN).set_delay(FADE_IN_DELAY).set_trans(Tween.TRANS_SINE).set_ease(Tween.EASE_OUT)
 
 
 ## True while a Chapter music change is still fading (tests).

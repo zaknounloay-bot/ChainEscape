@@ -49,6 +49,8 @@ const GATE := [Color("#3D4459"), Color("#23283A"), Color("#E9EDF5")]
 ## v0.6.2 ARMORED shell: dark, matte gunmetal plating [plate, rivet light,
 ## deep edge] - deliberately darker and duller than any reward metal.
 const ARMOR := [Color("#4A5263"), Color("#B9C2D0"), Color("#1F242E")]
+## v0.6.3 Armor "hit this" badge: [burst, disc].
+const ARMOR_IMPACT := [Color("#FF7A1A"), Color("#2A1408")]
 
 ## v0.6.2 reward bodies: the WHOLE block is polished metal (index = rarity):
 ## [top light, body, bottom shade, side]. Distinct from Armor (bright and

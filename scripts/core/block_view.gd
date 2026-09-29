@@ -214,12 +214,12 @@ func _draw() -> void:
 	var face_rect := _face_rect()
 	var size := face_rect.size.x
 	var side_rect := Rect2(face_rect.position + Vector2(0, cell_size * DEPTH_RATIO), face_rect.size)
+	if _metal_body():
+		_draw_coin(face_rect, size)
+		return
 	_side_style.draw(get_canvas_item(), side_rect)
 	_face_style.draw(get_canvas_item(), face_rect)
-	if _metal_body():
-		_draw_metal_body(face_rect, size)
-	else:
-		_draw_material(face_rect, size)
+	_draw_material(face_rect, size)
 
 
 ## v0.6.2: uncollected Silver/Gold (draw-once like every other part).
@@ -233,38 +233,40 @@ func _arrow_color() -> Color:
 	return Palette.REWARD_ARROW if _metal_body() else Palette.arrow(data.color)
 
 
-## Polished metal: light top, shaded bottom, a mirror streak. Drawn under
-## the arrow, once per state change.
-func _draw_metal_body(f: Rect2, size: float) -> void:
+## v0.6.3 reward COIN: an uncollected Silver/Gold block is a round, milled
+## metal coin in its cell (same cell, same arrow, same tap). The round
+## silhouette alone says "reward" - no square special block is round.
+## Drawn once per state change.
+func _draw_coin(f: Rect2, size: float) -> void:
 	var body: Array = Palette.REWARD_BODY[data.rarity]
-	var ci := get_canvas_item()
-	var radius := int(round(size * CORNER_RATIO))
-	var top := StyleBoxFlat.new()
-	top.anti_aliasing = true
-	top.bg_color = body[0]
-	top.corner_radius_top_left = radius
-	top.corner_radius_top_right = radius
-	top.draw(ci, Rect2(f.position, Vector2(size, size * 0.34)))
-	# Soft step between the light top and the body color.
-	draw_rect(Rect2(f.position + Vector2(0, size * 0.3), Vector2(size, size * 0.08)), body[0].lerp(body[1], 0.5))
-	var bottom := StyleBoxFlat.new()
-	bottom.anti_aliasing = true
-	bottom.bg_color = body[2]
-	bottom.corner_radius_bottom_left = radius
-	bottom.corner_radius_bottom_right = radius
-	bottom.draw(ci, Rect2(f.position + Vector2(0, size * 0.74), Vector2(size, size * 0.26)))
-	draw_rect(Rect2(f.position + Vector2(0, size * 0.68), Vector2(size, size * 0.07)), body[1].lerp(body[2], 0.5))
-	# Mirror streak across the upper-right.
-	var a := f.position + Vector2(size * 0.56, size * 0.06)
-	draw_colored_polygon(PackedVector2Array([a, a + Vector2(size * 0.16, 0), a + Vector2(-size * 0.3, size * 0.52), a + Vector2(-size * 0.42, size * 0.52)]), Color(1, 1, 1, 0.38))
-	# Bright polished rim.
-	var rim := StyleBoxFlat.new()
-	rim.draw_center = false
-	rim.anti_aliasing = true
-	rim.set_corner_radius_all(radius)
-	rim.set_border_width_all(maxi(2, int(size * 0.035)))
-	rim.border_color = Color(body[0], 0.95)
-	rim.draw(ci, f)
+	var ctr := f.get_center()
+	var r := size * 0.5
+	var depth := cell_size * DEPTH_RATIO
+	var gold := data.rarity >= BlockData.Rarity.GOLD
+	# Halo (Gold wider and warmer).
+	draw_circle(ctr + Vector2(0, depth * 0.5), r + cell_size * (0.13 if gold else 0.1), Color(body[1], 0.16))
+	draw_circle(ctr + Vector2(0, depth * 0.5), r + cell_size * (0.07 if gold else 0.05), Color(body[1], 0.28))
+	# Coin thickness (the 3D edge).
+	draw_circle(ctr + Vector2(0, depth), r, body[3])
+	draw_rect(Rect2(ctr + Vector2(-r, 0), Vector2(r * 2.0, depth)), body[3])
+	draw_circle(ctr, r, body[2])
+	# Milled rim: fine ridges all around.
+	var ridge := Color(body[0], 0.9)
+	for i in 40:
+		var d := Vector2.from_angle(TAU * i / 40.0)
+		draw_line(ctr + d * r * 0.9, ctr + d * r * 0.99, ridge, maxf(1.0, size * 0.018), true)
+	# Polished face: body color, then a soft highlight up-left (a domed look).
+	draw_circle(ctr, r * 0.86, body[1])
+	draw_circle(ctr + Vector2(-r * 0.12, -r * 0.14), r * 0.62, body[1].lerp(body[0], 0.45))
+	draw_circle(ctr + Vector2(-r * 0.22, -r * 0.26), r * 0.3, body[0])
+	draw_arc(ctr, r * 0.86, PI * 0.15, PI * 0.85, 24, Color(body[2], 0.8), maxf(2.0, size * 0.03), true)
+	# Inlay ring in the block's OWN color (locks count reward blocks by color).
+	var ring_w := maxf(3.0, size * 0.055)
+	draw_arc(ctr, r * 0.74, 0.0, TAU, 56, Color(body[3], 0.9), ring_w + 3.0, true)
+	draw_arc(ctr, r * 0.74, 0.0, TAU, 56, Palette.styled_face(data.color), ring_w, true)
+	# Static sparkles.
+	draw_colored_polygon(_star(ctr + Vector2(r * 0.5, -r * 0.5), size * 0.11, size * 0.03), Color(1, 1, 1, 0.95))
+	draw_colored_polygon(_star(ctr + Vector2(-r * 0.56, r * 0.46), size * 0.07, size * 0.02), Color(1, 1, 1, 0.8))
 
 
 ## Chapter finish: a gloss band on the upper face and a thin light rim.
@@ -364,18 +366,17 @@ func _draw_era2_material(f: Rect2, size: float, radius: int) -> void:
 				draw_line(p, p + Vector2(0, l * sy), g, w, true)
 
 
-## Silver/Gold glint: a soft diagonal band inside the face; its alpha pulses.
+## Silver/Gold glint: a soft diagonal band across the coin face (inside the
+## circle); its alpha pulses.
 func _draw_shine(c: CanvasItem) -> void:
-	if not data.is_reward() or reward_spent:
+	if not _metal_body():
 		return
 	var f := _face_rect()
-	var size := f.size.x
-	var w := size * 0.12
-	var inset := size * 0.14
-	var pts := PackedVector2Array([
-		f.position + Vector2(inset + size * 0.3, inset), f.position + Vector2(inset + size * 0.3 + w, inset),
-		f.position + Vector2(inset + w, size - inset), f.position + Vector2(inset, size - inset)])
-	c.draw_colored_polygon(pts, Color(1, 1, 1, 0.3))
+	var r := f.size.x * 0.5
+	var m := f.get_center() + Vector2(r * 0.08, -r * 0.08)
+	var d := Vector2(-1, 1).normalized() * r * 0.68
+	var n := Vector2(1, 1).normalized() * r * 0.13
+	c.draw_colored_polygon(PackedVector2Array([m + d + n, m + d - n, m - d - n, m - d + n]), Color(1, 1, 1, 0.42))
 
 
 ## Chunky white arrow pointing RIGHT around the part's origin; the part
@@ -499,10 +500,13 @@ func _draw_rule_strip(c: CanvasItem, center: Vector2, size: float) -> void:
 ## soft veil that makes the block read as "not available yet".
 func _draw_lock(c: CanvasItem, face_rect: Rect2, size: float) -> void:
 	var t := _lock_open
-	var veil := _face_style.duplicate() as StyleBoxFlat
-	veil.bg_color = Color(0.1, 0.07, 0.25, 0.30 * (1.0 - t))
-	veil.shadow_size = 0
-	veil.draw(c.get_canvas_item(), face_rect)
+	if _metal_body():
+		c.draw_circle(face_rect.get_center(), size * 0.5, Color(0.1, 0.07, 0.25, 0.30 * (1.0 - t)))
+	else:
+		var veil := _face_style.duplicate() as StyleBoxFlat
+		veil.bg_color = Color(0.1, 0.07, 0.25, 0.30 * (1.0 - t))
+		veil.shadow_size = 0
+		veil.draw(c.get_canvas_item(), face_rect)
 	var s := size * 0.36 * (1.0 + 0.5 * t)
 	var a := 1.0 - t
 	var cc := face_rect.position + Vector2(face_rect.size.x - size * 0.16, size * 0.18)
@@ -623,18 +627,23 @@ func _draw_link_badge(c: CanvasItem, f: Rect2, size: float) -> void:
 	c.draw_string(font, at + Vector2(-w * 0.5, size * 0.13), data.gate_link, HORIZONTAL_ALIGNMENT_LEFT, -1, fs, col)
 
 
-## ARMORED (v0.6.2 look): dark, matte gunmetal plating - a thick frame of
-## plates with seams and hex bolts, and a faint dark veil on the face. It
-## reads "protected / must be broken", never "reward". The arrow stays
-## fully visible in the middle.
+## ARMORED (v0.6.3 look): the block is sealed in a steel SHELL - plating
+## over the whole face (the arrow shows only dimly through it, and comes
+## back bright once the shell cracks), a riveted frame, stress cracks, and
+## an orange IMPACT badge on the top edge meaning "hit this". Square, dark
+## and matte: nothing like the round, bright reward coins.
 func _draw_armor(c: CanvasItem, f: Rect2, size: float) -> void:
 	var ci := c.get_canvas_item()
 	var radius := int(size * CORNER_RATIO)
-	var veil := StyleBoxFlat.new()
-	veil.anti_aliasing = true
-	veil.set_corner_radius_all(radius)
-	veil.bg_color = Color(Palette.ARMOR[2], 0.22)
-	veil.draw(ci, f)
+	var plate := StyleBoxFlat.new()
+	plate.anti_aliasing = true
+	plate.set_corner_radius_all(radius)
+	plate.bg_color = Color(Palette.ARMOR[0], 0.6)
+	plate.draw(ci, f)
+	# Brushed steel lines across the plate.
+	for i in 5:
+		var y := f.position.y + size * (0.22 + 0.14 * i)
+		c.draw_line(Vector2(f.position.x + size * 0.14, y), Vector2(f.end.x - size * 0.14, y), Color(Palette.ARMOR[1], 0.12), maxf(1.0, size * 0.012), true)
 	var frame := StyleBoxFlat.new()
 	frame.draw_center = false
 	frame.anti_aliasing = true
@@ -646,16 +655,6 @@ func _draw_armor(c: CanvasItem, f: Rect2, size: float) -> void:
 	frame.set_border_width_all(maxi(4, int(w * 0.72)))
 	frame.border_color = Palette.ARMOR[0]
 	frame.draw(ci, f.grow(-w * 0.14))
-	# Plate seams: short dark cuts across the frame, two per side.
-	var seam := Color(Palette.ARMOR[2], 0.95)
-	var sw := maxf(2.0, size * 0.025)
-	for t in [0.36, 0.64]:
-		var x: float = f.position.x + size * t
-		var y: float = f.position.y + size * t
-		c.draw_line(Vector2(x, f.position.y), Vector2(x, f.position.y + w), seam, sw, true)
-		c.draw_line(Vector2(x, f.end.y - w), Vector2(x, f.end.y), seam, sw, true)
-		c.draw_line(Vector2(f.position.x, y), Vector2(f.position.x + w, y), seam, sw, true)
-		c.draw_line(Vector2(f.end.x - w, y), Vector2(f.end.x, y), seam, sw, true)
 	# Hex bolts in the corners.
 	for p in [Vector2(0.11, 0.11), Vector2(0.89, 0.11), Vector2(0.89, 0.89), Vector2(0.11, 0.89)]:
 		var at: Vector2 = f.position + p * size
@@ -666,12 +665,34 @@ func _draw_armor(c: CanvasItem, f: Rect2, size: float) -> void:
 			hexi.append(at + Vector2.from_angle(i * PI / 3.0) * size * 0.032)
 		c.draw_colored_polygon(hexo, Palette.ARMOR[2])
 		c.draw_colored_polygon(hexi, Palette.ARMOR[1])
+	# Stress cracks from the frame inward: it CAN break.
+	var crack := Color(Palette.ARMOR[2], 0.95)
+	var cw := maxf(2.0, size * 0.028)
+	c.draw_polyline(PackedVector2Array([f.position + Vector2(size * 0.14, size * 0.62), f.position + Vector2(size * 0.26, size * 0.57),
+		f.position + Vector2(size * 0.3, size * 0.68), f.position + Vector2(size * 0.4, size * 0.66)]), crack, cw, true)
+	c.draw_polyline(PackedVector2Array([f.position + Vector2(size * 0.86, size * 0.34), f.position + Vector2(size * 0.75, size * 0.4),
+		f.position + Vector2(size * 0.71, size * 0.31), f.position + Vector2(size * 0.62, size * 0.35)]), crack, cw, true)
+	# Impact badge on the top edge: an orange burst on a dark disc.
+	var at := Vector2(f.get_center().x, f.position.y + size * 0.04)
+	var br := size * 0.17
+	c.draw_circle(at, br * 1.12, Color.WHITE)
+	c.draw_circle(at, br, Palette.ARMOR_IMPACT[1])
+	c.draw_colored_polygon(_burst(at, br * 0.86, br * 0.4, 8), Palette.ARMOR_IMPACT[0])
+	c.draw_colored_polygon(_burst(at, br * 0.46, br * 0.2, 8), Color.WHITE)
 
 
-## Silver / Gold reward block (v0.6.2). The body is metal (see
-## _draw_metal_body); here: a thin inner ring in the block's OWN color
-## (locks still depend on it) and a star badge in the top-left corner (the
-## padlock uses top-right). Nothing like the dark riveted Armor frame.
+static func _burst(ctr: Vector2, r_out: float, r_in: float, points: int) -> PackedVector2Array:
+	var pts := PackedVector2Array()
+	for i in points * 2:
+		var r := r_out if i % 2 == 0 else r_in
+		pts.append(ctr + Vector2.from_angle(-PI * 0.5 + i * PI / points) * r)
+	return pts
+
+
+## Silver / Gold reward block. The coin itself (with its own-color inlay
+## ring) is drawn by _draw_coin; here: the star badge in the top-left (the
+## padlock uses top-right), above any lock veil; or, once collected on an
+## earlier run, a faint metal frame on the normal block.
 func _draw_reward(c: CanvasItem, face_rect: Rect2, size: float) -> void:
 	var radius := int(round(size * CORNER_RATIO))
 	var frame := StyleBoxFlat.new()
@@ -685,15 +706,6 @@ func _draw_reward(c: CanvasItem, face_rect: Rect2, size: float) -> void:
 		frame.draw(c.get_canvas_item(), face_rect)
 		return
 	var body: Array = Palette.REWARD_BODY[data.rarity]
-	# Color identity ring.
-	var inset := size * 0.1
-	frame.set_corner_radius_all(maxi(radius - int(inset), 3))
-	frame.set_border_width_all(maxi(3, int(size * 0.055)))
-	frame.border_color = Palette.styled_face(data.color)
-	frame.draw(c.get_canvas_item(), face_rect.grow(-inset))
-	frame.set_border_width_all(1)
-	frame.border_color = Color(body[3], 0.8)
-	frame.draw(c.get_canvas_item(), face_rect.grow(-inset - maxi(3, int(size * 0.055))))
 	# Star badge: a four-point sparkle with a dark outline.
 	var g := _gem_center()
 	var gs := size * 0.15
