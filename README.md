@@ -1,4 +1,4 @@
-# Chain Escape — v0.6.3
+# Chain Escape — v0.6.4
 
 A one-handed portrait puzzle game built with **Godot 4.3 (GDScript)** for iOS, Android and mobile Web.
 
@@ -55,6 +55,56 @@ Not included, on purpose: leaderboards, country ranking, accounts/login, backend
 | **Difficulty** | Levels 61–95 were tuned harder, so every Chapter's average difficulty now rises: 42.1 → 46.1 → 49.9 → 53.3 → 58.8 for Chapters 6–10. Before, Chapter 7 dipped to 37.5. The verifier enforces the rise. |
 | **Save v3** | Adds completed Chapters, collected reward blocks, coins per Chapter and tips seen. v0.4 saves migrate without losing or double-paying anything. |
 | **101+ architecture** | Chapters 11+ come from the data (`overflow.cycle`). The generator gets `chapter_plan(c)` (profile, difficulty band, reward frequency) and `classify(level)`. |
+
+---
+
+## v0.6.4 — bomb-shell Armor and a free Hammer
+
+Two changes only. Scoring, saves, music, Level Select, tutorials, Silver / Gold and the levels are unchanged.
+
+### 1. Armor is a bomb shell that bursts open
+
+The Armor rules are unchanged: a shelled block can't leave until another block is launched into it, and the ram cracks the shell. What changed is how it looks and feels.
+
+**Intact shell** (`BlockView._draw_armor`):
+- **A gunmetal casing** covers the block face, with a thin band of the block's own colour left visible (locks still count it by colour) and rivets.
+- **A big black bomb** in the middle, with a steel rim and a shine, and a **lit fuse ending in an orange spark**.
+- **The big arrow is hidden** while the shell is intact. A **small white chip** in the bottom-right corner shows the direction the block will go once it is free, so planning is never guesswork.
+
+**The hit** (`Board.play_ram`, `BlockView.play_crack`, `AudioManager` "crack"):
+- The rammer dashes in and bounces back, as before.
+- **The shell bursts:**
+  - orange fire and yellow sparks
+  - steel fragments flying back toward the rammer
+  - a little grey smoke
+  - two expanding shockwave rings (orange and yellow)
+  - a board thump
+- **Sound:** a new synthesized **explosion**, a sharp noise crack that darkens as it fades over a low falling thump. It replaces the old metallic click.
+- **Reveal:** the shell and bomb vanish in a white flash, and the **full arrow pops in** (from 30% to 125% to 100% size). From then on the block is a normal block.
+- **Visual only:** no neighbour is removed, moved, turned or damaged, and the puzzle logic is exactly the existing ram. The playtest checks that every other block is identical after the burst.
+- **Undo** restores the bomb shell.
+- The Level 161 lesson and the reminder when a shell is tapped are unchanged.
+
+Everything is one-shot (freed particles, rings drawn once and only scaled and faded): no per-frame drawing and no resource creation.
+
+### 2. The Hammer removes any block that is safe to remove
+
+**The rule** (`Solver.hammer_safe`, used by the game and the tests): the Hammer may remove **any** block the player picks. That includes normal blocks, blocks that didn't need removing, Silver/Gold, armored blocks and, new in v0.6.4, **Chain Gates**. It is refused only if the smash would **make** the puzzle unsolvable:
+- **The board after the smash is solvable (or empty):** allowed.
+- **The board was already lost before the smash** (the player walked into a trap): allowed. The Hammer can't make it worse, and it may rescue it.
+- **Solvable before, unsolvable after:** rejected.
+
+**Why it felt restrictive:** on the 200 starting boards the old check was already right: 3,778 blocks, 407 rejected for real, and the solver never gave up. The problem was lost boards. The old rule asked "is it solvable after the smash?", which is almost always "no" once the board is lost. So the Hammer refused nearly every block exactly when players reached for it. Chain Gates were also always refused.
+
+**How it is checked:** before anything is spent, the solver checks the board after a hypothetical removal (a copy of the board). Only if that board is unsolvable does it check the current board.
+- The search budget is 400,000 nodes, far above what any campaign state needs. On all 200 starting boards every check settles, the slowest in 48 ms.
+- If a check could not settle, a live board is never risked: the smash is refused.
+
+**A rejected smash** consumes nothing. The Hammer **stays armed**, so the player can pick another block or tap CANCEL. The only feedback is a short shake, a buzz and a haptic tap, with no text.
+
+**Silver / Gold:** a smashed reward block still pays no coins and is not marked collected, so it can still be earned by playing. The short "Smashed - Silver/Gold coins only pay when a block escapes" line is kept.
+
+A lesson whose mechanic block is smashed ends quietly and returns the next time.
 
 ---
 
@@ -382,7 +432,7 @@ All three are deterministic and fully visible. Each relationship is shown by a c
 - When the **last linked block has escaped**, the gate opens: it drops away, and its cell and lane are free.
 - A switch can be a link, so "fire this switch" can be a gate condition.
 - Opening a gate is not an escape: it turns no spinner and reveals nothing.
-- The Hammer can't smash a gate.
+- The Hammer can smash a gate when that keeps the level solvable (v0.6.4; its chained blocks then simply open nothing).
 
 **ARMORED block** (`R>=`, introduced at 161)
 - Shows a riveted steel frame, with the arrow fully visible.
