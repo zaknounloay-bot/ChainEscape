@@ -136,6 +136,19 @@ Everything else was already correct:
 
 The two-player cross-fade, Stream playback and the page-level first-gesture unlock are unchanged.
 
+### v0.6.3 results
+
+| Check | Result |
+|---|---|
+| Unit tests | `UNIT TESTS PASSED`: 23,688 checks, 0 failures. The reward vs Armor look checks add: an uncollected reward takes the coin path and a collected one is a normal square; the Armor impact burst contrasts with its disc; the Armor plate stays dark; the navy arrow is at least 7:1 on both metals. |
+| Visual check (phone-size captures) | Levels 186, 188 and 200: coins, the Armor shell and normal blocks are distinct at 390 px width |
+| Level Select touch test (real Chromium touch, 390×844) | `LEVEL SELECT TOUCH TEST PASSED (24 checks)`; the same test failed 10 of 23 checks before the fix |
+| Music audit | `MUSIC AUDIT PASSED`: 11 scenarios plus a relaunch, with no silence gap, no abrupt cut, no restart and at most 2 players; it failed on the two bugs before the fix |
+| Playtest | `PLAYTEST PASSED`: all 200 levels, including the lesson and Level Select checks |
+| Soak (memory) | `SOAK PASSED`: 400 levels, 0 orphans; nodes and resources flat; objects +7 once (flat afterwards, as in v0.6.2), memory +0.2 MB |
+| Web persistence | `WEB PERSISTENCE TEST PASSED`: 47 checks; WebAssembly +9 MB then flat (101 → 140) |
+| Web audio | `WEB AUDIO TEST PASSED`: 75 checks |
+
 ---
 
 ## v0.6.2 — polish from the real-iPhone 1-200 playthrough
