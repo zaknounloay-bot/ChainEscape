@@ -17,6 +17,25 @@ var _title_stars: Label
 var _total_label: Label
 var _scroll: ScrollContainer
 
+## v0.6.3 touch scrolling (iPhone QA: swipes that started on a level tile or
+## a Chapter header did nothing - those controls stopped the touch before
+## the ScrollContainer saw it). Now every touch inside the list is handled
+## here, in _input, before any control: past TAP_SLOP pixels it is a drag
+## (the list follows the finger, then keeps gliding), otherwise a tap on
+## whatever is under the finger. The list's children ignore the mouse.
+const TAP_SLOP := 12.0
+const FLING_DECAY := 3.2  # per second (iOS-like glide)
+var _tappables: Array[Control] = []
+var _touching := false
+var _touch_index := -1  # the finger being followed (Web may number them from 1)
+var _dragging := false
+var _press_pos := Vector2.ZERO
+var _drag_origin_y := 0.0
+var _drag_origin_scroll := 0.0
+var _samples: Array = []  # [time_s, y] of the last moves, for the fling speed
+var _fling := 0.0
+var _scroll_f := 0.0
+
 
 func _init() -> void:
 	color = Palette.BACKGROUND
@@ -57,6 +76,7 @@ func _ready() -> void:
 	_list.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	_list.add_theme_constant_override("separation", 14)
 	_scroll.add_child(_list)
+	_scroll.get_v_scroll_bar().value_changed.connect(func(_v): _publish())
 
 
 ## `chapters`: Array of GameManager.chapter_summary() dictionaries, each
@@ -65,6 +85,11 @@ func _ready() -> void:
 func open(chapters: Array, total_stars: int, max_stars: int, current_chapter: int, total_score: int = 0) -> void:
 	for c in _list.get_children():
 		c.queue_free()
+	_tappables.clear()
+	_touching = false
+	_dragging = false
+	_fling = 0.0
+	set_process(false)
 	var era_shown := 0
 	for info in chapters:
 		# v0.6: a simple divider where each era begins.
@@ -87,6 +112,9 @@ func open(chapters: Array, total_stars: int, max_stars: int, current_chapter: in
 					level_chosen.emit(lv["number"])
 					close())
 			grid.add_child(tile)
+	# Taps and drags are resolved in _input; nothing in the list may stop a
+	# touch on its own.
+	_ignore_mouse(_list)
 	_title_stars.text = "%d / %d ★" % [total_stars, max_stars]
 	_total_label.text = "TOTAL SCORE  %s" % UIManager._fmt(total_score)
 	visible = true
@@ -95,10 +123,144 @@ func open(chapters: Array, total_stars: int, max_stars: int, current_chapter: in
 	for c in _list.get_children():
 		if c.has_meta("chapter") and c.get_meta("chapter") == current_chapter:
 			_scroll.scroll_vertical = int(c.position.y)
+	_publish()
 
 
 func close() -> void:
 	visible = false
+	_touching = false
+	_dragging = false
+	_fling = 0.0
+	set_process(false)
+	_publish()
+
+
+func _ignore_mouse(node: Node) -> void:
+	for c in node.get_children():
+		if c is Control:
+			if c is BaseButton:
+				_tappables.append(c)
+			c.mouse_filter = Control.MOUSE_FILTER_IGNORE
+		_ignore_mouse(c)
+
+
+func _input(event: InputEvent) -> void:
+	if not visible:
+		return
+	var area := _scroll.get_global_rect()
+	if event is InputEventScreenTouch and (not _touching or event.index == _touch_index):
+		if event.pressed:
+			if not area.has_point(event.position):
+				return
+			_touching = true
+			_touch_index = event.index
+			_dragging = false
+			_fling = 0.0
+			set_process(false)
+			_press_pos = event.position
+			_samples = [[Time.get_ticks_msec() / 1000.0, event.position.y]]
+			get_viewport().set_input_as_handled()
+		elif _touching:
+			_touching = false
+			if _dragging:
+				_dragging = false
+				_start_fling()
+			else:
+				_tap_at(event.position)
+			get_viewport().set_input_as_handled()
+	elif event is InputEventScreenDrag and _touching and event.index == _touch_index:
+		var y: float = event.position.y
+		if not _dragging and absf(y - _press_pos.y) > TAP_SLOP:
+			# Start following the finger from here (no jump).
+			_dragging = true
+			_drag_origin_y = y
+			_drag_origin_scroll = _scroll.scroll_vertical
+		if _dragging:
+			_set_scroll(_drag_origin_scroll - (y - _drag_origin_y))
+			_samples.append([Time.get_ticks_msec() / 1000.0, y])
+			if _samples.size() > 6:
+				_samples.pop_front()
+		get_viewport().set_input_as_handled()
+	elif (event is InputEventMouseButton and event.button_index == MOUSE_BUTTON_LEFT) or (event is InputEventMouseMotion and event.button_mask != 0):
+		# The same gesture again as emulated mouse events: already handled
+		# as touch above (touch is emulated from the mouse on desktop too).
+		if area.has_point(event.position) or _touching:
+			get_viewport().set_input_as_handled()
+
+
+func _set_scroll(value: float) -> void:
+	var bar := _scroll.get_v_scroll_bar()
+	_scroll_f = clampf(value, 0.0, maxf(bar.max_value - bar.page, 0.0))
+	_scroll.scroll_vertical = int(round(_scroll_f))
+
+
+## Keeps gliding after a flick, slowing down like iOS lists.
+func _start_fling() -> void:
+	if _samples.size() < 2:
+		return
+	var a: Array = _samples[0]
+	var b: Array = _samples[-1]
+	var dt: float = b[0] - a[0]
+	if dt <= 0.0 or Time.get_ticks_msec() / 1000.0 - b[0] > 0.12:
+		return  # the finger stopped before lifting: no glide
+	_fling = -(b[1] - a[1]) / dt
+	_scroll_f = _scroll.scroll_vertical
+	set_process(absf(_fling) > 30.0)
+
+
+func _process(delta: float) -> void:
+	_fling *= exp(-FLING_DECAY * delta)
+	var before := _scroll_f
+	_set_scroll(_scroll_f + _fling * delta)
+	if absf(_fling) < 30.0 or is_equal_approx(before, _scroll_f):
+		_fling = 0.0
+		set_process(false)
+
+
+## A tap (the finger barely moved): the tile or chest button under it.
+func _tap_at(pos: Vector2) -> void:
+	for b in _tappables:
+		if is_instance_valid(b) and b.is_visible_in_tree() and not b.disabled and b.get_global_rect().has_point(pos):
+			b.pressed.emit()
+			return
+
+
+## Web only (browser tests): scroll position plus the screen positions of a
+## visible level tile, Chapter header and empty gap, so a real-touch test
+## can start swipes on each. Published on scroll changes only.
+func _publish() -> void:
+	if not WebBridge.available():
+		return
+	var vis := get_viewport().get_visible_rect().size
+	var inner := _scroll.get_global_rect().grow(-40.0)
+	var norm := func(p: Vector2) -> Array:
+		return [snappedf(p.x / vis.x, 0.0001), snappedf(p.y / vis.y, 0.0001)]
+	var tile := []  # any visible tile (locked tiles used to block swipes too)
+	var open_tile := []  # a visible UNLOCKED tile (tap test)
+	var open_number := 0
+	var header := []
+	var gap := []
+	for c in _list.get_children():
+		var r: Rect2 = c.get_global_rect()
+		if header.is_empty() and c.has_meta("chapter"):
+			var hp := r.position + Vector2(r.size.x * 0.3, 30.0)
+			if inner.has_point(hp):
+				header = norm.call(hp)
+		if c is CenterContainer:
+			for t in c.get_child(0).get_children():
+				var tc: Vector2 = t.get_global_rect().get_center()
+				if not t is LevelTile or not inner.has_point(tc):
+					continue
+				if tile.is_empty():
+					tile = norm.call(tc)
+					# Left of the grid on the same row: no tile, no header.
+					gap = norm.call(Vector2(_scroll.get_global_rect().position.x + 6, tc.y))
+				if open_tile.is_empty() and t.info["unlocked"]:
+					open_tile = norm.call(tc)
+					open_number = t.info["number"]
+	WebBridge.publish("chainEscapeSelect", {"open": visible, "scroll": _scroll.scroll_vertical,
+		"max": int(_scroll.get_v_scroll_bar().max_value - _scroll.get_v_scroll_bar().page),
+		"tile": tile, "header": header, "gap": gap, "open_tile": open_tile, "open_number": open_number})
 
 
 ## "SECOND ERA  ·  LEVELS 101-200" between the eras.
