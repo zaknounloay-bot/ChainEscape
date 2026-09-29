@@ -1,12 +1,12 @@
 {
 	"name": "Final Ascent",
 	"map": [
-		"Pv+D    P<      Y<+C    Y>@     Pv@#G   .",
-		".       P^+D    Yv      G>@     .       B<@",
-		".       .       .       XD      G>      Pv",
-		".       R<@     Pv@-    Y^      .       .",
-		".       B^      XC      Y<$G+D  .       R<",
-		"Pv      .       P<=     B^#G    .       B>=",
-		"G>+C    .       .       .       Rv      ."
+		"Pv      G<+D    Y<+C    Y>@     B>@~#G  .",
+		".       Y^+C    Pv+D    G>@     .       Y<@",
+		".       .       .       XD      B>      Pv",
+		".       R<@     Gv@-    R^      .       .",
+		".       B^=     XC      Y<$G    .       P<+D",
+		"Pv      .       P<      B^#G    .       Bv=",
+		"G>      .       .       .       Rv      ."
 	]
 }

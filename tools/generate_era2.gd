@@ -185,8 +185,15 @@ func _repair_slot(n: int, seed: int, budget_s: int) -> LevelData:
 	var best_m := {}
 	var best_err := INF
 	var tries := 0
+	var stale := 0
 	while Time.get_ticks_msec() < deadline:
 		tries += 1
+		stale += 1
+		if stale > 1500 and best == null:
+			# Stuck on a plateau: start over from the original level.
+			current = original
+			cur_score = _repair_score(gen, original, om, p, target)
+			stale = 0
 		var cand := gen._mutate(current, p)
 		if cand == null:
 			continue
@@ -194,6 +201,8 @@ func _repair_slot(n: int, seed: int, budget_s: int) -> LevelData:
 		if not m["solvable"] or m["aborted"]:
 			continue
 		var sc := _repair_score(gen, cand, m, p, target)
+		if sc < cur_score:
+			stale = 0
 		if sc <= cur_score:
 			current = cand
 			cur_score = sc
@@ -204,7 +213,7 @@ func _repair_slot(n: int, seed: int, budget_s: int) -> LevelData:
 			if best_err <= 1.0:
 				break
 	if best == null:
-		print("L%d repair: no valid candidate in %d tries (best score %.1f)" % [n, tries, cur_score])
+		print("L%d repair: no valid candidate in %d tries (best score %.1f) rules failing: %s" % [n, tries, cur_score, str(_repair_reasons)])
 		return null
 	best.number = n
 	best.name = original.name
@@ -218,11 +227,20 @@ func _repair_slot(n: int, seed: int, budget_s: int) -> LevelData:
 	return best
 
 
+var _repair_reasons := {}
+
+
 ## Lower is better. >= 1000 means a rule still fails.
 func _repair_score(gen: LevelGenerator, level: LevelData, m: Dictionary, p: Dictionary, target: float) -> float:
 	var err := absf(float(m["difficulty"]) - target)
 	if m["armor_dead_ends"] > 0:
 		return 100000.0 + 1000.0 * m["armor_dead_ends"] + err
-	if gen.rejection_reason(m, p, level) != "":
-		return 1000.0 + err
+	var reason := gen.rejection_reason(m, p, level)
+	if reason != "":
+		_repair_reasons[reason] = _repair_reasons.get(reason, 0) + 1
+		# Graded, so the climb can make progress toward the failing rule.
+		var off: float = 5.0 * maxi(0, m["start_moves"] - p["max_start_moves"])
+		off += 3.0 * maxi(0, p["min_decision_points"] - m["decision_points"]) + 3.0 * maxi(0, p["min_depth"] - m["depth"])
+		off += 3.0 * maxi(0, p["min_start_traps"] - m["start_traps"]) + 40.0 * maxf(0.0, m["direction_share"] - p["max_direction_share"])
+		return 1000.0 + off + err * 0.1
 	return err

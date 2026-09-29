@@ -1,12 +1,12 @@
 {
 	"name": "Pinnacle",
 	"map": [
-		"Y>+C   .      .      .      .      .      Rv@-",
-		".      R>     .      B>     XC     P^=    .",
-		".      Y>     Rv     .      Y>     .      Rv",
-		"Pv     .      .      .      .      Bv#R   .",
-		".      .      Rv@    P>@*   Yv     .      B<@~",
-		"Y<     .      R<     .      B<@    R<     P>+C",
-		".      Y^     .      .      .      B<@#G  ."
+		"G>     B>     Rv     .      .      B>     Rv@-",
+		".      R>     P>@    .      XC     P^=    Pv",
+		"G^     .      Rv     .      G>     .      Pv+C",
+		".      .      .      .      .      Bv#R   .",
+		".      .      Pv@    P<@*   Y<     .      B<@~",
+		".      .      .      .      .      R<     .",
+		"R^+C   B^     .      .      .      P<@#G  ."
 	]
 }

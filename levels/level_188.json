@@ -1,12 +1,12 @@
 {
 	"name": "Summit Key",
 	"map": [
-		"Gv     Y<+C   .      .      B>=    .      Bv#P",
+		"Gv+C   B<     .      .      B>     .      Bv#P",
 		".      R^     Y>@    Pv@*   .      .      .",
 		".      B^+D   .      .      P<@$S  .      Rv",
-		".      .      .      .      Y<@    B>     Rv",
-		"Y>@~   .      .      R^     P<     .      XD",
-		"Bv@-   .      .      Y^     XC     P<+D   B<$G=",
-		".      B^+D   .      .      .      G<+C   Gv#P"
+		".      .      .      .      Y<     B>@    Rv",
+		"Y>@~   .      .      R^+D   P<     .      XD",
+		"Bv@-   .      .      Gv=    XC     P<+D   B>$G=",
+		".      B^     .      .      .      G<+C   G<#P"
 	]
 }

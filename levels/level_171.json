@@ -3,12 +3,12 @@
 	"hint": "Switch, gate and shell: read every mark before you tap.",
 	"hint_finger": false,
 	"map": [
-		".       .       .       B^=     Y<#B    .",
-		".       P>%A    .       .       .       .",
-		"B>@~    Gv@*    .       B<      .       Bv",
-		"Rv      .       Rv#Y    B^$G&A  G<      Bv",
-		"P>+C    .       R>      .       Y>=     .",
-		".       .       R^@     P^@-    .       .",
-		".       R^      .       .       .       XC"
+		".     .     .     B<=   .     .",
+		".     G>=   .     .     .     .",
+		"B>@   Bv@*  .     G<@   .     Bv",
+		"Pv    .     G^#Y  B^$G  G<    Bv&A",
+		"Y>    .     R>+C  .     .     .",
+		".     .     R^@~  P^@-  .     .",
+		".     R^%A  .     Gv    Y>#B  XC"
 	]
 }
