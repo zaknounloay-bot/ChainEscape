@@ -65,15 +65,7 @@ func _run() -> void:
 	_check_order(social, SocialScreen.Page.CHOICE)
 	await _shot("02_social_choice")
 
-	await _tap(_page_node(social, SocialScreen.Page.CHOICE, "Card_Photo"))
-	_check(social.page == SocialScreen.Page.PHOTO_REVEAL, "PHOTO / MESSAGE REVEAL opens its placeholder")
-	var soon: Label = social._pages[SocialScreen.Page.PHOTO_REVEAL].find_child("ComingSoon", true, false)
-	_check(soon != null and soon.text == "CREATION FLOW COMING SOON", "placeholder says CREATION FLOW COMING SOON")
-	await _wait(0.8)
-	_check_order(social, SocialScreen.Page.PHOTO_REVEAL)
-	await _shot("03_photo_placeholder")
-	await _tap(_page_node(social, SocialScreen.Page.PHOTO_REVEAL, "Back"))
-	_check(social.is_open() and social.page == SocialScreen.Page.CHOICE, "BACK from Photo returns to the Social choice screen")
+	await _test_reveal_creator(social)
 
 	await _tap(_page_node(social, SocialScreen.Page.CHOICE, "Card_Friend"))
 	_check(social.page == SocialScreen.Page.CHALLENGE_FRIEND, "CHALLENGE A FRIEND opens its placeholder")
@@ -149,6 +141,202 @@ func _test_main_menu() -> void:
 	var done: PillButton = menu.get_parent().get_child(menu.get_index() + 1)
 	await _tap(done)
 	_check(not game.ui.is_settings_open() and not game.ui.is_title_open(), "DONE closes Settings and stays in the level")
+
+
+## Social MVP 0.2A: the whole Photo / Message Reveal creation flow, driven
+## by taps (photos arrive through receive_photo, as the Web picker and the
+## desktop dialog deliver them).
+func _test_reveal_creator(social: SocialScreen) -> void:
+	_test_session_rules()
+	var cr: RevealCreator = social.creator
+	var wide := _test_jpeg(1600, 900, Color("#E8703A"))
+	var tall := _test_jpeg(900, 1600, Color("#3A7BE8"))
+	await _tap(_page_node(social, SocialScreen.Page.CHOICE, "Card_Photo"))
+	_check(social.page == SocialScreen.Page.PHOTO_REVEAL and cr.visible and cr.step == RevealCreator.Step.CHOOSE,
+			"PHOTO / MESSAGE REVEAL opens the creation flow (CHOOSE PHOTO)")
+	await _wait(0.4)
+	_check_step(cr, ["ChoosePhoto", "SkipPhoto", "Back"])
+	await _shot("03_reveal_choose")
+	# Pick a photo -> PREVIEW (not yet in the session).
+	cr.receive_photo(wide, Vector2i(4000, 2250))
+	await _wait(0.4)
+	_check(cr.step == RevealCreator.Step.PREVIEW and not cr.session.has_photo(), "a chosen photo opens PREVIEW, not yet committed")
+	_check_step(cr, ["UsePhoto", "ChooseAnother", "Back"])
+	_check_aspect(cr._preview_image, Vector2(1600, 900), "preview keeps the landscape aspect")
+	await _shot("04_reveal_preview")
+	# CHOOSE ANOTHER: a new pick replaces the preview.
+	cr.receive_photo(tall)
+	await _wait(0.3)
+	_check(cr.step == RevealCreator.Step.PREVIEW and cr._pending.image_size == Vector2i(900, 1600), "choosing another photo replaces the preview")
+	_check_aspect(cr._preview_image, Vector2(900, 1600), "preview keeps the portrait aspect")
+	_check_step(cr, ["UsePhoto", "ChooseAnother", "Back"])
+	await _shot("04b_reveal_preview_portrait")
+	_check(not cr.receive_photo(PackedByteArray([1, 2, 3])) and cr._pending.image_size == Vector2i(900, 1600), "an unreadable photo is refused, the preview stays")
+	await _tap(_cnode(cr, "Back"))
+	_check(cr.step == RevealCreator.Step.CHOOSE and not cr.session.has_photo(), "BACK from PREVIEW returns to CHOOSE PHOTO without the photo")
+	cr.receive_photo(wide, Vector2i(4000, 2250))
+	await _wait(0.3)
+	await _tap(_cnode(cr, "UsePhoto"))
+	_check(cr.step == RevealCreator.Step.MESSAGE and cr.session.has_photo() and cr.session.source_size == Vector2i(4000, 2250), "USE THIS PHOTO commits it and opens ADD A MESSAGE")
+	# Message: 200-character limit, count, CONTINUE.
+	await _wait(0.3)
+	_check_step(cr, ["MessageCard", "MessageCount", "Continue", "SkipMessage", "Back"])
+	var edit: TextEdit = cr._message_edit
+	edit.insert_text_at_caret("x".repeat(250))
+	await _frames(2)  # TextEdit emits text_changed deferred
+	_check(edit.text.length() == 200 and cr._message_count.text == "200 / 200", "message capped at 200 characters with a count (%s)" % cr._message_count.text)
+	edit.text = ""
+	edit.insert_text_at_caret("Happy birthday!\nSee you soon")
+	await _frames(2)  # TextEdit emits text_changed deferred
+	await _shot("05_reveal_message")
+	await _tap(_cnode(cr, "Continue"))
+	_check(cr.step == RevealCreator.Step.DIFFICULTY and cr.session.message == "Happy birthday!\nSee you soon", "CONTINUE keeps the message and opens CHOOSE DIFFICULTY")
+	# Difficulty.
+	await _wait(0.3)
+	_check_step(cr, ["Difficulty_easy", "Difficulty_medium", "Difficulty_hard", "Continue", "Back"])
+	_check(cr._difficulty_continue.disabled, "CONTINUE waits for a difficulty")
+	await _tap(_cnode(cr, "Difficulty_medium"))
+	_check(cr.session.difficulty == "medium" and not cr._difficulty_continue.disabled, "MEDIUM selected")
+	await _shot("06_reveal_difficulty")
+	await _tap(_cnode(cr, "Continue"))
+	_check(cr.step == RevealCreator.Step.REVIEW, "CONTINUE opens READY TO CREATE?")
+	await _wait(0.3)
+	_check_step(cr, ["ReviewPhoto", "ReviewMessage", "ReviewDifficulty", "EditPhoto", "EditMessage", "EditDifficulty", "Create", "Back"])
+	_check(cr._review_message.text.contains("Happy birthday!") and cr._review_difficulty.text.ends_with("MEDIUM") and not cr._review_create.disabled,
+			"REVIEW shows the photo, message and difficulty")
+	_check(cr._review_message.size.y >= 50.0, "REVIEW message is actually visible (2 lines, height %d)" % cr._review_message.size.y)
+	await _shot("07_reveal_review")
+	# Edit difficulty: photo and message stay.
+	await _tap(_cnode(cr, "EditDifficulty"))
+	_check(cr.step == RevealCreator.Step.DIFFICULTY, "EDIT DIFFICULTY opens the difficulty step")
+	await _tap(_cnode(cr, "Difficulty_hard"))
+	await _tap(_cnode(cr, "Continue"))
+	_check(cr.step == RevealCreator.Step.REVIEW and cr.session.difficulty == "hard" and cr.session.has_photo()
+			and cr.session.message == "Happy birthday!\nSee you soon", "editing the difficulty keeps photo and message")
+	# Edit message: whitespace only = no message; photo and difficulty stay.
+	await _tap(_cnode(cr, "EditMessage"))
+	_check(cr.step == RevealCreator.Step.MESSAGE and cr._message_edit.text == "Happy birthday!\nSee you soon", "EDIT MESSAGE opens with the current message")
+	cr._message_edit.text = ""
+	cr._message_edit.insert_text_at_caret("   \n  ")
+	await _frames(2)  # TextEdit emits text_changed deferred
+	await _tap(_cnode(cr, "Continue"))
+	_check(cr.step == RevealCreator.Step.REVIEW and not cr.session.has_message() and cr._review_message.text == "No message"
+			and cr.session.has_photo() and cr.session.difficulty == "hard", "a whitespace-only message counts as no message; the rest stays")
+	# Edit photo: message and difficulty stay.
+	await _tap(_cnode(cr, "EditPhoto"))
+	_check(cr.step == RevealCreator.Step.PREVIEW and cr._pending.image_size == Vector2i(1600, 900), "EDIT PHOTO shows the current photo")
+	cr.receive_photo(tall)
+	await _wait(0.3)
+	await _tap(_cnode(cr, "UsePhoto"))
+	_check(cr.step == RevealCreator.Step.REVIEW and cr.session.image_size == Vector2i(900, 1600) and cr.session.difficulty == "hard",
+			"choosing another photo from REVIEW keeps the difficulty")
+	# Worst case on REVIEW: portrait photo + a full 200-character message.
+	await _tap(_cnode(cr, "EditMessage"))
+	cr._message_edit.text = ""
+	cr._message_edit.insert_text_at_caret(("Happy birthday to the best friend anyone could ask for! " .repeat(4)).left(200))
+	await _frames(2)  # TextEdit emits text_changed deferred
+	await _tap(_cnode(cr, "Continue"))
+	await _wait(0.3)
+	_check(cr.step == RevealCreator.Step.REVIEW and cr.session.message.length() == 200, "a 200-character message reaches REVIEW")
+	_check_step(cr, ["ReviewPhoto", "ReviewMessage", "ReviewDifficulty", "EditPhoto", "EditMessage", "EditDifficulty", "Create", "Back"])
+	_check(cr._review_message.get_visible_line_count() == cr._review_message.get_line_count(), "the whole 200-character message is shown on REVIEW (%d lines)" % cr._review_message.get_line_count())
+	await _shot("07b_reveal_review_full")
+	# Back through the steps, then message only (skip the photo).
+	await _tap(_cnode(cr, "Back"))
+	_check(cr.step == RevealCreator.Step.DIFFICULTY, "BACK: REVIEW -> DIFFICULTY")
+	await _tap(_cnode(cr, "Back"))
+	_check(cr.step == RevealCreator.Step.MESSAGE, "BACK: DIFFICULTY -> MESSAGE")
+	await _tap(_cnode(cr, "Back"))
+	_check(cr.step == RevealCreator.Step.PREVIEW, "BACK: MESSAGE -> PREVIEW (a photo is chosen)")
+	await _tap(_cnode(cr, "Back"))
+	_check(cr.step == RevealCreator.Step.CHOOSE, "BACK: PREVIEW -> CHOOSE PHOTO")
+	await _tap(_cnode(cr, "SkipPhoto"))
+	_check(cr.step == RevealCreator.Step.MESSAGE and not cr.session.has_photo(), "SKIP PHOTO removes the photo and opens ADD A MESSAGE")
+	cr._message_edit.text = ""
+	await _frames(2)  # TextEdit emits text_changed deferred
+	await _wait(0.3)
+	_check(not cr._message_skip.visible and cr._message_continue.disabled, "message only: a message is required (no SKIP, CONTINUE waits)")
+	cr._message_edit.insert_text_at_caret("Meet me at the park at 5")
+	await _frames(2)  # TextEdit emits text_changed deferred
+	_check(not cr._message_continue.disabled, "CONTINUE enabled once there is a message")
+	await _shot("08_reveal_message_only")
+	await _tap(_cnode(cr, "Continue"))
+	_check(cr.step == RevealCreator.Step.DIFFICULTY and cr.session.difficulty == "hard", "difficulty kept after changing the photo choice")
+	await _tap(_cnode(cr, "Continue"))
+	_check(cr.step == RevealCreator.Step.REVIEW and cr._review_no_photo.visible and not cr._review_photo.visible, "REVIEW says No photo")
+	await _shot("09_reveal_review_message_only")
+	await _tap(_cnode(cr, "Create"))
+	_check(cr.step == RevealCreator.Step.READY, "CREATE CHALLENGE shows CHALLENGE READY")
+	await _wait(0.5)
+	_check_step(cr, ["ReadySummary", "SharingComingNext", "BackToCreate"])
+	var share: PillButton = _cnode(cr, "SharingComingNext")
+	_check(share.disabled, "SHARING COMING NEXT is not active")
+	_check(cr._ready_summary.text.contains("No photo") and cr._ready_summary.text.contains("Message") and cr._ready_summary.text.contains("Hard"), "READY summary (%s)" % cr._ready_summary.text)
+	var d := cr.session.to_dict()
+	_check(d["challenge_type"] == "photo_message_reveal" and d["image"] == null and d["message"] == "Meet me at the park at 5" and d["difficulty"] == "hard"
+			and not d.has("id") and not d.has("url"), "session data ready for a future SharedChallenge (no id, no url)")
+	await _shot("10_reveal_ready")
+	await _tap(_cnode(cr, "BackToCreate"))
+	_check(social.page == SocialScreen.Page.CHOICE and not cr.visible and not cr.session.has_message() and cr.session.difficulty == "",
+			"BACK TO CREATE CHALLENGE returns to the choice screen and discards the session")
+	# Re-enter: a fresh session; BACK from CHOOSE PHOTO leaves the flow.
+	await _tap(_page_node(social, SocialScreen.Page.CHOICE, "Card_Photo"))
+	_check(cr.step == RevealCreator.Step.CHOOSE and not cr.session.has_photo() and cr.session.message == "", "re-entering starts a fresh session")
+	await _tap(_cnode(cr, "Back"))
+	_check(social.page == SocialScreen.Page.CHOICE and not cr.visible, "BACK from CHOOSE PHOTO returns to the Social choice screen")
+	_check(get_tree().root.find_children("*", "HTTPRequest", true, false).is_empty(), "no network requests exist in the scene")
+	await _wait(0.8)
+
+
+func _test_session_rules() -> void:
+	var s := CreatorSession.new()
+	_check(s.validate().has("nothing_to_reveal") and s.validate().has("difficulty"), "an empty session cannot be created")
+	s.set_message("   \n\t  ")
+	_check(not s.has_message(), "whitespace-only message = no message")
+	s.set_message("y".repeat(260))
+	_check(s.message.length() == 200, "message cut at 200 characters")
+	s.set_message("a\n\n\n\nb\nc\nd\ne\nf\ng")
+	_check(s.message == "a\n\nb\nc\nd\ne", "blank runs collapse, at most 6 lines (%s)" % s.message.c_escape())
+	s.set_difficulty("impossible")
+	_check(s.difficulty == "", "unknown difficulty ignored")
+	s.set_difficulty("easy")
+	_check(s.is_valid(), "message + difficulty is a valid reveal")
+	_check(not s.set_photo_jpeg(PackedByteArray([0, 1])), "bad JPEG bytes refused")
+
+
+func _test_jpeg(w: int, h: int, col: Color) -> PackedByteArray:
+	var img := Image.create(w, h, false, Image.FORMAT_RGB8)
+	img.fill(col)
+	img.fill_rect(Rect2i(w / 4, h / 4, w / 2, h / 2), Color.WHITE)
+	return img.save_jpg_to_buffer(0.85)
+
+
+func _cnode(cr: RevealCreator, node_name: String) -> Control:
+	var n: Control = cr._steps[cr.step].find_child(node_name, true, false)
+	_check(n != null and n.is_visible_in_tree(), "step %d: %s visible" % [cr.step, node_name])
+	return n
+
+
+## Every listed control of the current step is visible and fully on
+## screen, and the column's items do not overlap.
+func _check_step(cr: RevealCreator, names: Array) -> void:
+	var vis := get_viewport().get_visible_rect()
+	for n in names:
+		var c := _cnode(cr, n)
+		if c:
+			_check(vis.encloses(c.get_global_rect()), "step %d: %s on screen (%s)" % [cr.step, n, c.get_global_rect()])
+	var prev_end := -INF
+	for c: Control in cr._steps[cr.step].get_children():
+		if not c.visible:
+			continue
+		var r := c.get_global_rect()
+		_check(r.position.y >= prev_end - 0.5, "step %d: '%s' does not overlap the item above" % [cr.step, c.name])
+		prev_end = r.end.y
+
+
+func _check_aspect(rect: TextureRect, img: Vector2, msg: String) -> void:
+	var sz := rect.custom_minimum_size
+	_check(sz.x > 100 and absf(sz.x / sz.y - img.x / img.y) < 0.02, "%s (%s)" % [msg, sz])
 
 
 ## After the entrance, a page's items rest in order, top to bottom, fully

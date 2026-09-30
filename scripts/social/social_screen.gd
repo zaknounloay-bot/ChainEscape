@@ -50,6 +50,9 @@ var _bg_bottom := Palette.BACKGROUND
 var _drifters: Array[Dictionary] = []  # {node, dir, speed}
 var _drift_time := 0.0
 var _entrance: Tween
+## 0.2A: the Photo / Message Reveal creation flow (replaces its placeholder).
+var creator: RevealCreator
+var _theme: Dictionary = {}
 var _entering: Control  # column waiting for its entrance to start
 var _tap: Tween
 
@@ -64,13 +67,17 @@ func _ready() -> void:
 	set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
 	_build_drifters()
 	_pages[Page.CHOICE] = _build_choice()
-	for p in [Page.PHOTO_REVEAL, Page.CHALLENGE_FRIEND]:
-		_pages[p] = _build_placeholder(p)
+	creator = RevealCreator.new()
+	creator.exit_requested.connect(func(): show_page(Page.CHOICE))
+	add_child(creator)
+	_pages[Page.PHOTO_REVEAL] = creator
+	_pages[Page.CHALLENGE_FRIEND] = _build_placeholder(Page.CHALLENGE_FRIEND)
 
 
 func open(theme: Dictionary) -> void:
 	_bg_top = theme["bg_top"]
 	_bg_bottom = theme["bg_bottom"]
+	_theme = theme
 	for l in _headings:
 		l.add_theme_color_override("font_color", theme["text"])
 	for l in _soft_labels:
@@ -83,6 +90,7 @@ func open(theme: Dictionary) -> void:
 
 func close() -> void:
 	_stop_animations()
+	creator.reset()
 	visible = false
 	page = Page.CHOICE
 	set_process(false)
@@ -95,9 +103,16 @@ func is_open() -> bool:
 func show_page(p: int) -> void:
 	_stop_animations()
 	page = p
+	# Leaving the creation flow discards its session (photo, message).
+	if p != Page.PHOTO_REVEAL and creator.visible:
+		creator.reset()
 	for k in _pages:
 		_pages[k].visible = k == p
-	if visible:
+	if not visible:
+		return
+	if p == Page.PHOTO_REVEAL:
+		creator.begin(_theme)  # the flow runs its own step transitions
+	else:
 		_animate_in(_pages[p])
 
 
@@ -335,6 +350,8 @@ func _stop_animations() -> void:
 		_tap.kill()
 		_tap = null
 	for k in _pages:
+		if not _pages[k] is Container:
+			continue  # the creator flow manages its own steps
 		for c in _pages[k].get_children():
 			c.modulate.a = 1.0
 		_pages[k].queue_sort()

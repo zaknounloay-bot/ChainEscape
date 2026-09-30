@@ -74,6 +74,29 @@ Built on the frozen **V17 Golden Master** (levels 1-200 unchanged). UI and navig
 - **Settings > MAIN MENU:** returns to the title exactly as at launch (the level stays loaded behind it). CONTINUE resumes the same board. Nothing is reset or saved, so no confirmation is needed.
 - Check: `godot --headless --path . res://tools/SocialSmoke.tscn` (real input events). It asserts navigation, card layout, entrance end state, the MAIN MENU round trip, and that progress and the save file are byte-identical after Social and MAIN MENU.
 
+## Social MVP 0.2A — Photo / Message Reveal: creation flow (local only)
+
+The creator side of **PHOTO / MESSAGE REVEAL**. It replaces that track's 0.1 placeholder; CHALLENGE A FRIEND keeps its placeholder. It stops before any backend: no upload, share link, challenge id, recipient flow, puzzle generation or analytics.
+
+**Flow** (`scripts/social/reveal_creator.gd`): CHOOSE PHOTO (or SKIP PHOTO) → PREVIEW (USE THIS PHOTO / CHOOSE ANOTHER) → ADD A MESSAGE (optional, 200 characters; required only when there is no photo) → CHOOSE DIFFICULTY (EASY / MEDIUM / HARD) → READY TO CREATE? (EDIT PHOTO / MESSAGE / DIFFICULTY) → CHALLENGE READY (SHARING COMING NEXT is inactive).
+- BACK always goes one step back.
+- Editing one field from the review returns to the review and keeps the others.
+- Leaving the flow discards everything.
+
+**Session data** (`scripts/social/creator_session.gd`) lives in memory only. It holds `challenge_type = photo_message_reveal`, a local JPEG working copy of the photo (longest edge at most 1080 px), the message and the difficulty. It is never written to PlayerProgress, the Classic save or localStorage. `to_dict()` is the hand-off shape for a future SharedChallenge (no id, no URL).
+
+**Photo picking:**
+- Web (iPhone Safari first): `web/social_creator.js` is a separate page script. It never touches saves, audio or the network.
+  - Safari opens a file picker only from inside a real tap. Godot handles taps a frame later, so the game registers the CHOOSE PHOTO button's screen rectangle and the page opens the native picker from the tap itself.
+  - The browser decodes the image (EXIF rotation, and HEIC→JPEG on iPhone), scales it to 1080 px and re-encodes it as JPEG. Only that copy reaches the game; the original file is never changed or kept.
+- Desktop: a native file dialog, then the same downscaled JPEG.
+
+**Message (Web):** a native text field opened from the tap (so the iPhone keyboard comes up), pinned above the keyboard. It uses a 16 px font (no Safari zoom), `maxlength` 200 and a live count. Desktop uses a TextEdit on the screen.
+
+`python3 tools/sync_web_head.py` inlines both page scripts into `export_presets.cfg` as separate `<script>` blocks. The audio/save script is unchanged.
+
+Check: `godot --headless --path . res://tools/SocialSmoke.tscn` now also drives the whole creation flow, including edits, limits, validation and layout at the smallest screen.
+
 ## v0.6.6 — clear Silver / Gold reward feedback
 
 **What was wrong:** the feedback still fired, but it was weak on a phone:
@@ -1493,7 +1516,7 @@ godot --headless --path . --script res://tools/run_tests.gd        # unit tests
 godot --headless --path . --script res://tools/verify_levels.gd    # 200-level analysis + campaign rules
 godot --headless --path . res://tools/Playtest.tscn                # end-to-end play-through of levels 1-200 (-- --chapters-only for the v0.5 part)
 godot --headless --path . res://tools/Soak.tscn -- --cycles=2        # long session: 1 -> 200 twice in one process
-godot --headless --path . res://tools/SocialSmoke.tscn              # Social MVP 0.1: CREATE CHALLENGE navigation, Classic progress untouched
+godot --headless --path . res://tools/SocialSmoke.tscn              # Social: CREATE CHALLENGE, reveal creation flow (0.2A), MAIN MENU; Classic progress untouched
 godot --headless --path . --export-release "Web" build/web/index.html && node tools/web_audio_test.mjs   # real browser
 node tools/web_persistence_test.mjs                                  # Web save scenarios A-G (itch-like iframe)
 godot --headless --path . --script res://tools/armor_audit.gd       # every reachable state of every armor level, solver vs game rules
