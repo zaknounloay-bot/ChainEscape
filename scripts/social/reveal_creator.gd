@@ -1,13 +1,14 @@
 class_name RevealCreator
 extends Control
-## Social MVP 0.2A: creator side of PHOTO / MESSAGE REVEAL.
+## Social MVP 0.2A/0.2B: creator side of PHOTO / MESSAGE REVEAL.
 ##
-##   CHOOSE PHOTO -> PREVIEW -> MESSAGE -> DIFFICULTY -> REVIEW -> READY
+##   CHOOSE PHOTO -> PREVIEW -> MESSAGE -> DIFFICULTY -> REVIEW -> GENERATING
 ##
 ## Collects a CreatorSession (photo and/or message, difficulty) in memory.
-## Nothing is saved, uploaded or shared, and no puzzle is generated yet:
-## READY is a local end point until the sharing build. Hosted by
-## SocialScreen (its backdrop and drifting blocks stay behind it).
+## CREATE CHALLENGE (0.2B) generates and verifies the exact puzzle
+## (SocialGenerator), wraps it in a SharedChallenge and asks SocialScreen to
+## play it (play_requested). Nothing is saved, uploaded or shared. Hosted
+## by SocialScreen (its backdrop and drifting blocks stay behind it).
 ##
 ## Photo: on the Web build the page script (web/social_creator.js) opens
 ## the native picker from the tap itself (needed on iPhone Safari) and
@@ -16,8 +17,9 @@ extends Control
 ## desktop build a TextEdit on the screen.
 
 signal exit_requested  # leave the flow, back to the Social choice screen
+signal play_requested(challenge: SharedChallenge)  # a verified challenge is ready
 
-enum Step { CHOOSE, PREVIEW, MESSAGE, DIFFICULTY, REVIEW, READY }
+enum Step { CHOOSE, PREVIEW, MESSAGE, DIFFICULTY, REVIEW, GENERATING }
 
 const ACCENT := Color("#C645E6")  # Photo / Message Reveal identity (0.1)
 const TINT := Color("#EBCBF7")
@@ -67,9 +69,17 @@ var _review_message: Label
 var _review_difficulty: Label
 var _review_status: Label
 var _review_create: PillButton
-var _ready_icon: Node2D
-var _ready_summary: Label
-var _ready_photo: TextureRect
+var _gen_blocks: Array[Node2D] = []
+var _gen_title: Label
+var _gen_status: Label
+var _gen_retry: PillButton
+var _gen_back: PillButton
+## Generation in progress (one candidate per frame; null when idle).
+var generator: SocialGenerator
+## Tests: fixed generator seed (0 = random).
+var debug_seed := 0
+var _gen_frames := 0
+var _gen_anim: Tween
 
 
 func _init() -> void:
@@ -86,7 +96,7 @@ func _ready() -> void:
 	_steps[Step.MESSAGE] = _build_message()
 	_steps[Step.DIFFICULTY] = _build_difficulty()
 	_steps[Step.REVIEW] = _build_review()
-	_steps[Step.READY] = _build_ready()
+	_steps[Step.GENERATING] = _build_generating()
 	get_viewport().size_changed.connect(_on_resized)
 
 
@@ -102,6 +112,14 @@ func begin(theme: Dictionary) -> void:
 	show_step(Step.CHOOSE)
 
 
+## Back from a challenge left before it was solved: the creator's choices
+## are all still here.
+func resume_review() -> void:
+	generator = null
+	editing = false
+	show_step(Step.REVIEW)
+
+
 ## Leave the flow: the session (photo, message, difficulty) is discarded.
 func reset() -> void:
 	session = CreatorSession.new()
@@ -109,6 +127,9 @@ func reset() -> void:
 	_draft = ""
 	editing = false
 	step = Step.CHOOSE
+	generator = null
+	if _gen_anim:
+		_gen_anim.kill()
 	if _fade:
 		_fade.kill()
 	visible = false
@@ -133,8 +154,8 @@ func show_step(s: int) -> void:
 			_refresh_difficulty()
 		Step.REVIEW:
 			_refresh_review()
-		Step.READY:
-			_refresh_ready()
+		Step.GENERATING:
+			_start_generating()
 	for k in _steps:
 		_steps[k].visible = k == s
 	var col: Control = _steps[s]
@@ -146,9 +167,6 @@ func show_step(s: int) -> void:
 		col.modulate.a = 0.0
 		_fade = create_tween()
 		_fade.tween_property(col, "modulate:a", 1.0, 0.22)
-		if s == Step.READY:
-			_ready_icon.scale = Vector2(0.3, 0.3)
-			_fade.parallel().tween_property(_ready_icon, "scale", Vector2.ONE, 0.45).set_trans(Tween.TRANS_BACK).set_ease(Tween.EASE_OUT)
 	_update_zones.call_deferred(2)
 
 
@@ -182,6 +200,9 @@ func _back() -> void:
 				show_step(Step.MESSAGE)
 		Step.REVIEW:
 			show_step(Step.DIFFICULTY)
+		Step.GENERATING:
+			generator = null
+			show_step(Step.REVIEW)
 
 
 ## After a photo decision: the next step, or back to REVIEW when editing
@@ -665,91 +686,104 @@ func _error_text(errors: Array[String]) -> String:
 	return "Something is missing. Check your choices."
 
 
-## 0.2A end point: validate and show READY. No backend, no upload, no link,
-## no challenge id, no puzzle generation yet.
+## 0.2B: validate, then generate the exact puzzle (GENERATING step).
+## Still no backend, upload, link or challenge id.
 func _create() -> void:
 	AudioManager.play_ui_tap()
 	var errors := session.validate()
 	if not errors.is_empty():
 		_show_status(_review_status, _error_text(errors))
 		return
-	print("[Social] reveal challenge ready (local only): %s" % JSON.stringify(session.to_dict()))
-	show_step(Step.READY)
+	show_step(Step.GENERATING)
 
 
-# --- Step 5: ready (local placeholder) ------------------------------------------
+# --- Step 5: generating the challenge -----------------------------------------
 
-func _build_ready() -> VBoxContainer:
+func _build_generating() -> VBoxContainer:
 	var box := _column()
-	var holder := CenterContainer.new()
-	holder.mouse_filter = Control.MOUSE_FILTER_IGNORE
-	var slot := Control.new()
-	slot.custom_minimum_size = Vector2(76, 76)
-	slot.mouse_filter = Control.MOUSE_FILTER_IGNORE
-	holder.add_child(slot)
-	var icon := SocialScreen.EscapeBlock.new()
-	icon.face = ACCENT
-	icon.dir = Vector2.UP
-	icon.half = 36.0
-	icon.position = Vector2(38, 38)
-	slot.add_child(icon)
-	_ready_icon = icon
-	box.add_child(holder)
-	box.add_child(_heading("CHALLENGE READY"))
-	box.add_child(_soft("Your reveal challenge is ready for\nthe next step.", 26))
-	var card := PanelContainer.new()
-	card.add_theme_stylebox_override("panel", _card_style(Palette.WHITE, TINT, 24))
-	card.custom_minimum_size = Vector2(WIDTH, 0)
-	card.mouse_filter = Control.MOUSE_FILTER_IGNORE
-	box.add_child(card)
-	var inner := HBoxContainer.new()
-	inner.add_theme_constant_override("separation", 20)
-	inner.alignment = BoxContainer.ALIGNMENT_CENTER
-	card.add_child(inner)
-	_ready_photo = TextureRect.new()
-	_ready_photo.name = "ReadyPhoto"
-	_ready_photo.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
-	_ready_photo.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
-	_ready_photo.mouse_filter = Control.MOUSE_FILTER_IGNORE
-	inner.add_child(_ready_photo)
-	_ready_summary = _label("", 24, Palette.TEXT, 800)
-	_ready_summary.name = "ReadySummary"
-	_ready_summary.horizontal_alignment = HORIZONTAL_ALIGNMENT_LEFT
-	_ready_summary.add_theme_constant_override("line_spacing", 6)
-	inner.add_child(_ready_summary)
-	var share := _primary("SHARING COMING NEXT", "SharingComingNext")
-	share.disabled = true  # not active in 0.2A
-	box.add_child(share)
-	box.add_child(_soft("Nothing has been uploaded or shared.", 22))
-	var done := PillButton.new("BACK TO CREATE CHALLENGE", PillButton.Icon.NONE, Palette.WHITE, Palette.TEXT, 26)
-	done.name = "BackToCreate"
-	done.custom_minimum_size = Vector2(500, 100)
-	done.size_flags_horizontal = Control.SIZE_SHRINK_CENTER
-	done.pressed.connect(func():
+	var row := HBoxContainer.new()
+	row.alignment = BoxContainer.ALIGNMENT_CENTER
+	row.add_theme_constant_override("separation", 16)
+	row.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	for i in 3:
+		var slot := Control.new()
+		slot.custom_minimum_size = Vector2(56, 56)
+		slot.mouse_filter = Control.MOUSE_FILTER_IGNORE
+		var b := SocialScreen.EscapeBlock.new()
+		b.face = [Palette.face("red"), ACCENT, Palette.face("blue")][i]
+		b.dir = [Vector2.LEFT, Vector2.UP, Vector2.RIGHT][i]
+		b.half = 26.0
+		b.position = Vector2(28, 28)
+		slot.add_child(b)
+		row.add_child(slot)
+		_gen_blocks.append(b)
+	box.add_child(row)
+	_gen_title = _heading("CREATING YOUR\nCHALLENGE")
+	box.add_child(_gen_title)
+	_gen_status = _soft("", 26)
+	_gen_status.name = "GeneratingStatus"
+	box.add_child(_gen_status)
+	_gen_retry = _primary("TRY AGAIN", "TryAgain")
+	_gen_retry.pressed.connect(func():
 		AudioManager.play_ui_tap()
-		exit_requested.emit())
-	box.add_child(done)
+		_start_generating())
+	box.add_child(_gen_retry)
+	_gen_back = _back_button()
+	box.add_child(_gen_back)
 	return box
 
 
-func _refresh_ready() -> void:
-	_ready_photo.visible = session.has_photo()
-	if session.has_photo():
-		_ready_photo.texture = session.texture
-		var img := Vector2(session.image_size)
-		var s := minf(150.0 / img.x, 150.0 / img.y)
-		_ready_photo.custom_minimum_size = (img * s).floor()
-	var lines := PackedStringArray()
-	lines.append("Photo" if session.has_photo() else "No photo")
-	lines.append(("Message  ·  %d characters" % session.message.length()) if session.has_message() else "No message")
-	lines.append("Difficulty  ·  %s" % DIFFICULTY_TEXT[session.difficulty][0].capitalize())
-	_ready_summary.text = "\n".join(lines)
+func _start_generating() -> void:
+	var seed_value := debug_seed if debug_seed != 0 else (randi() | 1)
+	generator = SocialGenerator.new(session.difficulty, seed_value)
+	_gen_frames = 0
+	_gen_title.text = "CREATING YOUR\nCHALLENGE"
+	_gen_status.text = "Building a %s puzzle..." % DIFFICULTY_TEXT[session.difficulty][0]
+	_gen_status.remove_theme_color_override("font_color")
+	_gen_retry.visible = false
+	_gen_back.visible = false
+	if _gen_anim:
+		_gen_anim.kill()
+	if not SocialScreen.reduced_motion():
+		_gen_anim = create_tween().set_loops()
+		for b in _gen_blocks:
+			_gen_anim.tween_property(b, "scale", Vector2(1.18, 1.18), 0.18)
+			_gen_anim.tween_property(b, "scale", Vector2.ONE, 0.18)
+
+
+## One generator attempt per frame (after the screen has drawn once).
+func _generate_step() -> void:
+	_gen_frames += 1
+	if _gen_frames < 3 or not generator.step():
+		return
+	var g := generator
+	generator = null
+	if _gen_anim:
+		_gen_anim.kill()
+	for b in _gen_blocks:
+		b.scale = Vector2.ONE
+	if g.puzzle == null:
+		# Never play an unverified board: say so and keep every choice.
+		push_warning("[Social] no challenge after %d attempts (%s)" % [g.attempts, g.error])
+		_gen_title.text = "COULDN'T CREATE\nTHE CHALLENGE"
+		_gen_status.text = "Your photo and message are kept.\nPlease try again."
+		_gen_retry.visible = true
+		_gen_back.visible = true
+		return
+	print("[Social] challenge ready: %s %s %s" % [session.difficulty, JSON.stringify(g.metrics), g.puzzle.to_json()])
+	play_requested.emit(SharedChallenge.photo_message_reveal(session, g.puzzle))
 
 
 # --- Web polling and tap zones -------------------------------------------------
 
 func _process(delta: float) -> void:
-	if not visible or not _web:
+	if not visible:
+		return
+	if step == Step.GENERATING:
+		if generator:
+			_generate_step()
+		return
+	if not _web:
 		return
 	_poll += delta
 	if _poll < POLL:

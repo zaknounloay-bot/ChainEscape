@@ -74,6 +74,34 @@ Built on the frozen **V17 Golden Master** (levels 1-200 unchanged). UI and navig
 - **Settings > MAIN MENU:** returns to the title exactly as at launch (the level stays loaded behind it). CONTINUE resumes the same board. Nothing is reset or saved, so no confirmation is needed.
 - Check: `godot --headless --path . res://tools/SocialSmoke.tscn` (real input events). It asserts navigation, card layout, entrance end state, the MAIN MENU round trip, and that progress and the save file are byte-identical after Social and MAIN MENU.
 
+## Social MVP 0.2B — local challenge: generate → play → complete → reveal
+
+CREATE CHALLENGE now generates an exact, solver-verified puzzle and plays it on this device. Solving it reveals the photo and/or message. There is still no backend, upload, link or recipient networking.
+
+**Generic core (reusable by Challenge a Friend):**
+- `PuzzleDefinition` is the exact board as explicit data, in the campaign's own map format, rebuilt with the campaign parser: `{"format":"ce-puzzle","v":1,"rules":1,"rows":6,"cols":6,"map":["G< . . Y> . B^", ...]}`. Easy is about 115 bytes, Medium about 140, Hard about 172.
+- `SharedChallenge` = puzzle + type (`photo_message_reveal`) + difficulty + payload (message, photo description). The photo bytes stay local and are never serialized.
+- `SocialGenerator` uses the campaign `LevelGenerator` (its profiles, candidate builder, Solver evaluation and refinement) with a target band on its difficulty score. It runs one candidate per frame, uses a bounded number of attempts, and verifies the winner again after rebuilding it from JSON. It is deterministic per seed.
+
+| Social | Base profile | Board | Blocks | Spinners | Difficulty band |
+|---|---|---|---|---|---|
+| EASY | `easy` | 4×4 / 5×4 | 7–9 | 0 | 4–9 |
+| MEDIUM | `medium` | 5×5 | 12–15 | 1–2 | 14–22 |
+| HARD | `hard` | 6×6 | 18–22 | 3–4 | 28–60 |
+
+For scale, the campaign averages 4.7 in Chapter 1, 18.2 in Chapter 3 and 42.1 in Chapter 6. Social puzzles use only plain arrows and clockwise spinners, because a recipient may never have played.
+
+**Play** (`SocialPlay`, its own layer): its own `BoardModel`, `Board`, `History` and `Solver` hints, with the campaign's sounds and animations.
+- It never touches GameManager, PlayerProgress or the save.
+- The Classic level stays loaded underneath, so Classic CONTINUE is unchanged.
+- Available: UNDO (3 per attempt, as in the campaign), HINT (2 free from the Solver), RESTART and EXIT (asks first and never reveals).
+- Not available: hearts, Hammer, coins, stars, score and level numbers.
+- PLAY AGAIN rebuilds the puzzle from its serialized data.
+
+**Reveal** (`SocialReveal`): a chain of blocks breaks open, then shows the photo + message, the photo alone, or the message alone (large, with an emblem). Messages use `MessageText`. The photo shrinks to keep the buttons on screen.
+
+Checks: `godot --headless --path . res://tools/SocialPlayTest.tscn` covers generation bands, determinism, exact reconstruction (field by field, same solution), the play/reveal matrix, PLAY AGAIN, EXIT, and Classic and the save being untouched.
+
 ## Social MVP 0.2A — Photo / Message Reveal: creation flow (local only)
 
 The creator side of **PHOTO / MESSAGE REVEAL**. It replaces that track's 0.1 placeholder; CHALLENGE A FRIEND keeps its placeholder. It stops before any backend: no upload, share link, challenge id, recipient flow, puzzle generation or analytics.
@@ -1523,6 +1551,7 @@ godot --headless --path . --script res://tools/verify_levels.gd    # 200-level a
 godot --headless --path . res://tools/Playtest.tscn                # end-to-end play-through of levels 1-200 (-- --chapters-only for the v0.5 part)
 godot --headless --path . res://tools/Soak.tscn -- --cycles=2        # long session: 1 -> 200 twice in one process
 godot --headless --path . res://tools/SocialSmoke.tscn              # Social: CREATE CHALLENGE, reveal creation flow (0.2A), MAIN MENU; Classic progress untouched
+godot --headless --path . res://tools/SocialPlayTest.tscn          # Social 0.2B: generate -> play -> reveal, exact reconstruction, Classic untouched
 godot --headless --path . --export-release "Web" build/web/index.html && node tools/web_audio_test.mjs   # real browser
 node tools/web_persistence_test.mjs                                  # Web save scenarios A-G (itch-like iframe)
 godot --headless --path . --script res://tools/armor_audit.gd       # every reachable state of every armor level, solver vs game rules

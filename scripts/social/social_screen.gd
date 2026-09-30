@@ -52,6 +52,8 @@ var _drift_time := 0.0
 var _entrance: Tween
 ## 0.2A: the Photo / Message Reveal creation flow (replaces its placeholder).
 var creator: RevealCreator
+## 0.2B: plays a created challenge (own layer, over everything).
+var play: SocialPlay
 var _theme: Dictionary = {}
 var _entering: Control  # column waiting for its entrance to start
 var _tap: Tween
@@ -70,6 +72,13 @@ func _ready() -> void:
 	creator = RevealCreator.new()
 	creator.exit_requested.connect(func(): show_page(Page.CHOICE))
 	add_child(creator)
+	play = SocialPlay.new()
+	creator.play_requested.connect(func(c): play.start(c, SocialPlay.Mode.CREATOR_PREVIEW, _theme))
+	# Left before solving: back to the review, every choice kept.
+	play.exited.connect(func(): creator.resume_review())
+	# After the reveal: back to CREATE CHALLENGE (the session is discarded).
+	play.finished.connect(func(): show_page(Page.CHOICE))
+	add_child(play)
 	_pages[Page.PHOTO_REVEAL] = creator
 	_pages[Page.CHALLENGE_FRIEND] = _build_placeholder(Page.CHALLENGE_FRIEND)
 
@@ -90,6 +99,7 @@ func open(theme: Dictionary) -> void:
 
 func close() -> void:
 	_stop_animations()
+	play.end()
 	creator.reset()
 	visible = false
 	page = Page.CHOICE

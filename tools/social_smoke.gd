@@ -266,19 +266,28 @@ func _test_reveal_creator(social: SocialScreen) -> void:
 	await _tap(_cnode(cr, "Continue"))
 	_check(cr.step == RevealCreator.Step.REVIEW and cr._review_no_photo.visible and not cr._review_photo.visible, "REVIEW says No photo")
 	await _shot("09_reveal_review_message_only")
-	await _tap(_cnode(cr, "Create"))
-	_check(cr.step == RevealCreator.Step.READY, "CREATE CHALLENGE shows CHALLENGE READY")
-	await _wait(0.5)
-	_check_step(cr, ["ReadySummary", "SharingComingNext", "BackToCreate"])
-	var share: PillButton = _cnode(cr, "SharingComingNext")
-	_check(share.disabled, "SHARING COMING NEXT is not active")
-	_check(cr._ready_summary.text.contains("No photo") and cr._ready_summary.text.contains("Message") and cr._ready_summary.text.contains("Hard"), "READY summary (%s)" % cr._ready_summary.text)
 	var d := cr.session.to_dict()
 	_check(d["challenge_type"] == "photo_message_reveal" and d["image"] == null and d["message"] == "Meet me at the park at 5" and d["difficulty"] == "hard"
 			and not d.has("id") and not d.has("url"), "session data ready for a future SharedChallenge (no id, no url)")
-	await _shot("10_reveal_ready")
-	await _tap(_cnode(cr, "BackToCreate"))
-	_check(social.page == SocialScreen.Page.CHOICE and not cr.visible and not cr.session.has_message() and cr.session.difficulty == "",
+	# 0.2B: CREATE generates the exact puzzle and plays it; solving reveals.
+	cr.debug_seed = 20260930
+	await _tap(_cnode(cr, "Create"))
+	_check(cr.step == RevealCreator.Step.GENERATING, "CREATE CHALLENGE starts generating")
+	var play: SocialPlay = social.play
+	var t0 := Time.get_ticks_msec()
+	while not play.is_active() and Time.get_ticks_msec() - t0 < 20000:
+		await _frames(1)
+	_check(play.is_active() and play.challenge.difficulty == "hard" and play.challenge.puzzle.verify(), "a verified HARD challenge is playing")
+	await _wait(0.6)
+	await _shot("10_reveal_play")
+	while play.play_solver_move():
+		await _wait(0.12)
+	await _wait(2.2)
+	_check(play.reveal.visible and not play.reveal._photo_frame.visible and play.reveal._message.text == "Meet me at the park at 5",
+			"solving reveals the message (message only: no photo frame)")
+	await _shot("11_reveal_message_only")
+	await _tap(play.reveal._back)
+	_check(social.page == SocialScreen.Page.CHOICE and not play.is_active() and not cr.visible and not cr.session.has_message() and cr.session.difficulty == "",
 			"BACK TO CREATE CHALLENGE returns to the choice screen and discards the session")
 	# Re-enter: a fresh session; BACK from CHOOSE PHOTO leaves the flow.
 	await _tap(_page_node(social, SocialScreen.Page.CHOICE, "Card_Photo"))
