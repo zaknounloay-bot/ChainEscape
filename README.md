@@ -1,4 +1,4 @@
-# Chain Escape — v0.6.4
+# Chain Escape — v0.6.5
 
 A one-handed portrait puzzle game built with **Godot 4.3 (GDScript)** for iOS, Android and mobile Web.
 
@@ -55,6 +55,33 @@ Not included, on purpose: leaderboards, country ranking, accounts/login, backend
 | **Difficulty** | Levels 61–95 were tuned harder, so every Chapter's average difficulty now rises: 42.1 → 46.1 → 49.9 → 53.3 → 58.8 for Chapters 6–10. Before, Chapter 7 dipped to 37.5. The verifier enforces the rise. |
 | **Save v3** | Adds completed Chapters, collected reward blocks, coins per Chapter and tips seen. v0.4 saves migrate without losing or double-paying anything. |
 | **101+ architecture** | Chapters 11+ come from the data (`overflow.cycle`). The generator gets `chapter_plan(c)` (profile, difficulty band, reward frequency) and `classify(level)`. |
+
+---
+
+## v0.6.5 — reward coins never disappear (regression fix)
+
+**Report:** after v0.6.4, the Silver/Gold coins on Levels 182, 186, 188 and 200 looked gone.
+
+**Root cause:** no code regressed. v0.6.3 and v0.6.4 draw rewards identically.
+- A reward block **already collected on this save** was drawn as a plain square with a faint frame, by design since v0.5, so it could not pay twice.
+- Those four levels got new reward blocks in v0.6.2, so in the v0.6.3 playthrough they were uncollected (coins) and were collected.
+- In v0.6.4 the same save showed them as plain squares that looked like normal blocks.
+- Reproduced by rendering each level twice: with a fresh save, and with its rewards marked collected.
+
+**Fix** (`BlockView._metal_body`, `_draw_reward`, `Palette.REWARD_DONE`): every Silver/Gold block is **always** drawn as the v0.6.3 coin, collected or not; the coin drawing itself is unchanged. On a coin already collected on this save:
+- a small green **check badge** replaces the star
+- the glint and twinkle are off, because it pays nothing on a replay
+
+The anti-farming rule (each block pays once per save), scoring, Bomb/Armor, the Hammer and the levels are unchanged.
+
+**Results:**
+
+| Check | Result |
+|---|---|
+| Unit tests | 24,944 checks, 0 failures. The test now checks that a collected reward keeps the coin, with no glint. |
+| Playtest | `PLAYTEST PASSED`, all 200 levels, including Silver/Gold anti-farming |
+| Soak | `SOAK PASSED`: 400 levels, 0 orphans; nodes and resources flat; objects +7 once and memory +0.3 MB, identical to v0.6.4 |
+| Captures | Levels 182, 186, 188 and 200, fresh and collected: coins on both; bombs unchanged |
 
 ---
 
