@@ -1234,11 +1234,15 @@ func test_reward_vs_armor_look() -> void:
 	data.rarity = BlockData.Rarity.GOLD
 	view.setup(data, 100.0)
 	check(view._face_style.bg_color.is_equal_approx(Palette.REWARD_BODY[BlockData.Rarity.GOLD][1]) and view._arrow_color() == Palette.REWARD_ARROW, "a Gold view is metal with a navy arrow")
-	# v0.6.3: uncollected rewards take the round-coin path; a collected one
-	# is a normal square block again. The Armor "hit this" badge reads.
+	# v0.6.3: rewards take the round-coin path. v0.6.5: a reward already
+	# collected on this save stays the same coin (it used to fall back to a
+	# plain square and looked like it had disappeared) - only its badge
+	# changes, and it no longer glints. The Armor "hit this" badge reads.
 	check(view._metal_body(), "an uncollected reward is drawn as a coin")
 	view.reward_spent = true
-	check(not view._metal_body() and view._arrow_color() == Palette.arrow("red"), "a collected reward is a normal square block")
+	view.refresh()
+	check(view._metal_body() and view._arrow_color() == Palette.REWARD_ARROW, "a collected reward is still drawn as the same coin")
+	check(not view._shine.visible and not view._twinkle.visible, "a collected coin does not glint (it pays once)")
 	check(_contrast(Palette.ARMOR_IMPACT[0], Palette.ARMOR_IMPACT[1]) >= 4.5, "Armor impact burst reads on its disc (%.1f)" % _contrast(Palette.ARMOR_IMPACT[0], Palette.ARMOR_IMPACT[1]))
 	check(Palette.ARMOR[0].get_luminance() < 0.35, "the Armor plate stays dark (%.2f)" % Palette.ARMOR[0].get_luminance())
 	view.free()

@@ -68,6 +68,8 @@ const REWARD_BODY := [
 ## Arrow on every uncollected reward block: deep navy, >= 8:1 contrast on
 ## both the silver and the gold body (WCAG AAA is 7:1).
 const REWARD_ARROW := Color("#12204A")
+## v0.6.5: check badge on a reward coin already collected on this save.
+const REWARD_DONE := Color("#1FA35B")
 
 
 static func link(group: String) -> Color:

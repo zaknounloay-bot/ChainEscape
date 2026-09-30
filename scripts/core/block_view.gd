@@ -224,9 +224,13 @@ func _draw() -> void:
 	_draw_material(face_rect, size)
 
 
-## v0.6.2: uncollected Silver/Gold (draw-once like every other part).
+## Silver/Gold are drawn as the coin (draw-once like every other part).
+## v0.6.5: ALWAYS, collected or not. A reward already collected on this save
+## used to fall back to a plain square with a faint frame, so replayed
+## reward blocks looked like they had disappeared. It stays the same coin,
+## with a check badge instead of the star and no glint (it pays once).
 func _metal_body() -> bool:
-	return data != null and data.is_reward() and not reward_spent
+	return data != null and data.is_reward()
 
 
 ## Arrow, spinner ring, rule strip and "?" color: deep navy on a metal body
@@ -696,14 +700,17 @@ func _draw_reward(c: CanvasItem, face_rect: Rect2, size: float) -> void:
 	var frame := StyleBoxFlat.new()
 	frame.draw_center = false
 	frame.anti_aliasing = true
-	if reward_spent:
-		var metal: Array = Palette.METALS[data.rarity]
-		frame.set_corner_radius_all(radius)
-		frame.set_border_width_all(maxi(2, int(size * 0.03)))
-		frame.border_color = Color(metal[0], 0.45)
-		frame.draw(c.get_canvas_item(), face_rect)
-		return
 	var body: Array = Palette.REWARD_BODY[data.rarity]
+	if reward_spent:
+		# Already collected on this save: a small check badge in the star's
+		# place (the coin itself is unchanged).
+		var gc := _gem_center()
+		var gr := size * 0.13
+		c.draw_circle(gc, gr + 2.0, Color(body[3], 0.95))
+		c.draw_circle(gc, gr, Palette.REWARD_DONE)
+		c.draw_polyline(PackedVector2Array([gc + Vector2(-gr * 0.5, 0.0), gc + Vector2(-gr * 0.12, gr * 0.42), gc + Vector2(gr * 0.52, -gr * 0.38)]),
+			Color.WHITE, maxf(2.0, gr * 0.3), true)
+		return
 	# Star badge: a four-point sparkle with a dark outline.
 	var g := _gem_center()
 	var gs := size * 0.15
