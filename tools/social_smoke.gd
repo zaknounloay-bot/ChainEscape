@@ -148,6 +148,7 @@ func _test_main_menu() -> void:
 ## desktop dialog deliver them).
 func _test_reveal_creator(social: SocialScreen) -> void:
 	_test_session_rules()
+	_test_multilingual()
 	var cr: RevealCreator = social.creator
 	var wide := _test_jpeg(1600, 900, Color("#E8703A"))
 	var tall := _test_jpeg(900, 1600, Color("#3A7BE8"))
@@ -286,6 +287,75 @@ func _test_reveal_creator(social: SocialScreen) -> void:
 	_check(social.page == SocialScreen.Page.CHOICE and not cr.visible, "BACK from CHOOSE PHOTO returns to the Social choice screen")
 	_check(get_tree().root.find_children("*", "HTTPRequest", true, false).is_empty(), "no network requests exist in the scene")
 	await _wait(0.8)
+
+
+## Personal messages in any language (0.2A fix). Shapes each sample with
+## the message font as the Web build has it (engine font + bundled
+## fallbacks, no system fonts): every glyph found, the right direction,
+## Arabic letters joined.
+const MESSAGES := {
+	"en": ["Happy Birthday!", TextServer.DIRECTION_LTR],
+	"fr": ["Joyeux anniversaire! Très belle journée. é è ê ë à â ç ù û ô ï", TextServer.DIRECTION_LTR],
+	"he": ["מזל טוב! יום הולדת שמח", TextServer.DIRECTION_RTL],
+	"ar": ["كل عام وأنت بخير", TextServer.DIRECTION_RTL],
+	"en+ar": ["Happy Birthday أحمد", TextServer.DIRECTION_LTR],
+	"he+en": ["מזל טוב Loay", TextServer.DIRECTION_RTL],
+	"fr+ar": ["Bonjour أحمد", TextServer.DIRECTION_LTR],
+	"ar-num": ["عمرك ٣٠ سنة! (30) مبروك، يا صديقي؟", TextServer.DIRECTION_RTL],
+	"he-num": ["שלום, מה שלומך? 123! (בדיוק)", TextServer.DIRECTION_RTL],
+	"ru": ["С днём рождения!", TextServer.DIRECTION_LTR],
+}
+
+
+func _test_multilingual() -> void:
+	var ts := TextServerManager.get_primary_interface()
+	_check(ts.has_feature(TextServer.FEATURE_BIDI_LAYOUT) and ts.has_feature(TextServer.FEATURE_SHAPING), "text server has BiDi + shaping (%s)" % ts.get_name())
+	# As on the Web: the engine font plus the bundled fallbacks, and no
+	# system fonts to fall back on.
+	var web_font: FontFile = ThemeDB.fallback_font.duplicate()
+	web_font.allow_system_fallback = false
+	var chain: Array[Font] = []
+	for fb: FontFile in MessageText.font().fallbacks:
+		var c: FontFile = fb.duplicate()
+		c.allow_system_fallback = false
+		chain.append(c)
+	web_font.fallbacks = chain
+	var plain: FontFile = ThemeDB.fallback_font.duplicate()
+	plain.allow_system_fallback = false
+	_check(_shape(TextServerManager.get_primary_interface(), plain, "كل عام وأنت بخير")["missing"] > 0,
+			"without the fallbacks, Arabic is missing on the Web font (the reported bug)")
+	_check(web_font.fallbacks.size() == 2, "message font carries the Arabic + Hebrew fallbacks")
+	_check(Palette.font(800).fallbacks.is_empty(), "the shared UI font is unchanged (no fallbacks added)")
+	for key in MESSAGES:
+		var text: String = MESSAGES[key][0]
+		var r := _shape(ts, web_font, text)
+		_check(r["missing"] == 0, "%s: every glyph found (%d missing)" % [key, r["missing"]])
+		_check(r["dir"] == MESSAGES[key][1], "%s: direction %s" % [key, "RTL" if MESSAGES[key][1] == TextServer.DIRECTION_RTL else "LTR"])
+	# Arabic joining: a letter inside a word uses a different (joined) glyph
+	# than the same letter alone.
+	var alone: int = _shape(ts, web_font, "ع")["glyphs"][0]["index"]
+	var joined: Array = _shape(ts, web_font, "عام")["glyphs"]
+	_check(joined.any(func(g): return g["index"] != alone) and joined.all(func(g): return g["index"] != alone), "Arabic letters are shaped (joined forms)")
+	var emoji := _shape(ts, web_font, "🎉❤️")
+	print("emoji on the Web font: %d of %d glyphs missing (drawn as boxes)" % [emoji["missing"], emoji["glyphs"].size()])
+	# Quoting isolates the message and never drops a character.
+	var q := MessageText.quoted("a\nb")
+	_check(q.begins_with("\u201C") and q.ends_with("\u201D") and q.count(String.chr(0x2068)) == 2 and q.count(String.chr(0x2069)) == 2, "quoted() isolates every line")
+	_check(_shape(ts, web_font, MessageText.quoted("كل عام وأنت بخير"))["missing"] == 0, "isolate marks are invisible (no boxes)")
+
+
+func _shape(ts: TextServer, f: Font, text: String) -> Dictionary:
+	var rid := ts.create_shaped_text()
+	ts.shaped_text_add_string(rid, text, f.get_rids(), 30)
+	ts.shaped_text_shape(rid)
+	var glyphs := ts.shaped_text_get_glyphs(rid)
+	var missing := 0
+	for g in glyphs:
+		if not (g["font_rid"] as RID).is_valid() and (g["flags"] & TextServer.GRAPHEME_IS_VIRTUAL) == 0:
+			missing += 1
+	var out := {"glyphs": glyphs, "missing": missing, "dir": ts.shaped_text_get_inferred_direction(rid)}
+	ts.free_rid(rid)
+	return out
 
 
 func _test_session_rules() -> void:

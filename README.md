@@ -93,6 +93,12 @@ The creator side of **PHOTO / MESSAGE REVEAL**. It replaces that track's 0.1 pla
 
 **Message (Web):** a native text field opened from the tap (so the iPhone keyboard comes up), pinned above the keyboard. It uses a 16 px font (no Safari zoom), `maxlength` 200 and a live count. Desktop uses a TextEdit on the screen.
 
+**Messages in any language:** `scripts/social/message_text.gd` draws every personal message.
+- **Root cause of the fix:** on the Web build the browser gives Godot no system fonts, so the UI falls back to the engine's Open Sans, which covers Latin, Greek and Cyrillic only. Messages therefore use a copy of the UI font with bundled Noto Sans Arabic and Hebrew fallbacks (`assets/fonts`, about 60 KB WOFF2, OFL). The shared UI font is unchanged.
+- **Direction and shaping:** Godot's ICU BiDi and HarfBuzz text server handles Arabic joining and RTL/LTR ordering (`TEXT_DIRECTION_AUTO`, each line from its first strong letter). Strings are never reversed by hand.
+- **Adding scripts later:** another script means adding its font to `MessageText.FALLBACKS`; large ones such as CJK should be loaded on demand.
+- **Emoji:** not supported yet (they draw as boxes).
+
 `python3 tools/sync_web_head.py` inlines both page scripts into `export_presets.cfg` as separate `<script>` blocks. The audio/save script is unchanged.
 
 Check: `godot --headless --path . res://tools/SocialSmoke.tscn` now also drives the whole creation flow, including edits, limits, validation and layout at the smallest screen.

@@ -393,6 +393,7 @@ func _build_message() -> VBoxContainer:
 		card.custom_minimum_size = Vector2(WIDTH, 260)
 		card.pressed.connect(func(): AudioManager.play_ui_tap())
 		_message_text = _label("", 28, Palette.TEXT, 800)
+		MessageText.apply(_message_text)  # any language, RTL / LTR
 		_message_text.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 		_message_text.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
 		_message_text.max_lines_visible = CreatorSession.MESSAGE_MAX_LINES
@@ -413,7 +414,7 @@ func _build_message() -> VBoxContainer:
 		_message_edit.name = "MessageEdit"
 		_message_edit.placeholder_text = "Write your message"
 		_message_edit.wrap_mode = TextEdit.LINE_WRAPPING_BOUNDARY
-		_message_edit.add_theme_font_override("font", Palette.font(800))
+		MessageText.apply_edit(_message_edit)  # any language, RTL / LTR
 		_message_edit.add_theme_font_size_override("font_size", 28)
 		_message_edit.add_theme_color_override("font_color", Palette.TEXT)
 		_message_edit.add_theme_color_override("font_placeholder_color", Palette.TEXT_SOFT)
@@ -601,6 +602,7 @@ func _build_review() -> VBoxContainer:
 	inner.add_child(_review_no_photo)
 	# The whole message fits: 200 characters wrap to at most 8 lines here.
 	_review_message = _label("", 24, Palette.TEXT, 800)
+	MessageText.apply(_review_message)  # any language, RTL / LTR
 	_review_message.name = "ReviewMessage"
 	_review_message.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 	_review_message.custom_minimum_size = Vector2(WIDTH - 60.0, 0)
@@ -647,7 +649,7 @@ func _refresh_review() -> void:
 		var img := Vector2(session.image_size)
 		var s := minf(WIDTH * 0.8 / img.x, max_h / img.y)
 		_review_photo.custom_minimum_size = (img * s).floor()
-	_review_message.text = ("“%s”" % session.message) if session.has_message() else "No message"
+	_review_message.text = MessageText.quoted(session.message) if session.has_message() else "No message"
 	_review_message.add_theme_color_override("font_color", Palette.TEXT if session.has_message() else Palette.TEXT_SOFT)
 	_review_difficulty.text = "DIFFICULTY  ·  %s" % DIFFICULTY_TEXT.get(session.difficulty, ["NOT CHOSEN"])[0]
 	var errors := session.validate()
