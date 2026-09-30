@@ -1,4 +1,4 @@
-# Chain Escape — v0.6.5
+# Chain Escape — v0.6.6
 
 A one-handed portrait puzzle game built with **Godot 4.3 (GDScript)** for iOS, Android and mobile Web.
 
@@ -55,6 +55,35 @@ Not included, on purpose: leaderboards, country ranking, accounts/login, backend
 | **Difficulty** | Levels 61–95 were tuned harder, so every Chapter's average difficulty now rises: 42.1 → 46.1 → 49.9 → 53.3 → 58.8 for Chapters 6–10. Before, Chapter 7 dipped to 37.5. The verifier enforces the rise. |
 | **Save v3** | Adds completed Chapters, collected reward blocks, coins per Chapter and tips seen. v0.4 saves migrate without losing or double-paying anything. |
 | **101+ architecture** | Chapters 11+ come from the data (`overflow.cycle`). The generator gets `chapter_plan(c)` (profile, difficulty band, reward frequency) and `classify(level)`. |
+
+---
+
+## v0.6.6 — clear Silver / Gold reward feedback
+
+**What was wrong:** the feedback still fired, but it was weak on a phone:
+- a plain white (Silver) or pale cream (Gold) "+5 COINS" label
+- drawn at the same spot as the "+points" score number, so the two overlapped
+- clipped at the screen edge
+- quickly flying away
+- the Silver/Gold chime played in the same frame as the escape sound, a little quieter, so it was masked
+
+**Restored:** when an **uncollected** Silver or Gold block escapes:
+- **A floating "+5" (Silver) or "+15" (Gold)** (`UIManager.fly_coins`):
+  - in the coin's own metal colour with a thick navy outline, 46 px
+  - pops up above the block, clear of the score number, and always kept on screen
+  - rises and holds for about half a second, then flies into the coin counter, which updates on arrival as before
+- **Its own chime** (`AudioManager.play_reward`): it plays 0.09 s after the escape sound so it is heard on its own, 3 dB louder than before (Silver -2 dB, Gold -1 dB).
+- **Unchanged:** the metal burst and ring.
+
+**Unchanged:**
+- the coin logic and values (+5 / +15), paid by `Economy` exactly as before
+- anti-farming
+- a reward already collected on this save keeps the coin with its check badge, pays nothing, and shows no "+N" and no chime (the playtest checks this after Restart)
+
+**Results:**
+- Unit tests: 24,944 checks, 0 failures.
+- `PLAYTEST PASSED`, all 200 levels. New checks: a Silver-coloured "+5" and a Gold-coloured "+15" appear on a new reward; no "+5" appears when a collected Silver escapes again.
+- Captures of Levels 41 (Silver) and 51 (Gold), frame by frame.
 
 ---
 

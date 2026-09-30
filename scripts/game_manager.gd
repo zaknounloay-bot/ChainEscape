@@ -936,7 +936,13 @@ func _collect_reward(b: BlockData, at: Vector2) -> void:
 	reward_coins_attempt += coins
 	reward_notes.append("%s +%d" % [b.rarity_name().capitalize(), coins])
 	board.play_reward(at, b.rarity)
-	AudioManager.play_reward(b.rarity)
+	# The Silver / Gold chime a beat after the escape sound, so it is heard
+	# on its own instead of being masked by it.
+	var session := _session_id
+	var rarity := b.rarity
+	get_tree().create_timer(0.09).timeout.connect(func():
+		if session == _session_id:
+			AudioManager.play_reward(rarity))
 	Haptics.light()
 	ui.fly_coins(board.get_global_transform_with_canvas() * at, coins, b.rarity, progress.coins)
 

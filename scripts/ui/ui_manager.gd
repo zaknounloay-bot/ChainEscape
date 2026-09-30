@@ -313,24 +313,31 @@ func chapter_card_chapter() -> int:
 ## "+15 COINS" pops at a reward block and flies into the coin counter,
 ## which then counts up. Fast (~0.8 s) and never blocks input.
 func fly_coins(from: Vector2, amount: int, rarity: int, new_total: int) -> void:
-	var metal: Array = Palette.METALS[clampi(rarity, 1, Palette.METALS.size() - 1)]
-	var l := _make_label(34, metal[1], 900)
-	l.text = "+%d COINS" % amount
-	l.add_theme_color_override("font_outline_color", metal[2])
-	l.add_theme_constant_override("outline_size", 10)
+	# v0.6.6: a clear Silver / Gold "+5" / "+15" (the metal's own color with
+	# a navy outline), popping ABOVE the block (clear of the "+points"
+	# number), kept fully on screen, held a beat, then flying to the pill.
+	var body: Array = Palette.REWARD_BODY[clampi(rarity, 1, Palette.REWARD_BODY.size() - 1)]
+	var l := _make_label(46, body[1], 900)
+	l.text = "+%d" % amount
+	l.add_theme_color_override("font_outline_color", Palette.REWARD_ARROW)
+	l.add_theme_constant_override("outline_size", 12)
 	l.z_index = 50
 	_root.add_child(l)
 	l.reset_size()
-	l.position = from - l.size * 0.5
+	var vis := get_viewport().get_visible_rect().size
+	var start := from - l.size * 0.5 - Vector2(0, 84)
+	start.x = clampf(start.x, 12.0, vis.x - l.size.x - 12.0)
+	start.y = clampf(start.y, 12.0, vis.y - l.size.y - 12.0)
+	l.position = start
 	l.pivot_offset = l.size * 0.5
-	l.scale = Vector2(0.6, 0.6)
+	l.scale = Vector2(0.5, 0.5)
 	var target := _coin_pill.get_global_rect().get_center() - l.size * 0.5
 	_coins_flying += 1
 	if _coins_pending == -1:
 		_coins_pending = new_total
 	var t := l.create_tween()
-	t.tween_property(l, "scale", Vector2(1.15, 1.15), 0.14).set_trans(Tween.TRANS_BACK).set_ease(Tween.EASE_OUT)
-	t.tween_property(l, "position:y", l.position.y - 40.0, 0.18).set_trans(Tween.TRANS_SINE)
+	t.tween_property(l, "scale", Vector2(1.2, 1.2), 0.16).set_trans(Tween.TRANS_BACK).set_ease(Tween.EASE_OUT)
+	t.tween_property(l, "position:y", maxf(l.position.y - 30.0, 12.0), 0.45).set_trans(Tween.TRANS_SINE).set_ease(Tween.EASE_OUT)
 	t.tween_property(l, "position", target, 0.38).set_trans(Tween.TRANS_CUBIC).set_ease(Tween.EASE_IN)
 	t.parallel().tween_property(l, "scale", Vector2(0.45, 0.45), 0.38).set_trans(Tween.TRANS_CUBIC).set_ease(Tween.EASE_IN)
 	t.tween_callback(func():

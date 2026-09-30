@@ -417,9 +417,9 @@ func play_chapter_complete() -> void:
 ## Silver / Gold block escaped: a short premium chime (gold is richer).
 func play_reward(rarity: int) -> void:
 	if rarity >= BlockData.Rarity.GOLD:
-		play("gold", 1.0, -4.0)
+		play("gold", 1.0, -1.0)
 	elif rarity == BlockData.Rarity.SILVER:
-		play("silver", 1.0, -5.0)
+		play("silver", 1.0, -2.0)
 
 
 ## v0.6: a switch fired (its arrows reverse).
