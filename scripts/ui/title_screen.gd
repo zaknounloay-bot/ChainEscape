@@ -2,6 +2,7 @@ class_name TitleScreen
 extends Control
 ## Launch screen: CONTINUE - LEVEL X (or PLAY for a new player) and LEVEL
 ## SELECT. The first tap here also unlocks audio on mobile browsers.
+## Social MVP 0.1: CREATE CHALLENGE opens the Social screen over the title.
 
 signal continue_pressed
 signal level_select_pressed
@@ -9,6 +10,8 @@ signal level_select_pressed
 var _continue: PillButton
 var _stats: Label
 var _time := 0.0
+var _social: SocialScreen
+var _theme: Dictionary = {}
 
 
 func _init() -> void:
@@ -26,7 +29,9 @@ func _ready() -> void:
 	box.add_theme_constant_override("separation", 22)
 	add_child(box)
 	var spacer := Control.new()
-	spacer.custom_minimum_size = Vector2(0, 330)
+	# 330 before Social 0.1; +118 (the CREATE CHALLENGE row) keeps PLAY and
+	# LEVEL SELECT exactly where they were in the centered column.
+	spacer.custom_minimum_size = Vector2(0, 448)
 	box.add_child(spacer)
 	_continue = PillButton.new("PLAY", PillButton.Icon.NONE, Palette.ACCENT, Palette.WHITE, 36)
 	_continue.custom_minimum_size = Vector2(460, 120)
@@ -36,6 +41,11 @@ func _ready() -> void:
 	ls.custom_minimum_size = Vector2(460, 100)
 	ls.pressed.connect(func(): level_select_pressed.emit())
 	box.add_child(ls)
+	var create := PillButton.new("CREATE CHALLENGE", PillButton.Icon.NONE, Palette.PURPLE_BADGE, Palette.WHITE, 30)
+	create.name = "CreateChallenge"
+	create.custom_minimum_size = Vector2(460, 96)
+	create.pressed.connect(_open_social)
+	box.add_child(create)
 	_stats = Label.new()
 	_stats.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	_stats.add_theme_font_override("font", Palette.font(800))
@@ -56,6 +66,8 @@ func _ready() -> void:
 	_diag.add_theme_font_size_override("font_size", 15)
 	_diag.modulate.a = 0.75
 	add_child(_diag)
+	_social = SocialScreen.new()
+	add_child(_social)
 
 
 var _diag: Label
@@ -75,12 +87,20 @@ func open(has_progress: bool, level: int, stars: int, coins: int, theme: Diction
 	_continue.set_background(theme["accent"].darkened(0.1) if theme["dark"] else theme["accent"])
 	_bg_top = theme["bg_top"]
 	_bg_bottom = theme["bg_bottom"]
+	_theme = theme
+	_social.close()
 	visible = true
 	queue_redraw()
 
 
 func close() -> void:
+	_social.close()
 	visible = false
+
+
+func _open_social() -> void:
+	AudioManager.play_ui_tap()
+	_social.open(_theme if not _theme.is_empty() else Chapters.theme_for_chapter(1))
 
 
 var _title_color := Palette.TEXT:
@@ -95,7 +115,7 @@ var _logo_blocks: Array[Node2D] = []
 
 
 func _process(delta: float) -> void:
-	if not visible:
+	if not visible or _social.visible:
 		return
 	_time += delta
 	if _logo_blocks.is_empty():
@@ -104,6 +124,7 @@ func _process(delta: float) -> void:
 			b.color_name = ["red", "blue", "yellow"][i]
 			add_child(b)
 			_logo_blocks.append(b)
+		move_child(_social, -1)  # the Social screen stays above the logo
 	var cx := size.x * 0.5
 	var y := size.y * 0.5 - 260.0
 	for i in 3:

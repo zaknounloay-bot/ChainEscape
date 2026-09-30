@@ -58,6 +58,16 @@ Not included, on purpose: leaderboards, country ranking, accounts/login, backend
 
 ---
 
+## Social MVP 0.1 — CREATE CHALLENGE navigation skeleton
+
+Built on the frozen **V17 Golden Master** (levels 1-200 unchanged). UI and navigation only: no backend, sharing, challenge data or analytics yet.
+
+- **Title screen:** a new purple **CREATE CHALLENGE** button under LEVEL SELECT. PLAY / CONTINUE and LEVEL SELECT stay at exactly their V17 positions (the column spacer grows by the new row's height).
+- **Social choice screen** (`scripts/social/social_screen.gd`, drawn over the title): **PHOTO / MESSAGE REVEAL** and **CHALLENGE A FRIEND** cards, plus BACK.
+- **Placeholders:** each track opens a "coming in the next build" page with BACK to the choice screen; BACK on the choice screen returns to the title.
+- The Social screen never touches GameManager, progress, the save file, audio settings or the Web bridge. Reopening or closing the title always resets it to closed.
+- Check: `godot --headless --path . res://tools/SocialSmoke.tscn` (real input events; asserts navigation, layout, and that progress and the save file are byte-identical after a Social round trip).
+
 ## v0.6.6 — clear Silver / Gold reward feedback
 
 **What was wrong:** the feedback still fired, but it was weak on a phone:
@@ -1477,6 +1487,7 @@ godot --headless --path . --script res://tools/run_tests.gd        # unit tests
 godot --headless --path . --script res://tools/verify_levels.gd    # 200-level analysis + campaign rules
 godot --headless --path . res://tools/Playtest.tscn                # end-to-end play-through of levels 1-200 (-- --chapters-only for the v0.5 part)
 godot --headless --path . res://tools/Soak.tscn -- --cycles=2        # long session: 1 -> 200 twice in one process
+godot --headless --path . res://tools/SocialSmoke.tscn              # Social MVP 0.1: CREATE CHALLENGE navigation, Classic progress untouched
 godot --headless --path . --export-release "Web" build/web/index.html && node tools/web_audio_test.mjs   # real browser
 node tools/web_persistence_test.mjs                                  # Web save scenarios A-G (itch-like iframe)
 godot --headless --path . --script res://tools/armor_audit.gd       # every reachable state of every armor level, solver vs game rules
