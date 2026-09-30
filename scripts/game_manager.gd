@@ -116,6 +116,7 @@ func _ready() -> void:
 	ui.backup_requested.connect(show_backup_code)
 	ui.restore_requested.connect(request_restore)
 	ui.recovery_new_game.connect(_recovery_start_new)
+	ui.main_menu_requested.connect(return_to_main_menu)
 	debug_panel.level_count = level_manager.level_count
 	debug_panel.level_requested.connect(func(n): start_level(wrapi(n, 1, level_manager.level_count + 1), "debug"))
 	debug_panel.restart_requested.connect(restart)
@@ -261,6 +262,15 @@ func apply_restore(code: String) -> bool:
 func _recovery_start_new() -> void:
 	progress.release_hold()
 	progress.save()
+	_show_title()
+	publish_state.call_deferred()
+
+
+## Settings > MAIN MENU (Social MVP 0.1): the title over the current level,
+## exactly as at launch. The board stays as it is behind the title, so
+## CONTINUE resumes it; nothing is reset, saved or rewarded here.
+func return_to_main_menu() -> void:
+	AudioManager.play_ui_tap()
 	_show_title()
 	publish_state.call_deferred()
 

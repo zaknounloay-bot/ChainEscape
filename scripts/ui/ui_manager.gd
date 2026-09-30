@@ -23,6 +23,7 @@ signal title_tapped  # used as a hidden debug gesture on devices
 signal backup_requested  # Settings: BACKUP CODE
 signal restore_requested  # Settings / recovery: RESTORE FROM CODE
 signal recovery_new_game  # recovery: START NEW GAME (confirmed)
+signal main_menu_requested  # Settings: MAIN MENU (back to the title screen)
 
 const TOP_HEIGHT := 290.0
 const BOTTOM_HEIGHT := 190.0
@@ -765,6 +766,15 @@ func _build_settings() -> void:
 		_close_settings()
 		restore_requested.emit())
 	save_row.add_child(restore)
+	# Social MVP 0.1: back to the title. Quiet style, so DONE stays the
+	# main action.
+	var menu := PillButton.new("MAIN MENU", PillButton.Icon.NONE, Palette.BACKGROUND, Palette.TEXT, 24)
+	_main_menu_button = menu
+	menu.custom_minimum_size = Vector2(0, 76)
+	menu.pressed.connect(func():
+		_close_settings()
+		main_menu_requested.emit())
+	box.add_child(menu)
 	var done := PillButton.new("DONE", PillButton.Icon.NONE, Palette.ACCENT, Palette.WHITE, 30)
 	done.custom_minimum_size = Vector2(0, 90)
 	done.pressed.connect(_close_settings)
@@ -780,6 +790,7 @@ var _recovery_new: PillButton
 var _recovery_restore: PillButton
 var _backup_button: PillButton
 var _restore_button: PillButton
+var _main_menu_button: PillButton
 var _recovery_confirm := false
 
 

@@ -64,9 +64,15 @@ Built on the frozen **V17 Golden Master** (levels 1-200 unchanged). UI and navig
 
 - **Title screen:** a new purple **CREATE CHALLENGE** button under LEVEL SELECT. PLAY / CONTINUE and LEVEL SELECT stay at exactly their V17 positions (the column spacer grows by the new row's height).
 - **Social choice screen** (`scripts/social/social_screen.gd`, drawn over the title): **PHOTO / MESSAGE REVEAL** and **CHALLENGE A FRIEND** cards, plus BACK.
-- **Placeholders:** each track opens a "coming in the next build" page with BACK to the choice screen; BACK on the choice screen returns to the title.
+- **Placeholders:** each track opens a "CREATION FLOW COMING SOON" page with BACK to the choice screen; BACK on the choice screen returns to the title.
 - The Social screen never touches GameManager, progress, the save file, audio settings or the Web bridge. Reopening or closing the title always resets it to closed.
-- Check: `godot --headless --path . res://tools/SocialSmoke.tscn` (real input events; asserts navigation, layout, and that progress and the save file are byte-identical after a Social round trip).
+- **0.1 polish pass:**
+  - Cards are centered stacks (icon, title, description) with intended line breaks and no overlap. They grow if a device's font runs taller.
+  - Track identities: Photo is warm purple/pink, Friend is cool blue/cyan (icon and card border).
+  - Motion is decorative and cheap. Seven faint blocks start as a chain, break apart and drift off in their arrow's direction, wrapping at the edges. They are drawn once and only moved. Entrance tweens run in order: heading, card 1, card 2, BACK. Card taps get a 0.12 s press bounce before navigating.
+  - With the browser's `prefers-reduced-motion`, nothing moves.
+- **Settings > MAIN MENU:** returns to the title exactly as at launch (the level stays loaded behind it). CONTINUE resumes the same board. Nothing is reset or saved, so no confirmation is needed.
+- Check: `godot --headless --path . res://tools/SocialSmoke.tscn` (real input events). It asserts navigation, card layout, entrance end state, the MAIN MENU round trip, and that progress and the save file are byte-identical after Social and MAIN MENU.
 
 ## v0.6.6 — clear Silver / Gold reward feedback
 
