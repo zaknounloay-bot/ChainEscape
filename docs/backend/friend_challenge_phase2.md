@@ -1,20 +1,44 @@
-# chain-escape-api — Challenge a Friend phase 2 backend change
+# chain-escape-api v4 — Challenge a Friend phase 2
 
-This makes `friend_challenge` a real challenge type on the existing Supabase backend, next to `photo_message_reveal`. It reuses the same table, Edge Function, links and expiry, and has no new sharing system.
+| File | What it is |
+|---|---|
+| `supabase/functions/chain-escape-api/index.ts` | **The complete replacement** (version 4). Paste it as the function's `index.ts`. |
+| `docs/backend/chain-escape-api/index.v3.deployed.ts` | The currently deployed version 3, verbatim: the reference and the rollback copy. |
+| `tools/backend_contract_test.mjs` | Contract test: the mock, a local run of either source file, or the real URL. |
+| `tools/edge_harness/` | A local stand-in for `supabase-js` (in-memory table and bucket), so the real source file runs under Deno with no credentials. |
 
-**Status:** prepared and verified against the local mock (`tools/mock_social_api.py`, which implements exactly these rules). It is **not deployed**: the build sandbox cannot reach Supabase, and the Edge Function source is not in this repository. Apply it in the Supabase dashboard / CLI, then verify with the contract test (step 4).
+## What version 4 changes (and what it keeps)
 
-## 0. Before changing anything
+- **Same** as v3 for `photo_message_reveal`:
+  - checks, in the same order, with the same error codes
+  - the payload `{message, media: {kind, path, content_type} | null}`
+  - the Storage upload, the orphan cleanup and the signed URL (1 h)
+  - the `201` response
+- **Same** shared puzzle checks for both types: format, `v: 1`, `rules: 1`, rows/cols 2–10, map row count, rows as strings of at most 500 characters.
+- **New:** `challenge_type: "friend_challenge"`:
+  - difficulty `easy | medium | hard | very_hard`; `very_hard` stays refused for photo challenges
+  - stricter board checks: every row has exactly `cols` cells, every cell is `.`, a plain arrow (`R>`) or a clockwise spinner (`B^@`), and there is at least one block
+  - no `message`, `image_base64` or `image_type` (refused with `unexpected_reveal_content`)
+  - optional boolean `surprise_me` (otherwise `invalid_surprise_me`)
+  - stored payload `{}` or `{"surprise_me": true}`, no Storage call
+- **READ:**
+  - media is signed only for `photo_message_reveal`, so a friend challenge always returns `media_url: null`
+  - a non-UUID id now returns `404 challenge_not_found` instead of a `500` from the uuid column
+  - everything else is unchanged; old rows read exactly as before
+- **Health:** `version: 4` (was 3), so you can see which version is live.
+- Secrets still come only from the function's environment (`SUPABASE_URL`, `SUPABASE_SERVICE_ROLE_KEY`). Keep **Verify JWT off**.
 
-1. Copy the currently deployed `chain-escape-api` source (Dashboard → Edge Functions → chain-escape-api → Code, or `supabase functions download chain-escape-api`) and keep it as the rollback copy.
-2. Note its current version number.
-3. Run the schema inspection in step 1 and keep its output.
+**Evidence** (local, Deno 2.9 with the stand-in client):
+- v4 passes the contract test **42/42**.
+- v3 passes all of its Photo / Message and validation checks but fails the friend ones (`invalid_challenge_type`), shows version 3, and returns `500` on a malformed id. This is exactly the intended difference.
+- `deno check` and `deno lint` are clean on v4.
+- **Not covered locally:** the real `supabase-js`, Storage, the real table constraints and RLS. Step 4 checks those against the real deployment.
 
-## 1. Database: inspect, then (only if needed) widen two CHECK constraints
+## Exact Supabase steps
 
-No new columns and no migration of existing rows. A friend challenge's data fits the existing columns: `challenge_type`, `difficulty`, `puzzle` (jsonb) and `payload` (jsonb: `{}` or `{"surprise_me": true}`).
+### 1. Database: check the constraints (read-only)
 
-Inspect the constraints on the table:
+Supabase Dashboard → **SQL Editor** → New query:
 
 ```sql
 select conname, pg_get_constraintdef(oid)
@@ -22,125 +46,68 @@ from pg_constraint
 where conrelid = 'public.shared_challenges'::regclass and contype = 'c';
 ```
 
-Only if a CHECK constraint limits `challenge_type` or `difficulty`, replace it. Use the real constraint names from the output above; the names below are examples. The new constraints only widen the allowed values, so every existing row stays valid. `very_hard` is accepted for `friend_challenge` only.
+- **No row mentions `challenge_type` or `difficulty`:** nothing to do. Go to step 2.
+- **A constraint limits `challenge_type` (e.g. `= 'photo_message_reveal'`) or `difficulty` (e.g. `in ('easy','medium','hard')`):** run the following, putting the real names from the output where it says `<…>`. It only widens the allowed values; existing rows are untouched and stay valid.
 
 ```sql
 begin;
-alter table public.shared_challenges drop constraint if exists shared_challenges_challenge_type_check;
-alter table public.shared_challenges drop constraint if exists shared_challenges_difficulty_check;
-alter table public.shared_challenges add constraint shared_challenges_challenge_type_check
-  check (challenge_type in ('photo_message_reveal', 'friend_challenge'));
-alter table public.shared_challenges add constraint shared_challenges_type_difficulty_check
-  check ((challenge_type = 'photo_message_reveal' and difficulty in ('easy', 'medium', 'hard'))
-      or (challenge_type = 'friend_challenge' and difficulty in ('easy', 'medium', 'hard', 'very_hard')));
+alter table public.shared_challenges drop constraint <the challenge_type constraint>;
+alter table public.shared_challenges drop constraint <the difficulty constraint>;
+alter table public.shared_challenges add constraint shared_challenges_type_difficulty_check check (
+  (challenge_type = 'photo_message_reveal' and difficulty in ('easy', 'medium', 'hard'))
+  or (challenge_type = 'friend_challenge' and difficulty in ('easy', 'medium', 'hard', 'very_hard')));
 commit;
 ```
 
-- RLS, policies, grants and the private `challenge-media` bucket are **not touched**.
-- If the table has no such constraints (validation lives only in the Edge Function), skip this step entirely.
+- Do not change RLS, policies, grants or the `challenge-media` bucket.
 
-## 2. Edge Function: type-aware CREATE validation
+### 2. Keep a copy of version 3
 
-Keep every existing Photo / Message Reveal rule as it is. Add the type branch so that each type has its own rules. In TypeScript, for the function's existing CREATE handler:
+Dashboard → **Edge Functions** → `chain-escape-api` → **Code**. Its `index.ts` should match `docs/backend/chain-escape-api/index.v3.deployed.ts`, which is the rollback copy. Note the current deployment / version number shown there.
 
-```ts
-const DIFFICULTIES: Record<string, string[]> = {
-  photo_message_reveal: ["easy", "medium", "hard"],
-  friend_challenge: ["easy", "medium", "hard", "very_hard"],
-};
-// Any campaign token (existing rule) / Challenge a Friend tokens only:
-// a plain arrow or a clockwise spinner ("R>", "B^@").
-const CELL = /^(\.|[RBGYP][\^v<>]\S*|X[A-D])$/;
-const FRIEND_CELL = /^(\.|[RBGYP][\^v<>](@)?)$/;
+### 3. Deploy version 4
 
-function validatePuzzle(p: any, friend: boolean): string {
-  if (!p || typeof p !== "object" || p.format !== "ce-puzzle" || p.v !== 1 || p.rules !== 1) return "invalid puzzle format";
-  const { rows, cols, map } = p;
-  if (!Number.isInteger(rows) || !Number.isInteger(cols) || rows < 1 || cols < 1 || rows > 12 || cols > 12) return "invalid puzzle size";
-  if (!Array.isArray(map) || map.length !== rows) return "invalid puzzle map";
-  let blocks = 0;
-  for (const row of map) {
-    const cells = typeof row === "string" ? row.split(/\s+/).filter(Boolean) : null;
-    if (!cells || cells.length !== cols) return "invalid puzzle map";
-    for (const c of cells) {
-      if (!(friend ? FRIEND_CELL : CELL).test(c)) return "invalid puzzle map";
-      if (c !== ".") blocks++;
-    }
-  }
-  if (blocks === 0) return "invalid puzzle map";
-  return "";
-}
+1. In the same **Code** editor, select all of `index.ts` and replace it with the full contents of `supabase/functions/chain-escape-api/index.ts`.
+2. Click **Deploy**.
+3. In the function's **Details / Settings**, confirm **Verify JWT (Enforce JWT verification)** is still **OFF**. No secrets, environment variables or other settings change.
 
-// Returns "" if valid, else a short reason (sent as a 400 error).
-function validateCreate(b: any): string {
-  if (!b || typeof b !== "object") return "body must be an object";
-  const t = b.challenge_type;
-  if (!(t in DIFFICULTIES)) return "invalid challenge_type";
-  if (!DIFFICULTIES[t].includes(b.difficulty)) return "invalid difficulty";
-  const pe = validatePuzzle(b.puzzle, t === "friend_challenge");
-  if (pe) return pe;
-  if (t === "friend_challenge") {
-    if (b.message != null || b.image_base64 != null || b.image_type != null) return "friend_challenge carries no message or image";
-    if ("surprise_me" in b && typeof b.surprise_me !== "boolean") return "invalid surprise_me";
-    return "";
-  }
-  // photo_message_reveal: the EXISTING checks, unchanged (message <= 200,
-  // image MIME + size, "photo or message required", ...).
-  return validatePhotoMessage(b); // <- the function's current validation
-}
-```
+(CLI alternative, from the repository root: `supabase functions deploy chain-escape-api --project-ref ydsippgwwdzwupbyrpfw --no-verify-jwt`.)
 
-When inserting:
+### 4. Verify the live function
 
-```ts
-const payload = b.challenge_type === "friend_challenge"
-  ? (b.surprise_me === true ? { surprise_me: true } : {})
-  : /* existing photo_message_reveal payload: { message, media } */ existingPayload;
-// friend_challenge: NO storage upload at all.
-// Store puzzle exactly as received (it was validated above); keep the
-// existing format_version / rules_version / expires_at behaviour.
-```
-
-## 3. Edge Function: READ
-
-- Return the stored row exactly as today: `challenge_type`, `difficulty` (the real one), `puzzle` (the exact stored PuzzleDefinition), `payload`, `expires_at`, …
-- Sign a media URL **only** when `payload.media` exists, which is only for photo challenges, as now. For `friend_challenge`, return `media_url: null` (or omit it) and never call Storage.
-- Old `photo_message_reveal` rows read exactly as before; nothing in READ depends on the new type.
-- The client (`SharedChallenge.from_api`) validates READ data per type and refuses a friend challenge that carries a message, media or `media_url`, a non-boolean `surprise_me`, or tokens other than plain arrows / clockwise spinners.
-
-## 4. Deploy and verify
-
-1. Deploy the updated function (keep "Verify JWT" **off**, as today: recipients open links without logging in). No secret, service-role key or database password goes into the game or this repository.
-2. From any machine with Node 18+ and this repository:
+1. Open `https://ydsippgwwdzwupbyrpfw.supabase.co/functions/v1/chain-escape-api` in a browser. Expect `{"ok":true,"service":"chain-escape-api","version":4}`.
+2. From a computer with Node 18+ and this repository, using an **existing** Photo / Message link's id for `--old`:
 
    ```bash
    node tools/backend_contract_test.mjs https://ydsippgwwdzwupbyrpfw.supabase.co/functions/v1/chain-escape-api \
      --old=5a264212-44fb-499b-9e05-59c738ed98b2 --with-image
    ```
 
-   - It checks:
-     - CREATE / READ `friend_challenge` for easy / medium / hard / very_hard with no message or image, and the exact puzzle back field for field
-     - 5 READs of one id give the same puzzle
-     - SURPRISE ME is stored as the real difficulty plus `payload.surprise_me = true`
-     - 13 invalid requests are refused, including a missing puzzle, an unsupported difficulty, a bad version or size, a locked block, a message on a friend challenge and an unknown type
-     - Photo / Message Reveal is unchanged: it still requires a photo or message, still refuses `very_hard`, and still returns a signed `media_url`
-     - the pre-deployment challenge `--old` still reads
-   - It creates about 10 small test challenges. They expire like any other, and you can delete them by id if preferred.
-3. Expected result: `BACKEND CONTRACT TEST (...): PASSED (40/40)` (39 checks plus the `--old` one).
+   Expect `BACKEND CONTRACT TEST (...): PASSED (42/42)`.
 
-**Rollback:** redeploy the saved source from step 0. The constraint change in step 1 only widens the allowed values, so it can stay.
+   It creates 7 small test challenges (5 friend, 2 photo, one with a tiny test JPEG) that expire after 30 days like any other. To review or remove them in the SQL Editor:
 
-## 5. Results (future, not built): one challenge, many independent results
+   ```sql
+   select id, challenge_type, difficulty, created_at from public.shared_challenges
+   order by created_at desc limit 10;
+   ```
 
-The challenge row is the immutable shared puzzle; it never stores a result. Results will be separate rows pointing at it:
+3. On the iPhone, open an existing Photo / Message link and create a new photo challenge as usual. Both must behave exactly as before.
+
+### Rollback
+
+Paste `docs/backend/chain-escape-api/index.v3.deployed.ts` back into the Code editor and deploy. The step 1 constraint change (if you made it) only widens the allowed values and can stay.
+
+## Results (future, not built): one challenge, many independent results
+
+The challenge row is the immutable shared puzzle; it never stores a result. Results will be separate rows pointing at it. This table is **not created** in phase 2:
 
 ```sql
 -- NOT APPLIED. Intended shape for the results phase.
 create table public.challenge_results (
   id            uuid primary key default gen_random_uuid(),     -- result_id
   challenge_id  uuid not null references public.shared_challenges(id) on delete cascade,
-  player_key    text not null,       -- anonymous, per device / browser (random, no PII);
-                                     -- an account id can be linked later without changing this
+  player_key    text not null,       -- anonymous random id per device / browser (no PII)
   user_id       uuid null,           -- reserved for future accounts
   started_at    timestamptz not null,
   completed_at  timestamptz null,
@@ -156,16 +123,16 @@ create index on public.challenge_results (challenge_id, duration_ms) where state
 alter table public.challenge_results enable row level security;  -- no anon policies: Edge Function only
 ```
 
-- Many results per `challenge_id` (one per recipient attempt or per `player_key`, rule to be decided), written and read only through the Edge Function with the service role, exactly like challenges.
-- `player_key` is a random anonymous id the game keeps locally. It is never an email, phone number or name. Accounts can later be linked through `user_id` without breaking anonymous play.
-- "Faster than X%" is then a per-challenge (or per-difficulty) comparison over completed rows. The population and minimum sample size are still to be defined, and nothing is computed yet.
+- Many results per `challenge_id`, written and read only through the Edge Function, like challenges.
+- `player_key` is anonymous; accounts can be linked later through `user_id` without breaking anonymous play.
+- "Faster than X%" will compare completed rows per challenge (or per difficulty). The population and minimum sample are to be defined, and nothing is computed yet.
 
-**Why the table is not created now:** nothing writes results yet, and adding it later is purely additive (a new table with a foreign key to `shared_challenges.id`). Phase 2 needs no change to `shared_challenges` for it, and none of today's ids or links would change. Creating it now would add an unused surface with no access path to design or test yet.
+**Why the table is not created now:** nothing writes results yet. Adding it later is purely additive (a new table with a foreign key to `shared_challenges.id`) and changes no existing table, id or link.
 
-## Known limitations (unchanged by this phase)
+## Known limitations (unchanged)
 
-- **Private-by-link:** anyone with the link can READ the challenge. Friend challenges have nothing secret; photo reveals are readable before solving (documented MVP limitation).
-- **No rate limiting** on CREATE / READ yet.
-- **Expired-challenge / media cleanup** is not automated yet.
-- **Server validation is structural:** format, version, rules, size, map shape and allowed tokens. It does not run the Solver. The client verifies solvability on CREATE and again on READ before anything is played; a full server-side solve is not equivalent and is not attempted.
-- **Stable share URL:** unchanged; still tied to the itch.io build URL.
+- **Private-by-link:** anyone with a link can READ it. Photo reveals are readable before solving (MVP limitation); friend challenges hold nothing secret.
+- **No rate limiting** on CREATE / READ.
+- **Expired rows and media are not cleaned up automatically.** READ already hides expired rows (404).
+- **Server validation is structural** (format, versions, size, map shape; for friend challenges also the cells). It does not run the Solver. The game verifies solvability before CREATE and again after READ, before anything is played.
+- **Share URLs** are still tied to the itch.io build URL.

@@ -120,9 +120,10 @@ For scale: the campaign averages 4.7 in Chapter 1, 18.2 in Chapter 3, 27.4 in Ch
   - `SharedChallenge.from_api` validates READ data per type. A friend challenge may carry no message, media or `media_url`, and only plain arrows or clockwise spinners.
   - Photo / Message Reveal rules are unchanged; it still refuses `very_hard`.
 - **Recipient:** there is no Challenge a Friend recipient UI yet. A friend link shows the friendly "isn't available / newer version" screen.
-- **Backend:** see `docs/backend/friend_challenge_phase2.md`, which covers the Edge Function changes, the constraint check, the intended results table (not created) and deploy + verify steps.
-  - The real function is **not deployed** from here (no Supabase access in the build sandbox).
-  - `node tools/backend_contract_test.mjs [API_URL]` checks any deployment, the mock by default.
+- **Backend:** `supabase/functions/chain-escape-api/index.ts` is the complete version 4 of the Edge Function. Version 3, as deployed, is kept in `docs/backend/chain-escape-api/index.v3.deployed.ts` for reference and rollback.
+  - `docs/backend/friend_challenge_phase2.md` has the exact Supabase steps: constraint check, deploy, verify, rollback, and the intended results table (not created).
+  - Deploying is done by hand in Supabase; nothing is deployed from here.
+  - `node tools/backend_contract_test.mjs [API_URL | --edge=<index.ts>]` checks the mock (default), the real URL, or a source file run locally under Deno with `tools/edge_harness/` standing in for supabase-js. v4 passes 42/42 locally.
 - **Checks:**
   - `godot --headless --path . res://tools/FriendChallengeApiTest.tscn`
   - `node tools/backend_contract_test.mjs`
@@ -1712,7 +1713,7 @@ godot --headless --path . --script res://tools/friend_generator_test.gd   # Chal
 godot --headless --path . --script res://tools/friend_benchmark.gd -- --seeds=200   # Challenge a Friend: generation timing per difficulty (desktop)
 node tools/web_friendbench_route_test.mjs build/web                  # ?friendbench=1 dev page vs challenge links (routing)
 godot --headless --path . res://tools/FriendChallengeApiTest.tscn    # Challenge a Friend phase 2: friend_challenge model / API vs the mock
-node tools/backend_contract_test.mjs [API_URL]                       # chain-escape-api contract (mock by default; pass the real URL after deploying)
+node tools/backend_contract_test.mjs [API_URL | --edge=<index.ts>]  # chain-escape-api contract: mock (default), real URL, or a function source under Deno
 godot --headless --path . --export-release "Web" build/web/index.html && node tools/web_audio_test.mjs   # real browser
 node tools/web_persistence_test.mjs                                  # Web save scenarios A-G (itch-like iframe)
 godot --headless --path . --script res://tools/armor_audit.gd       # every reachable state of every armor level, solver vs game rules

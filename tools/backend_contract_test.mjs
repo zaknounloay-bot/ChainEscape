@@ -4,6 +4,11 @@
 //
 //   node tools/backend_contract_test.mjs                 # local mock (started here)
 //   node tools/backend_contract_test.mjs <API_URL>       # e.g. the real Edge Function
+//   node tools/backend_contract_test.mjs --edge=supabase/functions/chain-escape-api/index.ts
+//       runs that Edge Function source locally under Deno (DENO=<path> or
+//       deno on PATH) with tools/edge_harness/fake_supabase.ts in place of
+//       supabase-js (in-memory table + bucket, seeded with a version-3
+//       photo record that is then read back as --old).
 //
 // Against a real deployment it CREATES a few small test challenges (no
 // images unless --with-image) - they expire like any other. It never needs
@@ -18,11 +23,28 @@ const repo = path.resolve(path.dirname(new URL(import.meta.url).pathname), '..')
 const args = process.argv.slice(2);
 const flag = (n) => args.find((a) => a.startsWith(`--${n}`));
 let API = args.find((a) => !a.startsWith('--')) || '';
-const oldId = (flag('old') || '').split('=')[1] || '';
-const withImage = !!flag('with-image');
+let oldId = (flag('old') || '').split('=')[1] || '';
+const edge = (flag('edge') || '').split('=')[1] || '';
+let withImage = !!flag('with-image');
 let mock = null;
 const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
-if (!API) {
+const OLD_SEED_ID = '6f1c2a3b-4d5e-4f60-8a7b-9c0d1e2f3a4b';
+if (edge) {
+  // A row exactly as version 3 stores a photo challenge.
+  const seedFile = path.join(repo, 'tools/edge_harness/.seed.json');
+  fs.writeFileSync(seedFile, JSON.stringify([{ id: OLD_SEED_ID, challenge_type: 'photo_message_reveal', difficulty: 'easy',
+    puzzle: JSON.parse(fs.readFileSync(path.join(repo, 'tools/fixtures/friend_puzzles.json'), 'utf8')).easy,
+    payload: { message: 'made by version 3', media: null }, format_version: 1, rules_version: 1,
+    created_at: '2026-09-30T10:00:00.000Z', expires_at: '2099-01-01T00:00:00.000Z' }]));
+  API = 'http://127.0.0.1:8000/';
+  mock = spawn(process.env.DENO || 'deno', ['run', '--quiet', '--allow-net', '--allow-env', '--allow-read',
+    '--import-map', path.join(repo, 'tools/edge_harness/import_map.json'), path.resolve(edge)],
+    { stdio: ['ignore', 'ignore', 'inherit'], env: { ...process.env, SUPABASE_URL: 'https://fake.supabase.test',
+      SUPABASE_SERVICE_ROLE_KEY: 'local-test-only', CE_FAKE_SEED: seedFile } });
+  for (let i = 0; i < 120; i++) { try { await fetch(API); break; } catch { await sleep(250); } }
+  oldId = oldId || OLD_SEED_ID;
+  withImage = true;
+} else if (!API) {
   API = 'http://127.0.0.1:8796/';
   mock = spawn('python3', [path.join(repo, 'tools/mock_social_api.py'), '--port', '8796'], { stdio: 'ignore' });
   for (let i = 0; i < 40; i++) { try { await fetch(API); break; } catch { await sleep(250); } }
@@ -44,10 +66,12 @@ async function read(id) {
   let j = null; try { j = await r.json(); } catch { /* not json */ }
   return { status: r.status, body: j };
 }
-const ok = (r) => r.status === 200 && r.body && r.body.ok === true && UUID.test(r.body.challenge_id || '');
+const ok = (r) => r.status >= 200 && r.status < 300 && r.body && r.body.ok === true && UUID.test(r.body.challenge_id || '');
 const refused = (r) => r.status >= 400 && r.status < 500 && r.body && r.body.ok === false;
 
 try {
+  const h = await (await fetch(base)).json();
+  check(h.ok && h.service === 'chain-escape-api' && h.version >= 4, `health: chain-escape-api version ${h.version} (friend_challenge needs >= 4)`);
   // 1-4: CREATE + READ friend_challenge, every difficulty, no message / image.
   const ids = {};
   for (const d of ['easy', 'medium', 'hard', 'very_hard']) {
@@ -124,10 +148,12 @@ try {
       `old challenge ${oldId} still reads (${r.status})`);
   }
   check((await read('3f2b8c1e-9a4d-4e7b-8c21-5d6e7f809a1b')).status === 404, 'unknown id -> 404');
+  const badId = await read('not-a-uuid');
+  check(badId.status >= 400 && badId.status < 500, `malformed id -> 4xx, not a server error (${badId.status})`);
 } catch (e) {
   check(false, 'exception: ' + e.message);
 }
 if (mock) mock.kill();
 const failed = results.filter((x) => !x).length;
-console.log(`BACKEND CONTRACT TEST (${mock ? 'mock' : base}): ${failed ? 'FAILED' : 'PASSED'} (${results.length - failed}/${results.length})`);
+console.log(`BACKEND CONTRACT TEST (${edge ? 'edge ' + edge : mock ? 'mock' : base}): ${failed ? 'FAILED' : 'PASSED'} (${results.length - failed}/${results.length})`);
 process.exit(failed ? 1 : 0);

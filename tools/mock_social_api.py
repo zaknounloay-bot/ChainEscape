@@ -4,13 +4,13 @@
     python3 tools/mock_social_api.py --port 8790
 
 Implements the documented contract:
-  GET  /                       -> {"ok": true, "service": "chain-escape-api", "version": 3}
+  GET  /                       -> {"ok": true, "service": "chain-escape-api", "version": 4}
   POST /   photo_message_reveal: {challenge_type, difficulty, puzzle, message?, image_base64?, image_type?}
            friend_challenge:     {challenge_type, difficulty, puzzle, surprise_me?}
                                -> {"ok": true, "challenge_id": "<uuid>", "expires_at": "..."}
   GET  /?action=read&id=<id>   -> {"ok": true, "challenge": {..., "media_url": "https://..." | null}}
 with type-specific validation:
-  common            puzzle format / version / rules, size 1-12, map shape and
+  common            puzzle format / version / rules, size 2-10 (as the real function), map shape and
                     cell tokens
   photo_message_reveal  difficulty easy|medium|hard, message <= 200, image MIME
                     and <= 5 MB, photo or message required
@@ -72,7 +72,7 @@ def validate(b):
     if not isinstance(p, dict) or p.get("format") != "ce-puzzle" or p.get("v") != 1 or p.get("rules") != 1:
         return "invalid puzzle format"
     rows, cols, m = p.get("rows"), p.get("cols"), p.get("map")
-    if not (isinstance(rows, int) and isinstance(cols, int) and 1 <= rows <= 12 and 1 <= cols <= 12):
+    if not (isinstance(rows, int) and isinstance(cols, int) and 2 <= rows <= 10 and 2 <= cols <= 10):
         return "invalid puzzle size"
     if not isinstance(m, list) or len(m) != rows:
         return "invalid puzzle map"
@@ -173,7 +173,7 @@ class H(BaseHTTPRequestHandler):
             media = (ch.get("payload") or {}).get("media") if isinstance(ch.get("payload"), dict) else None
             out["media_url"] = ("%s/storage/v1/object/sign/challenge-media/%s?token=%d" % (MEDIA["base"], media["path"], MEDIA["ver"])) if isinstance(media, dict) else None
             return self._send(200, {"ok": True, "challenge": out})
-        return self._send(200, {"ok": True, "service": "chain-escape-api", "version": 3})
+        return self._send(200, {"ok": True, "service": "chain-escape-api", "version": 4})
 
     def do_POST(self):
         u = urlparse(self.path)
