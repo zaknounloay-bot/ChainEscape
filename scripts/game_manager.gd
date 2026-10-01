@@ -280,6 +280,10 @@ func return_to_main_menu() -> void:
 ## its screens open over the title before anything else shows. Classic is
 ## loaded exactly as on any launch and is never touched by them.
 func _open_shared_challenge() -> void:
+	# Developer page (?friendbench=1): generation timing on this device.
+	if FriendBench.requested():
+		add_child(FriendBench.new())
+		return
 	var p := SocialWeb.launch_param()
 	if not p.is_empty():
 		ui.open_shared_challenge(str(p["raw"]))

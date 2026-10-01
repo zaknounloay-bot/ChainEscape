@@ -74,6 +74,37 @@ Built on the frozen **V17 Golden Master** (levels 1-200 unchanged). UI and navig
 - **Settings > MAIN MENU:** returns to the title exactly as at launch (the level stays loaded behind it). CONTINUE resumes the same board. Nothing is reset or saved, so no confirmation is needed.
 - Check: `godot --headless --path . res://tools/SocialSmoke.tscn` (real input events). It asserts navigation, card layout, entrance end state, the MAIN MENU round trip, and that progress and the save file are byte-identical after Social and MAIN MENU.
 
+## Challenge a Friend — phase 1: generated-puzzle engine (no UI yet)
+
+`scripts/social/friend_generator.gd` (`FriendGenerator`) makes a brand-new, Solver-validated puzzle for **EASY / MEDIUM / HARD / VERY HARD**. It uses the same engine as the campaign: LevelGenerator candidates and mutations, LevelGenerator.evaluate (Solver analysis and difficulty score) and PuzzleDefinition.
+- Every result is rebuilt from its own JSON and verified again, as a recipient will play it.
+- Photo / Message Reveal keeps its own `SocialGenerator`, unchanged.
+
+| | Board | Blocks | Mechanics | Target (difficulty score) | Fallback floor/ceiling | Time cap |
+|---|---|---|---|---|---|---|
+| EASY | 4×4 / 5×4 | 7–9 | plain arrows | 4–9 | 3–10.9 | 1.5 s |
+| MEDIUM | 5×5 | 13–15 | arrows + 2–3 clockwise spinners | 12–19 | 11–22.9 | 2.0 s |
+| HARD | 6×6 | 17–20 | arrows + 4 clockwise spinners | 24–33 | 23–35.9 | 2.5 s |
+| VERY HARD | 6×6 / 6×7 | 20–24 | arrows + 5–7 clockwise spinners | 40+ | 36+ | 2.5 s |
+
+For scale: the campaign averages 4.7 in Chapter 1, 18.2 in Chapter 3, 27.4 in Chapter 4 and 42.1 in Chapter 6.
+
+- No locks, hidden arrows, other spinner rules, switches, gates, armor or Silver / Gold rewards. This is checked on every result.
+- **Search:** sample a few candidates and keep the closest to the target, then hill-climb it with LevelGenerator mutations. After 25 changes without getting closer, start a new round. The first board inside the target wins.
+- **Bounds:**
+  - At most `max_evals` candidates (deterministic per seed) and at most the time cap.
+  - At the cap, the closest solvable board is returned if it is within the fallback window, which never reaches the next difficulty.
+  - Otherwise there are at most 0.5 s more (`GRACE_MS`) to find one, after which the closest board is returned with `metrics.in_accept = false`.
+  - A board is never returned unvalidated.
+  - `step()` runs about 20 ms of work per frame, so the screen keeps drawing.
+- **SURPRISE ME:** `FriendGenerator.resolve("surprise", rng)` picks one of the four real difficulties uniformly. The real one is what gets stored.
+- **NEW CHALLENGE:** use a new seed and pass the previous board's `board_key()` in `avoid`; it can never come back, even with the same seed.
+- **Never a campaign board:** `data/classic_board_keys.json` holds the keys of the 200 levels (written by `tools/classic_board_keys.gd`; the test fails if it is stale).
+- **Checks:**
+  - `godot --headless --path . --script res://tools/friend_generator_test.gd`
+  - `godot --headless --path . --script res://tools/friend_benchmark.gd -- --seeds=200` (desktop timings)
+  - **On a phone:** open the Web build with `?friendbench=1`. A developer page (`FriendBench`) measures generation on the device, one slice per frame as in the real creator, with each run after the first being a NEW CHALLENGE. It never touches Classic, the save or the network.
+
 ## Social MVP 0.2C — status
 
 **Core cross-device viral loop: REAL-DEVICE VALIDATED** (build `a5fb3e8`, real iPhones in Safari, real Supabase backend, hosted on itch.io).
@@ -1635,6 +1666,8 @@ godot --headless --path . res://tools/SocialPlayTest.tscn          # Social 0.2B
 godot --headless --path . res://tools/SocialApiTest.tscn           # Social 0.2C: create -> mock API -> challenge id -> share link; failures, retry, READ
 godot --headless --path . res://tools/RecipientTest.tscn           # Social 0.2C phase 2: shared link -> landing -> exact puzzle -> reveal -> CREATE YOUR OWN; errors; Classic isolation + HUD
 node tools/web_recipient_test.mjs build/web                          # Social 0.2C phase 2 in real Chromium (needs python3 for the mock API)
+godot --headless --path . --script res://tools/friend_generator_test.gd   # Challenge a Friend: generator profiles, validation, NEW CHALLENGE, SURPRISE ME, budget
+godot --headless --path . --script res://tools/friend_benchmark.gd -- --seeds=200   # Challenge a Friend: generation timing per difficulty (desktop)
 godot --headless --path . --export-release "Web" build/web/index.html && node tools/web_audio_test.mjs   # real browser
 node tools/web_persistence_test.mjs                                  # Web save scenarios A-G (itch-like iframe)
 godot --headless --path . --script res://tools/armor_audit.gd       # every reachable state of every armor level, solver vs game rules
