@@ -19,7 +19,7 @@ extends Control
 signal exit_requested  # leave the flow, back to the Social choice screen
 signal play_requested(challenge: SharedChallenge)  # a verified challenge is ready
 
-enum Step { CHOOSE, PREVIEW, MESSAGE, DIFFICULTY, REVIEW, GENERATING }
+enum Step { CHOOSE, PREVIEW, MESSAGE, DIFFICULTY, REVIEW, GENERATING, SHARE }
 
 const ACCENT := Color("#C645E6")  # Photo / Message Reveal identity (0.1)
 const TINT := Color("#EBCBF7")
@@ -80,6 +80,21 @@ var generator: SocialGenerator
 var debug_seed := 0
 var _gen_frames := 0
 var _gen_anim: Tween
+var _gen_preview: PillButton
+
+# 0.2C: the generated challenge is kept until the creator leaves, so a
+# failed upload is retried with the SAME puzzle; it is only rebuilt when
+# the creator changes the photo, message or difficulty.
+var prepared: SharedChallenge
+var _prepared_sig := ""
+var api: SocialApi
+var uploading := false
+var _upload_token := 0
+var last_error := ""
+## The created challenge's share link ("" until the API returned an id).
+var share_url := ""
+var _share_status: Label
+var _share_link: Label
 
 
 func _init() -> void:
@@ -97,6 +112,9 @@ func _ready() -> void:
 	_steps[Step.DIFFICULTY] = _build_difficulty()
 	_steps[Step.REVIEW] = _build_review()
 	_steps[Step.GENERATING] = _build_generating()
+	_steps[Step.SHARE] = _build_share()
+	api = SocialApi.new()
+	add_child(api)
 	get_viewport().size_changed.connect(_on_resized)
 
 
@@ -120,6 +138,15 @@ func resume_review() -> void:
 	show_step(Step.REVIEW)
 
 
+## Back from playing / previewing: the share screen if the challenge was
+## created on the server, else the review.
+func resume_after_play() -> void:
+	if is_created():
+		show_step(Step.SHARE)
+	else:
+		resume_review()
+
+
 ## Leave the flow: the session (photo, message, difficulty) is discarded.
 func reset() -> void:
 	session = CreatorSession.new()
@@ -128,6 +155,12 @@ func reset() -> void:
 	editing = false
 	step = Step.CHOOSE
 	generator = null
+	prepared = null
+	_prepared_sig = ""
+	share_url = ""
+	uploading = false
+	_upload_token += 1  # a reply still on its way is ignored
+	last_error = ""
 	if _gen_anim:
 		_gen_anim.kill()
 	if _fade:
@@ -156,6 +189,8 @@ func show_step(s: int) -> void:
 			_refresh_review()
 		Step.GENERATING:
 			_start_generating()
+		Step.SHARE:
+			_refresh_share()
 	for k in _steps:
 		_steps[k].visible = k == s
 	var col: Control = _steps[s]
@@ -201,8 +236,12 @@ func _back() -> void:
 		Step.REVIEW:
 			show_step(Step.DIFFICULTY)
 		Step.GENERATING:
+			if uploading:
+				return  # wait for the reply (no double submission)
 			generator = null
 			show_step(Step.REVIEW)
+		Step.SHARE:
+			exit_requested.emit()
 
 
 ## After a photo decision: the next step, or back to REVIEW when editing
@@ -686,8 +725,8 @@ func _error_text(errors: Array[String]) -> String:
 	return "Something is missing. Check your choices."
 
 
-## 0.2B: validate, then generate the exact puzzle (GENERATING step).
-## Still no backend, upload, link or challenge id.
+## 0.2B/0.2C: validate, then generate the exact puzzle (GENERATING step);
+## with a backend configured it is then uploaded and a share link made.
 func _create() -> void:
 	AudioManager.play_ui_tap()
 	var errors := session.validate()
@@ -728,20 +767,34 @@ func _build_generating() -> VBoxContainer:
 		AudioManager.play_ui_tap()
 		_start_generating())
 	box.add_child(_gen_retry)
+	_gen_preview = _secondary("PLAY / PREVIEW", "PreviewChallenge")
+	_gen_preview.pressed.connect(_preview)
+	box.add_child(_gen_preview)
 	_gen_back = _back_button()
 	box.add_child(_gen_back)
 	return box
 
 
 func _start_generating() -> void:
+	_gen_title.text = "CREATING YOUR\nCHALLENGE"
+	_gen_retry.visible = false
+	_gen_back.visible = false
+	_gen_preview.visible = false
+	_start_gen_anim()
+	# Same photo, message and difficulty as the prepared challenge: keep
+	# its exact puzzle (only the upload is repeated).
+	if SocialConfig.sharing_enabled() and prepared != null and _prepared_sig == _session_sig():
+		_gen_status.text = "Getting your link ready..."
+		_upload.call_deferred()
+		return
+	prepared = null
 	var seed_value := debug_seed if debug_seed != 0 else (randi() | 1)
 	generator = SocialGenerator.new(session.difficulty, seed_value)
 	_gen_frames = 0
-	_gen_title.text = "CREATING YOUR\nCHALLENGE"
 	_gen_status.text = "Building a %s puzzle..." % DIFFICULTY_TEXT[session.difficulty][0]
-	_gen_status.remove_theme_color_override("font_color")
-	_gen_retry.visible = false
-	_gen_back.visible = false
+
+
+func _start_gen_anim() -> void:
 	if _gen_anim:
 		_gen_anim.kill()
 	if not SocialScreen.reduced_motion():
@@ -770,8 +823,168 @@ func _generate_step() -> void:
 		_gen_retry.visible = true
 		_gen_back.visible = true
 		return
-	print("[Social] challenge ready: %s %s %s" % [session.difficulty, JSON.stringify(g.metrics), g.puzzle.to_json()])
-	play_requested.emit(SharedChallenge.photo_message_reveal(session, g.puzzle))
+	print("[Social] challenge ready: %s %s" % [session.difficulty, JSON.stringify(g.metrics)])
+	prepared = SharedChallenge.photo_message_reveal(session, g.puzzle)
+	_prepared_sig = _session_sig()
+	if not SocialConfig.sharing_enabled():
+		# No backend in this build: play it here, exactly as in 0.2B.
+		play_requested.emit(prepared)
+		return
+	_start_gen_anim()
+	_gen_status.text = "Getting your link ready..."
+	_upload()
+
+
+## Sends the prepared challenge (its exact puzzle) to the server. One
+## request at a time; a reply that arrives after the creator left is
+## ignored.
+func _upload() -> void:
+	if uploading or prepared == null:
+		return
+	uploading = true
+	_upload_token += 1
+	var token := _upload_token
+	var r := await api.create_challenge(prepared)
+	if token != _upload_token:
+		return
+	uploading = false
+	if _gen_anim:
+		_gen_anim.kill()
+	for b in _gen_blocks:
+		b.scale = Vector2.ONE
+	if not r["ok"]:
+		last_error = r["error"]
+		push_warning("[Social] create failed: %s" % last_error)
+		_gen_title.text = "COULDN'T CREATE\nCHALLENGE"
+		_gen_status.text = _upload_error_text(last_error)
+		_gen_retry.visible = true
+		_gen_preview.visible = true
+		_gen_back.visible = true
+		_update_zones.call_deferred(1)
+		return
+	last_error = ""
+	prepared.remote_id = r["challenge_id"]
+	prepared.expires_at = r["expires_at"]
+	share_url = ShareLink.build(ShareLink.default_base(), prepared.remote_id)
+	show_step(Step.SHARE)
+
+
+func _upload_error_text(code: String) -> String:
+	match code:
+		"network", "timeout":
+			return "Check your connection and try again.\nYour photo and message are kept."
+		"rate_limited":
+			return "Lots of challenges right now.\nPlease wait a minute and try again."
+		"too_large":
+			return "This photo is too large to send.\nTry another photo."
+		"not_configured":
+			return "Sharing isn't available in this version.\nYou can still play it here."
+	return "Something went wrong on our side.\nPlease try again."
+
+
+## True once the server accepted the prepared challenge (it has an id).
+func is_created() -> bool:
+	return prepared != null and prepared.remote_id != ""
+
+
+## Plays the prepared challenge here (same puzzle as the shared one).
+func _preview() -> void:
+	AudioManager.play_ui_tap()
+	if prepared != null:
+		play_requested.emit(prepared)
+
+
+## Identity of what the creator chose (photo bytes, message, difficulty).
+func _session_sig() -> String:
+	var h := HashingContext.new()
+	h.start(HashingContext.HASH_SHA256)
+	h.update(session.difficulty.to_utf8_buffer())
+	h.update(("\n" + session.message + "\n").to_utf8_buffer())
+	if session.has_photo():
+		h.update(session.image_jpeg)
+	return h.finish().hex_encode()
+
+
+# --- Step 6: share (0.2C) ------------------------------------------------------
+
+func _build_share() -> VBoxContainer:
+	var box := _column()
+	var holder := CenterContainer.new()
+	holder.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	var slot := Control.new()
+	slot.custom_minimum_size = Vector2(76, 76)
+	slot.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	holder.add_child(slot)
+	var icon := SocialScreen.EscapeBlock.new()
+	icon.face = ACCENT
+	icon.dir = Vector2.UP
+	icon.half = 36.0
+	icon.position = Vector2(38, 38)
+	slot.add_child(icon)
+	box.add_child(holder)
+	box.add_child(_heading("CHALLENGE READY!"))
+	box.add_child(_soft("Your Chain Escape is ready to send.", 26))
+	var share := _primary("SHARE CHALLENGE", "ShareChallenge")
+	share.pressed.connect(func(): _share_pressed(false))
+	box.add_child(share)
+	var copy := _secondary("COPY LINK", "CopyLink")
+	copy.pressed.connect(func(): _share_pressed(true))
+	box.add_child(copy)
+	_share_status = _label("", 24, ACCENT.darkened(0.15), 900)
+	_share_status.name = "ShareStatus"
+	box.add_child(_share_status)
+	_share_link = _label("", 18, Palette.TEXT_SOFT, 700)
+	_share_link.name = "ShareLink"
+	_share_link.custom_minimum_size = Vector2(WIDTH, 0)
+	_share_link.text_overrun_behavior = TextServer.OVERRUN_TRIM_ELLIPSIS
+	box.add_child(_share_link)
+	box.add_child(_soft("Only the link is shared. The link expires in 30 days.", 20))
+	var preview := PillButton.new("PLAY / PREVIEW CHALLENGE", PillButton.Icon.NONE, Palette.WHITE, Palette.TEXT, 24)
+	preview.name = "PreviewChallenge"
+	preview.custom_minimum_size = Vector2(460, 92)
+	preview.size_flags_horizontal = Control.SIZE_SHRINK_CENTER
+	preview.pressed.connect(_preview)
+	box.add_child(preview)
+	var done := PillButton.new("DONE", PillButton.Icon.NONE, Palette.WHITE, Palette.TEXT, 26)
+	done.name = "Done"
+	done.custom_minimum_size = Vector2(460, 92)
+	done.size_flags_horizontal = Control.SIZE_SHRINK_CENTER
+	done.pressed.connect(func():
+		AudioManager.play_ui_tap()
+		exit_requested.emit())
+	box.add_child(done)
+	return box
+
+
+func _refresh_share() -> void:
+	_share_status.text = ""
+	# No page address outside the Web build (and no SHARE_BASE_URL): the
+	# challenge exists, but there is no link to hand over here.
+	_share_link.text = share_url if share_url != "" else "Links are made by the Web version"
+	if _web:
+		SocialWeb.set_share(share_url, SocialConfig.SHARE_TEXT, SocialConfig.SHARE_TITLE)
+
+
+## Web: the page script already shared / copied inside the tap (zones), the
+## result arrives through _process. Elsewhere: copy to the clipboard.
+func _share_pressed(_copy_only: bool) -> void:
+	AudioManager.play_ui_tap()
+	if _web or share_url == "":
+		return
+	DisplayServer.clipboard_set(share_url)
+	_show_share_result("copied")
+
+
+func _show_share_result(r: String) -> void:
+	match r:
+		"shared":
+			_share_status.text = "SHARED"
+		"copied":
+			_share_status.text = "LINK COPIED"
+		"failed":
+			_share_status.text = "COULDN'T SHARE - TRY COPY LINK"
+		_:
+			_share_status.text = ""
 
 
 # --- Web polling and tap zones -------------------------------------------------
@@ -789,6 +1002,12 @@ func _process(delta: float) -> void:
 	if _poll < POLL:
 		return
 	_poll = 0.0
+	if step == Step.SHARE:
+		var sr := SocialWeb.take_share_result()
+		if sr != "":
+			_show_share_result(sr)
+			_publish()
+		return
 	if step == Step.CHOOSE or step == Step.PREVIEW:
 		var r := SocialWeb.take_photo()
 		if not r.is_empty():
@@ -830,6 +1049,9 @@ func _update_zones(defers_left: int = 0) -> void:
 				zones.append(_zone("photo", _steps[Step.PREVIEW].find_child("ChooseAnother", true, false)))
 			Step.MESSAGE:
 				zones.append(_zone("message", _message_card))
+			Step.SHARE:
+				zones.append(_zone("share", _steps[Step.SHARE].find_child("ShareChallenge", true, false)))
+				zones.append(_zone("copy", _steps[Step.SHARE].find_child("CopyLink", true, false)))
 	SocialWeb.set_zones(zones)
 	_publish()
 
@@ -849,7 +1071,8 @@ func _publish() -> void:
 		"has_photo": session.has_photo(), "image": [session.image_size.x, session.image_size.y],
 		"pending_image": [_pending.image_size.x, _pending.image_size.y] if _pending else [],
 		"message": session.message, "draft": _draft, "difficulty": session.difficulty, "buttons": buttons,
-		"status": _visible_status()})
+		"status": _visible_status(), "share_url": share_url, "uploading": uploading, "error": last_error,
+		"share_status": _share_status.text if _share_status else ""})
 
 
 func _visible_status() -> String:

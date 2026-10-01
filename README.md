@@ -74,6 +74,22 @@ Built on the frozen **V17 Golden Master** (levels 1-200 unchanged). UI and navig
 - **Settings > MAIN MENU:** returns to the title exactly as at launch (the level stays loaded behind it). CONTINUE resumes the same board. Nothing is reset or saved, so no confirmation is needed.
 - Check: `godot --headless --path . res://tools/SocialSmoke.tscn` (real input events). It asserts navigation, card layout, entrance end state, the MAIN MENU round trip, and that progress and the save file are byte-identical after Social and MAIN MENU.
 
+## Social MVP 0.2C (phase 1) — backend create + share link
+
+After CREATE CHALLENGE generates and verifies the exact puzzle, the challenge is sent to the Supabase Edge Function `chain-escape-api`. The function does every privileged database and storage write on the server. The game gets back a challenge id and shows **CHALLENGE READY!** with **SHARE CHALLENGE** (the native share sheet), **COPY LINK**, **PLAY / PREVIEW CHALLENGE** and **DONE**. The recipient flow is the next phase.
+
+- **Config:** `scripts/social/social_config.gd` is the single place for the API URL, the optional public key, the share base, the share text and the limits. It holds no secrets.
+  - When `API_URL` is empty, sharing is off and CREATE behaves exactly as in 0.2B (local play).
+- **API client:** `SocialApi` sends `{challenge_type, difficulty, puzzle (exact PuzzleDefinition), message?, image_base64?, image_type?}`.
+  - The photo is the processed copy (1080 px, re-encoded, no EXIF), never the original.
+  - Replies are validated, and errors become short codes with friendly text. Server text, messages, images and signed URLs are never logged.
+  - READ rebuilds the challenge from the explicit board (`SharedChallenge.from_api`, Solver-verified, version-checked) and never regenerates it.
+- **Retry:** the generated challenge is kept. TRY AGAIN, or BACK and CREATE again, uploads the same puzzle unless the photo, message or difficulty changed. There is one request at a time.
+- **Links:** `ShareLink` builds `<page or SHARE_BASE_URL>?challenge=<uuid>`. Only the id goes in the link; `#challenge=` is also accepted when parsing.
+  - On the Web, SHARE and COPY LINK run inside the tap (the iPhone requirement) in `web/social_creator.js`. Without `navigator.share`, SHARE copies the link.
+- **Checks:**
+  - `godot --headless --path . res://tools/SocialApiTest.tscn` runs against `tools/mock_social_api.py` (started automatically). It covers create (message / photo / both), the exact puzzle sent, retries, failures, READ / invalid / expired, links and Classic isolation.
+
 ## Social MVP 0.2B — local challenge: generate → play → complete → reveal
 
 CREATE CHALLENGE now generates an exact, solver-verified puzzle and plays it on this device. Solving it reveals the photo and/or message. There is still no backend, upload, link or recipient networking.
@@ -1552,6 +1568,7 @@ godot --headless --path . res://tools/Playtest.tscn                # end-to-end 
 godot --headless --path . res://tools/Soak.tscn -- --cycles=2        # long session: 1 -> 200 twice in one process
 godot --headless --path . res://tools/SocialSmoke.tscn              # Social: CREATE CHALLENGE, reveal creation flow (0.2A), MAIN MENU; Classic progress untouched
 godot --headless --path . res://tools/SocialPlayTest.tscn          # Social 0.2B: generate -> play -> reveal, exact reconstruction, Classic untouched
+godot --headless --path . res://tools/SocialApiTest.tscn           # Social 0.2C: create -> mock API -> challenge id -> share link; failures, retry, READ
 godot --headless --path . --export-release "Web" build/web/index.html && node tools/web_audio_test.mjs   # real browser
 node tools/web_persistence_test.mjs                                  # Web save scenarios A-G (itch-like iframe)
 godot --headless --path . --script res://tools/armor_audit.gd       # every reachable state of every armor level, solver vs game rules

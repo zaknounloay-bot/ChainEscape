@@ -17,7 +17,16 @@
  *    it), opened from the tap in the same way so the keyboard comes up at
  *    once, and pinned to the top of the visible area above the keyboard.
  *
- * Godot polls takePhoto() / takeMessage() (plain function calls).
+ * 3. Share (0.2C). SHARE CHALLENGE and COPY LINK are tap zones too, so the
+ *    native share sheet (navigator.share) and the clipboard - both need a
+ *    real tap on iPhone - run inside the tap. Without navigator.share the
+ *    link is copied instead. Only the link (challenge id) is shared: never
+ *    the message or photo.
+ * 4. Launch link (0.2C): the challenge id in this page's own address
+ *    (?challenge=<id>, or #challenge=<id>), read once for the game.
+ *
+ * Godot polls takePhoto() / takeMessage() / takeShareResult() (plain
+ * function calls).
  */
 (function () {
   var MAX_EDGE = 1080;          // longest edge of the working copy
@@ -34,6 +43,15 @@
   var lastFire = 0;
   var start = null;             // where the current touch / press began
   var input = null;
+  var share = { url: '', text: '', title: '' };
+  var shareResult = '';
+
+  // Challenge id in the launch address (validated again by the game).
+  var launchId = '';
+  try {
+    var lm = /[?&#]challenge=([0-9a-fA-F-]{36})(?:[&#]|$)/.exec(location.search + location.hash);
+    if (lm) launchId = lm[1].toLowerCase();
+  } catch (e) { launchId = ''; }
   var ui = 'font-family:-apple-system,system-ui,sans-serif;';
 
   function canvasRect() {
@@ -82,6 +100,8 @@
     if (now - lastFire < 800) return;  // touchend + compatibility mouseup
     lastFire = now;
     if (z.id === 'message') openMessage();
+    else if (z.id === 'share') doShare();
+    else if (z.id === 'copy') doCopy();
     else openPicker();
   }
 
@@ -220,6 +240,44 @@
     try { ta.focus(); ta.setSelectionRange(ta.value.length, ta.value.length); } catch (e) { /* tap the field */ }
   }
 
+  // --- Share (0.2C) -----------------------------------------------------------
+  function doShare() {
+    if (!share.url) return;
+    if (navigator.share) {
+      try {
+        navigator.share({ title: share.title, text: share.text, url: share.url }).then(
+          function () { shareResult = 'shared'; },
+          function (e) { shareResult = (e && e.name === 'AbortError') ? 'cancelled' : 'failed'; });
+        return;
+      } catch (e) { /* fall through to copy */ }
+    }
+    doCopy();
+  }
+
+  function copyFallback() {
+    var ta = document.createElement('textarea');
+    ta.value = share.url;
+    ta.setAttribute('readonly', '');
+    ta.style.cssText = 'position:fixed;left:-1000px;top:0;opacity:0';
+    document.body.appendChild(ta);
+    ta.select(); ta.setSelectionRange(0, ta.value.length);
+    var ok = false;
+    try { ok = document.execCommand('copy'); } catch (e) { ok = false; }
+    ta.remove();
+    shareResult = ok ? 'copied' : 'failed';
+  }
+
+  function doCopy() {
+    if (!share.url) return;
+    if (navigator.clipboard && navigator.clipboard.writeText) {
+      try {
+        navigator.clipboard.writeText(share.url).then(function () { shareResult = 'copied'; }, copyFallback);
+        return;
+      } catch (e) { /* older browsers */ }
+    }
+    copyFallback();
+  }
+
   // --- API used by Godot ----------------------------------------------------
   window.ceSocial = {
     /** zones: JSON [{id, x, y, w, h}] normalized to the canvas; '[]' clears. */
@@ -231,9 +289,19 @@
     /** '' while the dialog is open / unused; else JSON {done, text}. */
     takeMessage: function () { var r = messageResult; messageResult = ''; return r; },
     dialogOpen: function () { return dialogOpen; },
+    /** The link SHARE / COPY LINK will hand over (set before showing them). */
+    setShare: function (url, text, title) { share = { url: String(url || ''), text: String(text || ''), title: String(title || '') }; },
+    /** '' until a share / copy finished: 'shared' | 'copied' | 'cancelled' | 'failed'. */
+    takeShareResult: function () { var r = shareResult; shareResult = ''; return r; },
+    canShare: function () { return !!navigator.share; },
+    /** This page's address without query / fragment (base for share links). */
+    pageBase: function () { return location.origin + location.pathname; },
+    /** Challenge id this page was opened with ('' = none). */
+    launchChallenge: function () { return launchId; },
     /** Leaving the flow: forget zones, pending results and any open dialog. */
     reset: function () {
       zones = []; photoResult = ''; messageResult = ''; draft = '';
+      share = { url: '', text: '', title: '' }; shareResult = '';
       var m = document.getElementById('ce-message');
       if (m) m.remove();
       dialogOpen = false;

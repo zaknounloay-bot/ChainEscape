@@ -57,6 +57,35 @@ static func dialog_open() -> bool:
 	return api() != null and bool(_api.dialogOpen())
 
 
+## 0.2C: the link SHARE CHALLENGE / COPY LINK hand over (zones "share",
+## "copy" open the share sheet / copy inside the tap).
+static func set_share(url: String, text: String, title: String) -> void:
+	if api():
+		_api.setShare(url, text, title)
+
+
+## "" until done, else "shared" | "copied" | "cancelled" | "failed".
+static func take_share_result() -> String:
+	if api() == null:
+		return ""
+	var r = _api.takeShareResult()
+	return str(r) if r != null else ""
+
+
+static func can_share() -> bool:
+	return api() != null and bool(_api.canShare())
+
+
+## The page's address without query / fragment ("" outside the Web build).
+static func page_base() -> String:
+	return str(_api.pageBase()) if api() else ""
+
+
+## Challenge id the page was opened with ("" = none; validate before use).
+static func launch_challenge_id() -> String:
+	return str(_api.launchChallenge()) if api() else ""
+
+
 static func reset() -> void:
 	if api():
 		_api.reset()

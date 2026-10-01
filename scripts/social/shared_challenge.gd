@@ -27,6 +27,12 @@ var payload: Dictionary = {}
 ## This device only (never serialized).
 var local_photo_jpeg := PackedByteArray()
 var local_photo: Texture2D
+## Network (0.2C): the server's id once created / read, its expiry, and -
+## for a challenge read from the server - the temporary signed photo URL.
+## Never part of to_dict().
+var remote_id := ""
+var expires_at := ""
+var media_url := ""
 
 
 static func photo_message_reveal(session: CreatorSession, p: PuzzleDefinition) -> SharedChallenge:
@@ -42,6 +48,52 @@ static func photo_message_reveal(session: CreatorSession, p: PuzzleDefinition) -
 	c.local_photo_jpeg = session.image_jpeg
 	c.local_photo = session.texture
 	return c
+
+
+## A challenge as the API returns it (READ). Untrusted: every field is
+## checked and the puzzle is rebuilt from its explicit board data and
+## Solver-verified - never regenerated from the difficulty.
+## Returns {"challenge": SharedChallenge} or {"error": code}.
+static func from_api(ch: Dictionary) -> Dictionary:
+	var t := str(ch.get("challenge_type", ""))
+	if t != TYPE_PHOTO_MESSAGE_REVEAL:
+		return {"error": "unsupported"}
+	var pd = ch.get("puzzle")
+	if typeof(pd) != TYPE_DICTIONARY:
+		return {"error": "malformed"}
+	if str(pd.get("format", "")) != PuzzleDefinition.FORMAT or int(pd.get("v", 0)) != PuzzleDefinition.VERSION \
+			or int(pd.get("rules", 0)) != PuzzleDefinition.RULES:
+		return {"error": "unsupported"}  # a newer / older puzzle format
+	var p := PuzzleDefinition.from_dict(pd)
+	if p == null or not p.verify():
+		return {"error": "malformed"}
+	var d := str(ch.get("difficulty", ""))
+	if not d in CreatorSession.DIFFICULTIES:
+		return {"error": "malformed"}
+	var pl = ch.get("payload", {})
+	if pl == null:
+		pl = {}
+	if typeof(pl) != TYPE_DICTIONARY:
+		return {"error": "malformed"}
+	var msg = pl.get("message")
+	if msg != null and (typeof(msg) != TYPE_STRING or msg.length() > CreatorSession.MESSAGE_MAX):
+		return {"error": "malformed"}
+	var url = ch.get("media_url")
+	if url != null and (typeof(url) != TYPE_STRING or not url.begins_with("https://")):
+		return {"error": "malformed"}
+	var has_media: bool = typeof(pl.get("media")) == TYPE_DICTIONARY
+	var message := CreatorSession.clean_message(msg) if typeof(msg) == TYPE_STRING else ""
+	if message == "" and not has_media:
+		return {"error": "malformed"}  # nothing to reveal
+	var c := SharedChallenge.new()
+	c.type = t
+	c.difficulty = d
+	c.puzzle = p
+	c.payload = {"message": message if message != "" else null, "photo": {"format": "remote"} if has_media else null}
+	c.remote_id = str(ch.get("id", ""))
+	c.expires_at = str(ch.get("expires_at", ""))
+	c.media_url = url if typeof(url) == TYPE_STRING else ""
+	return {"challenge": c}
 
 
 func has_photo() -> bool:

@@ -236,6 +236,16 @@ func _test_exit_before_completion() -> void:
 	_check(not play.is_active() and not play.reveal.visible, "LEAVE ends the challenge without revealing anything")
 	_check(cr.visible and cr.step == RevealCreator.Step.REVIEW and cr.session.message == "Secret message" and cr.session.has_photo()
 			and cr.session.difficulty == "medium", "back on the review with photo, message and difficulty kept")
+	# Without a backend (local mode), CREATE again plays again, as in 0.2B.
+	await _tap(_cnode("Create"))
+	var t0 := Time.get_ticks_msec()
+	while not play.is_active() and Time.get_ticks_msec() - t0 < 20000:
+		await _frames(1)
+	_check(play.is_active(), "local mode: CREATE again after leaving starts a challenge")
+	await _wait(0.3)
+	await _tap(play._exit)
+	await _tap(play._confirm.find_child("Leave", true, false))
+	_check(cr.step == RevealCreator.Step.REVIEW, "and leaving it returns to the review again")
 	await _tap(_cnode("Back"))
 	await _tap(_cnode("Back"))
 	await _tap(_cnode("Back"))

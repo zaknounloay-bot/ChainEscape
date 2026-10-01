@@ -38,6 +38,8 @@ var completed := false
 var chain := 0
 var undos_used := 0
 var hints_used := 0
+## Reveal's last button text ("" = the default for the mode).
+var back_label := ""
 ## Fingerprint of the puzzle currently on the board (tests: PLAY AGAIN).
 var loaded_fingerprint := ""
 var plays := 0
@@ -310,6 +312,8 @@ func _on_solved() -> void:
 		return
 	_set_hud_visible(false)
 	reveal.show_reveal(challenge, _theme, mode)
+	if back_label != "":
+		reveal._back.text = back_label
 	get_tree().create_timer(1.6).timeout.connect(_publish)
 
 

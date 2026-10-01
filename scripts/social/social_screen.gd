@@ -73,11 +73,19 @@ func _ready() -> void:
 	creator.exit_requested.connect(func(): show_page(Page.CHOICE))
 	add_child(creator)
 	play = SocialPlay.new()
-	creator.play_requested.connect(func(c): play.start(c, SocialPlay.Mode.CREATOR_PREVIEW, _theme))
-	# Left before solving: back to the review, every choice kept.
-	play.exited.connect(func(): creator.resume_review())
-	# After the reveal: back to CREATE CHALLENGE (the session is discarded).
-	play.finished.connect(func(): show_page(Page.CHOICE))
+	creator.play_requested.connect(func(c):
+		play.back_label = "BACK TO SHARE" if creator.is_created() else ""
+		play.start(c, SocialPlay.Mode.CREATOR_PREVIEW, _theme))
+	# Left before solving: back to the review (or the share screen), every
+	# choice kept.
+	play.exited.connect(func(): creator.resume_after_play())
+	# After the reveal: back to the share screen if the challenge was
+	# created, else to CREATE CHALLENGE (the session is discarded).
+	play.finished.connect(func():
+		if creator.is_created():
+			creator.resume_after_play()
+		else:
+			show_page(Page.CHOICE))
 	add_child(play)
 	_pages[Page.PHOTO_REVEAL] = creator
 	_pages[Page.CHALLENGE_FRIEND] = _build_placeholder(Page.CHALLENGE_FRIEND)
