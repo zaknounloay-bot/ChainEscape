@@ -1712,6 +1712,7 @@ node tools/web_recipient_test.mjs build/web                          # Social 0.
 godot --headless --path . --script res://tools/friend_generator_test.gd   # Challenge a Friend: generator profiles, validation, NEW CHALLENGE, SURPRISE ME, budget
 godot --headless --path . --script res://tools/friend_benchmark.gd -- --seeds=200   # Challenge a Friend: generation timing per difficulty (desktop)
 node tools/web_friendbench_route_test.mjs build/web                  # ?friendbench=1 dev page vs challenge links (routing)
+node tools/web_sharetest_page_test.mjs build/web                   # ?sharetest=1 dev page: WhatsApp hand-off test links (web/share_test.js)
 godot --headless --path . res://tools/FriendChallengeApiTest.tscn    # Challenge a Friend phase 2: friend_challenge model / API vs the mock
 node tools/backend_contract_test.mjs [API_URL | --edge=<index.ts>]  # chain-escape-api contract: mock (default), real URL, or a function source under Deno
 godot --headless --path . --export-release "Web" build/web/index.html && node tools/web_audio_test.mjs   # real browser
