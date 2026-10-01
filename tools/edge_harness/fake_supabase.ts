@@ -1,14 +1,29 @@
 // Local test stand-in for "https://esm.sh/@supabase/supabase-js@2" (mapped by
 // import_map.json): an in-memory shared_challenges table and challenge-media
-// bucket with the calls chain-escape-api uses. Tests only - lets the REAL
+// bucket with the calls chain-escape-api uses. jsonb columns (puzzle,
+// payload) are stored with jsonb's key order, as the real database does. Tests only - lets the REAL
 // index.ts run under Deno without network access or credentials.
 //   CE_FAKE_SEED=<file.json>   rows to start with (e.g. a version-3 record)
 // deno-lint-ignore-file no-explicit-any
+// Like PostgreSQL jsonb: object keys come back sorted by length, then
+// bytewise - NOT in the order they were sent (arrays keep their order).
+const JSONB_COLUMNS = ["puzzle", "payload"];
+function jsonbOrder(v: any): any {
+  if (Array.isArray(v)) return v.map(jsonbOrder);
+  if (v === null || typeof v !== "object") return v;
+  const keys = Object.keys(v).sort((a, b) => a.length - b.length || (a < b ? -1 : a > b ? 1 : 0));
+  return Object.fromEntries(keys.map((k) => [k, jsonbOrder(v[k])]));
+}
+function asStored(row: any) {
+  const r = structuredClone(row);
+  for (const c of JSONB_COLUMNS) if (c in r) r[c] = jsonbOrder(r[c]);
+  return r;
+}
 const UUID = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
 const rows = new Map<string, any>();
 const files = new Map<string, Uint8Array>();
 const seed = Deno.env.get("CE_FAKE_SEED");
-if (seed) for (const r of JSON.parse(Deno.readTextFileSync(seed))) rows.set(r.id, r);
+if (seed) for (const r of JSON.parse(Deno.readTextFileSync(seed))) rows.set(r.id, asStored(r));
 
 class Query {
   filters: [string, string, any][] = [];
@@ -39,7 +54,7 @@ export function createClient(_url: string, _key: string, _opts?: unknown) {
         select: (cols: string) => new Query(cols),
         insert(row: any) {
           const now = new Date();
-          const full = { ...structuredClone(row), created_at: now.toISOString(),
+          const full = { ...asStored(row), created_at: now.toISOString(),
             expires_at: new Date(now.getTime() + 30 * 86400000).toISOString() };
           return { select: (cols: string) => ({ single: () => {
             if (rows.has(full.id)) return Promise.resolve({ data: null, error: { message: "duplicate key" } });

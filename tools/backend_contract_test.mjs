@@ -56,7 +56,12 @@ const results = [];
 const check = (ok, msg) => { results.push(!!ok); console.log((ok ? 'PASS ' : 'FAIL ') + msg); };
 const PUZ = JSON.parse(fs.readFileSync(path.join(repo, 'tools/fixtures/friend_puzzles.json'), 'utf8'));
 const UUID = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/;
-const same = (a, b) => JSON.stringify(a) === JSON.stringify(b);
+// Deep and exact (types, numbers, strings, array order) but blind to object
+// key order: PostgreSQL jsonb returns keys in its own order (by length,
+// then bytewise), so {"cols":5,"v":1} comes back as {"v":1,"cols":5}.
+const canon = (v) => Array.isArray(v) ? v.map(canon)
+  : v !== null && typeof v === 'object' ? Object.fromEntries(Object.keys(v).sort().map((k) => [k, canon(v[k])])) : v;
+const same = (a, b) => JSON.stringify(canon(a)) === JSON.stringify(canon(b));
 
 async function create(body) {
   const r = await fetch(base, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(body) });
@@ -92,7 +97,9 @@ try {
   // Multiple recipients: repeated READs of one id are identical.
   if (ids.hard) {
     const reads = await Promise.all([1, 2, 3, 4, 5].map(() => read(ids.hard)));
-    check(reads.every((r) => r.status === 200 && same(r.body.challenge.puzzle, PUZ.hard)), '5 READs of one id (5 recipients) -> the same puzzle every time');
+    const got = reads.map((r) => (r.status === 200 && r.body && r.body.challenge ? r.body.challenge.puzzle : null));
+    check(got.every((p) => p !== null && same(p, got[0])), '5 READs of one id (5 recipients) -> all 5 recipients get the same puzzle as each other');
+    check(got.every((p) => p !== null && same(p, PUZ.hard)), '5 READs of one id -> every one is the creator\'s exact puzzle');
   }
   // SURPRISE ME: real difficulty stored, flag kept.
   const s = await create({ challenge_type: 'friend_challenge', difficulty: 'medium', puzzle: PUZ.medium, surprise_me: true });

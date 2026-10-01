@@ -19,6 +19,8 @@ with type-specific validation:
                     surprise_me optional boolean; payload {} or
                     {"surprise_me": true}, never any media
 (the reference for the real Edge Function: docs/backend/friend_challenge_phase2.md).
+Stored puzzle / payload objects come back with jsonb key order (by length,
+then bytewise), like the real database - never in the order they were sent.
 
 Photos: READ's media_url points at <media-base>/storage/v1/object/sign/...
 ?token=<n> (a stand-in for a Supabase signed URL); with --media-base set to
@@ -58,6 +60,15 @@ TYPES = set(DIFFICULTIES)
 MIMES = {"image/jpeg": "jpg", "image/png": "png", "image/webp": "webp"}
 CELL = re.compile(r"^(\.|[RBGYP][\^v<>]\S*|X[A-D])$")
 FRIEND_CELL = re.compile(r"^(\.|[RBGYP][\^v<>](@)?)$")
+
+
+def jsonb(v):
+    """Like PostgreSQL jsonb: object keys sorted by length, then bytewise."""
+    if isinstance(v, list):
+        return [jsonb(x) for x in v]
+    if isinstance(v, dict):
+        return {k: jsonb(v[k]) for k in sorted(v, key=lambda k: (len(k.encode()), k.encode()))}
+    return v
 
 
 def validate(b):
@@ -192,7 +203,7 @@ class H(BaseHTTPRequestHandler):
             return self._send(200, {"ok": True})
         if u.path == "/__put":
             m = json.loads(raw)
-            STORE[m["id"]] = m["challenge"]
+            STORE[m["id"]] = dict(m["challenge"], **{k: jsonb(m["challenge"][k]) for k in ("puzzle", "payload") if k in m["challenge"]})
             return self._send(200, {"ok": True})
         if u.path == "/__expire":
             EXPIRED.add(json.loads(raw).get("id", ""))
@@ -231,8 +242,8 @@ class H(BaseHTTPRequestHandler):
         if b["challenge_type"] == "photo_message_reveal" and b.get("image_base64"):
             payload["media"] = {"type": "image", "path": "%s/reveal.%s" % (cid, MIMES[b["image_type"]]), "mime": b["image_type"]}
             IMAGES[payload["media"]["path"]] = (base64.b64decode(b["image_base64"]), b["image_type"])
-        STORE[cid] = {"id": cid, "challenge_type": b["challenge_type"], "difficulty": b["difficulty"], "puzzle": b["puzzle"],
-                      "payload": payload, "format_version": 1, "rules_version": 1,
+        STORE[cid] = {"id": cid, "challenge_type": b["challenge_type"], "difficulty": b["difficulty"], "puzzle": jsonb(b["puzzle"]),
+                      "payload": jsonb(payload), "format_version": 1, "rules_version": 1,
                       "created_at": now.strftime("%Y-%m-%dT%H:%M:%S.000Z"), "expires_at": expires}
         return self._send(200, {"ok": True, "challenge_id": cid, "expires_at": expires})
 

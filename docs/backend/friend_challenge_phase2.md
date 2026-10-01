@@ -29,7 +29,7 @@
 - Secrets still come only from the function's environment (`SUPABASE_URL`, `SUPABASE_SERVICE_ROLE_KEY`). Keep **Verify JWT off**.
 
 **Evidence** (local, Deno 2.9 with the stand-in client):
-- v4 passes the contract test **42/42**.
+- v4 passes the contract test **43/43**. The stand-in returns jsonb key order, as the real database does.
 - v3 passes all of its Photo / Message and validation checks but fails the friend ones (`invalid_challenge_type`), shows version 3, and returns `500` on a malformed id. This is exactly the intended difference.
 - `deno check` and `deno lint` are clean on v4.
 - **Not covered locally:** the real `supabase-js`, Storage, the real table constraints and RLS. Step 4 checks those against the real deployment.
@@ -83,7 +83,7 @@ Dashboard → **Edge Functions** → `chain-escape-api` → **Code**. Its `index
      --old=5a264212-44fb-499b-9e05-59c738ed98b2 --with-image
    ```
 
-   Expect `BACKEND CONTRACT TEST (...): PASSED (42/42)`.
+   Expect `BACKEND CONTRACT TEST (...): PASSED (43/43)`. Puzzles are compared deeply and exactly, but ignoring object key order: the jsonb column returns keys in its own order. The game also reads puzzles field by field, never by key order.
 
    It creates 7 small test challenges (5 friend, 2 photo, one with a tiny test JPEG) that expire after 30 days like any other. To review or remove them in the SQL Editor:
 

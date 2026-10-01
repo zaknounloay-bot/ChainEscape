@@ -123,7 +123,7 @@ For scale: the campaign averages 4.7 in Chapter 1, 18.2 in Chapter 3, 27.4 in Ch
 - **Backend:** `supabase/functions/chain-escape-api/index.ts` is the complete version 4 of the Edge Function. Version 3, as deployed, is kept in `docs/backend/chain-escape-api/index.v3.deployed.ts` for reference and rollback.
   - `docs/backend/friend_challenge_phase2.md` has the exact Supabase steps: constraint check, deploy, verify, rollback, and the intended results table (not created).
   - Deploying is done by hand in Supabase; nothing is deployed from here.
-  - `node tools/backend_contract_test.mjs [API_URL | --edge=<index.ts>]` checks the mock (default), the real URL, or a source file run locally under Deno with `tools/edge_harness/` standing in for supabase-js. v4 passes 42/42 locally.
+  - `node tools/backend_contract_test.mjs [API_URL | --edge=<index.ts>]` checks the mock (default), the real URL, or a source file run locally under Deno with `tools/edge_harness/` standing in for supabase-js. v4 passes 43/43 locally.
 - **Checks:**
   - `godot --headless --path . res://tools/FriendChallengeApiTest.tscn`
   - `node tools/backend_contract_test.mjs`
