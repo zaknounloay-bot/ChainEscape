@@ -26,6 +26,7 @@ func _ready() -> void:
 	for suffix in ["", ".bak", ".tmp", ".beacon"]:
 		DirAccess.remove_absolute(ProjectSettings.globalize_path(PROGRESS_PATH + suffix))
 	PlayerProgress.default_path = PROGRESS_PATH
+	SocialConfig.api_url_override = "off"  # local flow (no network in this test)
 	_run.call_deferred()
 
 

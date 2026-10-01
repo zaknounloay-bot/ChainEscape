@@ -6,10 +6,11 @@ class_name SocialConfig
 ## The deployed Supabase Edge Function "chain-escape-api", e.g.
 ## "https://<project-ref>.supabase.co/functions/v1/chain-escape-api".
 ## Empty = sharing is off in this build (CREATE still works, locally).
-const API_URL := ""
+const API_URL := "https://ydsippgwwdzwupbyrpfw.supabase.co/functions/v1/chain-escape-api"
 ## Public anon / publishable key, only if the function requires it (it is
 ## designed to be public). Sent as "apikey" + "Authorization: Bearer".
-## Leave empty when the function is deployed without JWT verification.
+## Leave empty when the function is deployed without JWT verification
+## (chain-escape-api is: recipients open challenges without logging in).
 const API_PUBLIC_KEY := ""
 
 ## Where share links point. Empty = the page the game is running on (Web),
@@ -28,7 +29,8 @@ const MAX_IMAGE_BYTES := 4 * 1024 * 1024
 const MAX_REQUEST_BYTES := 6 * 1024 * 1024
 
 ## Tests only: replaces API_URL (headless tests set it directly; Web tests
-## through window.ceApiUrl when window.ceTestHooks is set).
+## through window.ceApiUrl when window.ceTestHooks is set). "off" turns
+## sharing off (local 0.2B mode) for tests of the local flow.
 static var api_url_override := ""
 static var timeout_override := 0.0  # tests: seconds (0 = TIMEOUT_SEC)
 static var share_base_override := ""  # tests: link base outside the Web build
@@ -36,6 +38,8 @@ static var _web_override_checked := false
 
 
 static func api_url() -> String:
+	if api_url_override == "off":
+		return ""
 	if api_url_override != "":
 		return api_url_override
 	if OS.has_feature("web") and not _web_override_checked:
@@ -43,7 +47,7 @@ static func api_url() -> String:
 		var w := JavaScriptBridge.get_interface("window")
 		if w and bool(w.ceTestHooks) and w.ceApiUrl:
 			api_url_override = str(w.ceApiUrl)
-			return api_url_override
+			return "" if api_url_override == "off" else api_url_override
 	return API_URL
 
 
