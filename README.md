@@ -103,7 +103,9 @@ For scale: the campaign averages 4.7 in Chapter 1, 18.2 in Chapter 3, 27.4 in Ch
 - **Checks:**
   - `godot --headless --path . --script res://tools/friend_generator_test.gd`
   - `godot --headless --path . --script res://tools/friend_benchmark.gd -- --seeds=200` (desktop timings)
-  - **On a phone:** open the Web build with `?friendbench=1`. A developer page (`FriendBench`) measures generation on the device, one slice per frame as in the real creator, with each run after the first being a NEW CHALLENGE. It never touches Classic, the save or the network.
+  - **On a phone:** open the Web build with `?friendbench=1` (or `#friendbench=1`). A developer page (`FriendBench`) measures generation on the device, one slice per frame as in the real creator, with each run after the first being a NEW CHALLENGE. It never touches Classic, the save or the network.
+    - It wins over a challenge link, even when appended to one (`…?challenge=<id>?friendbench=1`): the page script splits launch parameters on `?`, `&` and `#`.
+    - Checked by `node tools/web_friendbench_route_test.mjs build/web`.
 
 ## Social MVP 0.2C — status
 
@@ -1668,6 +1670,7 @@ godot --headless --path . res://tools/RecipientTest.tscn           # Social 0.2C
 node tools/web_recipient_test.mjs build/web                          # Social 0.2C phase 2 in real Chromium (needs python3 for the mock API)
 godot --headless --path . --script res://tools/friend_generator_test.gd   # Challenge a Friend: generator profiles, validation, NEW CHALLENGE, SURPRISE ME, budget
 godot --headless --path . --script res://tools/friend_benchmark.gd -- --seeds=200   # Challenge a Friend: generation timing per difficulty (desktop)
+node tools/web_friendbench_route_test.mjs build/web                  # ?friendbench=1 dev page vs challenge links (routing)
 godot --headless --path . --export-release "Web" build/web/index.html && node tools/web_audio_test.mjs   # real browser
 node tools/web_persistence_test.mjs                                  # Web save scenarios A-G (itch-like iframe)
 godot --headless --path . --script res://tools/armor_audit.gd       # every reachable state of every armor level, solver vs game rules

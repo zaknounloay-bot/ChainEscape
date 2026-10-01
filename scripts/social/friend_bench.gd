@@ -3,7 +3,8 @@ extends CanvasLayer
 ## Developer page (Challenge a Friend, phase 1): measures puzzle generation
 ## ON THE DEVICE, the way the creator will run it - one step() slice per
 ## frame - for each difficulty, NEW CHALLENGE included. Opens only when the
-## page address has ?friendbench=1 (desktop: "-- --friendbench"); never
+## page address has ?friendbench=1 or #friendbench=1 (desktop:
+## "-- --friendbench"); never
 ## touches Classic, the save or the network. Results are shown on screen
 ## and published as window.chainEscapeFriendBench.
 
@@ -16,13 +17,21 @@ var _running := false
 var results: Array = []
 
 
+## Checked before a shared-challenge link, so it wins even when the address
+## also has ?challenge=. Read by the page script (web/social_creator.js,
+## which splits parameters on ? & #), with the address itself as a fallback.
 static func requested() -> bool:
 	if "--" + PARAM in OS.get_cmdline_user_args():
 		return true
 	if not OS.has_feature("web"):
 		return false
+	if SocialWeb.dev_bench():
+		return true
 	var loc := JavaScriptBridge.get_interface("location")
-	return loc != null and str(loc.search).contains(PARAM + "=1")
+	if loc == null:
+		return false
+	var where := (str(loc.search) + str(loc.hash)).to_lower()
+	return where.contains(PARAM + "=1") or where.contains(PARAM + "=true")
 
 
 func _init() -> void:
@@ -67,6 +76,7 @@ func _run() -> void:
 	_running = true
 	_again.disabled = true
 	results.clear()
+	WebBridge.publish("chainEscapeFriendBench", {"done": false, "running": true})
 	var rng := RandomNumberGenerator.new()
 	rng.randomize()
 	var lines := ["Each run: one slice per frame, as in the real creator.", ""]

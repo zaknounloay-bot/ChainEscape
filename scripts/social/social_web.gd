@@ -101,6 +101,11 @@ static func launch_param() -> Dictionary:
 	return {"raw": v.substr(1)} if v.begins_with("=") else {}
 
 
+## The page address asks for the developer benchmark (?friendbench=1).
+static func dev_bench() -> bool:
+	return api() != null and bool(_api.devBench())
+
+
 static func reset() -> void:
 	if api():
 		_api.reset()

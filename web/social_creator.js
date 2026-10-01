@@ -47,17 +47,29 @@
   var share = { url: '', text: '', title: '' };
   var shareResult = '';
 
-  // Challenge parameter in the launch address, as given (the game
-  // validates it: a malformed one gets a friendly "not available" screen
-  // instead of the normal start). null = no parameter at all.
+  // Launch address parameters, read once. Values end at &, # or a second
+  // ?, so a parameter appended to a full link (".../index.html?challenge=
+  // <id>?friendbench=1") is still read as two parameters.
+  //   challenge    the shared challenge id, as given (the game validates it:
+  //                a malformed one gets a friendly "not available" screen
+  //                instead of the normal start). null = no parameter at all.
+  //   friendbench  1 = the developer generation benchmark page.
   var launchRaw = null;
+  var devBench = false;
   try {
-    var lm = /(?:^|[?&#])challenge=([^&#]*)/.exec(location.search + location.hash);
-    if (lm) {
-      try { launchRaw = decodeURIComponent(lm[1]); } catch (e2) { launchRaw = lm[1]; }
-      launchRaw = String(launchRaw).trim().slice(0, 64);
+    var parts = String(location.search + location.hash).split(/[?&#]/);
+    for (var pi = 0; pi < parts.length; pi++) {
+      var eq = parts[pi].indexOf('=');
+      var key = (eq < 0 ? parts[pi] : parts[pi].slice(0, eq)).trim();
+      var val = eq < 0 ? '' : parts[pi].slice(eq + 1);
+      try { val = decodeURIComponent(val); } catch (e2) { /* keep as given */ }
+      if (key === 'challenge' && eq >= 0 && launchRaw === null) {
+        launchRaw = String(val).trim().slice(0, 64);
+      } else if (key === 'friendbench' && /^(1|true)?$/i.test(String(val).trim())) {
+        devBench = true;
+      }
     }
-  } catch (e) { launchRaw = null; }
+  } catch (e) { launchRaw = null; devBench = false; }
   var ui = 'font-family:-apple-system,system-ui,sans-serif;';
 
   function canvasRect() {
@@ -305,6 +317,8 @@
     /** Challenge parameter this page was opened with: '' = none, else
      *  '=' + the raw value (possibly malformed - the game validates it). */
     launchChallenge: function () { return launchRaw === null ? '' : '=' + launchRaw; },
+    /** True when the address asks for the developer generation benchmark. */
+    devBench: function () { return devBench; },
     /** Leaving the flow: forget zones, pending results and any open dialog. */
     reset: function () {
       zones = []; photoResult = ''; messageResult = ''; draft = '';
