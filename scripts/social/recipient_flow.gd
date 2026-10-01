@@ -128,6 +128,12 @@ func _load() -> void:
 	if not r.get("ok", false):
 		_fail(str(r.get("error", "invalid_response")))
 		return
+	# Phase 2 backend foundation only: Challenge a Friend has no recipient
+	# screens yet, so its links show the friendly "newer version" screen
+	# rather than the Photo / Message Reveal landing.
+	if r["challenge"].type != SharedChallenge.TYPE_PHOTO_MESSAGE_REVEAL:
+		_fail("unsupported")
+		return
 	challenge = r["challenge"]
 	_difficulty.text = "Difficulty: %s" % DIFFICULTY_NAMES.get(challenge.difficulty, "")
 	_show(State.LANDING)

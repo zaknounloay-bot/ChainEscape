@@ -1,0 +1,59 @@
+{
+ "easy": {
+  "cols": 5,
+  "format": "ce-puzzle",
+  "map": [
+   "B^ Y< G> . Pv",
+   ". . . . Bv",
+   "B< Y< . . .",
+   ". B< . . B<"
+  ],
+  "rows": 4,
+  "rules": 1,
+  "v": 1
+ },
+ "medium": {
+  "cols": 5,
+  "format": "ce-puzzle",
+  "map": [
+   "G> P> . Yv@ .",
+   "B^ . P< . Pv",
+   ". B< . . B<",
+   ". . . Bv R>",
+   ". . B^ Rv Yv@"
+  ],
+  "rows": 5,
+  "rules": 1,
+  "v": 1
+ },
+ "hard": {
+  "cols": 6,
+  "format": "ce-puzzle",
+  "map": [
+   ". Yv . Y< P> .",
+   ". . . . . .",
+   ". P< . . Gv P<",
+   "G>@ B< . P^ B>@ G>@",
+   "Rv Yv . . R> Bv",
+   ". R<@ Yv . . ."
+  ],
+  "rows": 6,
+  "rules": 1,
+  "v": 1
+ },
+ "very_hard": {
+  "cols": 6,
+  "format": "ce-puzzle",
+  "map": [
+   "R< Bv Y> . Rv .",
+   "G^ . . P^@ . G^",
+   ". R< B< . P< B^",
+   ". Y>@ P>@ Y< R>@ G<",
+   "Rv G< Bv . Y> Bv@",
+   ". Y< Rv@ Yv . ."
+  ],
+  "rows": 6,
+  "rules": 1,
+  "v": 1
+ }
+}

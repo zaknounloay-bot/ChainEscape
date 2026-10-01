@@ -107,6 +107,26 @@ For scale: the campaign averages 4.7 in Chapter 1, 18.2 in Chapter 3, 27.4 in Ch
     - It wins over a challenge link, even when appended to one (`…?challenge=<id>?friendbench=1`): the page script splits launch parameters on `?`, `&` and `#`.
     - Checked by `node tools/web_friendbench_route_test.mjs build/web`.
 
+### Challenge a Friend phase 2 — backend / data foundation (no UI)
+
+`friend_challenge` is a real challenge type in the client and in the mock API. It uses the same table, Edge Function, share links and expiry as Photo / Message Reveal.
+
+- **Model:** `SharedChallenge.friend_challenge(puzzle, difficulty, surprise)`.
+  - The difficulty is the real one: easy / medium / hard / very_hard (`very_hard` is friend-only).
+  - The payload is `{}` or `{"surprise_me": true}`. SURPRISE ME is never stored as a difficulty.
+  - The challenge is the immutable shared puzzle; results will be separate records pointing at its id.
+- **API:**
+  - `SocialApi` sends `{challenge_type, difficulty, puzzle, surprise_me?}`, with no message, image or upload.
+  - `SharedChallenge.from_api` validates READ data per type. A friend challenge may carry no message, media or `media_url`, and only plain arrows or clockwise spinners.
+  - Photo / Message Reveal rules are unchanged; it still refuses `very_hard`.
+- **Recipient:** there is no Challenge a Friend recipient UI yet. A friend link shows the friendly "isn't available / newer version" screen.
+- **Backend:** see `docs/backend/friend_challenge_phase2.md`, which covers the Edge Function changes, the constraint check, the intended results table (not created) and deploy + verify steps.
+  - The real function is **not deployed** from here (no Supabase access in the build sandbox).
+  - `node tools/backend_contract_test.mjs [API_URL]` checks any deployment, the mock by default.
+- **Checks:**
+  - `godot --headless --path . res://tools/FriendChallengeApiTest.tscn`
+  - `node tools/backend_contract_test.mjs`
+
 ### Challenge a Friend phase 1 — status: APPROVED, REAL-DEVICE VALIDATED
 
 Generation was benchmarked on a real iPhone in Safari, using the itch.io Web build (`7589397`) and the developer page (`…/index.html?v=<n>&friendbench=1`). The page runs 8 generations per difficulty, one slice per frame, with every run after the first being a NEW CHALLENGE.
@@ -1691,6 +1711,8 @@ node tools/web_recipient_test.mjs build/web                          # Social 0.
 godot --headless --path . --script res://tools/friend_generator_test.gd   # Challenge a Friend: generator profiles, validation, NEW CHALLENGE, SURPRISE ME, budget
 godot --headless --path . --script res://tools/friend_benchmark.gd -- --seeds=200   # Challenge a Friend: generation timing per difficulty (desktop)
 node tools/web_friendbench_route_test.mjs build/web                  # ?friendbench=1 dev page vs challenge links (routing)
+godot --headless --path . res://tools/FriendChallengeApiTest.tscn    # Challenge a Friend phase 2: friend_challenge model / API vs the mock
+node tools/backend_contract_test.mjs [API_URL]                       # chain-escape-api contract (mock by default; pass the real URL after deploying)
 godot --headless --path . --export-release "Web" build/web/index.html && node tools/web_audio_test.mjs   # real browser
 node tools/web_persistence_test.mjs                                  # Web save scenarios A-G (itch-like iframe)
 godot --headless --path . --script res://tools/armor_audit.gd       # every reachable state of every armor level, solver vs game rules

@@ -302,7 +302,7 @@ func _test_launch_errors(info: Dictionary) -> void:
 	long_msg["payload"]["message"] = "x".repeat(201)
 	_check(SharedChallenge.from_api(long_msg).get("error", "") == "malformed", "a message over 200 characters is refused")
 	var other := good.duplicate(true)
-	other["challenge_type"] = "friend_challenge"
+	other["challenge_type"] = "mystery_type"
 	_check(SharedChallenge.from_api(other).get("error", "") == "unsupported", "an unknown challenge type is refused")
 	var diff := good.duplicate(true)
 	diff["difficulty"] = "insane"

@@ -5,7 +5,9 @@ extends Node
 ## server; this client only sends a challenge and reads one back by id.
 ##
 ##   CREATE  POST <api>   {challenge_type, difficulty, puzzle, message?,
-##                          image_base64?, image_type?}
+##                          image_base64?, image_type?}   photo_message_reveal
+##                        {challenge_type, difficulty, puzzle, surprise_me?}
+##                                                         friend_challenge
 ##           -> {ok: true, challenge_id, expires_at}
 ##   READ    GET  <api>?action=read&id=<uuid>
 ##           -> {ok: true, challenge: {challenge_type, difficulty, puzzle,
@@ -20,7 +22,7 @@ extends Node
 ## server, invalid_response, invalid_id, not_found, expired, malformed,
 ## unsupported, too_large.
 
-const SUPPORTED_TYPES := [SharedChallenge.TYPE_PHOTO_MESSAGE_REVEAL]
+const SUPPORTED_TYPES := [SharedChallenge.TYPE_PHOTO_MESSAGE_REVEAL, SharedChallenge.TYPE_FRIEND_CHALLENGE]
 
 
 ## Sends a prepared challenge. Returns {ok, challenge_id, expires_at} or
@@ -60,9 +62,19 @@ func read_challenge(id: String) -> Dictionary:
 ## the processed copy from the creator session (<= 1080 px, re-encoded, no
 ## EXIF), never the original file. {"error": ...} if it can't be sent.
 static func build_create_body(c: SharedChallenge) -> Dictionary:
-	if c == null or c.puzzle == null or not c.type in SUPPORTED_TYPES:
+	if c == null or c.puzzle == null or not c.type in SUPPORTED_TYPES \
+			or not c.difficulty in SharedChallenge.DIFFICULTIES_BY_TYPE[c.type]:
 		return {"error": "rejected"}
 	var body := {"challenge_type": c.type, "difficulty": c.difficulty, "puzzle": c.puzzle.to_dict()}
+	if c.type == SharedChallenge.TYPE_FRIEND_CHALLENGE:
+		# The exact board, its real difficulty and (optionally) that it was
+		# a SURPRISE ME. Nothing to reveal: no message, no image.
+		if c.message() != "" or not c.local_photo_jpeg.is_empty() \
+				or not FriendGenerator.mechanics_ok(c.puzzle, FriendGenerator.MEDIUM):
+			return {"error": "rejected"}
+		if c.is_surprise():
+			body["surprise_me"] = true
+		return body
 	var message := c.message()
 	if message != "":
 		if message.length() > CreatorSession.MESSAGE_MAX:

@@ -5,11 +5,20 @@
 
 Implements the documented contract:
   GET  /                       -> {"ok": true, "service": "chain-escape-api", "version": 3}
-  POST /   {challenge_type, difficulty, puzzle, message?, image_base64?, image_type?}
+  POST /   photo_message_reveal: {challenge_type, difficulty, puzzle, message?, image_base64?, image_type?}
+           friend_challenge:     {challenge_type, difficulty, puzzle, surprise_me?}
                                -> {"ok": true, "challenge_id": "<uuid>", "expires_at": "..."}
   GET  /?action=read&id=<id>   -> {"ok": true, "challenge": {..., "media_url": "https://..." | null}}
-with the same validation rules (type, difficulty, puzzle format / rules /
-version / size, message <= 200, image MIME and <= 5 MB, photo or message).
+with type-specific validation:
+  common            puzzle format / version / rules, size 1-12, map shape and
+                    cell tokens
+  photo_message_reveal  difficulty easy|medium|hard, message <= 200, image MIME
+                    and <= 5 MB, photo or message required
+  friend_challenge  difficulty easy|medium|hard|very_hard, cells only plain
+                    arrows or clockwise spinners, no message / image,
+                    surprise_me optional boolean; payload {} or
+                    {"surprise_me": true}, never any media
+(the reference for the real Edge Function: docs/backend/friend_challenge_phase2.md).
 
 Photos: READ's media_url points at <media-base>/storage/v1/object/sign/...
 ?token=<n> (a stand-in for a Supabase signed URL); with --media-base set to
@@ -41,18 +50,23 @@ EXPIRED = set()
 STATE = {"fail_next": "", "fail_next_read": "", "last": None, "count": 0, "reads": 0}
 IMAGES = {}
 MEDIA = {"fail": False, "delay": 0.0, "ver": 1, "base": "https://mock.invalid"}
-TYPES = {"photo_message_reveal"}
-DIFFICULTIES = {"easy", "medium", "hard"}
+DIFFICULTIES = {
+    "photo_message_reveal": {"easy", "medium", "hard"},
+    "friend_challenge": {"easy", "medium", "hard", "very_hard"},
+}
+TYPES = set(DIFFICULTIES)
 MIMES = {"image/jpeg": "jpg", "image/png": "png", "image/webp": "webp"}
 CELL = re.compile(r"^(\.|[RBGYP][\^v<>]\S*|X[A-D])$")
+FRIEND_CELL = re.compile(r"^(\.|[RBGYP][\^v<>](@)?)$")
 
 
 def validate(b):
     if not isinstance(b, dict):
         return "body must be an object"
-    if b.get("challenge_type") not in TYPES:
+    t = b.get("challenge_type")
+    if t not in TYPES:
         return "invalid challenge_type"
-    if b.get("difficulty") not in DIFFICULTIES:
+    if b.get("difficulty") not in DIFFICULTIES[t]:
         return "invalid difficulty"
     p = b.get("puzzle")
     if not isinstance(p, dict) or p.get("format") != "ce-puzzle" or p.get("v") != 1 or p.get("rules") != 1:
@@ -66,6 +80,17 @@ def validate(b):
         cells = row.split() if isinstance(row, str) else None
         if not cells or len(cells) != cols or not all(CELL.match(c) for c in cells):
             return "invalid puzzle map"
+    if t == "friend_challenge":
+        cells = [c for row in m for c in row.split()]
+        if not all(FRIEND_CELL.match(c) for c in cells):
+            return "invalid puzzle map"
+        if all(c == "." for c in cells):
+            return "invalid puzzle map"
+        if b.get("message") is not None or b.get("image_base64") is not None or b.get("image_type") is not None:
+            return "friend_challenge carries no message or image"
+        if "surprise_me" in b and not isinstance(b["surprise_me"], bool):
+            return "invalid surprise_me"
+        return ""
     msg = b.get("message")
     if msg is not None and (not isinstance(msg, str) or len(msg) > 200):
         return "invalid message"
@@ -199,8 +224,11 @@ class H(BaseHTTPRequestHandler):
         cid = str(uuid.uuid4())
         now = datetime.now(timezone.utc)
         expires = (now + timedelta(days=30)).strftime("%Y-%m-%dT%H:%M:%S.000Z")
-        payload = {"message": b.get("message")}
-        if b.get("image_base64"):
+        if b["challenge_type"] == "friend_challenge":
+            payload = {"surprise_me": True} if b.get("surprise_me") is True else {}
+        else:
+            payload = {"message": b.get("message")}
+        if b["challenge_type"] == "photo_message_reveal" and b.get("image_base64"):
             payload["media"] = {"type": "image", "path": "%s/reveal.%s" % (cid, MIMES[b["image_type"]]), "mime": b["image_type"]}
             IMAGES[payload["media"]["path"]] = (base64.b64decode(b["image_base64"]), b["image_type"])
         STORE[cid] = {"id": cid, "challenge_type": b["challenge_type"], "difficulty": b["difficulty"], "puzzle": b["puzzle"],
