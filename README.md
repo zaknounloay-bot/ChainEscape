@@ -107,6 +107,26 @@ For scale: the campaign averages 4.7 in Chapter 1, 18.2 in Chapter 3, 27.4 in Ch
     - It wins over a challenge link, even when appended to one (`…?challenge=<id>?friendbench=1`): the page script splits launch parameters on `?`, `&` and `#`.
     - Checked by `node tools/web_friendbench_route_test.mjs build/web`.
 
+### Challenge a Friend phase 1 — status: APPROVED, REAL-DEVICE VALIDATED
+
+Generation was benchmarked on a real iPhone in Safari, using the itch.io Web build (`7589397`) and the developer page (`…/index.html?v=<n>&friendbench=1`). The page runs 8 generations per difficulty, one slice per frame, with every run after the first being a NEW CHALLENGE.
+
+| | Valid / in band | Median | Max | Difficulty |
+|---|---|---|---|---|
+| EASY | 8/8, 8/8 | 2 ms | 8 ms | 4.1–5.6 |
+| MEDIUM | 8/8, 8/8 | 73 ms | 156 ms | 12.2–18.9 |
+| HARD | 8/8, 8/8 | 124 ms | 957 ms | 24.4–31.1 |
+| VERY HARD | 8/8, 8/8 | 88 ms | 538 ms | 40.4–50.0 |
+
+- An earlier iPhone run was also 8/8 valid and in band for every difficulty:
+  - EASY: 3 ms median / 6 ms max
+  - MEDIUM: 96 / 289 ms
+  - HARD: 88 / 220 ms
+  - VERY HARD: 260 / 872 ms
+- The real-device target (VERY HARD at or under about 2–3 s on an iPhone) is comfortably met. The generator and difficulty profiles are unchanged from `599aa9e`.
+- **URL note:** itch.io build URLs already carry `?v=…`, so extra parameters must be added with `&` (`?v=…&friendbench=1`). Adding a second `?` was a malformed hand-typed URL, not a generator problem. `7589397` nevertheless reads a second `?` as a separator.
+- **Not built yet (later phases):** creator UI, recipient UI, backend support for `friend_challenge` / `very_hard`, result storage and percentile.
+
 ## Social MVP 0.2C — status
 
 **Core cross-device viral loop: REAL-DEVICE VALIDATED** (build `a5fb3e8`, real iPhones in Safari, real Supabase backend, hosted on itch.io).
