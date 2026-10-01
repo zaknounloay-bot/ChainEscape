@@ -18,8 +18,10 @@
 import fs from 'node:fs';
 import path from 'node:path';
 import { spawn } from 'node:child_process';
+import { fileURLToPath } from 'node:url';
 
-const repo = path.resolve(path.dirname(new URL(import.meta.url).pathname), '..');
+// fileURLToPath: a correct folder on Windows too (C:\..., spaces).
+const repo = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 const args = process.argv.slice(2);
 const flag = (n) => args.find((a) => a.startsWith(`--${n}`));
 let API = args.find((a) => !a.startsWith('--')) || '';
