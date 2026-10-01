@@ -163,14 +163,7 @@ func _ready() -> void:
 		AudioManager.play_ui_tap()
 		create_own.emit())
 	_column.add_child(_cta)
-	var arrow := CtaArrow.new()
-	_cta.add_child(arrow)
-	_cta.resized.connect(func():
-		var f := _cta.get_theme_font("font")
-		var fs := _cta.get_theme_font_size("font_size")
-		var full := f.get_string_size(_cta.text, HORIZONTAL_ALIGNMENT_LEFT, -1, fs).x
-		var word := f.get_string_size(CTA_TEXT, HORIZONTAL_ALIGNMENT_LEFT, -1, fs).x
-		arrow.position = Vector2((_cta.size.x - full) * 0.5 + word + (full - word) * 0.55, _cta.size.y * 0.5))
+	_cta.add_child(CtaArrow.new())
 	_cta_line = _label("Surprise someone with a challenge.", 24, Palette.TEXT_SOFT, 800)
 	_cta_line.name = "CtaLine"
 	_column.add_child(_cta_line)
@@ -421,8 +414,20 @@ func _label(t: String, fs: int, col: Color, weight: int) -> Label:
 	return l
 
 
-## The "->" after CREATE YOUR OWN (white, drawn once).
-class CtaArrow extends Node2D:
+## The "->" after CREATE YOUR OWN: covers the button, draws the arrow in
+## the room the trailing spaces leave after the text.
+class CtaArrow extends Control:
+	func _ready() -> void:
+		set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
+		mouse_filter = Control.MOUSE_FILTER_IGNORE
+		resized.connect(queue_redraw)
+
 	func _draw() -> void:
-		draw_rect(Rect2(-13, -3.5, 16, 7), Color.WHITE)
-		draw_colored_polygon(PackedVector2Array([Vector2(13, 0), Vector2(1, -11), Vector2(1, 11)]), Color.WHITE)
+		var b := get_parent() as Button
+		var f := b.get_theme_font("font")
+		var fs := b.get_theme_font_size("font_size")
+		var full := f.get_string_size(b.text, HORIZONTAL_ALIGNMENT_LEFT, -1, fs).x
+		var word := f.get_string_size(CTA_TEXT, HORIZONTAL_ALIGNMENT_LEFT, -1, fs).x
+		var at := Vector2((size.x - full) * 0.5 + word + (full - word) * 0.55, size.y * 0.5)
+		draw_rect(Rect2(at + Vector2(-13, -3.5), Vector2(16, 7)), Color.WHITE)
+		draw_colored_polygon(PackedVector2Array([at + Vector2(13, 0), at + Vector2(1, -11), at + Vector2(1, 11)]), Color.WHITE)
