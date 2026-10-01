@@ -34,6 +34,8 @@ const MAX_REQUEST_BYTES := 6 * 1024 * 1024
 static var api_url_override := ""
 static var timeout_override := 0.0  # tests: seconds (0 = TIMEOUT_SEC)
 static var share_base_override := ""  # tests: link base outside the Web build
+## Tests only: accept a plain-http photo URL (the local mock serves one).
+static var allow_http_media := false
 static var _web_override_checked := false
 
 

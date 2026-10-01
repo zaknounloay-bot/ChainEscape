@@ -12,11 +12,13 @@ extends CanvasLayer
 ## numbers.
 ##
 ## Mode: CREATOR_PREVIEW (the creator plays their own challenge, 0.2B) or
-## RECIPIENT (the person it was sent to, later). Both play the same
+## RECIPIENT (the person it was sent to, 0.2C phase 2). Both play the same
 ## PuzzleDefinition the same way; only texts and the end actions differ.
 
 signal exited  # left before solving: nothing revealed
-signal finished  # after the Reveal: BACK TO CREATE CHALLENGE
+signal finished  # after the Reveal: BACK TO CREATE CHALLENGE / MAIN MENU
+signal create_own  # recipient's Reveal: CREATE YOUR OWN
+signal photo_retry  # recipient's Reveal: the photo failed, TRY AGAIN
 
 enum Mode { CREATOR_PREVIEW, RECIPIENT }
 
@@ -43,6 +45,9 @@ var back_label := ""
 ## Fingerprint of the puzzle currently on the board (tests: PLAY AGAIN).
 var loaded_fingerprint := ""
 var plays := 0
+## Recipient: the photo is still downloading ("loading") or failed
+## ("failed"); "" = challenge.local_photo is all there is.
+var photo_pending := ""
 
 var _theme: Dictionary = {}
 var _total_blocks := 0
@@ -90,7 +95,7 @@ func start(c: SharedChallenge, p_mode: int, theme: Dictionary) -> void:
 	board.board_color = theme["board"]
 	board.slot_color = theme["slot"]
 	board.accent_color = theme["accent"]
-	_title.text = "REVEAL CHALLENGE"
+	_title.text = "SOLVE TO UNLOCK" if mode == Mode.RECIPIENT else "REVEAL CHALLENGE"
 	_chip.text = DIFFICULTY_NAMES.get(c.difficulty, "")
 	visible = true
 	_load_puzzle()
@@ -311,7 +316,7 @@ func _on_solved() -> void:
 	if session != _session:
 		return
 	_set_hud_visible(false)
-	reveal.show_reveal(challenge, _theme, mode)
+	reveal.show_reveal(challenge, _theme, mode, photo_pending if mode == Mode.RECIPIENT else "")
 	if back_label != "":
 		reveal._back.text = back_label
 	get_tree().create_timer(1.6).timeout.connect(_publish)
@@ -406,6 +411,10 @@ func _build() -> void:
 	reveal.done.connect(func():
 		end()
 		finished.emit())
+	reveal.create_own.connect(func():
+		end()
+		create_own.emit())
+	reveal.photo_retry.connect(func(): photo_retry.emit())
 	add_child(reveal)
 	_confirm = _build_confirm()
 	add_child(_confirm)
@@ -507,14 +516,17 @@ func _publish() -> void:
 			if hint_id != -1:
 				next = norm.call(to_screen * board.get_view(hint_id).home)
 	var buttons := {}
-	for b in [_exit, _undo, _hint, _restart, reveal._again, reveal._back,
+	for b in [_exit, _undo, _hint, _restart, reveal._again, reveal._back, reveal._cta, reveal._photo_retry,
 			_confirm.find_child("KeepPlaying", true, false), _confirm.find_child("Leave", true, false)]:
 		if b.is_visible_in_tree():
 			buttons[String(b.name)] = norm.call(b.get_global_rect().get_center())
 	WebBridge.publish("chainEscapeSocialPlay", {"active": visible, "completed": completed, "revealed": reveal.visible,
 		"difficulty": challenge.difficulty if challenge else "", "blocks": model.block_count(), "free": free, "next": next,
 		"fingerprint": loaded_fingerprint, "plays": plays, "confirm": _confirm.visible, "buttons": buttons,
-		"has_photo": reveal._photo_frame.visible and reveal.visible, "message": reveal._message.text if reveal.visible else ""})
+		"has_photo": reveal._photo_frame.visible and reveal.visible, "photo_state": reveal.photo_state if reveal.visible else "",
+		"cta_pulses": reveal.cta_pulses if reveal.visible else 0, "mode": "recipient" if mode == Mode.RECIPIENT else "creator",
+		# The revealed text only for automated tests (never otherwise exposed).
+		"message": reveal._message.text if reveal.visible and _test_hooks() else ""})
 
 
 static var _hooks_checked := false

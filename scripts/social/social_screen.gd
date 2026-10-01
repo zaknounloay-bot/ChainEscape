@@ -10,7 +10,7 @@ extends Control
 ## only moved (no per-frame redraw), plus short Tween entrances. All of it
 ## is skipped when the browser asks for reduced motion.
 
-enum Page { CHOICE, PHOTO_REVEAL, CHALLENGE_FRIEND }
+enum Page { CHOICE, PHOTO_REVEAL, CHALLENGE_FRIEND, RECIPIENT }
 
 ## Each track has its own identity color: warm purple/pink for Photo,
 ## cool blue/cyan for Friend (icon face, card border tint).
@@ -54,6 +54,8 @@ var _entrance: Tween
 var creator: RevealCreator
 ## 0.2B: plays a created challenge (own layer, over everything).
 var play: SocialPlay
+## 0.2C phase 2: a challenge opened from a shared link.
+var recipient: RecipientFlow
 var _theme: Dictionary = {}
 var _entering: Control  # column waiting for its entrance to start
 var _tap: Tween
@@ -76,22 +78,63 @@ func _ready() -> void:
 	creator.play_requested.connect(func(c):
 		play.back_label = "BACK TO SHARE" if creator.is_created() else ""
 		play.start(c, SocialPlay.Mode.CREATOR_PREVIEW, _theme))
+	recipient = RecipientFlow.new()
+	add_child(recipient)
+	recipient.main_menu_requested.connect(close)
+	recipient.play_requested.connect(func(c):
+		play.back_label = ""
+		play.photo_pending = "" if recipient.photo_state == "ready" else recipient.photo_state
+		play.start(c, SocialPlay.Mode.RECIPIENT, _theme))
+	# The photo arrived / failed while the reveal is showing.
+	recipient.photo_changed.connect(func(s):
+		if play.mode != SocialPlay.Mode.RECIPIENT or not play.visible:
+			return
+		play.photo_pending = "" if s == "ready" else s
+		if s == "ready":
+			play.reveal.set_photo(recipient.challenge.local_photo)
+		else:
+			play.reveal.set_photo_state(s))
 	# Left before solving: back to the review (or the share screen), every
-	# choice kept.
-	play.exited.connect(func(): creator.resume_after_play())
+	# choice kept - or, for a shared challenge, back to its landing.
+	play.exited.connect(func():
+		if play.mode == SocialPlay.Mode.RECIPIENT:
+			recipient.show_landing()
+		else:
+			creator.resume_after_play())
 	# After the reveal: back to the share screen if the challenge was
-	# created, else to CREATE CHALLENGE (the session is discarded).
+	# created, else to CREATE CHALLENGE (the session is discarded). A
+	# shared challenge's MAIN MENU closes Social (the title shows again).
 	play.finished.connect(func():
-		if creator.is_created():
+		if play.mode == SocialPlay.Mode.RECIPIENT:
+			close()
+		elif creator.is_created():
 			creator.resume_after_play()
 		else:
 			show_page(Page.CHOICE))
+	# CREATE YOUR OWN: straight into the existing Photo / Message creator.
+	play.create_own.connect(func():
+		recipient.reset()
+		show_page(Page.PHOTO_REVEAL))
+	play.photo_retry.connect(func(): recipient.retry_photo())
 	add_child(play)
 	_pages[Page.PHOTO_REVEAL] = creator
 	_pages[Page.CHALLENGE_FRIEND] = _build_placeholder(Page.CHALLENGE_FRIEND)
+	_pages[Page.RECIPIENT] = recipient
 
 
 func open(theme: Dictionary) -> void:
+	_apply_theme(theme)
+	show_page(Page.CHOICE)
+
+
+## A shared challenge link (`raw` = its launch parameter, unvalidated).
+func open_challenge(raw: String, theme: Dictionary) -> void:
+	_apply_theme(theme)
+	show_page(Page.RECIPIENT)
+	recipient.begin(raw, theme)
+
+
+func _apply_theme(theme: Dictionary) -> void:
 	_bg_top = theme["bg_top"]
 	_bg_bottom = theme["bg_bottom"]
 	_theme = theme
@@ -100,7 +143,6 @@ func open(theme: Dictionary) -> void:
 	for l in _soft_labels:
 		l.add_theme_color_override("font_color", theme["text_soft"])
 	visible = true
-	show_page(Page.CHOICE)
 	_start_drift()
 	queue_redraw()
 
@@ -109,6 +151,7 @@ func close() -> void:
 	_stop_animations()
 	play.end()
 	creator.reset()
+	recipient.reset()
 	visible = false
 	page = Page.CHOICE
 	set_process(false)
@@ -124,12 +167,16 @@ func show_page(p: int) -> void:
 	# Leaving the creation flow discards its session (photo, message).
 	if p != Page.PHOTO_REVEAL and creator.visible:
 		creator.reset()
+	if p != Page.RECIPIENT and recipient.visible:
+		recipient.reset()
 	for k in _pages:
 		_pages[k].visible = k == p
 	if not visible:
 		return
 	if p == Page.PHOTO_REVEAL:
 		creator.begin(_theme)  # the flow runs its own step transitions
+	elif p == Page.RECIPIENT:
+		pass  # recipient.begin() shows its own screens
 	else:
 		_animate_in(_pages[p])
 
@@ -137,7 +184,7 @@ func show_page(p: int) -> void:
 ## BACK: a track placeholder returns to the choice page, the choice page
 ## returns to the title.
 func back() -> void:
-	if page == Page.CHOICE:
+	if page == Page.CHOICE or page == Page.RECIPIENT:
 		close()
 	else:
 		show_page(Page.CHOICE)

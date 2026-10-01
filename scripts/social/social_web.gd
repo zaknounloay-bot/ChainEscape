@@ -81,9 +81,24 @@ static func page_base() -> String:
 	return str(_api.pageBase()) if api() else ""
 
 
-## Challenge id the page was opened with ("" = none; validate before use).
-static func launch_challenge_id() -> String:
-	return str(_api.launchChallenge()) if api() else ""
+## Tests / desktop: a launch parameter as if the page had it ("" = none).
+## Desktop also takes "--challenge=<id>" after "--" on the command line.
+static var launch_override := ""
+
+
+## The challenge parameter the game was opened with: {} when there is none,
+## else {"raw": value} - possibly malformed, validate with ShareLink.
+## Only the id is ever read; the address itself is never stored or logged.
+static func launch_param() -> Dictionary:
+	if launch_override != "":
+		return {"raw": launch_override.trim_prefix("=")}
+	for arg in OS.get_cmdline_user_args():
+		if arg.begins_with("--challenge="):
+			return {"raw": arg.get_slice("=", 1)}
+	if api() == null:
+		return {}
+	var v := str(_api.launchChallenge())
+	return {"raw": v.substr(1)} if v.begins_with("=") else {}
 
 
 static func reset() -> void:

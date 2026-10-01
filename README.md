@@ -74,6 +74,41 @@ Built on the frozen **V17 Golden Master** (levels 1-200 unchanged). UI and navig
 - **Settings > MAIN MENU:** returns to the title exactly as at launch (the level stays loaded behind it). CONTINUE resumes the same board. Nothing is reset or saved, so no confirmation is needed.
 - Check: `godot --headless --path . res://tools/SocialSmoke.tscn` (real input events). It asserts navigation, card layout, entrance end state, the MAIN MENU round trip, and that progress and the save file are byte-identical after Social and MAIN MENU.
 
+## Social MVP 0.2C (phase 2) — recipient flow, reveal, CREATE YOUR OWN
+
+A friend taps a shared link → Chain Escape opens straight into that challenge → they solve the creator's exact puzzle → the photo / message is revealed → **CREATE YOUR OWN** takes them into the same Photo / Message Reveal creator. There is no login, signup or install.
+
+- **Launch routing:** `web/social_creator.js` reads the `challenge` parameter once (`?challenge=<uuid>`, or `#challenge=<uuid>`) and passes it on raw. `GameManager._open_shared_challenge()` → `UIManager.open_shared_challenge()` → `SocialScreen.open_challenge()` → `RecipientFlow`.
+  - With no parameter, startup is unchanged.
+  - With a parameter, the recipient screens cover the title in the same frame, so the Main Menu is never shown first. The title stays underneath as the MAIN MENU target.
+  - Classic loads exactly as on any launch and is never touched.
+- **RecipientFlow** (`scripts/social/recipient_flow.gd`) has four screens:
+  - LOADING: "Opening your Chain Escape…".
+  - LANDING: gift icon, "SOMEONE SENT YOU A CHAIN ESCAPE", "Solve it to unlock your surprise.", the difficulty, PLAY and MAIN MENU. It shows no photo, message or preview.
+  - UNAVAILABLE: shown for a malformed id (no request is made), unknown, expired, unsupported version or invalid data. It says "THIS CHALLENGE ISN'T AVAILABLE" and offers MAIN MENU.
+  - ERROR: shown for offline, timeout, server or garbled replies. It says "COULDN'T OPEN THIS CHALLENGE" and offers RETRY and MAIN MENU.
+  - Raw server text is never shown or logged.
+- **Exact puzzle:** API READ → `SharedChallenge.from_api` (type, versions, difficulty, map, message length and an https media URL are checked, then the puzzle is Solver-verified) → `PuzzleDefinition` → `SocialPlay` in RECIPIENT mode. It is never regenerated (tests count `SocialGenerator.created`). PLAY AGAIN rebuilds the same serialized board.
+- **Gameplay:** the approved 0.2B Social rules: 3 UNDO, 2 free HINTs, RESTART, EXIT (asks first; LEAVE returns to the landing). There are no hearts, coins, stars, Hammer, score or progression.
+- **Photo:** downloaded from the temporary signed `media_url` while the recipient plays (a plain GET with no headers, decoded by content as JPEG / PNG / WebP, at most 8 MB, scaled down past 2048 px). It is never shown before the puzzle is solved.
+  - If the download fails (an expired signed URL included), the challenge is read again for a fresh URL; only the URL is taken, and the board stays the same.
+  - If it still fails, the reveal shows "The photo couldn't be loaded." with TRY AGAIN. A slow photo shows "Loading the photo…" and appears when it arrives.
+- **Reveal** (`SocialReveal`, recipient mode): photo + message, photo only, or message only. Messages are unchanged (MessageText).
+  - **CREATE YOUR OWN →** with "Surprise someone with a challenge." sits under the content, always above the fold. It starts quieter, and about 1.2 s in it comes to full strength with one gentle pulse, once only (no pulse with reduced motion).
+  - PLAY AGAIN and MAIN MENU sit side by side underneath.
+  - CREATE YOUR OWN opens the existing CREATE CHALLENGE → PHOTO / MESSAGE REVEAL flow.
+- **Classic HUD direction:** `project.godot` sets `internationalization/rendering/root_node_layout_direction=1` (left-to-right). The Classic HUD therefore always has the V17 layout: Level Select left, Settings right, TOTAL SCORE left, coins right, and UNDO → HINT → HAMMER → RESTART, whatever the device language or the Godot export.
+  - Personal messages still choose RTL / LTR per text (`TEXT_DIRECTION_AUTO`).
+- **Private-by-link (MVP):** READ returns the message and a signed photo URL before solving. Anyone with the link who inspects the network can see the surprise without solving it. Challenges are private by link, not cryptographically locked.
+  - What is guaranteed: nothing private is in the URL, the share text, the landing or the logs, and Storage stays private (short-lived signed URLs).
+- **Share links and hosting:** `SocialConfig.SHARE_BASE_URL` is the only place a link base is set. When it is empty, links use the page the game runs on.
+  - On itch.io that is the build's file URL (`html-classic.itch.zone/html/<upload-id>/index.html`), which changes with every upload.
+  - itch.io's game page (`<user>.itch.io/<game>`) embeds the build in an iframe and does not pass its own `?challenge=` to it. There is no documented, guaranteed way to make it do so.
+  - Migration: set `SHARE_BASE_URL` to a stable address on a domain we control. That address can either host the Web build itself, or be a tiny redirect page that forwards `?challenge=<id>` to the current build URL. Links made after that keep working across uploads. Links already made with an itch file URL stop working when that upload is replaced.
+- **Checks:**
+  - `godot --headless --path . res://tools/RecipientTest.tscn` (A–V against `tools/mock_social_api.py`, which also serves photos).
+  - `node tools/web_recipient_test.mjs build/web [shots] [photo.jpg]` (real Chromium, touch, `?` / `#` links, logs).
+
 ## Social MVP 0.2C (phase 1) — backend create + share link
 
 After CREATE CHALLENGE generates and verifies the exact puzzle, the challenge is sent to the Supabase Edge Function `chain-escape-api`. The function does every privileged database and storage write on the server. The game gets back a challenge id and shows **CHALLENGE READY!** with **SHARE CHALLENGE** (the native share sheet), **COPY LINK**, **PLAY / PREVIEW CHALLENGE** and **DONE**. The recipient flow is the next phase.
@@ -1569,6 +1604,8 @@ godot --headless --path . res://tools/Soak.tscn -- --cycles=2        # long sess
 godot --headless --path . res://tools/SocialSmoke.tscn              # Social: CREATE CHALLENGE, reveal creation flow (0.2A), MAIN MENU; Classic progress untouched
 godot --headless --path . res://tools/SocialPlayTest.tscn          # Social 0.2B: generate -> play -> reveal, exact reconstruction, Classic untouched
 godot --headless --path . res://tools/SocialApiTest.tscn           # Social 0.2C: create -> mock API -> challenge id -> share link; failures, retry, READ
+godot --headless --path . res://tools/RecipientTest.tscn           # Social 0.2C phase 2: shared link -> landing -> exact puzzle -> reveal -> CREATE YOUR OWN; errors; Classic isolation + HUD
+node tools/web_recipient_test.mjs build/web                          # Social 0.2C phase 2 in real Chromium (needs python3 for the mock API)
 godot --headless --path . --export-release "Web" build/web/index.html && node tools/web_audio_test.mjs   # real browser
 node tools/web_persistence_test.mjs                                  # Web save scenarios A-G (itch-like iframe)
 godot --headless --path . --script res://tools/armor_audit.gd       # every reachable state of every armor level, solver vs game rules

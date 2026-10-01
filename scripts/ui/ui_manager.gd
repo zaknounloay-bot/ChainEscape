@@ -239,6 +239,12 @@ func hide_title() -> void:
 	_bottom.modulate.a = 1.0
 
 
+## Social 0.2C: the game was opened from a shared challenge link - its
+## screens go over the title (the title is what MAIN MENU returns to).
+func open_shared_challenge(raw: String) -> void:
+	_title.open_challenge(raw)
+
+
 func is_title_open() -> bool:
 	return _title.visible
 

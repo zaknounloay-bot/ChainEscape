@@ -11,10 +11,20 @@ Implements the documented contract:
 with the same validation rules (type, difficulty, puzzle format / rules /
 version / size, message <= 200, image MIME and <= 5 MB, photo or message).
 
+Photos: READ's media_url points at <media-base>/storage/v1/object/sign/...
+?token=<n> (a stand-in for a Supabase signed URL); with --media-base set to
+this server it serves the stored image (CORS *), else it is a dummy https URL.
+
 Test controls (never part of the real API):
-  POST /__mode   {"fail_next": "500" | "429" | "timeout" | "garbage" | "bad_id"}
+  POST /__mode   {"fail_next": "500" | "429" | "timeout" | "garbage" | "bad_id",
+                  "fail_next_read": "500" | "timeout" | "garbage"}
   POST /__expire {"id": "..."}       GET /__last  (last CREATE body)
   GET  /__count                      (number of CREATE requests received)
+  GET  /__reads                      (number of READ requests received)
+  POST /__media  {"fail": bool, "delay": seconds, "expire": true}
+                 (expire = every photo URL handed out so far stops working)
+  POST /__put    {"id": "...", "challenge": {...}}  (stores a raw challenge:
+                 malformed / unsupported data for the client's validation)
 """
 import argparse
 import base64
@@ -28,7 +38,9 @@ from urllib.parse import parse_qs, urlparse
 
 STORE = {}
 EXPIRED = set()
-STATE = {"fail_next": "", "last": None, "count": 0}
+STATE = {"fail_next": "", "fail_next_read": "", "last": None, "count": 0, "reads": 0}
+IMAGES = {}
+MEDIA = {"fail": False, "delay": 0.0, "ver": 1, "base": "https://mock.invalid"}
 TYPES = {"photo_message_reveal"}
 DIFFICULTIES = {"easy", "medium", "hard"}
 MIMES = {"image/jpeg": "jpg", "image/png": "png", "image/webp": "webp"}
@@ -78,10 +90,10 @@ class H(BaseHTTPRequestHandler):
     def log_message(self, *a):
         pass
 
-    def _send(self, code, obj, raw=None):
+    def _send(self, code, obj, raw=None, ctype="application/json"):
         data = raw if raw is not None else json.dumps(obj).encode()
         self.send_response(code)
-        self.send_header("Content-Type", "application/json")
+        self.send_header("Content-Type", ctype)
         self.send_header("Access-Control-Allow-Origin", "*")
         self.send_header("Access-Control-Allow-Headers", "content-type, apikey, authorization, accept")
         self.send_header("Access-Control-Allow-Methods", "GET, POST, OPTIONS")
@@ -103,7 +115,29 @@ class H(BaseHTTPRequestHandler):
             return self._send(200, STATE["last"])
         if u.path == "/__count":
             return self._send(200, {"count": STATE["count"]})
+        if u.path == "/__reads":
+            return self._send(200, {"reads": STATE["reads"]})
+        if u.path.startswith("/storage/v1/object/sign/challenge-media/"):
+            path = u.path[len("/storage/v1/object/sign/challenge-media/"):]
+            if MEDIA["delay"]:
+                time.sleep(MEDIA["delay"])
+            if MEDIA["fail"]:
+                return self._send(500, {"error": "storage unavailable"})
+            if (q.get("token") or [""])[0] != str(MEDIA["ver"]):
+                return self._send(400, {"error": "InvalidJWT", "message": "token expired"})
+            img = IMAGES.get(path)
+            if img is None:
+                return self._send(404, {"error": "not found"})
+            return self._send(200, None, img[0], img[1])
         if q.get("action") == ["read"]:
+            STATE["reads"] += 1
+            mode, STATE["fail_next_read"] = STATE["fail_next_read"], ""
+            if mode == "timeout":
+                time.sleep(6)
+            if mode == "500":
+                return self._send(500, {"ok": False, "error": "internal"})
+            if mode == "garbage":
+                return self._send(200, None, b"<html>not json</html>")
             cid = (q.get("id") or [""])[0]
             if cid in EXPIRED:
                 return self._send(410, {"ok": False, "error": "challenge expired"})
@@ -111,7 +145,8 @@ class H(BaseHTTPRequestHandler):
             if ch is None:
                 return self._send(404, {"ok": False, "error": "challenge not found"})
             out = dict(ch)
-            out["media_url"] = ("https://mock.invalid/storage/v1/object/sign/challenge-media/%s?token=x" % ch["payload"]["media"]["path"]) if ch["payload"].get("media") else None
+            media = (ch.get("payload") or {}).get("media") if isinstance(ch.get("payload"), dict) else None
+            out["media_url"] = ("%s/storage/v1/object/sign/challenge-media/%s?token=%d" % (MEDIA["base"], media["path"], MEDIA["ver"])) if isinstance(media, dict) else None
             return self._send(200, {"ok": True, "challenge": out})
         return self._send(200, {"ok": True, "service": "chain-escape-api", "version": 3})
 
@@ -119,7 +154,20 @@ class H(BaseHTTPRequestHandler):
         u = urlparse(self.path)
         raw = self._body()
         if u.path == "/__mode":
-            STATE["fail_next"] = json.loads(raw or b"{}").get("fail_next", "")
+            m = json.loads(raw or b"{}")
+            STATE["fail_next"] = m.get("fail_next", STATE["fail_next"])
+            STATE["fail_next_read"] = m.get("fail_next_read", STATE["fail_next_read"])
+            return self._send(200, {"ok": True})
+        if u.path == "/__media":
+            m = json.loads(raw or b"{}")
+            MEDIA["fail"] = bool(m.get("fail", MEDIA["fail"]))
+            MEDIA["delay"] = float(m.get("delay", MEDIA["delay"]))
+            if m.get("expire"):
+                MEDIA["ver"] += 1
+            return self._send(200, {"ok": True})
+        if u.path == "/__put":
+            m = json.loads(raw)
+            STORE[m["id"]] = m["challenge"]
             return self._send(200, {"ok": True})
         if u.path == "/__expire":
             EXPIRED.add(json.loads(raw).get("id", ""))
@@ -154,6 +202,7 @@ class H(BaseHTTPRequestHandler):
         payload = {"message": b.get("message")}
         if b.get("image_base64"):
             payload["media"] = {"type": "image", "path": "%s/reveal.%s" % (cid, MIMES[b["image_type"]]), "mime": b["image_type"]}
+            IMAGES[payload["media"]["path"]] = (base64.b64decode(b["image_base64"]), b["image_type"])
         STORE[cid] = {"id": cid, "challenge_type": b["challenge_type"], "difficulty": b["difficulty"], "puzzle": b["puzzle"],
                       "payload": payload, "format_version": 1, "rules_version": 1,
                       "created_at": now.strftime("%Y-%m-%dT%H:%M:%S.000Z"), "expires_at": expires}
@@ -163,5 +212,7 @@ class H(BaseHTTPRequestHandler):
 if __name__ == "__main__":
     ap = argparse.ArgumentParser()
     ap.add_argument("--port", type=int, default=8790)
+    ap.add_argument("--media-base", default="https://mock.invalid")
     a = ap.parse_args()
+    MEDIA["base"] = a.media_base.rstrip("/")
     ThreadingHTTPServer(("127.0.0.1", a.port), H).serve_forever()

@@ -44,6 +44,10 @@ debug_toggle={
 
 pointing/emulate_touch_from_mouse=true
 
+[internationalization]
+
+rendering/root_node_layout_direction=1
+
 [rendering]
 
 renderer/rendering_method="gl_compatibility"

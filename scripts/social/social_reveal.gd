@@ -10,14 +10,21 @@ extends Control
 ##   message only     the message alone, large, in the card
 ## Messages render with MessageText (any language, RTL / LTR, Arabic
 ## shaping). Lightweight: a few Tweens on nodes drawn once.
+##
+## Recipient (0.2C phase 2): the photo arrives from the network, so its
+## frame can show "loading" / "couldn't load + TRY AGAIN" until it does;
+## and CREATE YOUR OWN invites them to make one (one gentle pulse, once).
 
 signal play_again
 signal done
+signal create_own
+signal photo_retry
 
 const ACCENT := Color("#C645E6")
 const TINT := Color("#EBCBF7")
 const WIDTH := 600.0
 const CHAIN := 7
+const CTA_TEXT := "CREATE YOUR OWN"
 
 var _backdrop: SocialPlay.Backdrop
 var _chain_root: Control
@@ -33,6 +40,23 @@ var _message: Label
 var _again: PillButton
 var _back: PillButton
 var _tween: Tween
+## Recipient only: CREATE YOUR OWN, its line, and PLAY AGAIN + MAIN MENU
+## side by side (so everything fits above the fold).
+var _cta: PillButton
+var _cta_line: Label
+var _row: HBoxContainer
+var _cta_tween: Tween
+## Photo still on its way / failed (recipient): shown in place of the photo.
+var _photo_status: PanelContainer
+var _photo_status_label: Label
+var _photo_retry: PillButton
+## "none" | "ready" | "loading" | "failed"
+var photo_state := "none"
+## Times CREATE YOUR OWN has pulsed in this reveal (tests: exactly once).
+var cta_pulses := 0
+var _shown := 0  # reveal counter: stale timers do nothing
+var _text := ""
+var _mode := 0
 
 
 func _init() -> void:
@@ -94,6 +118,31 @@ func _ready() -> void:
 	_message_card.size_flags_horizontal = Control.SIZE_SHRINK_CENTER
 	_message_card.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	_column.add_child(_message_card)
+	_photo_status = PanelContainer.new()
+	_photo_status.name = "RevealPhotoStatus"
+	_photo_status.add_theme_stylebox_override("panel", _card(24))
+	_photo_status.custom_minimum_size = Vector2(WIDTH - 40.0, 200)
+	_photo_status.size_flags_horizontal = Control.SIZE_SHRINK_CENTER
+	_photo_status.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	_column.add_child(_photo_status)
+	_column.move_child(_photo_status, _photo_frame.get_index() + 1)
+	var status_box := VBoxContainer.new()
+	status_box.alignment = BoxContainer.ALIGNMENT_CENTER
+	status_box.add_theme_constant_override("separation", 16)
+	status_box.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	_photo_status.add_child(status_box)
+	_photo_status_label = _label("", 26, Palette.TEXT_SOFT, 800)
+	_photo_status_label.name = "PhotoStatusText"
+	_photo_status_label.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+	status_box.add_child(_photo_status_label)
+	_photo_retry = PillButton.new("TRY AGAIN", PillButton.Icon.NONE, Color("#F8EEFC"), Palette.TEXT, 24)
+	_photo_retry.name = "PhotoRetry"
+	_photo_retry.custom_minimum_size = Vector2(260, 76)
+	_photo_retry.size_flags_horizontal = Control.SIZE_SHRINK_CENTER
+	_photo_retry.pressed.connect(func():
+		AudioManager.play_ui_tap()
+		photo_retry.emit())
+	status_box.add_child(_photo_retry)
 	_message = _label("", 30, Palette.TEXT, 800)
 	_message.name = "RevealMessage"
 	_message.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
@@ -104,6 +153,33 @@ func _ready() -> void:
 	gap.custom_minimum_size = Vector2(0, 4)
 	gap.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	_column.add_child(gap)
+	# The arrow is drawn (CtaArrow): the Web build's fallback font has no
+	# "→" glyph. The trailing spaces leave room for it.
+	_cta = PillButton.new(CTA_TEXT + "    ", PillButton.Icon.NONE, ACCENT, Palette.WHITE, 30)
+	_cta.name = "CreateYourOwn"
+	_cta.custom_minimum_size = Vector2(500, 100)
+	_cta.size_flags_horizontal = Control.SIZE_SHRINK_CENTER
+	_cta.pressed.connect(func():
+		AudioManager.play_ui_tap()
+		create_own.emit())
+	_column.add_child(_cta)
+	var arrow := CtaArrow.new()
+	_cta.add_child(arrow)
+	_cta.resized.connect(func():
+		var f := _cta.get_theme_font("font")
+		var fs := _cta.get_theme_font_size("font_size")
+		var full := f.get_string_size(_cta.text, HORIZONTAL_ALIGNMENT_LEFT, -1, fs).x
+		var word := f.get_string_size(CTA_TEXT, HORIZONTAL_ALIGNMENT_LEFT, -1, fs).x
+		arrow.position = Vector2((_cta.size.x - full) * 0.5 + word + (full - word) * 0.55, _cta.size.y * 0.5))
+	_cta_line = _label("Surprise someone with a challenge.", 24, Palette.TEXT_SOFT, 800)
+	_cta_line.name = "CtaLine"
+	_column.add_child(_cta_line)
+	_row = HBoxContainer.new()
+	_row.name = "RecipientActions"
+	_row.alignment = BoxContainer.ALIGNMENT_CENTER
+	_row.add_theme_constant_override("separation", 16)
+	_row.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	_column.add_child(_row)
 	_again = PillButton.new("PLAY AGAIN", PillButton.Icon.NONE, Color("#F8EEFC"), Palette.TEXT, 28)
 	_again.name = "PlayAgain"
 	_again.custom_minimum_size = Vector2(460, 96)
@@ -134,47 +210,131 @@ func _ready() -> void:
 
 
 ## Shows the reveal for `c`. Buttons depend on who is playing.
-func show_reveal(c: SharedChallenge, theme: Dictionary, mode: int) -> void:
+## `photo` (recipient): "loading" / "failed" while the challenge's photo is
+## not here yet; "" = use c.local_photo as is.
+func show_reveal(c: SharedChallenge, theme: Dictionary, mode: int, photo: String = "") -> void:
+	_shown += 1
+	_mode = mode
 	_backdrop.set_colors(theme["bg_top"], theme["bg_bottom"])
 	var has_photo := c.has_photo()
+	var expects_photo := has_photo or (photo != "" and c.payload.get("photo") != null)
 	var text := c.message()
+	_text = text
 	var has_message := text != ""
+	photo_state = "ready" if has_photo else (photo if expects_photo else "none")
 	_photo_frame.visible = has_photo
+	_photo_status.visible = expects_photo and not has_photo
+	_set_photo_status_text()
 	_message_card.visible = has_message
-	_emblem.visible = not has_photo
+	_emblem.visible = not expects_photo
 	# Message only: a roomier card, the message centered in it.
-	_message_card.custom_minimum_size = Vector2(WIDTH, 0 if has_photo else 280)
+	_message_card.custom_minimum_size = Vector2(WIDTH, 0 if expects_photo else 280)
 	_message.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
 	_message.text = text
 	# Message only: the message is the whole reveal - larger type.
-	_message.add_theme_font_size_override("font_size", 30 if has_photo else 40)
+	_message.add_theme_font_size_override("font_size", 30 if expects_photo else 40)
+	var recipient := mode == SocialPlay.Mode.RECIPIENT
+	_place_buttons(recipient)
 	if has_photo:
 		_photo.texture = c.local_photo
-		_fit_photo(c, text)
-	_back.text = "BACK TO CREATE CHALLENGE" if mode == SocialPlay.Mode.CREATOR_PREVIEW else "DONE"
+		_fit_photo(c.local_photo.get_size(), text)
+	_back.text = "MAIN MENU" if recipient else "BACK TO CREATE CHALLENGE"
 	visible = true
 	_animate()
+	if recipient:
+		_start_cta()
 	if has_photo:
 		_shrink_to_fit.call_deferred(2)
 
 
+## Recipient: the photo arrived (or failed again) while the reveal shows.
+func set_photo(tex: Texture2D) -> void:
+	if not visible or photo_state == "none" or tex == null:
+		return
+	photo_state = "ready"
+	_photo.texture = tex
+	_fit_photo(tex.get_size(), _text)
+	_photo_status.visible = false
+	_photo_frame.visible = true
+	_shrink_to_fit.call_deferred(2)
+
+
+func set_photo_state(state: String) -> void:
+	if not visible or photo_state == "none" or photo_state == "ready":
+		return
+	photo_state = state
+	_set_photo_status_text()
+
+
+func _set_photo_status_text() -> void:
+	_photo_status_label.text = "Loading the photo…" if photo_state == "loading" else "The photo couldn't be loaded."
+	_photo_retry.visible = photo_state == "failed"
+
+
 func hide_now() -> void:
+	_shown += 1
 	if _tween:
 		_tween.kill()
+	if _cta_tween:
+		_cta_tween.kill()
 	visible = false
 	_photo.texture = null
+	photo_state = "none"
+
+
+## Creator: PLAY AGAIN and BACK stacked, no invitation. Recipient: CREATE
+## YOUR OWN first, then PLAY AGAIN and MAIN MENU side by side, smaller.
+func _place_buttons(recipient: bool) -> void:
+	_cta.visible = recipient
+	_cta_line.visible = recipient
+	_row.visible = recipient
+	var holder: Control = _row if recipient else _column
+	for b in [_again, _back]:
+		if b.get_parent() != holder:
+			b.get_parent().remove_child(b)
+			holder.add_child(b)
+	if not recipient:
+		_column.move_child(_again, _row.get_index() + 1)
+		_column.move_child(_back, _again.get_index() + 1)
+	_again.custom_minimum_size = Vector2(260, 84) if recipient else Vector2(460, 96)
+	_back.custom_minimum_size = Vector2(260, 84) if recipient else Vector2(500, 96)
+	_again.add_theme_font_size_override("font_size", 24 if recipient else 28)
+	_back.add_theme_font_size_override("font_size", 24 if recipient else 26)
+
+
+## CREATE YOUR OWN is there from the start but quieter while the reveal
+## plays; ~1.2 s in it comes up to full strength with ONE gentle pulse.
+## Never repeated, no flashing, no timer shown.
+func _start_cta() -> void:
+	if _cta_tween:
+		_cta_tween.kill()
+	_cta.scale = Vector2.ONE
+	_cta.modulate = Color(1, 1, 1, 0.72)
+	cta_pulses = 0
+	var shown := _shown
+	get_tree().create_timer(1.2).timeout.connect(func():
+		if shown != _shown or not visible:
+			return
+		cta_pulses += 1
+		_cta.pivot_offset = _cta.size * 0.5
+		_cta_tween = create_tween()
+		_cta_tween.tween_property(_cta, "modulate:a", 1.0, 0.3)
+		if not SocialScreen.reduced_motion():
+			_cta_tween.parallel().tween_property(_cta, "scale", Vector2(1.06, 1.06), 0.3).set_trans(Tween.TRANS_SINE).set_ease(Tween.EASE_OUT)
+			_cta_tween.tween_property(_cta, "scale", Vector2.ONE, 0.35).set_trans(Tween.TRANS_SINE).set_ease(Tween.EASE_IN_OUT))
 
 
 ## Photo as large as the screen allows, aspect kept (never stretched or
 ## cropped); it gives way to a long message so the buttons stay on screen.
-func _fit_photo(c: SharedChallenge, text: String) -> void:
+func _fit_photo(img_size: Vector2, text: String) -> void:
 	var vh := get_viewport().get_visible_rect().size.y
 	var msg_h := 0.0
 	if text != "":
 		var lines := text.count("\n") + ceili(text.length() / 30.0)
 		msg_h = 60.0 + mini(lines, 9) * 42.0
-	var max_h := clampf(vh - 470.0 - msg_h, 220.0, 820.0)
-	var img := Vector2(c.local_photo.get_size())
+	var buttons_h := 560.0 if _mode == SocialPlay.Mode.RECIPIENT else 470.0
+	var max_h := clampf(vh - buttons_h - msg_h, 220.0, 820.0)
+	var img := Vector2(img_size)
 	var s := minf((WIDTH - 24.0) / img.x, max_h / img.y)
 	_photo.custom_minimum_size = (img * s).floor()
 
@@ -259,3 +419,10 @@ func _label(t: String, fs: int, col: Color, weight: int) -> Label:
 	l.add_theme_font_size_override("font_size", fs)
 	l.add_theme_color_override("font_color", col)
 	return l
+
+
+## The "->" after CREATE YOUR OWN (white, drawn once).
+class CtaArrow extends Node2D:
+	func _draw() -> void:
+		draw_rect(Rect2(-13, -3.5, 16, 7), Color.WHITE)
+		draw_colored_polygon(PackedVector2Array([Vector2(13, 0), Vector2(1, -11), Vector2(1, 11)]), Color.WHITE)

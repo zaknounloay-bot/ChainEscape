@@ -3,6 +3,7 @@ extends Control
 ## Launch screen: CONTINUE - LEVEL X (or PLAY for a new player) and LEVEL
 ## SELECT. The first tap here also unlocks audio on mobile browsers.
 ## Social MVP 0.1: CREATE CHALLENGE opens the Social screen over the title.
+## 0.2C phase 2: a shared challenge link opens its screens there too.
 
 signal continue_pressed
 signal level_select_pressed
@@ -96,6 +97,11 @@ func open(has_progress: bool, level: int, stars: int, coins: int, theme: Diction
 func close() -> void:
 	_social.close()
 	visible = false
+
+
+## A shared challenge link: its recipient screens over the title.
+func open_challenge(raw: String) -> void:
+	_social.open_challenge(raw, _theme if not _theme.is_empty() else Chapters.theme_for_chapter(1))
 
 
 func _open_social() -> void:

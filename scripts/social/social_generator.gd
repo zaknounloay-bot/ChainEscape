@@ -59,7 +59,12 @@ static func profile_for(d: String) -> Dictionary:
 	return p
 
 
+## Generators ever created (tests: a shared challenge is never regenerated).
+static var created := 0
+
+
 func _init(p_difficulty: String, p_seed: int) -> void:
+	created += 1
 	difficulty = p_difficulty
 	rng_seed = p_seed
 	if not SPECS.has(difficulty):

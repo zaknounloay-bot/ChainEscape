@@ -23,7 +23,8 @@
  *    link is copied instead. Only the link (challenge id) is shared: never
  *    the message or photo.
  * 4. Launch link (0.2C): the challenge id in this page's own address
- *    (?challenge=<id>, or #challenge=<id>), read once for the game.
+ *    (?challenge=<id>, or #challenge=<id>), read once for the game, which
+ *    validates it.
  *
  * Godot polls takePhoto() / takeMessage() / takeShareResult() (plain
  * function calls).
@@ -46,12 +47,17 @@
   var share = { url: '', text: '', title: '' };
   var shareResult = '';
 
-  // Challenge id in the launch address (validated again by the game).
-  var launchId = '';
+  // Challenge parameter in the launch address, as given (the game
+  // validates it: a malformed one gets a friendly "not available" screen
+  // instead of the normal start). null = no parameter at all.
+  var launchRaw = null;
   try {
-    var lm = /[?&#]challenge=([0-9a-fA-F-]{36})(?:[&#]|$)/.exec(location.search + location.hash);
-    if (lm) launchId = lm[1].toLowerCase();
-  } catch (e) { launchId = ''; }
+    var lm = /(?:^|[?&#])challenge=([^&#]*)/.exec(location.search + location.hash);
+    if (lm) {
+      try { launchRaw = decodeURIComponent(lm[1]); } catch (e2) { launchRaw = lm[1]; }
+      launchRaw = String(launchRaw).trim().slice(0, 64);
+    }
+  } catch (e) { launchRaw = null; }
   var ui = 'font-family:-apple-system,system-ui,sans-serif;';
 
   function canvasRect() {
@@ -296,8 +302,9 @@
     canShare: function () { return !!navigator.share; },
     /** This page's address without query / fragment (base for share links). */
     pageBase: function () { return location.origin + location.pathname; },
-    /** Challenge id this page was opened with ('' = none). */
-    launchChallenge: function () { return launchId; },
+    /** Challenge parameter this page was opened with: '' = none, else
+     *  '=' + the raw value (possibly malformed - the game validates it). */
+    launchChallenge: function () { return launchRaw === null ? '' : '=' + launchRaw; },
     /** Leaving the flow: forget zones, pending results and any open dialog. */
     reset: function () {
       zones = []; photoResult = ''; messageResult = ''; draft = '';

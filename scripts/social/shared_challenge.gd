@@ -79,7 +79,8 @@ static func from_api(ch: Dictionary) -> Dictionary:
 	if msg != null and (typeof(msg) != TYPE_STRING or msg.length() > CreatorSession.MESSAGE_MAX):
 		return {"error": "malformed"}
 	var url = ch.get("media_url")
-	if url != null and (typeof(url) != TYPE_STRING or not url.begins_with("https://")):
+	if url != null and (typeof(url) != TYPE_STRING
+			or not (url.begins_with("https://") or (SocialConfig.allow_http_media and url.begins_with("http://")))):
 		return {"error": "malformed"}
 	var has_media: bool = typeof(pl.get("media")) == TYPE_DICTIONARY
 	var message := CreatorSession.clean_message(msg) if typeof(msg) == TYPE_STRING else ""

@@ -135,6 +135,7 @@ func _ready() -> void:
 	if not skip_title and not direct:
 		_show_title()
 		_update_storage_notice()
+		_open_shared_challenge()
 	publish_state.call_deferred()
 	AudioManager.start_music()
 
@@ -273,6 +274,15 @@ func return_to_main_menu() -> void:
 	AudioManager.play_ui_tap()
 	_show_title()
 	publish_state.call_deferred()
+
+
+## Social 0.2C: opened from a shared challenge link (?challenge=<id>):
+## its screens open over the title before anything else shows. Classic is
+## loaded exactly as on any launch and is never touched by them.
+func _open_shared_challenge() -> void:
+	var p := SocialWeb.launch_param()
+	if not p.is_empty():
+		ui.open_shared_challenge(str(p["raw"]))
 
 
 ## Title "CONTINUE - LEVEL X" / "PLAY": the level is already loaded behind it.
