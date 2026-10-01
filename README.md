@@ -74,6 +74,35 @@ Built on the frozen **V17 Golden Master** (levels 1-200 unchanged). UI and navig
 - **Settings > MAIN MENU:** returns to the title exactly as at launch (the level stays loaded behind it). CONTINUE resumes the same board. Nothing is reset or saved, so no confirmation is needed.
 - Check: `godot --headless --path . res://tools/SocialSmoke.tscn` (real input events). It asserts navigation, card layout, entrance end state, the MAIN MENU round trip, and that progress and the save file are byte-identical after Social and MAIN MENU.
 
+## Social MVP 0.2C — status
+
+**Core cross-device viral loop: REAL-DEVICE VALIDATED** (build `a5fb3e8`, real iPhones in Safari, real Supabase backend, hosted on itch.io).
+
+The full loop was proven on real devices: A creates → shares → B opens → B plays the exact challenge → B solves → photo / message reveal → B taps CREATE YOUR OWN → B creates → shares → A opens.
+
+- **Creator:** a Photo / Message Reveal challenge was created on a real iPhone in Safari.
+  - The real backend CREATE succeeded.
+  - The row was confirmed in `public.shared_challenges`, and `reveal.jpg` in the private `challenge-media` bucket.
+  - READ returned the challenge with a signed `media_url`.
+- **Cross-device recipient:** the link was sent from one real iPhone to another.
+  - Opening it showed "SOMEONE SENT YOU A CHAIN ESCAPE" instead of the Main Menu.
+  - PLAY loaded the challenge, and the recipient solved it.
+- **Reveal:** the real uploaded photo loaded from private Storage through the signed URL. Real signed-media loading from itch.io / Safari is confirmed.
+  - The personal message displayed, with Arabic / RTL rendered correctly.
+- **Viral loop:** CREATE YOUR OWN opened the existing Photo / Message Reveal creator directly.
+  - The recipient created a new challenge and shared it back, and it opened and played correctly.
+- **Sharing channels:** WhatsApp and AirDrop worked.
+  - A challenge shared to a group was opened by several recipients, confirming one-to-one and one-to-many opening of the same challenge.
+- **Classic / HUD:** the build opened and played correctly on iPhone. The V17 left-to-right HUD lock stays; no further HUD change is planned.
+
+**Not production-ready for public release.** Open items:
+- **Stable share URLs (not solved).** itch.io file URLs change with every upload, so existing links break. Resolve before public release (see "Share links and hosting" below).
+- Emoji rendering in messages (shown as boxes on the Web) before public Social release.
+- Backend abuse / rate-limit hardening.
+- Cleanup of expired challenges and their media.
+- Further release and security QA.
+- Private-by-link model: the reveal is readable from READ before solving (documented below); challenges are not cryptographically locked.
+
 ## Social MVP 0.2C (phase 2) — recipient flow, reveal, CREATE YOUR OWN
 
 A friend taps a shared link → Chain Escape opens straight into that challenge → they solve the creator's exact puzzle → the photo / message is revealed → **CREATE YOUR OWN** takes them into the same Photo / Message Reveal creator. There is no login, signup or install.
