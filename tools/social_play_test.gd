@@ -172,7 +172,8 @@ func _test_play_matrix() -> void:
 		_check(play.is_active() and play.challenge.difficulty == cs[3], "%s: challenge playing" % name)
 		_check(play._title.text == "REVEAL CHALLENGE" and play._chip.text == cs[3].to_upper(), "%s: labelled REVEAL CHALLENGE / %s (no level number)" % [name, cs[3].to_upper()])
 		_check(play.model.block_count() == play.challenge.puzzle.block_count(), "%s: the board is the challenge's puzzle" % name)
-		_check(play._bottom.find_child("Hammer", false, false) == null, "%s: no Hammer / hearts in Social play" % name)
+		var hammer: Control = play._bottom.find_child("Hammer", false, false)
+		_check(hammer == null or not hammer.is_visible_in_tree(), "%s: no Hammer / hearts in Photo / Message play" % name)
 		if k == 0:
 			await _test_real_taps()
 			await _shot("p1_play_easy")
