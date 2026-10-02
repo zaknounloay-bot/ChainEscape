@@ -9,7 +9,8 @@ extends CanvasLayer
 ## history, never touches GameManager, PlayerProgress or the save, and the
 ## Classic level stays loaded (untouched) underneath - so Classic CONTINUE
 ## is exactly as it was. No hearts, coins, stars, score, boosters or level
-## numbers.
+## numbers. Its tools are free and per attempt: UNDO x3, SHOW A MOVE x2 and,
+## in a Friend Challenge, HAMMER x2 (Restart / PLAY AGAIN start them over).
 ##
 ## Mode: CREATOR_PREVIEW (the creator plays their own challenge, 0.2B) or
 ## RECIPIENT (the person it was sent to, 0.2C phase 2). Both play the same
@@ -26,6 +27,11 @@ enum Mode { CREATOR_PREVIEW, RECIPIENT }
 ## (free, no boosters involved).
 const MAX_UNDOS := GameManager.MAX_UNDOS
 const MAX_HINTS := 2
+## Challenge a Friend only: free Hammers per attempt (provisional value for
+## real-device testing, not an economy decision). Same smash rule as the
+## Classic Hammer (Solver.hammer_safe + BoardModel.remove); no coins,
+## inventory, shop or save are involved.
+const MAX_HAMMERS := 2
 const TOP_HEIGHT := 250.0
 const BOTTOM_HEIGHT := 190.0
 const ACCENT := Color("#C645E6")
@@ -40,6 +46,9 @@ var completed := false
 var chain := 0
 var undos_used := 0
 var hints_used := 0
+var hammers_used := 0
+## The next board tap smashes a block (Friend Challenge Hammer).
+var hammer_armed := false
 ## Reveal's last button text ("" = the default for the mode).
 var back_label := ""
 ## Fingerprint of the puzzle currently on the board (tests: PLAY AGAIN).
@@ -62,6 +71,7 @@ var _message: Label
 var _exit: PillButton
 var _undo: PillButton
 var _hint: PillButton
+var _hammer: PillButton
 var _restart: PillButton
 var _bottom: HBoxContainer
 var _confirm: Control
@@ -109,6 +119,7 @@ func end() -> void:
 	_session += 1
 	visible = false
 	completed = false
+	hammer_armed = false
 	if board:
 		board.build(0, 0, [], false)
 	model = BoardModel.new()
@@ -146,6 +157,8 @@ func _load_puzzle() -> void:
 	chain = 0
 	undos_used = 0
 	hints_used = 0
+	hammers_used = 0
+	hammer_armed = false
 	_total_blocks = model.block_count()
 	reveal.hide_now()
 	_confirm.visible = false
@@ -182,6 +195,10 @@ func tap_block(id: int) -> void:
 	if completed or not model.blocks.has(id):
 		return
 	board.clear_hint()
+	if hammer_armed:
+		_smash(id)
+		_publish.call_deferred()
+		return
 	match model.move_state(id):
 		"ok": _escape(id)
 		"blocked": _blocked(id)
@@ -258,6 +275,7 @@ func _play_mechanic_effects() -> void:
 func undo() -> void:
 	if completed or not history.can_undo() or undos_used >= MAX_UNDOS:
 		return
+	_disarm()
 	undos_used += 1
 	var state: Dictionary = history.pop()
 	model.restore(state["blocks"])
@@ -275,7 +293,7 @@ func hint() -> void:
 	if completed or model.is_empty():
 		return
 	if hints_used >= MAX_HINTS:
-		_show_message("No hints left - Undo or Restart can help")
+		_show_message("No SHOW A MOVE left - Undo or Restart can help")
 		return
 	var id := Solver.from_model(model).recommend_move()
 	if id == -1:
@@ -285,6 +303,78 @@ func hint() -> void:
 	board.set_hint(id)
 	AudioManager.play_hint()
 	_refresh_buttons()
+
+
+# --- Hammer (Challenge a Friend) ------------------------------------------------
+
+func hammer_available() -> bool:
+	return challenge != null and challenge.type == SharedChallenge.TYPE_FRIEND_CHALLENGE
+
+
+## Arms / disarms the Hammer (the button reads CANCEL while armed).
+func toggle_hammer() -> void:
+	if completed or not hammer_available():
+		return
+	AudioManager.play_ui_tap()
+	if hammer_armed:
+		_disarm()
+		_show_message("")
+		return
+	if hammers_used >= MAX_HAMMERS:
+		_show_message("No Hammers left - Undo or Restart can help")
+		return
+	hammer_armed = true
+	board.hammer_mode = true
+	_show_message("Tap a block to smash it")
+	_refresh_buttons()
+	_publish.call_deferred()
+
+
+func _disarm() -> void:
+	if hammer_armed:
+		hammer_armed = false
+		board.hammer_mode = false
+		_refresh_buttons()
+
+
+## Removes the tapped block, as the Classic Hammer does, unless that would
+## MAKE the puzzle unsolvable: then nothing is spent, the block shakes and
+## the Hammer stays armed. Neighbouring spinners turn exactly as when a
+## block escapes (same BoardModel.remove). Undo brings the block back (the
+## Hammer is not refunded, as in Classic).
+func _smash(id: int) -> void:
+	if not model.blocks.has(id):
+		return
+	if not Solver.hammer_safe(model, id):
+		AudioManager.play_invalid()
+		board.play_hidden_tap(id)
+		Haptics.medium()
+		_show_message("That block is needed - pick another")
+		return
+	hammer_armed = false
+	board.hammer_mode = false
+	hammers_used += 1
+	history.push({"blocks": model.snapshot(), "chain": chain})
+	var turned := model.remove(id)
+	var revealed := model.last_revealed.duplicate()
+	var unlocked := model.last_unlocked.duplicate()
+	_play_mechanic_effects()
+	board.play_smash(id)
+	board.animate_turns(turned)
+	AudioManager.play_hammer()
+	Haptics.medium()
+	if not revealed.is_empty():
+		board.play_reveals(revealed)
+	if not unlocked.is_empty():
+		board.play_unlocks(unlocked)
+		AudioManager.play_unlock()
+	_progress.set_progress(1.0 - float(model.block_count()) / maxf(_total_blocks, 1.0))
+	_show_message("")
+	_refresh_buttons()
+	if model.is_empty():
+		_on_solved()
+	elif model.playable_ids().is_empty():
+		_show_message("No moves left - tap Undo" if undos_used < MAX_UNDOS else "No moves left - tap Restart")
 
 
 func restart() -> void:
@@ -406,7 +496,16 @@ func _build() -> void:
 	_bottom.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	hud.add_child(_bottom)
 	_undo = _bottom_button("UNDO", PillButton.Icon.UNDO, undo)
-	_hint = _bottom_button("HINT", PillButton.Icon.HINT, hint)
+	_hint = UIManager.hint_button()
+	_hint.name = "Hint"
+	_hint.pressed.connect(hint)
+	_bottom.add_child(_hint)
+	# Same pill as the Classic Hammer, but always active: it is free here.
+	_hammer = PillButton.new("HAMMER", PillButton.Icon.HAMMER, Palette.WHITE, Palette.TEXT, 20, true, true)
+	_hammer.name = "Hammer"
+	_hammer.custom_minimum_size = Vector2(150, 104)
+	_hammer.pressed.connect(toggle_hammer)
+	_bottom.add_child(_hammer)
 	_restart = _bottom_button("RESTART", PillButton.Icon.RESTART, restart)
 
 	reveal = SocialReveal.new()
@@ -492,6 +591,11 @@ func _refresh_buttons() -> void:
 	_hint.badge_text = str(MAX_HINTS - hints_used)
 	_hint.modulate.a = 1.0 if hints_used < MAX_HINTS else 0.5
 	_hint.disabled = completed
+	_hammer.visible = hammer_available()
+	_hammer.text = "CANCEL" if hammer_armed else "HAMMER"
+	_hammer.badge_text = str(MAX_HAMMERS - hammers_used)
+	_hammer.modulate.a = 1.0 if hammer_armed or hammers_used < MAX_HAMMERS else 0.5
+	_hammer.disabled = completed
 	_restart.disabled = completed
 
 
@@ -520,13 +624,13 @@ func _publish() -> void:
 			if hint_id != -1:
 				next = norm.call(to_screen * board.get_view(hint_id).home)
 	var buttons := {}
-	for b in [_exit, _undo, _hint, _restart, reveal._again, reveal._back, reveal._cta, reveal._photo_retry,
+	for b in [_exit, _undo, _hint, _hammer, _restart, reveal._again, reveal._back, reveal._cta, reveal._photo_retry,
 			_confirm.find_child("KeepPlaying", true, false), _confirm.find_child("Leave", true, false)]:
 		if b.is_visible_in_tree():
 			buttons[String(b.name)] = norm.call(b.get_global_rect().get_center())
 	WebBridge.publish("chainEscapeSocialPlay", {"active": visible, "completed": completed, "revealed": reveal.visible,
 		"difficulty": challenge.difficulty if challenge else "", "blocks": model.block_count(), "free": free, "next": next,
-		"fingerprint": loaded_fingerprint, "plays": plays, "confirm": _confirm.visible, "buttons": buttons,
+		"fingerprint": loaded_fingerprint, "plays": plays, "hammers_left": MAX_HAMMERS - hammers_used, "hammer_armed": hammer_armed, "confirm": _confirm.visible, "buttons": buttons,
 		"has_photo": reveal._photo_frame.visible and reveal.visible, "photo_state": reveal.photo_state if reveal.visible else "",
 		"cta_pulses": reveal.cta_pulses if reveal.visible else 0, "mode": "recipient" if mode == Mode.RECIPIENT else "creator",
 		# The revealed text only for automated tests (never otherwise exposed).

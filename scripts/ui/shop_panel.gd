@@ -11,7 +11,7 @@ var _rows: Dictionary = {}  # item -> {"owned": Label, "buy": PillButton}
 var _note: Label
 
 const ITEMS := {
-	"hint": {"title": "HINT", "desc": "Shows one good move", "icon": PillButton.Icon.HINT},
+	"hint": {"title": "SHOW A MOVE", "desc": "Shows one good move", "icon": PillButton.Icon.HINT},
 	"hammer": {"title": "HAMMER", "desc": "Smash one block (only if the level stays solvable)", "icon": PillButton.Icon.HAMMER},
 }
 

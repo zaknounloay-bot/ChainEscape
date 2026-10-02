@@ -154,8 +154,8 @@ func _test_launch_valid(info: Dictionary) -> void:
 	await _frames(3)
 	_check(play.visible and play.mode == SocialPlay.Mode.RECIPIENT, "J: PLAY opens the Social board (recipient)")
 	_check(play.loaded_fingerprint == info["fp"] and play.model.block_count() == info["blocks"].size(), "J: the board on screen is the exact shared puzzle")
-	_check(play._undo.visible and play._hint.visible and play._restart.visible and SocialPlay.MAX_UNDOS == 3 and SocialPlay.MAX_HINTS == 2,
-		"J: 3 Undo, 2 Hints, Restart")
+	_check(play._undo.visible and play._hint.visible and play._restart.visible and SocialPlay.MAX_UNDOS == 3 and SocialPlay.MAX_HINTS == 2
+		and play._hint.text == "SHOW A MOVE", "J: 3 Undo, 2 SHOW A MOVE, Restart")
 	_check(not _visible_text(play).contains("HAMMER") and not _visible_text(play).contains("COINS"), "J: no Hammer, coins or hearts")
 	await _shot("J_play")
 	# Exit confirm -> landing.

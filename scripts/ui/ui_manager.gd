@@ -169,6 +169,21 @@ func set_undo_state(can_undo: bool, remaining: int) -> void:
 	set_undo_enabled(can_undo and remaining > 0)
 
 
+## The hint action's label everywhere (Classic and Social): it highlights
+## one move that keeps the board solvable (Solver.recommend_move) and never
+## plays it, so the button says what it does.
+const HINT_LABEL := "SHOW A MOVE"
+
+
+## The SHOW A MOVE pill of the bottom bar (Classic HUD and Social play).
+## Slightly smaller text and a little wider than its neighbours, so the
+## longer label fits on one line.
+static func hint_button() -> PillButton:
+	var b := PillButton.new(HINT_LABEL, PillButton.Icon.HINT, Palette.WHITE, Palette.TEXT, 18, true, true)
+	b.custom_minimum_size = Vector2(168, 104)
+	return b
+
+
 ## Hint badge: free hints left this level + owned Hint boosters, shown as
 ## "1+2" when both exist (∞ in debug). Dimmed when nothing is available.
 func set_hint_state(remaining: int, allowed: int, unlimited: bool, owned: int = 0) -> void:
@@ -403,7 +418,7 @@ func show_complete(r: Dictionary) -> void:
 	_set_card_mode(true)
 	_card_stars.set_stars(r["stars"], true)
 	var hearts_txt := "HEARTS %d/%d" % [r["hearts_left"], r["max_hearts"]] if r["max_hearts"] > 0 else "NO HEARTS"
-	_card_stats.text = "%s   ·   UNDO %d   ·   HINTS %d" % [hearts_txt, r["undos"], r["hints"]]
+	_card_stats.text = "%s   ·   UNDO %d   ·   SHOW A MOVE %d" % [hearts_txt, r["undos"], r["hints"]]
 	if r.get("hammers", 0) > 0:
 		_card_stats.text += "   ·   HAMMER %d" % r["hammers"]
 	var coins: int = r.get("coins", 0)
@@ -577,8 +592,7 @@ func _build() -> void:
 	_undo_button.custom_minimum_size = Vector2(150, 104)
 	_undo_button.pressed.connect(func(): undo_pressed.emit())
 	_bottom.add_child(_undo_button)
-	_hint_button = PillButton.new("HINT", PillButton.Icon.HINT, Palette.WHITE, Palette.TEXT, 20, true, true)
-	_hint_button.custom_minimum_size = Vector2(150, 104)
+	_hint_button = hint_button()
 	_hint_button.pressed.connect(func(): hint_pressed.emit())
 	_bottom.add_child(_hint_button)
 	_hammer_button = PillButton.new("HAMMER", PillButton.Icon.HAMMER, Palette.WHITE, Palette.TEXT, 20, true, true)

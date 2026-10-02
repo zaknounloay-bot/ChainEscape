@@ -173,14 +173,15 @@ func pick(p_choice: String) -> void:
 	_start_new()
 
 
-## NEW CHALLENGE: same difficulty (SURPRISE ME rolls again), a board never
-## shown before in this session. The current challenge stays until the new
-## one is created.
+## NEW CHALLENGE: back to the difficulty choice (nothing is generated
+## until a difficulty is picked). The current challenge and its link stay
+## valid: BACK on the choice returns to them. Boards already shown in this
+## session are still never repeated.
 func new_challenge() -> void:
 	if busy or step != Step.READY:
 		return
 	AudioManager.play_ui_tap()
-	_start_new()
+	show_step(Step.CHOOSE)
 
 
 func _start_new() -> void:
@@ -280,8 +281,8 @@ func _retry() -> void:
 		_start_new()
 
 
-## BACK while creating / after an error: cancel. With a challenge already
-## made (NEW CHALLENGE), back to it, unchanged; else to the difficulties.
+## BACK while creating / after an error: cancel, back to the difficulty
+## choice (a challenge made before stays there: BACK again returns to it).
 func _cancel() -> void:
 	AudioManager.play_ui_tap()
 	_token += 1
@@ -290,7 +291,7 @@ func _cancel() -> void:
 	pending = null
 	failed = ""
 	_stop_anim()
-	show_step(Step.READY if current != null else Step.CHOOSE)
+	show_step(Step.CHOOSE)
 
 
 func _error_text(code: String) -> String:
@@ -434,8 +435,14 @@ func _build_choose() -> VBoxContainer:
 	box.add_child(s)
 	var back := _button("BACK", "Back", Palette.WHITE, Palette.TEXT, 30, Vector2(460, 96))
 	back.pressed.connect(func():
+		if busy:
+			return
 		AudioManager.play_ui_tap()
-		exit_requested.emit())
+		# After NEW CHALLENGE: back to the challenge already made, unchanged.
+		if current != null:
+			show_step(Step.READY)
+		else:
+			exit_requested.emit())
 	box.add_child(back)
 	return box
 

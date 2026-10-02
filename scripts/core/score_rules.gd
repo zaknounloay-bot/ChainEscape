@@ -97,7 +97,7 @@ static func _passes(rule: String, r: Dictionary, rules: Dictionary) -> bool:
 static func describe(rule: String, rules: Dictionary) -> String:
 	match rule:
 		"complete": return "Complete the level"
-		"no_hints": return "No Hint used"
+		"no_hints": return "No SHOW A MOVE used"
 		"no_undo": return "No Undo used"
 		"no_mistakes": return "No blocked taps"
 		"perfect": return "PERFECT clear"

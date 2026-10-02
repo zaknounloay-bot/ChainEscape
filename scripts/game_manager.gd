@@ -749,7 +749,7 @@ func request_hint() -> void:
 	var owned: int = progress.inventory.get("hint", 0)
 	if not unlimited and free_left <= 0 and owned <= 0:
 		# Explain gently; the coin pill pulses to point at the Shop.
-		_show_message("No hints left - get Hint boosters in the Shop", 2.6)
+		_show_message("No SHOW A MOVE left - get more in the Shop", 2.6)
 		ui.pulse_coins()
 		return
 	var id := Solver.from_model(model).recommend_move()

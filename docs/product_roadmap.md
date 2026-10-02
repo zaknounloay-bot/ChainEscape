@@ -1,0 +1,86 @@
+# Chain Escape — product findings and roadmap (Social)
+
+Status as of the Challenge a Friend phase 3 finishing patch. This is a record of
+findings and direction only: nothing below is built, designed in detail, or
+scheduled beyond "next".
+
+## Real-user findings (phase 3 real-device test)
+
+**What worked:** the full social loop on real iPhones.
+- Phone A created a HARD Friend Challenge and sent it on WhatsApp; it arrived immediately and was solved.
+- From the recipient's phone, CHALLENGE A FRIEND created an EASY challenge for a third phone, which also arrived immediately and worked.
+- Creator PLAY / PREVIEW, the Friend creator, the recipient flow and WhatsApp sharing all worked well.
+
+**UX findings, addressed in the finishing patch:**
+- **NEW CHALLENGE** was read as "let me choose a new challenge", not "give me another one like this". It now returns to the difficulty choice.
+- **HINT** was vague for first-time players. It is now **SHOW A MOVE** everywhere (Classic and Social), with the behaviour unchanged.
+- Players looked for the **Hammer** in Friend Challenge. It is now there: free, x2 per attempt (provisional), isolated from the Classic economy.
+
+**VERY HARD did not feel very hard.** This is a real finding: the label is a promise to the player. The audit (README, *Audit: VERY HARD*) shows why: most moves in a Friend board are free and safe, and the Solver's score rewards size and length more than the decisions a person has to make. **No generator change has been made yet;** the recommendation is waiting for approval.
+
+**Competition is what younger players asked for.** The sharing loop works technically, but simply sending and solving is not yet enough of a "wow" for repeated play. Their immediate wishes:
+- a measurable completion time
+- comparing results with another person and trying to beat their result
+- relative performance (percentile)
+- eventually live 1v1 against someone online
+
+## Next product phase (after phase 3 is frozen): COMPETITIVE CHALLENGE
+
+The likely first step is **asynchronous competition on the exact same stored challenge**. The exact-board architecture already built (one immutable `PuzzleDefinition` per challenge, rebuilt identically on every device) is what makes this possible: everyone plays the same board.
+
+Concepts to choose from (not designed yet):
+- completion time
+- same-board comparison: sender versus recipient
+- personal best and the opponent's result
+- how many players completed the challenge
+- percentile, once the sample is large enough
+- challenge-specific ranking
+- Challenge Back (answer a result with your own)
+- later, possibly, live 1v1
+
+**Not now:** no design of the full system, no database tables, no backend change, no results. The intended shape of a future `challenge_results` table (one challenge, many independent results, anonymous player key, accounts addable later) is already sketched, *not applied*, in `docs/backend/friend_challenge_phase2.md`.
+
+### Fairness: time alone is not a result
+
+A future comparison cannot rank on time alone without considering help:
+
+| | Time | SHOW A MOVE | HAMMER |
+|---|---|---|---|
+| Player A | 35 s | 2 | 2 |
+| Player B | 42 s | 0 | 0 |
+
+Who did better depends on rules not yet decided. The scoring formula is **not** defined now. The data architecture must simply be able to record, per attempt:
+- completion time (and start / finish)
+- SHOW A MOVE uses
+- HAMMER uses
+- UNDO uses
+- RESTARTs
+- possibly failed or abandoned attempts
+
+The phase-2 sketch already has `duration_ms`, `hints_used`, `undos_used` and `state`. A results phase would add `hammers_used` and `restarts` (or a per-attempt record) before any result is stored. Today every Social tool is already counted per attempt in `SocialPlay` (`undos_used`, `hints_used`, `hammers_used`, restart = a new attempt), so nothing in the play code blocks this.
+
+### Live 1v1: later, not now
+
+Players asked for it, and it stays on the roadmap. It is a different order of complexity:
+- rooms and matchmaking
+- synchronisation and latency
+- reconnect and disconnect handling
+- a shared start time
+- cheating and result validation
+- player identity
+- session lifecycle
+
+First test whether asynchronous competition (same challenge + time + direct comparison) creates enough engagement. Future choices should avoid blocking live 1v1 (for example: results keyed by challenge id and attempt, board identity by `PuzzleDefinition` fingerprint), but nothing is built for it.
+
+### Personal performance (possible direction)
+
+Time and personal bests may matter beyond friends:
+- beat your previous time and improve your result
+- track your own performance over time
+- challenge yourself on harder puzzles
+
+Framed only around focus, problem solving, personal performance and personal bests. **No medical or cognitive-improvement claims.** Chain Escape must not claim to improve cognitive function unless appropriate evidence ever supports it.
+
+## Explicitly not in phase 3
+
+Timer, `challenge_results` / result storage, percentile, "faster than X%", opponent comparison, leaderboards and ranking, Challenge Back results, live multiplayer and rooms, accounts and profiles, friends and followers, notifications, monetization.

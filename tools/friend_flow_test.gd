@@ -83,6 +83,8 @@ func _run() -> void:
 	game.continue_game()
 	await _frames(3)
 	_check(game.current_level == 7 and _snapshot().begins_with(snap.get_slice("|", 0)), "Classic progress (level 7, coins, stars) unchanged")
+	_check(game.ui._hint_button.text == "SHOW A MOVE" and game.ui._hammer_button.text == "HAMMER", "Classic HUD: SHOW A MOVE (same label as Social), HAMMER")
+	await _shot("F10_classic_hud")
 	_finish()
 
 
@@ -195,16 +197,17 @@ func _test_surprise() -> void:
 	var text := SocialConfig.friend_share_text(c.difficulty)
 	_check(not text.to_lower().contains("surprise") and text.contains(FriendCreator.NAMES[c.difficulty]), "share text names the real difficulty, never SURPRISE")
 	await _shot("F4_ready_surprise")
-	# NEW CHALLENGE re-rolls the difficulty every time.
+	# NEW CHALLENGE -> the choice -> SURPRISE ME again: a new roll each time.
 	var diffs := {c.difficulty: true}
 	var keys := {FriendGenerator.board_key(c.puzzle): true}
 	for i in 6:
-		await _tap(fc._steps[FriendCreator.Step.READY].find_child("NewChallenge", true, false))
+		await _new_challenge_to_choice("surprise #%d" % i)
+		await _tap(fc._steps[FriendCreator.Step.CHOOSE].find_child("SurpriseMe", true, false))
 		await _until(func(): return fc.step == FriendCreator.Step.READY and not fc.busy, 15.0)
 		diffs[fc.current.difficulty] = true
 		keys[FriendGenerator.board_key(fc.current.puzzle)] = true
-		_check(fc.current.is_surprise() and fc._r_sub.text.begins_with("SURPRISE PICK: "), "SURPRISE NEW CHALLENGE #%d: still a surprise" % i)
-	_check(diffs.size() >= 2, "SURPRISE ME re-rolls the difficulty on NEW CHALLENGE (%s)" % str(diffs.keys()))
+		_check(fc.current.is_surprise() and fc._r_sub.text.begins_with("SURPRISE PICK: "), "SURPRISE ME again #%d: still a surprise" % i)
+	_check(diffs.size() >= 2, "SURPRISE ME re-rolls the difficulty each time (%s)" % str(diffs.keys()))
 	_check(keys.size() == 7, "7 surprise challenges, 7 different boards")
 	await _tap(fc._steps[FriendCreator.Step.READY].find_child("Done", true, false))
 
@@ -217,12 +220,22 @@ func _test_new_challenge() -> void:
 	var keys := {FriendGenerator.board_key(fc.current.puzzle): true}
 	var first_url := fc.share_url
 	var first_fp := fc.current.puzzle.fingerprint()
-	for i in 4:
-		await _tap(fc._steps[FriendCreator.Step.READY].find_child("NewChallenge", true, false))
+	# NEW CHALLENGE -> the choice; BACK there returns to the same challenge.
+	await _new_challenge_to_choice("first")
+	await _shot("F4b_new_challenge_choice")
+	await _tap(fc._steps[FriendCreator.Step.CHOOSE].find_child("Back", true, false))
+	_check(fc.visible and fc.step == FriendCreator.Step.READY and fc.share_url == first_url and fc.current.puzzle.fingerprint() == first_fp,
+		"BACK on the choice -> the previous CHALLENGE READY, same link and board")
+	# Each NEW CHALLENGE + a difficulty: a new board, never one shown before.
+	var picks := ["medium", "medium", "hard", "medium"]
+	for i in picks.size():
+		await _new_challenge_to_choice("#%d" % i)
+		await _tap(fc._steps[FriendCreator.Step.CHOOSE].find_child("Difficulty_" + picks[i], true, false))
 		await _until(func(): return fc.step == FriendCreator.Step.READY and not fc.busy, 15.0)
-		_check(fc.current.difficulty == "medium" and not fc.current.is_surprise(), "NEW CHALLENGE #%d keeps MEDIUM" % i)
+		_check(fc.current.difficulty == picks[i] and not fc.current.is_surprise() and fc._r_sub.text == "%s CHALLENGE" % FriendCreator.NAMES[picks[i]],
+			"NEW CHALLENGE #%d + %s -> a %s challenge" % [i, picks[i], picks[i]])
 		keys[FriendGenerator.board_key(fc.current.puzzle)] = true
-	_check(keys.size() == 5 and fc.seen_keys.size() == 5, "5 MEDIUM challenges, 5 different boards (never repeated)")
+	_check(keys.size() == 5 and fc.seen_keys.size() == 5, "5 challenges, 5 different boards (never repeated in the session)")
 	_check(fc.share_url != first_url, "a NEW CHALLENGE has its own link")
 	var old = (await _get_json("?action=read&id=" + ShareLink.parse(first_url)))["challenge"]
 	_check(PuzzleDefinition.from_dict(old["puzzle"]).fingerprint() == first_fp, "the earlier link still reads its own exact board")
@@ -263,16 +276,20 @@ func _test_backend_retry() -> void:
 	_check(fc.current != null and fc.current.difficulty == "easy", "TRY AGAIN after a generation failure creates a challenge")
 
 
-## NEW CHALLENGE fails -> BACK returns to the previous challenge, unchanged.
+## The next challenge fails -> the previous challenge and link stay:
+## BACK (error) -> the choice, BACK (choice) -> the previous READY.
 func _test_new_challenge_failure() -> void:
 	var prev_url := fc.share_url
 	var prev_fp := fc.current.puzzle.fingerprint()
 	await _post("__mode", {"fail_next": "500"})
-	await _tap(fc._steps[FriendCreator.Step.READY].find_child("NewChallenge", true, false))
+	await _new_challenge_to_choice("before a failure")
+	await _tap(fc._steps[FriendCreator.Step.CHOOSE].find_child("Difficulty_medium", true, false))
 	await _until(func(): return fc.failed != "", 15.0)
 	_check(fc.failed == "create" and fc.current.puzzle.fingerprint() == prev_fp and fc.share_url == prev_url,
-		"NEW CHALLENGE failure: the previous challenge and link are still there")
+		"next challenge failed: the previous challenge and link are still there")
 	await _tap(fc._c_back)
+	_check(fc.step == FriendCreator.Step.CHOOSE and not fc.busy and fc.failed == "", "BACK on the error -> the difficulty choice")
+	await _tap(fc._steps[FriendCreator.Step.CHOOSE].find_child("Back", true, false))
 	_check(fc.step == FriendCreator.Step.READY and fc.share_url == prev_url and fc.current.puzzle.fingerprint() == prev_fp,
 		"BACK -> the previous CHALLENGE READY, same link and board")
 
@@ -344,6 +361,7 @@ func _test_recipient(info: Dictionary) -> void:
 	await _tap(rf._pages[RecipientFlow.State.LANDING].find_child("Play", true, false))
 	_check(play.visible and play.mode == SocialPlay.Mode.RECIPIENT and play.loaded_fingerprint == info["fp"]
 		and play._title.text == "FRIEND CHALLENGE" and play._chip.text == "HARD", "PLAY: the creator's exact board (HARD)")
+	await _test_tools(info["fp"])
 	await _solve()
 	var r := play.reveal
 	_check(r.visible and r._heading.text == "YOU ESCAPED!" and r._cta.is_visible_in_tree() and r._cta.text.strip_edges() == "CHALLENGE A FRIEND"
@@ -353,8 +371,20 @@ func _test_recipient(info: Dictionary) -> void:
 	_check(r._cta.get_global_rect().end.y <= vh and r._back.get_global_rect().end.y <= vh, "completion fits on screen")
 	await _wait(1.6)
 	await _shot("F9_recipient_done")
+	# Use a Hammer, then PLAY AGAIN: the same board, both Hammers back.
+	var plays_before := play.plays
 	await _tap(r._again)
-	_check(play.loaded_fingerprint == info["fp"] and play.plays == 2, "PLAY AGAIN: same exact board")
+	_check(play.loaded_fingerprint == info["fp"] and play.plays == plays_before + 1, "PLAY AGAIN: same exact board")
+	await _tap(play._hammer)
+	var sid := _safe_block()
+	play.tap_block(sid)
+	await _wait(0.4)
+	_check(play.hammers_used == 1, "a Hammer used on the replay")
+	await _solve()
+	await _tap(play.reveal._again)
+	_check(play.hammers_used == 0 and not play.hammer_armed and play._hammer.badge_text == "2" and play.loaded_fingerprint == info["fp"],
+		"PLAY AGAIN: Hammer x2 again, same board")
+	await _solve()
 	await _solve()
 	_check(FriendGenerator.created == gens, "the recipient never generates a board")
 	await _tap(play.reveal._cta)
@@ -366,7 +396,112 @@ func _test_recipient(info: Dictionary) -> void:
 	_check(fc.current != null and ShareLink.parse(fc.share_url) != info["id"], "phone B made its own challenge: a new link")
 
 
+# --- Tools: UNDO x3, SHOW A MOVE x2, HAMMER x2 (free, per attempt) ----------------
+
+func _test_tools(fp: String) -> void:
+	var prog := game.progress
+	var econ := var_to_str([prog.coins, prog.inventory, prog.best_scores, prog.current_level])
+	var vis := get_viewport().get_visible_rect()
+	var row: Array[Control] = [play._undo, play._hint, play._hammer, play._restart]
+	var ok_row := true
+	for i in row.size():
+		ok_row = ok_row and row[i].is_visible_in_tree() and vis.encloses(row[i].get_global_rect())
+		if i > 0:
+			ok_row = ok_row and row[i].get_global_rect().position.x >= row[i - 1].get_global_rect().end.x
+	_check(ok_row, "tool row: UNDO, SHOW A MOVE, HAMMER, RESTART on screen, side by side")
+	_check(play._undo.badge_text == "3" and play._hint.text == "SHOW A MOVE" and play._hint.badge_text == "2", "UNDO x3, SHOW A MOVE x2")
+	_check(play._hammer.text == "HAMMER" and play._hammer.badge_text == "2" and play._hammer.modulate.a == 1.0 and not play._hammer.disabled,
+		"HAMMER x2, active from the start (not greyed out)")
+	await _shot("F8b_tools")
+	# SHOW A MOVE: highlights the Solver's move, never plays it.
+	var before := var_to_str(play.model.snapshot())
+	var expect := Solver.from_model(play.model).recommend_move()
+	await _tap(play._hint)
+	var hinted := []
+	for id in play.model.blocks.keys():
+		if play.board.get_view(id).hinted:
+			hinted.append(id)
+	_check(hinted == [expect] and var_to_str(play.model.snapshot()) == before and play.hints_used == 1 and play._hint.badge_text == "1",
+		"SHOW A MOVE highlights one valid move (the Solver's) and plays nothing")
+	# Arm, then CANCEL: nothing spent.
+	await _tap(play._hammer)
+	_check(play.hammer_armed and play.board.hammer_mode and play._hammer.text == "CANCEL", "HAMMER arms (button reads CANCEL)")
+	await _shot("F8c_hammer_armed")
+	await _tap(play._hammer)
+	_check(not play.hammer_armed and not play.board.hammer_mode and play.hammers_used == 0 and play._hammer.badge_text == "2", "CANCEL: nothing spent")
+	# A rejected smash (one that would make the board unsolvable), if any.
+	var unsafe := -1
+	for id in play.model.blocks.keys():
+		if not Solver.hammer_safe(play.model, id):
+			unsafe = id
+			break
+	print("[FriendFlowTest] refused-smash case: %s" % ("block %d" % unsafe if unsafe != -1 else "none on this board"))
+	if unsafe != -1:
+		await _tap(play._hammer)
+		before = var_to_str(play.model.snapshot())
+		play.tap_block(unsafe)
+		await _wait(0.3)
+		_check(var_to_str(play.model.snapshot()) == before and play.hammer_armed and play.hammers_used == 0,
+			"a smash that would make the board unsolvable is refused: nothing spent, still armed")
+		await _tap(play._hammer)
+	else:
+		passed += 1  # (every block on this board is safe to smash)
+	# Smash 1: exactly BoardModel.remove (spinners next to it turn as on an escape).
+	await _tap(play._hammer)
+	var sid := _safe_block()
+	var expected := BoardModel.new()
+	expected.setup(play.model.rows, play.model.columns, play.model.snapshot())
+	expected.remove(sid)
+	var count := play.model.block_count()
+	play.tap_block(sid)
+	await _wait(0.5)
+	_check(not play.model.blocks.has(sid) and play.model.block_count() == count - 1 and var_to_str(play.model.snapshot()) == var_to_str(expected.snapshot()),
+		"smash removes the block; the board changes exactly as the Classic Hammer rule says")
+	_check(play.hammers_used == 1 and play._hammer.badge_text == "1" and not play.hammer_armed and play._hammer.text == "HAMMER", "Hammer x1 left")
+	_check(Solver.from_model(play.model).is_solvable(), "the board is still solvable after the smash")
+	# Undo brings the block back; the Hammer is not refunded (as in Classic).
+	await _tap(play._undo)
+	_check(play.model.blocks.has(sid) and play.hammers_used == 1 and play.undos_used == 1, "UNDO brings the smashed block back (Hammer not refunded)")
+	# Smash 2, then none left.
+	await _tap(play._hammer)
+	play.tap_block(_safe_block())
+	await _wait(0.5)
+	_check(play.hammers_used == 2 and play._hammer.badge_text == "0" and play._hammer.modulate.a < 1.0, "Hammer x0 left")
+	await _tap(play._hammer)
+	_check(not play.hammer_armed and play._message.text.begins_with("No Hammers left"), "no third Hammer")
+	_check(Solver.from_model(play.model).is_solvable(), "still solvable after two smashes")
+	_check(play.challenge.puzzle.fingerprint() == fp and play.loaded_fingerprint == fp, "the shared PuzzleDefinition is untouched by smashes")
+	# RESTART: the exact board, every tool back.
+	await _tap(play._restart)
+	_check(play.loaded_fingerprint == fp and play.hammers_used == 0 and play.hints_used == 0 and play.undos_used == 0
+		and play._hammer.badge_text == "2" and play._hint.badge_text == "2" and play._undo.badge_text == "3" and play.model.block_count() == play._total_blocks,
+		"RESTART: same exact board, UNDO x3 / SHOW A MOVE x2 / HAMMER x2 again")
+	_check(var_to_str([prog.coins, prog.inventory, prog.best_scores, prog.current_level]) == econ,
+		"Classic coins, Hammer / boosters and progress untouched by the tools")
+
+
+func _safe_block() -> int:
+	var ids := play.model.blocks.keys()
+	ids.sort()
+	for id in ids:
+		if Solver.hammer_safe(play.model, id):
+			return id
+	return -1
+
+
 # --- Helpers ------------------------------------------------------------------------
+
+## NEW CHALLENGE on READY: back to the difficulty choice, nothing generated
+## or created by the tap itself.
+func _new_challenge_to_choice(what: String) -> void:
+	var gens := FriendGenerator.created
+	var count: int = (await _get_json("__count"))["count"]
+	var url := fc.share_url
+	await _tap(fc._steps[FriendCreator.Step.READY].find_child("NewChallenge", true, false))
+	await _wait(0.4)
+	_check(fc.step == FriendCreator.Step.CHOOSE and not fc.busy and fc.generator == null and FriendGenerator.created == gens
+		and (await _get_json("__count"))["count"] == count and fc.share_url == url,
+		"NEW CHALLENGE (%s) -> the difficulty choice, nothing generated" % what)
 
 func _new_game(link: String, skip: bool) -> void:
 	_free_game()
