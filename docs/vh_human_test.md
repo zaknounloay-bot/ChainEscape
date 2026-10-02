@@ -1,5 +1,11 @@
 # VERY HARD — blind human test (development only, phase 3d)
 
+> **Result (two experienced players, iPhone):** 30 playthroughs, all 30 completed, **none rated VERY HARD**. Variant B (heuristic-selected, opening-constrained) did not feel VERY HARD; it caused more restarts and mistakes for tester 2 but was mostly rated MEDIUM. Variant C (Locks) did not help. SHOW A MOVE was used 0 times; HAMMER once in 30.
+>
+> **Not valid as evidence:** tester 1's times (he did other things while some puzzles were open), and tester 2's first-move answers (he read the question as being about the whole puzzle).
+>
+> **New observation from the testers:** some hard late Classic levels made them scan the whole board to find where to start, unlike the generated boards. Follow-up: `docs/vh_human_test2.md` (test 2).
+
 **Question:** can arrows + clockwise spinners alone produce puzzles that experienced players genuinely perceive as VERY HARD?
 
 Nothing here changes production:

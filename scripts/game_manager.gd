@@ -284,9 +284,9 @@ func _open_shared_challenge() -> void:
 	if FriendBench.requested():
 		add_child(FriendBench.new())
 		return
-	# Developer page (?vhtest=1): blind VERY HARD human test (local only).
+	# Developer pages (?vhtest=1 / ?vhtest2=1): blind VERY HARD human tests (local only).
 	if VhHumanTest.requested():
-		add_child(VhHumanTest.new())
+		add_child(VhHumanTest.new(VhHumanTest.requested_test()))
 		return
 	var p := SocialWeb.launch_param()
 	if not p.is_empty():

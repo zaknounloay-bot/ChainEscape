@@ -107,9 +107,20 @@ For scale: the campaign averages 4.7 in Chapter 1, 18.2 in Chapter 3, 27.4 in Ch
     - It wins over a challenge link, even when appended to one (`…?challenge=<id>?friendbench=1`): the page script splits launch parameters on `?`, `&` and `#`.
     - Checked by `node tools/web_friendbench_route_test.mjs build/web`.
 
-### Challenge a Friend phase 3 — creator + minimal recipient (status: NOT frozen; VERY HARD blind human test pending, see phase 3d)
+### Challenge a Friend phase 3 — creator + minimal recipient (status: NOT frozen; VERY HARD blind human test 2 pending, see phase 3e)
 
 **Real-device result (`4f1a845`):** the full loop worked on real iPhones. Phone A created a HARD challenge and sent it on WhatsApp; it arrived immediately and was solved. From that phone, CHALLENGE A FRIEND made an EASY challenge for a third phone, which also arrived immediately and worked. Creator PLAY / PREVIEW, the creator, the recipient flow and WhatsApp sharing all worked well. Real-user findings and the next product direction (Competitive Challenge, fairness, live 1v1 later, personal performance) are recorded in `docs/product_roadmap.md`.
+
+#### Phase 3e — Classic topology audit and blind human test 2 (development only)
+
+**Test 1 result:** two experienced players, 30 of 30 puzzles completed, **0 rated VERY HARD**. B (heuristic-selected) and C (Locks) did not solve it. SHOW A MOVE was used 0 times and HAMMER once. (Tester 1's times and tester 2's first-move answers are not valid evidence.)
+
+The testers observed that hard late Classic levels make them scan the board to find where to start.
+- **Audit:** every level 161–200 also uses armor, locks and other spinner rules. Their geometry alone, flattened to arrows + clockwise spinners, becomes easy.
+- **Structural differences** found in Classic boards: deeper dependency chains, denser boards, more "hidden" next moves.
+- **Blind test 2** (`?vhtest2=1`): 14 boards in the same SocialPlay presentation. B (5 strongest Friend boards of test 1) vs D (pure Classic 42, 44, 47, 51, 55) vs E (late Classic geometry, flattened: 163, 165, 169, 194), all rotated 180°. The new question: "Was it immediately obvious which block you could start with?".
+
+Details: `docs/vh_human_test2.md`. Production unchanged.
 
 #### Phase 3d — blind human test of VERY HARD (development only)
 
@@ -1928,7 +1939,9 @@ godot --headless --path . --script res://tools/lock_prototype_bench.gd -- --n=60
 godot --headless --path . res://tools/LockPrototypeCheck.tscn         # LOCK PROTOTYPE safety: exact board, SHOW A MOVE, UNDO, RESTART, locked taps, production still refuses locks
 godot --headless --path . --script res://tools/vh_human_test_build.gd   # VERY HARD human test: (re)build data/dev/vh_human_test.json offline (about 5 min)
 godot --headless --path . res://tools/VhHumanTestCheck.tscn           # VERY HARD human test page (?vhtest=1): blind order, x1 / x1 assistance, rating, resume, results export
-node tools/web_vhtest_page_test.mjs build/web                       # ?vhtest=1 in real Chromium: real touches, COPY RESULTS, no network
+node tools/web_vhtest_page_test.mjs build/web                       # ?vhtest=1 and ?vhtest2=1 in real Chromium: real touches, COPY RESULTS, no network
+godot --headless --path . --script res://tools/classic_topology_audit.gd [-- --levels]   # VERY HARD: Classic vs Friend board geometry / visual-search audit
+godot --headless --path . --script res://tools/vh_human_test2_build.gd   # VERY HARD human test 2: (re)build data/dev/vh_human_test2.json
 node tools/web_friendbench_route_test.mjs build/web                  # ?friendbench=1 dev page vs challenge links (routing)
 node tools/web_sharetest_page_test.mjs build/web                   # ?sharetest=1 dev page: WhatsApp hand-off test links (web/share_test.js)
 node tools/web_share_options_test.mjs build/web                    # CHALLENGE READY: SEND ON WHATSAPP (wa.me, new tab), MORE WAYS TO SHARE, COPY LINK

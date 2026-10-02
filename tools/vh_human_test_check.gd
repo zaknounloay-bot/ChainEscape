@@ -95,12 +95,15 @@ func _run() -> void:
 	_check(t2._results_text.text.contains("Group "), "results after the last puzzle: the comparison by group")
 	t2.reset_test()
 	_check(t2.state["index"] == 0 and t2.state["results"].is_empty(), "START OVER clears the results")
+	t2.play.end()
+	t2.queue_free()
+	await _frames(2)
+	await _test2()
 	# Nothing else touched.
 	_check(not FileAccess.file_exists(PROGRESS_PATH), "no Classic save written")
 	var fresh := SocialPlay.new()
 	_check(fresh.max_hints == 2 and fresh.max_hammers == 2, "the game's SocialPlay keeps SHOW A MOVE x2 / HAMMER x2")
 	fresh.free()
-	t2.play.end()
 	print("VH HUMAN TEST CHECK: %s (%d checks)" % ["PASSED" if failures.is_empty() else "FAILED", passed + failures.size()])
 	for f in failures:
 		print("  FAIL: " + f)
@@ -165,3 +168,48 @@ func _wait(sec: float) -> void:
 func _frames(n: int) -> void:
 	for i in n:
 		await get_tree().process_frame
+
+
+## Test 2 (?vhtest2=1): its own boards, question and state file.
+func _test2() -> void:
+	var path2: String = VhHumanTest.TESTS["vhtest2"]["state"]
+	DirAccess.remove_absolute(ProjectSettings.globalize_path(path2))
+	var state1 := FileAccess.get_file_as_string(VhHumanTest.STATE_PATH)
+	var data = JSON.parse_string(FileAccess.get_file_as_string(VhHumanTest.TESTS["vhtest2"]["data"]))
+	var counts := {}
+	var originals := {}
+	for n in [42, 44, 47, 51, 55, 163, 165, 169, 194]:
+		var json = JSON.parse_string(FileAccess.get_file_as_string(LevelManager.LEVEL_PATH % n))
+		originals[PuzzleDefinition.from_level(LevelManager.parse_level(json, n)).fingerprint()] = n
+	for b in data["boards"]:
+		counts[b["variant"]] = counts.get(b["variant"], 0) + 1
+		var def := PuzzleDefinition.from_dict(b["puzzle"])
+		_check(def != null and def.fingerprint() == b["fingerprint"] and def.verify() and FriendGenerator.mechanics_ok(def, FriendGenerator.VERY_HARD)
+			and not def.to_json().contains("$") and not originals.has(def.fingerprint()),
+			"test 2 %s: exact, Solver-valid, arrows + clockwise spinners only, no reward marker, not shown as the original level" % b["id"])
+	_check(counts == {"B": 5, "D": 5, "E": 4}, "test 2: B 5, D 5, E 4 (%s)" % str(counts))
+	var t := VhHumanTest.new("vhtest2")
+	add_child(t)
+	await _frames(3)
+	_check(t.test == "vhtest2" and t.total() == 14 and _visible_text(t).contains("VERY HARD TEST 2"), "test 2 page: 14 puzzles, its own title")
+	_check(not _visible_text(t).contains("Classic") and not _visible_text(t).contains("Level") and not _visible_text(t).contains("Group"),
+		"test 2 intro never names a source")
+	t.start_next()
+	await _frames(2)
+	_check(t.play._title.text == "PUZZLE 1 / 14" and t.play._chip.text == "VERY HARD" and t.play._hint.badge_text == "1" and t.play._hammer.badge_text == "1",
+		"test 2 puzzle: 'PUZZLE 1 / 14', 'VERY HARD', SHOW A MOVE x1, HAMMER x1")
+	await _solve(t.play)
+	await _wait(1.3)
+	t.rate(2)
+	_check(_visible_text(t).contains("Was it immediately obvious which") and _visible_text(t).contains("block you could start with?"),
+		"test 2 asks 'Was it immediately obvious which block you could start with?'")
+	t.think("NO")
+	await _frames(2)
+	var r: Dictionary = t.state["results"][0]
+	_check(r["start_obvious"] == "NO" and not r.has("think_first") and r["rating"] == "HARD" and r["completed"], "test 2 records start_obvious")
+	_check(FileAccess.file_exists(path2) and FileAccess.get_file_as_string(VhHumanTest.STATE_PATH) == state1, "test 2 keeps its own state file (test 1's untouched)")
+	var exported = JSON.parse_string(t.results_json())
+	_check(exported["test"] == "vhtest2" and exported["q2_key"] == "start_obvious", "test 2 results JSON names the test and the question")
+	t.play.end()
+	t.queue_free()
+	await _frames(2)

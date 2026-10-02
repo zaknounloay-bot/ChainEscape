@@ -88,6 +88,39 @@ try {
   check(external.length === 0, 'no request left the page (no backend): ' + external.slice(0, 3).join(' '));
   check(errors.length === 0, 'no page errors ' + errors.join(' | '));
   await context.close();
+  // Test 2 (?vhtest2=1): its own 14 boards and question, still no network.
+  const c3 = await browser.newContext({ viewport: { width: W, height: H }, deviceScaleFactor: 1, isMobile: true, hasTouch: true });
+  const p3 = await c3.newPage();
+  const ext3 = [];
+  p3.on('request', (r) => { if (!r.url().startsWith(`http://127.0.0.1:${PORT}/`)) ext3.push(r.url()); });
+  await p3.addInitScript(() => { window.ceTestHooks = true; });
+  const cdp3 = await c3.newCDPSession(p3);
+  const t3 = async (pt, after = 700) => {
+    await cdp3.send('Input.dispatchTouchEvent', { type: 'touchStart', touchPoints: [{ x: pt[0] * W, y: pt[1] * H, id: 1 }] }); await sleep(80);
+    await cdp3.send('Input.dispatchTouchEvent', { type: 'touchEnd', touchPoints: [] }); await sleep(after);
+  };
+  await p3.goto(`http://127.0.0.1:${PORT}/index.html?v=7&vhtest2=1`);
+  const vt3 = () => p3.evaluate(() => window.chainEscapeVhTest || null).catch(() => null);
+  const pl3 = () => p3.evaluate(() => window.chainEscapeSocialPlay || null).catch(() => null);
+  v = await waitFor(vt3, (v) => v.screen === 'INTRO' && v.buttons.Start, 'test 2 intro', 120000);
+  await sleep(800);
+  check(v.total === 14, 'test 2 (?v=7&vhtest2=1): 14 puzzles');
+  await t3(v.buttons.Start, 1500);
+  for (let i = 0; i < 80; i++) {
+    const p = await waitFor(pl3, (p) => p.completed || (p.active && p.next && p.next.length === 2), 'test 2 next move');
+    if (p.completed) break;
+    await t3(p.next, 450);
+  }
+  v = await waitFor(vt3, (v) => v.screen === 'RATE' && v.buttons.Rate_HARD, 'test 2 rate', 15000);
+  await t3(v.buttons.Rate_MEDIUM, 700);
+  v = await waitFor(vt3, (v) => v.screen === 'THINK' && v.buttons.Think_YES, 'test 2 question', 5000);
+  const q = await p3.evaluate(() => document.body.innerText).catch(() => '');
+  await t3(v.buttons.Think_YES, 1500);
+  v = await waitFor(vt3, (v) => v.results === 1, 'test 2 result', 10000);
+  check(v.results === 1, 'test 2: solved by real touches, rated, "obvious start" answered, puzzle 2 next');
+  if (shots) { fs.mkdirSync(shots, { recursive: true }); await p3.screenshot({ path: path.join(shots, 'V5_test2_next.png') }); }
+  check(ext3.length === 0, 'test 2: no request left the page');
+  await c3.close();
   // Without ?vhtest the normal game opens (title).
   const c2 = await browser.newContext({ viewport: { width: W, height: H }, isMobile: true, hasTouch: true });
   const p2 = await c2.newPage();

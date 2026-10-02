@@ -48,6 +48,11 @@ scheduled beyond "next".
 
 **Phase 3d:** Locks rejected for production (audit approved). A blind development-only human test (`?vhtest=1`, `docs/vh_human_test.md`) compares current VERY HARD with offline heuristic-selected, opening-constrained boards (arrows + clockwise spinners only), with SHOW A MOVE x1 / HAMMER x1. Counter-clockwise spinners are the next controlled experiment only if those boards still feel too easy to people.
 
+**Phase 3e:**
+- Blind test 1: 0 of 30 rated VERY HARD.
+- The Classic topology audit and blind test 2 (`docs/vh_human_test2.md`) test whether board structure (density, depth, visual search) is the missing ingredient.
+- Mixed clockwise + counter-clockwise spinners follow only if it is not.
+
 ## Next product phase (after phase 3 is frozen): COMPETITIVE CHALLENGE
 
 The likely first step is **asynchronous competition on the exact same stored challenge**. The exact-board architecture already built (one immutable `PuzzleDefinition` per challenge, rebuilt identically on every device) is what makes this possible: everyone plays the same board.

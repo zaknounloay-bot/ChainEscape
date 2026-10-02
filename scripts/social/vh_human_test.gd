@@ -16,15 +16,32 @@ extends CanvasLayer
 ##
 ## Assistance for this test (VERY HARD candidate): UNDO x3, SHOW A MOVE x1,
 ## HAMMER x1, RESTART; reset on every RESTART, as in the game.
+##
+## Two tests share this page (each with its own board file, state file and
+## second question):
+##   ?vhtest=1   test 1 (A current VERY HARD / B heuristic-selected / C locks)
+##   ?vhtest2=1  test 2 (B strongest Friend / D pure Classic / E flattened
+##               late-Classic geometry), second question: "Was it
+##               immediately obvious which block you could start with?"
 
 const PARAM := "vhtest"
 const DATA_PATH := "res://data/dev/vh_human_test.json"
 const STATE_PATH := "user://vh_human_test_state.json"
+const TESTS := {
+	"vhtest": {"data": DATA_PATH, "state": STATE_PATH, "title": "VERY HARD TEST\n(DEVELOPMENT)",
+		"q2": "Did you have to stop and think\nbefore your first move?", "q2_key": "think_first", "q2_label": "stopped to think",
+		"ls": "chain_escape_vhtest_state"},
+	"vhtest2": {"data": "res://data/dev/vh_human_test2.json", "state": "user://vh_human_test2_state.json", "title": "VERY HARD TEST 2\n(DEVELOPMENT)",
+		"q2": "Was it immediately obvious which\nblock you could start with?", "q2_key": "start_obvious", "q2_label": "start obvious",
+		"ls": "chain_escape_vhtest2_state"},
+}
 const RATINGS := ["EASY", "MEDIUM", "HARD", "VERY HARD"]
 const ACCENT := Color("#1A9FE6")
 
 enum Screen { INTRO, PLAYING, RATE, THINK, RESULTS }
 
+var test := PARAM
+var _cfg: Dictionary = TESTS[PARAM]
 var boards: Dictionary = {}  # id -> record (variant, puzzle, metrics)
 var state: Dictionary = {}  # order, index, results
 var screen: int = Screen.INTRO
@@ -44,23 +61,34 @@ var _rate_title: Label
 
 ## Checked at launch like FriendBench (before a shared-challenge link).
 static func requested() -> bool:
-	if "--" + PARAM in OS.get_cmdline_user_args():
-		return true
+	return requested_test() != ""
+
+
+## "vhtest2", "vhtest" or "" (not asked for).
+static func requested_test() -> String:
+	for key in ["vhtest2", "vhtest"]:
+		if "--" + key in OS.get_cmdline_user_args():
+			return key
 	if not OS.has_feature("web"):
-		return false
+		return ""
 	var loc := JavaScriptBridge.get_interface("location")
 	if loc == null:
-		return false
+		return ""
 	var where := (str(loc.search) + str(loc.hash)).to_lower()
-	return where.contains(PARAM + "=1") or where.contains(PARAM + "=true")
+	for key in ["vhtest2", "vhtest"]:
+		if where.contains(key + "=1") or where.contains(key + "=true"):
+			return key
+	return ""
 
 
-func _init() -> void:
+func _init(p_test: String = PARAM) -> void:
 	layer = 30  # over everything (SocialPlay is layer 5)
+	test = p_test if TESTS.has(p_test) else PARAM
+	_cfg = TESTS[test]
 
 
 func _ready() -> void:
-	var data = JSON.parse_string(FileAccess.get_file_as_string(DATA_PATH))
+	var data = JSON.parse_string(FileAccess.get_file_as_string(_cfg["data"]))
 	if typeof(data) == TYPE_DICTIONARY:
 		_assist = data.get("assist", _assist)
 		for b in data.get("boards", []):
@@ -143,7 +171,7 @@ func rate(i: int) -> void:
 
 
 func think(answer: String) -> void:
-	_current["think_first"] = answer
+	_current[_cfg["q2_key"]] = answer
 	play.end()
 	state["results"].append(_current.duplicate())
 	state["index"] = int(state["index"]) + 1
@@ -162,10 +190,22 @@ func reset_test() -> void:
 # --- State (this file only) -------------------------------------------------------------
 
 func _load_state() -> void:
-	var parsed = JSON.parse_string(FileAccess.get_file_as_string(STATE_PATH)) if FileAccess.file_exists(STATE_PATH) else null
-	if typeof(parsed) == TYPE_DICTIONARY and parsed.get("order", []).size() == boards.size() \
-			and parsed["order"].all(func(id): return boards.has(str(id))):
-		state = parsed
+	# The file, and on the Web its synchronous localStorage mirror (this
+	# test's own key, as the Classic save does for its own): the copy with
+	# more answers wins, so closing Safari right after a rating loses nothing.
+	var path: String = _cfg["state"]
+	var texts := [FileAccess.get_file_as_string(path) if FileAccess.file_exists(path) else ""]
+	if OS.has_feature("web"):
+		texts.append(WebBridge.ls_get(_cfg["ls"]))
+	var best = null
+	for t in texts:
+		var parsed = JSON.parse_string(t) if t != "" else null
+		if typeof(parsed) == TYPE_DICTIONARY and parsed.get("order", []).size() == boards.size() \
+				and parsed["order"].all(func(id): return boards.has(str(id))) \
+				and (best == null or parsed.get("results", []).size() > best.get("results", []).size()):
+			best = parsed
+	if best != null:
+		state = best
 		state["index"] = int(state["index"])
 	else:
 		_new_order()
@@ -187,16 +227,19 @@ func _new_order() -> void:
 
 
 func _save_state() -> void:
-	var f := FileAccess.open(STATE_PATH, FileAccess.WRITE)
+	var text := JSON.stringify(state)
+	var f := FileAccess.open(_cfg["state"], FileAccess.WRITE)
 	if f:
-		f.store_string(JSON.stringify(state))
+		f.store_string(text)
 		f.close()
+	if OS.has_feature("web"):
+		WebBridge.ls_set(_cfg["ls"], text)
 
 
 ## Everything recorded, plus a per-variant summary (variants are only
 ## named here, after every puzzle was played).
 func results_json() -> String:
-	return JSON.stringify({"format": "ce-vh-human-results", "v": 1, "started": state.get("started", ""),
+	return JSON.stringify({"format": "ce-vh-human-results", "v": 1, "test": test, "q2_key": _cfg["q2_key"], "started": state.get("started", ""),
 		"device": OS.get_name(), "assist": _assist, "results": state["results"], "summary": summary()})
 
 
@@ -205,7 +248,7 @@ func summary() -> Dictionary:
 	for r in state["results"]:
 		var v: String = r["variant"]
 		if not out.has(v):
-			out[v] = {"n": 0, "solved": 0, "time_s": [], "rating": [], "very_hard": 0, "think_yes": 0, "show_a_move": 0, "hammer": 0, "restarts": 0, "first_move_s": []}
+			out[v] = {"n": 0, "solved": 0, "time_s": [], "rating": [], "very_hard": 0, "q2_yes": 0, "show_a_move": 0, "hammer": 0, "restarts": 0, "first_move_s": []}
 		var s: Dictionary = out[v]
 		s["n"] += 1
 		s["solved"] += 1 if r["completed"] else 0
@@ -213,7 +256,7 @@ func summary() -> Dictionary:
 			s["time_s"].append(snappedf(r["time_ms"] / 1000.0, 0.1))
 		s["rating"].append(RATINGS.find(r["rating"]) + 1)
 		s["very_hard"] += 1 if r["rating"] == "VERY HARD" else 0
-		s["think_yes"] += 1 if r.get("think_first", "") == "YES" else 0
+		s["q2_yes"] += 1 if r.get(_cfg["q2_key"], "") == "YES" else 0
 		s["show_a_move"] += r["show_a_move"]
 		s["hammer"] += r["hammer"]
 		s["restarts"] += r["restarts"]
@@ -244,8 +287,8 @@ func _summary_text() -> String:
 	keys.sort()
 	for v in keys:
 		var s: Dictionary = sm[v]
-		lines.append("Group %s: %d played, %d solved, median %ss, rated %.1f / 4, VERY HARD x%d, stopped to think x%d" % [
-			v, s["n"], s["solved"], str(s["median_time_s"]), s["avg_rating_1to4"], s["very_hard"], s["think_yes"]])
+		lines.append("Group %s: %d played, %d solved, median %ss, rated %.1f / 4, VERY HARD x%d, %s x%d" % [
+			v, s["n"], s["solved"], str(s["median_time_s"]), s["avg_rating_1to4"], s["very_hard"], _cfg["q2_label"], s["q2_yes"]])
 	lines.append("")
 	lines.append("Tap COPY RESULTS and paste it into the chat.")
 	return "\n".join(lines)
@@ -296,7 +339,7 @@ func _build() -> void:
 	_root.add_child(bg)
 	# INTRO
 	var intro := _column()
-	intro.add_child(_label("VERY HARD TEST\n(DEVELOPMENT)", 40, 900))
+	intro.add_child(_label(_cfg["title"], 40, 900))
 	_intro_text = _label("", 26, 700)
 	intro.add_child(_intro_text)
 	_start = _button("START", "Start", ACCENT, Palette.WHITE)
@@ -324,7 +367,7 @@ func _build() -> void:
 	_pages[Screen.RATE] = rate_box
 	# THINK (optional)
 	var think_box := _column()
-	think_box.add_child(_label("Did you have to stop and think\nbefore your first move?", 34, 900))
+	think_box.add_child(_label(_cfg["q2"], 34, 900))
 	for a in ["YES", "NO"]:
 		var b := _button(a, "Think_%s" % a, Palette.WHITE, Palette.TEXT)
 		b.pressed.connect(func():
