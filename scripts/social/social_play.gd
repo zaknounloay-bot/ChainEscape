@@ -319,6 +319,7 @@ func toggle_hammer() -> void:
 	if hammer_armed:
 		_disarm()
 		_show_message("")
+		_publish.call_deferred()
 		return
 	if hammers_used >= MAX_HAMMERS:
 		_show_message("No Hammers left - Undo or Restart can help")
