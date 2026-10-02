@@ -924,7 +924,14 @@ func _build_share() -> VBoxContainer:
 	box.add_child(holder)
 	box.add_child(_heading("CHALLENGE READY!"))
 	box.add_child(_soft("Your Chain Escape is ready to send.", 26))
-	var share := _primary("SHARE CHALLENGE", "ShareChallenge")
+	# SEND ON WHATSAPP opens the main WhatsApp app (wa.me) with the message
+	# and link; MORE WAYS TO SHARE is the system share sheet (AirDrop,
+	# Messages, Mail...); COPY LINK copies. On the Web all three run inside
+	# the tap (page script zones).
+	var whatsapp := _primary("SEND ON WHATSAPP", "SendWhatsApp")
+	whatsapp.pressed.connect(func(): _share_pressed(false))
+	box.add_child(whatsapp)
+	var share := _secondary("MORE WAYS TO SHARE", "ShareChallenge")
 	share.pressed.connect(func(): _share_pressed(false))
 	box.add_child(share)
 	var copy := _secondary("COPY LINK", "CopyLink")
@@ -932,6 +939,8 @@ func _build_share() -> VBoxContainer:
 	box.add_child(copy)
 	_share_status = _label("", 24, ACCENT.darkened(0.15), 900)
 	_share_status.name = "ShareStatus"
+	_share_status.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+	_share_status.custom_minimum_size = Vector2(WIDTH, 0)
 	box.add_child(_share_status)
 	_share_link = _label("", 18, Palette.TEXT_SOFT, 700)
 	_share_link.name = "ShareLink"
@@ -975,10 +984,14 @@ func _share_pressed(_copy_only: bool) -> void:
 	_show_share_result("copied")
 
 
+## Neutral wording: the browser only hands the link to another app; it can
+## never know whether a message was actually sent.
 func _show_share_result(r: String) -> void:
 	match r:
+		"whatsapp":
+			_share_status.text = "OPENED WHATSAPP"
 		"shared":
-			_share_status.text = "SHARED"
+			_share_status.text = "HANDED TO THE APP YOU CHOSE"
 		"copied":
 			_share_status.text = "LINK COPIED"
 		"failed":
@@ -1050,6 +1063,7 @@ func _update_zones(defers_left: int = 0) -> void:
 			Step.MESSAGE:
 				zones.append(_zone("message", _message_card))
 			Step.SHARE:
+				zones.append(_zone("whatsapp", _steps[Step.SHARE].find_child("SendWhatsApp", true, false)))
 				zones.append(_zone("share", _steps[Step.SHARE].find_child("ShareChallenge", true, false)))
 				zones.append(_zone("copy", _steps[Step.SHARE].find_child("CopyLink", true, false)))
 	SocialWeb.set_zones(zones)

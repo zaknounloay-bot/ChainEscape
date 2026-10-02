@@ -107,6 +107,27 @@ For scale: the campaign averages 4.7 in Chapter 1, 18.2 in Chapter 3, 27.4 in Ch
     - It wins over a challenge link, even when appended to one (`…?challenge=<id>?friendbench=1`): the page script splits launch parameters on `?`, `&` and `#`.
     - Checked by `node tools/web_friendbench_route_test.mjs build/web`.
 
+### CHALLENGE READY sharing — WhatsApp fix (real-iPhone finding)
+
+**Problem found on a real iPhone:** SHARE → WhatsApp used WhatsApp's *share extension*. That extension only queues the message, and the recipient got it only once the sender next opened WhatsApp. On top of that, the game showed "SHARED" as soon as iOS reported the hand-off.
+
+**The CHALLENGE READY screen now offers:**
+1. **SEND ON WHATSAPP** (primary): opens the **main WhatsApp app** through WhatsApp's official link, `https://wa.me/?text=<message>\n<challenge link>`.
+   - The user picks a chat or group and presses Send, and the message leaves immediately.
+   - It opens as a real link in a **new tab**, inside the tap, so the game page never navigates.
+   - If WhatsApp isn't installed, WhatsApp's web page opens in that tab instead.
+   - The status shows "OPENED WHATSAPP".
+2. **MORE WAYS TO SHARE**: the unchanged system share sheet (`navigator.share`: AirDrop, Messages, Mail…). The status shows "HANDED TO THE APP YOU CHOSE".
+3. **COPY LINK**: unchanged ("LINK COPIED").
+
+The message and the link are the same as before ("I made a Chain Escape for you 🔗 Can you unlock it?" + `?challenge=<id>`). A web page can't know whether a message was actually sent, so no status claims delivery.
+
+**How the method was chosen:** on a real iPhone (`?sharetest=1`, `web/share_test.js`):
+- `wa.me` (same page or new tab): opened the main app, and the message arrived immediately.
+- `whatsapp://`: Safari asked "Open in WhatsApp?" first, so it was rejected.
+
+**Checks:** `node tools/web_share_options_test.mjs build/web`.
+
 ### Challenge a Friend phase 2 — backend / data foundation (no UI)
 
 `friend_challenge` is a real challenge type in the client and in the mock API. It uses the same table, Edge Function, share links and expiry as Photo / Message Reveal.
@@ -1713,6 +1734,7 @@ godot --headless --path . --script res://tools/friend_generator_test.gd   # Chal
 godot --headless --path . --script res://tools/friend_benchmark.gd -- --seeds=200   # Challenge a Friend: generation timing per difficulty (desktop)
 node tools/web_friendbench_route_test.mjs build/web                  # ?friendbench=1 dev page vs challenge links (routing)
 node tools/web_sharetest_page_test.mjs build/web                   # ?sharetest=1 dev page: WhatsApp hand-off test links (web/share_test.js)
+node tools/web_share_options_test.mjs build/web                    # CHALLENGE READY: SEND ON WHATSAPP (wa.me, new tab), MORE WAYS TO SHARE, COPY LINK
 godot --headless --path . res://tools/FriendChallengeApiTest.tscn    # Challenge a Friend phase 2: friend_challenge model / API vs the mock
 node tools/backend_contract_test.mjs [API_URL | --edge=<index.ts>]  # chain-escape-api contract: mock (default), real URL, or a function source under Deno
 godot --headless --path . --export-release "Web" build/web/index.html && node tools/web_audio_test.mjs   # real browser
