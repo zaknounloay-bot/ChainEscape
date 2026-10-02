@@ -292,6 +292,103 @@ func random_win_rate(playouts: int, seed: int, max_wins: int = -1) -> float:
 	return float(wins) / maxf(games, 1)
 
 
+## Share of `games` played by a LOOKAHEAD player: at every step it picks a
+## random legal move among those that do not lead to a visible dead end
+## within `depth` more moves (no legal move left while blocks remain); if
+## every move does, any legal move. A rough model of a person who looks a
+## couple of moves ahead (the random tapper looks zero moves ahead).
+## Deterministic for a given seed; the board is left as it was.
+func lookahead_win_rate(games: int, depth: int, seed: int) -> float:
+	if _alive_count == 0:
+		return 1.0
+	var rng := RandomNumberGenerator.new()
+	rng.seed = seed
+	var wins := 0
+	var done: Array[int] = []
+	for k in games:
+		done.clear()
+		while true:
+			var legal := legal_moves()
+			if legal.is_empty():
+				break
+			var ok: Array[int] = []
+			for mv in legal:
+				_do(mv)
+				if not _dead_within(depth):
+					ok.append(mv)
+				_undo_move(mv)
+			var pool: Array[int] = ok if not ok.is_empty() else legal
+			var pick: int = pool[rng.randi() % pool.size()]
+			_do(pick)
+			done.append(pick)
+		if _alive_count == 0:
+			wins += 1
+		for i in range(done.size() - 1, -1, -1):
+			_undo_move(done[i])
+	return float(wins) / maxf(games, 1)
+
+
+## Share of `games` played by a HEURISTIC player, a closer model of a
+## person who has understood the rules: a move that turns no spinner (and
+## fires no switch / rams no shell) can never spoil the board, so it plays
+## those first (any of them, at random); only when every legal move is
+## "risky" does it think, picking among the risky moves that do not lead to
+## a visible dead end within `depth` moves. Deterministic per seed.
+func heuristic_win_rate(games: int, depth: int, seed: int) -> float:
+	if _alive_count == 0:
+		return 1.0
+	var rng := RandomNumberGenerator.new()
+	rng.seed = seed
+	var wins := 0
+	var done: Array[int] = []
+	for k in games:
+		done.clear()
+		while true:
+			var legal := legal_moves()
+			if legal.is_empty():
+				break
+			var calm: Array[int] = []
+			for mv in legal:
+				if not _is_risky(mv):
+					calm.append(mv)
+			var pool: Array[int] = calm
+			if pool.is_empty():
+				for mv in legal:
+					_do(mv)
+					if not _dead_within(depth):
+						pool.append(mv)
+					_undo_move(mv)
+			if pool.is_empty():
+				pool = legal
+			var pick: int = pool[rng.randi() % pool.size()]
+			_do(pick)
+			done.append(pick)
+		if _alive_count == 0:
+			wins += 1
+		for i in range(done.size() - 1, -1, -1):
+			_undo_move(done[i])
+	return float(wins) / maxf(games, 1)
+
+
+## True if every way of playing `depth` more moves gets stuck (blocks left,
+## no legal move) - a dead end a person could see by looking ahead.
+func _dead_within(depth: int) -> bool:
+	if _alive_count == 0:
+		return false
+	var legal := legal_moves()
+	if legal.is_empty():
+		return true
+	if depth <= 0:
+		return false
+	for mv in legal:
+		_do(mv)
+		var dead := _dead_within(depth - 1)
+		_undo_move(mv)
+		if not dead:
+			return false
+	return true
+
+
 ## Best move for a hint: a legal move after which the board is still
 ## solvable. Prefers the real decisions (moves that turn spinners or fire a
 ## switch) over always-safe moves. Returns the block id to tap, or -1 if no
@@ -330,6 +427,10 @@ func analyze() -> Dictionary:
 		# several moves are legal but exactly ONE keeps the board solvable,
 		# and the average number of safe moves per step.
 		"one_safe_steps": 0, "safe_choices": 0.0,
+		# Locks (planning): steps where at least one block has a clear lane
+		# but is still LOCKED (looks free, isn't), the total of such
+		# block-steps, and the average solution step at which a lock opens.
+		"locked_free_steps": 0, "lock_wait": 0, "unlock_step": 0.0,
 	}
 	for sid in _spinner_ids:
 		m["rule_" + ["cw", "ccw", "alt", "pattern"][_rule[sid]]] += 1
@@ -367,7 +468,19 @@ func analyze() -> Dictionary:
 	var depth := 1
 	var legal_sum := 0
 	var safe_sum := 0
+	var opened := {}  # locked id -> step it opened
 	for step in solution.size():
+		var tempting := 0
+		for id in _alive.size():
+			if _alive[id] == 1 and _lock[id] >= 0:
+				if _color_count[_lock[id]] > 0:
+					if _is_free(id):
+						tempting += 1
+				elif not opened.has(id):
+					opened[id] = step
+		if tempting > 0:
+			m["locked_free_steps"] += 1
+			m["lock_wait"] += tempting
 		var traps := 0
 		var legal := legal_moves()
 		legal_sum += legal.size()
@@ -400,6 +513,8 @@ func analyze() -> Dictionary:
 	m["depth"] = depth
 	m["branching"] = snappedf(float(legal_sum) / maxf(solution.size(), 1), 0.01)
 	m["safe_choices"] = snappedf(float(safe_sum) / maxf(solution.size(), 1), 0.01)
+	if not opened.is_empty():
+		m["unlock_step"] = snappedf(opened.values().reduce(func(a, b): return a + b, 0) / float(opened.size()), 0.01)
 	# Restore the starting state.
 	for i in range(applied.size() - 1, -1, -1):
 		_undo_move(applied[i])

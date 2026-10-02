@@ -38,6 +38,14 @@ scheduled beyond "next".
 - HARD and VERY HARD now selected by human-difficulty criteria, with the same two mechanics (README, *Phase 3b patch*).
 - If real players still find VERY HARD too easy, the next candidates are Classic mechanics: colour locks, then counter-clockwise spinners. These would need a separately approved iteration (generator, PuzzleDefinition review, backend cell validation, recipient tests, readability).
 
+## Real-user findings (phase 3c real-device test, `87c92db`)
+
+**Passed:** Social tool consistency (Photo / Message and Friend Hammer, SHOW A MOVE everywhere), acceptable generation speed, immediate sharing and recipient opening.
+
+**Failed expectation:** VERY HARD still felt too easy to two real users, despite much stronger algorithmic metrics. Algorithmic metrics improved but did not predict human-perceived difficulty.
+
+**Investigation:** the existing Classic Locked Block was audited and prototyped locally (`docs/lock_prototype_audit.md`): no production change. Evidence and a recommendation are waiting for approval.
+
 ## Next product phase (after phase 3 is frozen): COMPETITIVE CHALLENGE
 
 The likely first step is **asynchronous competition on the exact same stored challenge**. The exact-board architecture already built (one immutable `PuzzleDefinition` per challenge, rebuilt identically on every device) is what makes this possible: everyone plays the same board.

@@ -107,9 +107,25 @@ For scale: the campaign averages 4.7 in Chapter 1, 18.2 in Chapter 3, 27.4 in Ch
     - It wins over a challenge link, even when appended to one (`…?challenge=<id>?friendbench=1`): the page script splits launch parameters on `?`, `&` and `#`.
     - Checked by `node tools/web_friendbench_route_test.mjs build/web`.
 
-### Challenge a Friend phase 3 — creator + minimal recipient (status: NOT frozen; phase 3b patch awaiting its real-device test)
+### Challenge a Friend phase 3 — creator + minimal recipient (status: NOT frozen; VERY HARD under investigation, see phase 3c)
 
 **Real-device result (`4f1a845`):** the full loop worked on real iPhones. Phone A created a HARD challenge and sent it on WhatsApp; it arrived immediately and was solved. From that phone, CHALLENGE A FRIEND made an EASY challenge for a third phone, which also arrived immediately and worked. Creator PLAY / PREVIEW, the creator, the recipient flow and WhatsApp sharing all worked well. Real-user findings and the next product direction (Competitive Challenge, fairness, live 1v1 later, personal performance) are recorded in `docs/product_roadmap.md`.
+
+#### Phase 3c — real-device results (`87c92db`) and the Locked Block investigation
+
+**Passed on real iPhones:**
+- Social tool consistency: UNDO x3, SHOW A MOVE x2, HAMMER x2, RESTART in Photo / Message and Friend; counters correct; visuals correct.
+- SHOW A MOVE in Classic, Photo / Message and Friend.
+- Generation time felt completely acceptable; sharing and recipient opening were immediate; exact-board sharing kept working.
+
+**Failed product expectation:** **VERY HARD still felt too easy** to two real users (one solved it very quickly), despite much stronger algorithmic metrics (random tapper 22% → 3%). The algorithmic difficulty metrics improved but did not predict human-perceived difficulty.
+
+**Investigation (audit + local prototype only; no production, contract or backend change):** `docs/lock_prototype_audit.md`.
+- The Classic colour lock, as it can be generated into Friend boards, adds waiting rather than decisions. A rule-aware "heuristic player" (spinner-free moves first, thinks only at forced spinner moves) wins 43% of VERY HARD + Locks boards vs 31% of today's VERY HARD.
+- That heuristic player also explains the real-device result: it wins 31–38% of today's VERY HARD, which the random tapper (2%) did not show.
+- The two free Hammers ease VERY HARD a lot (lookahead player 4% → 26–30% after two smashes).
+- Recommendation (waiting for approval): an offline-selected VERY HARD pool chosen by the heuristic player (≤ 15% reachable with arrows + clockwise spinners alone), VERY HARD Hammer x1, and a quick dev-only human check first. Counter-clockwise spinners are the more promising mechanic for later, not Locks.
+- Tools: `tools/lock_prototype_bench.gd`, `tools/LockPrototypeCheck.tscn`; new additive Solver measurements `lookahead_win_rate`, `heuristic_win_rate` and lock counters in `analyze()`.
 
 #### Phase 3b — real-device results (`5889e02`) and why phase 3 was not frozen
 
@@ -1896,6 +1912,8 @@ node tools/web_recipient_test.mjs build/web                          # Social 0.
 godot --headless --path . --script res://tools/friend_generator_test.gd   # Challenge a Friend: generator profiles, validation, NEW CHALLENGE, SURPRISE ME, budget
 godot --headless --path . --script res://tools/friend_benchmark.gd -- --seeds=200   # Challenge a Friend: generation timing per difficulty (desktop)
 godot --headless --path . --script res://tools/friend_benchmark.gd -- --seeds=100 --human [--old]   # HARD / VERY HARD human-difficulty comparison (new, or the phase 3 specs)
+godot --headless --path . --script res://tools/lock_prototype_bench.gd -- --n=60 [--only=A|B|C] [--proto=<name>]   # LOCK PROTOTYPE audit: HARD vs VERY HARD vs VERY HARD + Locks (never production)
+godot --headless --path . res://tools/LockPrototypeCheck.tscn         # LOCK PROTOTYPE safety: exact board, SHOW A MOVE, UNDO, RESTART, locked taps, production still refuses locks
 node tools/web_friendbench_route_test.mjs build/web                  # ?friendbench=1 dev page vs challenge links (routing)
 node tools/web_sharetest_page_test.mjs build/web                   # ?sharetest=1 dev page: WhatsApp hand-off test links (web/share_test.js)
 node tools/web_share_options_test.mjs build/web                    # CHALLENGE READY: SEND ON WHATSAPP (wa.me, new tab), MORE WAYS TO SHARE, COPY LINK

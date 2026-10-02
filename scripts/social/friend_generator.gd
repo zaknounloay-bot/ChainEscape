@@ -87,11 +87,17 @@ const GRACE_MS := 500
 const SLICE_MS := 20
 ## Allowed map tokens: a color + arrow, optionally a clockwise spinner.
 const TOKEN_RE := "^[RBGYP][\\^v<>](@)?$"
+## LOCK PROTOTYPE ONLY (benchmarks / local dev, never production): the same,
+## plus a Classic colour lock ("R>#G": red arrow, locked while any green
+## block remains). Production validation (mechanics_ok without allow_locks,
+## SocialApi, SharedChallenge, Edge Function v4) still refuses it.
+const LOCK_TOKEN_RE := "^[RBGYP][\\^v<>](@)?(#[RBGYP])?$"
 const CLASSIC_KEYS_PATH := "res://data/classic_board_keys.json"
 
 ## Generators ever created (tests: recipients never generate).
 static var created := 0
 static var _token_re: RegEx
+static var _lock_token_re: RegEx
 static var _reward_re: RegEx
 static var _classic: Dictionary = {}
 
@@ -339,8 +345,22 @@ func _human_gap(m: Dictionary, level: LevelData) -> float:
 	gap += maxf(0.0, float(h["min_one_safe"]) - m["one_safe_steps"]) * 1.5
 	gap += maxf(0.0, m["safe_choices"] - float(h["max_safe_choices"])) * 4.0
 	gap += maxf(0.0, float(h["min_decisions"]) - m["decision_points"]) * 1.0
+	# LOCK PROTOTYPE ONLY (no production spec sets these): locks that matter,
+	# i.e. blocks that look free (clear lane) but must wait for their key
+	# colour, and that open late in the solution.
+	gap += maxf(0.0, float(h.get("min_locks", 0)) - m.get("locks", 0)) * 2.0
+	gap += maxf(0.0, float(h.get("min_locked_free_steps", 0)) - m.get("locked_free_steps", 0)) * 1.0
+	gap += maxf(0.0, float(h.get("min_unlock_step", 0)) - m.get("unlock_step", 0.0)) * 0.5
 	var model := BoardModel.new()
 	model.setup(level.rows, level.columns, level.blocks)
+	# LOCK PROTOTYPE ONLY: a heuristic player (spinner-free moves first, a
+	# short lookahead at forced spinner moves; Solver.heuristic_win_rate)
+	# must rarely win. Measured only once everything else is met.
+	m["smart_win"] = -1.0
+	if h.has("max_smart") and gap == 0.0:
+		var smart := Solver.from_model(model).heuristic_win_rate(int(h.get("smart_games", 30)), int(h.get("smart_depth", 2)), rng_seed + evals * 17)
+		m["smart_win"] = smart
+		gap += maxf(0.0, smart - float(h["max_smart"])) * 30.0
 	var rate := Solver.from_model(model).random_win_rate(int(h["playouts"]), rng_seed + evals * 31)
 	m["random_win"] = rate
 	gap += maxf(0.0, rate - float(h["max_random"])) * 40.0
@@ -352,7 +372,7 @@ func _human_gap(m: Dictionary, level: LevelData) -> float:
 ## not one to avoid.
 func _allowed(level: LevelData) -> bool:
 	var def := PuzzleDefinition.from_level(level)
-	if not mechanics_ok(def, difficulty):
+	if not mechanics_ok(def, difficulty, _spec.get("allow_locks", false)):
 		return false
 	var key := board_key(def)
 	return not _avoid.has(key) and not is_classic_board(def)
@@ -375,7 +395,7 @@ func _finish() -> void:
 	# Rebuilt from the data alone, as a recipient would: must verify.
 	var rebuilt := PuzzleDefinition.from_json(def.to_json())
 	if rebuilt == null or rebuilt.fingerprint() != def.fingerprint() or not rebuilt.verify() \
-			or not mechanics_ok(rebuilt, difficulty):
+			or not mechanics_ok(rebuilt, difficulty, _spec.get("allow_locks", false)):
 		error = "verification"
 		return
 	puzzle = rebuilt
@@ -395,14 +415,16 @@ func _finish() -> void:
 ## Only the mechanics this difficulty may use: plain arrows, and clockwise
 ## spinners above EASY. (No locks, hidden, rules, switches, gates, armor,
 ## rewards.)
-static func mechanics_ok(def: PuzzleDefinition, d: String) -> bool:
+static func mechanics_ok(def: PuzzleDefinition, d: String, allow_locks: bool = false) -> bool:
 	if _token_re == null:
 		_token_re = RegEx.create_from_string(TOKEN_RE)
+		_lock_token_re = RegEx.create_from_string(LOCK_TOKEN_RE)
+	var re := _lock_token_re if allow_locks else _token_re
 	for row in def.map:
 		for t in String(row).split(" ", false):
 			if t == ".":
 				continue
-			var m := _token_re.search(t)
+			var m := re.search(t)
 			if m == null or (d == EASY and m.get_string(1) != ""):
 				return false
 	return true
