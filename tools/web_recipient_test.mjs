@@ -123,6 +123,18 @@ try {
   await s.tap(r.buttons.Play, 1200);
   pv = await s.waitFor(s.play, (v) => v.active && v.mode === 'recipient', 'play');
   check(pv.difficulty === 'medium' && pv.blocks === 12, 'J: PLAY = the exact shared board (12 blocks)');
+  const fp0 = pv.fingerprint;
+  // Phase 3b: the same free Social tools as Challenge a Friend (HAMMER x2).
+  check(pv.buttons.Undo && pv.buttons.Hint && pv.buttons.Hammer && pv.buttons.Restart && pv.hammers_left === 2 && !pv.hammer_armed,
+    'photo / message play: UNDO, SHOW A MOVE, HAMMER x2, RESTART');
+  await s.tap(pv.buttons.Hammer, 600);
+  pv = await s.waitFor(s.play, (v) => v.hammer_armed && v.next && v.next.length === 2, 'armed + next');
+  await s.tap(pv.next, 900);  // smashing the Solver's next block is always allowed
+  pv = await s.play();
+  check(pv.hammers_left === 1 && pv.blocks === 11 && !pv.hammer_armed, 'photo / message: a real-touch smash, Hammer x1 left');
+  await s.tap(pv.buttons.Restart, 900);
+  pv = await s.play();
+  check(pv.hammers_left === 2 && pv.blocks === 12 && pv.fingerprint === fp0, 'photo / message RESTART: same board, Hammer x2 again');
   const fp = pv.fingerprint;
   await s.shot('web_play');
   pv = await s.solve();
@@ -138,7 +150,7 @@ try {
   check(pv.cta_pulses === 1, 'R: and never again');
   await s.tap(pv.buttons.PlayAgain, 1200);
   pv = await s.waitFor(s.play, (v) => v.active && !v.revealed, 'play again');
-  check(pv.plays === 2 && pv.blocks === 12 && pv.fingerprint === fp, 'P: PLAY AGAIN = the same puzzle');
+  check(pv.plays === 3 && pv.blocks === 12 && pv.fingerprint === fp, 'P: PLAY AGAIN = the same puzzle (play 3: one RESTART above)');
   pv = await s.solve();
   await sleep(1500);
   pv = await s.play();

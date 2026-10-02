@@ -172,8 +172,12 @@ func _test_play_matrix() -> void:
 		_check(play.is_active() and play.challenge.difficulty == cs[3], "%s: challenge playing" % name)
 		_check(play._title.text == "REVEAL CHALLENGE" and play._chip.text == cs[3].to_upper(), "%s: labelled REVEAL CHALLENGE / %s (no level number)" % [name, cs[3].to_upper()])
 		_check(play.model.block_count() == play.challenge.puzzle.block_count(), "%s: the board is the challenge's puzzle" % name)
-		var hammer: Control = play._bottom.find_child("Hammer", false, false)
-		_check(hammer == null or not hammer.is_visible_in_tree(), "%s: no Hammer / hearts in Photo / Message play" % name)
+		# Phase 3b: the same free Social tools as Challenge a Friend.
+		_check(play._undo.is_visible_in_tree() and play._undo.badge_text == "3" and play._hint.is_visible_in_tree() and play._hint.text == "SHOW A MOVE"
+			and play._hint.badge_text == "2" and play._restart.is_visible_in_tree(), "%s: UNDO x3, SHOW A MOVE x2, RESTART" % name)
+		_check(play._hammer.is_visible_in_tree() and play._hammer.text == "HAMMER" and play._hammer.badge_text == "2"
+			and play._hammer.modulate.a == 1.0 and not play._hammer.disabled, "%s: HAMMER x2, active from the start (free)" % name)
+		_check(not _visible_text(play).contains("COINS") and not _visible_text(play).contains("HEART"), "%s: no coins or hearts in Social play" % name)
 		if k == 0:
 			await _test_real_taps()
 			await _shot("p1_play_easy")
@@ -262,18 +266,93 @@ func _test_play_again() -> void:
 	await _create_and_play("Again!", "", "hard", 400)
 	var fp := play.loaded_fingerprint
 	var first := _blocks(play.model)
+	await _test_hammer(fp)
+	_check(play.loaded_fingerprint == fp and _blocks(play.model) == first, "after the Hammer test RESTART: the exact same puzzle")
+	# Smash once, then solve: the reveal still works.
+	await _tap(play._hammer)
+	play.tap_block(_safe_block())
+	await _wait(0.5)
+	_check(play.hammers_used == 1, "a Hammer used before solving")
 	await _solve()
 	await _wait(2.4)
 	_check(play.reveal.visible, "hard challenge solved and revealed")
 	await _tap(play.reveal._again)
 	await _wait(0.4)
-	_check(play.is_active() and not play.reveal.visible and play.plays == 2, "PLAY AGAIN starts over")
+	_check(play.is_active() and not play.reveal.visible and play.plays == 3, "PLAY AGAIN starts over")
+	_check(play.hammers_used == 0 and not play.hammer_armed and play._hammer.badge_text == "2" and play._hint.badge_text == "2"
+		and play._undo.badge_text == "3", "PLAY AGAIN: HAMMER x2, SHOW A MOVE x2, UNDO x3 again")
 	_check(play.loaded_fingerprint == fp and _blocks(play.model) == first, "PLAY AGAIN rebuilt the exact same puzzle from its data")
 	await _shot("p5_play_again")
 	await _solve()
 	await _wait(2.4)
 	_check(play.reveal.visible, "solved again, revealed again")
 	await _tap(play.reveal._back)
+
+
+## Photo / Message Reveal HAMMER x2 (phase 3b): the Social Hammer, free and
+## per attempt, exactly as in Challenge a Friend.
+func _test_hammer(fp: String) -> void:
+	var file_before := FileAccess.get_file_as_string(PROGRESS_PATH)
+	var econ := _snapshot()
+	await _tap(play._hammer)
+	_check(play.hammer_armed and play.board.hammer_mode and play._hammer.text == "CANCEL", "photo HAMMER arms (button reads CANCEL)")
+	await _shot("p4b_hammer_armed")
+	await _tap(play._hammer)
+	_check(not play.hammer_armed and play.hammers_used == 0 and play._hammer.badge_text == "2", "photo CANCEL: nothing spent")
+	var unsafe := -1
+	for id in play.model.blocks.keys():
+		if not Solver.hammer_safe(play.model, id):
+			unsafe = id
+			break
+	print("[SocialPlayTest] refused-smash case: %s" % ("block %d" % unsafe if unsafe != -1 else "none on this board"))
+	if unsafe != -1:
+		await _tap(play._hammer)
+		var before := _blocks(play.model)
+		play.tap_block(unsafe)
+		await _wait(0.3)
+		_check(_blocks(play.model) == before and play.hammer_armed and play.hammers_used == 0 and play._hammer.badge_text == "2",
+			"photo: an unsafe smash is refused and costs nothing (still armed)")
+		await _tap(play._hammer)
+	# Smash 1: the board changes exactly as BoardModel.remove says.
+	await _tap(play._hammer)
+	var sid := _safe_block()
+	var expected := BoardModel.new()
+	expected.setup(play.model.rows, play.model.columns, play.model.snapshot())
+	expected.remove(sid)
+	play.tap_block(sid)
+	await _wait(0.5)
+	_check(not play.model.blocks.has(sid) and var_to_str(play.model.snapshot()) == var_to_str(expected.snapshot()), "photo smash removes the block (Classic rule)")
+	_check(play.hammers_used == 1 and play._hammer.badge_text == "1" and Solver.from_model(play.model).is_solvable(), "photo Hammer 2 -> 1, still solvable")
+	await _tap(play._hammer)
+	play.tap_block(_safe_block())
+	await _wait(0.5)
+	_check(play.hammers_used == 2 and play._hammer.badge_text == "0" and play._hammer.modulate.a < 1.0, "photo Hammer 1 -> 0")
+	await _tap(play._hammer)
+	_check(not play.hammer_armed and play._message.text.begins_with("No Hammers left"), "photo: no third Hammer")
+	_check(play.challenge.puzzle.fingerprint() == fp and play.loaded_fingerprint == fp, "photo: the stored PuzzleDefinition is untouched")
+	await _tap(play._restart)
+	_check(play.hammers_used == 0 and play._hammer.badge_text == "2" and not play.hammer_armed and play.loaded_fingerprint == fp,
+		"photo RESTART: same puzzle, HAMMER x2 again")
+	_check(_snapshot() == econ and FileAccess.get_file_as_string(PROGRESS_PATH) == file_before,
+		"photo Hammer: Classic coins, owned Hammers / boosters, progress and save untouched")
+
+
+## Every visible Label / Button text under `root`.
+func _visible_text(root: Node) -> String:
+	var out := []
+	for n in root.find_children("*", "", true, false):
+		if (n is Label or n is Button) and n.is_visible_in_tree():
+			out.append(n.text)
+	return "\n".join(out)
+
+
+func _safe_block() -> int:
+	var ids := play.model.blocks.keys()
+	ids.sort()
+	for id in ids:
+		if Solver.hammer_safe(play.model, id):
+			return id
+	return -1
 
 
 ## N (through the real player): creator's instance -> JSON -> destroyed ->

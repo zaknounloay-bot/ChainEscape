@@ -107,15 +107,64 @@ For scale: the campaign averages 4.7 in Chapter 1, 18.2 in Chapter 3, 27.4 in Ch
     - It wins over a challenge link, even when appended to one (`…?challenge=<id>?friendbench=1`): the page script splits launch parameters on `?`, `&` and `#`.
     - Checked by `node tools/web_friendbench_route_test.mjs build/web`.
 
-### Challenge a Friend phase 3 — creator + minimal recipient (status: real-device loop PASSED; finishing patch awaiting its real-device test; NOT frozen)
+### Challenge a Friend phase 3 — creator + minimal recipient (status: NOT frozen; phase 3b patch awaiting its real-device test)
 
 **Real-device result (`4f1a845`):** the full loop worked on real iPhones. Phone A created a HARD challenge and sent it on WhatsApp; it arrived immediately and was solved. From that phone, CHALLENGE A FRIEND made an EASY challenge for a third phone, which also arrived immediately and worked. Creator PLAY / PREVIEW, the creator, the recipient flow and WhatsApp sharing all worked well. Real-user findings and the next product direction (Competitive Challenge, fairness, live 1v1 later, personal performance) are recorded in `docs/product_roadmap.md`.
+
+#### Phase 3b — real-device results (`5889e02`) and why phase 3 was not frozen
+
+**Passed on real iPhones:**
+- NEW CHALLENGE returns to the difficulty choice, and nothing is generated until a difficulty is picked.
+- SHOW A MOVE in Classic and in Friend Challenge: the right block pulses and nothing moves.
+- Friend HAMMER x2: free, active, behaves correctly.
+- HARD sharing was immediate, and the exact same HARD board appeared on two different iPhones. Different local themes did not affect the board.
+- Sharing and the recipient flow kept working.
+
+**New findings (so phase 3 was NOT frozen at `5889e02`):**
+- **HARD felt too easy** to both testers.
+- **VERY HARD felt clearly too easy** to both testers.
+- **Photo / Message Reveal had no Hammer**, unlike Friend Challenge. The Social tool set should be the same everywhere.
+
+#### Phase 3b patch
+
+- **One free Social tool set** for Photo / Message Reveal and Challenge a Friend alike: **UNDO x3, SHOW A MOVE x2, HAMMER x2, RESTART**. Photo / Message now uses the same SocialPlay Hammer that was validated in Friend Challenge (no second implementation): active from the start, CANCEL while armed, an unsafe smash is refused and costs nothing, RESTART / PLAY AGAIN give x2 again, the stored PuzzleDefinition is never touched, and nothing reaches the Classic economy, boosters or save.
+- **HARD and VERY HARD are now chosen for difficulty to a person**, with the same two mechanics (plain arrows + clockwise spinners). EASY and MEDIUM are unchanged.
+
+**How (FriendGenerator):** the Solver score mostly grows with board size and solution length, so for HARD and VERY HARD it is now only a sanity floor. A board must also meet *human* criteria, measured with the existing Solver:
+
+| Criterion | What it measures | HARD | VERY HARD |
+|---|---|---|---|
+| Free blocks at the start | an easy way in | ≤ 4 | ≤ 3 |
+| One-safe-move steps | steps where several blocks can move but only one keeps the board solvable | ≥ 2 | ≥ 4 |
+| Safe choices per step (average) | "tap anything that is free" | ≤ 2.5 | ≤ 1.9 |
+| Decision steps | steps where a wrong (spinner-turning) move exists | ≥ 6 | ≥ 8 |
+| Random tapper clears | share of random-tap games that still win (`Solver.random_win_rate`; 48 / 40 games) | 6–25 % | ≤ 5 % |
+| Solver score floor | sanity only | ≥ 20 | ≥ 28 |
+| Board | | 6×6, 17–20 blocks, 4 spinners | 6×6, 17–20 blocks, 5–6 spinners |
+
+- The two random-tapper windows do not overlap, so VERY HARD is always harder than HARD on that measure. HARD sits clearly above MEDIUM, but below VERY HARD.
+- **Search:** the hill-climb runs on cheap signals (free blocks at the start, one solvability check, a 12–16 game random-tapper estimate that stops early on clearly easy boards). Only a board that passes them gets the full Solver analysis and the longer random-tapper measurement. Time cap 1.5 s (+0.5 s grace, as before), so a challenge never takes more than about 2 s to generate. At the cap, the closest board within tolerance is used (`accept_gap`: about one criterion slightly missed).
+- **New Solver measurements** (additive; no existing value changed): `one_safe_steps` and `safe_choices` in `analyze()`, and `random_win_rate(games, seed, max_wins)`.
+- **No change:** mechanics, PuzzleDefinition, sharing, recipient reconstruction, the backend (still arrows + clockwise spinners only).
+
+**OLD vs NEW** (100 seeds each, product time caps, every result re-measured independently with a 300-game random tapper; `godot --headless --path . --script res://tools/friend_benchmark.gd -- --seeds=100 --human [--old]`, this sandbox, roughly iPhone speed):
+
+| | Free at start | One-safe steps | Safe choices / step | Decision steps | Depth | Blocks | Random tapper avg / median / p90 / max | Met all / within tolerance | Time p50 / p90 / max |
+|---|---|---|---|---|---|---|---|---|---|
+| HARD old | 5.8 | 1.1 | 2.67 | 8.6 | 10.7 | 18.6 | 32.9 / 30.0 / 64.7 / 98.0 % | (score only) | 114 / 494 / 789 ms |
+| **HARD new** | **3.9** | **3.1** | **1.99** | 9.6 | 11.5 | 18.3 | **10.0 / 8.3 / 22.0 / 27.7 %** | 68 % / 97 % | 1033 / 1535 / 2006 ms |
+| VERY HARD old | 7.4 | 1.9 | 3.19 | 14.7 | 11.9 | 22.0 | 21.6 / 16.3 / 47.3 / 86.3 % | (score only) | 311 / 1287 / 3024 ms |
+| **VERY HARD new** | **2.9** | **5.1** | **1.68** | 10.8 | 12.6 | 18.4 | **3.0 / 1.3 / 7.3 / 22.0 %** | 67 % / 85 % | 1230 / 2005 / 2045 ms |
+
+No run failed to produce a valid board. Desktop / sandbox timings are not phone timings; `?friendbench=1` measures on the device.
+
+**Trade-off:** HARD and VERY HARD now usually take about 1–2 s on the CREATING screen (before: mostly well under 1 s). 15 % of VERY HARD results are time-cap fallbacks that miss more than the tolerance; the independent re-measurement still puts the whole VERY HARD set at 3 % random-tapper wins on average (p90 7 %). Classic Chapter 6 is about 1 %.
 
 #### Finishing patch (real-user findings)
 
 - **NEW CHALLENGE** now returns to the difficulty choice (EASY / MEDIUM / HARD / VERY HARD / SURPRISE ME). The tap itself generates and creates nothing; picking a difficulty does, as the first time. The previous challenge's link stays valid, and BACK on the choice returns to its CHALLENGE READY unchanged. Boards shown earlier in the session are still never repeated.
 - **HINT → SHOW A MOVE**, everywhere (Classic HUD, Social play, Shop item, level card, star rule text, messages). The behaviour is unchanged (see the audit below). The pill uses font 18 and is 168 px wide so the label fits on one line next to its 150 px neighbours.
-- **HAMMER in Friend Challenge:** free, **x2 per attempt** (provisional value for testing HARD / VERY HARD, not an economy decision), active from the first frame (never the greyed "buy one" look). It uses the Classic smash rule (`Solver.hammer_safe` + `BoardModel.remove`) inside SocialPlay, with no coins, inventory, Shop or save. Photo / Message challenges are unchanged (no Hammer).
+- **HAMMER in Friend Challenge:** free, **x2 per attempt** (provisional value for testing HARD / VERY HARD, not an economy decision), active from the first frame (never the greyed "buy one" look). It uses the Classic smash rule (`Solver.hammer_safe` + `BoardModel.remove`) inside SocialPlay, with no coins, inventory, Shop or save. (Phase 3b adds the same Hammer to Photo / Message Reveal.)
 - **Friend Challenge tools** (all free, per attempt; RESTART and PLAY AGAIN start them over): UNDO x3, SHOW A MOVE x2, HAMMER x2.
 - **No change:** FriendGenerator and its profiles, Solver, backend / Edge Function v4, PuzzleDefinition, sharing, Photo / Message, Classic rules and economy.
 
@@ -132,7 +181,7 @@ For scale: the campaign averages 4.7 in Chapter 1, 18.2 in Chapter 3, 27.4 in Ch
 - **Friend boards:** only plain arrows and clockwise spinners. Removing an arrow can only free space and turn its spinner neighbours; `hammer_safe` refuses any smash after which the board would be unsolvable, so a smash can never make a Friend puzzle unsolvable (the board's own PuzzleDefinition is never touched; each attempt is rebuilt from it). On the tested HARD board one block was correctly refused.
 - **RESTART / PLAY AGAIN:** a new attempt from the exact PuzzleDefinition: both Hammers back, disarmed.
 
-#### Audit: VERY HARD (no change made; recommendation waiting for approval)
+#### Audit: VERY HARD (phase 3; implemented in phase 3b above, without new mechanics)
 
 Measured on 24 generated boards per difficulty and every Classic level in six Chapter groups. *Random tapper* = taps any free block at random (300 playouts per board); the share of boards it clears is a simple proxy for "the next move is obvious". *Single safe* = steps along the solution where several blocks can move but only one keeps the board solvable (a real decision).
 
@@ -1846,6 +1895,7 @@ godot --headless --path . res://tools/RecipientTest.tscn           # Social 0.2C
 node tools/web_recipient_test.mjs build/web                          # Social 0.2C phase 2 in real Chromium (needs python3 for the mock API)
 godot --headless --path . --script res://tools/friend_generator_test.gd   # Challenge a Friend: generator profiles, validation, NEW CHALLENGE, SURPRISE ME, budget
 godot --headless --path . --script res://tools/friend_benchmark.gd -- --seeds=200   # Challenge a Friend: generation timing per difficulty (desktop)
+godot --headless --path . --script res://tools/friend_benchmark.gd -- --seeds=100 --human [--old]   # HARD / VERY HARD human-difficulty comparison (new, or the phase 3 specs)
 node tools/web_friendbench_route_test.mjs build/web                  # ?friendbench=1 dev page vs challenge links (routing)
 node tools/web_sharetest_page_test.mjs build/web                   # ?sharetest=1 dev page: WhatsApp hand-off test links (web/share_test.js)
 node tools/web_share_options_test.mjs build/web                    # CHALLENGE READY: SEND ON WHATSAPP (wa.me, new tab), MORE WAYS TO SHARE, COPY LINK

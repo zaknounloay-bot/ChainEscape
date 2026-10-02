@@ -9,8 +9,9 @@ extends CanvasLayer
 ## history, never touches GameManager, PlayerProgress or the save, and the
 ## Classic level stays loaded (untouched) underneath - so Classic CONTINUE
 ## is exactly as it was. No hearts, coins, stars, score, boosters or level
-## numbers. Its tools are free and per attempt: UNDO x3, SHOW A MOVE x2 and,
-## in a Friend Challenge, HAMMER x2 (Restart / PLAY AGAIN start them over).
+## numbers. Its tools are free and per attempt, the same for every Social
+## challenge: UNDO x3, SHOW A MOVE x2, HAMMER x2 (Restart / PLAY AGAIN start
+## them over).
 ##
 ## Mode: CREATOR_PREVIEW (the creator plays their own challenge, 0.2B) or
 ## RECIPIENT (the person it was sent to, 0.2C phase 2). Both play the same
@@ -27,10 +28,11 @@ enum Mode { CREATOR_PREVIEW, RECIPIENT }
 ## (free, no boosters involved).
 const MAX_UNDOS := GameManager.MAX_UNDOS
 const MAX_HINTS := 2
-## Challenge a Friend only: free Hammers per attempt (provisional value for
-## real-device testing, not an economy decision). Same smash rule as the
-## Classic Hammer (Solver.hammer_safe + BoardModel.remove); no coins,
-## inventory, shop or save are involved.
+## Free Hammers per attempt, in every Social challenge (Photo / Message
+## Reveal and Challenge a Friend; provisional value for real-device testing,
+## not an economy decision). Same smash rule as the Classic Hammer
+## (Solver.hammer_safe + BoardModel.remove); no coins, inventory, shop or
+## save are involved.
 const MAX_HAMMERS := 2
 const TOP_HEIGHT := 250.0
 const BOTTOM_HEIGHT := 190.0
@@ -47,7 +49,7 @@ var chain := 0
 var undos_used := 0
 var hints_used := 0
 var hammers_used := 0
-## The next board tap smashes a block (Friend Challenge Hammer).
+## The next board tap smashes a block (Social Hammer).
 var hammer_armed := false
 ## Reveal's last button text ("" = the default for the mode).
 var back_label := ""
@@ -305,10 +307,10 @@ func hint() -> void:
 	_refresh_buttons()
 
 
-# --- Hammer (Challenge a Friend) ------------------------------------------------
+# --- Hammer (every Social challenge) -------------------------------------------
 
 func hammer_available() -> bool:
-	return challenge != null and challenge.type == SharedChallenge.TYPE_FRIEND_CHALLENGE
+	return challenge != null
 
 
 ## Arms / disarms the Hammer (the button reads CANCEL while armed).
@@ -501,7 +503,8 @@ func _build() -> void:
 	_hint.name = "Hint"
 	_hint.pressed.connect(hint)
 	_bottom.add_child(_hint)
-	# Same pill as the Classic Hammer, but always active: it is free here.
+	# Same pill as the Classic Hammer, but always active: it is free here
+	# (Photo / Message Reveal and Challenge a Friend alike).
 	_hammer = PillButton.new("HAMMER", PillButton.Icon.HAMMER, Palette.WHITE, Palette.TEXT, 20, true, true)
 	_hammer.name = "Hammer"
 	_hammer.custom_minimum_size = Vector2(150, 104)

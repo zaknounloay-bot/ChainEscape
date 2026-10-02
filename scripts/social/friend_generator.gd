@@ -51,6 +51,25 @@ const SPECS := {
 	MEDIUM: {"profile": "medium", "band": Vector2(12, 19), "accept": Vector2(11, 22.9),
 		"overrides": {"sizes": [Vector2i(5, 5)], "blocks": Vector2i(13, 15), "spinners": Vector2i(2, 3)},
 		"sample": 6, "stale": 25, "max_evals": 400, "time_cap_ms": 2000},
+	# HARD and VERY HARD (phase 3b): difficulty for a PERSON, not size. The
+	# score is only a sanity floor; the "human" criteria (see _human_gap)
+	# decide. VERY HARD: fewer free blocks, more one-safe-move steps, fewer
+	# safe choices per step, a random tapper almost never clears it. HARD
+	# sits in a window below it (not too easy, not VERY HARD).
+	HARD: {"profile": "hard", "band": Vector2(20, 999), "accept": Vector2(18, 999),
+		"overrides": {"sizes": [Vector2i(6, 6)], "blocks": Vector2i(17, 20), "spinners": Vector2i(4, 4)},
+		"human": {"max_start": 4, "min_one_safe": 2, "max_safe_choices": 2.5, "min_decisions": 6,
+			"min_random": 0.06, "max_random": 0.25, "quick_playouts": 16, "playouts": 48, "accept_gap": 3.0},
+		"sample": 3, "stale": 60, "max_evals": 4000, "time_cap_ms": 1500},
+	VERY_HARD: {"profile": "expert", "band": Vector2(28, 999), "accept": Vector2(24, 999),
+		"overrides": {"sizes": [Vector2i(6, 6)], "blocks": Vector2i(17, 20), "spinners": Vector2i(5, 6)},
+		"human": {"max_start": 3, "min_one_safe": 4, "max_safe_choices": 1.9, "min_decisions": 8,
+			"max_random": 0.05, "quick_playouts": 12, "playouts": 40, "accept_gap": 3.0},
+		"sample": 3, "stale": 60, "max_evals": 4000, "time_cap_ms": 1500},
+}
+## Phase 3 HARD / VERY HARD, kept for OLD-vs-NEW benchmarks only
+## (tools/friend_benchmark.gd --old). Never used by the game.
+const OLD_SPECS := {
 	HARD: {"profile": "hard", "band": Vector2(24, 33), "accept": Vector2(23, 35.9),
 		"overrides": {"sizes": [Vector2i(6, 6)], "blocks": Vector2i(17, 20), "spinners": Vector2i(4, 4)},
 		"sample": 6, "stale": 25, "max_evals": 400, "time_cap_ms": 2500},
@@ -58,6 +77,9 @@ const SPECS := {
 		"overrides": {"sizes": [Vector2i(6, 6), Vector2i(6, 7)], "blocks": Vector2i(20, 24), "spinners": Vector2i(5, 7)},
 		"sample": 6, "stale": 25, "max_evals": 400, "time_cap_ms": 2500},
 }
+## Benchmarks / tests only: replaces SPECS[difficulty] keys (e.g. a
+## "human" block) for generators created while set. Never used by the game.
+static var spec_override: Dictionary = {}
 ## Extra time (after the cap) to find an acceptable board, if none yet.
 const GRACE_MS := 500
 ## Work per step() call: units run until this much time has passed (a
@@ -102,6 +124,11 @@ var _stale := 0
 var _best: LevelData
 var _best_m: Dictionary = {}
 var _best_gap := INF
+## HARD / VERY HARD: human-difficulty criteria ({} = score band only).
+var _human: Dictionary = {}
+# Closest candidate by the cheap signals (fallback if none was analysed).
+var _cheap_best: LevelData
+var _cheap_best_gap := INF
 
 
 ## `avoid`: board keys (board_key()) that must not come back, e.g. the
@@ -115,8 +142,15 @@ func _init(p_difficulty: String, p_seed: int, avoid: Array = [], time_cap_ms: in
 		done = true
 		error = "difficulty"
 		return
-	_spec = SPECS[difficulty]
-	_profile = profile_for(difficulty)
+	_spec = SPECS[difficulty].duplicate(true)
+	if spec_override.has(difficulty):
+		if spec_override[difficulty].get("replace", false):
+			_spec = spec_override[difficulty].duplicate(true)
+		else:
+			_spec.merge(spec_override[difficulty], true)
+	_human = _spec.get("human", {})
+	_profile = LevelGenerator.profile(_spec["profile"])
+	_profile.merge(_spec["overrides"], true)
 	_band = _spec["band"]
 	_gen = LevelGenerator.new(rng_seed)
 	for k in avoid:
@@ -176,9 +210,17 @@ func _out_of_budget() -> bool:
 func _best_acceptable() -> bool:
 	if _best == null:
 		return false
+	return _accepts(_best_m)
+
+
+## Acceptable as this difficulty (a budget-bound fallback): the score in
+## the accept window and, with human criteria, within their tolerance.
+func _accepts(m: Dictionary) -> bool:
 	var acc: Vector2 = _spec["accept"]
-	var d: float = _best_m["difficulty"]
-	return d >= acc.x and d <= acc.y
+	var d: float = m["difficulty"]
+	if d < acc.x or d > acc.y:
+		return false
+	return _human.is_empty() or float(m.get("human_gap", 0.0)) <= float(_human.get("accept_gap", 0.0))
 
 
 ## One candidate (a fresh sample or a mutation of _cur). True = an allowed
@@ -193,11 +235,17 @@ func _unit() -> bool:
 	else:
 		_stale += 1
 		cand = _gen._mutate(_cur, _profile)
-	if cand != null:
+	if cand != null and not _human.is_empty():
+		if _try_human(cand):
+			return true
+	elif cand != null:
 		evals += 1
 		var m := _gen.evaluate(cand)
 		if m["solvable"] and not m["aborted"]:
 			var gap := _gap(m["difficulty"])
+			if not _human.is_empty():
+				m["human_gap"] = _human_gap(m, cand)
+				gap += m["human_gap"]
 			if gap < _best_gap and _allowed(cand):
 				_best = cand
 				_best_m = m
@@ -227,8 +275,77 @@ func _new_round() -> void:
 	_cur_gap = INF
 
 
+## HARD / VERY HARD: one candidate, climbed on CHEAP human signals (free
+## blocks at the start + a quick random-tapper rate, after one solvability
+## check). Only a board that already passes them gets the full Solver
+## analysis (score, one-safe steps, decisions) and a longer random-tapper
+## measurement. True = a board meeting every criterion.
+func _try_human(cand: LevelData) -> bool:
+	evals += 1
+	var model := BoardModel.new()
+	model.setup(cand.rows, cand.columns, cand.blocks)
+	var s := Solver.from_model(model)
+	var start := s.legal_moves().size()
+	if not s.is_solvable() or s.aborted:
+		return false
+	# Quick estimate: stops once the board is clearly too easy.
+	var games := int(_human.get("quick_playouts", 24))
+	var quick := s.random_win_rate(games, rng_seed + evals, int(ceil(float(_human["max_random"]) * games)) + 2)
+	var gap := maxf(0.0, start - float(_human["max_start"])) * 2.0 + maxf(0.0, quick - float(_human["max_random"])) * 40.0
+	# (A floor is checked on the full measurement only: the quick one is noisy.)
+	if gap < _cheap_best_gap:
+		_cheap_best = cand
+		_cheap_best_gap = gap
+	if gap == 0.0 and _allowed(cand):
+		var m := _gen.evaluate(cand)
+		if m["solvable"] and not m["aborted"]:
+			m["human_gap"] = _human_gap(m, cand)
+			gap = _gap(m["difficulty"]) + m["human_gap"]
+			if gap < _best_gap:
+				_best = cand
+				_best_m = m
+				_best_gap = gap
+				if gap == 0.0:
+					return true
+	if gap <= _cur_gap:
+		if gap < _cur_gap:
+			_stale = 0
+		_cur = cand
+		_cur_gap = gap
+	return false
+
+
 func _gap(d: float) -> float:
 	return absf(d - clampf(d, _band.x, _band.y))
+
+
+## How far a board is from feeling like this difficulty to a PERSON (0 =
+## meets every criterion). The Solver score above mostly grows with size and
+## solution length; these measure the choices a player actually faces:
+##   max_start         free blocks at the start (fewer = no easy way in)
+##   min_one_safe      steps where several blocks can move but only ONE
+##                     keeps the board solvable (real decisions)
+##   max_safe_choices  average number of safe moves per step (fewer = less
+##                     "tap anything that is free")
+##   min_decisions     steps where a wrong (spinner-turning) move exists
+##   max_random        share of random-tapper games that still clear the
+##                     board (Solver.random_win_rate, `playouts` games,
+##                     computed only once the other criteria are met)
+## Each shortfall is weighted to roughly one score point per unit.
+func _human_gap(m: Dictionary, level: LevelData) -> float:
+	var h := _human
+	var gap := 0.0
+	gap += maxf(0.0, m["start_moves"] - float(h["max_start"])) * 2.0
+	gap += maxf(0.0, float(h["min_one_safe"]) - m["one_safe_steps"]) * 1.5
+	gap += maxf(0.0, m["safe_choices"] - float(h["max_safe_choices"])) * 4.0
+	gap += maxf(0.0, float(h["min_decisions"]) - m["decision_points"]) * 1.0
+	var model := BoardModel.new()
+	model.setup(level.rows, level.columns, level.blocks)
+	var rate := Solver.from_model(model).random_win_rate(int(h["playouts"]), rng_seed + evals * 31)
+	m["random_win"] = rate
+	gap += maxf(0.0, rate - float(h["max_random"])) * 40.0
+	gap += maxf(0.0, float(h.get("min_random", 0.0)) - rate) * 40.0
+	return gap
 
 
 ## Plain arrows (+ clockwise spinners above EASY), not a campaign board and
@@ -243,6 +360,14 @@ func _allowed(level: LevelData) -> bool:
 
 func _finish() -> void:
 	done = true
+	if _best == null and _cheap_best != null and _allowed(_cheap_best):
+		# Nothing reached the full analysis: measure the closest candidate.
+		var m := _gen.evaluate(_cheap_best)
+		if m["solvable"] and not m["aborted"]:
+			m["human_gap"] = _human_gap(m, _cheap_best)
+			_best = _cheap_best
+			_best_m = m
+			_best_gap = _gap(m["difficulty"]) + m["human_gap"]
 	if _best == null:
 		error = "no_solvable_board"
 		return
@@ -255,11 +380,13 @@ func _finish() -> void:
 		return
 	puzzle = rebuilt
 	var d: float = _best_m["difficulty"]
-	var acc: Vector2 = _spec["accept"]
-	metrics = {"difficulty": snappedf(d, 0.1), "in_band": _best_gap == 0.0, "in_accept": d >= acc.x and d <= acc.y,
+	metrics = {"difficulty": snappedf(d, 0.1), "in_band": _best_gap == 0.0, "in_accept": _accepts(_best_m),
 		"evals": evals, "rounds": _rounds, "ms": Time.get_ticks_msec() - _started_ms,
 		"blocks": _best_m["blocks"], "spinners": _best_m["spinners"], "depth": _best_m["depth"],
-		"decision_points": _best_m["decision_points"], "rows": rebuilt.rows, "cols": rebuilt.columns}
+		"decision_points": _best_m["decision_points"], "rows": rebuilt.rows, "cols": rebuilt.columns,
+		"start_moves": _best_m["start_moves"], "one_safe_steps": _best_m["one_safe_steps"],
+		"safe_choices": _best_m["safe_choices"], "human_gap": snappedf(float(_best_m.get("human_gap", 0.0)), 0.01),
+		"random_win": snappedf(float(_best_m.get("random_win", -1.0)), 0.001)}
 	print("[Social] friend challenge: %s %s" % [difficulty, JSON.stringify(metrics)])
 
 

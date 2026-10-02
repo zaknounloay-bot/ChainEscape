@@ -118,7 +118,7 @@ func _test_hud_orientation() -> void:
 			"T(%s): TOTAL SCORE left, coins right" % loc)
 		var order := [ui._undo_button, ui._hint_button, ui._hammer_button, ui._restart_button].map(func(b): return cx.call(b))
 		_check(order[0] < order[1] and order[1] < order[2] and order[2] < order[3],
-			"T(%s): bottom row UNDO -> HINT -> HAMMER -> RESTART (%s)" % [loc, str(order)])
+			"T(%s): bottom row UNDO -> SHOW A MOVE -> HAMMER -> RESTART (%s)" % [loc, str(order)])
 		if loc == "he_IL":
 			await _shot("T_classic_hud_he")
 		_free_game()
@@ -156,7 +156,9 @@ func _test_launch_valid(info: Dictionary) -> void:
 	_check(play.loaded_fingerprint == info["fp"] and play.model.block_count() == info["blocks"].size(), "J: the board on screen is the exact shared puzzle")
 	_check(play._undo.visible and play._hint.visible and play._restart.visible and SocialPlay.MAX_UNDOS == 3 and SocialPlay.MAX_HINTS == 2
 		and play._hint.text == "SHOW A MOVE", "J: 3 Undo, 2 SHOW A MOVE, Restart")
-	_check(not _visible_text(play).contains("HAMMER") and not _visible_text(play).contains("COINS"), "J: no Hammer, coins or hearts")
+	_check(play._hammer.is_visible_in_tree() and play._hammer.badge_text == "2" and play._hammer.modulate.a == 1.0,
+		"J: HAMMER x2, free and active (phase 3b: same Social tools as Challenge a Friend)")
+	_check(not _visible_text(play).contains("COINS"), "J: no coins or hearts")
 	await _shot("J_play")
 	# Exit confirm -> landing.
 	await _tap(play._exit)

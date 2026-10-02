@@ -24,6 +24,20 @@ scheduled beyond "next".
 - relative performance (percentile)
 - eventually live 1v1 against someone online
 
+## Real-user findings (phase 3b real-device test, `5889e02`)
+
+**Passed:** the NEW CHALLENGE flow, SHOW A MOVE in Classic and in Friend Challenge, the Friend HAMMER x2, the exact same Friend board on several iPhones (local themes do not affect it), and sharing / the recipient flow.
+
+**New findings:** these are why phase 3 was not frozen at `5889e02`.
+- HARD felt too easy to both testers.
+- VERY HARD felt clearly too easy to both testers.
+- Photo / Message Reveal lacked the Hammer; the Social tool set should be the same everywhere.
+
+**Response (phase 3b):**
+- One free Social tool set: UNDO x3, SHOW A MOVE x2, HAMMER x2, RESTART.
+- HARD and VERY HARD now selected by human-difficulty criteria, with the same two mechanics (README, *Phase 3b patch*).
+- If real players still find VERY HARD too easy, the next candidates are Classic mechanics: colour locks, then counter-clockwise spinners. These would need a separately approved iteration (generator, PuzzleDefinition review, backend cell validation, recipient tests, readability).
+
 ## Next product phase (after phase 3 is frozen): COMPETITIVE CHALLENGE
 
 The likely first step is **asynchronous competition on the exact same stored challenge**. The exact-board architecture already built (one immutable `PuzzleDefinition` per challenge, rebuilt identically on every device) is what makes this possible: everyone plays the same board.
@@ -80,6 +94,13 @@ Time and personal bests may matter beyond friends:
 - challenge yourself on harder puzzles
 
 Framed only around focus, problem solving, personal performance and personal bests. **No medical or cognitive-improvement claims.** Chain Escape must not claim to improve cognitive function unless appropriate evidence ever supports it.
+
+**Research possibility (future, evidence-based only):**
+- There is a broader research literature suggesting that cognitive training and puzzle / brain-training activities may support or improve performance in some cognitive domains.
+- **Chain Escape itself has not been validated for any such effect, and no such claim is made.**
+- Future adult positioning may explore problem solving, focus, planning, personal performance and personal bests, repeated challenge, and measurable improvement over time.
+- If the product later shows sufficient traction, a formal study could evaluate whether repeated Chain Escape play is associated with measurable changes in specific cognitive-performance measures.
+- Until then: no medical, therapeutic, preventive or cognitive-improvement claim of any kind, in the product, store listing or marketing.
 
 ## Explicitly not in phase 3
 

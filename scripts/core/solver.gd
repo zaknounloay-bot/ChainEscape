@@ -245,6 +245,53 @@ func legal_moves() -> Array[int]:
 	return out
 
 
+## Share of `playouts` random games that clear the board: each one taps a
+## uniformly random legal move until none is left (a "random tapper", a proxy
+## for how often the next move is obvious). Deterministic for a given seed;
+## the board is left as it was. With `max_wins` >= 0 it stops as soon as more
+## games than that were won and returns the rate measured so far (a quick
+## "clearly too easy" estimate for searches).
+func random_win_rate(playouts: int, seed: int, max_wins: int = -1) -> float:
+	if _alive_count == 0:
+		return 1.0
+	var rng := RandomNumberGenerator.new()
+	rng.seed = seed
+	var wins := 0
+	var games := 0
+	var done: Array[int] = []
+	for k in playouts:
+		games += 1
+		done.clear()
+		while true:
+			# One uniformly random legal move (reservoir pick, no list).
+			var pick := -1
+			var seen := 0
+			for id in _alive.size():
+				if _alive[id] != 1:
+					continue
+				var mv := -1
+				if _is_legal(id):
+					mv = id
+				elif _ram_target(id) != -1:
+					mv = id | RAM
+				if mv == -1:
+					continue
+				seen += 1
+				if rng.randi() % seen == 0:
+					pick = mv
+			if pick == -1:
+				break
+			_do(pick)
+			done.append(pick)
+		if _alive_count == 0:
+			wins += 1
+		for i in range(done.size() - 1, -1, -1):
+			_undo_move(done[i])
+		if max_wins >= 0 and wins > max_wins:
+			break
+	return float(wins) / maxf(games, 1)
+
+
 ## Best move for a hint: a legal move after which the board is still
 ## solvable. Prefers the real decisions (moves that turn spinners or fire a
 ## switch) over always-safe moves. Returns the block id to tap, or -1 if no
@@ -279,6 +326,10 @@ func analyze() -> Dictionary:
 		# v0.6
 		"switches": 0, "flip_targets": 0, "gates": 0, "gate_links": 0, "armored": 0, "rams": 0,
 		"switch_decisions": 0, "branching": 0.0,
+		# Human-facing (Challenge a Friend): steps along the solution where
+		# several moves are legal but exactly ONE keeps the board solvable,
+		# and the average number of safe moves per step.
+		"one_safe_steps": 0, "safe_choices": 0.0,
 	}
 	for sid in _spinner_ids:
 		m["rule_" + ["cw", "ccw", "alt", "pattern"][_rule[sid]]] += 1
@@ -315,6 +366,7 @@ func analyze() -> Dictionary:
 	var round_free: Array[int] = legal_moves()
 	var depth := 1
 	var legal_sum := 0
+	var safe_sum := 0
 	for step in solution.size():
 		var traps := 0
 		var legal := legal_moves()
@@ -334,6 +386,9 @@ func analyze() -> Dictionary:
 		if traps > 0:
 			m["decision_points"] += 1
 			m["trap_moves"] += traps
+		safe_sum += legal.size() - traps
+		if legal.size() > 1 and legal.size() - traps == 1:
+			m["one_safe_steps"] += 1
 		var move: int = solution[step]
 		if move & RAM:
 			m["rams"] += 1
@@ -344,6 +399,7 @@ func analyze() -> Dictionary:
 		applied.append(move)
 	m["depth"] = depth
 	m["branching"] = snappedf(float(legal_sum) / maxf(solution.size(), 1), 0.01)
+	m["safe_choices"] = snappedf(float(safe_sum) / maxf(solution.size(), 1), 0.01)
 	# Restore the starting state.
 	for i in range(applied.size() - 1, -1, -1):
 		_undo_move(applied[i])
