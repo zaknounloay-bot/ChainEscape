@@ -21,6 +21,7 @@ signal exited  # left before solving: nothing revealed
 signal finished  # after the Reveal: BACK TO CREATE CHALLENGE / MAIN MENU
 signal create_own(challenge_type: String)  # recipient's Reveal: CREATE YOUR OWN / CHALLENGE A FRIEND
 signal photo_retry  # recipient's Reveal: the photo failed, TRY AGAIN
+signal solved  # the board was cleared (just before the Reveal)
 
 enum Mode { CREATOR_PREVIEW, RECIPIENT }
 
@@ -49,6 +50,16 @@ var chain := 0
 var undos_used := 0
 var hints_used := 0
 var hammers_used := 0
+## Per-attempt allowances. The game always uses the defaults; only the
+## development VERY HARD human test (?vhtest=1) sets its own (x1 / x1).
+var max_hints := MAX_HINTS
+var max_hammers := MAX_HAMMERS
+## Totals for the current challenge across every attempt (start() resets
+## them; RESTART / PLAY AGAIN do not). Read by the development human test.
+var total_moves := 0
+var total_undos := 0
+var total_hints := 0
+var total_hammers := 0
 ## The next board tap smashes a block (Social Hammer).
 var hammer_armed := false
 ## Reveal's last button text ("" = the default for the mode).
@@ -99,6 +110,10 @@ func start(c: SharedChallenge, p_mode: int, theme: Dictionary) -> void:
 	mode = p_mode
 	_theme = theme
 	plays = 0
+	total_moves = 0
+	total_undos = 0
+	total_hints = 0
+	total_hammers = 0
 	_backdrop.set_colors(theme["bg_top"], theme["bg_bottom"])
 	_title.add_theme_color_override("font_color", theme["text"])
 	_chip.add_theme_color_override("font_color", theme["text_soft"])
@@ -220,6 +235,7 @@ func _escape(id: int) -> void:
 	var unlocked := model.last_unlocked.duplicate()
 	_play_mechanic_effects()
 	chain += 1
+	total_moves += 1
 	board.play_escape(id, chain, turned)
 	AudioManager.play_escape(chain)
 	if not turned.is_empty():
@@ -279,6 +295,7 @@ func undo() -> void:
 		return
 	_disarm()
 	undos_used += 1
+	total_undos += 1
 	var state: Dictionary = history.pop()
 	model.restore(state["blocks"])
 	chain = state["chain"]
@@ -294,7 +311,7 @@ func undo() -> void:
 func hint() -> void:
 	if completed or model.is_empty():
 		return
-	if hints_used >= MAX_HINTS:
+	if hints_used >= max_hints:
 		_show_message("No SHOW A MOVE left - Undo or Restart can help")
 		return
 	var id := Solver.from_model(model).recommend_move()
@@ -302,6 +319,7 @@ func hint() -> void:
 		_show_message("No moves left - tap Undo" if model.playable_ids().is_empty() else "This board can't be cleared from here - try Undo")
 		return
 	hints_used += 1
+	total_hints += 1
 	board.set_hint(id)
 	AudioManager.play_hint()
 	_refresh_buttons()
@@ -323,7 +341,7 @@ func toggle_hammer() -> void:
 		_show_message("")
 		_publish.call_deferred()
 		return
-	if hammers_used >= MAX_HAMMERS:
+	if hammers_used >= max_hammers:
 		_show_message("No Hammers left - Undo or Restart can help")
 		return
 	hammer_armed = true
@@ -357,6 +375,7 @@ func _smash(id: int) -> void:
 	hammer_armed = false
 	board.hammer_mode = false
 	hammers_used += 1
+	total_hammers += 1
 	history.push({"blocks": model.snapshot(), "chain": chain})
 	var turned := model.remove(id)
 	var revealed := model.last_revealed.duplicate()
@@ -401,6 +420,7 @@ func play_solver_move() -> bool:
 func _on_solved() -> void:
 	completed = true
 	_refresh_buttons()
+	solved.emit()
 	var session := _session
 	await get_tree().create_timer(0.25).timeout
 	if session != _session:
@@ -592,13 +612,13 @@ func _set_hud_visible(on: bool) -> void:
 func _refresh_buttons() -> void:
 	_undo.badge_text = str(MAX_UNDOS - undos_used)
 	_undo.disabled = completed or not history.can_undo() or undos_used >= MAX_UNDOS
-	_hint.badge_text = str(MAX_HINTS - hints_used)
-	_hint.modulate.a = 1.0 if hints_used < MAX_HINTS else 0.5
+	_hint.badge_text = str(max_hints - hints_used)
+	_hint.modulate.a = 1.0 if hints_used < max_hints else 0.5
 	_hint.disabled = completed
 	_hammer.visible = hammer_available()
 	_hammer.text = "CANCEL" if hammer_armed else "HAMMER"
-	_hammer.badge_text = str(MAX_HAMMERS - hammers_used)
-	_hammer.modulate.a = 1.0 if hammer_armed or hammers_used < MAX_HAMMERS else 0.5
+	_hammer.badge_text = str(max_hammers - hammers_used)
+	_hammer.modulate.a = 1.0 if hammer_armed or hammers_used < max_hammers else 0.5
 	_hammer.disabled = completed
 	_restart.disabled = completed
 
@@ -634,7 +654,7 @@ func _publish() -> void:
 			buttons[String(b.name)] = norm.call(b.get_global_rect().get_center())
 	WebBridge.publish("chainEscapeSocialPlay", {"active": visible, "completed": completed, "revealed": reveal.visible,
 		"difficulty": challenge.difficulty if challenge else "", "blocks": model.block_count(), "free": free, "next": next,
-		"fingerprint": loaded_fingerprint, "plays": plays, "hammers_left": MAX_HAMMERS - hammers_used, "hammer_armed": hammer_armed, "confirm": _confirm.visible, "buttons": buttons,
+		"fingerprint": loaded_fingerprint, "plays": plays, "hammers_left": max_hammers - hammers_used, "hammer_armed": hammer_armed, "confirm": _confirm.visible, "buttons": buttons,
 		"has_photo": reveal._photo_frame.visible and reveal.visible, "photo_state": reveal.photo_state if reveal.visible else "",
 		"cta_pulses": reveal.cta_pulses if reveal.visible else 0, "mode": "recipient" if mode == Mode.RECIPIENT else "creator",
 		# The revealed text only for automated tests (never otherwise exposed).

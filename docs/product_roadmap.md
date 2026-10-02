@@ -46,6 +46,8 @@ scheduled beyond "next".
 
 **Investigation:** the existing Classic Locked Block was audited and prototyped locally (`docs/lock_prototype_audit.md`): no production change. Evidence and a recommendation are waiting for approval.
 
+**Phase 3d:** Locks rejected for production (audit approved). A blind development-only human test (`?vhtest=1`, `docs/vh_human_test.md`) compares current VERY HARD with offline heuristic-selected, opening-constrained boards (arrows + clockwise spinners only), with SHOW A MOVE x1 / HAMMER x1. Counter-clockwise spinners are the next controlled experiment only if those boards still feel too easy to people.
+
 ## Next product phase (after phase 3 is frozen): COMPETITIVE CHALLENGE
 
 The likely first step is **asynchronous competition on the exact same stored challenge**. The exact-board architecture already built (one immutable `PuzzleDefinition` per challenge, rebuilt identically on every device) is what makes this possible: everyone plays the same board.

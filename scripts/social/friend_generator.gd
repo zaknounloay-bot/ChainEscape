@@ -348,6 +348,13 @@ func _human_gap(m: Dictionary, level: LevelData) -> float:
 	# LOCK PROTOTYPE ONLY (no production spec sets these): locks that matter,
 	# i.e. blocks that look free (clear lane) but must wait for their key
 	# colour, and that open late in the solution.
+	# HUMAN TEST ONLY (offline VERY HARD candidates, never a production
+	# spec): the opening. Few safe first moves, none of them "calm" (every
+	# safe first move turns a spinner, so it has to be thought through).
+	if h.has("max_start_safe"):
+		gap += maxf(0.0, m["start_safe"] - float(h["max_start_safe"])) * 3.0
+	if h.has("max_start_calm"):
+		gap += maxf(0.0, m["start_calm"] - float(h["max_start_calm"])) * 3.0
 	gap += maxf(0.0, float(h.get("min_locks", 0)) - m.get("locks", 0)) * 2.0
 	gap += maxf(0.0, float(h.get("min_locked_free_steps", 0)) - m.get("locked_free_steps", 0)) * 1.0
 	gap += maxf(0.0, float(h.get("min_unlock_step", 0)) - m.get("unlock_step", 0.0)) * 0.5

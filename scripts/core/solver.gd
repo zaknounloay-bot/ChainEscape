@@ -431,6 +431,10 @@ func analyze() -> Dictionary:
 		# but is still LOCKED (looks free, isn't), the total of such
 		# block-steps, and the average solution step at which a lock opens.
 		"locked_free_steps": 0, "lock_wait": 0, "unlock_step": 0.0,
+		# Opening: legal moves at the start that keep the board solvable,
+		# and legal moves that turn no spinner (always safe, so obvious to a
+		# player who knows the rules).
+		"start_safe": 0, "start_calm": 0,
 	}
 	for sid in _spinner_ids:
 		m["rule_" + ["cw", "ccw", "alt", "pattern"][_rule[sid]]] += 1
@@ -496,6 +500,10 @@ func analyze() -> Dictionary:
 					m["switch_decisions"] += 1
 		if step == 0:
 			m["start_traps"] = traps
+			m["start_safe"] = legal.size() - traps
+			for mv in legal:
+				if not _is_risky(mv):
+					m["start_calm"] += 1
 		if traps > 0:
 			m["decision_points"] += 1
 			m["trap_moves"] += traps

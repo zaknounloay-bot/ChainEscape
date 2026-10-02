@@ -1,0 +1,596 @@
+{
+	"format": "ce-vh-human-test",
+	"v": 1,
+	"assist": {
+		"undo": 3,
+		"show_a_move": 1,
+		"hammer": 1
+	},
+	"boards": [
+		{
+			"variant": "B",
+			"puzzle": {
+				"format": "ce-puzzle",
+				"v": 1,
+				"rules": 1,
+				"rows": 6,
+				"cols": 6,
+				"map": [
+					". . . Bv Gv@ Rv@",
+					". . . Yv Rv .",
+					"B^ Y>@ . . Y<@ P^",
+					". P^ Gv P>@ R<@ G^",
+					". . . . . Yv",
+					"R^ . . . . R<"
+				]
+			},
+			"fingerprint": "15fbd338183ce144c28ed6d4b00bc1af701f300e372d8be35c093a1d6348aec9",
+			"metrics": {
+				"start_moves": 2,
+				"start_safe": 1,
+				"start_calm": 0,
+				"one_safe_steps": 11,
+				"safe_choices": 1.12,
+				"decision_points": 12,
+				"depth": 15,
+				"solution_length": 17,
+				"blocks": 17,
+				"spinners": 6,
+				"locks": 0,
+				"random": 0,
+				"smart2": 0,
+				"smart3": 0,
+				"gen_ms": 3304,
+				"gen_evals": 866,
+				"met_all": true
+			},
+			"id": "T01"
+		},
+		{
+			"variant": "A",
+			"puzzle": {
+				"format": "ce-puzzle",
+				"v": 1,
+				"rules": 1,
+				"rows": 6,
+				"cols": 6,
+				"map": [
+					". P< G< Y< . Pv",
+					". G^ B^@ G^ . .",
+					". P^ Y^@ B^ G< .",
+					". . . . . .",
+					"Rv . . . B>@ R>@",
+					". P^ P>@ B< . P<@"
+				]
+			},
+			"fingerprint": "681d31d39d8f34ae6278903f5225afcfedd9afb54450e469c1f91f4504d1cea8",
+			"metrics": {
+				"start_moves": 3,
+				"start_safe": 2,
+				"start_calm": 2,
+				"one_safe_steps": 4,
+				"safe_choices": 1.78,
+				"decision_points": 15,
+				"depth": 11,
+				"solution_length": 18,
+				"blocks": 18,
+				"spinners": 6,
+				"locks": 0,
+				"random": 0.007,
+				"smart2": 0.09,
+				"smart3": 0.05,
+				"gen_ms": 409,
+				"gen_evals": 52,
+				"met_all": true
+			},
+			"id": "T02"
+		},
+		{
+			"variant": "B",
+			"puzzle": {
+				"format": "ce-puzzle",
+				"v": 1,
+				"rules": 1,
+				"rows": 6,
+				"cols": 6,
+				"map": [
+					"G> . . . Rv .",
+					". B<@ . . . .",
+					". G^@ B> G<@ Yv G>",
+					"G^ P^ B> Y^@ B^@ P<@",
+					". . . G^ Y< .",
+					". P^ . . . Y^"
+				]
+			},
+			"fingerprint": "e84b3ec4060f9e72da120986aec952cbd6f68fea1540cbee48087695327e27b1",
+			"metrics": {
+				"start_moves": 2,
+				"start_safe": 1,
+				"start_calm": 0,
+				"one_safe_steps": 9,
+				"safe_choices": 1.33,
+				"decision_points": 15,
+				"depth": 14,
+				"solution_length": 18,
+				"blocks": 18,
+				"spinners": 6,
+				"locks": 0,
+				"random": 0,
+				"smart2": 0.09,
+				"smart3": 0.067,
+				"gen_ms": 10033,
+				"gen_evals": 2671,
+				"met_all": true
+			},
+			"id": "T03"
+		},
+		{
+			"variant": "B",
+			"puzzle": {
+				"format": "ce-puzzle",
+				"v": 1,
+				"rules": 1,
+				"rows": 6,
+				"cols": 6,
+				"map": [
+					"B< Gv@ . P< . .",
+					"R^@ Pv G> . . Gv",
+					"Rv@ . P> Y<@ Rv .",
+					"Y^ . Bv . Y> Gv",
+					". Yv@ P< . P< P^@",
+					". B< . . . ."
+				]
+			},
+			"fingerprint": "ba6b73c5cda03be9cac72ff007b2787ad92671acca4af421209239e3b2f0fa5a",
+			"metrics": {
+				"start_moves": 2,
+				"start_safe": 1,
+				"start_calm": 0,
+				"one_safe_steps": 5,
+				"safe_choices": 1.8,
+				"decision_points": 12,
+				"depth": 14,
+				"solution_length": 20,
+				"blocks": 20,
+				"spinners": 6,
+				"locks": 0,
+				"random": 0.003,
+				"smart2": 0.07,
+				"smart3": 0.067,
+				"gen_ms": 24584,
+				"gen_evals": 6205,
+				"met_all": true
+			},
+			"id": "T04"
+		},
+		{
+			"variant": "B",
+			"puzzle": {
+				"format": "ce-puzzle",
+				"v": 1,
+				"rules": 1,
+				"rows": 6,
+				"cols": 6,
+				"map": [
+					". . . . . .",
+					". . . . Yv B<",
+					"P<@ Gv@ Y>@ Y< . .",
+					"R^ . . P> G> Yv",
+					". R^@ B< P>@ . B<@",
+					". P> . . R> Yv"
+				]
+			},
+			"fingerprint": "55a454b2795f6973efd554e2425275a4f969d691cb655f66e7dc9685d3469afc",
+			"metrics": {
+				"start_moves": 2,
+				"start_safe": 1,
+				"start_calm": 0,
+				"one_safe_steps": 6,
+				"safe_choices": 1.59,
+				"decision_points": 9,
+				"depth": 11,
+				"solution_length": 17,
+				"blocks": 17,
+				"spinners": 6,
+				"locks": 0,
+				"random": 0.017,
+				"smart2": 0.06,
+				"smart3": 0.133,
+				"gen_ms": 7329,
+				"gen_evals": 1870,
+				"met_all": true
+			},
+			"id": "T05"
+		},
+		{
+			"variant": "C",
+			"puzzle": {
+				"format": "ce-puzzle",
+				"v": 1,
+				"rules": 1,
+				"rows": 6,
+				"cols": 6,
+				"map": [
+					". . . R> P^ Gv@",
+					"B^ . Y< . P< .",
+					"Gv@ . G^ . . .",
+					". . . . . G<",
+					". Y>@ B< Gv#B . P<",
+					"P^@ R< . P> R>@#B ."
+				]
+			},
+			"fingerprint": "07d50d3c67f1db39a599d55cbf0c7c6528927188d55d7623e6761a1a23b2a7c1",
+			"metrics": {
+				"start_moves": 3,
+				"start_safe": 2,
+				"start_calm": 1,
+				"one_safe_steps": 10,
+				"safe_choices": 1.35,
+				"decision_points": 15,
+				"depth": 13,
+				"solution_length": 17,
+				"blocks": 17,
+				"spinners": 5,
+				"locks": 2,
+				"random": 0,
+				"smart2": 0.26,
+				"smart3": 0.15,
+				"gen_ms": 494,
+				"gen_evals": 173,
+				"met_all": true
+			},
+			"id": "T06"
+		},
+		{
+			"variant": "A",
+			"puzzle": {
+				"format": "ce-puzzle",
+				"v": 1,
+				"rules": 1,
+				"rows": 6,
+				"cols": 6,
+				"map": [
+					". . . . . G^@",
+					"R> Y^ Pv . Rv .",
+					"R> . . Pv . .",
+					". . . R>@ B>@ P^",
+					". R^ Bv@ . Rv G^@",
+					". . Gv@ . G< G^"
+				]
+			},
+			"fingerprint": "688e62f37b080b22b2ba9fd3f7ed8f275b445a9d59e2888db10f000c6df6ed52",
+			"metrics": {
+				"start_moves": 3,
+				"start_safe": 2,
+				"start_calm": 2,
+				"one_safe_steps": 6,
+				"safe_choices": 1.76,
+				"decision_points": 10,
+				"depth": 9,
+				"solution_length": 17,
+				"blocks": 17,
+				"spinners": 6,
+				"locks": 0,
+				"random": 0.007,
+				"smart2": 0.05,
+				"smart3": 0.117,
+				"gen_ms": 574,
+				"gen_evals": 142,
+				"met_all": true
+			},
+			"id": "T07"
+		},
+		{
+			"variant": "A",
+			"puzzle": {
+				"format": "ce-puzzle",
+				"v": 1,
+				"rules": 1,
+				"rows": 6,
+				"cols": 6,
+				"map": [
+					"G^@ Yv@ . P< G>@ .",
+					". . . . . B>",
+					"G^@ . . . . Gv",
+					"P^ G^ P> Y>@ R^ .",
+					". . R>@ G< . G<",
+					"P^ . B< R< Y< P<"
+				]
+			},
+			"fingerprint": "9f204b3414260a17cf3d3be27a1acafdec8430c8dfb9782c0f3be37d700d3636",
+			"metrics": {
+				"start_moves": 3,
+				"start_safe": 3,
+				"start_calm": 2,
+				"one_safe_steps": 4,
+				"safe_choices": 1.85,
+				"decision_points": 15,
+				"depth": 11,
+				"solution_length": 20,
+				"blocks": 20,
+				"spinners": 6,
+				"locks": 0,
+				"random": 0.023,
+				"smart2": 0.14,
+				"smart3": 0.333,
+				"gen_ms": 506,
+				"gen_evals": 138,
+				"met_all": true
+			},
+			"id": "T08"
+		},
+		{
+			"variant": "C",
+			"puzzle": {
+				"format": "ce-puzzle",
+				"v": 1,
+				"rules": 1,
+				"rows": 6,
+				"cols": 6,
+				"map": [
+					"Yv . . B<@ . B<",
+					". B<#P B<#Y Gv Rv@ G^",
+					". Gv . P> . .",
+					". . R^@ Bv G< .",
+					"B> . . Pv@ B^@ .",
+					". Rv Y> . R> P^"
+				]
+			},
+			"fingerprint": "fcee296628277f9e63bc6e81cfc10c407993e7cc01029473deb8eee03d115cb0",
+			"metrics": {
+				"start_moves": 3,
+				"start_safe": 3,
+				"start_calm": 2,
+				"one_safe_steps": 11,
+				"safe_choices": 1.3,
+				"decision_points": 12,
+				"depth": 15,
+				"solution_length": 20,
+				"blocks": 20,
+				"spinners": 5,
+				"locks": 2,
+				"random": 0,
+				"smart2": 0.51,
+				"smart3": 0.467,
+				"gen_ms": 817,
+				"gen_evals": 265,
+				"met_all": true
+			},
+			"id": "T09"
+		},
+		{
+			"variant": "B",
+			"puzzle": {
+				"format": "ce-puzzle",
+				"v": 1,
+				"rules": 1,
+				"rows": 6,
+				"cols": 6,
+				"map": [
+					". . Y> Rv Gv .",
+					"Yv Gv@ Y>@ . P> B^@",
+					". . . . R> Gv@",
+					". . Pv . Y< .",
+					"Gv@ G^ Rv . . P<",
+					"P> B> G>@ P> . ."
+				]
+			},
+			"fingerprint": "23e48fc58219157093a701473fe5452adba7c4791b05b95dc339574e033ae883",
+			"metrics": {
+				"start_moves": 2,
+				"start_safe": 1,
+				"start_calm": 0,
+				"one_safe_steps": 9,
+				"safe_choices": 1.4,
+				"decision_points": 15,
+				"depth": 14,
+				"solution_length": 20,
+				"blocks": 20,
+				"spinners": 6,
+				"locks": 0,
+				"random": 0,
+				"smart2": 0.03,
+				"smart3": 0.05,
+				"gen_ms": 23719,
+				"gen_evals": 6040,
+				"met_all": true
+			},
+			"id": "T10"
+		},
+		{
+			"variant": "B",
+			"puzzle": {
+				"format": "ce-puzzle",
+				"v": 1,
+				"rules": 1,
+				"rows": 6,
+				"cols": 6,
+				"map": [
+					". . . . Y> .",
+					". . Y> B> P<@ B^@",
+					". . B> Y>@ . Gv@",
+					". Gv . . Y^ .",
+					"Yv B< . Y< . .",
+					"B> . . B^@ P^ G^@"
+				]
+			},
+			"fingerprint": "643158bdabed799b0d3b8e9c1c68c5e9aa54634d1ca6030232186c4f0494a768",
+			"metrics": {
+				"start_moves": 2,
+				"start_safe": 1,
+				"start_calm": 0,
+				"one_safe_steps": 6,
+				"safe_choices": 1.65,
+				"decision_points": 12,
+				"depth": 12,
+				"solution_length": 17,
+				"blocks": 17,
+				"spinners": 6,
+				"locks": 0,
+				"random": 0.01,
+				"smart2": 0.06,
+				"smart3": 0.117,
+				"gen_ms": 1685,
+				"gen_evals": 407,
+				"met_all": true
+			},
+			"id": "T11"
+		},
+		{
+			"variant": "A",
+			"puzzle": {
+				"format": "ce-puzzle",
+				"v": 1,
+				"rules": 1,
+				"rows": 6,
+				"cols": 6,
+				"map": [
+					". . . . Y> R>@",
+					". . . . . Yv",
+					"Gv . R< . . B<",
+					"Y< B< Gv Pv . P>",
+					"Gv P>@ . R<@ . B<@",
+					"P>@ Y>@ . . B^ ."
+				]
+			},
+			"fingerprint": "38cdeb8705f0758bb36d1f52779c895b77b63b85869ec0e06753601df0fdd3c9",
+			"metrics": {
+				"start_moves": 4,
+				"start_safe": 3,
+				"start_calm": 3,
+				"one_safe_steps": 5,
+				"safe_choices": 1.78,
+				"decision_points": 15,
+				"depth": 12,
+				"solution_length": 18,
+				"blocks": 18,
+				"spinners": 6,
+				"locks": 0,
+				"random": 0.003,
+				"smart2": 0.34,
+				"smart3": 0.35,
+				"gen_ms": 2035,
+				"gen_evals": 388,
+				"met_all": false
+			},
+			"id": "T12"
+		},
+		{
+			"variant": "C",
+			"puzzle": {
+				"format": "ce-puzzle",
+				"v": 1,
+				"rules": 1,
+				"rows": 6,
+				"cols": 6,
+				"map": [
+					"Y< R>@ . Pv . R^#P",
+					"Bv#G G<@ . . . .",
+					". Y^ . . . .",
+					". P>@ Rv . Y^@ Bv",
+					"G>#P . Pv . . .",
+					". P> R> B> . Y>"
+				]
+			},
+			"fingerprint": "dc51f44df18e6aa6167124309339a8b781105f9fb7a2ff104c1c1fc645d601e5",
+			"metrics": {
+				"start_moves": 3,
+				"start_safe": 2,
+				"start_calm": 2,
+				"one_safe_steps": 7,
+				"safe_choices": 1.47,
+				"decision_points": 13,
+				"depth": 10,
+				"solution_length": 17,
+				"blocks": 17,
+				"spinners": 4,
+				"locks": 3,
+				"random": 0,
+				"smart2": 0.57,
+				"smart3": 0.6,
+				"gen_ms": 683,
+				"gen_evals": 214,
+				"met_all": true
+			},
+			"id": "T13"
+		},
+		{
+			"variant": "A",
+			"puzzle": {
+				"format": "ce-puzzle",
+				"v": 1,
+				"rules": 1,
+				"rows": 6,
+				"cols": 6,
+				"map": [
+					". P^ Y>@ B< . Rv",
+					"Y>@ . . R>@ . Rv",
+					"Pv@ . . . . .",
+					". . B>@ . . Pv",
+					". . . Yv G< Bv@",
+					"Bv G^ . R< . G>"
+				]
+			},
+			"fingerprint": "cc5668af46d8f8fe96cb215bdca778226bd6976b181c57a0d2b1b27bf940d2ff",
+			"metrics": {
+				"start_moves": 3,
+				"start_safe": 2,
+				"start_calm": 1,
+				"one_safe_steps": 2,
+				"safe_choices": 1.88,
+				"decision_points": 9,
+				"depth": 10,
+				"solution_length": 17,
+				"blocks": 17,
+				"spinners": 6,
+				"locks": 0,
+				"random": 0.017,
+				"smart2": 0.45,
+				"smart3": 0.617,
+				"gen_ms": 1502,
+				"gen_evals": 341,
+				"met_all": false
+			},
+			"id": "T14"
+		},
+		{
+			"variant": "A",
+			"puzzle": {
+				"format": "ce-puzzle",
+				"v": 1,
+				"rules": 1,
+				"rows": 6,
+				"cols": 6,
+				"map": [
+					". Rv@ Y< Gv@ B< .",
+					"Gv B< . . R^ .",
+					". . . . . .",
+					". G< R^@ P^ R^@ .",
+					"B< . P^ Y> Gv .",
+					". . . . P^@ Y>"
+				]
+			},
+			"fingerprint": "386d74d0c05a789c76fbd919dee58027070f44ce51bf2969f09eefe54dec8cc4",
+			"metrics": {
+				"start_moves": 3,
+				"start_safe": 2,
+				"start_calm": 1,
+				"one_safe_steps": 0,
+				"safe_choices": 2.53,
+				"decision_points": 9,
+				"depth": 12,
+				"solution_length": 17,
+				"blocks": 17,
+				"spinners": 5,
+				"locks": 0,
+				"random": 0.017,
+				"smart2": 0.19,
+				"smart3": 0.3,
+				"gen_ms": 2005,
+				"gen_evals": 367,
+				"met_all": false
+			},
+			"id": "T15"
+		}
+	]
+}

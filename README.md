@@ -107,9 +107,21 @@ For scale: the campaign averages 4.7 in Chapter 1, 18.2 in Chapter 3, 27.4 in Ch
     - It wins over a challenge link, even when appended to one (`…?challenge=<id>?friendbench=1`): the page script splits launch parameters on `?`, `&` and `#`.
     - Checked by `node tools/web_friendbench_route_test.mjs build/web`.
 
-### Challenge a Friend phase 3 — creator + minimal recipient (status: NOT frozen; VERY HARD under investigation, see phase 3c)
+### Challenge a Friend phase 3 — creator + minimal recipient (status: NOT frozen; VERY HARD blind human test pending, see phase 3d)
 
 **Real-device result (`4f1a845`):** the full loop worked on real iPhones. Phone A created a HARD challenge and sent it on WhatsApp; it arrived immediately and was solved. From that phone, CHALLENGE A FRIEND made an EASY challenge for a third phone, which also arrived immediately and worked. Creator PLAY / PREVIEW, the creator, the recipient flow and WhatsApp sharing all worked well. Real-user findings and the next product direction (Competitive Challenge, fairness, live 1v1 later, personal performance) are recorded in `docs/product_roadmap.md`.
+
+#### Phase 3d — blind human test of VERY HARD (development only)
+
+Lock audit conclusion approved: Classic Locks are **not** moved into production Friend Challenges.
+
+The next question goes to people, not metrics: can arrows + clockwise spinners alone produce boards that experienced players perceive as VERY HARD?
+- A development-only page (`?vhtest=1`) plays 15 fixed boards blind, in a random order: 6 current VERY HARD, 6 offline heuristic-selected boards with an opening constraint, and 3 Lock-prototype controls.
+- Assistance on that page only: UNDO x3, SHOW A MOVE x1, HAMMER x1.
+- It records time, moves, restarts and tool use, then asks "How difficult was this puzzle?" and the optional "Did you have to stop and think before your first move?".
+- Results are copied as JSON.
+
+Details, board statistics, search cost and iPhone instructions: `docs/vh_human_test.md`. Production, backend and Supabase are unchanged; no production decision is made until the real-device results are in.
 
 #### Phase 3c — real-device results (`87c92db`) and the Locked Block investigation
 
@@ -1914,6 +1926,9 @@ godot --headless --path . --script res://tools/friend_benchmark.gd -- --seeds=20
 godot --headless --path . --script res://tools/friend_benchmark.gd -- --seeds=100 --human [--old]   # HARD / VERY HARD human-difficulty comparison (new, or the phase 3 specs)
 godot --headless --path . --script res://tools/lock_prototype_bench.gd -- --n=60 [--only=A|B|C] [--proto=<name>]   # LOCK PROTOTYPE audit: HARD vs VERY HARD vs VERY HARD + Locks (never production)
 godot --headless --path . res://tools/LockPrototypeCheck.tscn         # LOCK PROTOTYPE safety: exact board, SHOW A MOVE, UNDO, RESTART, locked taps, production still refuses locks
+godot --headless --path . --script res://tools/vh_human_test_build.gd   # VERY HARD human test: (re)build data/dev/vh_human_test.json offline (about 5 min)
+godot --headless --path . res://tools/VhHumanTestCheck.tscn           # VERY HARD human test page (?vhtest=1): blind order, x1 / x1 assistance, rating, resume, results export
+node tools/web_vhtest_page_test.mjs build/web                       # ?vhtest=1 in real Chromium: real touches, COPY RESULTS, no network
 node tools/web_friendbench_route_test.mjs build/web                  # ?friendbench=1 dev page vs challenge links (routing)
 node tools/web_sharetest_page_test.mjs build/web                   # ?sharetest=1 dev page: WhatsApp hand-off test links (web/share_test.js)
 node tools/web_share_options_test.mjs build/web                    # CHALLENGE READY: SEND ON WHATSAPP (wa.me, new tab), MORE WAYS TO SHARE, COPY LINK
