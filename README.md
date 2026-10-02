@@ -107,7 +107,17 @@ For scale: the campaign averages 4.7 in Chapter 1, 18.2 in Chapter 3, 27.4 in Ch
     - It wins over a challenge link, even when appended to one (`…?challenge=<id>?friendbench=1`): the page script splits launch parameters on `?`, `&` and `#`.
     - Checked by `node tools/web_friendbench_route_test.mjs build/web`.
 
-### CHALLENGE READY sharing — WhatsApp fix (real-iPhone finding)
+### CHALLENGE READY sharing — status: REAL-DEVICE VALIDATED (`a1c2643`)
+
+Real iPhone Safari results, on the itch.io build:
+- **SEND ON WHATSAPP:** opened the main WhatsApp app, and the challenge arrived immediately. Neither the sender nor the recipient had to reopen WhatsApp.
+- **Back in Safari:** the game was still on CHALLENGE READY, with no reload.
+- **MORE WAYS TO SHARE:** Email and Messages / iMessage passed. Every channel delivered the same exact challenge.
+- **COPY LINK:** passed.
+
+The "OPENED WHATSAPP" status was not visible on the device after returning. That is accepted as is, because the user has just seen WhatsApp open. Nothing will be done about it; "LINK COPIED" stays.
+
+#### WhatsApp fix (real-iPhone finding)
 
 **Problem found on a real iPhone:** SHARE → WhatsApp used WhatsApp's *share extension*. That extension only queues the message, and the recipient got it only once the sender next opened WhatsApp. On top of that, the game showed "SHARED" as soon as iOS reported the hand-off.
 
@@ -128,7 +138,15 @@ The message and the link are the same as before ("I made a Chain Escape for you 
 
 **Checks:** `node tools/web_share_options_test.mjs build/web`.
 
-### Challenge a Friend phase 2 — backend / data foundation (no UI)
+### Challenge a Friend phase 2 — status: APPROVED / FROZEN
+
+**Frozen state:**
+- **Edge Function:** `chain-escape-api` **v4** is deployed (health reports `version: 4`), and the database constraint allows `friend_challenge` / `very_hard`.
+- **Live contract test:** `node tools/backend_contract_test.mjs <live URL> --old=… --with-image` passed **43/43** against production.
+- **Sharing:** the CHALLENGE READY sharing fix (SEND ON WHATSAPP / MORE WAYS TO SHARE / COPY LINK, `a1c2643`) is real-device validated.
+- **Not part of phase 2:** the Challenge a Friend creator UI, recipient UI, results, timer, percentile and Challenge Back (later phases).
+
+#### Backend / data foundation (no UI)
 
 `friend_challenge` is a real challenge type in the client and in the mock API. It uses the same table, Edge Function, share links and expiry as Photo / Message Reveal.
 
