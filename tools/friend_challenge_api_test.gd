@@ -135,8 +135,8 @@ func _test_old_records() -> void:
 	_check(SharedChallenge.from_api(bare).has("challenge"), "old records without version columns still parse")
 
 
-## No Challenge a Friend recipient UI yet: a friend link gets the friendly
-## "not available / newer version" screen, nothing else.
+## Phase 3: a friend link opens the Friend landing (phase 2 showed the
+## "not available" screen here).
 func _test_recipient_guard() -> void:
 	var p := FriendGenerator.new("medium", 21, [], 0).run()
 	var c := await api.create_challenge(SharedChallenge.friend_challenge(p, "medium"))
@@ -146,8 +146,10 @@ func _test_recipient_guard() -> void:
 	var t0 := Time.get_ticks_msec()
 	while rf.state == RecipientFlow.State.LOADING and Time.get_ticks_msec() - t0 < 8000:
 		await get_tree().process_frame
-	_check(rf.state == RecipientFlow.State.UNAVAILABLE and rf.error_code == "unsupported" and rf.challenge == null,
-		"a friend link today -> friendly unavailable screen, nothing playable (%s)" % rf.error_code)
+	_check(rf.state == RecipientFlow.State.LANDING and rf.challenge != null and rf.challenge.type == "friend_challenge"
+		and rf.challenge.difficulty == "medium" and rf.challenge.puzzle.fingerprint() == p.fingerprint()
+		and rf._l_title.text == "YOUR FRIEND\nCHALLENGED YOU" and rf._l_sub.text == "Can you escape this MEDIUM\nChain Escape?",
+		"phase 3: a friend link opens the Friend landing with the exact puzzle (%s)" % rf.error_code)
 	rf.queue_free()
 
 

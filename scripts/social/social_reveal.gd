@@ -25,6 +25,8 @@ const TINT := Color("#EBCBF7")
 const WIDTH := 600.0
 const CHAIN := 7
 const CTA_TEXT := "CREATE YOUR OWN"
+## Challenge a Friend (phase 3): the recipient's invitation.
+const FRIEND_CTA_TEXT := "CHALLENGE A FRIEND"
 
 var _backdrop: SocialPlay.Backdrop
 var _chain_root: Control
@@ -228,6 +230,15 @@ func show_reveal(c: SharedChallenge, theme: Dictionary, mode: int, photo: String
 	_message.add_theme_font_size_override("font_size", 30 if expects_photo else 40)
 	var recipient := mode == SocialPlay.Mode.RECIPIENT
 	_place_buttons(recipient)
+	# A friend challenge has nothing to reveal: its invitation is to make
+	# one in return (no supporting line).
+	var friend := c.type == SharedChallenge.TYPE_FRIEND_CHALLENGE
+	_cta.text = (FRIEND_CTA_TEXT if friend else CTA_TEXT) + "    "
+	_cta.name = "ChallengeAFriend" if friend else "CreateYourOwn"
+	_cta_line.visible = recipient and not friend
+	for ch in _cta.get_children():
+		if ch is CtaArrow:
+			ch.queue_redraw()
 	if has_photo:
 		_photo.texture = c.local_photo
 		_fit_photo(c.local_photo.get_size(), text)
@@ -427,7 +438,7 @@ class CtaArrow extends Control:
 		var f := b.get_theme_font("font")
 		var fs := b.get_theme_font_size("font_size")
 		var full := f.get_string_size(b.text, HORIZONTAL_ALIGNMENT_LEFT, -1, fs).x
-		var word := f.get_string_size(CTA_TEXT, HORIZONTAL_ALIGNMENT_LEFT, -1, fs).x
+		var word := f.get_string_size(b.text.strip_edges(), HORIZONTAL_ALIGNMENT_LEFT, -1, fs).x
 		var at := Vector2((size.x - full) * 0.5 + word + (full - word) * 0.55, size.y * 0.5)
 		draw_rect(Rect2(at + Vector2(-13, -3.5), Vector2(16, 7)), Color.WHITE)
 		draw_colored_polygon(PackedVector2Array([at + Vector2(13, 0), at + Vector2(1, -11), at + Vector2(1, 11)]), Color.WHITE)

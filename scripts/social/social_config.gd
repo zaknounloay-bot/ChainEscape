@@ -21,6 +21,10 @@ const SHARE_BASE_URL := ""
 const LINK_PARAM := "challenge"
 const SHARE_TITLE := "Chain Escape"
 const SHARE_TEXT := "I made a Chain Escape for you 🔗 Can you unlock it?"
+## Challenge a Friend: the REAL stored difficulty goes in (never "surprise";
+## the recipient is not told SURPRISE ME was used).
+const FRIEND_SHARE_TEXT := "I made a %s Chain Escape for you 🔗\nCan you escape it?"
+const DIFFICULTY_LABELS := {"easy": "EASY", "medium": "MEDIUM", "hard": "HARD", "very_hard": "VERY HARD"}
 
 ## Network limits (the server enforces its own; these fail early and kindly).
 const TIMEOUT_SEC := 30.0
@@ -55,3 +59,7 @@ static func api_url() -> String:
 
 static func sharing_enabled() -> bool:
 	return api_url() != ""
+
+
+static func friend_share_text(difficulty: String) -> String:
+	return FRIEND_SHARE_TEXT % DIFFICULTY_LABELS.get(difficulty, "")

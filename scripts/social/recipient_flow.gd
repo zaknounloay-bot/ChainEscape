@@ -24,8 +24,9 @@ signal photo_changed(state: String)
 enum State { CLOSED, LOADING, LANDING, UNAVAILABLE, ERROR }
 
 const ACCENT := Color("#C645E6")
+const FRIEND_COLOR := Color("#1A9FE6")  # Challenge a Friend identity
 const TINT := Color("#EBCBF7")
-const DIFFICULTY_NAMES := {"easy": "EASY", "medium": "MEDIUM", "hard": "HARD"}
+const DIFFICULTY_NAMES := {"easy": "EASY", "medium": "MEDIUM", "hard": "HARD", "very_hard": "VERY HARD"}
 ## Errors worth a RETRY (the link itself may be fine).
 const RETRYABLE := ["network", "timeout", "server", "rate_limited", "invalid_response", "not_configured"]
 const MAX_PHOTO_BYTES := 8 * 1024 * 1024
@@ -47,6 +48,13 @@ var _pages: Dictionary = {}  # State -> Control
 var _labels: Array[Label] = []  # recolored per theme
 var _soft: Array[Label] = []
 var _difficulty: Label
+# Landing parts that change with the challenge type.
+var _l_gift: Node2D
+var _l_block: Node2D
+var _l_title: Label
+var _l_sub: Label
+var _l_chip: Control
+var _l_play: PillButton
 var _err_title: Label
 var _err_body: Label
 var _retry: PillButton
@@ -128,18 +136,31 @@ func _load() -> void:
 	if not r.get("ok", false):
 		_fail(str(r.get("error", "invalid_response")))
 		return
-	# Phase 2 backend foundation only: Challenge a Friend has no recipient
-	# screens yet, so its links show the friendly "newer version" screen
-	# rather than the Photo / Message Reveal landing.
-	if r["challenge"].type != SharedChallenge.TYPE_PHOTO_MESSAGE_REVEAL:
-		_fail("unsupported")
-		return
 	challenge = r["challenge"]
-	_difficulty.text = "Difficulty: %s" % DIFFICULTY_NAMES.get(challenge.difficulty, "")
+	_set_landing(challenge)
 	_show(State.LANDING)
 	# The photo comes now, while they play (never shown before solving).
 	if challenge.payload.get("photo") != null:
 		_download_photo(false)
+
+
+## The landing's words for this type: a Photo / Message Reveal promises a
+## surprise; a friend challenge (phase 3) is a dare, with its difficulty.
+func _set_landing(c: SharedChallenge) -> void:
+	var dname: String = DIFFICULTY_NAMES.get(c.difficulty, "")
+	var friend := c.type == SharedChallenge.TYPE_FRIEND_CHALLENGE
+	_l_gift.visible = not friend
+	_l_block.visible = friend
+	_l_chip.visible = not friend
+	if friend:
+		_l_title.text = "YOUR FRIEND\nCHALLENGED YOU"
+		_l_sub.text = "Can you escape this %s\nChain Escape?" % dname
+		_l_play.set_background(FRIEND_COLOR)
+	else:
+		_l_title.text = "SOMEONE SENT YOU\nA CHAIN ESCAPE"
+		_l_sub.text = "Solve it to unlock your surprise."
+		_l_play.set_background(ACCENT)
+		_difficulty.text = "Difficulty: %s" % dname
 
 
 func _fail(code: String) -> void:
@@ -281,12 +302,25 @@ func _build_landing() -> Control:
 	var gift := Gift.new()
 	gift.position = Vector2(75, 80)
 	slot.get_child(0).add_child(gift)
+	_l_gift = gift
+	var block := SocialScreen.EscapeBlock.new()
+	block.face = FRIEND_COLOR
+	block.dir = Vector2.RIGHT
+	block.half = 50.0
+	block.position = Vector2(75, 75)
+	block.visible = false
+	slot.get_child(0).add_child(block)
+	_l_block = block
 	box.add_child(slot)
 	var h := _text("SOMEONE SENT YOU\nA CHAIN ESCAPE", 50, 900, false)
 	h.name = "LandingTitle"
 	box.add_child(h)
-	box.add_child(_text("Solve it to unlock your surprise.", 28, 800, true))
+	_l_title = h
+	_l_sub = _text("Solve it to unlock your surprise.", 28, 800, true)
+	_l_sub.name = "LandingSubtitle"
+	box.add_child(_l_sub)
 	var chip := PanelContainer.new()
+	_l_chip = chip
 	var st := StyleBoxFlat.new()
 	st.bg_color = Palette.WHITE
 	st.set_corner_radius_all(30)
@@ -307,6 +341,7 @@ func _build_landing() -> Control:
 	box.add_child(_gap(10))
 	var play := _button("PLAY", ACCENT, Palette.WHITE, 36, Vector2(460, 116))
 	play.name = "Play"
+	_l_play = play
 	play.pressed.connect(func():
 		AudioManager.play_ui_tap()
 		if challenge != null:
@@ -442,6 +477,8 @@ func _publish() -> void:
 		State.UNAVAILABLE: "unavailable", State.ERROR: "error"}
 	WebBridge.publish("chainEscapeRecipient", {"state": names[state], "error": error_code,
 		"difficulty": challenge.difficulty if challenge else "", "photo": photo_state, "reads": reads,
+		"type": challenge.type if challenge else "", "title": _l_title.text if _l_title else "",
+		"subtitle": _l_sub.text if _l_sub else "",
 		"buttons": buttons})
 
 

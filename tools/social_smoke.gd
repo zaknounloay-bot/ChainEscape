@@ -69,11 +69,17 @@ func _run() -> void:
 	await _test_reveal_creator(social)
 
 	await _tap(_page_node(social, SocialScreen.Page.CHOICE, "Card_Friend"))
-	_check(social.page == SocialScreen.Page.CHALLENGE_FRIEND, "CHALLENGE A FRIEND opens its placeholder")
+	_check(social.page == SocialScreen.Page.CHALLENGE_FRIEND and social.friend.visible
+		and social.friend.step == FriendCreator.Step.CHOOSE, "CHALLENGE A FRIEND opens its creator (difficulty choice)")
 	await _wait(0.8)
-	_check_order(social, SocialScreen.Page.CHALLENGE_FRIEND)
-	await _shot("04_friend_placeholder")
-	await _tap(_page_node(social, SocialScreen.Page.CHALLENGE_FRIEND, "Back"))
+	var vis := get_viewport().get_visible_rect()
+	var prev_end := -INF
+	for c: Control in social.friend._steps[FriendCreator.Step.CHOOSE].get_children():
+		var r := c.get_global_rect()
+		_check(r.position.y >= prev_end - 0.5 and vis.encloses(r), "Friend choice: '%s' in order, on screen (%s)" % [c.name, r])
+		prev_end = r.end.y
+	await _shot("04_friend_choose")
+	await _tap(social.friend._steps[FriendCreator.Step.CHOOSE].find_child("Back", true, false))
 	_check(social.page == SocialScreen.Page.CHOICE, "BACK from Friend returns to the Social choice screen")
 
 	await _tap(_page_node(social, SocialScreen.Page.CHOICE, "Back"))

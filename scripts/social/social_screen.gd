@@ -56,6 +56,10 @@ var creator: RevealCreator
 var play: SocialPlay
 ## 0.2C phase 2: a challenge opened from a shared link.
 var recipient: RecipientFlow
+## Challenge a Friend phase 3: the creator (replaces its 0.1 placeholder).
+var friend: FriendCreator
+## Who started the current play: "photo" | "friend" | "recipient".
+var play_source := ""
 var _theme: Dictionary = {}
 var _entering: Control  # column waiting for its entrance to start
 var _tap: Tween
@@ -76,12 +80,22 @@ func _ready() -> void:
 	add_child(creator)
 	play = SocialPlay.new()
 	creator.play_requested.connect(func(c):
+		play_source = "photo"
 		play.back_label = "BACK TO SHARE" if creator.is_created() else ""
+		play.start(c, SocialPlay.Mode.CREATOR_PREVIEW, _theme))
+	friend = FriendCreator.new()
+	friend.exit_requested.connect(func(): show_page(Page.CHOICE))
+	add_child(friend)
+	# PLAY / PREVIEW: the exact created board, as the recipients get it.
+	friend.play_requested.connect(func(c):
+		play_source = "friend"
+		play.back_label = "BACK TO SHARE"
 		play.start(c, SocialPlay.Mode.CREATOR_PREVIEW, _theme))
 	recipient = RecipientFlow.new()
 	add_child(recipient)
 	recipient.main_menu_requested.connect(close)
 	recipient.play_requested.connect(func(c):
+		play_source = "recipient"
 		play.back_label = ""
 		play.photo_pending = "" if recipient.photo_state == "ready" else recipient.photo_state
 		play.start(c, SocialPlay.Mode.RECIPIENT, _theme))
@@ -97,28 +111,34 @@ func _ready() -> void:
 	# Left before solving: back to the review (or the share screen), every
 	# choice kept - or, for a shared challenge, back to its landing.
 	play.exited.connect(func():
-		if play.mode == SocialPlay.Mode.RECIPIENT:
+		if play_source == "recipient":
 			recipient.show_landing()
+		elif play_source == "friend":
+			friend.resume_after_play()
 		else:
 			creator.resume_after_play())
 	# After the reveal: back to the share screen if the challenge was
 	# created, else to CREATE CHALLENGE (the session is discarded). A
 	# shared challenge's MAIN MENU closes Social (the title shows again).
 	play.finished.connect(func():
-		if play.mode == SocialPlay.Mode.RECIPIENT:
+		if play_source == "recipient":
 			close()
+		elif play_source == "friend":
+			friend.resume_after_play()
 		elif creator.is_created():
 			creator.resume_after_play()
 		else:
 			show_page(Page.CHOICE))
-	# CREATE YOUR OWN: straight into the existing Photo / Message creator.
-	play.create_own.connect(func():
+	# The recipient's invitation: CREATE YOUR OWN (a photo / message reveal)
+	# opens the Photo / Message creator, CHALLENGE A FRIEND (a friend
+	# challenge) the Friend creator.
+	play.create_own.connect(func(challenge_type):
 		recipient.reset()
-		show_page(Page.PHOTO_REVEAL))
+		show_page(Page.CHALLENGE_FRIEND if challenge_type == SharedChallenge.TYPE_FRIEND_CHALLENGE else Page.PHOTO_REVEAL))
 	play.photo_retry.connect(func(): recipient.retry_photo())
 	add_child(play)
 	_pages[Page.PHOTO_REVEAL] = creator
-	_pages[Page.CHALLENGE_FRIEND] = _build_placeholder(Page.CHALLENGE_FRIEND)
+	_pages[Page.CHALLENGE_FRIEND] = friend
 	_pages[Page.RECIPIENT] = recipient
 
 
@@ -151,6 +171,7 @@ func close() -> void:
 	_stop_animations()
 	play.end()
 	creator.reset()
+	friend.reset()
 	recipient.reset()
 	visible = false
 	page = Page.CHOICE
@@ -167,6 +188,8 @@ func show_page(p: int) -> void:
 	# Leaving the creation flow discards its session (photo, message).
 	if p != Page.PHOTO_REVEAL and creator.visible:
 		creator.reset()
+	if p != Page.CHALLENGE_FRIEND and friend.visible:
+		friend.reset()
 	if p != Page.RECIPIENT and recipient.visible:
 		recipient.reset()
 	for k in _pages:
@@ -175,6 +198,8 @@ func show_page(p: int) -> void:
 		return
 	if p == Page.PHOTO_REVEAL:
 		creator.begin(_theme)  # the flow runs its own step transitions
+	elif p == Page.CHALLENGE_FRIEND:
+		friend.begin(_theme)
 	elif p == Page.RECIPIENT:
 		pass  # recipient.begin() shows its own screens
 	else:
@@ -198,26 +223,6 @@ func _build_choice() -> Control:
 	box.add_child(_soft("Choose what to send.", 26))
 	for p in [Page.PHOTO_REVEAL, Page.CHALLENGE_FRIEND]:
 		box.add_child(_track_card(p))
-	box.add_child(_back_button())
-	return box
-
-
-func _build_placeholder(p: int) -> Control:
-	var info: Dictionary = TRACKS[p]
-	var box := _column()
-	box.add_child(_heading(info["title"]))
-	var card := PanelContainer.new()
-	card.add_theme_stylebox_override("panel", _card_style(Palette.WHITE, info["tint"]))
-	card.custom_minimum_size = Vector2(CARD_WIDTH, 0)
-	box.add_child(card)
-	var inner := VBoxContainer.new()
-	inner.add_theme_constant_override("separation", 18)
-	card.add_child(inner)
-	inner.add_child(_icon_holder(info))
-	inner.add_child(_label(info["copy"], 26, Palette.TEXT, 800))
-	var soon := _label("CREATION FLOW COMING SOON", 24, info["color"].darkened(0.15), 900)
-	soon.name = "ComingSoon"
-	inner.add_child(soon)
 	box.add_child(_back_button())
 	return box
 

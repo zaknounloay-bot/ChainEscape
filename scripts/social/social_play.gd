@@ -17,7 +17,7 @@ extends CanvasLayer
 
 signal exited  # left before solving: nothing revealed
 signal finished  # after the Reveal: BACK TO CREATE CHALLENGE / MAIN MENU
-signal create_own  # recipient's Reveal: CREATE YOUR OWN
+signal create_own(challenge_type: String)  # recipient's Reveal: CREATE YOUR OWN / CHALLENGE A FRIEND
 signal photo_retry  # recipient's Reveal: the photo failed, TRY AGAIN
 
 enum Mode { CREATOR_PREVIEW, RECIPIENT }
@@ -29,7 +29,7 @@ const MAX_HINTS := 2
 const TOP_HEIGHT := 250.0
 const BOTTOM_HEIGHT := 190.0
 const ACCENT := Color("#C645E6")
-const DIFFICULTY_NAMES := {"easy": "EASY", "medium": "MEDIUM", "hard": "HARD"}
+const DIFFICULTY_NAMES := {"easy": "EASY", "medium": "MEDIUM", "hard": "HARD", "very_hard": "VERY HARD"}
 
 var challenge: SharedChallenge
 var mode: int = Mode.CREATOR_PREVIEW
@@ -95,7 +95,10 @@ func start(c: SharedChallenge, p_mode: int, theme: Dictionary) -> void:
 	board.board_color = theme["board"]
 	board.slot_color = theme["slot"]
 	board.accent_color = theme["accent"]
-	_title.text = "SOLVE TO UNLOCK" if mode == Mode.RECIPIENT else "REVEAL CHALLENGE"
+	if c.type == SharedChallenge.TYPE_FRIEND_CHALLENGE:
+		_title.text = "FRIEND CHALLENGE"
+	else:
+		_title.text = "SOLVE TO UNLOCK" if mode == Mode.RECIPIENT else "REVEAL CHALLENGE"
 	_chip.text = DIFFICULTY_NAMES.get(c.difficulty, "")
 	visible = true
 	_load_puzzle()
@@ -412,8 +415,9 @@ func _build() -> void:
 		end()
 		finished.emit())
 	reveal.create_own.connect(func():
+		var t := challenge.type if challenge else ""
 		end()
-		create_own.emit())
+		create_own.emit(t))
 	reveal.photo_retry.connect(func(): photo_retry.emit())
 	add_child(reveal)
 	_confirm = _build_confirm()

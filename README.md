@@ -107,6 +107,36 @@ For scale: the campaign averages 4.7 in Chapter 1, 18.2 in Chapter 3, 27.4 in Ch
     - It wins over a challenge link, even when appended to one (`…?challenge=<id>?friendbench=1`): the page script splits launch parameters on `?`, `&` and `#`.
     - Checked by `node tools/web_friendbench_route_test.mjs build/web`.
 
+### Challenge a Friend phase 3 — creator + minimal recipient (status: IMPLEMENTED, awaiting the real-device loop; NOT frozen)
+
+**Creator** (`scripts/social/friend_creator.gd`, `FriendCreator`): CREATE CHALLENGE → **CHALLENGE A FRIEND** opens the difficulty choice.
+- **EASY / MEDIUM / HARD / VERY HARD**, plus **SURPRISE ME** (separate card, drawn dice). One tap does everything: the board is generated (FriendGenerator, in ~20 ms slices per frame) and created through the existing API as a `friend_challenge`. There is no GENERATE / CONTINUE button and no preview step.
+- One screen while that happens: "CREATING YOUR CHALLENGE…" (three pulsing blocks, no progress bar).
+- **CHALLENGE READY:** SEND ON WHATSAPP, MORE WAYS TO SHARE, COPY LINK; NEW CHALLENGE and PLAY / PREVIEW side by side; DONE. The subtitle is "HARD CHALLENGE", or "SURPRISE PICK: HARD" (with the dice) after SURPRISE ME.
+- **Share message:** "I made a HARD Chain Escape for you 🔗\nCan you escape it?" + the link. It always names the real stored difficulty and never mentions SURPRISE ME. The low-level sharing is the validated Photo / Message machinery (SocialWeb tap zones, wa.me in a new tab, `navigator.share`, clipboard), unchanged; only the Friend screen is new. The Photo / Message CHALLENGE READY screen is untouched.
+- **NEW CHALLENGE:** same difficulty, a different board; after SURPRISE ME it re-rolls the difficulty. No board repeats within the session (every shown board's key is passed to the generator as `avoid`). Each one gets its own link; earlier links keep working.
+- **PLAY / PREVIEW:** SocialPlay on the exact stored puzzle (never regenerated). EXIT returns to CHALLENGE READY. Solved: YOU ESCAPED! + PLAY AGAIN + BACK TO SHARE (no timer, no score).
+- **Errors:**
+  - generation failure: "COULDN'T CREATE A CHALLENGE" + TRY AGAIN (generates again) + BACK
+  - server failure: "COULDN'T GET YOUR LINK READY" + TRY AGAIN + BACK. The exact generated puzzle is kept and TRY AGAIN resends that same puzzle.
+  - a failed NEW CHALLENGE keeps the previous challenge and link: BACK returns to them.
+  - Taps are ignored while busy (no duplicates); BACK during creation invalidates the request, so a late server reply changes nothing.
+- The board stays private to the creator until it is shared; nothing is stored locally and the Classic save is never written.
+
+**Recipient** (minimal, in the existing RecipientFlow / SocialPlay / SocialReveal):
+- **Landing:** "YOUR FRIEND CHALLENGED YOU" / "Can you escape this HARD Chain Escape?" / PLAY / MAIN MENU.
+- PLAY: the exact shared board with the existing rules ("FRIEND CHALLENGE", difficulty chip).
+- **Solved:** YOU ESCAPED! + **CHALLENGE A FRIEND** (opens the Friend creator: the loop) + PLAY AGAIN (same exact board) + MAIN MENU. No photo frame or message card.
+- Photo / Message links behave exactly as before (CREATE YOUR OWN → the Photo / Message creator).
+
+**Not built (by design):** results, timer, percentile, leaderboards, Challenge Back, accounts, notifications, analytics, editor, new mechanics. No backend change (v4 as deployed).
+
+**Checks:**
+- `godot --headless --path . res://tools/FriendFlowTest.tscn` (116 checks against the mock API; add `-- --shots=<dir>` under xvfb with `--resolution 390x844` / `405x720` for screenshots)
+- `node tools/web_friend_flow_test.mjs build/web` (real Chromium: phone A creates HARD and shares via wa.me / share sheet / copy, previews; phone B at 405x720 opens the link, solves, CHALLENGE A FRIEND → creates its own)
+
+**Freezes only after the real-device loop:** Phone A creates → WhatsApp → Phone B solves → CHALLENGE A FRIEND → creates → shares back.
+
 ### CHALLENGE READY sharing — status: REAL-DEVICE VALIDATED (`a1c2643`)
 
 Real iPhone Safari results, on the itch.io build:
@@ -158,7 +188,7 @@ The message and the link are the same as before ("I made a Chain Escape for you 
   - `SocialApi` sends `{challenge_type, difficulty, puzzle, surprise_me?}`, with no message, image or upload.
   - `SharedChallenge.from_api` validates READ data per type. A friend challenge may carry no message, media or `media_url`, and only plain arrows or clockwise spinners.
   - Photo / Message Reveal rules are unchanged; it still refuses `very_hard`.
-- **Recipient:** there is no Challenge a Friend recipient UI yet. A friend link shows the friendly "isn't available / newer version" screen.
+- **Recipient:** there was no Challenge a Friend recipient UI in phase 2 (a friend link showed the "isn't available" screen); phase 3 adds it.
 - **Backend:** `supabase/functions/chain-escape-api/index.ts` is the complete version 4 of the Edge Function. Version 3, as deployed, is kept in `docs/backend/chain-escape-api/index.v3.deployed.ts` for reference and rollback.
   - `docs/backend/friend_challenge_phase2.md` has the exact Supabase steps: constraint check, deploy, verify, rollback, and the intended results table (not created).
   - Deploying is done by hand in Supabase; nothing is deployed from here.
@@ -1754,6 +1784,8 @@ node tools/web_friendbench_route_test.mjs build/web                  # ?friendbe
 node tools/web_sharetest_page_test.mjs build/web                   # ?sharetest=1 dev page: WhatsApp hand-off test links (web/share_test.js)
 node tools/web_share_options_test.mjs build/web                    # CHALLENGE READY: SEND ON WHATSAPP (wa.me, new tab), MORE WAYS TO SHARE, COPY LINK
 godot --headless --path . res://tools/FriendChallengeApiTest.tscn    # Challenge a Friend phase 2: friend_challenge model / API vs the mock
+godot --headless --path . res://tools/FriendFlowTest.tscn            # Challenge a Friend phase 3: creator, NEW CHALLENGE, SURPRISE ME, retries, preview, recipient loop
+node tools/web_friend_flow_test.mjs build/web                      # Challenge a Friend phase 3 in real Chromium: create -> wa.me / share / copy -> recipient -> CHALLENGE A FRIEND
 node tools/backend_contract_test.mjs [API_URL | --edge=<index.ts>]  # chain-escape-api contract: mock (default), real URL, or a function source under Deno
 godot --headless --path . --export-release "Web" build/web/index.html && node tools/web_audio_test.mjs   # real browser
 node tools/web_persistence_test.mjs                                  # Web save scenarios A-G (itch-like iframe)
