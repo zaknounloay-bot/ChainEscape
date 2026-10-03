@@ -59,6 +59,15 @@ var gate_link: String = ""
 ## ARMORED: cannot escape while its shell is intact. The shell cracks when
 ## the player launches another block straight into it (see BoardModel.ram).
 var armored: bool = false
+## SEQUENCE PROTOTYPE (development only, ?mechlab=sequence): a two-stage
+## arrow. seq_stage 0 = not a Sequence block; 1 = first stage (the arrow
+## is `direction`, the NEXT arrow is `seq_next`); 2 = second stage (its
+## first stage was activated: `direction` is now the former next arrow and
+## it plays like a plain arrow). Stage 1 never leaves the board: with a
+## clear lane it launches, comes back, sends the neighbour event (adjacent
+## spinners turn, adjacent hidden arrows are revealed) and moves to stage 2.
+var seq_stage: int = 0
+var seq_next: int = -1
 
 const LINK_GROUPS := ["A", "B", "C", "D"]
 ## Switches use A / B, Chain Gates C / D (their own letters and colors, so a
@@ -120,6 +129,11 @@ func undo_turn() -> void:
 	direction = Direction.rotate_ccw(direction) if next_turn_cw() else Direction.rotate_cw(direction)
 
 
+## Sequence prototype: still in its first stage (a tap advances it).
+func is_sequence_pending() -> bool:
+	return seq_stage == 1
+
+
 func is_reward() -> bool:
 	return rarity != Rarity.NORMAL
 
@@ -144,4 +158,6 @@ func duplicate_data() -> BlockData:
 	b.gate_group = gate_group
 	b.gate_link = gate_link
 	b.armored = armored
+	b.seq_stage = seq_stage
+	b.seq_next = seq_next
 	return b

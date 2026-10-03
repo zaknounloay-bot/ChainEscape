@@ -65,8 +65,9 @@ scheduled beyond "next".
 - Lessons: `docs/vh_human_test3.md` §8. Phase 3 stays unfrozen.
 
 **Chapter 2 mechanic lab (levels 201–300 come first):**
-- PORTAL is the first candidate. A dev-only prototype (`?mechlab=1`, `docs/mechlab_portal.md`) with matched control boards decides GO / MODIFY / DROP with people.
-- Sequence, Choice, Linked / Trigger, levels 201–300 and the global Game Feel pass are not started.
+- **PORTAL: GO** after its human test (dev-only lab `?mechlab=1`, `docs/mechlab_portal.md`). Not implemented in production yet. The onboarding / demo must be clearer for new players (recorded MODIFY).
+- **SEQUENCE:** dev-only prototype lab (`?mechlab=sequence`, `docs/mechlab_sequence.md`). It tests whether its first stage creates a timing decision or is just two taps. Not approved.
+- Choice, Linked / Trigger, levels 201–300 and the global Game Feel pass are not started.
 
 ## Next product phase (after phase 3 is frozen): COMPETITIVE CHALLENGE
 

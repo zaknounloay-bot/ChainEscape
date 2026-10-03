@@ -78,6 +78,15 @@ var _has_portals := false
 ## Returned by _first_in_lane for a lane that loops (malformed portal
 ## layouts only): not free, and nothing to ram.
 const LANE_LOOP := -2
+# Sequence prototype (development only): per block 0 / 1 / 2 (see
+# BlockData.seq_stage) and the NEXT arrow. The stage changes during play,
+# so it is part of the memo key; a first-stage block's legal move is the
+# advance (it stays, turns / reveals its neighbours, takes its next arrow).
+# Empty on every campaign and Social board.
+var _seq_stage := PackedByteArray()
+var _seq_first := PackedInt32Array()  # stage-1 arrow, to undo an advance
+var _seq_next := PackedInt32Array()
+var _seq_ids := PackedInt32Array()
 
 
 ## Build from a list of BlockData (e.g. BoardModel.snapshot()).
@@ -120,6 +129,16 @@ func _init(p_rows: int, p_columns: int, blocks: Array, portals: Dictionary = {})
 	_turnable = PackedByteArray(); _turnable.resize(n)
 	_neighbours.resize(n)
 	for b in blocks:
+		if b.seq_stage != 0:
+			if _seq_ids.is_empty():
+				_seq_stage.resize(n)
+				_seq_first.resize(n)
+				_seq_next.resize(n)
+			_seq_ids.append(b.id)
+			_seq_stage[b.id] = b.seq_stage
+			_seq_next[b.id] = b.seq_next
+			_seq_first[b.id] = b.direction
+	for b in blocks:
 		_rule[b.id] = b.spin_rule
 		_step[b.id] = b.spin_step
 		_color[b.id] = _color_index(b.color)
@@ -141,7 +160,7 @@ func _init(p_rows: int, p_columns: int, blocks: Array, portals: Dictionary = {})
 			_armor[b.id] = 1
 			_armored_ids.append(b.id)
 			_shells += 1
-		if b.is_spinner() or b.flip_link != "":
+		if b.is_spinner() or b.flip_link != "" or b.seq_stage == 1:
 			_turnable[b.id] = 1
 	for b in blocks:
 		var idx: int = b.cell.y * columns + b.cell.x
@@ -633,7 +652,7 @@ func _dfs() -> bool:
 			if _alive[id] == 0:
 				continue
 			if _is_legal(id):
-				if _spinner_neighbours(id) == 0 and _switch[id] < 0 and (_shells == 0 or _turnable[id] == 0):
+				if _spinner_neighbours(id) == 0 and _switch[id] < 0 and (_shells == 0 or _turnable[id] == 0) and not _pending(id):
 					_apply(id)
 					safe.append(id)
 					_path.append(id)
@@ -685,6 +704,11 @@ func _key() -> String:
 		if period > 1:
 			dirs = dirs * period + posmod(_step[sid], period)
 	parts.append(str(dirs))
+	if not _seq_ids.is_empty():
+		var stages := 0
+		for i in _seq_ids.size():
+			stages |= (1 if _seq_stage[_seq_ids[i]] == 1 else 0) << (i % 62)
+		parts.append("s" + str(stages))
 	if not _armored_ids.is_empty():
 		var shells := 0
 		for i in _armored_ids.size():
@@ -698,7 +722,7 @@ func _key() -> String:
 func _is_risky(move: int) -> bool:
 	if move & RAM:
 		return false
-	return _spinner_neighbours(move) > 0 or _switch[move] >= 0 or (_shells > 0 and _turnable[move] == 1)
+	return _spinner_neighbours(move) > 0 or _switch[move] >= 0 or (_shells > 0 and _turnable[move] == 1) or _pending(move)
 
 
 ## Can escape now: not a gate, not hidden, not locked, not armored, lane clear.
@@ -725,14 +749,24 @@ func _ram_target(id: int) -> int:
 	return t if t >= 0 and _armor[t] == 1 else -1
 
 
-## Still hidden: no neighbour (at construction time) has escaped yet.
+## Still hidden: no neighbour (at construction time) has escaped yet - or,
+## Sequence prototype, advanced past its first stage (the same neighbour
+## event; a block that was already in stage 2 at construction had revealed
+## its neighbours then, so this stays exact).
 func _is_concealed(id: int) -> bool:
 	if _hidden[id] == 0:
 		return false
 	for n in _neighbours[id]:
 		if _alive[n] == 0:
 			return false
+		if not _seq_ids.is_empty() and _seq_stage[n] == 2:
+			return false
 	return true
+
+
+## Sequence prototype: a first-stage block (its legal move is an advance).
+func _pending(id: int) -> bool:
+	return not _seq_ids.is_empty() and _seq_stage[id] == 1
 
 
 func _is_free(id: int) -> bool:
@@ -830,6 +864,8 @@ func _undo_move(move: int) -> void:
 ## Removes `id`: turns adjacent spinners, fires its switch, and opens its
 ## Chain Gate if it was the last link. Returns the turned spinner ids.
 func _apply(id: int) -> Array:
+	if _pending(id):
+		return _advance(id)
 	var idx := _cell[id]
 	_grid[idx] = -1
 	_alive[id] = 0
@@ -860,6 +896,46 @@ func _apply(id: int) -> Array:
 				_alive[gid] = 0
 				_alive_count -= 1
 	return turned
+
+
+## Sequence prototype: the first stage. Neighbour event around its cell
+## (spinners turn, hidden reveal is derived), then the next arrow.
+func _advance(id: int) -> Array:
+	var idx := _cell[id]
+	var c := idx % columns
+	var r := idx / columns
+	var turned := []
+	for step in Direction.STEPS:
+		var x: int = c + step.x
+		var y: int = r + step.y
+		if x >= 0 and y >= 0 and x < columns and y < rows:
+			var other := _grid[y * columns + x]
+			if other != -1 and _spinner[other] == 1:
+				var cw := BlockData.turn_is_cw(_rule[other], _step[other])
+				_dir[other] = Direction.rotate_cw(_dir[other]) if cw else Direction.rotate_ccw(_dir[other])
+				_step[other] += 1
+				turned.append(other)
+	_dir[id] = _seq_next[id]
+	_seq_stage[id] = 2
+	return turned
+
+
+## Exact inverse of _advance.
+func _unadvance(id: int) -> void:
+	_seq_stage[id] = 1
+	_dir[id] = _seq_first[id]
+	var idx := _cell[id]
+	var c := idx % columns
+	var r := idx / columns
+	for step in Direction.STEPS:
+		var x: int = c + step.x
+		var y: int = r + step.y
+		if x >= 0 and y >= 0 and x < columns and y < rows:
+			var other := _grid[y * columns + x]
+			if other != -1 and _spinner[other] == 1:
+				_step[other] -= 1
+				var cw := BlockData.turn_is_cw(_rule[other], _step[other])
+				_dir[other] = Direction.rotate_ccw(_dir[other]) if cw else Direction.rotate_cw(_dir[other])
 
 
 ## v0.6.1 armor safety: walks EVERY state a player can reach (every escape
@@ -925,6 +1001,9 @@ func _rewind(path: Array[int]) -> void:
 ## and turns its spinner neighbours back. Must be called in reverse order
 ## of _apply, so the neighbours are exactly those turned.
 func _undo(id: int, _turned: Array = []) -> void:
+	if _alive[id] == 1 and not _seq_ids.is_empty() and _seq_stage[id] == 2:
+		_unadvance(id)  # the move was the advance (the block never left)
+		return
 	if _link[id] >= 0:
 		var g := _link[id]
 		if _links_alive[g] == 0:

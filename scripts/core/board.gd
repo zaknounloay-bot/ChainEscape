@@ -328,6 +328,16 @@ func play_bump(id: int, blocker_id: int, via: Array = []) -> void:
 		blocker.play_hit(view.data.direction, cell_size * 0.05, 0.05 + 0.015 * dist)
 
 
+## SEQUENCE PROTOTYPE: `id` advanced - a short launch along its lane and
+## back, then its arrow turns to the former NEXT arrow (the chip goes);
+## the spinners it turned animate as for an escape.
+func play_advance(id: int, new_direction: int, turned: Array) -> void:
+	var v: BlockView = _views.get(id)
+	if v:
+		v.play_advance(new_direction, cell_size)
+	animate_turns(turned)
+
+
 ## Spinners turned by an escape/smash: animate each by its own rule.
 func animate_turns(turned: Array) -> void:
 	for sid in turned:
@@ -351,6 +361,15 @@ func sync_to(blocks: Array) -> void:
 	for id in wanted:
 		if _views.has(id):
 			var existing: BlockView = _views[id]
+			if existing.data.seq_stage != wanted[id].seq_stage:
+				# Sequence prototype: an advance undone - back to stage 1
+				# (arrow and NEXT chip as they were).
+				existing.stop_motion()  # an advance still animating
+				existing.data.seq_stage = wanted[id].seq_stage
+				existing.data.seq_next = wanted[id].seq_next
+				existing.play_turn(wanted[id].direction, true)
+				existing.refresh()
+				continue
 			if existing.data.direction != wanted[id].direction:
 				# A spinner turned back by Undo: animate the reverse of the
 				# turn it made.

@@ -107,6 +107,30 @@ For scale: the campaign averages 4.7 in Chapter 1, 18.2 in Chapter 3, 27.4 in Ch
     - It wins over a challenge link, even when appended to one (`…?challenge=<id>?friendbench=1`): the page script splits launch parameters on `?`, `&` and `#`.
     - Checked by `node tools/web_friendbench_route_test.mjs build/web`.
 
+### Chapter 2 mechanic lab — SEQUENCE prototype (development only, not approved)
+
+The second candidate mechanic. The research question: does its first stage create a real **timing** decision, or is it just "a block that needs two taps"?
+
+**Rule:** a Sequence block (`R>:^`) shows its arrow now (big) and its NEXT arrow (small corner disc).
+- **First tap with a clear lane:** it launches and comes back. It sends the same neighbour event as an escape from its cell (adjacent spinners turn, adjacent hidden arrows are revealed), stays, and takes its NEXT arrow.
+- **Then:** a plain arrow.
+- **Blocked:** an ordinary blocked tap; the stage does not advance.
+
+**Status:**
+- Not approved, not in production, not combined with Portal.
+- **Outside the lab the token is unknown, exactly as before:** it is parsed only while `LevelManager.dev_sequence` is on, set by the lab and its tools.
+- **Proven unchanged:** levels 1–200 and the PORTAL lab boards (byte-identical before / after dumps).
+
+**Open it:** the Web build with `?mechlab=sequence`.
+- A 10 s demo.
+- 11 Sequence boards and 6 matched controls (the same boards with plain arrows, turned 180°).
+- Short questions, including whether it felt like "just tapping twice".
+- COPY RESULTS.
+
+Details: `docs/mechlab_sequence.md`.
+
+**PORTAL decision after its human test: GO** (dev-only for now). A MODIFY is recorded for later: the onboarding / demo must be clearer for players who don't know the mechanic (`docs/mechlab_portal.md`).
+
 ### Chapter 2 mechanic lab — PORTAL prototype (development only, not approved)
 
 The first candidate mechanic for levels 201–300, from the next-phase design audit. It is built only to answer one question with people: does PORTAL create genuinely new planning?
@@ -1993,6 +2017,10 @@ godot --headless --path . res://tools/PortalCheck.tscn                  # PORTAL
 godot --headless --path . --script res://tools/mechlab_portal_build.gd   # PORTAL lab: (re)build data/dev/mechlab_portal.json (17 boards; --dry to check only)
 godot --headless --path . --script res://tools/classic_golden.gd -- --out=FILE   # campaign no-change dump: solutions, analysis, move states (diff two dumps)
 node tools/web_mechlab_page_test.mjs build/web                     # ?mechlab=1 in real Chromium: demo, real touches, questions, resume, COPY RESULTS, no network
+godot --headless --path . res://tools/SequenceCheck.tscn                # SEQUENCE prototype (dev only): token gating, stages, neighbour event, Solver vs brute force, ?mechlab=sequence flow
+godot --headless --path . --script res://tools/mechlab_sequence_build.gd # SEQUENCE lab: (re)build data/dev/mechlab_sequence.json (17 boards; --dry to check only)
+godot --headless --path . --script res://tools/mechlab_golden.gd -- --out=FILE   # PORTAL lab boards no-change dump (diff two dumps)
+node tools/web_mechlab_sequence_test.mjs build/web                 # ?mechlab=sequence in real Chromium (and ?mechlab=1 still the PORTAL lab)
 godot --headless --path . --script res://tools/classic_topology_audit.gd [-- --levels]   # VERY HARD: Classic vs Friend board geometry / visual-search audit
 godot --headless --path . --script res://tools/vh_human_test2_build.gd   # VERY HARD human test 2: (re)build data/dev/vh_human_test2.json
 godot --headless --path . --script res://tools/vh_human_test3_build.gd   # VERY HARD human test 3: (re)build data/dev/vh_human_test3.json (CW + CCW, about 1 min)

@@ -24,6 +24,10 @@ extends Node
 ##    PORTAL PROTOTYPE (development only, ?mechlab=1; see Portals):
 ##    "OA"   = a cell of portal pair A (no block; groups A-D, exactly two
 ##             cells each). No campaign level uses it.
+##    SEQUENCE PROTOTYPE (development only, ?mechlab=sequence; accepted only
+##    while LevelManager.dev_sequence is true - never in the game, Social or
+##    Friend parsing): "R>:^" = Sequence block, current arrow right, NEXT
+##    arrow up. A plain arrow: no other modifier.
 ##    Modifiers can be combined in the order  @ ? #K $R %A &A +A =
 ##    (spinners cannot be hidden, hidden blocks cannot be locked; switches,
 ##    flip targets and armored blocks are plain arrows: no spinner, no
@@ -109,11 +113,15 @@ static func parse_level(json: Dictionary, number: int = 0) -> LevelData:
 
 
 static var _token_re: RegEx
+## Sequence prototype: the ":" token is parsed only while this is true (set
+## by the mechanic lab and its dev tools). Off everywhere else, so a
+## Sequence cell stays a bad token exactly as before this prototype.
+static var dev_sequence: bool = false
 
 
 static func _parse_map(map: Array, level: LevelData) -> void:
 	if _token_re == null:
-		_token_re = RegEx.create_from_string("^([RBGYPrbgyp])([\\^v<>])(@[-~*]?)?(\\?)?(#[RBGYPrbgyp])?(\\$[SGD])?(%[ABCD])?(&[ABCD])?(\\+[ABCD])?(=)?$")
+		_token_re = RegEx.create_from_string("^([RBGYPrbgyp])([\\^v<>])(@[-~*]?)?(\\?)?(#[RBGYPrbgyp])?(\\$[SGD])?(%[ABCD])?(&[ABCD])?(\\+[ABCD])?(=)?(:[\\^v<>])?$")
 	level.rows = map.size()
 	level.columns = 0
 	var next_id := 0
@@ -134,6 +142,8 @@ static func _parse_map(map: Array, level: LevelData) -> void:
 				next_id += 1
 				continue
 			var m := _token_re.search(t)
+			if m != null and m.get_string(11) != "" and not dev_sequence:
+				m = null  # Sequence prototype token outside the lab: unknown, as before
 			if m == null:
 				push_error("Level %d: bad map token '%s' at row %d col %d" % [level.number, t, r, c])
 				continue
@@ -152,6 +162,9 @@ static func _parse_map(map: Array, level: LevelData) -> void:
 			b.flip_link = m.get_string(8).substr(1)
 			b.gate_link = m.get_string(9).substr(1)
 			b.armored = m.get_string(10) != ""
+			if m.get_string(11) != "":
+				b.seq_stage = 1
+				b.seq_next = Direction.MAP_CHARS[m.get_string(11).substr(1)]
 			_validate_block(b, level)
 			level.blocks.append(b)
 			next_id += 1
@@ -216,6 +229,12 @@ static func _validate_links(level: LevelData) -> void:
 
 
 static func _validate_block(b: BlockData, level: LevelData) -> void:
+	# Sequence prototype: a plain colored arrow, nothing else.
+	if b.seq_stage != 0 and (b.is_spinner() or b.hidden or b.lock_color != "" or b.is_reward() or b.switch_group != ""
+			or b.flip_link != "" or b.gate_link != "" or b.armored):
+		push_error("Level %d: Sequence block at %s must be a plain arrow (no other modifier)" % [level.number, b.cell])
+		b.seq_stage = 0
+		b.seq_next = -1
 	if b.hidden and b.is_spinner():
 		push_error("Level %d: spinner at %s cannot be hidden" % [level.number, b.cell])
 		b.hidden = false
@@ -290,7 +309,8 @@ static func to_json_text(level: LevelData) -> String:
 				+ ("?" if b.hidden else "") + ("#" + letters[b.lock_color] if b.lock_color != "" else "")
 				+ ("$" + BlockData.RARITY_TOKENS[b.rarity] if b.is_reward() else "")
 				+ ("%" + b.switch_group if b.switch_group != "" else "") + ("&" + b.flip_link if b.flip_link != "" else "")
-				+ ("+" + b.gate_link if b.gate_link != "" else "") + ("=" if b.armored else ""))
+				+ ("+" + b.gate_link if b.gate_link != "" else "") + ("=" if b.armored else "")
+				+ (":" + arrows[b.seq_next] if b.seq_stage == 1 else ""))
 	var rows := []
 	for row in grid:
 		rows.append(" ".join(PackedStringArray(row)))

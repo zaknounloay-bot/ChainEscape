@@ -67,6 +67,15 @@ var total_blocked := 0
 var total_rams := 0
 var total_portal_uses := 0
 var total_portal_blocked := 0
+## Sequence prototype (mechanic lab only; always 0 / empty elsewhere):
+## first-stage advances, blocked taps on a first-stage block, second-stage
+## escapes, spinner turns caused by advances, and one record per advance
+## ({"ms": ticks, "cleared", "of", "turned"}).
+var total_seq_advances := 0
+var total_seq_blocked := 0
+var total_seq_escapes := 0
+var total_seq_spinner_turns := 0
+var seq_events: Array = []
 ## The next board tap smashes a block (Social Hammer).
 var hammer_armed := false
 ## Reveal's last button text ("" = the default for the mode).
@@ -125,6 +134,11 @@ func start(c: SharedChallenge, p_mode: int, theme: Dictionary) -> void:
 	total_rams = 0
 	total_portal_uses = 0
 	total_portal_blocked = 0
+	total_seq_advances = 0
+	total_seq_blocked = 0
+	total_seq_escapes = 0
+	total_seq_spinner_turns = 0
+	seq_events = []
 	_backdrop.set_colors(theme["bg_top"], theme["bg_bottom"])
 	_title.add_theme_color_override("font_color", theme["text"])
 	_chip.add_theme_color_override("font_color", theme["text_soft"])
@@ -231,6 +245,7 @@ func tap_block(id: int) -> void:
 		return
 	match model.move_state(id):
 		"ok": _escape(id)
+		"advance": _advance(id)
 		"blocked": _blocked(id)
 		"ram": _ram(id)
 		"locked":
@@ -244,6 +259,8 @@ func tap_block(id: int) -> void:
 func _escape(id: int) -> void:
 	history.push({"blocks": model.snapshot(), "chain": chain})
 	var via := _portal_via(id)
+	if model.blocks[id].seq_stage == 2:
+		total_seq_escapes += 1
 	var turned := model.remove(id)
 	var revealed := model.last_revealed.duplicate()
 	var unlocked := model.last_unlocked.duplicate()
@@ -279,12 +296,39 @@ func _blocked(id: int) -> void:
 	var blocker := model.find_blocker(id)
 	var via := _portal_via(id)
 	total_blocked += 1
+	if model.blocks[id].seq_stage == 1:
+		total_seq_blocked += 1
 	board.play_bump(id, blocker.id if blocker else -1, via)
 	_mistake()
 	if not via.is_empty():
 		# Portal prototype: the reason may be far away - say where.
 		total_portal_blocked += 1
 		_show_message("Blocked after portal %s" % str(model.portal_groups.get(via[-1][0], "")))
+
+
+## SEQUENCE PROTOTYPE: a first-stage block with a clear lane launches,
+## comes back, sends the neighbour event and takes its next arrow (see
+## BoardModel.advance). A real move: Undo-able, never a mistake; the chain
+## is kept (it is not an escape).
+func _advance(id: int) -> void:
+	history.push({"blocks": model.snapshot(), "chain": chain})
+	var turned := model.advance(id)
+	var revealed := model.last_revealed.duplicate()
+	total_seq_advances += 1
+	total_seq_spinner_turns += turned.size()
+	seq_events.append({"ms": Time.get_ticks_msec(), "cleared": _total_blocks - model.block_count(), "of": _total_blocks, "turned": turned.size()})
+	board.play_advance(id, model.blocks[id].direction, turned)
+	AudioManager.play("switch", 1.25)  # placeholder
+	if not turned.is_empty():
+		AudioManager.play_turn()
+	if not revealed.is_empty():
+		board.play_reveals(revealed)
+		AudioManager.play_reveal()
+	Haptics.light()
+	_show_message("")
+	_refresh_buttons()
+	if model.playable_ids().is_empty():
+		_show_message("No moves left - tap Undo" if undos_used < MAX_UNDOS else "No moves left - tap Restart")
 
 
 ## Portal prototype: portals `id`'s lane runs through ([] on every real board).

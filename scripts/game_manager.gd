@@ -288,9 +288,10 @@ func _open_shared_challenge() -> void:
 	if VhHumanTest.requested():
 		add_child(VhHumanTest.new(VhHumanTest.requested_test()))
 		return
-	# Developer page (?mechlab=1): the PORTAL mechanic prototype lab (local only).
+	# Developer pages (?mechlab=1 PORTAL, ?mechlab=sequence SEQUENCE): the
+	# mechanic prototype labs (local only).
 	if MechLab.requested():
-		add_child(MechLab.new())
+		add_child(MechLab.new(MechLab.requested_mechanic()))
 		return
 	var p := SocialWeb.launch_param()
 	if not p.is_empty():

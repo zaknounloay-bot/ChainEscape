@@ -1,7 +1,14 @@
 # Mechanic lab — PORTAL prototype (development only)
 
-> **Status:** a dev-only prototype, not approved. It answers one question: **does PORTAL deserve to become a real Chain Escape mechanic?**
-> The decision (GO / MODIFY / DROP) is made by people after the real-iPhone test, not by the code or the solver.
+> **Decision after the human test: GO** (3 testers familiar with Chain Escape).
+> - The mechanic was clear during play.
+> - 24 / 24 evaluated portal boards were judged more interesting than, or no worse than, the experience without it; none less interesting.
+> - Portal materially increased remote / dependency reasoning, time, restarts and / or planning on several matched boards.
+> - It is **not** a VERY HARD solution by itself, and that is fine.
+>
+> **Recorded MODIFY for the later implementation:** the opening demo / onboarding was not clear enough for a player who does not already know the mechanic.
+>
+> **Not done yet, on purpose:** no production implementation, no polish, no levels 201–300. The prototype below stays dev-only and unchanged.
 
 Nothing in production changes:
 - **Untouched:** Classic levels 1–200, saves, economy, hearts and milestones; the Friend generator and its difficulty settings; Photo / Message Reveal; the backend, Supabase, API and sharing.

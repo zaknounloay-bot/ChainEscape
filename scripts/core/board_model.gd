@@ -135,14 +135,16 @@ func move_state(id: int) -> String:
 	if blocker == null:
 		if not portals.is_empty() and lane(id)["loop"]:
 			return "blocked"
-		return "ok"
+		# Sequence prototype: a first-stage block with a clear lane advances
+		# instead of escaping.
+		return "advance" if b.seq_stage == 1 else "ok"
 	return "ram" if blocker.armored else "blocked"
 
 
 ## A tap that does something: an escape or a ram.
 func is_playable(id: int) -> bool:
 	var st := move_state(id)
-	return st == "ok" or st == "ram"
+	return st == "ok" or st == "ram" or st == "advance"
 
 
 ## Ram: `id` is launched into the shelled block in its lane, which loses its
@@ -229,6 +231,38 @@ func remove(id: int) -> Array:
 				_occupancy.erase(g.cell)
 				blocks.erase(g.id)
 				_color_count[g.color] = _color_count.get(g.color, 1) - 1
+	return turned
+
+
+## SEQUENCE PROTOTYPE: `id`'s first stage (caller checks move_state ==
+## "advance"). The block launches along its clear lane and comes back to
+## its cell: the same neighbour event as an escape from that cell (adjacent
+## spinners turn by their rule, adjacent hidden arrows are revealed), but
+## the block stays, so nothing else happens (no lock key, gate link or
+## switch: a Sequence block is a plain arrow). Then its NEXT arrow becomes
+## its arrow (stage 2). Returns the spinners that turned (last_revealed is
+## filled; the other last_* lists are emptied).
+func advance(id: int) -> Array:
+	var b: BlockData = blocks.get(id)
+	if b == null or b.seq_stage != 1:
+		return []
+	var turned := []
+	last_revealed = []
+	last_unlocked = []
+	last_flipped = []
+	last_opened_gates = []
+	for step in Direction.STEPS:
+		var n := block_at(b.cell + step)
+		if n == null:
+			continue
+		if n.is_spinner():
+			n.apply_turn()
+			turned.append(n.id)
+		if n.hidden:
+			n.hidden = false
+			last_revealed.append(n.id)
+	b.direction = b.seq_next
+	b.seq_stage = 2
 	return turned
 
 

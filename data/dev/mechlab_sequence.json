@@ -1,0 +1,541 @@
+{
+	"format": "ce-mechlab",
+	"v": 1,
+	"mechanic": "sequence",
+	"assist": {
+		"undo": 3,
+		"show_a_move": 1,
+		"hammer": 0
+	},
+	"boards": [
+		{
+			"id": "A1",
+			"variant": "sequence",
+			"stage": "A",
+			"pair": "A1",
+			"puzzle": {
+				"format": "ce-puzzle",
+				"v": 1,
+				"rules": 1,
+				"rows": 4,
+				"cols": 4,
+				"map": [
+					". . . .",
+					"R>:^ . . .",
+					". . B< .",
+					". G^ . ."
+				]
+			},
+			"metrics": {
+				"blocks": 3,
+				"sequence_blocks": 1,
+				"solution": 4,
+				"start_moves": 3,
+				"early_traps": 0,
+				"late_traps": 0,
+				"spinner_advances": 0,
+				"reveal_advances": 0,
+				"random_win": 1
+			}
+		},
+		{
+			"id": "A2",
+			"variant": "sequence",
+			"stage": "A",
+			"pair": "A2",
+			"puzzle": {
+				"format": "ce-puzzle",
+				"v": 1,
+				"rules": 1,
+				"rows": 5,
+				"cols": 4,
+				"map": [
+					". . . .",
+					". Y> . .",
+					"Bv R<:^ . .",
+					". . . .",
+					". . G< ."
+				]
+			},
+			"metrics": {
+				"blocks": 4,
+				"sequence_blocks": 1,
+				"solution": 5,
+				"start_moves": 3,
+				"early_traps": 0,
+				"late_traps": 0,
+				"spinner_advances": 0,
+				"reveal_advances": 0,
+				"random_win": 1
+			}
+		},
+		{
+			"id": "B1",
+			"variant": "sequence",
+			"stage": "B",
+			"pair": "B1",
+			"puzzle": {
+				"format": "ce-puzzle",
+				"v": 1,
+				"rules": 1,
+				"rows": 5,
+				"cols": 5,
+				"map": [
+					". . B>:v Rv Rv@",
+					". . . . .",
+					". . . G<@ Gv:<",
+					". . . . .",
+					"Pv G< . . ."
+				]
+			},
+			"metrics": {
+				"blocks": 7,
+				"sequence_blocks": 2,
+				"solution": 9,
+				"start_moves": 3,
+				"early_traps": 1,
+				"late_traps": 1,
+				"spinner_advances": 0,
+				"reveal_advances": 0,
+				"random_win": 0.063
+			}
+		},
+		{
+			"id": "B1_CTRL",
+			"variant": "control",
+			"stage": "B",
+			"pair": "B1",
+			"puzzle": {
+				"format": "ce-puzzle",
+				"v": 1,
+				"rules": 1,
+				"rows": 5,
+				"cols": 5,
+				"map": [
+					". . . G> P^",
+					". . . . .",
+					"G> G>@ . . .",
+					". . . . .",
+					"R^@ R^ B^ . ."
+				]
+			},
+			"metrics": {
+				"blocks": 7,
+				"sequence_blocks": 0,
+				"solution": 7,
+				"start_moves": 3,
+				"early_traps": 0,
+				"late_traps": 0,
+				"spinner_advances": 0,
+				"reveal_advances": 0,
+				"random_win": 1
+			}
+		},
+		{
+			"id": "B2",
+			"variant": "sequence",
+			"stage": "B",
+			"pair": "B2",
+			"puzzle": {
+				"format": "ce-puzzle",
+				"v": 1,
+				"rules": 1,
+				"rows": 5,
+				"cols": 5,
+				"map": [
+					"Y> . Rv:> . .",
+					". . . G< B<",
+					". . . . .",
+					"P^@ Pv:< . . .",
+					". . G> . Rv"
+				]
+			},
+			"metrics": {
+				"blocks": 8,
+				"sequence_blocks": 2,
+				"solution": 10,
+				"start_moves": 3,
+				"early_traps": 8,
+				"late_traps": 1,
+				"spinner_advances": 0,
+				"reveal_advances": 0,
+				"random_win": 0.013
+			}
+		},
+		{
+			"id": "B2_CTRL",
+			"variant": "control",
+			"stage": "B",
+			"pair": "B2",
+			"puzzle": {
+				"format": "ce-puzzle",
+				"v": 1,
+				"rules": 1,
+				"rows": 5,
+				"cols": 5,
+				"map": [
+					"R^ . G< . .",
+					". . . P> Pv@",
+					". . . . .",
+					"B> G> . . .",
+					". . R< . Y<"
+				]
+			},
+			"metrics": {
+				"blocks": 8,
+				"sequence_blocks": 0,
+				"solution": 8,
+				"start_moves": 3,
+				"early_traps": 0,
+				"late_traps": 0,
+				"spinner_advances": 0,
+				"reveal_advances": 0,
+				"random_win": 1
+			}
+		},
+		{
+			"id": "B3",
+			"variant": "sequence",
+			"stage": "B",
+			"pair": "B3",
+			"puzzle": {
+				"format": "ce-puzzle",
+				"v": 1,
+				"rules": 1,
+				"rows": 5,
+				"cols": 5,
+				"map": [
+					". G> . . Bv",
+					"B> . . . Yv:>",
+					". . B< . .",
+					"G^@ G>:< . . .",
+					". . G^ . ."
+				]
+			},
+			"metrics": {
+				"blocks": 8,
+				"sequence_blocks": 2,
+				"solution": 10,
+				"start_moves": 3,
+				"early_traps": 7,
+				"late_traps": 1,
+				"spinner_advances": 0,
+				"reveal_advances": 0,
+				"random_win": 0.05
+			}
+		},
+		{
+			"id": "B3_CTRL",
+			"variant": "control",
+			"stage": "B",
+			"pair": "B3",
+			"puzzle": {
+				"format": "ce-puzzle",
+				"v": 1,
+				"rules": 1,
+				"rows": 5,
+				"cols": 5,
+				"map": [
+					". . Gv . .",
+					". . . G> Gv@",
+					". . B> . .",
+					"Y< . . . B<",
+					"B^ . . G< ."
+				]
+			},
+			"metrics": {
+				"blocks": 8,
+				"sequence_blocks": 0,
+				"solution": 8,
+				"start_moves": 2,
+				"early_traps": 0,
+				"late_traps": 0,
+				"spinner_advances": 0,
+				"reveal_advances": 0,
+				"random_win": 1
+			}
+		},
+		{
+			"id": "C1",
+			"variant": "sequence",
+			"stage": "C",
+			"pair": "C1",
+			"puzzle": {
+				"format": "ce-puzzle",
+				"v": 1,
+				"rules": 1,
+				"rows": 4,
+				"cols": 4,
+				"map": [
+					". . . .",
+					". R>:^ . .",
+					". Gv@ . .",
+					"P> B^ . ."
+				]
+			},
+			"metrics": {
+				"blocks": 4,
+				"sequence_blocks": 1,
+				"solution": 5,
+				"start_moves": 1,
+				"early_traps": 0,
+				"late_traps": 0,
+				"spinner_advances": 1,
+				"reveal_advances": 0,
+				"random_win": 1
+			}
+		},
+		{
+			"id": "C2",
+			"variant": "sequence",
+			"stage": "C",
+			"pair": "C2",
+			"puzzle": {
+				"format": "ce-puzzle",
+				"v": 1,
+				"rules": 1,
+				"rows": 5,
+				"cols": 5,
+				"map": [
+					". . . . .",
+					". . . . .",
+					"B> R> . Gv@ P^@",
+					". . . Y>:v .",
+					". Bv . B<@ ."
+				]
+			},
+			"metrics": {
+				"blocks": 7,
+				"sequence_blocks": 1,
+				"solution": 8,
+				"start_moves": 3,
+				"early_traps": 2,
+				"late_traps": 0,
+				"spinner_advances": 1,
+				"reveal_advances": 0,
+				"random_win": 0.25
+			}
+		},
+		{
+			"id": "C3",
+			"variant": "sequence",
+			"stage": "C",
+			"pair": "C3",
+			"puzzle": {
+				"format": "ce-puzzle",
+				"v": 1,
+				"rules": 1,
+				"rows": 5,
+				"cols": 5,
+				"map": [
+					"Pv@ R>:v . G> .",
+					"G> Bv@ . . .",
+					". . P> . .",
+					". B^@ . . .",
+					". Bv . . ."
+				]
+			},
+			"metrics": {
+				"blocks": 8,
+				"sequence_blocks": 1,
+				"solution": 9,
+				"start_moves": 3,
+				"early_traps": 4,
+				"late_traps": 0,
+				"spinner_advances": 1,
+				"reveal_advances": 0,
+				"random_win": 0.305
+			}
+		},
+		{
+			"id": "C3_CTRL",
+			"variant": "control",
+			"stage": "C",
+			"pair": "C3",
+			"puzzle": {
+				"format": "ce-puzzle",
+				"v": 1,
+				"rules": 1,
+				"rows": 5,
+				"cols": 5,
+				"map": [
+					". . . B^ .",
+					". . . Bv@ .",
+					". . P< . .",
+					". . . B^@ G<",
+					". G< . R^ P^@"
+				]
+			},
+			"metrics": {
+				"blocks": 8,
+				"sequence_blocks": 0,
+				"solution": 8,
+				"start_moves": 3,
+				"early_traps": 0,
+				"late_traps": 0,
+				"spinner_advances": 0,
+				"reveal_advances": 0,
+				"random_win": 1
+			}
+		},
+		{
+			"id": "D1",
+			"variant": "sequence",
+			"stage": "D",
+			"pair": "D1",
+			"puzzle": {
+				"format": "ce-puzzle",
+				"v": 1,
+				"rules": 1,
+				"rows": 5,
+				"cols": 5,
+				"map": [
+					". . . G^? G^:v",
+					". P> . . Bv@",
+					". . . . .",
+					". . . . Yv",
+					"Y< . P<? G^ ."
+				]
+			},
+			"metrics": {
+				"blocks": 8,
+				"sequence_blocks": 1,
+				"solution": 9,
+				"start_moves": 3,
+				"early_traps": 3,
+				"late_traps": 0,
+				"spinner_advances": 0,
+				"reveal_advances": 1,
+				"random_win": 0.203
+			}
+		},
+		{
+			"id": "E1",
+			"variant": "sequence",
+			"stage": "E",
+			"pair": "E1",
+			"puzzle": {
+				"format": "ce-puzzle",
+				"v": 1,
+				"rules": 1,
+				"rows": 6,
+				"cols": 6,
+				"map": [
+					". B>@ P< . G<@ Pv:<",
+					"Y^ P>:< . . . Bv",
+					". . R^@ Y^:> . .",
+					". . . B^ . .",
+					". . . . . .",
+					"R> . R^@ . . ."
+				]
+			},
+			"metrics": {
+				"blocks": 12,
+				"sequence_blocks": 3,
+				"solution": 15,
+				"start_moves": 3,
+				"early_traps": 10,
+				"late_traps": 1,
+				"spinner_advances": 2,
+				"reveal_advances": 0,
+				"random_win": 0.01
+			}
+		},
+		{
+			"id": "E1_CTRL",
+			"variant": "control",
+			"stage": "E",
+			"pair": "E1",
+			"puzzle": {
+				"format": "ce-puzzle",
+				"v": 1,
+				"rules": 1,
+				"rows": 6,
+				"cols": 6,
+				"map": [
+					". . . Rv@ . R<",
+					". . . . . .",
+					". . Bv . . .",
+					". . Y< Rv@ . .",
+					"B^ . . . P> Yv",
+					"P> G>@ . P> B<@ ."
+				]
+			},
+			"metrics": {
+				"blocks": 12,
+				"sequence_blocks": 0,
+				"solution": 12,
+				"start_moves": 3,
+				"early_traps": 0,
+				"late_traps": 0,
+				"spinner_advances": 0,
+				"reveal_advances": 0,
+				"random_win": 1
+			}
+		},
+		{
+			"id": "E2",
+			"variant": "sequence",
+			"stage": "E",
+			"pair": "E2",
+			"puzzle": {
+				"format": "ce-puzzle",
+				"v": 1,
+				"rules": 1,
+				"rows": 6,
+				"cols": 6,
+				"map": [
+					". . R> R> . R>:v",
+					". . Y^@ Gv@ . Yv@",
+					". . . . Y< .",
+					". . . Y> Bv .",
+					". . Y^ . . .",
+					". . . . Y>@ Y>:v"
+				]
+			},
+			"metrics": {
+				"blocks": 12,
+				"sequence_blocks": 2,
+				"solution": 14,
+				"start_moves": 3,
+				"early_traps": 5,
+				"late_traps": 1,
+				"spinner_advances": 1,
+				"reveal_advances": 0,
+				"random_win": 0.033
+			}
+		},
+		{
+			"id": "E2_CTRL",
+			"variant": "control",
+			"stage": "E",
+			"pair": "E2",
+			"puzzle": {
+				"format": "ce-puzzle",
+				"v": 1,
+				"rules": 1,
+				"rows": 6,
+				"cols": 6,
+				"map": [
+					"Y^ Y<@ . . . .",
+					". . . Yv . .",
+					". B^ Y< . . .",
+					". Y> . . . .",
+					"Y^@ . G^@ Yv@ . .",
+					"R^ . R< R< . ."
+				]
+			},
+			"metrics": {
+				"blocks": 12,
+				"sequence_blocks": 0,
+				"solution": 12,
+				"start_moves": 2,
+				"early_traps": 0,
+				"late_traps": 0,
+				"spinner_advances": 0,
+				"reveal_advances": 0,
+				"random_win": 0.28
+			}
+		}
+	]
+}

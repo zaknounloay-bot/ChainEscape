@@ -390,7 +390,7 @@ func _draw_shine(c: CanvasItem) -> void:
 func _draw_arrow_part(c: CanvasItem) -> void:
 	if data.hidden or data.is_gate():
 		return
-	var size := cell_size * FACE_RATIO * (0.78 if data.is_spinner() else 1.0)
+	var size := cell_size * FACE_RATIO * (0.78 if data.is_spinner() else (0.84 if data.seq_stage == 1 else 1.0))
 	var length := size * 0.50
 	var head_len := size * 0.24
 	var head_w := size * 0.22
@@ -444,6 +444,8 @@ func _draw_overlay(c: CanvasItem) -> void:
 	if data.is_gate():
 		_draw_gate(c, f, size)
 		return
+	if data.seq_stage == 1:
+		_draw_next_chip(c, f, size)
 	if data.is_switch():
 		_draw_switch_chip(c, f, size)
 	elif data.flip_link != "":
@@ -613,6 +615,24 @@ func _draw_flip_badge(c: CanvasItem, f: Rect2, size: float) -> void:
 	var r := size * 0.23
 	c.draw_arc(at, r, -PI * 0.9, -PI * 0.1, 10, col, maxf(1.5, size * 0.02), true)
 	c.draw_arc(at, r, PI * 0.1, PI * 0.9, 10, col, maxf(1.5, size * 0.02), true)
+
+
+## SEQUENCE PROTOTYPE (greybox): the NEXT arrow, small, on a white disc in
+## the top-right corner (the big arrow, slightly smaller on a first-stage
+## block, is the current one). Gone once the first stage is used.
+func _draw_next_chip(c: CanvasItem, f: Rect2, size: float) -> void:
+	var at := f.position + Vector2(size * 0.82, size * 0.18)
+	var r := size * 0.21
+	c.draw_circle(at, r + maxf(2.0, size * 0.025), Color(Palette.TEXT, 0.85))
+	c.draw_circle(at, r, Color.WHITE)
+	var d := Direction.vector(data.seq_next)
+	var side := Vector2(-d.y, d.x)
+	var tip := at + d * r * 0.62
+	var base := at - d * r * 0.55
+	var neck := tip - d * r * 0.55
+	var col := Palette.TEXT
+	c.draw_line(base, neck, col, maxf(2.5, size * 0.055), true)
+	c.draw_colored_polygon(PackedVector2Array([tip, neck + side * r * 0.48, neck - side * r * 0.48]), col)
 
 
 ## GATE LINK: a chain badge in the bottom-right corner (gate's color + letter).
@@ -892,6 +912,48 @@ func _new_tween() -> Tween:
 		_tween.kill()
 	_tween = create_tween()
 	return _tween
+
+
+## SEQUENCE PROTOTYPE: first stage used - dash out along the lane and back
+## (it never leaves), a flash, then the arrow turns to its new direction
+## and the NEXT chip disappears.
+func play_advance(new_direction: int, cell: float) -> void:
+	position = home
+	var old := data.direction
+	var fwd := Direction.vector(old)
+	# The rules already moved on: an escape tapped mid-animation flies the
+	# new way. The NEXT chip stays drawn until the block is back.
+	data.seq_stage = 2
+	data.direction = new_direction
+	var t := _new_tween()
+	t.tween_property(self, "position", home + fwd * cell * 0.45, 0.11).set_trans(Tween.TRANS_QUAD).set_ease(Tween.EASE_OUT)
+	t.tween_property(self, "position", home, 0.16).set_trans(Tween.TRANS_BACK).set_ease(Tween.EASE_OUT)
+	t.tween_callback(func():
+		flash = 1.0
+		refresh()  # chip gone, full-size arrow
+		if new_direction == Direction.opposite(old):
+			play_flip(new_direction)
+		else:
+			play_turn(new_direction, new_direction_angle_steps(old, new_direction) != 3))
+	t.tween_property(self, "flash", 0.0, 0.3)
+
+
+## Stops a running move / advance animation (Undo resyncs the view).
+func stop_motion() -> void:
+	if _tween and _tween.is_valid():
+		_tween.kill()
+	position = home
+	flash = 0.0
+
+
+## Quarter turns clockwise from `from` to `to` (0-3).
+static func new_direction_angle_steps(from: int, to: int) -> int:
+	var d := from
+	for i in 4:
+		if d == to:
+			return i
+		d = Direction.rotate_cw(d)
+	return 0
 
 
 ## Pop in at level start. `delay` is used to stagger blocks.

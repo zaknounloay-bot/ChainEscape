@@ -1,8 +1,12 @@
 class_name MechLab
 extends CanvasLayer
-## DEVELOPMENT ONLY: the mechanic lab - PORTAL prototype human test.
-## Opens only when the page address has ?mechlab=1 (or #mechlab=1;
-## desktop: "-- --mechlab"). Without it nothing here runs or loads.
+## DEVELOPMENT ONLY: the mechanic lab - human tests of prototype mechanics.
+##   ?mechlab=1 (or #mechlab=1; desktop "-- --mechlab")   PORTAL lab
+##   ?mechlab=sequence (desktop "-- --mechlab=sequence")    SEQUENCE lab
+## Without one of these nothing here runs or loads. Each mechanic has its
+## own board file, state file, demo, questions and result fields (see
+## MECHANICS); the PORTAL lab is exactly as it was before the SEQUENCE
+## lab was added (its settings are the constants below).
 ##
 ## Plays a fixed board set (data/dev/mechlab_portal.json, built offline by
 ## tools/mechlab_portal_build.gd) through its own SocialPlay:
@@ -62,7 +66,56 @@ const DEMO_STEPS := [
 	[10.6, "", "If the path after the portal is\nblocked, the block can't go.\nNow you try!"],
 ]
 
+## SEQUENCE lab (?mechlab=sequence): its own questions, demo and files.
+const SEQ_QUESTIONS := {
+	"rating": ["How difficult was this puzzle?", RATINGS],
+	"focus": ["What were you mainly\nthinking about?", ["WHICH BLOCK TO START WITH", "WHEN TO TRIGGER THE SEQUENCE",
+		"WHAT THE SPINNER WOULD BECOME", "THE ORDER OF MY MOVES", "JUST TAPPING THE SEQUENCE TWICE", "NOTHING MUCH"]],
+	"planning": ["Did the Sequence block make you think\nabout WHEN to activate its first stage?", ["NOT REALLY", "A LITTLE", "A LOT"]],
+	"clarity": ["Was it clear what the Sequence\nblock would do?", ["CLEAR", "SOMEWHAT CLEAR", "CONFUSING"]],
+	"interest": ["Compared with a similar normal puzzle,\nthe Sequence block made it...", ["MORE INTERESTING", "NO DIFFERENCE", "LESS INTERESTING"]],
+}
+const SEQ_ASK := {
+	"A": ["rating", "clarity"],
+	"sequence": ["rating", "focus", "planning", "clarity", "interest"],
+	"control": ["rating", "focus"],
+}
+## Red: Sequence block (now right, next up). Green: a spinner below it,
+## pointing down into blue. Red's first stage turns green to the left.
+const SEQ_DEMO_MAP := [
+	".  .    .  .  .",
+	".  .    .  .  .",
+	".  R>:^ .  .  .",
+	".  Gv@  .  .  .",
+	".  B^   .  .  .",
+]
+const SEQ_DEMO_STEPS := [
+	[0.5, "", "SEQUENCE block (red): the BIG arrow is\nwhere it goes NOW. The SMALL arrow\nin the corner is what it becomes NEXT."],
+	[3.6, "R", "First tap: it launches, comes BACK,\nand turns to its next arrow (up).\nIt stays - and the spinner next to it TURNS."],
+	[6.8, "G", "The spinner turned - now it can leave."],
+	[8.3, "R", "Second tap: it leaves with\nits new arrow."],
+	[9.9, "", "WHEN you use the first stage matters:\nit turns the spinners next to it.\nNow you try!"],
+]
+## Per-mechanic settings. "portal" is the original lab, unchanged.
+const MECHANICS := {
+	"portal": {"data": DATA_PATH, "state": STATE_PATH, "ls": LS_KEY, "variant": "portal", "title": "PORTAL LAB",
+		"demo_title": "HOW PORTALS WORK", "groups": [["B", "C"], ["D"]],
+		"names": {"portal_A": "Basic portal", "portal": "Portal", "control": "Without portal"}},
+	"sequence": {"data": "res://data/dev/mechlab_sequence.json", "state": "user://mechlab_sequence_state.json",
+		"ls": "chain_escape_mechlab_sequence_state", "variant": "sequence", "title": "SEQUENCE LAB",
+		"demo_title": "HOW SEQUENCE BLOCKS WORK", "groups": [["B", "C", "D"], ["E"]],
+		"names": {"sequence_A": "Basic sequence", "sequence": "Sequence", "control": "Without sequence"}},
+}
+
 enum Screen { INTRO, DEMO, PLAYING, QUESTION, RESULTS }
+
+## "portal" or "sequence" (which lab this is).
+var mechanic := "portal"
+var _cfg: Dictionary = MECHANICS["portal"]
+var _questions: Dictionary = QUESTIONS
+var _ask: Dictionary = ASK
+var _demo_map: Array = DEMO_MAP
+var _demo_steps: Array = DEMO_STEPS
 
 var boards: Dictionary = {}  # id -> record
 var state: Dictionary = {}  # order, index, results, demo_seen
@@ -92,23 +145,45 @@ var _demo_buttons: HBoxContainer
 
 ## Checked at launch, like the VERY HARD tests.
 static func requested() -> bool:
-	if "--" + PARAM in OS.get_cmdline_user_args():
-		return true
+	return requested_mechanic() != ""
+
+
+## "sequence" (?mechlab=sequence), "portal" (?mechlab=1 / =true / =portal)
+## or "" (not asked for).
+static func requested_mechanic() -> String:
+	var args := OS.get_cmdline_user_args()
+	if "--" + PARAM + "=sequence" in args:
+		return "sequence"
+	if "--" + PARAM in args:
+		return "portal"
 	if not OS.has_feature("web"):
-		return false
+		return ""
 	var loc := JavaScriptBridge.get_interface("location")
 	if loc == null:
-		return false
+		return ""
 	var where := (str(loc.search) + str(loc.hash)).to_lower()
-	return where.contains(PARAM + "=1") or where.contains(PARAM + "=true")
+	if where.contains(PARAM + "=sequence"):
+		return "sequence"
+	if where.contains(PARAM + "=1") or where.contains(PARAM + "=true") or where.contains(PARAM + "=portal"):
+		return "portal"
+	return ""
 
 
-func _init() -> void:
+func _init(p_mechanic: String = "portal") -> void:
 	layer = 30  # over everything (SocialPlay is layer 5)
+	mechanic = p_mechanic if MECHANICS.has(p_mechanic) else "portal"
+	_cfg = MECHANICS[mechanic]
+	if mechanic == "sequence":
+		# Lab-only parsing of the Sequence token (off in the game and Social).
+		LevelManager.dev_sequence = true
+		_questions = SEQ_QUESTIONS
+		_ask = SEQ_ASK
+		_demo_map = SEQ_DEMO_MAP
+		_demo_steps = SEQ_DEMO_STEPS
 
 
 func _ready() -> void:
-	var data = JSON.parse_string(FileAccess.get_file_as_string(DATA_PATH))
+	var data = JSON.parse_string(FileAccess.get_file_as_string(_cfg["data"]))
 	if typeof(data) == TYPE_DICTIONARY:
 		_assist = data.get("assist", _assist)
 		for b in data.get("boards", []):
@@ -129,6 +204,8 @@ func _process(_delta: float) -> void:
 		if _current.get("first_move_ms", -1) < 0 and _actions() > 0:
 			_current["first_move_ms"] = Time.get_ticks_msec() - _t0
 		_track_pauses()
+		if mechanic == "sequence":
+			_track_sequence()
 	if screen == Screen.RESULTS:
 		var r := SocialWeb.take_share_result()
 		if r == "copied":
@@ -138,7 +215,19 @@ func _process(_delta: float) -> void:
 
 
 func _actions() -> int:
-	return play.total_moves + play.total_blocked + play.total_rams
+	return play.total_moves + play.total_blocked + play.total_rams + play.total_seq_advances
+
+
+## Sequence lab: when a first-stage block first became usable (lane
+## clear) and when the first advance happened (ms after the board opened).
+func _track_sequence() -> void:
+	if _current.get("seq_first_usable_ms", -1) < 0 and not play.completed:
+		for id in play.model.blocks:
+			if play.model.move_state(id) == "advance":
+				_current["seq_first_usable_ms"] = Time.get_ticks_msec() - _t0
+				break
+	if _current.get("seq_first_advance_ms", -1) < 0 and play.total_seq_advances > 0:
+		_current["seq_first_advance_ms"] = Time.get_ticks_msec() - _t0
 
 
 # --- Flow ------------------------------------------------------------------------------
@@ -155,6 +244,9 @@ func start_next() -> void:
 	var rec: Dictionary = boards[state["order"][i]]
 	_current = {"id": rec["id"], "variant": rec["variant"], "stage": rec["stage"], "pair": rec["pair"], "order": i + 1,
 		"first_move_ms": -1, "longest_pause_ms": 0, "long_pauses": []}
+	if mechanic == "sequence":
+		_current["seq_first_usable_ms"] = -1
+		_current["seq_first_advance_ms"] = -1
 	_show(Screen.PLAYING)
 	_start_board(rec["puzzle"])
 	play._title.text = "PUZZLE %d / %d" % [i + 1, total()]
@@ -189,7 +281,7 @@ func _on_gave_up() -> void:
 
 
 func _track_pauses() -> void:
-	var sig := [play.total_moves, play.total_blocked, play.total_rams, play.total_undos, play.total_hints, play.plays]
+	var sig := [play.total_moves, play.total_blocked, play.total_rams, play.total_undos, play.total_hints, play.plays, play.total_seq_advances]
 	if _act_sig.is_empty():
 		_act_sig = sig
 		return
@@ -216,11 +308,24 @@ func _finish_attempt(solved: bool) -> void:
 	_current["restarts"] = maxi(0, play.plays - 1)
 	_current["undos"] = play.total_undos
 	_current["show_a_move"] = play.total_hints
+	if mechanic == "sequence":
+		_current.erase("portal_uses")
+		_current.erase("portal_blocked_taps")
+		_current["seq_advances"] = play.total_seq_advances
+		_current["seq_blocked_taps"] = play.total_seq_blocked
+		_current["seq_escapes"] = play.total_seq_escapes
+		_current["seq_spinner_turns"] = play.total_seq_spinner_turns
+		# Each advance: when (ms after the board opened), in which attempt,
+		# and how much of the board was already cleared at that moment.
+		var events := []
+		for e in play.seq_events:
+			events.append({"ms": int(e["ms"]) - _t0, "cleared": e["cleared"], "of": e["of"], "turned": e["turned"]})
+		_current["advances"] = events
 
 
 func _begin_questions() -> void:
 	var v: String = _current["variant"]
-	_asks = ASK["A"] if v == "portal" and _current["stage"] == "A" else ASK[v]
+	_asks = _ask["A"] if v != "control" and _current["stage"] == "A" else _ask[v]
 	_q = 0
 	_show(Screen.QUESTION)
 
@@ -255,14 +360,14 @@ func start_demo() -> void:
 	_demo_session += 1
 	var session := _demo_session
 	var rows := []
-	for row in DEMO_MAP:
+	for row in _demo_map:
 		rows.append(" ".join(String(row).split(" ", false)))
 	_start_board({"format": PuzzleDefinition.FORMAT, "v": PuzzleDefinition.VERSION, "rules": PuzzleDefinition.RULES,
 		"rows": rows.size(), "cols": String(rows[0]).split(" ", false).size(), "map": rows})
-	play._title.text = "HOW PORTALS WORK"
+	play._title.text = _cfg["demo_title"]
 	_demo_buttons.visible = false
 	var t0 := 0.0
-	for step in DEMO_STEPS:
+	for step in _demo_steps:
 		await get_tree().create_timer(float(step[0]) - t0).timeout
 		t0 = float(step[0])
 		if session != _demo_session or screen != Screen.DEMO:
@@ -270,7 +375,7 @@ func start_demo() -> void:
 		_demo_caption.text = step[2]
 		if step[1] != "":
 			for id in play.model.blocks:
-				if play.model.blocks[id].color.begins_with({"R": "red", "P": "purple"}[step[1]]):
+				if play.model.blocks[id].color == LevelManager.COLOR_LETTERS[step[1]]:
 					play.tap_block(id)
 					break
 	_demo_buttons.visible = true
@@ -288,9 +393,10 @@ func _end_demo() -> void:
 # --- State (this file only) -------------------------------------------------------------
 
 func _load_state() -> void:
-	var texts := [FileAccess.get_file_as_string(STATE_PATH) if FileAccess.file_exists(STATE_PATH) else ""]
+	var path: String = _cfg["state"]
+	var texts := [FileAccess.get_file_as_string(path) if FileAccess.file_exists(path) else ""]
 	if OS.has_feature("web"):
-		texts.append(WebBridge.ls_get(LS_KEY))
+		texts.append(WebBridge.ls_get(_cfg["ls"]))
 	var best = null
 	for t in texts:
 		var parsed = JSON.parse_string(t) if t != "" else null
@@ -317,7 +423,7 @@ func _new_order() -> void:
 	for id in ids:
 		if boards[id]["stage"] == "A":
 			order.append(id)
-	for stages in [["B", "C"], ["D"]]:
+	for stages in _cfg["groups"]:
 		var group := ids.filter(func(id): return boards[id]["stage"] in stages)
 		order.append_array(_shuffle_apart(group, rng))
 	state = {"order": order, "index": 0, "results": [], "demo_seen": false, "started": Time.get_datetime_string_from_system()}
@@ -345,30 +451,35 @@ func _shuffle_apart(group: Array, rng: RandomNumberGenerator) -> Array:
 
 func _save_state() -> void:
 	var text := JSON.stringify(state)
-	var f := FileAccess.open(STATE_PATH, FileAccess.WRITE)
+	var f := FileAccess.open(_cfg["state"], FileAccess.WRITE)
 	if f:
 		f.store_string(text)
 		f.close()
 	if OS.has_feature("web"):
-		WebBridge.ls_set(LS_KEY, text)
+		WebBridge.ls_set(_cfg["ls"], text)
 
 
 # --- Results ----------------------------------------------------------------------------
 
 func results_json() -> String:
-	return JSON.stringify({"format": "ce-mechlab-results", "v": 1, "mechanic": "portal", "started": state.get("started", ""),
+	return JSON.stringify({"format": "ce-mechlab-results", "v": 1, "mechanic": mechanic, "started": state.get("started", ""),
 		"device": OS.get_name(), "assist": _assist, "demo_seen": state.get("demo_seen", false),
 		"order": state["order"], "results": state["results"], "summary": summary(), "pairs": pairs()})
 
 
-## Per group: portal stage A, portal B-D, control.
+## Per group: basic boards (stage A), the mechanic's other boards, controls.
+## Counters: the portal lab's (portal uses...) or the sequence lab's.
 func summary() -> Dictionary:
 	var out := {}
+	var counters := ["restarts", "undos", "show_a_move", "blocked_taps", "portal_blocked_taps", "portal_uses"]
+	if mechanic == "sequence":
+		counters = ["restarts", "undos", "show_a_move", "blocked_taps", "seq_advances", "seq_blocked_taps", "seq_escapes", "seq_spinner_turns"]
 	for r in state["results"]:
-		var g: String = "portal_A" if r["variant"] == "portal" and r["stage"] == "A" else r["variant"]
+		var g: String = r["variant"] + "_A" if r["variant"] != "control" and r["stage"] == "A" else r["variant"]
 		if not out.has(g):
-			out[g] = {"n": 0, "solved": 0, "time_s": [], "rating": [], "very_hard": 0, "hard": 0, "restarts": 0, "undos": 0,
-				"show_a_move": 0, "blocked_taps": 0, "portal_blocked_taps": 0, "portal_uses": 0, "long_pauses": 0, "answers": {}}
+			out[g] = {"n": 0, "solved": 0, "time_s": [], "rating": [], "very_hard": 0, "hard": 0, "long_pauses": 0, "answers": {}}
+			for k in counters:
+				out[g][k] = 0
 		var s: Dictionary = out[g]
 		s["n"] += 1
 		s["solved"] += 1 if r["completed"] else 0
@@ -379,7 +490,7 @@ func summary() -> Dictionary:
 			s["rating"].append(ri + 1)
 		s["very_hard"] += 1 if r.get("rating", "") == "VERY HARD" else 0
 		s["hard"] += 1 if r.get("rating", "") == "HARD" else 0
-		for k in ["restarts", "undos", "show_a_move", "blocked_taps", "portal_blocked_taps", "portal_uses"]:
+		for k in counters:
 			s[k] += int(r.get(k, 0))
 		s["long_pauses"] += r.get("long_pauses", []).size()
 		for k in ["focus", "planning", "clarity", "interest"]:
@@ -396,7 +507,7 @@ func summary() -> Dictionary:
 	return out
 
 
-## Matched pairs played so far: portal board vs its control.
+## Matched pairs played so far: the mechanic's board vs its control.
 func pairs() -> Array:
 	var by_id := {}
 	for r in state["results"]:
@@ -407,8 +518,13 @@ func pairs() -> Array:
 		if r["variant"] != "control" or not by_id.has(r["pair"]):
 			continue
 		var p: Dictionary = by_id[r["pair"]]
-		out.append({"pair": r["pair"],
-			"portal": {"rating": p.get("rating", ""), "time_s": snappedf(p["time_ms"] / 1000.0, 0.1), "moves": p["moves"], "restarts": p["restarts"], "undos": p["undos"], "focus": p.get("focus", ""), "order": p["order"]},
+		var main := {"rating": p.get("rating", ""), "time_s": snappedf(p["time_ms"] / 1000.0, 0.1), "moves": p["moves"], "restarts": p["restarts"], "undos": p["undos"], "focus": p.get("focus", ""), "order": p["order"]}
+		if mechanic == "sequence":
+			main["planning"] = p.get("planning", "")
+			main["interest"] = p.get("interest", "")
+			main["seq_advances"] = p.get("seq_advances", 0)
+			main["seq_spinner_turns"] = p.get("seq_spinner_turns", 0)
+		out.append({"pair": r["pair"], str(_cfg["variant"]): main,
 			"control": {"rating": r.get("rating", ""), "time_s": snappedf(r["time_ms"] / 1000.0, 0.1), "moves": r["moves"], "restarts": r["restarts"], "undos": r["undos"], "focus": r.get("focus", ""), "order": r["order"]}})
 	return out
 
@@ -421,16 +537,17 @@ func _summary_text() -> String:
 		lines.append("Tap COPY RESULTS and paste it into the chat.")
 		return "\n".join(lines)
 	var sm := summary()
-	for g in ["portal_A", "portal", "control"]:
+	var v: String = _cfg["variant"]
+	for g in [v + "_A", v, "control"]:
 		if not sm.has(g):
 			continue
 		var s: Dictionary = sm[g]
 		lines.append("%s: %d played, %d solved, median %ss, rated %.1f / 4, restarts %d, UNDO %d" % [
-			{"portal_A": "Basic portal", "portal": "Portal", "control": "Without portal"}[g], s["n"], s["solved"], str(s["median_time_s"]),
+			_cfg["names"][g], s["n"], s["solved"], str(s["median_time_s"]),
 			s["avg_rating_1to4"], s["restarts"], s["undos"]])
 	lines.append("")
 	for p in pairs():
-		lines.append("Pair %s: portal %s vs without %s" % [p["pair"], p["portal"]["rating"], p["control"]["rating"]])
+		lines.append("Pair %s: %s %s vs without %s" % [p["pair"], v, p[v]["rating"], p["control"]["rating"]])
 	lines.append("")
 	lines.append("Tap COPY RESULTS and paste it into the chat.")
 	return "\n".join(lines)
@@ -447,14 +564,16 @@ func _show(s: int) -> void:
 	match s:
 		Screen.INTRO:
 			var i: int = state["index"]
-			_intro_text.text = ("PORTAL LAB: %d puzzles. Some have PORTALS, some don't.\n\n" % total()
-				+ "A path that enters a portal continues from the other portal with the same letter, in the same direction.\n\n"
+			_intro_text.text = ((("PORTAL LAB: %d puzzles. Some have PORTALS, some don't.\n\n" % total()
+				+ "A path that enters a portal continues from the other portal with the same letter, in the same direction.\n\n")
+				if mechanic == "portal" else ("SEQUENCE LAB: %d puzzles. Some have SEQUENCE blocks, some don't.\n\n" % total()
+				+ "A Sequence block shows its arrow NOW (big) and its NEXT arrow (small, in the corner). The first tap with a clear path launches it and brings it back with its next arrow - spinners next to it turn. The second tap lets it leave.\n\n"))
 				+ "You have UNDO x%d and SHOW A MOVE x%d per attempt (no HAMMER); RESTART gives them back.\n\n" % [int(_assist["undo"]), int(_assist["show_a_move"])]
 				+ "To give up on a puzzle, tap EXIT and LEAVE. After each puzzle: a few quick questions.")
 			_start.text = "WATCH THE DEMO" if i == 0 and not state.get("demo_seen", false) else ("START" if i == 0 else ("CONTINUE  %d / %d" % [i + 1, total()] if i < total() else "SEE RESULTS"))
 		Screen.QUESTION:
 			var key: String = _asks[_q]
-			var q: Array = QUESTIONS[key]
+			var q: Array = _questions[key]
 			var head := ""
 			if _q == 0:
 				head = "PUZZLE %d / %d  %s\n\n" % [_current.get("order", 0), total(), "SOLVED" if _current.get("completed", false) else "NOT SOLVED"]
@@ -500,7 +619,7 @@ func _build() -> void:
 	_root.add_child(bg)
 	# INTRO
 	var intro := _column()
-	intro.add_child(_label("PORTAL LAB\n(DEVELOPMENT)", 40, 900))
+	intro.add_child(_label(str(_cfg["title"]) + "\n(DEVELOPMENT)", 40, 900))
 	_intro_text = _label("", 26, 700)
 	intro.add_child(_intro_text)
 	_start = _button("START", "Start", ACCENT, Palette.WHITE)
