@@ -107,9 +107,18 @@ For scale: the campaign averages 4.7 in Chapter 1, 18.2 in Chapter 3, 27.4 in Ch
     - It wins over a challenge link, even when appended to one (`…?challenge=<id>?friendbench=1`): the page script splits launch parameters on `?`, `&` and `#`.
     - Checked by `node tools/web_friendbench_route_test.mjs build/web`.
 
-### Challenge a Friend phase 3 — creator + minimal recipient (status: NOT frozen; VERY HARD blind human test 3 pending, see phase 3f)
+### Challenge a Friend phase 3 — creator + minimal recipient (status: NOT frozen; VERY HARD design paused until levels 201–300, see phase 3g)
 
 **Real-device result (`4f1a845`):** the full loop worked on real iPhones. Phone A created a HARD challenge and sent it on WhatsApp; it arrived immediately and was solved. From that phone, CHALLENGE A FRIEND made an EASY challenge for a third phone, which also arrived immediately and worked. Creator PLAY / PREVIEW, the creator, the recipient flow and WhatsApp sharing all worked well. Real-user findings and the next product direction (Competitive Challenge, fairness, live 1v1 later, personal performance) are recorded in `docs/product_roadmap.md`.
+
+#### Phase 3g — test 3 results; VERY HARD design paused
+
+**Test 3** (2 testers × 10 boards; the third tester did not take part): **0 / 20 rated VERY HARD.**
+- Counter-clockwise spinners raised the son's ratings (2.83 vs 2.25) but not Loay's (1.83 vs 2.25), and Loay confirmed the spinner direction was clear.
+- None of the pre-registered main criteria was met; the guard criteria were.
+- Across tests 1–3, 0 of 92 playthroughs were rated VERY HARD.
+
+**The final VERY HARD design is paused:** levels 201–300 will add mechanics first, and the final VERY HARD must challenge a player who knows that whole vocabulary. No test 4, no generator change. Production unchanged; phase 3 stays unfrozen. Results, criteria assessment and carried-forward lessons: `docs/vh_human_test3.md` §7–8.
 
 #### Phase 3f — test 2 analysis and blind human test 3: clockwise + counter-clockwise spinners (development only)
 

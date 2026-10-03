@@ -59,6 +59,11 @@ scheduled beyond "next".
 - Blind test 3 (`docs/vh_human_test3.md`) isolates clockwise + counter-clockwise spinners, with HAMMER x0 for both groups. If counter-clockwise spinners do not help, the next candidate variable is attempt cost (board size / solution length).
 - The eventual Social assistance policy (HAMMER x1 for EASY–HARD, x0 for VERY HARD) is not decided; VERY HARD must first be hard by itself.
 
+**Phase 3g:**
+- Blind test 3: 0 of 20 rated VERY HARD; counter-clockwise spinners helped the less-exposed tester only. Across tests 1–3, 0 of 92 playthroughs rated VERY HARD.
+- **VERY HARD design is paused** until levels 201–300 (planned before launch) add mechanics: the final VERY HARD must challenge an expert who knows the whole vocabulary through level 300.
+- Lessons: `docs/vh_human_test3.md` §8. Phase 3 stays unfrozen.
+
 ## Next product phase (after phase 3 is frozen): COMPETITIVE CHALLENGE
 
 The likely first step is **asynchronous competition on the exact same stored challenge**. The exact-board architecture already built (one immutable `PuzzleDefinition` per challenge, rebuilt identically on every device) is what makes this possible: everyone plays the same board.

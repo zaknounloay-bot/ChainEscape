@@ -1,5 +1,14 @@
 # VERY HARD — test 2 analysis and blind human test 3 (development only)
 
+> **Result (2 testers × 10 boards = 20 playthroughs; the third planned tester did not take part):** **0 / 20 rated VERY HARD.**
+> - Counter-clockwise spinners (X) raised the son's ratings (X 2.83 vs control 2.25; 5 of 6 X boards HARD) but not Loay's (X 1.83 vs 2.25).
+> - Combined: X 2.33 vs C 2.25.
+> - **None of the pre-registered main criteria was met.** The guard criteria were.
+> - Spinner direction alone has not shown it can create the target VERY HARD experience.
+> - The VERY HARD design is **paused** (strategic decision, §8); no test 4.
+>
+> Full results: §7.
+
 Nothing in production changes:
 - no backend, Supabase or API change
 - no change to the live difficulty profiles, Classic levels, sharing, Photo / Message or Friend Challenge
@@ -175,3 +184,134 @@ The intro adds one line for every board: "Spinners turn when a block next to the
 - `scripts/social/friend_generator.gd`: `mechanics_ok(..., allow_ccw)` for these offline boards only. Production validation still refuses `@-`.
 - `tools/classic_topology_audit.gd`: `rotate90`
 - Checks: `tools/VhHumanTestCheck.tscn` (100), `tools/web_vhtest_page_test.mjs` (17)
+
+
+## 7. Test 3 results (2 testers × 10 boards, run on 2026-10-03)
+
+**Testers:**
+- **Loay:** very high exposure to Chain Escape; has completed all 200 Classic levels and every earlier test.
+- **His son:** experienced, with far less exposure.
+
+The third planned tester did not take part, and the dataset was closed at 20 playthroughs by decision. **Loay confirmed that CW vs CCW direction was visually clear throughout.** No readability answer was given for the son, and none is assumed.
+
+**Moves** are taps that moved a block (all attempts); **excess** = moves − blocks on the board, i.e. wasted taps across all attempts. Pauses are gaps between two actions; a long pause is ≥ 10 s.
+
+### 7.1 By tester
+
+| | Loay C (4) | Loay X (6) | Son C (4) | Son X (6) |
+|---|---|---|---|---|
+| Average rating (1–4) | 2.25 | **1.83** | 2.25 | **2.83** |
+| VERY HARD / HARD / MEDIUM / EASY | 0 / 1 / 3 / 0 | 0 / 0 / 5 / 1 | 0 / 1 / 3 / 0 | 0 / **5** / 1 / 0 |
+| Solved | 4 / 4 | 6 / 6 | 4 / 4 | 6 / 6 |
+| Median total time | 42.0 s | 51.0 s | 48.1 s | 55.4 s |
+| Median time to first move | 2.9 s | 3.6 s | 3.1 s | 1.6 s |
+| Moves (average) / excess | 30.5 / 9.0 | 31.2 / 11.2 | 35.5 / 14.0 | 38.3 / 18.3 |
+| Restarts (total / per puzzle) | 8 / 2.0 | 6 / 1.0 | 5 / 1.25 | 10 / 1.67 |
+| UNDO (total / per puzzle) | 3 / 0.75 | 1 / 0.17 | 8 / 2.0 | 14 / 2.33 |
+| SHOW A MOVE | 0 | 0 | 0 | 0 |
+| "Had to plan" YES | 3 / 4 (75%) | 4 / 6 (67%) | 3 / 4 (75%) | 4 / 6 (67%) |
+| "Mistake later" YES | 4 / 4 (100%) | 4 / 6 (67%) | 3 / 4 (75%) | 5 / 6 (83%) |
+| Long pauses (≥ 10 s) | 1 | 1 | 2 | 2 |
+| Median / max longest pause | 5.5 / 11.5 s | 5.7 / 15.9 s | 8.8 / 17.2 s | 5.3 / 15.8 s |
+
+### 7.2 Combined
+
+| | C (8 playthroughs) | X (12 playthroughs) |
+|---|---|---|
+| Average rating | 2.25 | 2.33 (+0.08) |
+| VERY HARD | 0 | **0** |
+| HARD | 2 (25%) | 5 (42%; all 5 from the son) |
+| Solved | 8 / 8 | 12 / 12 |
+| Median / mean total time | 42.0 / 50.8 s | 51.0 / 50.3 s |
+| Median time to first move | 2.9 s | 2.5 s |
+| Moves (average) / excess | 33.0 / 11.5 | 34.8 / 14.8 |
+| Restarts per puzzle | 1.63 | 1.33 |
+| UNDO per puzzle | 1.38 | 1.25 |
+| SHOW A MOVE | 0 | 0 |
+| "Had to plan" YES | 75% | 67% |
+| "Mistake later" YES | 88% | 75% |
+| Long pauses per puzzle | 0.38 | 0.25 |
+| Median longest pause | 6.8 s | 5.5 s |
+
+**Per board** (rating, restarts):
+
+| Board | Group | Loay | Son |
+|---|---|---|---|
+| Q01 | X | MEDIUM, 1 | HARD, 1 (15.8 s before the first move) |
+| Q03 | X | MEDIUM, 2 | HARD, 1 |
+| Q04 | X | EASY, 0 | MEDIUM, 1 |
+| Q06 | X | MEDIUM, 1 | HARD, 4 |
+| Q08 | X | MEDIUM, 1 | HARD, 2 |
+| Q09 | X | MEDIUM, 1 | HARD, 1 |
+| Q02 | C | **HARD, 4** | MEDIUM, 1 |
+| Q05 | C | MEDIUM, 0 | MEDIUM, 1 |
+| Q07 | C | MEDIUM, 2 | HARD, 2 (2 long pauses, 101 s) |
+| Q10 | C | MEDIUM, 2 | MEDIUM, 1 |
+
+### 7.3 Pre-registered criteria (§4, as written before the test; not redefined)
+
+| Criterion | Observed | Status |
+|---|---|---|
+| **Main 1:** ≥ 1/3 of X playthroughs rated VERY HARD | 0 / 12 | **Not met.** Even a third tester rating all 6 X boards VERY HARD would have given exactly 6 / 18 = 1/3, so only a perfect third tester could have rescued it |
+| **Main 2:** X average ≥ C average + 0.7 | 2.33 vs 2.25 (+0.08); Loay −0.42, son +0.58 | **Not met** (combined, and for each tester separately) |
+| **Main 3:** at least 2 of the 3 testers rate ≥ 1 X board VERY HARD | 0 of the 2 testers who took part | **Not met.** Defined for 3 testers, so a third tester could add at most one, making 1 of 3: it could not have been met. It is not reinterpreted as a 2-tester criterion |
+| **Supporting:** more "had to plan" on X | X 67% vs C 75% (the same for both testers) | Not met |
+| **Supporting:** more "mistake later" on X | X 75% vs C 88%; Loay 67% vs 100%, son 83% vs 75% | Not met combined (higher for the son only) |
+| **Supporting:** more long pauses on X | 0.25 vs 0.38 per puzzle; median longest pause 5.5 vs 6.8 s | Not met |
+| **Supporting:** more restarts / UNDO from experienced testers on X | Son: restarts 1.67 vs 1.25, UNDO 2.33 vs 2.0 (more). Loay: restarts 1.0 vs 2.0, UNDO 0.17 vs 0.75 (fewer) | Mixed: met for the son, not for Loay |
+| **Guard:** ≥ 90% of X playthroughs solved | 12 / 12 | Met (for the 2 testers who took part) |
+| **Guard:** no tester gives up on > 1 X board | No give-ups | Met (for the 2 testers who took part) |
+| **Readability** | Loay: clear throughout. Son: not reported | Loay assessable; son not assessable |
+
+**Overall:** the pre-registered success condition (all three main criteria) was **not met**. Counter-clockwise spinners did not produce VERY HARD. Main 1 and Main 3 could not have been met even with the missing third tester, except, for Main 1, an implausible perfect score.
+
+### 7.4 Interpretation
+
+**A. Evidence (what the data shows)**
+- 0 / 20 VERY HARD. All 20 solved, no give-ups, no SHOW A MOVE used.
+- The effect of counter-clockwise spinners differs by tester:
+  - **The son** rated X higher (2.83 vs 2.25; 5 of 6 X boards HARD vs 1 of 4 controls), with more restarts and UNDO on X.
+  - **Loay** rated X lower (1.83 vs 2.25; his only HARD was a control, Q02, with 4 restarts), with fewer restarts and UNDO on X.
+- Loay confirmed the spinner direction was visually clear, so his result is not a readability artefact.
+- Totals and timing barely differ between the groups: mean time about 50 s for both, first move about 2.5–3 s, long pauses rare (6 in 20 playthroughs).
+- Both follow-up questions got YES on most boards in **both** groups ("had to plan" 67–75%, "mistake later" 75–88%), so they did not separate the groups.
+- Across tests 1, 2 and 3 there have been **92 human playthroughs** of candidate VERY HARD boards: 30 + 42 + 20, with arrows + clockwise spinners, Locks, and clockwise + counter-clockwise spinners. **None was rated VERY HARD.**
+
+**B. Reasonable inference**
+- In these boards, counter-clockwise spinners act more like a **learning-curve** factor than a lasting difficulty factor. They raised difficulty for the less-exposed player and not for the most-exposed one. A VERY HARD benchmark has to hold for experts, so this is the more important signal for the target.
+- Removing the Hammer (x0 here) did not by itself create VERY HARD, which supports the earlier decision not to manufacture difficulty by removing tools.
+- SHOW A MOVE was unused across tests 2 and 3 by the experienced testers, so the assistance count is not what is holding difficulty back.
+- With fast trial and error (about 20–40 taps per attempt, near-instant restarts), these testers recover from mistakes cheaply. Ratings cap at HARD even when they make several mistakes, consistent with test 2.
+- The "plan" and "mistake later" questions, as worded, hit a ceiling: experienced players say YES to most boards of any kind. They are weak discriminators.
+
+**C. Speculation (not supported or refuted by this data)**
+- Counter-clockwise spinners may still help as **one ingredient among several** (for example combined with longer attempts or other mechanics from levels 201–300), but this test cannot show that.
+- Board ordering, fatigue across 10 puzzles, and recognition (Loay has seen the controls in two earlier orientations) could have shifted individual ratings. The sample is too small to separate these.
+
+### 7.5 Limitations
+
+- **2 testers, 20 playthroughs:** too small for confident effects. Per-tester differences dominate the group differences.
+- **The third tester is missing,** so criteria defined for 3 testers are assessed as written.
+- **Unequal group sizes** (4 C vs 6 X): rates are compared per playthrough.
+- **Not fully blind:** counter-clockwise spinners are visible, and Loay has seen every control board before (in other orientations); he may recognise them.
+- **No readability report for the son.**
+- **Timing data is valid this time** (no reported multitasking), but there is one data point per tester per board.
+
+## 8. Decision: VERY HARD design paused
+
+The final VERY HARD design is **paused** after test 3. No test 4 and no new generator iteration. Production, Classic, the backend, Supabase, the API, sharing, Photo / Message, the live Friend generator and the production difficulty settings are unchanged, and **Phase 3 stays unfrozen**.
+
+**Why (strategic):** Levels 201–300 are planned before launch and will add mechanics and a richer gameplay vocabulary. The final Friend VERY HARD should challenge a player who has learned the **whole** vocabulary through level 300. Tuning it now against the vocabulary of levels 1–200 risks optimising for a target that becomes obsolete. Test 3 is the last experiment of the current investigation.
+
+### Lessons to carry forward (levels 201–300 and the later Friend generator)
+
+1. **People, not proxies.** Solver and heuristic measures (random tapper, lookahead / heuristic players, one-safe steps, hidden steps, trap delay) did not predict human ratings in tests 1–3. Any future VERY HARD must be validated with people, including expert players.
+2. **The expert is the benchmark.** A rule a player has not internalised yet (counter-clockwise for the son, everything for a first-time adult) creates temporary difficulty that fades with exposure. VERY HARD must stay hard for someone who knows the full vocabulary through level 300.
+3. **Opening discoverability is not the driver** (test 2), and neither is the assistance count: the Hammer was removed in test 3, and SHOW A MOVE went unused across tests 2–3.
+4. **Cheap recovery caps difficulty.** Ratings rise with restarts but stopped at HARD in 92 playthroughs. Future designs should look at what makes trial and error *fail* (for example longer or costlier attempts, or interactions between mechanics), not only at the number of traps.
+5. **Spinner direction is a candidate ingredient, not a solution.** Keep the tooling:
+   - `FriendGenerator.mechanics_ok(..., allow_ccw)` for offline boards
+   - the "direction matters" measures in `tools/vh_human_test3_build.gd`: misread steps, all-clockwise solvability
+   - the blind test page (`?vhtest=1` / `?vhtest2=1` / `?vhtest3=1`) with per-move pause recording, ready for future human tests
+6. **Better instruments next time:** "had to plan" and "mistake later" hit a ceiling. Prefer behavioural measures (restarts, excess moves, pauses, give-ups), or comparative questions (rank two boards) over yes / no.
+7. **Test design:** recruit more testers, with mixed exposure levels; balance the group sizes; avoid boards an expert has already played.
