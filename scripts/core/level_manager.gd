@@ -21,6 +21,9 @@ extends Node
 ##    "XA"   = CHAIN GATE of group A (no color / arrow; can't be tapped)
 ##    "R>+A" = LINK of gate A: the gate opens when every +A block is gone
 ##    "R>="  = ARMORED: launch another block into it to crack the shell
+##    PORTAL PROTOTYPE (development only, ?mechlab=1; see Portals):
+##    "OA"   = a cell of portal pair A (no block; groups A-D, exactly two
+##             cells each). No campaign level uses it.
 ##    Modifiers can be combined in the order  @ ? #K $R %A &A +A =
 ##    (spinners cannot be hidden, hidden blocks cannot be locked; switches,
 ##    flip targets and armored blocks are plain arrows: no spinner, no
@@ -121,6 +124,9 @@ static func _parse_map(map: Array, level: LevelData) -> void:
 			var t := tokens[c]
 			if t == "." or t == "..":
 				continue
+			if t.length() == 2 and t[0] == Portals.TOKEN_PREFIX and Portals.GROUPS.has(t[1]):
+				level.portals[Vector2i(c, r)] = t[1]
+				continue
 			if t.length() == 2 and t[0] == "X" and "ABCD".contains(t[1]):
 				var g := BlockData.new(next_id, Vector2i(c, r), GATE_COLOR, Direction.UP, BlockData.Kind.GATE)
 				g.gate_group = t[1]
@@ -150,6 +156,20 @@ static func _parse_map(map: Array, level: LevelData) -> void:
 			level.blocks.append(b)
 			next_id += 1
 	_validate_links(level)
+	_validate_portals(level)
+
+
+## Portal prototype: a malformed layout (a group without exactly two cells,
+## or a lane that could loop) is reported and dropped entirely, never
+## guessed at.
+static func _validate_portals(level: LevelData) -> void:
+	if level.portals.is_empty():
+		return
+	var errors := Portals.layout_errors(level.rows, level.columns, level.portals)
+	if not errors.is_empty():
+		for e in errors:
+			push_error("Level %d: %s" % [level.number, e])
+		level.portals = {}
 
 
 ## Gates are colorless: this color is never a lock key and never drawn.
@@ -260,6 +280,8 @@ static func to_json_text(level: LevelData) -> String:
 	var arrows := {}
 	for k in Direction.MAP_CHARS:
 		arrows[Direction.MAP_CHARS[k]] = k
+	for cell in level.portals:
+		grid[cell.y][cell.x] = Portals.TOKEN_PREFIX + level.portals[cell]
 	for b in level.blocks:
 		if b.is_gate():
 			grid[b.cell.y][b.cell.x] = "X" + b.gate_group

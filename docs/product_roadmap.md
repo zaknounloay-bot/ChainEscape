@@ -64,6 +64,10 @@ scheduled beyond "next".
 - **VERY HARD design is paused** until levels 201–300 (planned before launch) add mechanics: the final VERY HARD must challenge an expert who knows the whole vocabulary through level 300.
 - Lessons: `docs/vh_human_test3.md` §8. Phase 3 stays unfrozen.
 
+**Chapter 2 mechanic lab (levels 201–300 come first):**
+- PORTAL is the first candidate. A dev-only prototype (`?mechlab=1`, `docs/mechlab_portal.md`) with matched control boards decides GO / MODIFY / DROP with people.
+- Sequence, Choice, Linked / Trigger, levels 201–300 and the global Game Feel pass are not started.
+
 ## Next product phase (after phase 3 is frozen): COMPETITIVE CHALLENGE
 
 The likely first step is **asynchronous competition on the exact same stored challenge**. The exact-board architecture already built (one immutable `PuzzleDefinition` per challenge, rebuilt identically on every device) is what makes this possible: everyone plays the same board.

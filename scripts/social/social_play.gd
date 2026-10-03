@@ -60,6 +60,13 @@ var total_moves := 0
 var total_undos := 0
 var total_hints := 0
 var total_hammers := 0
+## Blocked taps (all), and - portal prototype, mechanic lab only - escapes
+## and rams through a portal, and blocked taps whose lane ran through one.
+## Always 0 portal counts on campaign / Social boards (no portals there).
+var total_blocked := 0
+var total_rams := 0
+var total_portal_uses := 0
+var total_portal_blocked := 0
 ## The next board tap smashes a block (Social Hammer).
 var hammer_armed := false
 ## Reveal's last button text ("" = the default for the mode).
@@ -114,6 +121,10 @@ func start(c: SharedChallenge, p_mode: int, theme: Dictionary) -> void:
 	total_undos = 0
 	total_hints = 0
 	total_hammers = 0
+	total_blocked = 0
+	total_rams = 0
+	total_portal_uses = 0
+	total_portal_blocked = 0
 	_backdrop.set_colors(theme["bg_top"], theme["bg_bottom"])
 	_title.add_theme_color_override("font_color", theme["text"])
 	_chip.add_theme_color_override("font_color", theme["text_soft"])
@@ -169,6 +180,7 @@ func _load_puzzle() -> void:
 	var level := def.to_level()
 	model = BoardModel.new()
 	model.setup(level.rows, level.columns, level.blocks)
+	model.set_portals(level.portals)  # portal prototype: {} on every real board
 	history.clear()
 	completed = false
 	chain = 0
@@ -182,6 +194,7 @@ func _load_puzzle() -> void:
 	board.mystery = level.mystery
 	board.spent_rewards = {}
 	board.hammer_mode = false
+	board.portals = level.portals
 	board.build(level.rows, level.columns, level.blocks, true)
 	board.refresh_locks(model)
 	board.input_enabled = false  # taps come through _input (see _on_input)
@@ -230,14 +243,18 @@ func tap_block(id: int) -> void:
 
 func _escape(id: int) -> void:
 	history.push({"blocks": model.snapshot(), "chain": chain})
+	var via := _portal_via(id)
 	var turned := model.remove(id)
 	var revealed := model.last_revealed.duplicate()
 	var unlocked := model.last_unlocked.duplicate()
 	_play_mechanic_effects()
 	chain += 1
 	total_moves += 1
-	board.play_escape(id, chain, turned)
+	board.play_escape(id, chain, turned, via)
 	AudioManager.play_escape(chain)
+	if not via.is_empty():
+		total_portal_uses += 1
+		AudioManager.play("reveal", 0.7)  # portal prototype: placeholder "whoosh"
 	if not turned.is_empty():
 		AudioManager.play_turn()
 	if not revealed.is_empty():
@@ -260,8 +277,19 @@ func _escape(id: int) -> void:
 
 func _blocked(id: int) -> void:
 	var blocker := model.find_blocker(id)
-	board.play_bump(id, blocker.id if blocker else -1)
+	var via := _portal_via(id)
+	total_blocked += 1
+	board.play_bump(id, blocker.id if blocker else -1, via)
 	_mistake()
+	if not via.is_empty():
+		# Portal prototype: the reason may be far away - say where.
+		total_portal_blocked += 1
+		_show_message("Blocked after portal %s" % str(model.portal_groups.get(via[-1][0], "")))
+
+
+## Portal prototype: portals `id`'s lane runs through ([] on every real board).
+func _portal_via(id: int) -> Array:
+	return [] if model.portals.is_empty() else model.lane(id)["via"]
 
 
 ## A wrong tap: the usual buzz, the chain resets. No hearts in Social play.
@@ -273,8 +301,12 @@ func _mistake() -> void:
 
 func _ram(id: int) -> void:
 	history.push({"blocks": model.snapshot(), "chain": chain})
+	var via := _portal_via(id)
 	var target := model.ram(id)
-	board.play_ram(id, target)
+	total_rams += 1
+	if not via.is_empty():
+		total_portal_uses += 1
+	board.play_ram(id, target, via)
 	AudioManager.play_crack()
 	Haptics.medium()
 	_refresh_buttons()

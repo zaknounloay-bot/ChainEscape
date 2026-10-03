@@ -107,6 +107,32 @@ For scale: the campaign averages 4.7 in Chapter 1, 18.2 in Chapter 3, 27.4 in Ch
     - It wins over a challenge link, even when appended to one (`…?challenge=<id>?friendbench=1`): the page script splits launch parameters on `?`, `&` and `#`.
     - Checked by `node tools/web_friendbench_route_test.mjs build/web`.
 
+### Chapter 2 mechanic lab — PORTAL prototype (development only, not approved)
+
+The first candidate mechanic for levels 201–300, from the next-phase design audit. It is built only to answer one question with people: does PORTAL create genuinely new planning?
+
+**Rule:** a portal pair is two cells with the same letter (`OA`). A lane that reaches a portal continues from its partner, in the same direction; the block escapes only if that whole path is clear.
+
+**Status:**
+- Not approved, not in production.
+- **Not used:** no level, no Friend / Photo / Message board, the backend or sharing.
+- **Engine code is inactive on normal boards.** The rules, Solver and board view only do anything when a board has portals. The 200 levels are proven unchanged by a byte-identical before / after `tools/classic_golden.gd` dump.
+
+**Open it:** the Web build with `?mechlab=1` (or `#mechlab=1`).
+- A short automatic demo, then the basic portal boards.
+- Then the other portal boards mixed with matched CONTROL boards: the same blocks without portals, turned 180°.
+- After each board: short questions. COPY RESULTS at the end.
+
+Rules, boards, questions and the GO / MODIFY / DROP bar: `docs/mechlab_portal.md`.
+
+**Checks:**
+```
+godot --headless --path . res://tools/PortalCheck.tscn                       # portal rules, layouts, loop guard, Solver vs brute force, lab flow
+godot --headless --path . --script res://tools/mechlab_portal_build.gd -- --dry   # lab boards: valid, solvable, portal used
+godot --headless --path . --script res://tools/classic_golden.gd -- --out=FILE    # campaign no-change dump (compare before / after)
+node tools/web_mechlab_page_test.mjs build/web                               # the lab in real Chromium at iPhone size
+```
+
 ### Challenge a Friend phase 3 — creator + minimal recipient (status: NOT frozen; VERY HARD design paused until levels 201–300, see phase 3g)
 
 **Real-device result (`4f1a845`):** the full loop worked on real iPhones. Phone A created a HARD challenge and sent it on WhatsApp; it arrived immediately and was solved. From that phone, CHALLENGE A FRIEND made an EASY challenge for a third phone, which also arrived immediately and worked. Creator PLAY / PREVIEW, the creator, the recipient flow and WhatsApp sharing all worked well. Real-user findings and the next product direction (Competitive Challenge, fairness, live 1v1 later, personal performance) are recorded in `docs/product_roadmap.md`.
@@ -1963,6 +1989,10 @@ godot --headless --path . res://tools/LockPrototypeCheck.tscn         # LOCK PRO
 godot --headless --path . --script res://tools/vh_human_test_build.gd   # VERY HARD human test: (re)build data/dev/vh_human_test.json offline (about 5 min)
 godot --headless --path . res://tools/VhHumanTestCheck.tscn           # VERY HARD human test page (?vhtest=1): blind order, x1 / x1 assistance, rating, resume, results export
 node tools/web_vhtest_page_test.mjs build/web                       # ?vhtest=1, ?vhtest2=1, ?vhtest3=1 in real Chromium: real touches, COPY RESULTS, no network
+godot --headless --path . res://tools/PortalCheck.tscn                  # PORTAL prototype (dev only): rules, layouts, loop guard, Solver vs brute force, ?mechlab=1 flow
+godot --headless --path . --script res://tools/mechlab_portal_build.gd   # PORTAL lab: (re)build data/dev/mechlab_portal.json (17 boards; --dry to check only)
+godot --headless --path . --script res://tools/classic_golden.gd -- --out=FILE   # campaign no-change dump: solutions, analysis, move states (diff two dumps)
+node tools/web_mechlab_page_test.mjs build/web                     # ?mechlab=1 in real Chromium: demo, real touches, questions, resume, COPY RESULTS, no network
 godot --headless --path . --script res://tools/classic_topology_audit.gd [-- --levels]   # VERY HARD: Classic vs Friend board geometry / visual-search audit
 godot --headless --path . --script res://tools/vh_human_test2_build.gd   # VERY HARD human test 2: (re)build data/dev/vh_human_test2.json
 godot --headless --path . --script res://tools/vh_human_test3_build.gd   # VERY HARD human test 3: (re)build data/dev/vh_human_test3.json (CW + CCW, about 1 min)

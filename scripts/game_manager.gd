@@ -288,6 +288,10 @@ func _open_shared_challenge() -> void:
 	if VhHumanTest.requested():
 		add_child(VhHumanTest.new(VhHumanTest.requested_test()))
 		return
+	# Developer page (?mechlab=1): the PORTAL mechanic prototype lab (local only).
+	if MechLab.requested():
+		add_child(MechLab.new())
+		return
 	var p := SocialWeb.launch_param()
 	if not p.is_empty():
 		ui.open_shared_challenge(str(p["raw"]))

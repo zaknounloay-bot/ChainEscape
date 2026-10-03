@@ -1,0 +1,506 @@
+{
+	"format": "ce-mechlab",
+	"v": 1,
+	"mechanic": "portal",
+	"assist": {
+		"undo": 3,
+		"show_a_move": 1,
+		"hammer": 0
+	},
+	"boards": [
+		{
+			"id": "A1",
+			"variant": "portal",
+			"stage": "A",
+			"pair": "A1",
+			"puzzle": {
+				"format": "ce-puzzle",
+				"v": 1,
+				"rules": 1,
+				"rows": 5,
+				"cols": 5,
+				"map": [
+					". . . . .",
+					"R> . OA . Y^",
+					". B^ . . .",
+					". . . OA .",
+					". G> . . ."
+				]
+			},
+			"metrics": {
+				"blocks": 4,
+				"solution": 4,
+				"start_moves": 4,
+				"portal_moves": 1,
+				"remote_blocked_at_start": 0,
+				"random_win": 1
+			}
+		},
+		{
+			"id": "A2",
+			"variant": "portal",
+			"stage": "A",
+			"pair": "A2",
+			"puzzle": {
+				"format": "ce-puzzle",
+				"v": 1,
+				"rules": 1,
+				"rows": 5,
+				"cols": 5,
+				"map": [
+					". . . Yv .",
+					"R> . OA . .",
+					". . . . B<",
+					"OA P> . . .",
+					". . G^ . ."
+				]
+			},
+			"metrics": {
+				"blocks": 5,
+				"solution": 5,
+				"start_moves": 3,
+				"portal_moves": 2,
+				"remote_blocked_at_start": 2,
+				"random_win": 1
+			}
+		},
+		{
+			"id": "A3",
+			"variant": "portal",
+			"stage": "A",
+			"pair": "A3",
+			"puzzle": {
+				"format": "ce-puzzle",
+				"v": 1,
+				"rules": 1,
+				"rows": 5,
+				"cols": 5,
+				"map": [
+					". Gv . . .",
+					"B^ OA . . .",
+					". . . . .",
+					". . . OA Y<",
+					". . . R> ."
+				]
+			},
+			"metrics": {
+				"blocks": 4,
+				"solution": 4,
+				"start_moves": 2,
+				"portal_moves": 2,
+				"remote_blocked_at_start": 2,
+				"random_win": 1
+			}
+		},
+		{
+			"id": "B1",
+			"variant": "portal",
+			"stage": "B",
+			"pair": "B1",
+			"puzzle": {
+				"format": "ce-puzzle",
+				"v": 1,
+				"rules": 1,
+				"rows": 6,
+				"cols": 6,
+				"map": [
+					"Pv . . . P<@ B^@",
+					". . Rv . . .",
+					". . Gv . R^ .",
+					". OA Pv Yv@ . .",
+					"Y>@ . OA . . .",
+					". . . P>@ . ."
+				]
+			},
+			"metrics": {
+				"blocks": 10,
+				"solution": 10,
+				"start_moves": 3,
+				"portal_moves": 4,
+				"remote_blocked_at_start": 1,
+				"random_win": 0.255
+			}
+		},
+		{
+			"id": "B1_CTRL",
+			"variant": "control",
+			"stage": "B",
+			"pair": "B1",
+			"puzzle": {
+				"format": "ce-puzzle",
+				"v": 1,
+				"rules": 1,
+				"rows": 6,
+				"cols": 6,
+				"map": [
+					". . P<@ . . .",
+					". . . . . Y<@",
+					". . Y^@ P^ . .",
+					". Rv . G^ . .",
+					". . . R^ . .",
+					"Bv@ P>@ . . . P^"
+				]
+			},
+			"metrics": {
+				"blocks": 10,
+				"solution": 10,
+				"start_moves": 4,
+				"portal_moves": 0,
+				"remote_blocked_at_start": 0,
+				"random_win": 1
+			}
+		},
+		{
+			"id": "B2",
+			"variant": "portal",
+			"stage": "B",
+			"pair": "B2",
+			"puzzle": {
+				"format": "ce-puzzle",
+				"v": 1,
+				"rules": 1,
+				"rows": 6,
+				"cols": 6,
+				"map": [
+					"Y>@ . . . . OA",
+					"P< . . . . .",
+					"OA . . G<@ . .",
+					"Y^@ B<@ P< Y< . B^",
+					". . . . . .",
+					". . . . G< G<@"
+				]
+			},
+			"metrics": {
+				"blocks": 10,
+				"solution": 10,
+				"start_moves": 3,
+				"portal_moves": 4,
+				"remote_blocked_at_start": 3,
+				"random_win": 0.01
+			}
+		},
+		{
+			"id": "B2_CTRL",
+			"variant": "control",
+			"stage": "B",
+			"pair": "B2",
+			"puzzle": {
+				"format": "ce-puzzle",
+				"v": 1,
+				"rules": 1,
+				"rows": 6,
+				"cols": 6,
+				"map": [
+					"G>@ G> . . . .",
+					". . . . . .",
+					"Bv . Y> P> B>@ Yv@",
+					". . G>@ . . .",
+					". . . . . P>",
+					". . . . . Y<@"
+				]
+			},
+			"metrics": {
+				"blocks": 10,
+				"solution": 10,
+				"start_moves": 5,
+				"portal_moves": 0,
+				"remote_blocked_at_start": 0,
+				"random_win": 0.507
+			}
+		},
+		{
+			"id": "C1",
+			"variant": "portal",
+			"stage": "C",
+			"pair": "C1",
+			"puzzle": {
+				"format": "ce-puzzle",
+				"v": 1,
+				"rules": 1,
+				"rows": 6,
+				"cols": 6,
+				"map": [
+					"G>@ OA . . . .",
+					"R< . . . . P>",
+					"R^ B< . . . .",
+					". . . . . .",
+					"G^@ R>#G OA G^ . .",
+					". . . . . ."
+				]
+			},
+			"metrics": {
+				"blocks": 8,
+				"solution": 8,
+				"start_moves": 3,
+				"portal_moves": 2,
+				"remote_blocked_at_start": 1,
+				"random_win": 0.218
+			}
+		},
+		{
+			"id": "C2",
+			"variant": "portal",
+			"stage": "C",
+			"pair": "C2",
+			"puzzle": {
+				"format": "ce-puzzle",
+				"v": 1,
+				"rules": 1,
+				"rows": 6,
+				"cols": 6,
+				"map": [
+					". . Y< . . .",
+					". . . . . Yv",
+					"B^ G^ Y^@ . OA .",
+					". . . . . .",
+					". Gv%A . . . .",
+					". OA . . B< G<&A"
+				]
+			},
+			"metrics": {
+				"blocks": 8,
+				"solution": 8,
+				"start_moves": 3,
+				"portal_moves": 3,
+				"remote_blocked_at_start": 2,
+				"random_win": 0.23
+			}
+		},
+		{
+			"id": "C2_CTRL",
+			"variant": "control",
+			"stage": "C",
+			"pair": "C2",
+			"puzzle": {
+				"format": "ce-puzzle",
+				"v": 1,
+				"rules": 1,
+				"rows": 6,
+				"cols": 6,
+				"map": [
+					"G>&A B> . . . .",
+					". . . . G^%A .",
+					". . . . . .",
+					". . . Yv@ Gv Bv",
+					"Y^ . . . . .",
+					". . . Y> . ."
+				]
+			},
+			"metrics": {
+				"blocks": 8,
+				"solution": 8,
+				"start_moves": 5,
+				"portal_moves": 0,
+				"remote_blocked_at_start": 0,
+				"random_win": 1
+			}
+		},
+		{
+			"id": "C3",
+			"variant": "portal",
+			"stage": "C",
+			"pair": "C3",
+			"puzzle": {
+				"format": "ce-puzzle",
+				"v": 1,
+				"rules": 1,
+				"rows": 6,
+				"cols": 6,
+				"map": [
+					". . . . R<@ B<",
+					". . Y^ . OA R^",
+					"P^ . . . . P<",
+					"B>= . . . . .",
+					"OA . . . Y<@ B^",
+					"P^ . . . . ."
+				]
+			},
+			"metrics": {
+				"blocks": 10,
+				"solution": 11,
+				"start_moves": 3,
+				"portal_moves": 3,
+				"remote_blocked_at_start": 2,
+				"random_win": 0.13
+			}
+		},
+		{
+			"id": "C3_CTRL",
+			"variant": "control",
+			"stage": "C",
+			"pair": "C3",
+			"puzzle": {
+				"format": "ce-puzzle",
+				"v": 1,
+				"rules": 1,
+				"rows": 6,
+				"cols": 6,
+				"map": [
+					". . . . . Pv",
+					"Bv Y>@ . . . .",
+					". . . . . B<=",
+					"P> . . . . Pv",
+					"Rv . . Yv . .",
+					"B> R>@ . . . ."
+				]
+			},
+			"metrics": {
+				"blocks": 10,
+				"solution": 11,
+				"start_moves": 5,
+				"portal_moves": 0,
+				"remote_blocked_at_start": 0,
+				"random_win": 1
+			}
+		},
+		{
+			"id": "C4",
+			"variant": "portal",
+			"stage": "C",
+			"pair": "C4",
+			"puzzle": {
+				"format": "ce-puzzle",
+				"v": 1,
+				"rules": 1,
+				"rows": 6,
+				"cols": 6,
+				"map": [
+					". . Gv+C . . .",
+					"R> . . OA . B^@",
+					". . . . . .",
+					". . . . . Y<+C",
+					". OA . XC . .",
+					"P^@ . . . R< ."
+				]
+			},
+			"metrics": {
+				"blocks": 7,
+				"solution": 6,
+				"start_moves": 3,
+				"portal_moves": 1,
+				"remote_blocked_at_start": 1,
+				"random_win": 1
+			}
+		},
+		{
+			"id": "D1",
+			"variant": "portal",
+			"stage": "D",
+			"pair": "D1",
+			"puzzle": {
+				"format": "ce-puzzle",
+				"v": 1,
+				"rules": 1,
+				"rows": 7,
+				"cols": 6,
+				"map": [
+					". . Y>@- G<@ . .",
+					". . OA G<@ . R<",
+					"Y<@ . P> B^@ R^ .",
+					"G^ Bv . Yv . .",
+					"P^@- OA . . . .",
+					". . . P< . .",
+					". . . . . ."
+				]
+			},
+			"metrics": {
+				"blocks": 13,
+				"solution": 13,
+				"start_moves": 3,
+				"portal_moves": 3,
+				"remote_blocked_at_start": 2,
+				"random_win": 0.023
+			}
+		},
+		{
+			"id": "D1_CTRL",
+			"variant": "control",
+			"stage": "D",
+			"pair": "D1",
+			"puzzle": {
+				"format": "ce-puzzle",
+				"v": 1,
+				"rules": 1,
+				"rows": 7,
+				"cols": 6,
+				"map": [
+					". . . . . .",
+					". . P> . . .",
+					". . . . . Pv@-",
+					". . Y^ . B^ Gv",
+					". Rv Bv@ P< . Y>@",
+					"R> . G>@ . . .",
+					". . G>@ Y<@- . ."
+				]
+			},
+			"metrics": {
+				"blocks": 13,
+				"solution": 13,
+				"start_moves": 5,
+				"portal_moves": 0,
+				"remote_blocked_at_start": 0,
+				"random_win": 0.098
+			}
+		},
+		{
+			"id": "D2",
+			"variant": "portal",
+			"stage": "D",
+			"pair": "D2",
+			"puzzle": {
+				"format": "ce-puzzle",
+				"v": 1,
+				"rules": 1,
+				"rows": 7,
+				"cols": 6,
+				"map": [
+					". . . . . Y^",
+					". B> P> B> . .",
+					". . . . . .",
+					"R> P^@ . Y>@ R> Y^",
+					". OA . . Y<@- .",
+					". . Pv R< . OA",
+					". . . Y>@- . G^@"
+				]
+			},
+			"metrics": {
+				"blocks": 14,
+				"solution": 14,
+				"start_moves": 3,
+				"portal_moves": 2,
+				"remote_blocked_at_start": 2,
+				"random_win": 0.063
+			}
+		},
+		{
+			"id": "D2_CTRL",
+			"variant": "control",
+			"stage": "D",
+			"pair": "D2",
+			"puzzle": {
+				"format": "ce-puzzle",
+				"v": 1,
+				"rules": 1,
+				"rows": 7,
+				"cols": 6,
+				"map": [
+					"Gv@ . Y<@- . . .",
+					". . R> P^ . .",
+					". Y>@- . . . .",
+					"Yv R< Y<@ . Pv@ R<",
+					". . . . . .",
+					". . B< P< B< .",
+					"Yv . . . . ."
+				]
+			},
+			"metrics": {
+				"blocks": 14,
+				"solution": 14,
+				"start_moves": 4,
+				"portal_moves": 0,
+				"remote_blocked_at_start": 0,
+				"random_win": 0.185
+			}
+		}
+	]
+}

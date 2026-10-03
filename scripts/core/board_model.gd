@@ -41,6 +41,12 @@ var last_unlocked: Array = []
 ## ({"id", "cell", "group"}).
 var last_flipped: Array = []
 var last_opened_gates: Array = []
+## PORTAL PROTOTYPE (development only, see Portals): static board data,
+## Vector2i cell -> pair letter, and cell -> partner cell. Empty on every
+## campaign and Social board, where every rule below is unchanged. setup()
+## and restore() leave them alone (they never change during play).
+var portal_groups: Dictionary = {}
+var portals: Dictionary = {}
 
 
 func setup(p_rows: int, p_columns: int, p_blocks: Array) -> void:
@@ -51,6 +57,12 @@ func setup(p_rows: int, p_columns: int, p_blocks: Array) -> void:
 	_color_count.clear()
 	for b in p_blocks:
 		_add(b.duplicate_data())
+
+
+## Portal prototype: sets this board's portal pairs ({cell: letter}).
+func set_portals(groups: Dictionary) -> void:
+	portal_groups = groups.duplicate()
+	portals = Portals.pairs(portal_groups)
 
 
 func is_inside(cell: Vector2i) -> bool:
@@ -74,6 +86,8 @@ func block_count() -> int:
 ## or null if the path is clear.
 func find_blocker(id: int) -> BlockData:
 	var b: BlockData = blocks[id]
+	if not portals.is_empty():
+		return lane(id)["blocker"]
 	var step := Direction.step(b.direction)
 	var cell := b.cell + step
 	while is_inside(cell):
@@ -82,6 +96,19 @@ func find_blocker(id: int) -> BlockData:
 			return other
 		cell += step
 	return null
+
+
+## Portal prototype: `id`'s whole lane. {"blocker": first block in it (or
+## null), "loop": true if the lane could never reach the edge (malformed
+## layout only), "via": [[entry, exit], ...] portals it passes, in order}.
+## Without portals: the straight lane (via is empty, loop false).
+func lane(id: int) -> Dictionary:
+	var b: BlockData = blocks.get(id)
+	if b == null:
+		return {"blocker": null, "loop": false, "via": []}
+	var r := Portals.walk(rows, columns, portals, b.cell, b.direction, func(c: Vector2i) -> bool: return _occupancy.has(c))
+	var cell: Vector2i = r["cell"]
+	return {"blocker": block_at(cell) if cell.x >= 0 else null, "loop": r["loop"], "via": r["via"]}
 
 
 func can_escape(id: int) -> bool:
@@ -106,6 +133,8 @@ func move_state(id: int) -> String:
 		return "armored"
 	var blocker := find_blocker(id)
 	if blocker == null:
+		if not portals.is_empty() and lane(id)["loop"]:
+			return "blocked"
 		return "ok"
 	return "ram" if blocker.armored else "blocked"
 

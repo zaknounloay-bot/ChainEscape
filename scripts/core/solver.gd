@@ -70,12 +70,27 @@ var _shells: int = 0  # shells still intact
 var _flip_ids: Array = [[], [], [], []]  # group -> ids that reverse
 var _gate_ids: Array = [[], [], [], []]  # group -> gate ids
 var _links_alive := PackedInt32Array([0, 0, 0, 0])
+# Portal prototype (development only): cell index -> partner cell index.
+# Static, so it is not part of the memo key. Empty on every campaign and
+# Social board, where lanes are walked exactly as before.
+var _portal_exit := PackedInt32Array()
+var _has_portals := false
+## Returned by _first_in_lane for a lane that loops (malformed portal
+## layouts only): not free, and nothing to ram.
+const LANE_LOOP := -2
 
 
 ## Build from a list of BlockData (e.g. BoardModel.snapshot()).
-func _init(p_rows: int, p_columns: int, blocks: Array) -> void:
+func _init(p_rows: int, p_columns: int, blocks: Array, portals: Dictionary = {}) -> void:
 	rows = p_rows
 	columns = p_columns
+	if not portals.is_empty():
+		_has_portals = true
+		_portal_exit.resize(rows * columns)
+		_portal_exit.fill(-1)
+		for cell in portals:
+			var to: Vector2i = portals[cell]
+			_portal_exit[cell.y * columns + cell.x] = to.y * columns + to.x
 	var max_id := -1
 	for b in blocks:
 		max_id = maxi(max_id, b.id)
@@ -163,7 +178,7 @@ func _color_index(c: String) -> int:
 
 
 static func from_model(model: BoardModel) -> Solver:
-	return Solver.new(model.rows, model.columns, model.snapshot())
+	return Solver.new(model.rows, model.columns, model.snapshot(), model.portals)
 
 
 # --- Public API ------------------------------------------------------------
@@ -187,6 +202,7 @@ static func hammer_safe(model: BoardModel, id: int) -> bool:
 		return false
 	var test := BoardModel.new()
 	test.setup(model.rows, model.columns, model.snapshot())
+	test.set_portals(model.portal_groups)
 	test.remove(id)
 	if test.is_empty():
 		return true
@@ -706,7 +722,7 @@ func _ram_target(id: int) -> int:
 	if _lock[id] >= 0 and _color_count[_lock[id]] > 0:
 		return -1
 	var t := _first_in_lane(id)
-	return t if t != -1 and _armor[t] == 1 else -1
+	return t if t >= 0 and _armor[t] == 1 else -1
 
 
 ## Still hidden: no neighbour (at construction time) has escaped yet.
@@ -725,6 +741,8 @@ func _is_free(id: int) -> bool:
 
 ## The first block in `id`'s arrow direction, or -1 if the lane is clear.
 func _first_in_lane(id: int) -> int:
+	if _has_portals:
+		return _first_in_portal_lane(id)
 	var idx := _cell[id]
 	var c := idx % columns
 	var r := idx / columns
@@ -733,6 +751,42 @@ func _first_in_lane(id: int) -> int:
 	r += step.y
 	while c >= 0 and r >= 0 and c < columns and r < rows:
 		var o := _grid[r * columns + c]
+		if o != -1:
+			return o
+		c += step.x
+		r += step.y
+	return -1
+
+
+## Portal prototype: the same walk, continuing from a portal's partner in
+## the same direction. Entering a portal twice (or running past the step
+## limit) means the lane loops: LANE_LOOP.
+func _first_in_portal_lane(id: int) -> int:
+	var idx := _cell[id]
+	var c := idx % columns
+	var r := idx / columns
+	var step: Vector2i = Direction.STEPS[_dir[id]]
+	c += step.x
+	r += step.y
+	var entered := {}
+	var limit := (rows + columns) * 9 + 4
+	var steps := 0
+	while c >= 0 and r >= 0 and c < columns and r < rows:
+		steps += 1
+		if steps > limit:
+			return LANE_LOOP
+		var i := r * columns + c
+		if i == idx:
+			return LANE_LOOP  # back at its own cell: a looping layout
+		var to := _portal_exit[i]
+		if to != -1:
+			if entered.has(i):
+				return LANE_LOOP
+			entered[i] = true
+			c = to % columns + step.x
+			r = to / columns + step.y
+			continue
+		var o := _grid[i]
 		if o != -1:
 			return o
 		c += step.x

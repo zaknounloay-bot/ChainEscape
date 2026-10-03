@@ -35,6 +35,15 @@ var mystery: bool = false:
 	set(v):
 		mystery = v
 		queue_redraw()
+## PORTAL PROTOTYPE (development only, ?mechlab=1; see Portals): Vector2i
+## cell -> pair letter, drawn as round "holes" under the blocks (a block is
+## a rounded square: a portal never looks tappable). Greybox look: pair
+## colour + letter. Empty on every campaign and Social board.
+var portals: Dictionary = {}:
+	set(v):
+		portals = v
+		queue_redraw()
+const PORTAL_COLORS := {"A": Color("#00D8C4"), "B": Color("#FF8A1F"), "C": Color("#E05BFF"), "D": Color("#9BE15D")}
 var show_coords: bool = false:
 	set(v):
 		show_coords = v
@@ -157,7 +166,39 @@ func _draw() -> void:
 		for c in columns:
 			var center := cell_to_local(Vector2i(c, r))
 			_slot_style.draw(get_canvas_item(), Rect2(center - Vector2(slot, slot) * 0.5, Vector2(slot, slot)))
+	for cell in portals:
+		_draw_portal(cell_to_local(cell), str(portals[cell]))
 	_coords_layer.queue_redraw()
+
+
+## Portal prototype (greybox): coloured rim, dark hole, two inner rings and
+## the pair letter.
+func _draw_portal(center: Vector2, group: String) -> void:
+	var color: Color = PORTAL_COLORS.get(group, Color.WHITE)
+	var r := cell_size * 0.42
+	draw_circle(center, r, color)
+	draw_circle(center, r * 0.80, Color("#10121C"))
+	draw_arc(center, r * 0.62, 0.0, TAU, 40, Color(color, 0.55), maxf(2.0, cell_size * 0.03), true)
+	draw_arc(center, r * 0.42, 0.0, TAU, 32, Color(color, 0.35), maxf(2.0, cell_size * 0.025), true)
+	var fs := int(cell_size * 0.34)
+	var font := Palette.font(900)
+	var size := font.get_string_size(group, HORIZONTAL_ALIGNMENT_LEFT, -1, fs)
+	draw_string(font, center + Vector2(-size.x * 0.5, fs * 0.36), group, HORIZONTAL_ALIGNMENT_LEFT, -1, fs, Color.WHITE)
+
+
+## Portal prototype: a short flash on a portal (a block passed through it,
+## or a lane through it is blocked).
+func _portal_flash(cell: Vector2i, color: Color, delay: float = 0.0) -> void:
+	var ring := RewardRing.new()
+	ring.color = color
+	ring.max_radius = cell_size * 0.62
+	ring.position = cell_to_local(cell)
+	if delay <= 0.0:
+		_fx_root.add_child(ring)
+	else:
+		get_tree().create_timer(delay).timeout.connect(func():
+			if is_instance_valid(self):
+				_fx_root.add_child(ring))
 
 
 ## Debug overlay: "column,row" in the corner of every cell.
@@ -201,7 +242,10 @@ func _find_block_near(local: Vector2) -> int:
 
 ## Sends a block off-screen. `chain` makes the effect a touch stronger.
 ## `turned` = spinner ids the escape turned (from BoardModel.remove).
-func play_escape(id: int, chain: int, turned: Array = []) -> void:
+## Portal prototype: `via` = [[entry, exit], ...] portals the lane passes
+## (BoardModel.lane); the block then dives into each entry and comes out of
+## its partner before leaving the board.
+func play_escape(id: int, chain: int, turned: Array = [], via: Array = []) -> void:
 	var view: BlockView = _views.get(id)
 	if view == null:
 		return
@@ -211,7 +255,7 @@ func play_escape(id: int, chain: int, turned: Array = []) -> void:
 	animate_turns(turned)
 	var dir := Direction.vector(view.data.direction)
 	var duration := clampf(0.28 - 0.012 * (chain - 1), 0.20, 0.28)
-	var tween := view.play_escape(_offscreen_point(view.home, dir), duration)
+	var tween := view.play_escape(_offscreen_point(view.home, dir), duration) if via.is_empty() else _play_portal_escape(view, via, duration)
 	tween.finished.connect(view.queue_free)
 	var ghost := EscapeGhost.new()
 	ghost.size = cell_size * BlockView.FACE_RATIO
@@ -224,13 +268,61 @@ func play_escape(id: int, chain: int, turned: Array = []) -> void:
 		_pulse(0.008 + 0.002 * mini(chain - 5, 5))
 
 
+## Portal prototype: the escape through portals. Same speed feel as a
+## normal escape: fly to the entry, shrink into it, pop out of the exit,
+## continue (possibly into the next portal), then leave the board.
+func _play_portal_escape(view: BlockView, via: Array, duration: float) -> Tween:
+	view.z_index = 10
+	var t := view._new_tween()
+	view.flash = 1.0
+	t.tween_property(view, "flash", 0.0, 0.12)
+	var dir := Direction.vector(view.data.direction)
+	var from := view.home
+	var delay := 0.0
+	for hop in via:
+		var entry := cell_to_local(hop[0])
+		var exit := cell_to_local(hop[1])
+		var cells := (entry - from).length() / cell_size
+		var travel := 0.05 + 0.045 * cells
+		t.tween_property(view, "position", entry, travel).set_trans(Tween.TRANS_QUAD).set_ease(Tween.EASE_IN)
+		t.tween_property(view, "scale", Vector2(0.12, 0.12), 0.09).set_trans(Tween.TRANS_BACK).set_ease(Tween.EASE_IN)
+		t.tween_callback(func(): view.position = exit)
+		t.tween_property(view, "scale", Vector2.ONE, 0.11).set_trans(Tween.TRANS_BACK).set_ease(Tween.EASE_OUT)
+		var color: Color = PORTAL_COLORS.get(str(portals.get(hop[0], "")), Color.WHITE)
+		delay += 0.12 + travel + 0.09
+		_portal_flash(hop[0], color, delay - 0.1)
+		_portal_flash(hop[1], color, delay)
+		delay += 0.11
+		from = exit
+	var target := _offscreen_point(from, dir)
+	t.tween_property(view, "position", target, duration).set_trans(Tween.TRANS_QUAD).set_ease(Tween.EASE_IN)
+	t.parallel().tween_property(view, "modulate:a", 0.0, duration * 0.35).set_delay(duration * 0.65)
+	return t
+
+
 ## Blocked tap: nudge the tapped block and make the blocker react.
-func play_bump(id: int, blocker_id: int) -> void:
+## Portal prototype: when the lane runs through portals (`via`), the portals
+## flash and the far blocker shakes clearly (a red ring), so a remote block
+## is never a mystery.
+func play_bump(id: int, blocker_id: int, via: Array = []) -> void:
 	var view: BlockView = _views.get(id)
 	if view == null:
 		return
 	view.play_bump(cell_size * 0.12)
 	var blocker: BlockView = _views.get(blocker_id)
+	if not via.is_empty():
+		for i in via.size():
+			var color: Color = PORTAL_COLORS.get(str(portals.get(via[i][0], "")), Color.WHITE)
+			_portal_flash(via[i][0], color, 0.04 + 0.1 * i)
+			_portal_flash(via[i][1], color, 0.09 + 0.1 * i)
+		if blocker:
+			blocker.play_rattle()
+			var ring := RewardRing.new()
+			ring.color = Color("#FF4D4D")
+			ring.max_radius = cell_size * 0.7
+			ring.position = blocker.home
+			_fx_root.add_child(ring)
+		return
 	if blocker:
 		var dist := (blocker.home - view.home).length() / cell_size
 		blocker.play_hit(view.data.direction, cell_size * 0.05, 0.05 + 0.015 * dist)
@@ -378,12 +470,19 @@ func play_gate_opens(gates: Array) -> void:
 
 ## v0.6: `id` is launched into the shelled block `target`: it dashes up to
 ## it and bounces back, and the shell shatters.
-func play_ram(id: int, target: int) -> void:
+func play_ram(id: int, target: int, via: Array = []) -> void:
 	var v: BlockView = _views.get(id)
 	var t: BlockView = _views.get(target)
 	if v == null or t == null:
 		return
 	var gap := (t.home - v.home).length() - cell_size
+	if not via.is_empty():
+		# Portal prototype: dash into the entry portal; both portals flash.
+		gap = (cell_to_local(via[0][0]) - v.home).length() - cell_size * 0.6
+		for hop in via:
+			var color: Color = PORTAL_COLORS.get(str(portals.get(hop[0], "")), Color.WHITE)
+			_portal_flash(hop[0], color, 0.02)
+			_portal_flash(hop[1], color, 0.06)
 	v.play_ram(maxf(gap, 0.0) + cell_size * 0.15)
 	t.play_crack(0.09)
 	# v0.6.4: the shell bursts - fire, sparks, shell fragments, smoke and a
