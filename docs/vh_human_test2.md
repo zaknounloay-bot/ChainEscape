@@ -1,5 +1,7 @@
 # VERY HARD — Classic topology audit and blind human test 2 (development only)
 
+> **Result:** 3 testers × 14 boards. **0 / 42 rated VERY HARD**; no group was consistently harder. Analysis and next step: `docs/vh_human_test3.md`.
+
 ## Why
 
 Blind test 1 (`docs/vh_human_test.md`):

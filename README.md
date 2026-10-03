@@ -107,9 +107,23 @@ For scale: the campaign averages 4.7 in Chapter 1, 18.2 in Chapter 3, 27.4 in Ch
     - It wins over a challenge link, even when appended to one (`…?challenge=<id>?friendbench=1`): the page script splits launch parameters on `?`, `&` and `#`.
     - Checked by `node tools/web_friendbench_route_test.mjs build/web`.
 
-### Challenge a Friend phase 3 — creator + minimal recipient (status: NOT frozen; VERY HARD blind human test 2 pending, see phase 3e)
+### Challenge a Friend phase 3 — creator + minimal recipient (status: NOT frozen; VERY HARD blind human test 3 pending, see phase 3f)
 
 **Real-device result (`4f1a845`):** the full loop worked on real iPhones. Phone A created a HARD challenge and sent it on WhatsApp; it arrived immediately and was solved. From that phone, CHALLENGE A FRIEND made an EASY challenge for a third phone, which also arrived immediately and worked. Creator PLAY / PREVIEW, the creator, the recipient flow and WhatsApp sharing all worked well. Real-user findings and the next product direction (Competitive Challenge, fairness, live 1v1 later, personal performance) are recorded in `docs/product_roadmap.md`.
+
+#### Phase 3f — test 2 analysis and blind human test 3: clockwise + counter-clockwise spinners (development only)
+
+**Test 2 (3 testers × 14 boards):** 0 / 42 rated VERY HARD.
+- No board group was consistently harder, and the opening's obviousness did not track the ratings.
+- Restarts did raise ratings for every tester, but even 3–4 restarts stayed at HARD: with fast, cheap trial and error, the arrows + clockwise-spinner space seems capped.
+
+**Test 3** (`?vhtest3=1`) changes one variable, **spinner direction**:
+- **Groups:** 4 controls (test 2's boards that were hardest for people, rotated 90°) vs 6 new arrows + clockwise + **counter-clockwise** boards, kept only where direction matters.
+- **Tools:** HAMMER x0 for both groups.
+- **Questions:** "did you have to stop and plan" and "did a move that looked right turn out to be a mistake later".
+- **Also recorded:** long pauses.
+
+Analysis (evidence / inference / speculation), design, success criteria and instructions: `docs/vh_human_test3.md`. Production unchanged; counter-clockwise spinners stay refused by the live validation.
 
 #### Phase 3e — Classic topology audit and blind human test 2 (development only)
 
@@ -1939,9 +1953,10 @@ godot --headless --path . --script res://tools/lock_prototype_bench.gd -- --n=60
 godot --headless --path . res://tools/LockPrototypeCheck.tscn         # LOCK PROTOTYPE safety: exact board, SHOW A MOVE, UNDO, RESTART, locked taps, production still refuses locks
 godot --headless --path . --script res://tools/vh_human_test_build.gd   # VERY HARD human test: (re)build data/dev/vh_human_test.json offline (about 5 min)
 godot --headless --path . res://tools/VhHumanTestCheck.tscn           # VERY HARD human test page (?vhtest=1): blind order, x1 / x1 assistance, rating, resume, results export
-node tools/web_vhtest_page_test.mjs build/web                       # ?vhtest=1 and ?vhtest2=1 in real Chromium: real touches, COPY RESULTS, no network
+node tools/web_vhtest_page_test.mjs build/web                       # ?vhtest=1, ?vhtest2=1, ?vhtest3=1 in real Chromium: real touches, COPY RESULTS, no network
 godot --headless --path . --script res://tools/classic_topology_audit.gd [-- --levels]   # VERY HARD: Classic vs Friend board geometry / visual-search audit
 godot --headless --path . --script res://tools/vh_human_test2_build.gd   # VERY HARD human test 2: (re)build data/dev/vh_human_test2.json
+godot --headless --path . --script res://tools/vh_human_test3_build.gd   # VERY HARD human test 3: (re)build data/dev/vh_human_test3.json (CW + CCW, about 1 min)
 node tools/web_friendbench_route_test.mjs build/web                  # ?friendbench=1 dev page vs challenge links (routing)
 node tools/web_sharetest_page_test.mjs build/web                   # ?sharetest=1 dev page: WhatsApp hand-off test links (web/share_test.js)
 node tools/web_share_options_test.mjs build/web                    # CHALLENGE READY: SEND ON WHATSAPP (wa.me, new tab), MORE WAYS TO SHARE, COPY LINK

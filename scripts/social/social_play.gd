@@ -615,7 +615,7 @@ func _refresh_buttons() -> void:
 	_hint.badge_text = str(max_hints - hints_used)
 	_hint.modulate.a = 1.0 if hints_used < max_hints else 0.5
 	_hint.disabled = completed
-	_hammer.visible = hammer_available()
+	_hammer.visible = hammer_available() and max_hammers > 0
 	_hammer.text = "CANCEL" if hammer_armed else "HAMMER"
 	_hammer.badge_text = str(max_hammers - hammers_used)
 	_hammer.modulate.a = 1.0 if hammer_armed or hammers_used < max_hammers else 0.5

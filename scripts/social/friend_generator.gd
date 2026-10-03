@@ -92,12 +92,16 @@ const TOKEN_RE := "^[RBGYP][\\^v<>](@)?$"
 ## block remains). Production validation (mechanics_ok without allow_locks,
 ## SocialApi, SharedChallenge, Edge Function v4) still refuses it.
 const LOCK_TOKEN_RE := "^[RBGYP][\\^v<>](@)?(#[RBGYP])?$"
+## HUMAN TEST 3 ONLY (offline boards, never production): arrows + clockwise
+## OR counter-clockwise spinners ("R>@-", the Classic CCW rule).
+const CCW_TOKEN_RE := "^[RBGYP][\\^v<>](@-?)?$"
 const CLASSIC_KEYS_PATH := "res://data/classic_board_keys.json"
 
 ## Generators ever created (tests: recipients never generate).
 static var created := 0
 static var _token_re: RegEx
 static var _lock_token_re: RegEx
+static var _ccw_token_re: RegEx
 static var _reward_re: RegEx
 static var _classic: Dictionary = {}
 
@@ -379,7 +383,7 @@ func _human_gap(m: Dictionary, level: LevelData) -> float:
 ## not one to avoid.
 func _allowed(level: LevelData) -> bool:
 	var def := PuzzleDefinition.from_level(level)
-	if not mechanics_ok(def, difficulty, _spec.get("allow_locks", false)):
+	if not mechanics_ok(def, difficulty, _spec.get("allow_locks", false), _spec.get("allow_ccw", false)):
 		return false
 	var key := board_key(def)
 	return not _avoid.has(key) and not is_classic_board(def)
@@ -402,7 +406,7 @@ func _finish() -> void:
 	# Rebuilt from the data alone, as a recipient would: must verify.
 	var rebuilt := PuzzleDefinition.from_json(def.to_json())
 	if rebuilt == null or rebuilt.fingerprint() != def.fingerprint() or not rebuilt.verify() \
-			or not mechanics_ok(rebuilt, difficulty, _spec.get("allow_locks", false)):
+			or not mechanics_ok(rebuilt, difficulty, _spec.get("allow_locks", false), _spec.get("allow_ccw", false)):
 		error = "verification"
 		return
 	puzzle = rebuilt
@@ -422,11 +426,12 @@ func _finish() -> void:
 ## Only the mechanics this difficulty may use: plain arrows, and clockwise
 ## spinners above EASY. (No locks, hidden, rules, switches, gates, armor,
 ## rewards.)
-static func mechanics_ok(def: PuzzleDefinition, d: String, allow_locks: bool = false) -> bool:
+static func mechanics_ok(def: PuzzleDefinition, d: String, allow_locks: bool = false, allow_ccw: bool = false) -> bool:
 	if _token_re == null:
 		_token_re = RegEx.create_from_string(TOKEN_RE)
 		_lock_token_re = RegEx.create_from_string(LOCK_TOKEN_RE)
-	var re := _lock_token_re if allow_locks else _token_re
+		_ccw_token_re = RegEx.create_from_string(CCW_TOKEN_RE)
+	var re := _lock_token_re if allow_locks else (_ccw_token_re if allow_ccw else _token_re)
 	for row in def.map:
 		for t in String(row).split(" ", false):
 			if t == ".":

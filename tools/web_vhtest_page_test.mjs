@@ -121,6 +121,53 @@ try {
   if (shots) { fs.mkdirSync(shots, { recursive: true }); await p3.screenshot({ path: path.join(shots, 'V5_test2_next.png') }); }
   check(ext3.length === 0, 'test 2: no request left the page');
   await c3.close();
+  // Test 3 (?vhtest3=1): CW + CCW boards, HAMMER x0, two follow-up questions.
+  const c4 = await browser.newContext({ viewport: { width: W, height: H }, deviceScaleFactor: 1, isMobile: true, hasTouch: true });
+  const p4 = await c4.newPage();
+  const ext4 = [];
+  p4.on('request', (r) => { if (!r.url().startsWith(`http://127.0.0.1:${PORT}/`)) ext4.push(r.url()); });
+  await p4.addInitScript(() => { window.ceTestHooks = true; });
+  const cdp4 = await c4.newCDPSession(p4);
+  const t4 = async (pt, after = 700) => {
+    await cdp4.send('Input.dispatchTouchEvent', { type: 'touchStart', touchPoints: [{ x: pt[0] * W, y: pt[1] * H, id: 1 }] }); await sleep(80);
+    await cdp4.send('Input.dispatchTouchEvent', { type: 'touchEnd', touchPoints: [] }); await sleep(after);
+  };
+  await p4.goto(`http://127.0.0.1:${PORT}/index.html?v=8&vhtest3=1`);
+  const vt4 = () => p4.evaluate(() => window.chainEscapeVhTest || null).catch(() => null);
+  const pl4 = () => p4.evaluate(() => window.chainEscapeSocialPlay || null).catch(() => null);
+  v = await waitFor(vt4, (v) => v.screen === 'INTRO' && v.buttons.Start, 'test 3 intro', 120000);
+  await sleep(800);
+  check(v.total === 10, 'test 3 (?v=8&vhtest3=1): 10 puzzles');
+  if (shots) { fs.mkdirSync(shots, { recursive: true }); await p4.screenshot({ path: path.join(shots, 'V6_test3_intro.png') }); }
+  await t4(v.buttons.Start, 1500);
+  let q4 = await waitFor(pl4, (p) => p.active && p.next && p.next.length === 2, 'test 3 puzzle');
+  check(q4.buttons.Hint && !q4.buttons.Hammer && q4.buttons.Undo && q4.buttons.Restart, 'test 3 puzzle: UNDO, SHOW A MOVE, RESTART, no HAMMER');
+  if (shots) await p4.screenshot({ path: path.join(shots, 'V7_test3_puzzle.png') });
+  for (let i = 0; i < 80; i++) {
+    const p = await waitFor(pl4, (p) => p.completed || (p.active && p.next && p.next.length === 2), 'test 3 next move');
+    if (p.completed) break;
+    await t4(p.next, 450);
+  }
+  // Let each screen settle (positions are published again after layout).
+  await waitFor(vt4, (v) => v.screen === 'RATE' && v.buttons.Rate_VERY_HARD, 'test 3 rate', 15000);
+  await sleep(600);
+  v = await vt4();
+  await t4(v.buttons.Rate_VERY_HARD, 700);
+  await waitFor(vt4, (v) => v.screen === 'THINK' && v.buttons.Think_YES, 'test 3 question 1', 5000);
+  await sleep(600);
+  v = await vt4();
+  if (shots) await p4.screenshot({ path: path.join(shots, 'V8_test3_q1.png') });
+  await t4(v.buttons.Think_YES, 900);
+  v = await waitFor(vt4, (v) => v.screen === 'THINK' && v.buttons.Think_NO, 'test 3 question 2', 5000);
+  await sleep(600);
+  v = await vt4();
+  if (shots) await p4.screenshot({ path: path.join(shots, 'V9_test3_q2.png') });
+  check(v.results === 0, 'test 3: a second question follows the first');
+  await t4(v.buttons.Think_NO, 1500);
+  v = await waitFor(vt4, (v) => v.results === 1 && v.screen === 'PLAYING', 'test 3 result', 10000);
+  check(v.results === 1, 'test 3: solved by real touches, rated, both questions answered, puzzle 2 next');
+  check(ext4.length === 0, 'test 3: no request left the page');
+  await c4.close();
   // Without ?vhtest the normal game opens (title).
   const c2 = await browser.newContext({ viewport: { width: W, height: H }, isMobile: true, hasTouch: true });
   const p2 = await c2.newPage();

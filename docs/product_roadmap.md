@@ -53,6 +53,12 @@ scheduled beyond "next".
 - The Classic topology audit and blind test 2 (`docs/vh_human_test2.md`) test whether board structure (density, depth, visual search) is the missing ingredient.
 - Mixed clockwise + counter-clockwise spinners follow only if it is not.
 
+**Phase 3f:**
+- Blind test 2: 0 of 42 rated VERY HARD.
+- Topology-only tuning shows diminishing returns.
+- Blind test 3 (`docs/vh_human_test3.md`) isolates clockwise + counter-clockwise spinners, with HAMMER x0 for both groups. If counter-clockwise spinners do not help, the next candidate variable is attempt cost (board size / solution length).
+- The eventual Social assistance policy (HAMMER x1 for EASY–HARD, x0 for VERY HARD) is not decided; VERY HARD must first be hard by itself.
+
 ## Next product phase (after phase 3 is frozen): COMPETITIVE CHALLENGE
 
 The likely first step is **asynchronous competition on the exact same stored challenge**. The exact-board architecture already built (one immutable `PuzzleDefinition` per challenge, rebuilt identically on every device) is what makes this possible: everyone plays the same board.

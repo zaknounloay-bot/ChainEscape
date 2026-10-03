@@ -99,6 +99,7 @@ func _run() -> void:
 	t2.queue_free()
 	await _frames(2)
 	await _test2()
+	await _test3()
 	# Nothing else touched.
 	_check(not FileAccess.file_exists(PROGRESS_PATH), "no Classic save written")
 	var fresh := SocialPlay.new()
@@ -210,6 +211,62 @@ func _test2() -> void:
 	_check(FileAccess.file_exists(path2) and FileAccess.get_file_as_string(VhHumanTest.STATE_PATH) == state1, "test 2 keeps its own state file (test 1's untouched)")
 	var exported = JSON.parse_string(t.results_json())
 	_check(exported["test"] == "vhtest2" and exported["q2_key"] == "start_obvious", "test 2 results JSON names the test and the question")
+	t.play.end()
+	t.queue_free()
+	await _frames(2)
+
+
+## Test 3 (?vhtest3=1): CW + CCW boards vs the hardest CW boards, HAMMER x0,
+## two follow-up questions, pause recording.
+func _test3() -> void:
+	var path3: String = VhHumanTest.TESTS["vhtest3"]["state"]
+	DirAccess.remove_absolute(ProjectSettings.globalize_path(path3))
+	var data = JSON.parse_string(FileAccess.get_file_as_string(VhHumanTest.TESTS["vhtest3"]["data"]))
+	_check(data["assist"]["hammer"] == 0 and data["assist"]["show_a_move"] == 1 and data["assist"]["undo"] == 3, "test 3 assistance: UNDO x3, SHOW A MOVE x1, HAMMER x0")
+	var counts := {}
+	for b in data["boards"]:
+		counts[b["variant"]] = counts.get(b["variant"], 0) + 1
+		var def := PuzzleDefinition.from_dict(b["puzzle"])
+		var ok: bool = def != null and def.fingerprint() == b["fingerprint"] and def.verify() and FriendGenerator.mechanics_ok(def, FriendGenerator.VERY_HARD, false, true)
+		var m: Dictionary = b["metrics"]
+		if b["variant"] == "X":
+			ok = ok and m["ccw"] >= 2 and m["cw"] >= 2 and m["misread_steps"] >= 2 and def.to_json().contains("@-")
+			ok = ok and not FriendGenerator.mechanics_ok(def, FriendGenerator.VERY_HARD)  # production still refuses CCW
+		else:
+			ok = ok and not def.to_json().contains("@-") and FriendGenerator.mechanics_ok(def, FriendGenerator.VERY_HARD)
+		_check(ok, "test 3 %s (%s): exact, Solver-valid, intended spinners (X: >= 2 CCW, direction matters)" % [b["id"], b["variant"]])
+	_check(counts.get("C", 0) == 4 and counts.get("X", 0) >= 5, "test 3: 4 control + %d CW+CCW boards" % counts.get("X", 0))
+	var t := VhHumanTest.new("vhtest3")
+	add_child(t)
+	await _frames(3)
+	var intro := _visible_text(t)
+	_check(t.test == "vhtest3" and intro.contains("VERY HARD TEST 3") and intro.contains("counter-clockwise") and intro.contains("no HAMMER"),
+		"test 3 intro: its title, explains spinner direction, says there is no HAMMER")
+	t.start_next()
+	await _frames(2)
+	var p := t.play
+	_check(p._hint.badge_text == "1" and not p._hammer.is_visible_in_tree() and p.max_hammers == 0, "test 3 puzzle: SHOW A MOVE x1, no HAMMER button")
+	p.toggle_hammer()
+	_check(not p.hammer_armed and p.hammers_used == 0, "test 3: the Hammer cannot be armed")
+	p.restart()
+	await _frames(2)
+	await _solve(p)
+	await _wait(1.3)
+	t.rate(3)
+	_check(_visible_text(t).contains("stop and plan your next moves"), "test 3 question 1: had to stop and plan")
+	t.think("YES")
+	await _frames(1)
+	_check(t.screen == VhHumanTest.Screen.THINK and _visible_text(t).contains("turn out") and _visible_text(t).contains("mistake later"),
+		"test 3 question 2: a move that looked right was a mistake later")
+	t.think("NO")
+	await _frames(2)
+	var r: Dictionary = t.state["results"][0]
+	_check(r["planned"] == "YES" and r["late_mistake"] == "NO" and r["rating"] == "VERY HARD" and r["hammer"] == 0 and r["restarts"] == 1
+		and r.has("longest_pause_ms") and r.has("long_pauses"), "test 3 records both answers, restarts and pause data (%s)" % str(r))
+	_check(t.screen == VhHumanTest.Screen.PLAYING and t.play._title.text == "PUZZLE 2 / %d" % t.total(), "test 3: next puzzle after both answers")
+	var exported = JSON.parse_string(t.results_json())
+	_check(exported["test"] == "vhtest3" and exported["q3_key"] == "late_mistake", "test 3 results JSON names both questions")
+	_check(FileAccess.file_exists(path3), "test 3 keeps its own state file")
 	t.play.end()
 	t.queue_free()
 	await _frames(2)

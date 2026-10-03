@@ -131,6 +131,24 @@ static func rotate180(def: PuzzleDefinition) -> PuzzleDefinition:
 	return PuzzleDefinition.from_dict({"format": "ce-puzzle", "v": 1, "rules": 1, "rows": def.rows, "cols": def.columns, "map": rows})
 
 
+## 90-degree clockwise rotation (orientation-preserving like rotate180):
+## cell (c, r) -> (rows-1-r, c); arrows turn a quarter clockwise; the board
+## becomes rows x columns. Spinner rules are kept.
+static func rotate90(def: PuzzleDefinition) -> PuzzleDefinition:
+	var turn := {"^": ">", ">": "v", "v": "<", "<": "^"}
+	var grid := []
+	for row in def.map:
+		grid.append(Array(String(row).split(" ", false)))
+	var rows := []
+	for c in def.columns:
+		var cells := []
+		for r in range(def.rows - 1, -1, -1):
+			var t: String = grid[r][c]
+			cells.append(t if t == "." else t[0] + turn[t[1]] + t.substr(2))
+		rows.append(" ".join(cells))
+	return PuzzleDefinition.from_dict({"format": "ce-puzzle", "v": 1, "rules": 1, "rows": def.columns, "cols": def.rows, "map": rows})
+
+
 static func measure(def: PuzzleDefinition) -> Dictionary:
 	var lv := def.to_level()
 	var model := BoardModel.new()

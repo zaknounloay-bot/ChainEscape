@@ -34,7 +34,17 @@ const TESTS := {
 	"vhtest2": {"data": "res://data/dev/vh_human_test2.json", "state": "user://vh_human_test2_state.json", "title": "VERY HARD TEST 2\n(DEVELOPMENT)",
 		"q2": "Was it immediately obvious which\nblock you could start with?", "q2_key": "start_obvious", "q2_label": "start obvious",
 		"ls": "chain_escape_vhtest2_state"},
+	# Test 3: controlled variable = clockwise + counter-clockwise spinners;
+	# HAMMER x0 for every board (from the board file's "assist").
+	"vhtest3": {"data": "res://data/dev/vh_human_test3.json", "state": "user://vh_human_test3_state.json", "title": "VERY HARD TEST 3\n(DEVELOPMENT)",
+		"q2": "During the puzzle, did you have to\nstop and plan your next moves?", "q2_key": "planned", "q2_label": "had to plan",
+		"q3": "Did a move that looked right turn out\nto be a mistake later?", "q3_key": "late_mistake", "q3_label": "late mistake",
+		"note": "Spinners turn when a block next to them leaves. The arrowheads on a spinner's ring show which way it turns: some turn clockwise, some counter-clockwise.",
+		"ls": "chain_escape_vhtest3_state"},
 }
+## A pause between two actions (move, UNDO, SHOW A MOVE, RESTART) at least
+## this long is recorded as a "long pause" (test 3 analytics).
+const LONG_PAUSE_MS := 10000
 const RATINGS := ["EASY", "MEDIUM", "HARD", "VERY HARD"]
 const ACCENT := Color("#1A9FE6")
 
@@ -57,6 +67,12 @@ var _results_text: Label
 var _copy: PillButton
 var _copy_status: Label
 var _rate_title: Label
+var _q_label: Label
+var _q := 0  # which follow-up question is showing
+## Follow-up questions after the rating: [[key, text, label], ...].
+var _questions: Array = []
+var _act_sig := []
+var _last_act := 0
 
 
 ## Checked at launch like FriendBench (before a shared-challenge link).
@@ -64,9 +80,9 @@ static func requested() -> bool:
 	return requested_test() != ""
 
 
-## "vhtest2", "vhtest" or "" (not asked for).
+## "vhtest3", "vhtest2", "vhtest" or "" (not asked for).
 static func requested_test() -> String:
-	for key in ["vhtest2", "vhtest"]:
+	for key in ["vhtest3", "vhtest2", "vhtest"]:
 		if "--" + key in OS.get_cmdline_user_args():
 			return key
 	if not OS.has_feature("web"):
@@ -75,7 +91,7 @@ static func requested_test() -> String:
 	if loc == null:
 		return ""
 	var where := (str(loc.search) + str(loc.hash)).to_lower()
-	for key in ["vhtest2", "vhtest"]:
+	for key in ["vhtest3", "vhtest2", "vhtest"]:
 		if where.contains(key + "=1") or where.contains(key + "=true"):
 			return key
 	return ""
@@ -85,6 +101,9 @@ func _init(p_test: String = PARAM) -> void:
 	layer = 30  # over everything (SocialPlay is layer 5)
 	test = p_test if TESTS.has(p_test) else PARAM
 	_cfg = TESTS[test]
+	_questions = [[_cfg["q2_key"], _cfg["q2"], _cfg["q2_label"]]]
+	if _cfg.has("q3"):
+		_questions.append([_cfg["q3_key"], _cfg["q3"], _cfg["q3_label"]])
 
 
 func _ready() -> void:
@@ -108,6 +127,8 @@ func _ready() -> void:
 func _process(_delta: float) -> void:
 	if screen == Screen.PLAYING and _current.get("first_move_ms", -1) < 0 and (play.total_moves > 0 or play.total_hammers > 0):
 		_current["first_move_ms"] = Time.get_ticks_msec() - _t0
+	if screen == Screen.PLAYING:
+		_track_pauses()
 	if screen == Screen.RESULTS:
 		var r := SocialWeb.take_share_result()
 		if r == "copied":
@@ -130,12 +151,15 @@ func start_next() -> void:
 	var rec: Dictionary = boards[state["order"][i]]
 	var def := PuzzleDefinition.from_dict(rec["puzzle"])
 	var c := SharedChallenge.friend_challenge(def, FriendGenerator.VERY_HARD)
-	_current = {"id": rec["id"], "variant": rec["variant"], "fingerprint": def.fingerprint(), "order": i + 1, "first_move_ms": -1}
+	_current = {"id": rec["id"], "variant": rec["variant"], "fingerprint": def.fingerprint(), "order": i + 1, "first_move_ms": -1,
+		"longest_pause_ms": 0, "long_pauses": []}
 	_show(Screen.PLAYING)
 	play.back_label = ""
+	_act_sig = []
 	play.start(c, SocialPlay.Mode.CREATOR_PREVIEW, Chapters.theme_for_chapter(1))
 	play._title.text = "PUZZLE %d / %d" % [i + 1, total()]
 	_t0 = Time.get_ticks_msec()
+	_last_act = _t0
 
 
 func _on_solved() -> void:
@@ -155,6 +179,26 @@ func _on_gave_up() -> void:
 	_show(Screen.RATE)
 
 
+## Pauses between actions (a move, UNDO, SHOW A MOVE, HAMMER, RESTART).
+## Recorded: the longest, and every pause >= LONG_PAUSE_MS with where it
+## happened (attempt number, blocks already cleared in that attempt / total).
+func _track_pauses() -> void:
+	var sig := [play.total_moves, play.total_undos, play.total_hints, play.total_hammers, play.plays]
+	if _act_sig.is_empty():
+		_act_sig = sig
+		return
+	if sig == _act_sig:
+		return
+	_act_sig = sig
+	var now := Time.get_ticks_msec()
+	var gap := now - _last_act
+	_last_act = now
+	_current["longest_pause_ms"] = maxi(int(_current.get("longest_pause_ms", 0)), gap)
+	if gap >= LONG_PAUSE_MS:
+		var cleared := play._total_blocks - play.model.block_count()
+		_current["long_pauses"].append({"ms": gap, "attempt": play.plays, "cleared": cleared, "of": play._total_blocks})
+
+
 func _finish_attempt(solved: bool) -> void:
 	_current["completed"] = solved
 	_current["time_ms"] = Time.get_ticks_msec() - _t0
@@ -167,11 +211,18 @@ func _finish_attempt(solved: bool) -> void:
 
 func rate(i: int) -> void:
 	_current["rating"] = RATINGS[i]
+	_q = 0
 	_show(Screen.THINK)
 
 
+## Answer to the follow-up question showing ("" = skipped); the next one,
+## or the next puzzle.
 func think(answer: String) -> void:
-	_current[_cfg["q2_key"]] = answer
+	_current[_questions[_q][0]] = answer
+	_q += 1
+	if _q < _questions.size():
+		_show(Screen.THINK)
+		return
 	play.end()
 	state["results"].append(_current.duplicate())
 	state["index"] = int(state["index"]) + 1
@@ -239,7 +290,7 @@ func _save_state() -> void:
 ## Everything recorded, plus a per-variant summary (variants are only
 ## named here, after every puzzle was played).
 func results_json() -> String:
-	return JSON.stringify({"format": "ce-vh-human-results", "v": 1, "test": test, "q2_key": _cfg["q2_key"], "started": state.get("started", ""),
+	return JSON.stringify({"format": "ce-vh-human-results", "v": 1, "test": test, "q2_key": _cfg["q2_key"], "q3_key": _cfg.get("q3_key", ""), "started": state.get("started", ""),
 		"device": OS.get_name(), "assist": _assist, "results": state["results"], "summary": summary()})
 
 
@@ -257,6 +308,9 @@ func summary() -> Dictionary:
 		s["rating"].append(RATINGS.find(r["rating"]) + 1)
 		s["very_hard"] += 1 if r["rating"] == "VERY HARD" else 0
 		s["q2_yes"] += 1 if r.get(_cfg["q2_key"], "") == "YES" else 0
+		if _cfg.has("q3_key"):
+			s["q3_yes"] = s.get("q3_yes", 0) + (1 if r.get(_cfg["q3_key"], "") == "YES" else 0)
+		s["long_pauses"] = s.get("long_pauses", 0) + r.get("long_pauses", []).size()
 		s["show_a_move"] += r["show_a_move"]
 		s["hammer"] += r["hammer"]
 		s["restarts"] += r["restarts"]
@@ -274,6 +328,14 @@ func summary() -> Dictionary:
 	return out
 
 
+func _tools_text() -> String:
+	var parts := ["UNDO x%d" % int(_assist["undo"]), "SHOW A MOVE x%d" % int(_assist["show_a_move"])]
+	if int(_assist["hammer"]) > 0:
+		parts.append("HAMMER x%d" % int(_assist["hammer"]))
+	return "Play each one as you normally would. You have %s per attempt%s; RESTART gives them back." % [
+		" and ".join([", ".join(parts.slice(0, parts.size() - 1)), parts[-1]]), "" if int(_assist["hammer"]) > 0 else " (no HAMMER in this test)"]
+
+
 func _summary_text() -> String:
 	var lines := ["%d of %d puzzles played." % [state["results"].size(), total()], ""]
 	if int(state["index"]) < total():
@@ -287,8 +349,9 @@ func _summary_text() -> String:
 	keys.sort()
 	for v in keys:
 		var s: Dictionary = sm[v]
-		lines.append("Group %s: %d played, %d solved, median %ss, rated %.1f / 4, VERY HARD x%d, %s x%d" % [
-			v, s["n"], s["solved"], str(s["median_time_s"]), s["avg_rating_1to4"], s["very_hard"], _cfg["q2_label"], s["q2_yes"]])
+		lines.append("Group %s: %d played, %d solved, median %ss, rated %.1f / 4, VERY HARD x%d, %s x%d%s" % [
+			v, s["n"], s["solved"], str(s["median_time_s"]), s["avg_rating_1to4"], s["very_hard"], _cfg["q2_label"], s["q2_yes"],
+			(", %s x%d" % [_cfg["q3_label"], s.get("q3_yes", 0)]) if _cfg.has("q3_key") else ""])
 	lines.append("")
 	lines.append("Tap COPY RESULTS and paste it into the chat.")
 	return "\n".join(lines)
@@ -305,9 +368,12 @@ func _show(s: int) -> void:
 		Screen.INTRO:
 			var i: int = state["index"]
 			_intro_text.text = ("%d puzzles, one after another, in a random order.\n\n" % total()
-				+ "Play each one as you normally would. You have UNDO x%d, SHOW A MOVE x%d and HAMMER x%d per attempt; RESTART gives them back.\n\n" % [int(_assist["undo"]), int(_assist["show_a_move"]), int(_assist["hammer"])]
-				+ "If you want to give up, tap EXIT and LEAVE.\n\nAfter each puzzle: one question about how difficult it was.")
+				+ _tools_text() + "\n\n"
+				+ (str(_cfg["note"]) + "\n\n" if _cfg.has("note") else "")
+				+ "If you want to give up, tap EXIT and LEAVE.\n\nAfter each puzzle: a few quick questions.")
 			_start.text = "START" if i == 0 else ("CONTINUE  %d / %d" % [i + 1, total()] if i < total() else "SEE RESULTS")
+		Screen.THINK:
+			_q_label.text = _questions[_q][1]
 		Screen.RATE:
 			_rate_title.text = "PUZZLE %d / %d %s\n\nHow difficult was this puzzle?" % [_current.get("order", 0), total(), "SOLVED" if _current.get("completed", false) else "NOT SOLVED"]
 		Screen.RESULTS:
@@ -367,7 +433,8 @@ func _build() -> void:
 	_pages[Screen.RATE] = rate_box
 	# THINK (optional)
 	var think_box := _column()
-	think_box.add_child(_label(_cfg["q2"], 34, 900))
+	_q_label = _label(_cfg["q2"], 34, 900)
+	think_box.add_child(_q_label)
 	for a in ["YES", "NO"]:
 		var b := _button(a, "Think_%s" % a, Palette.WHITE, Palette.TEXT)
 		b.pressed.connect(func():
