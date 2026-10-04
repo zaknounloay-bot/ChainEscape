@@ -1,12 +1,14 @@
 extends SceneTree
 ## No-change check for the mechanic lab boards: like classic_golden.gd but
-## for a lab board file (default: the PORTAL lab). Dumps each board's
+## for a lab board file (default: the PORTAL lab; --file= for the SEQUENCE
+## lab - Sequence tokens are parsed here). Dumps each board's
 ## parsed portals, Solver solution, first SHOW A MOVE and every block's
 ## move state / blocker / lane at each solution step.
 ##   godot --headless --path . --script res://tools/mechlab_golden.gd -- --out=/path/golden.json [--file=res://data/dev/mechlab_portal.json]
 
 
 func _init() -> void:
+	LevelManager.dev_sequence = true
 	var out_path := ""
 	var file := "res://data/dev/mechlab_portal.json"
 	for a in OS.get_cmdline_user_args():
@@ -34,10 +36,13 @@ func _init() -> void:
 				var blk: BlockData = ln["blocker"]
 				row.append("%d:%s:%d:%s" % [id, model.move_state(id), blk.id if blk else -1, str(ln["via"])])
 			states.append(" ".join(row))
+			var mid: int = mv & Solver.ID_MASK
 			if mv & Solver.RAM:
-				model.ram(mv & Solver.ID_MASK)
+				model.ram(mid)
+			elif model.move_state(mid) == "advance":
+				model.advance(mid)
 			else:
-				model.remove(mv)
+				model.remove(mid)
 		out["states"] = states
 		dump.append(out)
 	var text := JSON.stringify(dump, "", true)

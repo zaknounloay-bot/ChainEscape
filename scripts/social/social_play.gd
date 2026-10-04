@@ -76,6 +76,12 @@ var total_seq_blocked := 0
 var total_seq_escapes := 0
 var total_seq_spinner_turns := 0
 var seq_events: Array = []
+## Movable prototype (mechanic lab only; 0 / empty elsewhere): pushes,
+## blocked taps into a crate that could not move, and one record per push
+## ({"ms", "crate", "from", "to", "dir", "portal", "sequence", "cleared", "of"}).
+var total_pushes := 0
+var total_push_blocked := 0
+var push_events: Array = []
 ## The next board tap smashes a block (Social Hammer).
 var hammer_armed := false
 ## Reveal's last button text ("" = the default for the mode).
@@ -139,6 +145,9 @@ func start(c: SharedChallenge, p_mode: int, theme: Dictionary) -> void:
 	total_seq_escapes = 0
 	total_seq_spinner_turns = 0
 	seq_events = []
+	total_pushes = 0
+	total_push_blocked = 0
+	push_events = []
 	_backdrop.set_colors(theme["bg_top"], theme["bg_bottom"])
 	_title.add_theme_color_override("font_color", theme["text"])
 	_chip.add_theme_color_override("font_color", theme["text_soft"])
@@ -246,6 +255,7 @@ func tap_block(id: int) -> void:
 	match model.move_state(id):
 		"ok": _escape(id)
 		"advance": _advance(id)
+		"push": _push(id)
 		"blocked": _blocked(id)
 		"ram": _ram(id)
 		"locked":
@@ -298,6 +308,8 @@ func _blocked(id: int) -> void:
 	total_blocked += 1
 	if model.blocks[id].seq_stage == 1:
 		total_seq_blocked += 1
+	if blocker != null and blocker.is_crate():
+		total_push_blocked += 1  # Movable prototype: the crate could not move
 	board.play_bump(id, blocker.id if blocker else -1, via)
 	_mistake()
 	if not via.is_empty():
@@ -325,6 +337,41 @@ func _advance(id: int) -> void:
 		board.play_reveals(revealed)
 		AudioManager.play_reveal()
 	Haptics.light()
+	_show_message("")
+	_refresh_buttons()
+	if model.playable_ids().is_empty():
+		_show_message("No moves left - tap Undo" if undos_used < MAX_UNDOS else "No moves left - tap Restart")
+
+
+## MOVABLE PROTOTYPE: `id` is launched into the crate in its lane; the crate
+## moves one cell (BoardModel.push), `id` stays. A real move: Undo-able,
+## never a mistake; the chain is kept (it is not an escape). A first-stage
+## Sequence pusher also uses its first stage (counted as an advance).
+func _push(id: int) -> void:
+	history.push({"blocks": model.snapshot(), "chain": chain})
+	var pusher_via := _portal_via(id)
+	var info := model.push(id)
+	if info.is_empty():
+		return
+	var revealed := model.last_revealed.duplicate() if info["advanced"] else []
+	total_pushes += 1
+	if not pusher_via.is_empty():
+		total_portal_uses += 1
+	if info["advanced"]:
+		total_seq_advances += 1
+		total_seq_spinner_turns += info["turned"].size()
+		seq_events.append({"ms": Time.get_ticks_msec(), "cleared": _total_blocks - model.block_count(), "of": _total_blocks, "turned": info["turned"].size()})
+	push_events.append({"ms": Time.get_ticks_msec(), "crate": info["crate"], "from": [info["from"].x, info["from"].y], "to": [info["to"].x, info["to"].y],
+		"dir": Direction.NAMES[info["dir"]], "portal": not info["via"].is_empty() or not pusher_via.is_empty(), "sequence": info["advanced"],
+		"cleared": _total_blocks - model.block_count(), "of": _total_blocks, "attempt": plays})
+	board.play_push(id, info, pusher_via, SocialScreen.reduced_motion())
+	AudioManager.play("hammer", 0.62)  # placeholder CLUNK
+	if not info["turned"].is_empty():
+		AudioManager.play_turn()
+	if not revealed.is_empty():
+		board.play_reveals(revealed)
+		AudioManager.play_reveal()
+	Haptics.medium()
 	_show_message("")
 	_refresh_buttons()
 	if model.playable_ids().is_empty():

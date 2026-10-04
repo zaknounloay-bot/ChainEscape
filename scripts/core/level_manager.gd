@@ -28,6 +28,9 @@ extends Node
 ##    while LevelManager.dev_sequence is true - never in the game, Social or
 ##    Friend parsing): "R>:^" = Sequence block, current arrow right, NEXT
 ##    arrow up. A plain arrow: no other modifier.
+##    MOVABLE PROTOTYPE (development only, ?mechlab=movable; accepted only
+##    while LevelManager.dev_movable is true): "M" = a MOVABLE crate (no
+##    color, no arrow; pushed one cell by an arrow launched into it).
 ##    Modifiers can be combined in the order  @ ? #K $R %A &A +A =
 ##    (spinners cannot be hidden, hidden blocks cannot be locked; switches,
 ##    flip targets and armored blocks are plain arrows: no spinner, no
@@ -117,6 +120,10 @@ static var _token_re: RegEx
 ## by the mechanic lab and its dev tools). Off everywhere else, so a
 ## Sequence cell stays a bad token exactly as before this prototype.
 static var dev_sequence: bool = false
+## Movable prototype: the "M" crate token is parsed only while this is true
+## (the Movable lab and its dev tools). Elsewhere it stays a bad token.
+static var dev_movable: bool = false
+const CRATE_COLOR := "crate"
 
 
 static func _parse_map(map: Array, level: LevelData) -> void:
@@ -131,6 +138,10 @@ static func _parse_map(map: Array, level: LevelData) -> void:
 		for c in tokens.size():
 			var t := tokens[c]
 			if t == "." or t == "..":
+				continue
+			if t == "M" and dev_movable:
+				level.blocks.append(BlockData.new(next_id, Vector2i(c, r), CRATE_COLOR, Direction.UP, BlockData.Kind.CRATE))
+				next_id += 1
 				continue
 			if t.length() == 2 and t[0] == Portals.TOKEN_PREFIX and Portals.GROUPS.has(t[1]):
 				level.portals[Vector2i(c, r)] = t[1]
@@ -304,6 +315,9 @@ static func to_json_text(level: LevelData) -> String:
 	for b in level.blocks:
 		if b.is_gate():
 			grid[b.cell.y][b.cell.x] = "X" + b.gate_group
+			continue
+		if b.is_crate():
+			grid[b.cell.y][b.cell.x] = "M"
 			continue
 		grid[b.cell.y][b.cell.x] = (letters.get(b.color, "B") + arrows[b.direction] + ("@" + BlockData.RULE_SUFFIX[b.spin_rule] if b.is_spinner() else "")
 				+ ("?" if b.hidden else "") + ("#" + letters[b.lock_color] if b.lock_color != "" else "")

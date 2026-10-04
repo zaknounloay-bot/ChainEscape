@@ -156,6 +156,13 @@ func set_cell_size(value: float) -> void:
 		s.anti_aliasing_size = 1.2
 	_face_style.bg_color = Palette.styled_face(data.color) if not data.is_gate() else Palette.GATE[0]
 	_side_style.bg_color = Palette.styled_side(data.color) if not data.is_gate() else Palette.GATE[1]
+	if data.is_crate():
+		# Movable prototype: a heavy wooden crate, almost square corners,
+		# deeper side - nothing like a colored arrow block.
+		_face_style.bg_color = CRATE_FACE
+		_side_style.bg_color = CRATE_SIDE
+		for s in [_face_style, _side_style]:
+			s.set_corner_radius_all(int(cell_size * 0.05))
 	# Chapter material: on dark Chapters a soft glow in the block's own
 	# color replaces part of the drop shadow.
 	var glow: float = Palette.block_style.get("glow", 0.0)
@@ -191,7 +198,7 @@ func refresh() -> void:
 	_badge.visible = data.is_spinner() and not data.hidden
 	# v0.6.4: an intact shell hides the big arrow (its direction shows on a
 	# small chip); the crack reveals it.
-	_arrow.visible = not data.hidden and not data.is_gate() and not data.armored
+	_arrow.visible = not data.hidden and not data.is_gate() and not data.armored and not data.is_crate()
 	for p in get_children():
 		if p is Part:
 			p.queue_redraw()
@@ -219,9 +226,41 @@ func _draw() -> void:
 	if _metal_body():
 		_draw_coin(face_rect, size)
 		return
+	if data.is_crate():
+		side_rect = Rect2(face_rect.position + Vector2(0, cell_size * DEPTH_RATIO * 2.2), face_rect.size)
 	_side_style.draw(get_canvas_item(), side_rect)
 	_face_style.draw(get_canvas_item(), face_rect)
+	if data.is_crate():
+		_draw_crate(face_rect, size)
+		return
 	_draw_material(face_rect, size)
+
+
+## MOVABLE PROTOTYPE (greybox+): a wooden crate - dark structural frame,
+## plank lines, a diagonal brace, and four small outward notches (it can
+## be moved in any of the four directions). No arrow.
+const CRATE_FACE := Color("#C08A4B")
+const CRATE_SIDE := Color("#6B4220")
+const CRATE_DARK := Color("#4A2C12")
+
+
+func _draw_crate(f: Rect2, size: float) -> void:
+	var w := maxf(3.0, size * 0.075)
+	var inner := f.grow(-w * 0.5)
+	draw_rect(inner, CRATE_DARK, false, w)
+	# Planks.
+	for i in [1, 2]:
+		var y: float = f.position.y + f.size.y * i / 3.0
+		draw_line(Vector2(f.position.x + w, y), Vector2(f.end.x - w, y), Color(CRATE_DARK, 0.35), maxf(1.5, size * 0.02))
+	# Diagonal brace.
+	draw_line(f.position + Vector2(w * 1.2, f.size.y - w * 1.2), f.position + Vector2(f.size.x - w * 1.2, w * 1.2), CRATE_DARK, w * 0.8)
+	# Four outward notches (movable both ways on both axes).
+	var c := f.get_center()
+	var n := size * 0.10
+	for d in [Vector2.UP, Vector2.DOWN, Vector2.LEFT, Vector2.RIGHT]:
+		var side := Vector2(-d.y, d.x)
+		var base: Vector2 = c + d * (size * 0.5 - w * 1.6)
+		draw_colored_polygon(PackedVector2Array([base + d * n * 0.9, base + side * n, base - side * n]), Color("#F4E3C3"))
 
 
 ## Silver/Gold are drawn as the coin (draw-once like every other part).
@@ -938,11 +977,36 @@ func play_advance(new_direction: int, cell: float) -> void:
 	t.tween_property(self, "flash", 0.0, 0.3)
 
 
+## MOVABLE PROTOTYPE: the crate slides from where it was to its (already
+## updated) home - impact, a slide of exactly the cells it moved, and a
+## small weighted settle (about 0.3 s). `via` = [[entry, exit], ...] board
+## positions when it went through portals (shrink in, pop out). Reduced
+## motion: a short plain slide, no squash.
+func play_slide(from: Vector2, via_points: Array, reduced: bool) -> void:
+	position = from
+	scale = Vector2.ONE
+	var t := _new_tween()
+	t.tween_interval(0.06)  # the hit lands
+	for hop in via_points:
+		t.tween_property(self, "position", hop[0], 0.08).set_trans(Tween.TRANS_QUAD).set_ease(Tween.EASE_IN)
+		t.tween_property(self, "scale", Vector2(0.15, 0.15), 0.07)
+		var exit: Vector2 = hop[1]
+		t.tween_callback(func(): position = exit)
+		t.tween_property(self, "scale", Vector2.ONE, 0.08).set_trans(Tween.TRANS_BACK).set_ease(Tween.EASE_OUT)
+	if reduced:
+		t.tween_property(self, "position", home, 0.12)
+		return
+	t.tween_property(self, "position", home, 0.17).set_trans(Tween.TRANS_QUAD).set_ease(Tween.EASE_OUT)
+	t.tween_property(self, "scale", Vector2(1.07, 0.93), 0.04)
+	t.tween_property(self, "scale", Vector2.ONE, 0.08).set_trans(Tween.TRANS_BACK).set_ease(Tween.EASE_OUT)
+
+
 ## Stops a running move / advance animation (Undo resyncs the view).
 func stop_motion() -> void:
 	if _tween and _tween.is_valid():
 		_tween.kill()
 	position = home
+	scale = Vector2.ONE
 	flash = 0.0
 
 

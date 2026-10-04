@@ -338,6 +338,41 @@ func play_advance(id: int, new_direction: int, turned: Array) -> void:
 	animate_turns(turned)
 
 
+## MOVABLE PROTOTYPE: `id` was launched into a crate and stays; the crate
+## (info = BoardModel.last_push) slides one cell, through portals if any.
+## A first-stage Sequence pusher also turns to its next arrow.
+func play_push(id: int, info: Dictionary, pusher_via: Array, reduced: bool) -> void:
+	var v: BlockView = _views.get(id)
+	var c: BlockView = _views.get(info["crate"])
+	if c == null:
+		return
+	var from := c.home
+	c.data.cell = info["to"]
+	c.home = cell_to_local(info["to"])
+	var points := []
+	for hop in info["via"]:
+		points.append([cell_to_local(hop[0]), cell_to_local(hop[1])])
+		var color: Color = PORTAL_COLORS.get(str(portals.get(hop[0], "")), Color.WHITE)
+		_portal_flash(hop[0], color, 0.1)
+		_portal_flash(hop[1], color, 0.2)
+	c.play_slide(from, points, reduced)
+	if v:
+		var gap := (from - v.home).length() - cell_size
+		if not pusher_via.is_empty():
+			gap = (cell_to_local(pusher_via[0][0]) - v.home).length() - cell_size * 0.6
+		if info.get("advanced", false):
+			v.play_advance(v.data.seq_next, cell_size)
+		else:
+			v.play_ram(maxf(gap, 0.0) + cell_size * 0.15)
+	animate_turns(info.get("turned", []))
+	_burst(from + Direction.vector(info["dir"]) * cell_size * 0.45, -Direction.vector(info["dir"]), CRATE_DUST, 8, 0.7, 70.0)
+	if not reduced:
+		_pulse(0.006)
+
+
+const CRATE_DUST := Color("#D9C29A")
+
+
 ## Spinners turned by an escape/smash: animate each by its own rule.
 func animate_turns(turned: Array) -> void:
 	for sid in turned:
@@ -361,6 +396,14 @@ func sync_to(blocks: Array) -> void:
 	for id in wanted:
 		if _views.has(id):
 			var existing: BlockView = _views[id]
+			if existing.data.is_crate():
+				# Movable prototype: a crate moved back by Undo - straight to
+				# its cell (any slide still running is stopped first).
+				if existing.data.cell != wanted[id].cell:
+					existing.data.cell = wanted[id].cell
+					existing.home = cell_to_local(wanted[id].cell)
+				existing.stop_motion()
+				continue
 			if existing.data.seq_stage != wanted[id].seq_stage:
 				# Sequence prototype: an advance undone - back to stage 1
 				# (arrow and NEXT chip as they were).

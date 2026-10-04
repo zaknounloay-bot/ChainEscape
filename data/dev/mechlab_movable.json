@@ -1,0 +1,604 @@
+{
+	"format": "ce-mechlab",
+	"v": 1,
+	"mechanic": "movable",
+	"assist": {
+		"undo": 3,
+		"show_a_move": 1,
+		"hammer": 0
+	},
+	"boards": [
+		{
+			"id": "A1",
+			"variant": "movable",
+			"stage": "A",
+			"pair": "A1",
+			"puzzle": {
+				"format": "ce-puzzle",
+				"v": 1,
+				"rules": 1,
+				"rows": 5,
+				"cols": 5,
+				"map": [
+					". . . . .",
+					". . . . .",
+					"G> . M . .",
+					". . Y^@ . .",
+					". . B> . ."
+				]
+			},
+			"metrics": {
+				"arrows": 3,
+				"crates": 1,
+				"min_moves": 4,
+				"min_pushes": 1,
+				"push_traps": 1,
+				"push_needed": true,
+				"start_moves": 3,
+				"random_win": 0.335,
+				"states": 23
+			}
+		},
+		{
+			"id": "A2",
+			"variant": "movable",
+			"stage": "A",
+			"pair": "A2",
+			"puzzle": {
+				"format": "ce-puzzle",
+				"v": 1,
+				"rules": 1,
+				"rows": 5,
+				"cols": 5,
+				"map": [
+					". . Gv . .",
+					"P< . . . .",
+					"R>@ . M . .",
+					". . . . .",
+					". . . . ."
+				]
+			},
+			"metrics": {
+				"arrows": 3,
+				"crates": 1,
+				"min_moves": 4,
+				"min_pushes": 1,
+				"push_traps": 1,
+				"push_needed": true,
+				"start_moves": 3,
+				"random_win": 0.315,
+				"states": 22
+			}
+		},
+		{
+			"id": "B1",
+			"variant": "movable",
+			"stage": "B",
+			"pair": "B1",
+			"puzzle": {
+				"format": "ce-puzzle",
+				"v": 1,
+				"rules": 1,
+				"rows": 5,
+				"cols": 5,
+				"map": [
+					"P^ . . . .",
+					". . . . .",
+					". . . . .",
+					". . M . B<@",
+					"R^ . Y^ . P<"
+				]
+			},
+			"metrics": {
+				"arrows": 5,
+				"crates": 1,
+				"min_moves": 6,
+				"min_pushes": 1,
+				"push_traps": 3,
+				"push_needed": true,
+				"start_moves": 3,
+				"random_win": 0.203,
+				"states": 56
+			}
+		},
+		{
+			"id": "B1_CTRL",
+			"variant": "control",
+			"stage": "B",
+			"pair": "B1",
+			"puzzle": {
+				"format": "ce-puzzle",
+				"v": 1,
+				"rules": 1,
+				"rows": 5,
+				"cols": 5,
+				"map": [
+					"P> . Yv . Rv",
+					"B>@ . Yv . .",
+					". . . . .",
+					". . . . .",
+					". . . . Pv"
+				]
+			},
+			"metrics": {
+				"arrows": 6,
+				"crates": 0,
+				"min_moves": 6,
+				"min_pushes": 0,
+				"push_traps": 0,
+				"push_needed": false,
+				"start_moves": 2,
+				"random_win": 1,
+				"states": 17
+			}
+		},
+		{
+			"id": "B2",
+			"variant": "movable",
+			"stage": "B",
+			"pair": "B2",
+			"puzzle": {
+				"format": "ce-puzzle",
+				"v": 1,
+				"rules": 1,
+				"rows": 5,
+				"cols": 5,
+				"map": [
+					"Y< . . . .",
+					"G>@ . . Gv@ Y^",
+					". . M . .",
+					". . R^ . .",
+					". . . . ."
+				]
+			},
+			"metrics": {
+				"arrows": 5,
+				"crates": 1,
+				"min_moves": 7,
+				"min_pushes": 2,
+				"push_traps": 1,
+				"push_needed": true,
+				"start_moves": 4,
+				"random_win": 0.025,
+				"states": 67
+			}
+		},
+		{
+			"id": "B2_CTRL",
+			"variant": "control",
+			"stage": "B",
+			"pair": "B2",
+			"puzzle": {
+				"format": "ce-puzzle",
+				"v": 1,
+				"rules": 1,
+				"rows": 5,
+				"cols": 5,
+				"map": [
+					". . . . .",
+					". . Rv . .",
+					". . Yv . .",
+					"Yv G^@ . . G<@",
+					". . . . Y>"
+				]
+			},
+			"metrics": {
+				"arrows": 6,
+				"crates": 0,
+				"min_moves": 6,
+				"min_pushes": 0,
+				"push_traps": 0,
+				"push_needed": false,
+				"start_moves": 4,
+				"random_win": 1,
+				"states": 39
+			}
+		},
+		{
+			"id": "B3",
+			"variant": "movable",
+			"stage": "B",
+			"pair": "B3",
+			"puzzle": {
+				"format": "ce-puzzle",
+				"v": 1,
+				"rules": 1,
+				"rows": 5,
+				"cols": 5,
+				"map": [
+					". . . . .",
+					". . R<@ P> G^@",
+					". . . . .",
+					". M . . Y>",
+					". Y^ . . ."
+				]
+			},
+			"metrics": {
+				"arrows": 5,
+				"crates": 1,
+				"min_moves": 8,
+				"min_pushes": 3,
+				"push_traps": 1,
+				"push_needed": true,
+				"start_moves": 4,
+				"random_win": 0.05,
+				"states": 64
+			}
+		},
+		{
+			"id": "B3_CTRL",
+			"variant": "control",
+			"stage": "B",
+			"pair": "B3",
+			"puzzle": {
+				"format": "ce-puzzle",
+				"v": 1,
+				"rules": 1,
+				"rows": 5,
+				"cols": 5,
+				"map": [
+					". . . Yv .",
+					"Y< . . Yv .",
+					". . . . .",
+					"Gv@ P< R>@ . .",
+					". . . . ."
+				]
+			},
+			"metrics": {
+				"arrows": 6,
+				"crates": 0,
+				"min_moves": 6,
+				"min_pushes": 0,
+				"push_traps": 0,
+				"push_needed": false,
+				"start_moves": 4,
+				"random_win": 1,
+				"states": 36
+			}
+		},
+		{
+			"id": "C1",
+			"variant": "movable",
+			"stage": "C",
+			"pair": "C1",
+			"puzzle": {
+				"format": "ce-puzzle",
+				"v": 1,
+				"rules": 1,
+				"rows": 5,
+				"cols": 5,
+				"map": [
+					"G< . . Pv .",
+					". . . . .",
+					". . . M .",
+					"R>@ . . . B>",
+					"Bv@ . . . ."
+				]
+			},
+			"metrics": {
+				"arrows": 5,
+				"crates": 1,
+				"min_moves": 7,
+				"min_pushes": 2,
+				"push_traps": 2,
+				"push_needed": true,
+				"start_moves": 4,
+				"random_win": 0.085,
+				"states": 54
+			}
+		},
+		{
+			"id": "C1_CTRL",
+			"variant": "control",
+			"stage": "C",
+			"pair": "C1",
+			"puzzle": {
+				"format": "ce-puzzle",
+				"v": 1,
+				"rules": 1,
+				"rows": 5,
+				"cols": 5,
+				"map": [
+					". . . . B^@",
+					"B< . . . R<@",
+					". Y^ . . .",
+					". . . . .",
+					". P^ . . G>"
+				]
+			},
+			"metrics": {
+				"arrows": 6,
+				"crates": 0,
+				"min_moves": 6,
+				"min_pushes": 0,
+				"push_traps": 0,
+				"push_needed": false,
+				"start_moves": 4,
+				"random_win": 1,
+				"states": 42
+			}
+		},
+		{
+			"id": "C2",
+			"variant": "movable",
+			"stage": "C",
+			"pair": "C2",
+			"puzzle": {
+				"format": "ce-puzzle",
+				"v": 1,
+				"rules": 1,
+				"rows": 5,
+				"cols": 5,
+				"map": [
+					". . Pv@ . B>",
+					". . M P< .",
+					"R>@ . . R^ .",
+					"Bv . . . .",
+					". . . . ."
+				]
+			},
+			"metrics": {
+				"arrows": 6,
+				"crates": 1,
+				"min_moves": 8,
+				"min_pushes": 2,
+				"push_traps": 5,
+				"push_needed": true,
+				"start_moves": 4,
+				"random_win": 0.008,
+				"states": 112
+			}
+		},
+		{
+			"id": "C3",
+			"variant": "movable",
+			"stage": "C",
+			"pair": "C3",
+			"puzzle": {
+				"format": "ce-puzzle",
+				"v": 1,
+				"rules": 1,
+				"rows": 5,
+				"cols": 5,
+				"map": [
+					". . . . .",
+					". M Y< . .",
+					"G^@ . . . .",
+					". . R< . .",
+					"G^@ Yv . . ."
+				]
+			},
+			"metrics": {
+				"arrows": 5,
+				"crates": 1,
+				"min_moves": 7,
+				"min_pushes": 2,
+				"push_traps": 1,
+				"push_needed": true,
+				"start_moves": 4,
+				"random_win": 0.05,
+				"states": 52
+			}
+		},
+		{
+			"id": "D1",
+			"variant": "movable",
+			"stage": "D",
+			"pair": "D1",
+			"puzzle": {
+				"format": "ce-puzzle",
+				"v": 1,
+				"rules": 1,
+				"rows": 5,
+				"cols": 5,
+				"map": [
+					"P< . . . .",
+					"R>@ . Y> Y> Y>=",
+					". . . M .",
+					". . Rv . .",
+					". . . P^ ."
+				]
+			},
+			"metrics": {
+				"arrows": 7,
+				"crates": 1,
+				"min_moves": 10,
+				"min_pushes": 2,
+				"push_traps": 2,
+				"push_needed": true,
+				"start_moves": 3,
+				"random_win": 0.005,
+				"states": 84
+			}
+		},
+		{
+			"id": "E1",
+			"variant": "movable",
+			"stage": "E",
+			"pair": "E1",
+			"puzzle": {
+				"format": "ce-puzzle",
+				"v": 1,
+				"rules": 1,
+				"rows": 6,
+				"cols": 6,
+				"map": [
+					". . . . . .",
+					". P^ R< G< . .",
+					". . M . P< .",
+					". . . M R< .",
+					". . B^@ . . .",
+					". . Yv@ . . ."
+				]
+			},
+			"metrics": {
+				"arrows": 7,
+				"crates": 2,
+				"min_moves": 10,
+				"min_pushes": 3,
+				"push_traps": 9,
+				"push_needed": true,
+				"start_moves": 4,
+				"random_win": 0,
+				"states": 672
+			}
+		},
+		{
+			"id": "E1_CTRL",
+			"variant": "control",
+			"stage": "E",
+			"pair": "E1",
+			"puzzle": {
+				"format": "ce-puzzle",
+				"v": 1,
+				"rules": 1,
+				"rows": 6,
+				"cols": 6,
+				"map": [
+					". . . Y^@ . .",
+					". . . Bv@ . .",
+					". R> Bv . . .",
+					". P> . Yv . .",
+					". . G> R> Pv .",
+					". . . . . ."
+				]
+			},
+			"metrics": {
+				"arrows": 9,
+				"crates": 0,
+				"min_moves": 9,
+				"min_pushes": 0,
+				"push_traps": 0,
+				"push_needed": false,
+				"start_moves": 2,
+				"random_win": 1,
+				"states": 50
+			}
+		},
+		{
+			"id": "E2",
+			"variant": "movable",
+			"stage": "E",
+			"pair": "E2",
+			"puzzle": {
+				"format": "ce-puzzle",
+				"v": 1,
+				"rules": 1,
+				"rows": 6,
+				"cols": 6,
+				"map": [
+					". . . . M Y>",
+					". . R< . . Y<@",
+					". . G^@ Pv . .",
+					". . . . . .",
+					"R> M . . . .",
+					". . P^ Yv . ."
+				]
+			},
+			"metrics": {
+				"arrows": 8,
+				"crates": 2,
+				"min_moves": 13,
+				"min_pushes": 5,
+				"push_traps": 2,
+				"push_needed": true,
+				"start_moves": 4,
+				"random_win": 0,
+				"states": 287
+			}
+		},
+		{
+			"id": "E2_CTRL",
+			"variant": "control",
+			"stage": "E",
+			"pair": "E2",
+			"puzzle": {
+				"format": "ce-puzzle",
+				"v": 1,
+				"rules": 1,
+				"rows": 6,
+				"cols": 6,
+				"map": [
+					". . Y^ Pv . .",
+					". . . . B< R<",
+					". . . . . .",
+					". . P^ Gv@ . .",
+					"Y>@ . . R> . .",
+					"Y< Y< . . . ."
+				]
+			},
+			"metrics": {
+				"arrows": 10,
+				"crates": 0,
+				"min_moves": 10,
+				"min_pushes": 0,
+				"push_traps": 0,
+				"push_needed": false,
+				"start_moves": 4,
+				"random_win": 0.128,
+				"states": 150
+			}
+		},
+		{
+			"id": "F1",
+			"variant": "integration",
+			"stage": "F",
+			"pair": "F1",
+			"puzzle": {
+				"format": "ce-puzzle",
+				"v": 1,
+				"rules": 1,
+				"rows": 5,
+				"cols": 5,
+				"map": [
+					". Gv . . .",
+					"R>@ M OA . .",
+					"Y< . . . .",
+					". . . OA .",
+					". . . . ."
+				]
+			},
+			"metrics": {
+				"arrows": 3,
+				"crates": 1,
+				"min_moves": 4,
+				"min_pushes": 1,
+				"push_traps": 1,
+				"push_needed": true,
+				"start_moves": 3,
+				"random_win": 0.315,
+				"states": 21
+			}
+		},
+		{
+			"id": "F2",
+			"variant": "integration",
+			"stage": "F",
+			"pair": "F2",
+			"puzzle": {
+				"format": "ce-puzzle",
+				"v": 1,
+				"rules": 1,
+				"rows": 4,
+				"cols": 4,
+				"map": [
+					". . . .",
+					"R>:v M . .",
+					". . . .",
+					". G^ . ."
+				]
+			},
+			"metrics": {
+				"arrows": 2,
+				"crates": 1,
+				"min_moves": 3,
+				"min_pushes": 1,
+				"push_traps": 1,
+				"push_needed": true,
+				"start_moves": 2,
+				"random_win": 0.533,
+				"states": 8
+			}
+		}
+	]
+}

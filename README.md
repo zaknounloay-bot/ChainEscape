@@ -107,7 +107,33 @@ For scale: the campaign averages 4.7 in Chapter 1, 18.2 in Chapter 3, 27.4 in Ch
     - It wins over a challenge link, even when appended to one (`…?challenge=<id>?friendbench=1`): the page script splits launch parameters on `?`, `&` and `#`.
     - Checked by `node tools/web_friendbench_route_test.mjs build/web`.
 
-### Chapter 2 mechanic lab — SEQUENCE prototype (development only, not approved)
+### Chapter 2 mechanic lab — MOVABLE crate prototype (development only, not approved)
+
+The third candidate. The question: does a crate that arrows push around make players reason about where things **will be**, while staying immediately clear and more interesting than a fair control?
+
+**Rule:** a MOVABLE crate (`M`) has no arrow, never escapes and need not leave (the board is clear when only crates remain).
+- **Push:** when the first thing in an arrow's lane is a crate, tapping the arrow pushes the crate exactly one cell in that direction. The arrow stays in its cell.
+- **Blocked:** a block, a second crate (no chain pushing), the board edge or a blocked portal exit behind the crate is an ordinary blocked tap.
+- **Portals:** pushes go through portals with the portal rules.
+- **Sequence:** a first-stage Sequence block's push also uses its first stage; a failed push does not.
+
+**Status:**
+- Not approved, not in production, not in Social or the backend.
+- **Outside the lab the token is unknown, as before:** it is parsed only while `LevelManager.dev_movable` is on, set by the lab and its tools.
+- **Proven unchanged:** levels 1–200, the PORTAL lab boards and the SEQUENCE lab boards (byte-identical before / after dumps).
+
+**Open it:** the Web build with `?mechlab=movable`.
+- A 10 s demo.
+- 11 Movable boards and 6 matched controls.
+- 2 Portal / Sequence integration checks, last.
+- Short questions, including whether it was "just pushing it when I could".
+- Push telemetry, COPY RESULTS.
+
+Details and the "last pusher stays stuck" rule consequence: `docs/mechlab_movable.md`.
+
+**SEQUENCE decision after its human test: GO** (dev-only for now).
+
+### Chapter 2 mechanic lab — SEQUENCE prototype (development only, GO after human test; not in production)
 
 The second candidate mechanic. The research question: does its first stage create a real **timing** decision, or is it just "a block that needs two taps"?
 
@@ -2021,6 +2047,9 @@ godot --headless --path . res://tools/SequenceCheck.tscn                # SEQUEN
 godot --headless --path . --script res://tools/mechlab_sequence_build.gd # SEQUENCE lab: (re)build data/dev/mechlab_sequence.json (17 boards; --dry to check only)
 godot --headless --path . --script res://tools/mechlab_golden.gd -- --out=FILE   # PORTAL lab boards no-change dump (diff two dumps)
 node tools/web_mechlab_sequence_test.mjs build/web                 # ?mechlab=sequence in real Chromium (and ?mechlab=1 still the PORTAL lab)
+godot --headless --path . res://tools/MovableCheck.tscn                 # MOVABLE prototype (dev only): push rules, Portal / Sequence pushes, Undo / Restart, Solver vs exact search, ?mechlab=movable flow
+godot --headless --path . --script res://tools/mechlab_movable_build.gd  # MOVABLE lab: (re)build data/dev/mechlab_movable.json (19 boards; --dry to check only)
+node tools/web_mechlab_movable_test.mjs build/web                  # ?mechlab=movable in real Chromium (and ?mechlab=1 / =sequence unchanged)
 godot --headless --path . --script res://tools/classic_topology_audit.gd [-- --levels]   # VERY HARD: Classic vs Friend board geometry / visual-search audit
 godot --headless --path . --script res://tools/vh_human_test2_build.gd   # VERY HARD human test 2: (re)build data/dev/vh_human_test2.json
 godot --headless --path . --script res://tools/vh_human_test3_build.gd   # VERY HARD human test 3: (re)build data/dev/vh_human_test3.json (CW + CCW, about 1 min)

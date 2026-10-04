@@ -1,8 +1,8 @@
 # Mechanic lab — SEQUENCE prototype (development only)
 
-> **Status:** a dev-only research prototype, **not approved**. One question:
-> **does the first stage create a genuinely new timing decision ("WHEN do I use it?"), or is it just "a block that needs two taps"?**
-> The decision (GO / MODIFY / DROP) is made by people, not by the solver.
+> **Decision after the human test: GO.** Not implemented in production yet; the prototype below stays dev-only and unchanged.
+>
+> The question it answered: does the first stage create a genuinely new timing decision ("WHEN do I use it?"), or is it just "a block that needs two taps"?
 
 **Open it:** the Web build with `?mechlab=sequence`. `?mechlab=1` is still the PORTAL lab, unchanged.
 

@@ -31,6 +31,8 @@ const DEFAULT_NODE_LIMIT := 60000
 static var default_limit: int = DEFAULT_NODE_LIMIT
 const RAM := 1 << 20
 const ID_MASK := RAM - 1
+## Movable prototype: a push move (the tapped block is launched into a crate).
+const PUSH := 1 << 21
 
 var rows: int
 var columns: int
@@ -87,6 +89,18 @@ var _seq_stage := PackedByteArray()
 var _seq_first := PackedInt32Array()  # stage-1 arrow, to undo an advance
 var _seq_next := PackedInt32Array()
 var _seq_ids := PackedInt32Array()
+# MOVABLE prototype (development only): crates are blocks that never leave;
+# the board is clear when only they remain (_alive_count == _crate_n).
+# Their cells change, so they are part of the memo key, and pushes can be
+# undone (one stack entry per push). With crates, the search is the cycle-
+# safe _dfs_crates (a crate can be pushed back and forth). 0 / empty on
+# every campaign and Social board.
+var _crate := PackedByteArray()
+var _crate_ids := PackedInt32Array()
+var _crate_n := 0
+var _push_stack: Array = []
+var _on_path: Dictionary = {}
+var _last_low := 0
 
 
 ## Build from a list of BlockData (e.g. BoardModel.snapshot()).
@@ -128,6 +142,13 @@ func _init(p_rows: int, p_columns: int, blocks: Array, portals: Dictionary = {})
 	_armored_ids = PackedInt32Array()
 	_turnable = PackedByteArray(); _turnable.resize(n)
 	_neighbours.resize(n)
+	for b in blocks:
+		if b.is_crate():
+			if _crate_ids.is_empty():
+				_crate.resize(n)
+			_crate[b.id] = 1
+			_crate_ids.append(b.id)
+			_crate_n += 1
 	for b in blocks:
 		if b.seq_stage != 0:
 			if _seq_ids.is_empty():
@@ -247,6 +268,7 @@ func solve_moves() -> Array[int]:
 	aborted = false
 	_failed.clear()
 	_path.clear()
+	_on_path.clear()
 	if _dfs():
 		var result: Array[int] = _path.duplicate()
 		_rewind(_path)
@@ -263,7 +285,7 @@ static func _strip(moves: Array) -> Array[int]:
 
 
 func is_solvable() -> bool:
-	if _alive_count == 0:
+	if _alive_count == _crate_n:
 		return true
 	return not solve_moves().is_empty()
 
@@ -277,6 +299,8 @@ func legal_moves() -> Array[int]:
 				out.append(id)
 			elif _ram_target(id) != -1:
 				out.append(id | RAM)
+			elif _crate_n > 0 and _push_target(id) != -1:
+				out.append(id | PUSH)
 	return out
 
 
@@ -287,7 +311,7 @@ func legal_moves() -> Array[int]:
 ## games than that were won and returns the rate measured so far (a quick
 ## "clearly too easy" estimate for searches).
 func random_win_rate(playouts: int, seed: int, max_wins: int = -1) -> float:
-	if _alive_count == 0:
+	if _alive_count == _crate_n:
 		return 1.0
 	var rng := RandomNumberGenerator.new()
 	rng.seed = seed
@@ -309,16 +333,18 @@ func random_win_rate(playouts: int, seed: int, max_wins: int = -1) -> float:
 					mv = id
 				elif _ram_target(id) != -1:
 					mv = id | RAM
+				elif _crate_n > 0 and _push_target(id) != -1:
+					mv = id | PUSH
 				if mv == -1:
 					continue
 				seen += 1
 				if rng.randi() % seen == 0:
 					pick = mv
-			if pick == -1:
+			if pick == -1 or (_crate_n > 0 and done.size() >= 120):
 				break
 			_do(pick)
 			done.append(pick)
-		if _alive_count == 0:
+		if _alive_count == _crate_n:
 			wins += 1
 		for i in range(done.size() - 1, -1, -1):
 			_undo_move(done[i])
@@ -334,7 +360,7 @@ func random_win_rate(playouts: int, seed: int, max_wins: int = -1) -> float:
 ## couple of moves ahead (the random tapper looks zero moves ahead).
 ## Deterministic for a given seed; the board is left as it was.
 func lookahead_win_rate(games: int, depth: int, seed: int) -> float:
-	if _alive_count == 0:
+	if _alive_count == _crate_n:
 		return 1.0
 	var rng := RandomNumberGenerator.new()
 	rng.seed = seed
@@ -356,7 +382,7 @@ func lookahead_win_rate(games: int, depth: int, seed: int) -> float:
 			var pick: int = pool[rng.randi() % pool.size()]
 			_do(pick)
 			done.append(pick)
-		if _alive_count == 0:
+		if _alive_count == _crate_n:
 			wins += 1
 		for i in range(done.size() - 1, -1, -1):
 			_undo_move(done[i])
@@ -370,7 +396,7 @@ func lookahead_win_rate(games: int, depth: int, seed: int) -> float:
 ## "risky" does it think, picking among the risky moves that do not lead to
 ## a visible dead end within `depth` moves. Deterministic per seed.
 func heuristic_win_rate(games: int, depth: int, seed: int) -> float:
-	if _alive_count == 0:
+	if _alive_count == _crate_n:
 		return 1.0
 	var rng := RandomNumberGenerator.new()
 	rng.seed = seed
@@ -398,7 +424,7 @@ func heuristic_win_rate(games: int, depth: int, seed: int) -> float:
 			var pick: int = pool[rng.randi() % pool.size()]
 			_do(pick)
 			done.append(pick)
-		if _alive_count == 0:
+		if _alive_count == _crate_n:
 			wins += 1
 		for i in range(done.size() - 1, -1, -1):
 			_undo_move(done[i])
@@ -408,7 +434,7 @@ func heuristic_win_rate(games: int, depth: int, seed: int) -> float:
 ## True if every way of playing `depth` more moves gets stuck (blocks left,
 ## no legal move) - a dead end a person could see by looking ahead.
 func _dead_within(depth: int) -> bool:
-	if _alive_count == 0:
+	if _alive_count == _crate_n:
 		return false
 	var legal := legal_moves()
 	if legal.is_empty():
@@ -432,7 +458,7 @@ func recommend_move() -> int:
 	var safe_pick := -1
 	for mv in legal_moves():
 		_do(mv)
-		var ok := _alive_count == 0 or not _solve_keep_state().is_empty()
+		var ok := _alive_count == _crate_n or not _solve_keep_state().is_empty()
 		_undo_move(mv)
 		if not ok:
 			continue
@@ -496,7 +522,7 @@ func analyze() -> Dictionary:
 	m["directions_used"] = counts.filter(func(c): return c > 0).size()
 
 	var solution := solve_moves()
-	m["solvable"] = _alive_count == 0 or not solution.is_empty()
+	m["solvable"] = _alive_count == _crate_n or not solution.is_empty()
 	m["solution"] = _strip(solution)
 	if not m["solvable"]:
 		return m
@@ -527,7 +553,7 @@ func analyze() -> Dictionary:
 			if not _is_risky(mv):
 				continue  # safe moves are never traps
 			_do(mv)
-			var ok := _alive_count == 0 or not _solve_keep_state().is_empty()
+			var ok := _alive_count == _crate_n or not _solve_keep_state().is_empty()
 			_undo_move(mv)
 			if not ok:
 				traps += 1
@@ -575,7 +601,7 @@ func analyze() -> Dictionary:
 func mystery_fairness() -> Dictionary:
 	var result := {"fair": true, "states_checked": 0, "reason": ""}
 	var solution := solve_moves()
-	if solution.is_empty() and _alive_count > 0:
+	if solution.is_empty() and _alive_count > _crate_n:
 		return {"fair": false, "states_checked": 0, "reason": "unsolvable"}
 	var applied: Array = []
 	for step in solution.size():
@@ -610,7 +636,7 @@ func _trap_map(moves: Array) -> Array:
 	var out := []
 	for mv in moves:
 		_do(mv)
-		out.append(_alive_count > 0 and _solve_keep_state().is_empty())
+		out.append(_alive_count > _crate_n and _solve_keep_state().is_empty())
 		_undo_move(mv)
 	return out
 
@@ -621,7 +647,9 @@ func _solve_keep_state() -> Array[int]:
 	# Solve from the current (possibly mutated) state without disturbing it.
 	var saved_path := _path.duplicate()
 	var saved_failed := _failed
+	var saved_on_path := _on_path
 	_failed = {}
+	_on_path = {}
 	_path.clear()
 	nodes = 0
 	aborted = false
@@ -633,12 +661,15 @@ func _solve_keep_state() -> Array[int]:
 		_rewind(_path)
 	_path = saved_path
 	_failed = saved_failed
+	_on_path = saved_on_path
 	if ok and result.is_empty():
 		result = [-1]  # solved with zero moves (already empty)
 	return result
 
 
 func _dfs() -> bool:
+	if _crate_n > 0:
+		return _dfs_crates(_path.size())
 	nodes += 1
 	if nodes > node_limit:
 		aborted = true
@@ -662,7 +693,7 @@ func _dfs() -> bool:
 				safe.append(id | RAM)
 				_path.append(id | RAM)
 				progress = true
-	if _alive_count == 0:
+	if _alive_count == _crate_n:
 		return true
 	var key := _key()
 	if not _failed.has(key):
@@ -709,6 +740,11 @@ func _key() -> String:
 		for i in _seq_ids.size():
 			stages |= (1 if _seq_stage[_seq_ids[i]] == 1 else 0) << (i % 62)
 		parts.append("s" + str(stages))
+	if _crate_n > 0:
+		var cells := PackedStringArray()
+		for cid in _crate_ids:
+			cells.append(str(_cell[cid]))
+		parts.append("m" + ",".join(cells))
 	if not _armored_ids.is_empty():
 		var shells := 0
 		for i in _armored_ids.size():
@@ -720,6 +756,8 @@ func _key() -> String:
 ## A move that may hurt: it turns spinners, fires a switch, or (while shells
 ## remain) removes a block that could still turn into a rammer.
 func _is_risky(move: int) -> bool:
+	if move & PUSH:
+		return true
 	if move & RAM:
 		return false
 	return _spinner_neighbours(move) > 0 or _switch[move] >= 0 or (_shells > 0 and _turnable[move] == 1) or _pending(move)
@@ -728,6 +766,8 @@ func _is_risky(move: int) -> bool:
 ## Can escape now: not a gate, not hidden, not locked, not armored, lane clear.
 func _is_legal(id: int) -> bool:
 	if _gate[id] == 1 or _armor[id] == 1:
+		return false
+	if _crate_n > 0 and _crate[id] == 1:
 		return false
 	if _hidden[id] == 1 and _is_concealed(id):
 		return false
@@ -740,6 +780,8 @@ func _is_legal(id: int) -> bool:
 ## that block's id (a ram); else -1.
 func _ram_target(id: int) -> int:
 	if _gate[id] == 1 or _armor[id] == 1:
+		return -1
+	if _crate_n > 0 and _crate[id] == 1:
 		return -1
 	if _hidden[id] == 1 and _is_concealed(id):
 		return -1
@@ -845,6 +887,9 @@ func _spinner_neighbours(id: int) -> int:
 
 ## Applies a move (escape, or ram with the RAM bit).
 func _do(move: int) -> void:
+	if move & PUSH:
+		_do_push(move & ID_MASK)
+		return
 	if move & RAM:
 		_armor[_first_in_lane(move & ID_MASK)] = 0
 		_shells -= 1
@@ -854,6 +899,9 @@ func _do(move: int) -> void:
 
 ## Exact inverse of _do (LIFO order).
 func _undo_move(move: int) -> void:
+	if move & PUSH:
+		_undo_push(move & ID_MASK)
+		return
 	if move & RAM:
 		_armor[_first_in_lane(move & ID_MASK)] = 1
 		_shells += 1
@@ -938,6 +986,100 @@ func _unadvance(id: int) -> void:
 				_dir[other] = Direction.rotate_ccw(_dir[other]) if cw else Direction.rotate_cw(_dir[other])
 
 
+## MOVABLE prototype: the cell the crate first in `id`'s lane would be
+## pushed to (one cell in `id`'s direction, through portals as any lane,
+## onto an empty cell), or -1 (no crate first in the lane / no room).
+## Same conditions as a ram for the tapped block itself.
+func _push_target(id: int) -> int:
+	if _gate[id] == 1 or _armor[id] == 1 or _crate[id] == 1:
+		return -1
+	if _hidden[id] == 1 and _is_concealed(id):
+		return -1
+	if _lock[id] >= 0 and _color_count[_lock[id]] > 0:
+		return -1
+	var t := _first_in_lane(id)
+	if t < 0 or _crate[t] == 0:
+		return -1
+	var idx := _cell[t]
+	var step: Vector2i = Direction.STEPS[_dir[id]]
+	var c := idx % columns + step.x
+	var r := idx / columns + step.y
+	var entered := {}
+	while c >= 0 and r >= 0 and c < columns and r < rows:
+		var i := r * columns + c
+		if _has_portals and _portal_exit[i] != -1:
+			if entered.has(i):
+				return -1
+			entered[i] = true
+			c = _portal_exit[i] % columns + step.x
+			r = _portal_exit[i] / columns + step.y
+			continue
+		return i if _grid[i] == -1 else -1
+	return -1
+
+
+func _do_push(id: int) -> void:
+	var t := _first_in_lane(id)
+	var dest := _push_target(id)
+	var from := _cell[t]
+	_grid[from] = -1
+	_grid[dest] = t
+	_cell[t] = dest
+	var adv := _pending(id)
+	if adv:
+		_advance(id)
+	_push_stack.append([t, from, adv])
+
+
+func _undo_push(id: int) -> void:
+	var e: Array = _push_stack.pop_back()
+	if e[2]:
+		_unadvance(id)
+	var t: int = e[0]
+	_grid[_cell[t]] = -1
+	_grid[e[1]] = t
+	_cell[t] = e[1]
+
+
+## MOVABLE prototype search: plain DFS over every legal move (no greedy
+## moves - with crates moving into lanes, no escape is safe for sure), with
+## the states on the current path cut off (a crate pushed back and forth)
+## and a state remembered as lost only when no cycle through an ancestor
+## was cut below it (Tarjan-style low link: sound, never prunes a winner).
+func _dfs_crates(depth: int) -> bool:
+	nodes += 1
+	if nodes > node_limit:
+		aborted = true
+		return false
+	if _alive_count == _crate_n:
+		return true
+	var key := _key()
+	if _failed.has(key):
+		_last_low = 1 << 30
+		return false
+	if _on_path.has(key):
+		_last_low = _on_path[key]
+		return false
+	_on_path[key] = depth
+	var low := depth
+	for mv in legal_moves():
+		_do(mv)
+		_path.append(mv)
+		if _dfs_crates(depth + 1):
+			_on_path.erase(key)
+			return true
+		low = mini(low, _last_low)
+		_path.pop_back()
+		_undo_move(mv)
+		if aborted:
+			break
+	_on_path.erase(key)
+	if not aborted and low >= depth:
+		_failed[key] = true
+	_last_low = low
+	return false
+
+
 ## v0.6.1 armor safety: walks EVERY state a player can reach (every escape
 ## and ram, in every order) and looks for dead ends that still hold an intact
 ## shell. Such a shell can never be cracked again, so the level would need
@@ -964,7 +1106,7 @@ func _audit_walk(seen: Dictionary, path: Array[int], out: Dictionary, limit: int
 		out["complete"] = false
 		return
 	seen[key] = true
-	if _alive_count == 0:
+	if _alive_count == _crate_n:
 		return
 	var moves := legal_moves()
 	if moves.is_empty():

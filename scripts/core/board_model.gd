@@ -47,6 +47,14 @@ var last_opened_gates: Array = []
 ## and restore() leave them alone (they never change during play).
 var portal_groups: Dictionary = {}
 var portals: Dictionary = {}
+## MOVABLE PROTOTYPE (development only, see BlockData.Kind.CRATE): crates on
+## the board. They are blocks (lanes stop at them, snapshots / Undo carry
+## their cells) but never escape: the board is clear when only crates are
+## left. 0 on every campaign and Social board.
+var _crates: int = 0
+## Filled by push(): {"crate", "from", "to", "dir", "via", "advanced",
+## "turned"} of the last successful push.
+var last_push: Dictionary = {}
 
 
 func setup(p_rows: int, p_columns: int, p_blocks: Array) -> void:
@@ -55,6 +63,7 @@ func setup(p_rows: int, p_columns: int, p_blocks: Array) -> void:
 	blocks.clear()
 	_occupancy.clear()
 	_color_count.clear()
+	_crates = 0
 	for b in p_blocks:
 		_add(b.duplicate_data())
 
@@ -74,12 +83,14 @@ func block_at(cell: Vector2i) -> BlockData:
 	return blocks.get(id) if id != -1 else null
 
 
+## Clear: no blocks left (Movable prototype: or only crates).
 func is_empty() -> bool:
-	return blocks.is_empty()
+	return blocks.is_empty() or (_crates > 0 and blocks.size() == _crates)
 
 
+## Blocks that still have to leave (crates never count).
 func block_count() -> int:
-	return blocks.size()
+	return blocks.size() - _crates
 
 
 ## Returns the first block standing between `id` and the board edge,
@@ -125,6 +136,8 @@ func move_state(id: int) -> String:
 		return "blocked"
 	if b.is_gate():
 		return "gate"
+	if b.kind == BlockData.Kind.CRATE:
+		return "crate"
 	if b.hidden:
 		return "hidden"
 	if is_locked(id):
@@ -138,13 +151,17 @@ func move_state(id: int) -> String:
 		# Sequence prototype: a first-stage block with a clear lane advances
 		# instead of escaping.
 		return "advance" if b.seq_stage == 1 else "ok"
+	if blocker.kind == BlockData.Kind.CRATE:
+		# Movable prototype: launched into a crate - a push if the crate
+		# can move one cell, else an ordinary blocked tap.
+		return "push" if push_target(id)["cell"].x >= 0 else "blocked"
 	return "ram" if blocker.armored else "blocked"
 
 
 ## A tap that does something: an escape or a ram.
 func is_playable(id: int) -> bool:
 	var st := move_state(id)
-	return st == "ok" or st == "ram" or st == "advance"
+	return st == "ok" or st == "ram" or st == "advance" or st == "push"
 
 
 ## Ram: `id` is launched into the shelled block in its lane, which loses its
@@ -201,6 +218,8 @@ func remove(id: int) -> Array:
 	_occupancy.erase(b.cell)
 	blocks.erase(id)
 	_color_count[b.color] = _color_count.get(b.color, 1) - 1
+	if b.kind == BlockData.Kind.CRATE:
+		_crates -= 1  # only a Hammer test board removes a crate
 	var turned := []
 	last_revealed = []
 	for step in Direction.STEPS:
@@ -266,6 +285,60 @@ func advance(id: int) -> Array:
 	return turned
 
 
+## MOVABLE PROTOTYPE: where the crate first in `id`'s lane would go if
+## `id` were launched into it: exactly one cell in `id`'s direction - and,
+## like any lane, through a portal it reaches (out of its partner, same
+## direction) - onto an EMPTY board cell. {"cell": Vector2i ((-1, -1) =
+## no push possible: no crate first in the lane, or the edge / a block /
+## another crate (no chain pushing) / a looping portal is in the way),
+## "crate": id or -1, "via": portals the crate passes}.
+func push_target(id: int) -> Dictionary:
+	var none := {"cell": Vector2i(-1, -1), "crate": -1, "via": []}
+	var b: BlockData = blocks.get(id)
+	if b == null or _crates == 0:
+		return none
+	var crate := find_blocker(id)
+	if crate == null or crate.kind != BlockData.Kind.CRATE:
+		return none
+	var step := Direction.step(b.direction)
+	var cell := crate.cell + step
+	var via := []
+	var entered := {}
+	while is_inside(cell) and portals.has(cell):
+		if entered.has(cell):
+			return none  # a looping portal layout
+		entered[cell] = true
+		via.append([cell, portals[cell]])
+		cell = portals[cell] + step
+	if not is_inside(cell) or _occupancy.has(cell):
+		return none
+	return {"cell": cell, "crate": crate.id, "via": via}
+
+
+## MOVABLE PROTOTYPE: `id` is launched into the crate in its lane (caller
+## checks move_state == "push"); the crate moves one cell (see push_target)
+## and `id` stays in its cell. Nothing else happens - like a ram, a push is
+## not an escape - except for a first-stage Sequence block: its first stage
+## is used, exactly as BoardModel.advance (neighbour event, next arrow).
+## Returns last_push.
+func push(id: int) -> Dictionary:
+	var t := push_target(id)
+	last_push = {}
+	if t["cell"].x < 0:
+		return last_push
+	var crate: BlockData = blocks[t["crate"]]
+	var from := crate.cell
+	_occupancy.erase(from)
+	crate.cell = t["cell"]
+	_occupancy[crate.cell] = crate.id
+	var b: BlockData = blocks[id]
+	last_push = {"crate": crate.id, "from": from, "to": crate.cell, "dir": b.direction, "via": t["via"], "advanced": false, "turned": []}
+	if b.seq_stage == 1:
+		last_push["turned"] = advance(id)
+		last_push["advanced"] = true
+	return last_push
+
+
 ## True if removing `id` would turn at least one spinner.
 func turns_spinners(id: int) -> bool:
 	var b: BlockData = blocks.get(id)
@@ -319,3 +392,5 @@ func _add(b: BlockData) -> void:
 	blocks[b.id] = b
 	_occupancy[b.cell] = b.id
 	_color_count[b.color] = _color_count.get(b.color, 0) + 1
+	if b.kind == BlockData.Kind.CRATE:
+		_crates += 1

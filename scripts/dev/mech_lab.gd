@@ -96,6 +96,39 @@ const SEQ_DEMO_STEPS := [
 	[8.3, "R", "Second tap: it leaves with\nits new arrow."],
 	[9.9, "", "WHEN you use the first stage matters:\nit turns the spinners next to it.\nNow you try!"],
 ]
+## MOVABLE lab (?mechlab=movable): its own questions, demo and files.
+const MOV_QUESTIONS := {
+	"rating": ["How difficult was this puzzle?", RATINGS],
+	"clarity": ["Was it clear what the MOVABLE\ncrate would do?", ["CLEAR", "NOT CLEAR"]],
+	"interest": ["Compared with a similar normal puzzle,\nthe MOVABLE crate made it...", ["MORE INTERESTING", "NO DIFFERENCE", "LESS INTERESTING"]],
+	"planning": ["Did the MOVABLE crate make you think about\nwhere the board would be after your move?", ["NOT REALLY", "A LITTLE", "A LOT"]],
+	"focus": ["What were you thinking\nabout most?", ["WHERE TO MOVE THE MOVABLE BLOCK", "WHERE THE MOVABLE BLOCK WOULD END UP",
+		"THE ORDER OF MY MOVES", "WHICH ARROW TO START WITH", "JUST PUSHING IT WHEN I COULD", "NOTHING MUCH"]],
+	# Controls have no crate: the same kinds of answer, without it.
+	"focus_control": ["What were you thinking\nabout most?", ["WHERE THINGS WOULD BE LATER", "THE ORDER OF MY MOVES",
+		"WHICH ARROW TO START WITH", "JUST TAPPING WHAT COULD MOVE", "NOTHING MUCH"]],
+}
+const MOV_ASK := {
+	"A": ["rating", "clarity"],
+	"movable": ["rating", "focus", "planning", "clarity", "interest"],
+	"control": ["rating", "focus_control"],
+	"integration": ["rating", "clarity"],
+}
+## Red hits the crate: it slides one cell. Blue hits the other crate, but
+## green sits right behind it: it can't move.
+const MOV_DEMO_MAP := [
+	".  .  .  .  .",
+	"R> .  M  .  .",
+	".  .  .  .  .",
+	"B> M  G^ .  .",
+	".  .  .  .  .",
+]
+const MOV_DEMO_STEPS := [
+	[0.5, "", "MOVABLE crate: no arrow.\nAn arrow launched into it PUSHES it\nexactly ONE cell."],
+	[3.0, "R", "Red hits the crate: the crate\nslides ONE cell. Red stays\nwhere it was."],
+	[5.9, "B", "Something is right behind this crate:\nit CAN'T move. Nothing happens."],
+	[8.4, "", "Crates never need to leave:\nclear every ARROW block.\nNow you try!"],
+]
 ## Per-mechanic settings. "portal" is the original lab, unchanged.
 const MECHANICS := {
 	"portal": {"data": DATA_PATH, "state": STATE_PATH, "ls": LS_KEY, "variant": "portal", "title": "PORTAL LAB",
@@ -105,6 +138,12 @@ const MECHANICS := {
 		"ls": "chain_escape_mechlab_sequence_state", "variant": "sequence", "title": "SEQUENCE LAB",
 		"demo_title": "HOW SEQUENCE BLOCKS WORK", "groups": [["B", "C", "D"], ["E"]],
 		"names": {"sequence_A": "Basic sequence", "sequence": "Sequence", "control": "Without sequence"}},
+	# Stage F = Portal / Sequence integration checks, always last (not part
+	# of the main movable-vs-control comparison).
+	"movable": {"data": "res://data/dev/mechlab_movable.json", "state": "user://mechlab_movable_state.json",
+		"ls": "chain_escape_mechlab_movable_state", "variant": "movable", "title": "MOVABLE LAB",
+		"demo_title": "HOW MOVABLE CRATES WORK", "groups": [["B", "C", "D"], ["E"], ["F"]],
+		"names": {"movable_A": "Basic movable", "movable": "Movable", "control": "Without movable", "integration": "Portal / Sequence checks"}},
 }
 
 enum Screen { INTRO, DEMO, PLAYING, QUESTION, RESULTS }
@@ -154,6 +193,8 @@ static func requested_mechanic() -> String:
 	var args := OS.get_cmdline_user_args()
 	if "--" + PARAM + "=sequence" in args:
 		return "sequence"
+	if "--" + PARAM + "=movable" in args:
+		return "movable"
 	if "--" + PARAM in args:
 		return "portal"
 	if not OS.has_feature("web"):
@@ -164,6 +205,8 @@ static func requested_mechanic() -> String:
 	var where := (str(loc.search) + str(loc.hash)).to_lower()
 	if where.contains(PARAM + "=sequence"):
 		return "sequence"
+	if where.contains(PARAM + "=movable"):
+		return "movable"
 	if where.contains(PARAM + "=1") or where.contains(PARAM + "=true") or where.contains(PARAM + "=portal"):
 		return "portal"
 	return ""
@@ -180,6 +223,15 @@ func _init(p_mechanic: String = "portal") -> void:
 		_ask = SEQ_ASK
 		_demo_map = SEQ_DEMO_MAP
 		_demo_steps = SEQ_DEMO_STEPS
+	elif mechanic == "movable":
+		# Lab-only parsing of the crate token (and Sequence, for the
+		# integration check boards).
+		LevelManager.dev_movable = true
+		LevelManager.dev_sequence = true
+		_questions = MOV_QUESTIONS
+		_ask = MOV_ASK
+		_demo_map = MOV_DEMO_MAP
+		_demo_steps = MOV_DEMO_STEPS
 
 
 func _ready() -> void:
@@ -206,6 +258,8 @@ func _process(_delta: float) -> void:
 		_track_pauses()
 		if mechanic == "sequence":
 			_track_sequence()
+		if mechanic == "movable" and _current.get("first_push_ms", -1) < 0 and play.total_pushes > 0:
+			_current["first_push_ms"] = Time.get_ticks_msec() - _t0
 	if screen == Screen.RESULTS:
 		var r := SocialWeb.take_share_result()
 		if r == "copied":
@@ -215,7 +269,7 @@ func _process(_delta: float) -> void:
 
 
 func _actions() -> int:
-	return play.total_moves + play.total_blocked + play.total_rams + play.total_seq_advances
+	return play.total_moves + play.total_blocked + play.total_rams + play.total_seq_advances + play.total_pushes
 
 
 ## Sequence lab: when a first-stage block first became usable (lane
@@ -247,6 +301,8 @@ func start_next() -> void:
 	if mechanic == "sequence":
 		_current["seq_first_usable_ms"] = -1
 		_current["seq_first_advance_ms"] = -1
+	if mechanic == "movable":
+		_current["first_push_ms"] = -1
 	_show(Screen.PLAYING)
 	_start_board(rec["puzzle"])
 	play._title.text = "PUZZLE %d / %d" % [i + 1, total()]
@@ -281,7 +337,7 @@ func _on_gave_up() -> void:
 
 
 func _track_pauses() -> void:
-	var sig := [play.total_moves, play.total_blocked, play.total_rams, play.total_undos, play.total_hints, play.plays, play.total_seq_advances]
+	var sig := [play.total_moves, play.total_blocked, play.total_rams, play.total_undos, play.total_hints, play.plays, play.total_seq_advances, play.total_pushes]
 	if _act_sig.is_empty():
 		_act_sig = sig
 		return
@@ -321,6 +377,62 @@ func _finish_attempt(solved: bool) -> void:
 		for e in play.seq_events:
 			events.append({"ms": int(e["ms"]) - _t0, "cleared": e["cleared"], "of": e["of"], "turned": e["turned"]})
 		_current["advances"] = events
+	if mechanic == "movable":
+		_current.erase("portal_blocked_taps")
+		_movable_metrics()
+
+
+## Movable lab: pushes (all attempts of this board), blocked pushes, pushes
+## by direction, distinct cells each crate occupied (its start included),
+## corrections (a push straight back against that crate's previous push,
+## and pushes back onto a cell that crate already visited in the same
+## attempt), portal / Sequence pushes, and every push event (ms after the
+## board opened, attempt, crate, from, to, direction, arrows cleared).
+func _movable_metrics() -> void:
+	_current["pushes"] = play.total_pushes
+	_current["push_blocked"] = play.total_push_blocked
+	_current["seq_advances"] = play.total_seq_advances
+	var by_dir := {"up": 0, "down": 0, "left": 0, "right": 0}
+	var start := {}  # crate -> starting cell
+	var level := PuzzleDefinition.from_dict(boards[_current["id"]]["puzzle"]).to_level()
+	for b in level.blocks:
+		if b.is_crate():
+			start[b.id] = [b.cell.x, b.cell.y]
+	var seen := {}
+	for cid in start:
+		seen[str([cid, start[cid]])] = true
+	var reversals := 0
+	var revisits := 0
+	var portal_pushes := 0
+	var seq_pushes := 0
+	var last_dir := {}
+	var visited := {}  # attempt-crate -> cells
+	var events := []
+	for e in play.push_events:
+		by_dir[e["dir"]] += 1
+		seen[str([e["crate"], e["to"]])] = true
+		var key := "%d-%d" % [e["attempt"], e["crate"]]
+		if not visited.has(key):
+			visited[key] = {str(start.get(e["crate"], [])): true}
+			last_dir.erase(key)
+		if visited[key].has(str(e["to"])):
+			revisits += 1
+		visited[key][str(e["to"])] = true
+		var opposite := {"up": "down", "down": "up", "left": "right", "right": "left"}
+		if last_dir.get(key, "") == opposite[e["dir"]]:
+			reversals += 1
+		last_dir[key] = e["dir"]
+		portal_pushes += 1 if e["portal"] else 0
+		seq_pushes += 1 if e["sequence"] else 0
+		events.append({"ms": int(e["ms"]) - _t0, "attempt": e["attempt"], "crate": e["crate"], "from": e["from"], "to": e["to"],
+			"dir": e["dir"], "cleared": e["cleared"], "of": e["of"], "portal": e["portal"], "sequence": e["sequence"]})
+	_current["pushes_by_dir"] = by_dir
+	_current["crate_positions"] = seen.size()
+	_current["push_reversals"] = reversals
+	_current["push_revisits"] = revisits
+	_current["portal_pushes"] = portal_pushes
+	_current["sequence_pushes"] = seq_pushes
+	_current["push_events"] = events
 
 
 func _begin_questions() -> void:
@@ -474,6 +586,8 @@ func summary() -> Dictionary:
 	var counters := ["restarts", "undos", "show_a_move", "blocked_taps", "portal_blocked_taps", "portal_uses"]
 	if mechanic == "sequence":
 		counters = ["restarts", "undos", "show_a_move", "blocked_taps", "seq_advances", "seq_blocked_taps", "seq_escapes", "seq_spinner_turns"]
+	elif mechanic == "movable":
+		counters = ["restarts", "undos", "show_a_move", "blocked_taps", "pushes", "push_blocked", "push_reversals", "push_revisits", "portal_pushes", "sequence_pushes"]
 	for r in state["results"]:
 		var g: String = r["variant"] + "_A" if r["variant"] != "control" and r["stage"] == "A" else r["variant"]
 		if not out.has(g):
@@ -493,7 +607,7 @@ func summary() -> Dictionary:
 		for k in counters:
 			s[k] += int(r.get(k, 0))
 		s["long_pauses"] += r.get("long_pauses", []).size()
-		for k in ["focus", "planning", "clarity", "interest"]:
+		for k in ["focus", "planning", "clarity", "interest", "focus_control"]:
 			if r.has(k) and r[k] != "":
 				if not s["answers"].has(k):
 					s["answers"][k] = {}
@@ -519,13 +633,19 @@ func pairs() -> Array:
 			continue
 		var p: Dictionary = by_id[r["pair"]]
 		var main := {"rating": p.get("rating", ""), "time_s": snappedf(p["time_ms"] / 1000.0, 0.1), "moves": p["moves"], "restarts": p["restarts"], "undos": p["undos"], "focus": p.get("focus", ""), "order": p["order"]}
+		if mechanic == "movable":
+			main["planning"] = p.get("planning", "")
+			main["interest"] = p.get("interest", "")
+			main["pushes"] = p.get("pushes", 0)
+			main["push_reversals"] = p.get("push_reversals", 0)
+			main["crate_positions"] = p.get("crate_positions", 0)
 		if mechanic == "sequence":
 			main["planning"] = p.get("planning", "")
 			main["interest"] = p.get("interest", "")
 			main["seq_advances"] = p.get("seq_advances", 0)
 			main["seq_spinner_turns"] = p.get("seq_spinner_turns", 0)
 		out.append({"pair": r["pair"], str(_cfg["variant"]): main,
-			"control": {"rating": r.get("rating", ""), "time_s": snappedf(r["time_ms"] / 1000.0, 0.1), "moves": r["moves"], "restarts": r["restarts"], "undos": r["undos"], "focus": r.get("focus", ""), "order": r["order"]}})
+			"control": {"rating": r.get("rating", ""), "time_s": snappedf(r["time_ms"] / 1000.0, 0.1), "moves": r["moves"], "restarts": r["restarts"], "undos": r["undos"], "focus": r.get("focus", r.get("focus_control", "")), "order": r["order"]}})
 	return out
 
 
@@ -538,7 +658,7 @@ func _summary_text() -> String:
 		return "\n".join(lines)
 	var sm := summary()
 	var v: String = _cfg["variant"]
-	for g in [v + "_A", v, "control"]:
+	for g in [v + "_A", v, "control", "integration"]:
 		if not sm.has(g):
 			continue
 		var s: Dictionary = sm[g]
@@ -566,8 +686,10 @@ func _show(s: int) -> void:
 			var i: int = state["index"]
 			_intro_text.text = ((("PORTAL LAB: %d puzzles. Some have PORTALS, some don't.\n\n" % total()
 				+ "A path that enters a portal continues from the other portal with the same letter, in the same direction.\n\n")
-				if mechanic == "portal" else ("SEQUENCE LAB: %d puzzles. Some have SEQUENCE blocks, some don't.\n\n" % total()
-				+ "A Sequence block shows its arrow NOW (big) and its NEXT arrow (small, in the corner). The first tap with a clear path launches it and brings it back with its next arrow - spinners next to it turn. The second tap lets it leave.\n\n"))
+				if mechanic == "portal" else (("SEQUENCE LAB: %d puzzles. Some have SEQUENCE blocks, some don't.\n\n" % total()
+				+ "A Sequence block shows its arrow NOW (big) and its NEXT arrow (small, in the corner). The first tap with a clear path launches it and brings it back with its next arrow - spinners next to it turn. The second tap lets it leave.\n\n")
+				if mechanic == "sequence" else ("MOVABLE LAB: %d puzzles. Some have MOVABLE crates, some don't.\n\n" % total()
+				+ "A crate has no arrow and never has to leave. An arrow launched into it pushes it exactly ONE cell (the arrow stays). If something is right behind the crate, or the edge, it can't move.\n\n")))
 				+ "You have UNDO x%d and SHOW A MOVE x%d per attempt (no HAMMER); RESTART gives them back.\n\n" % [int(_assist["undo"]), int(_assist["show_a_move"])]
 				+ "To give up on a puzzle, tap EXIT and LEAVE. After each puzzle: a few quick questions.")
 			_start.text = "WATCH THE DEMO" if i == 0 and not state.get("demo_seen", false) else ("START" if i == 0 else ("CONTINUE  %d / %d" % [i + 1, total()] if i < total() else "SEE RESULTS"))

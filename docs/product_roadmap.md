@@ -66,7 +66,8 @@ scheduled beyond "next".
 
 **Chapter 2 mechanic lab (levels 201–300 come first):**
 - **PORTAL: GO** after its human test (dev-only lab `?mechlab=1`, `docs/mechlab_portal.md`). Not implemented in production yet. The onboarding / demo must be clearer for new players (recorded MODIFY).
-- **SEQUENCE:** dev-only prototype lab (`?mechlab=sequence`, `docs/mechlab_sequence.md`). It tests whether its first stage creates a timing decision or is just two taps. Not approved.
+- **SEQUENCE: GO** after its human test (dev-only lab `?mechlab=sequence`, `docs/mechlab_sequence.md`). Not implemented in production yet.
+- **MOVABLE (crate):** dev-only prototype lab (`?mechlab=movable`, `docs/mechlab_movable.md`). It tests whether reasoning about the board's future positions is valuable. Not approved.
 - Choice, Linked / Trigger, levels 201–300 and the global Game Feel pass are not started.
 
 ## Next product phase (after phase 3 is frozen): COMPETITIVE CHALLENGE

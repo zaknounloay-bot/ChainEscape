@@ -6,7 +6,11 @@ extends RefCounted
 ## every time an orthogonally adjacent block escapes. GATE (v0.6, Chain
 ## Gate) is a solid slab with no arrow: it can't be tapped, blocks lanes, and
 ## opens (disappears) once every block linked to it has escaped.
-enum Kind { NORMAL, SPINNER, GATE }
+## CRATE: MOVABLE PROTOTYPE (development only, ?mechlab=movable): a heavy
+## board object, not an arrow. It never escapes and need not leave (the
+## board is clear when only crates remain); an arrow launched into it
+## pushes it exactly one cell (see BoardModel.push).
+enum Kind { NORMAL, SPINNER, GATE, CRATE }
 
 ## v0.4 spinner rules. Deterministic, never random: the direction of the
 ## next turn depends only on the rule and how many turns the spinner has
@@ -90,6 +94,10 @@ func is_spinner() -> bool:
 
 func is_gate() -> bool:
 	return kind == Kind.GATE
+
+
+func is_crate() -> bool:
+	return kind == Kind.CRATE
 
 
 func is_switch() -> bool:
