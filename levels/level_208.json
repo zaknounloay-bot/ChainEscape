@@ -1,0 +1,12 @@
+{
+	"name": "Unseen Exit",
+	"mystery": true,
+	"map": [
+		".     P>$G  .     .     G>    .",
+		".     B^@   B^    Pv    .     .",
+		"Gv    .     .     OA    B^@   P<",
+		".     OA    R<    .     B<?   .",
+		"R<?   P>    .     .     .     G^",
+		".     .     .     P^    .     ."
+	]
+}

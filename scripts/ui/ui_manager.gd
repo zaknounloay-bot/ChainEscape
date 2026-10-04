@@ -116,7 +116,7 @@ func set_level(number: int, total: int, level_name: String, mystery: bool = fals
 	_name_label.add_theme_font_size_override("font_size", 24 if _name_label.text.length() <= 40 else 20)
 	var mystery_col := Color("#C9A8FF") if theme["dark"] else Palette.PURPLE_BADGE
 	_name_label.add_theme_color_override("font_color", mystery_col if mystery else theme["text_soft"])
-	_level_label.add_theme_color_override("font_color", Palette.GOLD if master or Chapters.is_milestone(number) else theme["text"])
+	_level_label.add_theme_color_override("font_color", Palette.GOLD if master or Chapters.is_milestone(number) or Chapters.celebration_tier(number) != "" else theme["text"])
 	hide_complete()
 	_chain_label.modulate.a = 0.0
 
@@ -410,7 +410,7 @@ func show_complete(r: Dictionary) -> void:
 	_card_title.text = "PERFECT!" if perfect else "LEVEL COMPLETE"
 	if r.get("master", false):
 		_card_title.text = "GRAND MASTER!" if r.get("level", 0) > Chapters.master_level() else "MASTER CLEARED!"
-	elif r.get("milestone", false):
+	elif r.get("milestone", false) or r.get("celebration", "") == "short":
 		_card_title.text = "MILESTONE CLEARED!"
 	_card_title.add_theme_color_override("font_color", Palette.GOLD if perfect else Palette.TEXT)
 	_card_style.border_color = Palette.GOLD

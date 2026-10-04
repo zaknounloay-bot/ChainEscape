@@ -1,0 +1,12 @@
+{
+	"name": "Chain Door",
+	"map": [
+		".      Y>     .      .      .      P>+C",
+		".      Y^     .      .      .      .",
+		"Rv     OA     .      Y<@    P>     XC",
+		"Pv     R^     .      B<     .      .",
+		"G>     .      B>     .      .      OA",
+		"R>@    P^     Yv     B^@$S  B<@    .",
+		"R>+C   .      .      .      .      P^"
+	]
+}

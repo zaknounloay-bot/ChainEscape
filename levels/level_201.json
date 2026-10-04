@@ -1,0 +1,12 @@
+{
+	"name": "First Portal",
+	"hint": "New: PORTAL. Blocks go in one A and come out the other A.",
+	"hint_finger": false,
+	"map": [
+		"R>  B>  .   OA  Gv",
+		".   .   .   .   .",
+		"P^  .   .   .   R<",
+		".   .   .   .   .",
+		".   OA  P>  .   ."
+	]
+}

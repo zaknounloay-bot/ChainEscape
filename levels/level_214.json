@@ -1,0 +1,12 @@
+{
+	"name": "Which Way First",
+	"map": [
+		".    .    R^   R<   B<   Y<",
+		".    .    .    .    R^   OA",
+		".    .    P^   .    P^   Y<",
+		"Rv   P>   .    .    R^   .",
+		"OA   .    .    .    B^   R<",
+		"R^@  Gv   B>@  .    .    Y<@",
+		".    .    B>   .    P^   ."
+	]
+}

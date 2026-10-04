@@ -77,6 +77,7 @@ func level_from_map(map: Array) -> LevelData:
 func model_of(level: LevelData) -> BoardModel:
 	var m := BoardModel.new()
 	m.setup(level.rows, level.columns, level.blocks)
+	m.set_portals(level.portals)  # {} except the Portal arc (201+)
 	return m
 
 
@@ -178,6 +179,7 @@ func test_hints_never_invalid() -> void:
 						check(m.is_playable(hint), "L%d: hint %d is a legal move" % [n, hint])
 						var after := BoardModel.new()
 						after.setup(m.rows, m.columns, m.snapshot())
+						after.set_portals(m.portal_groups)
 						if after.move_state(hint) == "ram":
 							after.ram(hint)
 						else:
@@ -496,7 +498,7 @@ func test_hammer_safety() -> void:
 	var lost_boards := 0
 	var gates_ok := 0
 	var armored_ok := 0
-	for n in [11, 31, 45, 61, 75, 88, 97, 121, 135, 161, 174, 200]:
+	for n in [11, 31, 45, 61, 75, 88, 97, 121, 135, 161, 174, 200, 213, 225]:  # v0.7: + two Portal levels
 		if n > lm.level_count:
 			continue
 		var m := model_of(lm.load_level(n))
@@ -505,6 +507,7 @@ func test_hammer_safety() -> void:
 			for id in m.blocks.keys():
 				var t := BoardModel.new()
 				t.setup(m.rows, m.columns, m.snapshot())
+				t.set_portals(m.portal_groups)
 				t.remove(id)
 				var after := t.is_empty() or Solver.from_model(t).is_solvable()
 				var allowed := Solver.hammer_safe(m, id)

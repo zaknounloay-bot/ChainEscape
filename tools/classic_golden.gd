@@ -5,19 +5,24 @@ extends SceneTree
 ## step of that solution. Two dumps taken before and after an engine change
 ## must be byte-identical.
 ##   godot --headless --path . --script res://tools/classic_golden.gd -- --out=/path/golden.json
+##   ... -- --to=200   (only levels 1..200: compare against a dump taken before 201+ existed)
 
 
 func _init() -> void:
 	var out_path := ""
+	var last := 1 << 30
 	for a in OS.get_cmdline_user_args():
 		if a.begins_with("--out="):
 			out_path = a.get_slice("=", 1)
+		elif a.begins_with("--to="):
+			last = int(a.get_slice("=", 1))
 	var levels := []
 	var n := 1
-	while FileAccess.file_exists(LevelManager.LEVEL_PATH % n):
+	while n <= last and FileAccess.file_exists(LevelManager.LEVEL_PATH % n):
 		var level := LevelManager.parse_level(JSON.parse_string(FileAccess.get_file_as_string(LevelManager.LEVEL_PATH % n)), n)
 		var model := BoardModel.new()
 		model.setup(level.rows, level.columns, level.blocks)
+		model.set_portals(level.portals)  # {} on levels 1-200
 		var solver := Solver.from_model(model)
 		var moves := solver.solve_moves()
 		var rec := {"n": n, "solution": Array(moves), "aborted": solver.aborted,

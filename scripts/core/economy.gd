@@ -154,7 +154,10 @@ static func buy(progress: PlayerProgress, item: String) -> bool:
 
 static func is_chapter_cleared(progress: PlayerProgress, chapter: int, total_levels: int) -> bool:
 	var rg := Chapters.chapter_range(chapter)
-	if rg.x > total_levels:
+	# A Chapter only counts as complete once all of its levels exist: with
+	# levels 201-225, Chapter 23 (221-230) is not finished at 225. (Every
+	# Chapter up to 200 is full, so nothing changes for them.)
+	if rg.y > total_levels:
 		return false
 	for n in range(rg.x, mini(rg.y, total_levels) + 1):
 		if not progress.best_scores.has(n):

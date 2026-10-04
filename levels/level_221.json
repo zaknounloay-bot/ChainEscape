@@ -1,0 +1,12 @@
+{
+	"name": "Crossroads",
+	"map": [
+		".     OB    .     G>    G>    B>    .",
+		"R<    .     .     G<    OA    G^    .",
+		"Y^@   .     .     P^    .     .     .",
+		".     .     OB    .     .     Pv@   .",
+		"G^    R>    OA    .     R<$S  G<    .",
+		"R^    .     R^@   B^    P<@   .     P<",
+		"G^    Y^    G<@   G<    .     R^    ."
+	]
+}

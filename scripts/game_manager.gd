@@ -81,6 +81,13 @@ var _blocked_hint_shown := false
 ## mechanic ("switch" / "gate" / "armor"; "" = none). Finished once per
 ## save: stored as "lesson_<kind>" in progress.tips_seen.
 const LESSONS := {101: "switch", 121: "gate", 161: "armor"}
+## PORTAL (levels 201+): shown under the board when a lane through a portal
+## is blocked on the far side (one translatable string).
+const PORTAL_BLOCKED_TEXT := "Blocked after portal %s"
+## The level that introduces each mechanic with its NEW MECHANIC card; a
+## player who already cleared it never gets the card (not retroactive).
+const MECHANIC_INTRO_FROM := {"portal": 201}
+var mechanic_intro: MechanicIntro
 var _lesson := ""
 var _locked_hint_shown := false
 var _hidden_hint_shown := false
@@ -136,6 +143,8 @@ func _ready() -> void:
 		_show_title()
 		_update_storage_notice()
 		_open_shared_challenge()
+	else:
+		_maybe_mechanic_intro()  # no title (tests / --level=): straight in
 	publish_state.call_deferred()
 	AudioManager.start_music()
 
@@ -303,6 +312,32 @@ func continue_game() -> void:
 	_hide_title()
 	AudioManager.play_ui_tap()
 	ui.show_chapter_banner(level_banner(current_level))
+	_maybe_mechanic_intro()
+
+
+## Levels 201+: the first level with a new mechanic opens with its short
+## "NEW MECHANIC!" card (MechanicIntro), once per save ("intro_<mechanic>"
+## in tips_seen), never over the title and never for a player who already
+## cleared the mechanic's first level. Board taps wait until the card is
+## gone (~1.8 s).
+func _maybe_mechanic_intro() -> void:
+	if level == null or completed or mechanic_intro != null:
+		return
+	var mech := "portal" if not level.portals.is_empty() else ""
+	if mech == "" or progress.tips_seen.has("intro_" + mech) or progress.highest_completed >= MECHANIC_INTRO_FROM[mech]:
+		return
+	progress.tips_seen.append("intro_" + mech)
+	progress.save()
+	board.input_enabled = false
+	var session := _session_id
+	mechanic_intro = MechanicIntro.new(mech, SocialScreen.reduced_motion())
+	mechanic_intro.finished.connect(func():
+		mechanic_intro = null
+		if session == _session_id and not completed and not game_over:
+			board.input_enabled = true
+		publish_state.call_deferred())
+	add_child(mechanic_intro)
+	publish_state.call_deferred()
 
 
 func _initial_level() -> int:
@@ -324,6 +359,7 @@ func start_level(number: int, via: String = "load") -> void:
 	level = data
 	current_level = number
 	model.setup(level.rows, level.columns, level.blocks)
+	model.set_portals(level.portals)  # PORTAL (201+): {} on every level before
 	history.clear()
 	chain = 0
 	best_chain = 0
@@ -353,6 +389,7 @@ func start_level(number: int, via: String = "load") -> void:
 	_apply_chapter_theme(number)
 	board.mystery = level.mystery
 	board.spent_rewards = progress.collected_rewards(number)
+	board.portals = level.portals
 	board.build(level.rows, level.columns, level.blocks, true)
 	board.refresh_locks(model)
 	board.input_enabled = true
@@ -381,6 +418,10 @@ func start_level(number: int, via: String = "load") -> void:
 		_maybe_explain_rewards()
 	progress.current_level = number
 	progress.save()
+	# At launch the title opens right after this: the card waits for
+	# CONTINUE (continue_game) instead of playing unseen behind it.
+	if not ui.is_title_open() and via != "launch":
+		_maybe_mechanic_intro()
 	debug_panel.set_current_level(number)
 	last_diag = Diagnostics.level_transition(number, current_chapter, via, get_tree(), {
 		"fx": board.fx_count(), "music": AudioManager.music_theme, "music_players": AudioManager.music_playing_count(),
@@ -451,10 +492,17 @@ func _on_block_tapped(id: int) -> void:
 		_lesson_step()
 
 
+## PORTAL: the portals `id`'s lane runs through ([] on every level without
+## portals - the whole campaign before 201).
+func _portal_via(id: int) -> Array:
+	return [] if model.portals.is_empty() else model.lane(id)["via"]
+
+
 func _escape(id: int) -> void:
 	history.push(_capture_state())
 	var at := board.get_view(id).home
 	var escaped: BlockData = model.blocks[id]
+	var via := _portal_via(id)
 	var turned := model.remove(id)
 	var revealed := model.last_revealed.duplicate()
 	var unlocked := model.last_unlocked.duplicate()
@@ -467,8 +515,10 @@ func _escape(id: int) -> void:
 	escape_points += points
 	_clear_hint()
 
-	board.play_escape(id, chain, turned)
+	board.play_escape(id, chain, turned, via)
 	board.show_points(at, "+%d" % points)
+	if not via.is_empty():
+		AudioManager.play_portal()
 	if escaped.is_reward():
 		_collect_reward(escaped, at)
 	AudioManager.play_escape(chain)
@@ -501,8 +551,13 @@ func _escape(id: int) -> void:
 
 func _blocked(id: int) -> void:
 	var blocker := model.find_blocker(id)
-	board.play_bump(id, blocker.id if blocker else -1)
+	var via := _portal_via(id)
+	board.play_bump(id, blocker.id if blocker else -1, via)
 	if _mistake():
+		return
+	if not via.is_empty():
+		# PORTAL: the reason may be on the far side of the board - say where.
+		_show_message(PORTAL_BLOCKED_TEXT % str(model.portal_groups.get(via[-1][0], "")), 2.4)
 		return
 	if level.blocked_hint != "" and not _blocked_hint_shown:
 		_blocked_hint_shown = true
@@ -547,11 +602,12 @@ func _play_second_era_effects() -> void:
 ## move, never a mistake: no heart, the chain is kept (but earns nothing).
 func _ram(id: int) -> void:
 	history.push(_capture_state())
+	var via := _portal_via(id)
 	var target := model.ram(id)
 	_clear_hint()
 	if _lesson == "armor":
 		_finish_lesson()
-	board.play_ram(id, target)
+	board.play_ram(id, target, via)
 	AudioManager.play_crack()
 	Haptics.medium()
 	_refresh_buttons()
@@ -638,6 +694,8 @@ func _on_board_cleared() -> void:
 		notes.append("GRAND MASTER" if current_level > Chapters.master_level() else "MASTER")
 	# v0.6 milestone levels (125 / 150 / 175): a one-time bonus.
 	r["milestone"] = Chapters.is_milestone(current_level)
+	# Presentation-only milestones (225): the celebration, never coins.
+	r["celebration"] = Chapters.celebration_tier(current_level)
 	var ms_key := "milestone_%d" % current_level
 	if r["milestone"] and not progress.achievements.has(ms_key):
 		progress.achievements.append(ms_key)
@@ -680,7 +738,7 @@ func _on_board_cleared() -> void:
 		AudioManager.play_master()
 		Haptics.medium()
 		await get_tree().create_timer(2.0 if grand else 1.6).timeout
-	elif r["milestone"]:
+	elif r["milestone"] or r["celebration"] == "short":
 		for i in 2:
 			board.celebrate()
 		ui.show_perfect_stamp("MILESTONE!", 0.9)
@@ -1053,7 +1111,7 @@ func chapter_summary(chapter: int) -> Dictionary:
 func level_banner(number: int) -> String:
 	if Chapters.is_master(number):
 		return "GRAND MASTER LEVEL" if number > Chapters.master_level() else "MASTER LEVEL"
-	if Chapters.is_milestone(number):
+	if Chapters.is_milestone(number) or Chapters.celebration_tier(number) != "":
 		return "MILESTONE  ·  LEVEL %d" % number
 	var era := Chapters.era_of(number)
 	if era["index"] > 1 and number == era["from"]:
@@ -1112,7 +1170,7 @@ func open_level_select() -> void:
 				"completed": progress.best_scores.has(n),
 				"mystery": li["mystery"], "reward": best_rarity,
 				"master": Chapters.is_master(n),
-				"milestone": Chapters.is_milestone(n),
+				"milestone": Chapters.is_milestone(n) or Chapters.celebration_tier(n) != "",
 				"current": n == current_level,
 			})
 		info["levels"] = levels
@@ -1183,6 +1241,9 @@ func publish_state() -> void:
 		"highest_completed": progress.highest_completed, "highest_unlocked": progress.highest_unlocked,
 		"last_played": progress.current_level, "save_seq": progress.seq, "save_source": progress.load_source,
 		"inventory": progress.inventory, "title_open": ui.is_title_open(), "card_open": ui.is_complete_visible(),
+		"intro_open": mechanic_intro != null, "intro_seen": progress.tips_seen.has("intro_portal"),
+		"portals": board.portals.size(), "celebration": last_result.get("celebration", "") if completed else "",
+		"card_title": ui._card_title.text,
 		"chapter_card_open": ui.is_chapter_card_open(), "continue_text": ui._title._continue.text,
 		"next": center.call(ui._next_button), "chapter_continue": center.call(ui._chapter_card._continue),
 		"title_continue": center.call(ui._title._continue), "levels_button": center.call(ui._levels_button),

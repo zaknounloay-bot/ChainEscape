@@ -1,0 +1,11 @@
+{
+	"name": "Easy Passage",
+	"map": [
+		"P<$S  Gv    OA    .     B<    P<",
+		"B^@   Yv    .     Y>    B^    .",
+		"OB    .     Bv    B^    .     .",
+		"Bv    OA    .     .     .     R^",
+		".     .     OB    .     .     .",
+		".     .     P^@   Y^    .     Y<"
+	]
+}

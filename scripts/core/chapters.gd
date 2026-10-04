@@ -89,6 +89,12 @@ static func is_milestone(level_number: int) -> bool:
 	return config().get("milestone_levels", []).map(func(x): return int(x)).has(level_number)
 
 
+## Presentation-only milestone tier of a level ("short", or "" = none):
+## celebration only - never coins, theme or music (see chapters.json).
+static func celebration_tier(level_number: int) -> String:
+	return String(config().get("celebration_levels", {}).get(str(level_number), ""))
+
+
 ## Era of a level: 1 (levels 1-100) or 2 (101-200). {"index", "name", "from", "to"}
 static func era_of(level_number: int) -> Dictionary:
 	var eras: Array = config().get("eras", [])

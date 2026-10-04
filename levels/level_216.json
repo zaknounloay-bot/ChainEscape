@@ -1,0 +1,12 @@
+{
+	"name": "Mirror Door",
+	"map": [
+		".     .     R<    Y<    .     G<",
+		".     .     .     OA    P<&A  P<",
+		"R>    R>%A  .     .     .     .",
+		".     Gv    .     Rv    R>    Y^",
+		".     G>    .     Pv&A  .     R^@",
+		"P^    .     .     P>    G^    .",
+		".     .     Y^@   .     OA    ."
+	]
+}

@@ -1,0 +1,11 @@
+{
+	"name": "Locked Passage",
+	"map": [
+		"Rv    .     R<    B<    Bv    B<",
+		".     .     .     .     Y>    Yv",
+		".     .     G^@   R^    OA    R<@",
+		"Yv    .     Y<@   .     R<    .",
+		"Rv    .     Pv$G  .     .     .",
+		"Rv    .     .     OA    B<#R  ."
+	]
+}

@@ -1,0 +1,11 @@
+{
+	"name": "Turning Door",
+	"map": [
+		".    .    P>   OA   Y>   Gv",
+		".    .    .    .    Bv   Yv",
+		".    .    Y^   R<   .    .",
+		"P^   .    .    .    .    Bv",
+		"B>@  .    R>@  .    Y>   OA",
+		"R^   .    .    .    R<   ."
+	]
+}

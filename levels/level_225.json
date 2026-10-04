@@ -1,0 +1,14 @@
+{
+	"name": "The Gateway",
+	"hint": "Milestone. Plan the whole route through both portals.",
+	"hint_finger": false,
+	"map": [
+		"Pv    .     .     R<    Y<    B>    Gv",
+		"Yv    G<    R<    P<@   .     OB    .",
+		".     .     .     R^    G^    P^@   P<",
+		".     G>    G<@   R^    .     .     .",
+		".     OB    .     .     .     P^$G  Bv@",
+		"Rv    .     P<    P^@   OA    .     R<",
+		"Pv    .     OA    .     .     P<    Y<$S"
+	]
+}

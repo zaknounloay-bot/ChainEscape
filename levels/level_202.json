@@ -1,0 +1,12 @@
+{
+	"name": "Same Way Out",
+	"hint": "Out of a portal, a block keeps moving the same way.",
+	"hint_finger": false,
+	"map": [
+		"Pv  .   .   .   OA",
+		".   .   .   .   .",
+		"OA  R<  G<  G<  .",
+		"R^  .   .   B<  Y<",
+		".   .   .   B^  ."
+	]
+}

@@ -1,0 +1,11 @@
+{
+	"name": "Both Sides",
+	"map": [
+		"Gv     R<     .      B<     .      Bv@",
+		".      .      G>     .      .      Pv",
+		".      .      G>     .      .      Yv",
+		".      R^     .      .      Y<     G<",
+		".      .      Pv@$S  G^@    .      OA",
+		"Rv     .      .      OA     B<     ."
+	]
+}

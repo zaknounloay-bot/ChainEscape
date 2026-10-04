@@ -50,11 +50,26 @@ extends SceneTree
 ##     shell whose every possible rammer escaped or turned away first, and
 ##     so any level that could only be finished with the Hammer. The search
 ##     must finish (no state cap reached).
+##   * v0.7 Third Era, the PORTAL arc (201-225):
+##       - portals only from 201
+##       - every arc level uses a portal in its solution, and (except the
+##         breathers 209 / 215 / 220) the portal changes how it is solved
+##         (impact >= 1.0) - no decoration
+##       - the Portal lessons 201-205 need the portal (unsolvable without),
+##         may be small (<= 3 start moves, depth >= 3), and 201-204 use no
+##         other mechanic; from 206 the late-game rules apply
+##       - no mechanic stacking: at most two older mechanic families
+##         (spinners, locks, mystery, switches, gates, armor) per level
+##       - Level 225 (the arc's milestone) is the hardest level of the arc,
+##         by difficulty AND by structural difficulty
 
 const HIGH_LEVEL := 21
 const LATE_LEVEL := 61
 const MAX_SIMILARITY := 0.6
 const MIN_CHAPTER_STEP := 2.0
+const PORTAL_FROM := 201
+const PORTAL_ARC_END := 225
+const PORTAL_BREATHERS := [209, 215, 220]
 
 
 func _initialize() -> void:
@@ -98,8 +113,10 @@ func _initialize() -> void:
 				problems.append("L%d %s" % [n, issue])
 		var rules := "c%da%dp%d" % [m["rule_ccw"], m["rule_alt"], m["rule_pattern"]] if m["spinners"] > 0 else "-"
 		var era2 := ""
+		if m["portal_pairs"] > 0:
+			era2 += " po%d:%s mv%d" % [m["portal_pairs"], _imp(m["portal_impact"], m["portal_pairs"]), m["portal_moves"]]
 		if m["switches"] + m["gates"] + m["armored"] > 0:
-			era2 = " sw%d:%s gt%d:%s ar%d:%s" % [m["switches"], _imp(m["switch_impact"], m["switches"]), m["gates"], _imp(m["gate_impact"], m["gates"]),
+			era2 += " sw%d:%s gt%d:%s ar%d:%s" % [m["switches"], _imp(m["switch_impact"], m["switches"]), m["gates"], _imp(m["gate_impact"], m["gates"]),
 				m["armored"], _imp(m["armor_impact"], m["armored"])]
 		print("%3d %2d %-17s %dx%d %3d %3d %-6s %3d %3d %5d %3d %3d %3d %3d %4d %5.1f %4s %4s %4s  %-4s %-3s %s%s" % [
 			n, Chapters.chapter_of(n), level.name.left(17), level.columns, level.rows, m["blocks"], m["spinners"], rules, m["locks"], m["hidden"],
@@ -131,6 +148,20 @@ func _initialize() -> void:
 			print("L%d (Master) structural difficulty %.1f; next: L%d %.1f" % [master, structs[master], top_n, top_s])
 			if structs[master] <= top_s:
 				problems.append("L%d (Master) is not the hardest to reason about in the %s (structural %.1f <= L%d %.1f)" % [master, era["name"], structs[master], top_n, top_s])
+	if campaign and diffs.has(PORTAL_ARC_END):
+		# The Portal arc's milestone is its hardest level, both ways.
+		var top_d := 0.0
+		var top_s := 0.0
+		var top_n := 0
+		for k in range(PORTAL_FROM, PORTAL_ARC_END):
+			top_d = maxf(top_d, diffs[k])
+			if structs[k] > top_s:
+				top_s = structs[k]
+				top_n = k
+		print("L%d (Portal milestone) difficulty %.1f structural %.1f; next structural: L%d %.1f" % [
+			PORTAL_ARC_END, diffs[PORTAL_ARC_END], structs[PORTAL_ARC_END], top_n, top_s])
+		if diffs[PORTAL_ARC_END] <= top_d or structs[PORTAL_ARC_END] <= top_s:
+			problems.append("L%d is not the hardest level of the Portal arc" % PORTAL_ARC_END)
 	if campaign:
 		# Chapter difficulty curve.
 		var line := PackedStringArray()
@@ -177,6 +208,25 @@ static func _rule_issue(n: int, m: Dictionary) -> String:
 		return "GATE DECORATIVE"
 	if m["armored"] > 0 and m["armor_impact"] < 1.0:
 		return "ARMOR DECORATIVE"
+	# v0.7 Third Era: the PORTAL arc.
+	if m.get("portal_pairs", 0) > 0 and n < PORTAL_FROM:
+		return "PORTAL BEFORE %d" % PORTAL_FROM
+	if n >= PORTAL_FROM and n <= PORTAL_ARC_END:
+		if m["portal_pairs"] == 0 or m["portal_moves"] == 0:
+			return "PORTAL ARC LEVEL WITHOUT A PORTAL MOVE"
+		if not PORTAL_BREATHERS.has(n) and m["portal_impact"] < 1.0:
+			return "PORTAL DECORATIVE"
+		var older := _older_families(m)
+		if older > 2:
+			return "MECHANIC STACKING (%d older mechanics)" % older
+		if n <= PORTAL_FROM + 4:
+			if m["portal_impact"] < LevelAnalysis.ESSENTIAL:
+				return "PORTAL LESSON NEEDS AN ESSENTIAL PORTAL"
+			if n <= PORTAL_FROM + 3 and older > 0:
+				return "PORTAL LESSON MIXES MECHANICS"
+			if m["start_moves"] > 3 or m["depth"] < 3:
+				return "PORTAL LESSON SHAPE"
+			return ""
 	if n >= 101 and n <= 105:
 		if m["switches"] == 0 or m["switch_impact"] < LevelAnalysis.ESSENTIAL:
 			return "SWITCH LESSON NEEDS AN ESSENTIAL SWITCH"
@@ -215,6 +265,12 @@ static func _rule_issue(n: int, m: Dictionary) -> String:
 		if m["mystery_impact"] < 0.3:
 			return "MYSTERY DECORATIVE"
 	return ""
+
+
+## Older mechanic families on a level (the Portal arc allows two).
+static func _older_families(m: Dictionary) -> int:
+	return int(m["spinners"] > 0) + int(m["locks"] > 0) + int(m["hidden"] > 0) + int(m["switches"] > 0) \
+		+ int(m["gates"] > 0) + int(m["armored"] > 0)
 
 
 static func _reward_issue(n: int, level: LevelData) -> String:
@@ -257,6 +313,7 @@ static func _imp(v: float, count: int) -> String:
 func _armor_issue(level: LevelData) -> String:
 	var model := BoardModel.new()
 	model.setup(level.rows, level.columns, level.blocks)
+	model.set_portals(level.portals)
 	var r := Solver.from_model(model).armor_audit()
 	if not r["complete"]:
 		return "ARMOR AUDIT INCOMPLETE (%d states)" % r["states"]

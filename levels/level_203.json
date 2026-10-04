@@ -1,0 +1,12 @@
+{
+	"name": "Far Side",
+	"hint": "Look past the portal: a block there stops the way out.",
+	"hint_finger": false,
+	"map": [
+		"B<  G>  .   .   Rv",
+		".   .   .   .   .",
+		"Y^  .   Y<  .   Y<",
+		".   .   .   R>  OA",
+		".   OA  G>  .   Y^"
+	]
+}

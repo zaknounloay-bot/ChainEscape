@@ -1,0 +1,12 @@
+{
+	"name": "Threshold",
+	"map": [
+		".     Pv    .     R<    .     B>    Gv",
+		"Yv    G<    .     .     P<@   OB    .",
+		".     .     .     .     G^    P^@   P<",
+		".     Gv    G<@   R^    .     .     .",
+		".     .     .     Y^    .     Y<    Bv@",
+		"Rv    R<    P>    P^@   OA    .     R<$S",
+		"G<    .     OA    .     OB    .     P<"
+	]
+}

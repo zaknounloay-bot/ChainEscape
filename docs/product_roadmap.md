@@ -65,10 +65,10 @@ scheduled beyond "next".
 - Lessons: `docs/vh_human_test3.md` §8. Phase 3 stays unfrozen.
 
 **Chapter 2 mechanic lab (levels 201–300 come first):**
-- **PORTAL: GO** after its human test (dev-only lab `?mechlab=1`, `docs/mechlab_portal.md`). Not implemented in production yet. The onboarding / demo must be clearer for new players (recorded MODIFY).
-- **SEQUENCE: GO** after its human test (dev-only lab `?mechlab=sequence`, `docs/mechlab_sequence.md`). Not implemented in production yet.
-- **MOVABLE (crate):** dev-only prototype lab (`?mechlab=movable`, `docs/mechlab_movable.md`). It tests whether reasoning about the board's future positions is valuable. Not approved.
-- Choice, Linked / Trigger, levels 201–300 and the global Game Feel pass are not started.
+- **PORTAL: GO** after its human test (lab `?mechlab=1`, `docs/mechlab_portal.md`). **In production since v0.7:** levels 201-225 (the Portal arc, `docs/portal_arc.md`), with a one-time NEW MECHANIC card as the clearer onboarding the MODIFY asked for. Not in Friend / Social generation.
+- **SEQUENCE: GO** after its human test (dev-only lab `?mechlab=sequence`, `docs/mechlab_sequence.md`). Not in production yet (after the Portal arc).
+- **MOVABLE (crate): GO** after its human test (dev-only lab `?mechlab=movable`, `docs/mechlab_movable.md`). Not in production yet.
+- **Levels 201–225 (Portal arc): done in v0.7.** Levels 226–300, Choice, Linked / Trigger and the global Game Feel pass are not started.
 
 ## Next product phase (after phase 3 is frozen): COMPETITIVE CHALLENGE
 

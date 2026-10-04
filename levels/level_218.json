@@ -1,0 +1,12 @@
+{
+	"name": "Shell Shot",
+	"map": [
+		"Rv   .    .    OA   .    P>=",
+		".    .    .    .    .    Yv",
+		"B^@  OA   G<@  G<   .    P<@",
+		"Rv   .    .    Rv@  .    Gv",
+		"Pv   .    P<   Y<   .    .",
+		".    Yv   .    Pv   .    .",
+		"P>   B>   Y>   P>   .    ."
+	]
+}

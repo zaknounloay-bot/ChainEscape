@@ -90,8 +90,14 @@ func _run() -> void:
 
 func _play_level(n: int) -> void:
 	var total_prev := game.progress.total_score()
+	var fresh_portal := n >= 201 and not game.progress.tips_seen.has("intro_portal") and game.progress.highest_completed < n
 	game.start_level(n)
+	# v0.7: the first Portal level opens with the NEW MECHANIC card (once).
+	_check((game.mechanic_intro != null) == (fresh_portal and not game.level.portals.is_empty()), "L%d mechanic intro shown only on the first Portal level" % n)
+	while game.mechanic_intro != null:
+		await _wait(0.1)
 	await _wait(0.45)
+	_check(game.board.input_enabled, "L%d board takes input after the intro" % n)
 	_check(game.ui.hud_total_text() == "TOTAL SCORE %s" % UIManager._fmt(total_prev),
 		"L%d HUD shows TOTAL SCORE %d at start (%s)" % [n, total_prev, game.ui.hud_total_text()])
 	_shot("L%02d_start" % n)
@@ -122,6 +128,7 @@ func _play_level(n: int) -> void:
 			_check(game.model.is_playable(hinted), "L%d hint %d is a legal move" % [n, hinted])
 			var after := BoardModel.new()
 			after.setup(game.model.rows, game.model.columns, game.model.snapshot())
+			after.set_portals(game.model.portal_groups)
 			if after.move_state(hinted) == "ram":
 				after.ram(hinted)  # v0.6: a hint can be a ram
 			else:
@@ -165,7 +172,7 @@ func _play_level(n: int) -> void:
 			taps -= 1
 		await _wait(0.07)
 	# PERFECT and the Master Level celebrate longer before the card.
-	var extra := 1.3 if Chapters.is_milestone(n) else 0.0
+	var extra := 1.3 if Chapters.is_milestone(n) or Chapters.celebration_tier(n) != "" else 0.0
 	await _wait(extra + (2.8 if Chapters.is_master(n) else (1.0 if not game.last_result.get("perfect", false) else 1.6)))
 	_shot("L%02d_complete" % n)
 	var r := game.last_result
@@ -284,9 +291,11 @@ func _test_chapters_and_music() -> void:
 	game.ui.levels_opened.emit()
 	await _frames(3)
 	var headers := game.ui._level_select._list.get_children().filter(func(c): return c.has_meta("chapter"))
-	_check(headers.size() == 20, "Level Select groups levels into 20 Chapters (%d)" % headers.size())
+	var chapter_total := Chapters.chapter_count(game.level_manager.level_count)
+	_check(headers.size() == chapter_total, "Level Select groups levels into %d Chapters (%d)" % [chapter_total, headers.size()])
 	var eras := game.ui._level_select._list.get_children().filter(func(c): return c.has_meta("era"))
-	_check(eras.size() == 2 and eras[1].get_meta("era") == 2, "Level Select shows a First Era and a Second Era divider")
+	# v0.7: 201+ opens the Third Era divider.
+	_check(eras.size() == 3 and eras[1].get_meta("era") == 2 and eras[2].get_meta("era") == 3, "Level Select shows First, Second and Third Era dividers")
 	_check(_count_tiles(game.ui._level_select._list) == game.level_manager.level_count, "Level Select still shows every level")
 	_shot("level_select_chapters")
 	game.ui._level_select.close()
@@ -486,6 +495,7 @@ func _reward_id(rarity: int) -> int:
 func _stays_solvable(id: int) -> bool:
 	var t := BoardModel.new()
 	t.setup(game.model.rows, game.model.columns, game.model.snapshot())
+	t.set_portals(game.model.portal_groups)
 	t.remove(id)
 	return t.is_empty() or Solver.from_model(t).is_solvable()
 

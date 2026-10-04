@@ -1,0 +1,13 @@
+{
+	"name": "Twin Doors",
+	"hint": "Two portal pairs: A leads to A, B leads to B.",
+	"hint_finger": false,
+	"map": [
+		".      B^     OB     Rv     G<     .",
+		"B>     Y>@    OA     Rv     .      G<",
+		".      .      .      OB     R<$S   Y^",
+		"OA     .      .      P>     Y>@    R^",
+		".      P^@$G  G<     .      .      .",
+		"B<     B<     .      .      .      R<@"
+	]
+}

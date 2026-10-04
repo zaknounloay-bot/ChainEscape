@@ -1,0 +1,12 @@
+{
+	"name": "Long Way Round",
+	"map": [
+		".      .      .      .      .      .      .",
+		"R>     .      P>     .      OA     P<$S   .",
+		"R^     P<@    Gv     Y>@    .      B^     .",
+		".      .      Gv     R<     .      Y<     Yv",
+		".      .      .      .      Yv     Rv     Pv@$G",
+		".      .      Rv@    Y<     .      Y<     Rv",
+		".      Y^     OA     .      G>@    .      ."
+	]
+}

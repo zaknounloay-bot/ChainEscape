@@ -5,6 +5,9 @@ extends SceneTree
 ## files at run time. Run after changing any level file:
 ##   godot --headless --path . --script res://tools/classic_board_keys.gd
 ## (tools/run_tests.gd recomputes the keys and fails if this file is stale.)
+## v0.7: Portal levels (201+) are skipped - a Friend board never has portals
+## (PuzzleDefinition rejects them), so it can never be one of those, and
+## the Friend data stays exactly as it was.
 
 
 static func compute() -> Array:
@@ -13,8 +16,10 @@ static func compute() -> Array:
 	while FileAccess.file_exists(LevelManager.LEVEL_PATH % n):
 		var json = JSON.parse_string(FileAccess.get_file_as_string(LevelManager.LEVEL_PATH % n))
 		var level := LevelManager.parse_level(json, n)
-		keys.append(FriendGenerator.board_key(PuzzleDefinition.from_level(level)))
 		n += 1
+		if not level.portals.is_empty():
+			continue
+		keys.append(FriendGenerator.board_key(PuzzleDefinition.from_level(level)))
 	return keys
 
 

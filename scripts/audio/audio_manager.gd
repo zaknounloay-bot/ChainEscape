@@ -14,7 +14,9 @@ const SOUND_IDS := ["escape", "invalid", "combo", "level_complete", "ui_tap", "u
 	"turn", "heart_lost", "hint", "try_again", "unlock", "reveal", "star", "perfect", "new_best",
 	"coin", "hammer", "chest", "master", "chapter", "silver", "gold", "chapter_complete",
 	# v0.6 Second Era
-	"switch", "gate", "crack", "milestone"]
+	"switch", "gate", "crack", "milestone",
+	# Levels 201+
+	"portal"]
 const MUSIC_ID := "music"
 const MUSIC_VOLUME_DB := -15.0  # background level: present but never in the way
 const DUCK_DB := -8.0  # extra attenuation while ducked
@@ -374,6 +376,11 @@ func play_reveal() -> void:
 	play("reveal", 1.0, -6.0)
 
 
+## PORTAL (201+): a block went through a portal (a short rising whoosh).
+func play_portal() -> void:
+	play("portal", 1.0, -4.0)
+
+
 ## Stars pop with rising pitch (index 0..2).
 func play_star(index: int) -> void:
 	play("star", pow(2.0, [0, 4, 7][clampi(index, 0, 2)] / 12.0), -5.0)
@@ -538,6 +545,9 @@ func _load_or_synthesize(id: String) -> AudioStream:
 		"crack":
 			# v0.6.4 shell burst: a short explosion (noise + low thump).
 			return _synth_boom(0.55)
+		"portal":
+			# In, through, out: a soft low tone sweeping up into a bright ping.
+			return _synth_notes([[392.0, 0.0], [587.0, 0.06], [880.0, 0.13], [1319.0, 0.2]], 0.45, 9.0)
 		"milestone":
 			return _synth_notes([[587.0, 0.0], [740.0, 0.1], [880.0, 0.2], [1175.0, 0.32], [1480.0, 0.46], [1760.0, 0.62]], 1.5, 3.4)
 	return null

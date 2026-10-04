@@ -21,9 +21,11 @@ extends Node
 ##    "XA"   = CHAIN GATE of group A (no color / arrow; can't be tapped)
 ##    "R>+A" = LINK of gate A: the gate opens when every +A block is gone
 ##    "R>="  = ARMORED: launch another block into it to crack the shell
-##    PORTAL PROTOTYPE (development only, ?mechlab=1; see Portals):
+##    v0.7 PORTAL (Third Era, levels 201+; also the ?mechlab=1 lab; see
+##    Portals):
 ##    "OA"   = a cell of portal pair A (no block; groups A-D, exactly two
-##             cells each). No campaign level uses it.
+##             cells each). Levels 1-200 never use it; Social / Friend
+##             boards with a portal are rejected (PuzzleDefinition.verify).
 ##    SEQUENCE PROTOTYPE (development only, ?mechlab=sequence; accepted only
 ##    while LevelManager.dev_sequence is true - never in the game, Social or
 ##    Friend parsing): "R>:^" = Sequence block, current arrow right, NEXT

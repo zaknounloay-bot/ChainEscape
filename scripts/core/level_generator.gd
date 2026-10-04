@@ -363,6 +363,7 @@ func assign_reward_blocks(level: LevelData, silver: int, gold: int) -> void:
 		return
 	var model := BoardModel.new()
 	model.setup(level.rows, level.columns, level.blocks)
+	model.set_portals(level.portals)  # {} on every level before 201
 	var order := Solver.from_model(model).solve()
 	if order.is_empty():
 		return
@@ -409,6 +410,7 @@ func _assign_strategic(level: LevelData, order: Array, by_id: Dictionary, silver
 	ids.sort_custom(func(x, y): return last_pos[x] < last_pos[y])
 	var model := BoardModel.new()
 	model.setup(level.rows, level.columns, level.blocks)
+	model.set_portals(level.portals)
 	var late := ids.slice(ids.size() / 2)
 	for g in gold:
 		var role := late.filter(func(id): return by_id[id].gate_link != "" or by_id[id].flip_link != "")

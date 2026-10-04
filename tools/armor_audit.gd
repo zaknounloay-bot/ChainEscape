@@ -12,7 +12,7 @@ func _init() -> void:
 			var kv := a.substr(2).split("=")
 			args[kv[0]] = kv[1]
 	var from := int(args.get("from", "101"))
-	var to := int(args.get("to", "200"))
+	var to := int(args.get("to", "999"))
 	var limit := int(args.get("limit", "400000"))
 	var bad := 0
 	for n in range(from, to + 1):
@@ -22,6 +22,7 @@ func _init() -> void:
 		var level := LevelManager.parse_level(JSON.parse_string(FileAccess.get_file_as_string(path)), n)
 		var model := BoardModel.new()
 		model.setup(level.rows, level.columns, level.blocks)
+		model.set_portals(level.portals)
 		var solver := Solver.from_model(model)
 		if solver._armored_ids.is_empty():
 			continue

@@ -1,4 +1,4 @@
-# Chain Escape — v0.6.6
+# Chain Escape — v0.7
 
 A one-handed portrait puzzle game built with **Godot 4.3 (GDScript)** for iOS, Android and mobile Web.
 
@@ -22,6 +22,8 @@ The feeling it aims for: *"I progressed, the game changed, and I want to see the
 
 See *v0.5.1 stabilization* below.
 
+**v0.7 opens the Third Era with the PORTAL arc: levels 201-225.** Portal is now a production Classic mechanic (introduced once with a short NEW MECHANIC card). Level 225 is a short, presentation-only milestone. Levels 1-200, Social / Friend and the backend are unchanged. See *v0.7* below and `docs/portal_arc.md`.
+
 **v0.6 opens the Second Era: levels 101-200**, with three new mechanics (Switch, Chain Gate, Armored), ten new Chapter worlds in five visual families, new music, milestone levels and a second Master Level (200). See *v0.6* below.
 
 **v0.5.2 fixes the two issues left after a real-iPhone test of v0.5.1** (the crash fix held for all 100 levels): the displayed score still seemed to drop between levels, and iPhone progress was lost after closing Safari and reopening the itch.io link. See *v0.5.2* below.
@@ -37,6 +39,21 @@ Everything from v0.4 is kept:
 - the mobile Web audio unlock with Stream playback
 
 Not included, on purpose: leaderboards, country ranking, accounts/login, backend, real-money purchases, ads, Daily Challenge and multiplayer.
+
+---
+
+## v0.7 — PORTAL in Classic: levels 201-225 (Third Era, first arc)
+
+| Area | Change |
+|---|---|
+| **Portal** | The lab mechanic, unchanged, now plays in Classic: a block that enters a portal comes out of the other portal with the same letter and keeps moving the same way. Escape, blocked tap ("Blocked after portal A"), ram, Undo, Restart, SHOW A MOVE and the Hammer all use the same portal rules; the Hammer's safety check solves with the portals. A short portal sound plays on an escape through a portal. |
+| **Levels 201-225** | 25 new levels in three waves: **Learn** 201-205, **Apply** 206-215 (breathers 209 / 215), **Master / interact** 216-224 (breather 220), **Milestone** 225. One clear idea per level, at most two older mechanics with the portal. Per-level ideas and metrics: `docs/portal_arc.md`. Built by `tools/generate_portal_arc.gd`, checked by `tools/verify_levels.gd`. |
+| **NEW MECHANIC card** | On the first Portal level only: "NEW MECHANIC! PORTAL", a miniature (ENTER A → EXIT A → CONTINUE), about 1.8 s, then play starts; a tap skips it. Saved in `tips_seen` (`intro_portal`), so it never repeats; never shown to a player who already cleared 201, never over the title (CONTINUE shows it). Reduced motion: a still picture. Its words live in one table (`MechanicIntro.TEXT`) for translation. |
+| **Level 225** | A short MILESTONE (gold level label, "MILESTONE · LEVEL 225" banner, two bursts and a MILESTONE stamp, "MILESTONE CLEARED!" card). It is presentation only: `chapters.json` `celebration_levels`, not `milestone_levels`, so it pays no milestone coins and changes no theme or music. It is not a finale and does not reuse GRAND MASTER. |
+| **Eras / Chapters** | Third Era (201-300) in `chapters.json`; Chapters 21-23 use the overflow themes. A Chapter only completes (and pays) once all its levels exist, so Chapter 23 (221-230) is not complete at 225. Full Chapters 1-22 are unaffected. |
+| **Unchanged** | Levels 1-200 (byte-identical Solver dump), economy values, save format (old saves load as before), Photo / Message Reveal, Challenge a Friend (generator, difficulties, VERY HARD, `classic_board_keys.json`), Social analytics, the recipient flow, share links, the Supabase schema and the Edge Function contract. Portal boards stay impossible as Social challenges. Sequence and Movable stay lab-only. |
+
+Checks: `godot --headless --path . res://tools/PortalProdCheck.tscn` and `node tools/web_portal_arc_test.mjs build/web`, plus every existing suite.
 
 ---
 
@@ -99,7 +116,7 @@ For scale: the campaign averages 4.7 in Chapter 1, 18.2 in Chapter 3, 27.4 in Ch
   - `step()` runs about 20 ms of work per frame, so the screen keeps drawing.
 - **SURPRISE ME:** `FriendGenerator.resolve("surprise", rng)` picks one of the four real difficulties uniformly. The real one is what gets stored.
 - **NEW CHALLENGE:** use a new seed and pass the previous board's `board_key()` in `avoid`; it can never come back, even with the same seed.
-- **Never a campaign board:** `data/classic_board_keys.json` holds the keys of the 200 levels (written by `tools/classic_board_keys.gd`; the test fails if it is stale).
+- **Never a campaign board:** `data/classic_board_keys.json` holds the keys of the 200 levels 1-200 (written by `tools/classic_board_keys.gd`; the test fails if it is stale). Portal levels (201+) are skipped: a Friend board never has portals.
 - **Checks:**
   - `godot --headless --path . --script res://tools/friend_generator_test.gd`
   - `godot --headless --path . --script res://tools/friend_benchmark.gd -- --seeds=200` (desktop timings)

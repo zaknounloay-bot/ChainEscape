@@ -91,6 +91,10 @@ func open(chapters: Array, total_stars: int, max_stars: int, current_chapter: in
 	_fling = 0.0
 	set_process(false)
 	var era_shown := 0
+	_last_level = 0
+	for info in chapters:
+		for lv in info.get("levels", []):
+			_last_level = maxi(_last_level, int(lv["number"]))
 	for info in chapters:
 		# v0.6: a simple divider where each era begins.
 		var era := Chapters.era_of_chapter(info["chapter"])
@@ -263,6 +267,10 @@ func _publish() -> void:
 		"tile": tile, "header": header, "gap": gap, "open_tile": open_tile, "open_number": open_number})
 
 
+## Highest level number in the list being shown.
+var _last_level := 0
+
+
 ## "SECOND ERA  ·  LEVELS 101-200" between the eras.
 func _era_divider(era: Dictionary, info: Dictionary) -> Control:
 	var box := VBoxContainer.new()
@@ -275,7 +283,9 @@ func _era_divider(era: Dictionary, info: Dictionary) -> Control:
 	var t: Dictionary = info["theme"]
 	var title := _label(String(era["name"]).to_upper(), 34, t["accent"] if era["index"] > 1 else Palette.TEXT)
 	box.add_child(title)
-	var sub := _label("LEVELS %d-%d" % [era["from"], era["to"]], 18, Palette.TEXT_SOFT)
+	# v0.7: an era still being built (the Third Era, 201-300) names only the
+	# levels that exist ("LEVELS 201-225").
+	var sub := _label("LEVELS %d-%d" % [era["from"], mini(int(era["to"]), _last_level) if _last_level > 0 else era["to"]], 18, Palette.TEXT_SOFT)
 	box.add_child(sub)
 	var line := ColorRect.new()
 	line.custom_minimum_size = Vector2(0, 4)

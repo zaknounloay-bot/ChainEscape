@@ -1,0 +1,13 @@
+{
+	"name": "Take Turns",
+	"hint": "Two blocks, one portal: choose who goes first.",
+	"hint_finger": false,
+	"map": [
+		".   .   .   .   .",
+		"R>  P>  R>  Yv  .",
+		"OA  .   .   .   .",
+		"G>  .   Gv  .   .",
+		".   .   Gv  OA  G<",
+		".   .   B>  .   G^"
+	]
+}
