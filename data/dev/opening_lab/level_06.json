@@ -1,0 +1,11 @@
+{
+	"name": "Spinner",
+	"hint": "Spinners turn when a neighbor escapes",
+	"blocked_hint": "Careful: from now on, blocked taps cost a heart",
+	"map": [
+		".   Yv  .   .",
+		".   P>@ R<  .",
+		".   Bv  .   .",
+		".   .   .   ."
+	]
+}

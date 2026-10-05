@@ -1,0 +1,10 @@
+{
+	"name": "Out Of Sight",
+	"mystery": true,
+	"map": [
+		"B^  P^? .   .",
+		"P>  P<@ B^  .",
+		".   B<  .   .",
+		"R^? Y^  .   ."
+	]
+}

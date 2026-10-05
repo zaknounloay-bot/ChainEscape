@@ -57,6 +57,11 @@ const LEVEL_PATH := "res://levels/level_%02d.json"
 
 const COLOR_LETTERS := {"R": "red", "B": "blue", "G": "green", "Y": "yellow", "P": "purple"}
 
+## Developer page only (?openinglab, see OpeningLab): levels 1..override_last
+## are read from this folder instead of res://levels. Empty = never.
+static var override_dir := ""
+static var override_last := 0
+
 var level_count: int = 0
 var _info_cache: Dictionary = {}
 
@@ -71,6 +76,8 @@ func _ready() -> void:
 
 func load_level(number: int) -> LevelData:
 	var path := LEVEL_PATH % number
+	if override_dir != "" and number <= override_last:
+		path = override_dir.path_join("level_%02d.json" % number)
 	var text := FileAccess.get_file_as_string(path)
 	if text.is_empty():
 		push_error("Could not read level file %s" % path)

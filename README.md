@@ -44,6 +44,17 @@ Not included, on purpose: leaderboards, country ranking, accounts/login, backend
 
 ---
 
+## Opening Experience Lab (developer page, not production): `?openinglab=reset`
+
+A candidate Levels 1–10 opening, playable in the real game for first-time-player tests. Production levels, mechanics, save, economy, Social and the backend are unchanged.
+- **Levels:** 1–10 come from `data/dev/opening_lab/`; 11+ are production.
+- **Save:** the lab has its own save and storage keys. `?openinglab=1` continues it, and no parameter returns to the real save.
+- **Play log:** levels, restarts, mistakes, time to NEXT. Open it from the debug panel by tapping the title 5 times.
+- **Docs:** design, metrics, scorecard and concerns are in `docs/opening_lab.md`.
+- **Checks:** `godot --headless --path . res://tools/OpeningLabCheck.tscn` and `node tools/web_opening_lab_test.mjs build/web`.
+
+---
+
 ## v0.8 — SEQUENCE, MOVABLE and INTEGRATION: levels 226-300 (Third Era complete)
 
 | Area | Change |

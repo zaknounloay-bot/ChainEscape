@@ -1,0 +1,10 @@
+{
+	"name": "Clockwork",
+	"mystery": true,
+	"map": [
+		".   .   Bv  .   .",
+		"G^  R^@ .   .   G>?",
+		".   G^  Y>@ Rv  R<",
+		".   .   G>  .   G^"
+	]
+}

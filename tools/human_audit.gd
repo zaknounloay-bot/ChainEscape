@@ -42,10 +42,12 @@ func _init() -> void:
 			to = int(a.get_slice("=", 1))
 		elif a.begins_with("--detail="):
 			detail = int(a.get_slice("=", 1))
+		elif a.begins_with("--dir="):
+			level_dir = a.get_slice("=", 1)
 		elif a.begins_with("--limit="):
 			limit = int(a.get_slice("=", 1))
 	for n in range(from, to + 1):
-		if not FileAccess.file_exists(LevelManager.LEVEL_PATH % n):
+		if not FileAccess.file_exists(LevelManager.LEVEL_PATH % n if level_dir == "" else level_dir.path_join("level_%02d.json" % n)):
 			continue
 		var t0 := Time.get_ticks_msec()
 		var r := _audit(n, limit, n == detail)
@@ -54,8 +56,12 @@ func _init() -> void:
 	quit()
 
 
+var level_dir := ""  # --dir=res://...: read level_NN.json from there (e.g. the opening lab)
+
+
 func _solver(n: int) -> Solver:
-	var lv := LevelManager.read_level(n)
+	var lv := LevelManager.read_level(n) if level_dir == "" else \
+		LevelManager.parse_level(JSON.parse_string(FileAccess.get_file_as_string(level_dir.path_join("level_%02d.json" % n))), n, true)
 	var model := BoardModel.new()
 	model.setup(lv.rows, lv.columns, lv.blocks)
 	model.set_portals(lv.portals)

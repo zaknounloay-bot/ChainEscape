@@ -1,0 +1,12 @@
+{
+	"name": "Hidden Arrow",
+	"mystery": true,
+	"hint": "Hidden arrows appear when a neighbor escapes",
+	"hint_finger": false,
+	"map": [
+		".   Bv  .   P<",
+		"R>  Y>? .   .",
+		".   Gv  .   .",
+		".   .   .   ."
+	]
+}

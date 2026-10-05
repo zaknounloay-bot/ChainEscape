@@ -103,8 +103,14 @@ var _solving := false
 
 
 func _ready() -> void:
+	# Developer page (?openinglab): candidate Levels 1-10 and a separate
+	# save; must be set before the save is loaded. Off unless asked for.
+	var lab := OpeningLab.requested()
+	if lab != "":
+		OpeningLab.apply(lab)
 	progress = PlayerProgress.new().load_from_disk()
-	_take_web_transfer()
+	if not OpeningLab.active:
+		_take_web_transfer()
 	background = ChapterBackground.new()
 	add_child(background)
 	_apply_settings()
@@ -439,6 +445,7 @@ func start_level(number: int, via: String = "load") -> void:
 	if not ui.is_title_open() and via != "launch":
 		_maybe_mechanic_intro()
 	debug_panel.set_current_level(number)
+	OpeningLab.event("start", number, {"via": via})
 	last_diag = Diagnostics.level_transition(number, current_chapter, via, get_tree(), {
 		"fx": board.fx_count(), "music": AudioManager.music_theme, "music_players": AudioManager.music_playing_count(),
 		"sfx": AudioManager.sfx_playing_count(), "save_seq": progress.seq})
@@ -457,6 +464,7 @@ func replay() -> void:
 
 func next_level() -> void:
 	AudioManager.play_ui_tap()
+	OpeningLab.event("next", current_level)
 	if pending_chapter_card != 0:
 		_show_chapter_card(pending_chapter_card)
 		return
@@ -824,6 +832,8 @@ func _on_board_cleared() -> void:
 	r["is_last"] = current_level == level_manager.level_count
 	r["level"] = current_level
 	last_result = r
+	OpeningLab.event("clear", current_level, {"stars": r["stars"], "mistakes": mistakes, "undos": undos_used, "hints": hints_used,
+		"hearts_left": hearts, "perfect": r["perfect"]})
 	var session := _session_id
 	# Let the last block leave the screen, then celebrate, then show the card.
 	await get_tree().create_timer(0.22).timeout
@@ -1372,6 +1382,7 @@ func publish_state() -> void:
 		"intro_mechanic": mechanic_intro.mechanic if mechanic_intro != null else "",
 		"intros_seen": progress.tips_seen.filter(func(t): return String(t).begins_with("intro_")),
 		"portals": board.portals.size(), "celebration": last_result.get("celebration", "") if completed else "",
+		"opening_lab": OpeningLab.active, "level_name": level.name if level else "", "max_hearts": max_hearts, "blocks_left": model.block_count(),
 		"coin_notes": last_result.get("coin_notes", "") if completed else "", "chapter_complete": last_result.get("chapter_complete", 0) if completed else 0,
 		"card_title": ui._card_title.text, "next_text": ui._next_button.text,
 		"major_rect": [ui.major_milestone_rect().position.x / vis.x, ui.major_milestone_rect().position.y / vis.y, ui.major_milestone_rect().end.x / vis.x, ui.major_milestone_rect().end.y / vis.y],
@@ -1401,7 +1412,8 @@ func debug_info() -> String:
 		Diagnostics.last_line, progress.load_source, progress.seq, progress.version, progress.current_level,
 		progress.highest_completed, progress.highest_unlocked, progress.total_score(), progress.coins, progress.saved_text(),
 		("  HELD(%s) beacon=%s" % [progress.hold_reason, JSON.stringify(progress.beacon)]) if progress.hold_writes else "", str(st),
-		("Previous session: " + Diagnostics.previous_session) if Diagnostics.previous_session != "" else "Previous session: closed normally / first run"]
+		("Previous session: " + Diagnostics.previous_session) if Diagnostics.previous_session != "" else "Previous session: closed normally / first run"] \
+		+ (("\n" + OpeningLab.summary()) if OpeningLab.active else "")
 
 
 # --- Settings ----------------------------------------------------------------

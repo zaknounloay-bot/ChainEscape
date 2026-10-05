@@ -1,0 +1,11 @@
+{
+	"name": "The Knot",
+	"hint": "Order matters - look before you tap",
+	"hint_finger": false,
+	"map": [
+		".  .  .  .",
+		".  Rv Y< .",
+		".  B< Gv .",
+		".  P> Y> ."
+	]
+}

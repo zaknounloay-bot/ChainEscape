@@ -32,6 +32,10 @@ const MIRROR_KEY := "chain_escape_save"
 
 ## Tests point this somewhere else so they never touch real progress.
 static var default_path := "user://progress.cfg"
+## The Web mirror / beacon keys in use (a developer page with its own save,
+## e.g. ?openinglab, points them elsewhere; the defaults never change).
+static var mirror_key := MIRROR_KEY
+static var beacon_key := BEACON_KEY
 ## Print "[Save] ..." lines for every load and write (diagnostics).
 static var log_enabled: bool = true
 
@@ -452,13 +456,13 @@ func _direct_write(text: String) -> bool:
 func _mirror_write(text: String) -> bool:
 	if not OS.has_feature("web") or path != default_path:
 		return false
-	return WebBridge.ls_set(MIRROR_KEY, text)
+	return WebBridge.ls_set(mirror_key, text)
 
 
 func _mirror_read() -> String:
 	if not OS.has_feature("web") or path != default_path:
 		return ""
-	return WebBridge.ls_get(MIRROR_KEY)
+	return WebBridge.ls_get(mirror_key)
 
 
 ## Beacon: a tiny "a save exists, this far" note kept apart from the save
@@ -476,7 +480,7 @@ func _beacon_write() -> void:
 		f.store_string(b)
 		f.close()
 	if OS.has_feature("web") and path == default_path:
-		WebBridge.ls_set(BEACON_KEY, b)
+		WebBridge.ls_set(beacon_key, b)
 
 
 func _beacon_read() -> Dictionary:
@@ -485,7 +489,7 @@ func _beacon_read() -> Dictionary:
 	if FileAccess.file_exists(path + ".beacon"):
 		texts.append(FileAccess.get_file_as_string(path + ".beacon"))
 	if OS.has_feature("web") and path == default_path:
-		texts.append(WebBridge.ls_get(BEACON_KEY))
+		texts.append(WebBridge.ls_get(beacon_key))
 	for t in texts:
 		var d = JSON.parse_string(t) if t != "" else null
 		if typeof(d) == TYPE_DICTIONARY and int(d.get("seq", 0)) >= int(best.get("seq", 0)):
