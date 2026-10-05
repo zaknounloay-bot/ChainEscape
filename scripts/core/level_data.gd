@@ -22,6 +22,6 @@ var hints: int = -1
 ## Star rules, data-driven per level. Keys: "two", "three" (rule names, see
 ## ScoreRules) and "score" (3-star score target, 0 = auto).
 var star_rules: Dictionary = {}
-## PORTAL PROTOTYPE (development only, see Portals): Vector2i cell -> pair
+## PORTAL (levels 201+, see Portals): Vector2i cell -> pair
 ## letter. Empty on every campaign and Social board.
 var portals: Dictionary = {}

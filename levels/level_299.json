@@ -1,0 +1,12 @@
+{
+	"name": "Last Mile",
+	"map": [
+		".     .     .     .     .     OA    P^",
+		"Bv:^  B<@   .     B<    G>    .     B^",
+		"Gv    R<:^  B>    OA    P>@   R^@   OB",
+		".     .     B^    R<    .     R>    .",
+		"Yv    .     B<@   .     OB    R^    .",
+		".     .     R^    .     G<@   B<    .",
+		"B>    .     .     .     P^:v  .     ."
+	]
+}

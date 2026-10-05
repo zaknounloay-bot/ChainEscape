@@ -1,23 +1,34 @@
 class_name MechanicIntro
 extends CanvasLayer
 ## "NEW MECHANIC!" - a short card the FIRST time a new mechanic appears
-## (levels 201+; Portal at level 201). About 1.8 s, then play starts; a tap
-## skips it. Shown once per save (GameManager stores "intro_<mechanic>" in
+## (Portal at 201, Sequence at 226, Movable at 251). About 1.8 s (Movable,
+## with its one extra line, 2.2 s), then play starts; a tap skips it. Shown
+## once per save (GameManager stores "intro_<mechanic>" in
 ## PlayerProgress.tips_seen) and never to a player already past that level.
 ##
-## The card plays the mechanic in miniature (Portal: a block ENTERS A, comes
-## out of the other A and CONTINUES). Reduced motion: the same picture,
-## still. Every visible word comes from TEXT, one entry per mechanic, so it
-## can be translated in one place.
+## The card plays the mechanic in miniature:
+## - Portal: a block ENTERS A, comes out of the other A and CONTINUES.
+## - Sequence: the FIRST MOVE launches and comes back with its next arrow,
+##   the SECOND MOVE escapes.
+## - Movable: an arrow HITs the Movable block, PUSHes it, it MOVES ONE CELL.
+## Reduced motion: the same picture, still. Every visible word comes from
+## TEXT, one entry per mechanic, so it can be translated in one place.
 
 signal finished
 
 const TEXT := {
 	"portal": {"badge": "NEW MECHANIC!", "name": "PORTAL", "steps": ["ENTER A", "EXIT A", "CONTINUE"]},
+	"sequence": {"badge": "NEW MECHANIC!", "name": "SEQUENCE", "steps": ["FIRST MOVE CHANGES IT", "SECOND MOVE ESCAPES"]},
+	"movable": {"badge": "NEW MECHANIC!", "name": "MOVABLE", "steps": ["HIT", "PUSH", "MOVES ONE CELL"],
+		"note": "BLOCKED BEHIND = CAN'T MOVE  ·  IT NEVER HAS TO LEAVE"},
 }
 const HOLD := 1.8  # seconds before play starts by itself
+const HOLD_LONG := 2.2  # a card with a note line (Movable)
 const PORTAL_COLOR := Color("#00D8C4")
 const BLOCK_COLOR := Color("#FF4D5E")
+const SEQ_COLOR := Color("#2F8CFF")
+const CRATE_FACE := Color("#C08A4B")
+const CRATE_DARK := Color("#4A2C12")
 
 var mechanic := "portal"
 var reduced := false
@@ -68,9 +79,12 @@ func _ready() -> void:
 	box.add_child(_label(t["name"], 64, Color.WHITE))
 	_diagram = Diagram.new()
 	_diagram.custom_minimum_size = Vector2(560, 150)
+	_diagram.mechanic = mechanic
 	_diagram.steps = t["steps"]
 	_diagram.reduced = reduced
 	box.add_child(_diagram)
+	if t.has("note"):
+		box.add_child(_label(t["note"], 19, Color(1, 1, 1, 0.78)))
 	card.reset_size()
 	card.position = (get_viewport().get_visible_rect().size - card.size) * 0.5
 	# Pop in (a fade only with reduced motion).
@@ -85,8 +99,16 @@ func _ready() -> void:
 		tw.parallel().tween_property(card, "scale", Vector2.ONE, 0.22).set_trans(Tween.TRANS_BACK).set_ease(Tween.EASE_OUT)
 	if not reduced:
 		_diagram.play()
-	get_tree().create_timer(HOLD).timeout.connect(close)
-	AudioManager.play_portal()
+	get_tree().create_timer(hold_seconds()).timeout.connect(close)
+	match mechanic:
+		"sequence": AudioManager.play_sequence()
+		"movable": AudioManager.play_push()
+		_: AudioManager.play_portal()
+
+
+## How long the card stays before play starts by itself.
+func hold_seconds() -> float:
+	return HOLD_LONG if TEXT[mechanic].has("note") else HOLD
 
 
 ## Ends the card (timer or tap); `finished` fires once.
@@ -116,21 +138,27 @@ func _label(text: String, fs: int, color: Color) -> Label:
 	return l
 
 
-## The miniature: portal A (left), portal A (right), a block that goes in at
-## the left one and comes out of the right one, and the three step words.
+## The miniature for each mechanic, and its step words underneath.
 class Diagram extends Control:
+	var mechanic := "portal"
 	var steps: Array = []
 	var reduced := false
-	var t := 0.0  # 0..1 progress of the block's trip
+	var t := 0.0  # 0..1 progress of the animation
 
 	func play() -> void:
 		var tw := create_tween()
-		tw.tween_property(self, "t", 1.0, 1.15).set_trans(Tween.TRANS_SINE).set_ease(Tween.EASE_IN_OUT)
+		tw.tween_property(self, "t", 1.0, 1.15 if mechanic == "portal" else 1.4).set_trans(Tween.TRANS_SINE).set_ease(Tween.EASE_IN_OUT)
 
 	func _process(_delta: float) -> void:
 		queue_redraw()
 
 	func _draw() -> void:
+		match mechanic:
+			"sequence": _draw_sequence()
+			"movable": _draw_movable()
+			_: _draw_portal()
+
+	func _draw_portal() -> void:
 		var w := size.x
 		var y := 52.0
 		var a := Vector2(w * 0.30, y)
@@ -152,8 +180,8 @@ class Diagram extends Control:
 		draw_line(b + Vector2(40, 0), Vector2(w * 0.95, y), faint, 3.0, true)
 		# The travelling block.
 		if reduced:
-			_block(Vector2(w * 0.12, y), 1.0)
-			_block(Vector2(w * 0.88, y), 1.0)
+			_block(Vector2(w * 0.12, y), 1.0, MechanicIntro.BLOCK_COLOR, Vector2.RIGHT)
+			_block(Vector2(w * 0.88, y), 1.0, MechanicIntro.BLOCK_COLOR, Vector2.RIGHT)
 		else:
 			var pos: Vector2
 			var sc := 1.0
@@ -165,22 +193,96 @@ class Diagram extends Control:
 				sc = 0.15 + (t - 0.42) / 0.16 * 0.85
 			else:
 				pos = b.lerp(Vector2(w * 0.96, y), (t - 0.58) / 0.42)
-			_block(pos, clampf(sc, 0.15, 1.0))
-		# Step words under the picture.
-		var xs := [w * 0.30, w * 0.70, w * 0.92]
-		for i in mini(steps.size(), 3):
+			_block(pos, clampf(sc, 0.15, 1.0), MechanicIntro.BLOCK_COLOR, Vector2.RIGHT)
+		_words([w * 0.30, w * 0.70, w * 0.92], y + 76)
+
+	## Sequence: arrow RIGHT with a small NEXT arrow UP. First move: a dash
+	## to the right and back, then the arrow becomes UP. Second move: up and
+	## away.
+	func _draw_sequence() -> void:
+		var w := size.x
+		var y := 62.0
+		var home := Vector2(w * 0.27, y)
+		var faint := Color(1, 1, 1, 0.35)
+		draw_line(home + Vector2(36, 0), Vector2(w * 0.47, y), faint, 3.0, true)
+		var home2 := Vector2(w * 0.73, y)
+		draw_line(home2 - Vector2(0, 36), Vector2(home2.x, 2), faint, 3.0, true)
+		if reduced:
+			_block(home, 1.0, MechanicIntro.SEQ_COLOR, Vector2.RIGHT, Vector2.UP)
+			_block(home2, 1.0, MechanicIntro.SEQ_COLOR, Vector2.UP)
+		else:
+			var pos := home
+			var dir := Vector2.RIGHT
+			var next := Vector2.UP
+			if t < 0.4:
+				pos = home.lerp(home + Vector2(w * 0.16, 0), sin(t / 0.4 * PI))
+			else:
+				dir = Vector2.UP
+				next = Vector2.ZERO
+				pos = home
+				if t > 0.62:
+					pos = home + Vector2(0, -(t - 0.62) / 0.38 * 70.0)
+			_block(pos, 1.0, MechanicIntro.SEQ_COLOR, dir, next)
+			_block(home2, 0.6, Color(MechanicIntro.SEQ_COLOR, 0.35), Vector2.UP)
+		_words([w * 0.27, w * 0.73], y + 66)
+
+	## Movable: an arrow (RIGHT) hits the Movable block, which slides one
+	## cell; the arrow stays where it was.
+	func _draw_movable() -> void:
+		var w := size.x
+		var y := 52.0
+		var cell := 64.0
+		var arrow_home := Vector2(w * 0.22, y)
+		var crate_home := Vector2(w * 0.50, y)
+		# The board cells under the crate's start and target.
+		for x in [crate_home.x, crate_home.x + cell]:
+			var r := Rect2(Vector2(x - 28, y - 28), Vector2(56, 56))
+			draw_rect(r, Color(1, 1, 1, 0.08), true)
+		var arrow_pos := arrow_home
+		var crate_pos := crate_home + (Vector2(cell, 0) if reduced else Vector2.ZERO)
+		if not reduced:
+			if t < 0.3:
+				arrow_pos = arrow_home.lerp(crate_home - Vector2(cell * 0.85, 0), t / 0.3)
+			elif t < 0.65:
+				arrow_pos = (crate_home - Vector2(cell * 0.85, 0)).lerp(arrow_home, (t - 0.3) / 0.35)
+				crate_pos = crate_home.lerp(crate_home + Vector2(cell, 0), clampf((t - 0.3) / 0.25, 0.0, 1.0))
+			else:
+				crate_pos = crate_home + Vector2(cell, 0)
+		_block(arrow_pos, 1.0, MechanicIntro.BLOCK_COLOR, Vector2.RIGHT)
+		_crate(crate_pos)
+		_words([w * 0.22, w * 0.50, w * 0.80], y + 76)
+
+	func _words(xs: Array, y: float) -> void:
+		var font := Palette.font(900)
+		var w := size.x
+		for i in mini(steps.size(), xs.size()):
 			var txt: String = steps[i]
 			var s := font.get_string_size(txt, HORIZONTAL_ALIGNMENT_LEFT, -1, 22)
 			var x: float = clampf(xs[i] - s.x * 0.5, 0.0, w - s.x)
-			draw_string(font, Vector2(x, y + 76), txt, HORIZONTAL_ALIGNMENT_LEFT, -1, 22, Color(1, 1, 1, 0.92))
+			draw_string(font, Vector2(x, y), txt, HORIZONTAL_ALIGNMENT_LEFT, -1, 22, Color(1, 1, 1, 0.92))
 
-	func _block(at: Vector2, sc: float) -> void:
+	## A colored block with an arrow (`dir`) and, if `next` is set, the
+	## small NEXT arrow on a white disc in its corner (as on the board).
+	func _block(at: Vector2, sc: float, color: Color, dir: Vector2, next: Vector2 = Vector2.ZERO) -> void:
 		var half := 24.0 * sc
 		var r := Rect2(at - Vector2(half, half), Vector2(half, half) * 2.0)
 		var st := StyleBoxFlat.new()
-		st.bg_color = MechanicIntro.BLOCK_COLOR
+		st.bg_color = color
 		st.set_corner_radius_all(int(10 * sc))
 		st.draw(get_canvas_item(), r)
 		if sc > 0.5:
 			var h := 12.0 * sc
-			draw_colored_polygon(PackedVector2Array([at + Vector2(h, 0), at + Vector2(-h * 0.4, -h * 0.8), at + Vector2(-h * 0.4, h * 0.8)]), Color.WHITE)
+			var side := Vector2(-dir.y, dir.x)
+			draw_colored_polygon(PackedVector2Array([at + dir * h, at - dir * h * 0.4 + side * h * 0.8, at - dir * h * 0.4 - side * h * 0.8]), Color.WHITE)
+		if next != Vector2.ZERO:
+			var c := at + Vector2(half * 0.75, -half * 0.75)
+			draw_circle(c, 11.0, Color.WHITE)
+			var side2 := Vector2(-next.y, next.x)
+			draw_colored_polygon(PackedVector2Array([c + next * 7.0, c - next * 4.0 + side2 * 6.0, c - next * 4.0 - side2 * 6.0]), Color("#1D1A2E"))
+
+	## The Movable block: a wooden crate, no arrow (as on the board).
+	func _crate(at: Vector2) -> void:
+		var r := Rect2(at - Vector2(26, 26), Vector2(52, 52))
+		draw_rect(r, MechanicIntro.CRATE_FACE, true)
+		draw_rect(r.grow(-2.5), MechanicIntro.CRATE_DARK, false, 5.0)
+		draw_line(r.position + Vector2(6, 46), r.position + Vector2(46, 6), MechanicIntro.CRATE_DARK, 4.0)

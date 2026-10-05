@@ -90,10 +90,18 @@ func _run() -> void:
 
 func _play_level(n: int) -> void:
 	var total_prev := game.progress.total_score()
-	var fresh_portal := n >= 201 and not game.progress.tips_seen.has("intro_portal") and game.progress.highest_completed < n
+	var seen_before: Array = game.progress.tips_seen.duplicate()
 	game.start_level(n)
-	# v0.7: the first Portal level opens with the NEW MECHANIC card (once).
-	_check((game.mechanic_intro != null) == (fresh_portal and not game.level.portals.is_empty()), "L%d mechanic intro shown only on the first Portal level" % n)
+	# v0.7 / v0.8: the first Portal / Sequence / Movable level opens with its
+	# NEW MECHANIC card (once each).
+	var expect := ""
+	for k in ["movable", "sequence", "portal"]:
+		var has: bool = (k == "portal" and not game.level.portals.is_empty()) or (k == "sequence" and game.level.blocks.any(func(b): return b.seq_stage != 0)) \
+			or (k == "movable" and game.level.blocks.any(func(b): return b.is_crate()))
+		if has and not seen_before.has("intro_" + k) and game.progress.highest_completed < GameManager.MECHANIC_INTRO_FROM[k]:
+			expect = k
+			break
+	_check((game.mechanic_intro.mechanic if game.mechanic_intro != null else "") == expect, "L%d mechanic intro '%s' expected" % [n, expect])
 	while game.mechanic_intro != null:
 		await _wait(0.1)
 	await _wait(0.45)
@@ -129,10 +137,11 @@ func _play_level(n: int) -> void:
 			var after := BoardModel.new()
 			after.setup(game.model.rows, game.model.columns, game.model.snapshot())
 			after.set_portals(game.model.portal_groups)
-			if after.move_state(hinted) == "ram":
-				after.ram(hinted)  # v0.6: a hint can be a ram
-			else:
-				after.remove(hinted)
+			match after.move_state(hinted):
+				"ram": after.ram(hinted)  # v0.6: a hint can be a ram
+				"advance": after.advance(hinted)  # v0.8: a first stage
+				"push": after.push(hinted)  # v0.8: a push
+				_: after.remove(hinted)
 			_check(Solver.from_model(after).is_solvable(), "L%d hint keeps the board solvable" % n)
 			_check(game.board.get_view(hinted).hinted, "L%d hinted block is highlighted" % n)
 			_shot("L%02d_hint" % n)
@@ -150,9 +159,10 @@ func _play_level(n: int) -> void:
 		var kind := game.model.move_state(id)
 		var chain_before_tap := game.chain
 		await _tap(id)
-		if kind == "ram":
-			# v0.6: a ram cracks a shell and removes nothing.
-			_check(game.model.block_count() == before_count and game.model.blocks.has(id), "L%d ram by block %d must not remove it" % [n, id])
+		if kind == "ram" or kind == "advance" or kind == "push":
+			# v0.6: a ram cracks a shell and removes nothing; v0.8: neither
+			# does a Sequence first stage or a push.
+			_check(game.model.block_count() == before_count and game.model.blocks.has(id), "L%d %s by block %d must not remove it" % [n, kind, id])
 		else:
 			# An escape removes the block (and opens any Chain Gate it completed).
 			_check(game.model.block_count() == before_count - 1 - game.model.last_opened_gates.size(), "L%d tap on block %d did not remove it" % [n, id])
@@ -173,7 +183,7 @@ func _play_level(n: int) -> void:
 		await _wait(0.07)
 	# PERFECT and the Master Level celebrate longer before the card.
 	var extra := 1.3 if Chapters.is_milestone(n) or Chapters.celebration_tier(n) != "" else 0.0
-	await _wait(extra + (2.8 if Chapters.is_master(n) else (1.0 if not game.last_result.get("perfect", false) else 1.6)))
+	await _wait(extra + (2.8 if Chapters.is_master(n) or Chapters.celebration_tier(n) == "major" else (1.0 if not game.last_result.get("perfect", false) else 1.6)))
 	_shot("L%02d_complete" % n)
 	var r := game.last_result
 	_check(game.ui.is_complete_visible(), "L%d complete card not shown" % n)
@@ -1113,7 +1123,7 @@ func _state() -> Dictionary:
 	var d := {}
 	for id in game.model.blocks:
 		var b: BlockData = game.model.blocks[id]
-		d[id] = [b.direction, b.hidden, game.model.is_locked(id), b.armored]
+		d[id] = [b.direction, b.hidden, game.model.is_locked(id), b.armored, b.seq_stage, b.cell]
 	return d
 
 

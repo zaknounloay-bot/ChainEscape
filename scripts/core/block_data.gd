@@ -6,7 +6,7 @@ extends RefCounted
 ## every time an orthogonally adjacent block escapes. GATE (v0.6, Chain
 ## Gate) is a solid slab with no arrow: it can't be tapped, blocks lanes, and
 ## opens (disappears) once every block linked to it has escaped.
-## CRATE: MOVABLE PROTOTYPE (development only, ?mechlab=movable): a heavy
+## CRATE: MOVABLE (Classic levels 251+; also the ?mechlab=movable lab): a heavy
 ## board object, not an arrow. It never escapes and need not leave (the
 ## board is clear when only crates remain); an arrow launched into it
 ## pushes it exactly one cell (see BoardModel.push).
@@ -63,7 +63,7 @@ var gate_link: String = ""
 ## ARMORED: cannot escape while its shell is intact. The shell cracks when
 ## the player launches another block straight into it (see BoardModel.ram).
 var armored: bool = false
-## SEQUENCE PROTOTYPE (development only, ?mechlab=sequence): a two-stage
+## SEQUENCE (Classic levels 226+; also the ?mechlab=sequence lab): a two-stage
 ## arrow. seq_stage 0 = not a Sequence block; 1 = first stage (the arrow
 ## is `direction`, the NEXT arrow is `seq_next`); 2 = second stage (its
 ## first stage was activated: `direction` is now the former next arrow and
@@ -137,7 +137,7 @@ func undo_turn() -> void:
 	direction = Direction.rotate_ccw(direction) if next_turn_cw() else Direction.rotate_cw(direction)
 
 
-## Sequence prototype: still in its first stage (a tap advances it).
+## Sequence: still in its first stage (a tap advances it).
 func is_sequence_pending() -> bool:
 	return seq_stage == 1
 

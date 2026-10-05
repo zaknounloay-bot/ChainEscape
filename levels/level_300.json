@@ -1,0 +1,14 @@
+{
+	"name": "Every Way Out",
+	"hint": "300 LEVELS. Portals, Sequence, spinners: plan every route.",
+	"hint_finger": false,
+	"map": [
+		".     .     .     P<    B<    R<    .",
+		".     .     Bv    .     .     R<$G  .",
+		"G>    Y>    .     Y^:v  OA    B>@   OB",
+		".     P>@   .     P<@-  P^    R^    .",
+		".     .     .     Pv    G<:v  Y>@-  R>:<",
+		"OA    OB    .     .     .     G>$S  Pv@",
+		"Y^:<  .     Y<    B<    .     .     P<"
+	]
+}

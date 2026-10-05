@@ -1,0 +1,12 @@
+{
+	"name": "First Push",
+	"hint": "New: MOVABLE. Hit it with an arrow to push it one cell.",
+	"hint_finger": false,
+	"map": [
+		".    .    .    .    .",
+		".    .    .    .    .",
+		".    .    Bv   P<   .",
+		".    .    M    G<@  .",
+		".    .    .    .    ."
+	]
+}

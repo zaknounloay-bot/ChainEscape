@@ -3,6 +3,7 @@ extends SceneTree
 ##
 ##   godot --headless --path . --script res://tools/verify_levels.gd
 ##   godot --headless --path . --script res://tools/verify_levels.gd -- --file=path/to/level.json
+##   godot --headless --path . --script res://tools/verify_levels.gd -- --to=250   (checkpoint: 1..250)
 ##
 ## Per level it reports size, blocks, spinners, locks, hidden arrows, legal
 ## starting moves, starting traps, decision points, dependency depth,
@@ -62,6 +63,23 @@ extends SceneTree
 ##         (spinners, locks, mystery, switches, gates, armor) per level
 ##       - Level 225 (the arc's milestone) is the hardest level of the arc,
 ##         by difficulty AND by structural difficulty
+##   * v0.8 Third Era arcs: SEQUENCE 226-250, MOVABLE 251-275, INTEGRATION
+##     276-300 (ARCS below):
+##       - Sequence blocks only from 226, Movable blocks only from 251
+##       - every Sequence-arc level uses a first stage, every Movable-arc
+##         level a push; every Integration level uses a Third Era mechanic
+##       - every Portal / Sequence / Movable on a level matters (portal and
+##         sequence impact >= 1.0; Movable: no win without pushing, or
+##         impact >= 1.0) - except on the arc's breathers
+##       - lessons (226-228, 251-254) may be small (<= 3 start moves, depth
+##         >= 3); 226-227 use nothing else; Movable lessons need a push to
+##         be won (and one spinner, the only way a last pusher can leave)
+##       - no stacking: the arc's mechanic + at most 2 other families
+##         (Integration: at most 4 families in all)
+##       - 250 / 275 are the hardest levels of their arcs, 300 the hardest
+##         of the whole Third Era (difficulty AND structural)
+##       - a Chapter holding a new mechanic's first level (226, 251) starts
+##         its own difficulty curve
 
 const HIGH_LEVEL := 21
 const LATE_LEVEL := 61
@@ -70,17 +88,38 @@ const MIN_CHAPTER_STEP := 2.0
 const PORTAL_FROM := 201
 const PORTAL_ARC_END := 225
 const PORTAL_BREATHERS := [209, 215, 220]
+## v0.8: the SEQUENCE arc (226-250), the MOVABLE arc (251-275) and the
+## INTEGRATION arc (276-300). Each arc ends on a milestone that must be its
+## hardest level; 300 must be the hardest level of the whole Third Era.
+const SEQ_FROM := 226
+const MOV_FROM := 251
+const INTEGRATION_FROM := 276
+const ERA3_END := 300
+const ARCS := [
+	{"from": 226, "to": 250, "mech": "sequence", "lessons": [226, 227, 228], "pure": [226, 227], "breathers": [235, 244]},
+	# Movable lessons can't be "pure": the last arrow to push a Movable block
+	# stays stuck behind it unless it can turn (the lab's rule consequence),
+	# so each lesson has one plain clockwise spinner as its last pusher.
+	{"from": 251, "to": 275, "mech": "movable", "lessons": [251, 252, 253, 254], "pure": [], "breathers": [258, 264, 270]},
+	{"from": 276, "to": 300, "mech": "", "lessons": [], "pure": [], "breathers": [281, 287, 294]},
+]
+## Chapters that hold a new mechanic's first level start their own
+## difficulty curve (like an era): the lessons are easier on purpose.
+const ARC_STARTS := [201, 226, 251]
 
 
 func _initialize() -> void:
 	var files: Array = []
+	var upto := 1 << 30
 	for a in OS.get_cmdline_user_args():
 		if a.begins_with("--file="):
 			files.append(a.get_slice("=", 1))
+		elif a.begins_with("--to="):
+			upto = int(a.get_slice("=", 1))  # campaign checkpoint: levels 1..N only
 	var campaign := files.is_empty()
 	if campaign:
 		var n := 1
-		while FileAccess.file_exists(LevelManager.LEVEL_PATH % n):
+		while n <= upto and FileAccess.file_exists(LevelManager.LEVEL_PATH % n):
 			files.append(LevelManager.LEVEL_PATH % n)
 			n += 1
 	var problems: Array[String] = []
@@ -90,7 +129,7 @@ func _initialize() -> void:
 	var structs := {}
 	for i in files.size():
 		var json = JSON.parse_string(FileAccess.get_file_as_string(files[i]))
-		var level := LevelManager.parse_level(json, i + 1)
+		var level := LevelManager.parse_level(json, i + 1, true)
 		levels.append(level)
 		var m := LevelAnalysis.analyze(level)
 		var n := i + 1
@@ -115,6 +154,10 @@ func _initialize() -> void:
 		var era2 := ""
 		if m["portal_pairs"] > 0:
 			era2 += " po%d:%s mv%d" % [m["portal_pairs"], _imp(m["portal_impact"], m["portal_pairs"]), m["portal_moves"]]
+		if m["sequence_blocks"] > 0:
+			era2 += " sq%d:%s ad%d" % [m["sequence_blocks"], _imp(m["sequence_impact"], m["sequence_blocks"]), m["advances"]]
+		if m["crates"] > 0:
+			era2 += " mo%d:%s%s pu%d" % [m["crates"], _imp(m["movable_impact"], m["crates"]), "!" if m["push_essential"] else "", m["pushes"]]
 		if m["switches"] + m["gates"] + m["armored"] > 0:
 			era2 += " sw%d:%s gt%d:%s ar%d:%s" % [m["switches"], _imp(m["switch_impact"], m["switches"]), m["gates"], _imp(m["gate_impact"], m["gates"]),
 				m["armored"], _imp(m["armor_impact"], m["armored"])]
@@ -163,6 +206,27 @@ func _initialize() -> void:
 		if diffs[PORTAL_ARC_END] <= top_d or structs[PORTAL_ARC_END] <= top_s:
 			problems.append("L%d is not the hardest level of the Portal arc" % PORTAL_ARC_END)
 	if campaign:
+		# v0.8: each arc's milestone is its hardest level (both ways); 300 is
+		# the hardest level of the whole Third Era.
+		for arc in ARCS:
+			var last: int = arc["to"]
+			if not diffs.has(last):
+				continue
+			var lo: int = PORTAL_FROM if last == ERA3_END else arc["from"]
+			var top_d := 0.0
+			var top_s := 0.0
+			var top_n := 0
+			for k in range(lo, last):
+				if not diffs.has(k):
+					continue
+				top_d = maxf(top_d, diffs[k])
+				if structs[k] > top_s:
+					top_s = structs[k]
+					top_n = k
+			print("L%d (milestone) difficulty %.1f structural %.1f; next structural: L%d %.1f (from L%d)" % [last, diffs[last], structs[last], top_n, top_s, lo])
+			if diffs[last] <= top_d or structs[last] <= top_s:
+				problems.append("L%d is not the hardest level of levels %d-%d" % [last, lo, last])
+	if campaign:
 		# Chapter difficulty curve.
 		var line := PackedStringArray()
 		var prev := -1.0
@@ -177,6 +241,9 @@ func _initialize() -> void:
 			line.append("C%d %.1f" % [c, avg])
 			if Chapters.era_of_chapter(c)["from"] == Chapters.chapter_range(c).x and c > 1:
 				prev = -1.0  # a new era starts its own curve
+			for a in ARC_STARTS:
+				if a >= rg.x and a <= rg.y:
+					prev = -1.0  # v0.8: so does a Chapter that introduces a new mechanic
 			if prev >= 0.0 and avg < prev + MIN_CHAPTER_STEP:
 				problems.append("Chapter %d average difficulty %.1f is not above Chapter %d (%.1f) by %.1f" % [c, avg, c - 1, prev, MIN_CHAPTER_STEP])
 			prev = avg
@@ -208,6 +275,14 @@ static func _rule_issue(n: int, m: Dictionary) -> String:
 		return "GATE DECORATIVE"
 	if m["armored"] > 0 and m["armor_impact"] < 1.0:
 		return "ARMOR DECORATIVE"
+	# v0.8 Third Era: SEQUENCE, MOVABLE, INTEGRATION.
+	if m.get("sequence_blocks", 0) > 0 and n < SEQ_FROM:
+		return "SEQUENCE BEFORE %d" % SEQ_FROM
+	if m.get("crates", 0) > 0 and n < MOV_FROM:
+		return "MOVABLE BEFORE %d" % MOV_FROM
+	var era3 := _era3_issue(n, m)
+	if era3 != "-":
+		return era3
 	# v0.7 Third Era: the PORTAL arc.
 	if m.get("portal_pairs", 0) > 0 and n < PORTAL_FROM:
 		return "PORTAL BEFORE %d" % PORTAL_FROM
@@ -265,6 +340,66 @@ static func _rule_issue(n: int, m: Dictionary) -> String:
 		if m["mystery_impact"] < 0.3:
 			return "MYSTERY DECORATIVE"
 	return ""
+
+
+## v0.8 arcs 226-300. "-" = not an arc level (keep checking); "" = fine
+## (lessons skip the late-game shape rules, as the Switch / Portal lessons).
+static func _era3_issue(n: int, m: Dictionary) -> String:
+	for arc in ARCS:
+		if n < arc["from"] or n > arc["to"]:
+			continue
+		var breather: bool = n in arc["breathers"]
+		var mech: String = arc["mech"]
+		# Every Third Era mechanic on the level must matter (not on breathers).
+		if not breather:
+			if m["portal_pairs"] > 0 and (m["portal_moves"] == 0 or m["portal_impact"] < 1.0):
+				return "PORTAL DECORATIVE"
+			if m["sequence_blocks"] > 0 and m["sequence_impact"] < 1.0:
+				return "SEQUENCE DECORATIVE"
+			if m["crates"] > 0 and not m["push_essential"] and m["movable_impact"] < 1.0:
+				return "MOVABLE DECORATIVE"
+		if m["crates"] > 0 and m["pushes"] == 0:
+			return "MOVABLE NEVER PUSHED"
+		if m["portal_pairs"] > 0 and m["portal_moves"] == 0 and m["crate_portal_pushes"] == 0:
+			return "PORTAL NEVER USED"
+		var fams := _families(m)
+		if mech == "sequence":
+			if m["sequence_blocks"] == 0 or m["advances"] == 0:
+				return "SEQUENCE ARC LEVEL WITHOUT A SEQUENCE MOVE"
+		elif mech == "movable":
+			if m["crates"] == 0 or m["pushes"] == 0:
+				return "MOVABLE ARC LEVEL WITHOUT A PUSH"
+			if n in arc["lessons"] and not m["push_essential"]:
+				return "MOVABLE LESSON MUST NEED A PUSH"
+		else:
+			if m["portal_pairs"] + m["sequence_blocks"] + m["crates"] == 0:
+				return "INTEGRATION LEVEL WITHOUT A THIRD ERA MECHANIC"
+		# No stacking: the arc's own mechanic plus at most two others; the
+		# integration arc at most four families in all.
+		var others := fams.size() - (1 if mech != "" and fams.has(mech) else 0)
+		if mech != "" and others > 2:
+			return "MECHANIC STACKING (%s)" % ",".join(fams)
+		if mech == "" and fams.size() > 4:
+			return "MECHANIC STACKING (%s)" % ",".join(fams)
+		if n in arc["pure"] and fams.size() > 1:
+			return "LESSON MIXES MECHANICS (%s)" % ",".join(fams)
+		if n in arc["lessons"]:
+			if m["start_moves"] > 3 or m["depth"] < 3:
+				return "LESSON SHAPE"
+			return ""
+		return "-"
+	return "-"
+
+
+## Mechanic families on a level (for the no-stacking rules).
+static func _families(m: Dictionary) -> Array:
+	var out := []
+	for pair in [["spinner", m["spinners"]], ["lock", m["locks"]], ["mystery", m["hidden"]], ["switch", m["switches"]],
+			["gate", m["gates"]], ["armor", m["armored"]], ["portal", m.get("portal_pairs", 0)],
+			["sequence", m.get("sequence_blocks", 0)], ["movable", m.get("crates", 0)]]:
+		if pair[1] > 0:
+			out.append(pair[0])
+	return out
 
 
 ## Older mechanic families on a level (the Portal arc allows two).

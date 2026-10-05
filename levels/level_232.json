@@ -1,0 +1,12 @@
+{
+	"name": "Unseen Turn",
+	"mystery": true,
+	"map": [
+		"Bv    .     .     .     R>:<  R^",
+		"Pv    P>$G  .     .     .     B^",
+		".     G^@   Y>    Y>?   G>:^  P^",
+		".     B^    .     .     .     .",
+		".     .     .     .     .     .",
+		"Yv@   .     B<@   .     P>    Y^"
+	]
+}

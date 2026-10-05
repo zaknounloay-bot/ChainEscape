@@ -1,0 +1,13 @@
+{
+	"name": "Push Order",
+	"hint": "Who pushes first decides where it ends up.",
+	"hint_finger": false,
+	"map": [
+		".    .    .    .    .",
+		".    .    G^   .    .",
+		".    .    .    .    .",
+		"Y>   M    .    .    .",
+		"Y<   B<@  Y^   .    .",
+		".    .    .    .    ."
+	]
+}

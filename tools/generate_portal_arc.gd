@@ -126,7 +126,7 @@ func _load_known(skip: int) -> void:
 	var n := 1
 	while FileAccess.file_exists(LevelManager.LEVEL_PATH % n):
 		if n != skip:
-			var lv := LevelManager.parse_level(JSON.parse_string(FileAccess.get_file_as_string(LevelManager.LEVEL_PATH % n)), n)
+			var lv := LevelManager.read_level(n)
 			known.append(lv)
 			if n >= ARC_FROM and n < ARC_TO:
 				var m := LevelAnalysis.analyze(lv, false)

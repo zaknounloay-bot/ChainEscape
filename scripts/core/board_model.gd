@@ -41,13 +41,13 @@ var last_unlocked: Array = []
 ## ({"id", "cell", "group"}).
 var last_flipped: Array = []
 var last_opened_gates: Array = []
-## PORTAL PROTOTYPE (development only, see Portals): static board data,
+## PORTAL (levels 201+, see Portals): static board data,
 ## Vector2i cell -> pair letter, and cell -> partner cell. Empty on every
 ## campaign and Social board, where every rule below is unchanged. setup()
 ## and restore() leave them alone (they never change during play).
 var portal_groups: Dictionary = {}
 var portals: Dictionary = {}
-## MOVABLE PROTOTYPE (development only, see BlockData.Kind.CRATE): crates on
+## MOVABLE (levels 251+, see BlockData.Kind.CRATE): crates on
 ## the board. They are blocks (lanes stop at them, snapshots / Undo carry
 ## their cells) but never escape: the board is clear when only crates are
 ## left. 0 on every campaign and Social board.
@@ -68,7 +68,7 @@ func setup(p_rows: int, p_columns: int, p_blocks: Array) -> void:
 		_add(b.duplicate_data())
 
 
-## Portal prototype: sets this board's portal pairs ({cell: letter}).
+## Portal: sets this board's portal pairs ({cell: letter}).
 func set_portals(groups: Dictionary) -> void:
 	portal_groups = groups.duplicate()
 	portals = Portals.pairs(portal_groups)
@@ -83,7 +83,7 @@ func block_at(cell: Vector2i) -> BlockData:
 	return blocks.get(id) if id != -1 else null
 
 
-## Clear: no blocks left (Movable prototype: or only crates).
+## Clear: no blocks left (Movable: or only crates).
 func is_empty() -> bool:
 	return blocks.is_empty() or (_crates > 0 and blocks.size() == _crates)
 
@@ -109,7 +109,7 @@ func find_blocker(id: int) -> BlockData:
 	return null
 
 
-## Portal prototype: `id`'s whole lane. {"blocker": first block in it (or
+## Portal: `id`'s whole lane. {"blocker": first block in it (or
 ## null), "loop": true if the lane could never reach the edge (malformed
 ## layout only), "via": [[entry, exit], ...] portals it passes, in order}.
 ## Without portals: the straight lane (via is empty, loop false).
@@ -148,11 +148,11 @@ func move_state(id: int) -> String:
 	if blocker == null:
 		if not portals.is_empty() and lane(id)["loop"]:
 			return "blocked"
-		# Sequence prototype: a first-stage block with a clear lane advances
+		# Sequence: a first-stage block with a clear lane advances
 		# instead of escaping.
 		return "advance" if b.seq_stage == 1 else "ok"
 	if blocker.kind == BlockData.Kind.CRATE:
-		# Movable prototype: launched into a crate - a push if the crate
+		# Movable: launched into a crate - a push if the crate
 		# can move one cell, else an ordinary blocked tap.
 		return "push" if push_target(id)["cell"].x >= 0 else "blocked"
 	return "ram" if blocker.armored else "blocked"
@@ -253,7 +253,7 @@ func remove(id: int) -> Array:
 	return turned
 
 
-## SEQUENCE PROTOTYPE: `id`'s first stage (caller checks move_state ==
+## SEQUENCE: `id`'s first stage (caller checks move_state ==
 ## "advance"). The block launches along its clear lane and comes back to
 ## its cell: the same neighbour event as an escape from that cell (adjacent
 ## spinners turn by their rule, adjacent hidden arrows are revealed), but
@@ -285,7 +285,7 @@ func advance(id: int) -> Array:
 	return turned
 
 
-## MOVABLE PROTOTYPE: where the crate first in `id`'s lane would go if
+## MOVABLE: where the crate first in `id`'s lane would go if
 ## `id` were launched into it: exactly one cell in `id`'s direction - and,
 ## like any lane, through a portal it reaches (out of its partner, same
 ## direction) - onto an EMPTY board cell. {"cell": Vector2i ((-1, -1) =
@@ -315,7 +315,7 @@ func push_target(id: int) -> Dictionary:
 	return {"cell": cell, "crate": crate.id, "via": via}
 
 
-## MOVABLE PROTOTYPE: `id` is launched into the crate in its lane (caller
+## MOVABLE: `id` is launched into the crate in its lane (caller
 ## checks move_state == "push"); the crate moves one cell (see push_target)
 ## and `id` stays in its cell. Nothing else happens - like a ram, a push is
 ## not an escape - except for a first-stage Sequence block: its first stage

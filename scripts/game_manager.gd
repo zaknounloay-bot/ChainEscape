@@ -84,9 +84,16 @@ const LESSONS := {101: "switch", 121: "gate", 161: "armor"}
 ## PORTAL (levels 201+): shown under the board when a lane through a portal
 ## is blocked on the far side (one translatable string).
 const PORTAL_BLOCKED_TEXT := "Blocked after portal %s"
+## MOVABLE: shown on a tap on the Movable block itself / on a push that
+## can't move it (translatable strings).
+## Milestone presentation copy (v0.8; never "final" - the game continues).
+const MAJOR_MILESTONE_LINE := "LEVELS ESCAPED!"
+const STRONG_MILESTONE_STAMP := "%d LEVELS!"
+const CRATE_TAP_TEXT := "Movable - launch an arrow into it to push it one cell"
+const CRATE_STUCK_TEXT := "The Movable block can't move there"
 ## The level that introduces each mechanic with its NEW MECHANIC card; a
 ## player who already cleared it never gets the card (not retroactive).
-const MECHANIC_INTRO_FROM := {"portal": 201}
+const MECHANIC_INTRO_FROM := {"portal": 201, "sequence": 226, "movable": 251}
 var mechanic_intro: MechanicIntro
 var _lesson := ""
 var _locked_hint_shown := false
@@ -323,8 +330,17 @@ func continue_game() -> void:
 func _maybe_mechanic_intro() -> void:
 	if level == null or completed or mechanic_intro != null:
 		return
-	var mech := "portal" if not level.portals.is_empty() else ""
-	if mech == "" or progress.tips_seen.has("intro_" + mech) or progress.highest_completed >= MECHANIC_INTRO_FROM[mech]:
+	# The newest mechanic on this level that this player has not met yet
+	# (one card per level start at most).
+	var present := {"portal": not level.portals.is_empty(),
+		"sequence": level.blocks.any(func(b): return b.seq_stage != 0),
+		"movable": level.blocks.any(func(b): return b.is_crate())}
+	var mech := ""
+	for k in ["movable", "sequence", "portal"]:
+		if present[k] and not progress.tips_seen.has("intro_" + k) and progress.highest_completed < MECHANIC_INTRO_FROM[k]:
+			mech = k
+			break
+	if mech == "":
 		return
 	progress.tips_seen.append("intro_" + mech)
 	progress.save()
@@ -444,7 +460,17 @@ func next_level() -> void:
 	if pending_chapter_card != 0:
 		_show_chapter_card(pending_chapter_card)
 		return
-	start_level(current_level % level_manager.level_count + 1, "next")
+	_go_next("next")
+
+
+## v0.8: after the last level that exists (300 for now) the game opens
+## Level Select instead of looping back to Level 1 (more levels will follow
+## later; nothing says the game is over).
+func _go_next(via: String) -> void:
+	if current_level >= level_manager.level_count:
+		open_level_select()
+		return
+	start_level(current_level + 1, via)
 
 
 func _layout() -> void:
@@ -484,8 +510,11 @@ func _on_block_tapped(id: int) -> void:
 		"locked": _locked_tap(id)
 		"hidden": _hidden_tap(id)
 		"ram": _ram(id)
+		"advance": _advance(id)
+		"push": _push(id)
 		"gate": _gate_tap(id)
 		"armored": _armored_tap(id)
+		"crate": _crate_tap(id)
 	# Free "explain" taps (gate, shell, hidden, locked) keep their message;
 	# the lesson moves on after real moves.
 	if _lesson != "" and not completed and not game_over and tap_state in ["ok", "ram", "blocked"]:
@@ -558,6 +587,8 @@ func _blocked(id: int) -> void:
 	if not via.is_empty():
 		# PORTAL: the reason may be on the far side of the board - say where.
 		_show_message(PORTAL_BLOCKED_TEXT % str(model.portal_groups.get(via[-1][0], "")), 2.4)
+	elif blocker != null and blocker.is_crate():
+		_show_message(CRATE_STUCK_TEXT, 2.4)
 		return
 	if level.blocked_hint != "" and not _blocked_hint_shown:
 		_blocked_hint_shown = true
@@ -614,6 +645,77 @@ func _ram(id: int) -> void:
 	if model.playable_ids().is_empty():
 		_show_message("No moves left - tap Undo", 3.0)
 		ui.pulse_undo_button()
+
+
+## v0.8 SEQUENCE (levels 226+): a first-stage block with a clear lane
+## launches, comes back, sends the neighbour event (adjacent spinners turn,
+## hidden arrows are revealed) and takes its NEXT arrow (BoardModel.advance;
+## the rule of the human-tested lab, unchanged). It does not escape: like a
+## ram, a productive move that is never a mistake - no heart, the chain is
+## kept (but earns nothing). Undo-able.
+func _advance(id: int) -> void:
+	history.push(_capture_state())
+	var turned := model.advance(id)
+	var revealed := model.last_revealed.duplicate()
+	_clear_hint()
+	board.play_advance(id, model.blocks[id].direction, turned)
+	AudioManager.play_sequence()
+	if not turned.is_empty():
+		AudioManager.play_turn()
+	if not revealed.is_empty():
+		board.play_reveals(revealed)
+		AudioManager.play_reveal()
+	Haptics.light()
+	_refresh_buttons()
+	_after_stay_move()
+
+
+## v0.8 MOVABLE (levels 251+): `id` is launched into the Movable block first
+## in its lane; it moves exactly one cell (through a portal, as any lane)
+## and `id` stays (BoardModel.push; the lab rule, unchanged). A first-stage
+## Sequence pusher also uses its first stage. Like a ram: productive, never
+## a mistake, the chain is kept. Undo-able. A push that can't move the
+## block is an ordinary blocked tap (move_state "blocked").
+func _push(id: int) -> void:
+	history.push(_capture_state())
+	var pusher_via := _portal_via(id)
+	var info := model.push(id)
+	if info.is_empty():
+		history.pop()
+		return
+	var revealed := model.last_revealed.duplicate() if info["advanced"] else []
+	_clear_hint()
+	board.play_push(id, info, pusher_via, SocialScreen.reduced_motion())
+	AudioManager.play_push()
+	if not pusher_via.is_empty() or not info["via"].is_empty():
+		AudioManager.play_portal()
+	if info["advanced"]:
+		AudioManager.play_sequence()
+	if not info["turned"].is_empty():
+		AudioManager.play_turn()
+	if not revealed.is_empty():
+		board.play_reveals(revealed)
+		AudioManager.play_reveal()
+	Haptics.medium()
+	_refresh_buttons()
+	_after_stay_move()
+
+
+## After a move that leaves every arrow on the board (advance, push): the
+## same "no moves left" pointer as after an escape.
+func _after_stay_move() -> void:
+	if model.playable_ids().is_empty():
+		if undos_used < MAX_UNDOS:
+			_show_message("No moves left - tap Undo", 3.0)
+			ui.pulse_undo_button()
+		else:
+			_show_message("No moves left - tap Restart", 3.0)
+
+
+## A Movable block never moves by itself: tapping it is free and explains.
+func _crate_tap(id: int) -> void:
+	board.play_hidden_tap(id)
+	_show_message(CRATE_TAP_TEXT, 2.6)
 
 
 ## Chain Gates never move: tapping one is free and explains what opens it.
@@ -738,6 +840,25 @@ func _on_board_cleared() -> void:
 		AudioManager.play_master()
 		Haptics.medium()
 		await get_tree().create_timer(2.0 if grand else 1.6).timeout
+	elif r["celebration"] == "major":
+		# v0.8 MAJOR milestone (300): the biggest moment of the Third Era -
+		# NOT a finale and not GRAND MASTER: "300 LEVELS ESCAPED!", fitted
+		# to the screen.
+		for i in 5:
+			board.celebrate()
+		ui.show_major_milestone(str(current_level), MAJOR_MILESTONE_LINE, 2.0, SocialScreen.reduced_motion())
+		get_tree().create_timer(0.6).timeout.connect(publish_state)  # diagnostics: the overlay's rect
+		AudioManager.play_master()
+		Haptics.medium()
+		await get_tree().create_timer(2.8).timeout
+	elif r["celebration"] == "strong":
+		# v0.8 stronger milestone (250): more bursts, a longer stamp.
+		for i in 3:
+			board.celebrate()
+		ui.show_perfect_stamp(STRONG_MILESTONE_STAMP % current_level, 1.2)
+		AudioManager.play_milestone()
+		Haptics.medium()
+		await get_tree().create_timer(1.7).timeout
 	elif r["milestone"] or r["celebration"] == "short":
 		for i in 2:
 			board.celebrate()
@@ -891,6 +1012,11 @@ func toggle_hammer() -> void:
 ## another block or CANCEL) and only gives a short shake + buzz.
 func _smash(id: int) -> void:
 	if not model.blocks.has(id):
+		return
+	if model.blocks[id].is_crate():
+		# v0.8: the Movable block is a neutral board object, not a target.
+		AudioManager.play_invalid()
+		board.play_hidden_tap(id)
 		return
 	if not is_hammer_safe(id):
 		AudioManager.play_invalid()
@@ -1123,7 +1249,8 @@ func _chapter_news(chapter: int) -> String:
 	var rg := Chapters.chapter_range(chapter)
 	var news := []
 	# v0.6 Second Era mechanics, where each is introduced.
-	for intro in [[101, "Switch Blocks"], [121, "Chain Gates"], [161, "Armored Blocks"]]:
+	for intro in [[101, "Switch Blocks"], [121, "Chain Gates"], [161, "Armored Blocks"],
+			[201, "Portals"], [226, "Sequence Blocks"], [251, "Movable Blocks"]]:
 		if intro[0] >= rg.x and intro[0] <= rg.y:
 			news.append(intro[1])
 	var blocks: Dictionary = Economy.config().get("reward_blocks", {})
@@ -1147,7 +1274,7 @@ func _show_chapter_card(chapter: int) -> void:
 
 ## CONTINUE on the Chapter card: straight into the next Chapter.
 func _after_chapter_card() -> void:
-	start_level(current_level % level_manager.level_count + 1, "chapter")
+	_go_next("chapter")
 
 
 # --- Level select --------------------------------------------------------------
@@ -1242,9 +1369,15 @@ func publish_state() -> void:
 		"last_played": progress.current_level, "save_seq": progress.seq, "save_source": progress.load_source,
 		"inventory": progress.inventory, "title_open": ui.is_title_open(), "card_open": ui.is_complete_visible(),
 		"intro_open": mechanic_intro != null, "intro_seen": progress.tips_seen.has("intro_portal"),
+		"intro_mechanic": mechanic_intro.mechanic if mechanic_intro != null else "",
+		"intros_seen": progress.tips_seen.filter(func(t): return String(t).begins_with("intro_")),
 		"portals": board.portals.size(), "celebration": last_result.get("celebration", "") if completed else "",
-		"card_title": ui._card_title.text,
-		"chapter_card_open": ui.is_chapter_card_open(), "continue_text": ui._title._continue.text,
+		"coin_notes": last_result.get("coin_notes", "") if completed else "", "chapter_complete": last_result.get("chapter_complete", 0) if completed else 0,
+		"card_title": ui._card_title.text, "next_text": ui._next_button.text,
+		"major_rect": [ui.major_milestone_rect().position.x / vis.x, ui.major_milestone_rect().position.y / vis.y, ui.major_milestone_rect().end.x / vis.x, ui.major_milestone_rect().end.y / vis.y],
+		"crates": model.blocks.values().filter(func(b): return b.is_crate()).size() if model else 0,
+		"seq_blocks": model.blocks.values().filter(func(b): return b.seq_stage != 0).size() if model else 0,
+		"chapter_card_open": ui.is_chapter_card_open(), "chapter_continue_text": ui._chapter_card._continue.text, "continue_text": ui._title._continue.text,
 		"next": center.call(ui._next_button), "chapter_continue": center.call(ui._chapter_card._continue),
 		"title_continue": center.call(ui._title._continue), "levels_button": center.call(ui._levels_button),
 		"music": AudioManager.music_theme, "diag": last_diag,

@@ -157,7 +157,7 @@ func set_cell_size(value: float) -> void:
 	_face_style.bg_color = Palette.styled_face(data.color) if not data.is_gate() else Palette.GATE[0]
 	_side_style.bg_color = Palette.styled_side(data.color) if not data.is_gate() else Palette.GATE[1]
 	if data.is_crate():
-		# Movable prototype: a heavy wooden crate, almost square corners,
+		# Movable: a heavy wooden crate, almost square corners,
 		# deeper side - nothing like a colored arrow block.
 		_face_style.bg_color = CRATE_FACE
 		_side_style.bg_color = CRATE_SIDE
@@ -236,7 +236,7 @@ func _draw() -> void:
 	_draw_material(face_rect, size)
 
 
-## MOVABLE PROTOTYPE (greybox+): a wooden crate - dark structural frame,
+## MOVABLE (the human-tested lab look): a wooden crate - dark structural frame,
 ## plank lines, a diagonal brace, and four small outward notches (it can
 ## be moved in any of the four directions). No arrow.
 const CRATE_FACE := Color("#C08A4B")
@@ -656,7 +656,7 @@ func _draw_flip_badge(c: CanvasItem, f: Rect2, size: float) -> void:
 	c.draw_arc(at, r, PI * 0.1, PI * 0.9, 10, col, maxf(1.5, size * 0.02), true)
 
 
-## SEQUENCE PROTOTYPE (greybox): the NEXT arrow, small, on a white disc in
+## SEQUENCE (the human-tested lab look): the NEXT arrow, small, on a white disc in
 ## the top-right corner (the big arrow, slightly smaller on a first-stage
 ## block, is the current one). Gone once the first stage is used.
 func _draw_next_chip(c: CanvasItem, f: Rect2, size: float) -> void:
@@ -953,7 +953,7 @@ func _new_tween() -> Tween:
 	return _tween
 
 
-## SEQUENCE PROTOTYPE: first stage used - dash out along the lane and back
+## SEQUENCE: first stage used - dash out along the lane and back
 ## (it never leaves), a flash, then the arrow turns to its new direction
 ## and the NEXT chip disappears.
 func play_advance(new_direction: int, cell: float) -> void:
@@ -977,7 +977,7 @@ func play_advance(new_direction: int, cell: float) -> void:
 	t.tween_property(self, "flash", 0.0, 0.3)
 
 
-## MOVABLE PROTOTYPE: the crate slides from where it was to its (already
+## MOVABLE: the crate slides from where it was to its (already
 ## updated) home - impact, a slide of exactly the cells it moved, and a
 ## small weighted settle (about 0.3 s). `via` = [[entry, exit], ...] board
 ## positions when it went through portals (shrink in, pop out). Reduced

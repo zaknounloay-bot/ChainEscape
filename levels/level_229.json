@@ -1,0 +1,13 @@
+{
+	"name": "Spin Cycle",
+	"hint": "Its first tap turns the spinners next to it.",
+	"hint_finger": false,
+	"map": [
+		".      .      .      .      .      .",
+		".      .      .      .      Y>     R>",
+		"Pv     G>     Gv     .      Yv@    .",
+		"R>:v   .      .      .      .      R^",
+		"P^@$S  .      .      .      Y>     Y^",
+		".      .      G<     .      .      ."
+	]
+}

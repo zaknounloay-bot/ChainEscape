@@ -66,9 +66,9 @@ scheduled beyond "next".
 
 **Chapter 2 mechanic lab (levels 201–300 come first):**
 - **PORTAL: GO** after its human test (lab `?mechlab=1`, `docs/mechlab_portal.md`). **In production since v0.7:** levels 201-225 (the Portal arc, `docs/portal_arc.md`), with a one-time NEW MECHANIC card as the clearer onboarding the MODIFY asked for. Not in Friend / Social generation.
-- **SEQUENCE: GO** after its human test (dev-only lab `?mechlab=sequence`, `docs/mechlab_sequence.md`). Not in production yet (after the Portal arc).
-- **MOVABLE (crate): GO** after its human test (dev-only lab `?mechlab=movable`, `docs/mechlab_movable.md`). Not in production yet.
-- **Levels 201–225 (Portal arc): done in v0.7.** Levels 226–300, Choice, Linked / Trigger and the global Game Feel pass are not started.
+- **SEQUENCE: GO** after its human test (lab `?mechlab=sequence`, `docs/mechlab_sequence.md`). **In production since v0.8:** levels 226-250 (+ integration 276-300).
+- **MOVABLE (crate): GO** after its human test (lab `?mechlab=movable`, `docs/mechlab_movable.md`). **In production since v0.8:** levels 251-275 (+ integration 276-300).
+- **Levels 201–225 (Portal arc): done in v0.7. Levels 226–300: done in v0.8** (`docs/era3_226_300.md`) - awaiting the 1–300 human validation. Levels 301+, Choice, Linked / Trigger, Friend VERY HARD calibration (against Level 300) and the global Game Feel pass are not started.
 
 ## Next product phase (after phase 3 is frozen): COMPETITIVE CHALLENGE
 

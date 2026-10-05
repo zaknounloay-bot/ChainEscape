@@ -1,0 +1,12 @@
+{
+	"name": "Shell Through",
+	"map": [
+		"Y>    .     .     .     .     Y>",
+		"Y^    Y<:^  .     P<    .     Y<",
+		".     R^=   .     .     .     OA",
+		".     .     .     G^    P<    R<",
+		".     OA    B^    P>$G  Rv@   P^",
+		".     .     B>@   .     P>    P^",
+		"P>    .     G^    .     Y^    ."
+	]
+}

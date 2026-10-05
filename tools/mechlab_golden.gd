@@ -9,6 +9,7 @@ extends SceneTree
 
 func _init() -> void:
 	LevelManager.dev_sequence = true
+	LevelManager.dev_movable = true  # the MOVABLE lab file ("M"); no other board has crates
 	var out_path := ""
 	var file := "res://data/dev/mechlab_portal.json"
 	for a in OS.get_cmdline_user_args():

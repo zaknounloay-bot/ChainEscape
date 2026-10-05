@@ -151,7 +151,7 @@ func refresh(s: Dictionary) -> void:
 		_preview_style.set_border_width_all(0)
 		_next_title.add_theme_color_override("font_color", Palette.TEXT)
 		_continue.set_background(Palette.ACCENT)
-		_continue.text = "PLAY AGAIN"
+		_continue.text = UIManager.LAST_LEVEL_BUTTON  # v0.8: Level Select, not Level 1
 
 
 func _build_chests(tiers: Array) -> void:

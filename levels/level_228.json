@@ -1,0 +1,13 @@
+{
+	"name": "Turn and Through",
+	"hint": "A Sequence lane can run through a portal too.",
+	"hint_finger": false,
+	"map": [
+		"Rv:^  B<    .     Y<    .",
+		"Yv:<  .     .     .     OA",
+		".     .     .     .     .",
+		".     .     .     B^    .",
+		".     Bv    .     Y<    Y<",
+		"OA    .     .     .     ."
+	]
+}

@@ -1,0 +1,12 @@
+{
+	"name": "Two Way Street",
+	"map": [
+		"Y>    .     .     OB    .     B>    G^",
+		"R^    P<    .     R^@   G<    .     .",
+		".     .     Y>@   B^$S  R<:v  B^    .",
+		".     OB    .     R>    .     .     B^",
+		"Rv@   G<    .     .     .     .     .",
+		"G>:^  .     OA    .     R<@   Pv    .",
+		"Y^    G^    .     .     .     OA    B^"
+	]
+}

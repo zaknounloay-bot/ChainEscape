@@ -381,6 +381,18 @@ func play_portal() -> void:
 	play("portal", 1.0, -4.0)
 
 
+## SEQUENCE (226+): a first stage used (the human-tested lab sound: the
+## switch blip, pitched up).
+func play_sequence() -> void:
+	play("switch", 1.25)
+
+
+## MOVABLE (251+): the push CLUNK (the human-tested lab sound: the Hammer
+## thud, pitched down).
+func play_push() -> void:
+	play("hammer", 0.62)
+
+
 ## Stars pop with rising pitch (index 0..2).
 func play_star(index: int) -> void:
 	play("star", pow(2.0, [0, 4, 7][clampi(index, 0, 2)] / 12.0), -5.0)

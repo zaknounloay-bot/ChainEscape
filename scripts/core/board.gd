@@ -35,7 +35,7 @@ var mystery: bool = false:
 	set(v):
 		mystery = v
 		queue_redraw()
-## PORTAL PROTOTYPE (development only, ?mechlab=1; see Portals): Vector2i
+## PORTAL (Classic levels 201+; also the ?mechlab=1 lab; see Portals): Vector2i
 ## cell -> pair letter, drawn as round "holes" under the blocks (a block is
 ## a rounded square: a portal never looks tappable). Greybox look: pair
 ## colour + letter. Empty on every campaign and Social board.
@@ -171,7 +171,7 @@ func _draw() -> void:
 	_coords_layer.queue_redraw()
 
 
-## Portal prototype (greybox): coloured rim, dark hole, two inner rings and
+## Portal (the human-tested lab look): coloured rim, dark hole, two inner rings and
 ## the pair letter.
 func _draw_portal(center: Vector2, group: String) -> void:
 	var color: Color = PORTAL_COLORS.get(group, Color.WHITE)
@@ -186,7 +186,7 @@ func _draw_portal(center: Vector2, group: String) -> void:
 	draw_string(font, center + Vector2(-size.x * 0.5, fs * 0.36), group, HORIZONTAL_ALIGNMENT_LEFT, -1, fs, Color.WHITE)
 
 
-## Portal prototype: a short flash on a portal (a block passed through it,
+## Portal: a short flash on a portal (a block passed through it,
 ## or a lane through it is blocked).
 func _portal_flash(cell: Vector2i, color: Color, delay: float = 0.0) -> void:
 	var ring := RewardRing.new()
@@ -242,7 +242,7 @@ func _find_block_near(local: Vector2) -> int:
 
 ## Sends a block off-screen. `chain` makes the effect a touch stronger.
 ## `turned` = spinner ids the escape turned (from BoardModel.remove).
-## Portal prototype: `via` = [[entry, exit], ...] portals the lane passes
+## Portal: `via` = [[entry, exit], ...] portals the lane passes
 ## (BoardModel.lane); the block then dives into each entry and comes out of
 ## its partner before leaving the board.
 func play_escape(id: int, chain: int, turned: Array = [], via: Array = []) -> void:
@@ -268,7 +268,7 @@ func play_escape(id: int, chain: int, turned: Array = [], via: Array = []) -> vo
 		_pulse(0.008 + 0.002 * mini(chain - 5, 5))
 
 
-## Portal prototype: the escape through portals. Same speed feel as a
+## Portal: the escape through portals. Same speed feel as a
 ## normal escape: fly to the entry, shrink into it, pop out of the exit,
 ## continue (possibly into the next portal), then leave the board.
 func _play_portal_escape(view: BlockView, via: Array, duration: float) -> Tween:
@@ -301,7 +301,7 @@ func _play_portal_escape(view: BlockView, via: Array, duration: float) -> Tween:
 
 
 ## Blocked tap: nudge the tapped block and make the blocker react.
-## Portal prototype: when the lane runs through portals (`via`), the portals
+## Portal: when the lane runs through portals (`via`), the portals
 ## flash and the far blocker shakes clearly (a red ring), so a remote block
 ## is never a mystery.
 func play_bump(id: int, blocker_id: int, via: Array = []) -> void:
@@ -328,7 +328,7 @@ func play_bump(id: int, blocker_id: int, via: Array = []) -> void:
 		blocker.play_hit(view.data.direction, cell_size * 0.05, 0.05 + 0.015 * dist)
 
 
-## SEQUENCE PROTOTYPE: `id` advanced - a short launch along its lane and
+## SEQUENCE: `id` advanced - a short launch along its lane and
 ## back, then its arrow turns to the former NEXT arrow (the chip goes);
 ## the spinners it turned animate as for an escape.
 func play_advance(id: int, new_direction: int, turned: Array) -> void:
@@ -338,7 +338,7 @@ func play_advance(id: int, new_direction: int, turned: Array) -> void:
 	animate_turns(turned)
 
 
-## MOVABLE PROTOTYPE: `id` was launched into a crate and stays; the crate
+## MOVABLE: `id` was launched into a crate and stays; the crate
 ## (info = BoardModel.last_push) slides one cell, through portals if any.
 ## A first-stage Sequence pusher also turns to its next arrow.
 func play_push(id: int, info: Dictionary, pusher_via: Array, reduced: bool) -> void:
@@ -397,7 +397,7 @@ func sync_to(blocks: Array) -> void:
 		if _views.has(id):
 			var existing: BlockView = _views[id]
 			if existing.data.is_crate():
-				# Movable prototype: a crate moved back by Undo - straight to
+				# Movable: a crate moved back by Undo - straight to
 				# its cell (any slide still running is stopped first).
 				if existing.data.cell != wanted[id].cell:
 					existing.data.cell = wanted[id].cell
@@ -405,7 +405,7 @@ func sync_to(blocks: Array) -> void:
 				existing.stop_motion()
 				continue
 			if existing.data.seq_stage != wanted[id].seq_stage:
-				# Sequence prototype: an advance undone - back to stage 1
+				# Sequence: an advance undone - back to stage 1
 				# (arrow and NEXT chip as they were).
 				existing.stop_motion()  # an advance still animating
 				existing.data.seq_stage = wanted[id].seq_stage
@@ -539,7 +539,7 @@ func play_ram(id: int, target: int, via: Array = []) -> void:
 		return
 	var gap := (t.home - v.home).length() - cell_size
 	if not via.is_empty():
-		# Portal prototype: dash into the entry portal; both portals flash.
+		# Portal: dash into the entry portal; both portals flash.
 		gap = (cell_to_local(via[0][0]) - v.home).length() - cell_size * 0.6
 		for hop in via:
 			var color: Color = PORTAL_COLORS.get(str(portals.get(hop[0], "")), Color.WHITE)

@@ -1,0 +1,12 @@
+{
+	"name": "Switchback Run",
+	"map": [
+		"G^      .       .       Bv      .       .       R<",
+		"P^      B<      .       P<&A    Y<:v    .       P^:v",
+		"R^      .       .       R<      B<      OA      .",
+		".       P^%A    Yv      Yv@     .       Gv      Bv$G&A",
+		".       .       .       .       .       Pv      Gv@",
+		".       .       .       .       .       .       OA",
+		".       .       Gv      B>@     .       R<      ."
+	]
+}

@@ -410,8 +410,11 @@ func show_complete(r: Dictionary) -> void:
 	_card_title.text = "PERFECT!" if perfect else "LEVEL COMPLETE"
 	if r.get("master", false):
 		_card_title.text = "GRAND MASTER!" if r.get("level", 0) > Chapters.master_level() else "MASTER CLEARED!"
-	elif r.get("milestone", false) or r.get("celebration", "") == "short":
+	elif r.get("celebration", "") == "major":
+		_card_title.text = MAJOR_MILESTONE_TITLE % r.get("level", 0)
+	elif r.get("milestone", false) or r.get("celebration", "") in ["short", "strong"]:
 		_card_title.text = "MILESTONE CLEARED!"
+	_fit_label(_card_title, 50, _card.size.x - 80.0 if _card.size.x > 200.0 else get_viewport().get_visible_rect().size.x - 120.0)
 	_card_title.add_theme_color_override("font_color", Palette.GOLD if perfect else Palette.TEXT)
 	_card_style.border_color = Palette.GOLD
 	_card_style.set_border_width_all(8 if perfect else 0)
@@ -442,7 +445,9 @@ func show_complete(r: Dictionary) -> void:
 	_card_gain.visible = gain > 0
 	_card_total.text = "LEVEL SCORE  %s" % _fmt(r["score"])
 	set_total_score(total_after)
-	_next_button.text = "NEXT LEVEL" if not r["is_last"] else "PLAY AGAIN"
+	# v0.8: the last level that exists (300 for now) leads to Level Select,
+	# never back to Level 1.
+	_next_button.text = "NEXT LEVEL" if not r["is_last"] else LAST_LEVEL_BUTTON
 	if r.get("chapter_complete", 0) > 0:
 		_next_button.text = "CONTINUE"  # opens the Chapter Complete card
 	_overlay.visible = true
@@ -490,6 +495,70 @@ func show_perfect_stamp(text: String = "PERFECT!", hold: float = 0.45) -> void:
 	t.chain().tween_interval(hold)
 	t.chain().tween_property(_stamp, "modulate:a", 0.0, 0.2)
 	t.chain().tween_callback(func(): _stamp.visible = false)
+
+
+## v0.8 card / overlay strings (translatable in one place).
+const MAJOR_MILESTONE_TITLE := "%d LEVELS ESCAPED!"
+const LAST_LEVEL_BUTTON := "LEVEL SELECT"
+
+
+## Shrinks a one-line label's font (never grows it) until its text fits
+## `max_width` - long titles never run off the card on a narrow phone.
+static func _fit_label(l: Label, base_size: int, max_width: float) -> void:
+	var font: Font = l.get_theme_font("font")
+	var size := base_size
+	while size > 20 and font.get_string_size(l.text, HORIZONTAL_ALIGNMENT_LEFT, -1, size).x > max_width:
+		size -= 2
+	l.add_theme_font_size_override("font_size", size)
+
+
+## v0.8 MAJOR milestone (Level 300): a big number and a line under it,
+## centred and FITTED to the screen (safe side margins on every phone - it
+## never scales past the viewport, unlike the older stamp). Grows in from
+## smaller (a fade only with reduced motion), holds, fades out.
+func show_major_milestone(big: String, line: String, hold: float = 1.8, reduced: bool = false) -> void:
+	var vis := get_viewport().get_visible_rect()
+	var max_w := vis.size.x - 2.0 * MAJOR_MARGIN
+	if _major == null:
+		_major = VBoxContainer.new()
+		_major.alignment = BoxContainer.ALIGNMENT_CENTER
+		_major.mouse_filter = Control.MOUSE_FILTER_IGNORE
+		_major.add_theme_constant_override("separation", 0)
+		for fs in [190, 64]:
+			var l := _make_label(fs, Palette.GOLD, 900)
+			l.add_theme_color_override("font_outline_color", Palette.WHITE)
+			l.add_theme_constant_override("outline_size", 16 if fs > 100 else 10)
+			_major.add_child(l)
+		_root.add_child(_major)
+	var big_l: Label = _major.get_child(0)
+	var line_l: Label = _major.get_child(1)
+	big_l.text = big
+	line_l.text = line
+	_fit_label(big_l, 190, max_w - 32.0)
+	_fit_label(line_l, 64, max_w - 20.0)
+	_major.visible = true
+	_major.reset_size()
+	_major.size.x = max_w
+	_major.position = Vector2(MAJOR_MARGIN, vis.size.y * 0.42 - _major.size.y * 0.5)
+	_major.pivot_offset = _major.size * 0.5
+	_major.modulate.a = 0.0
+	_major.scale = Vector2.ONE if reduced else Vector2(0.6, 0.6)
+	var t := create_tween().set_parallel()
+	if not reduced:
+		t.tween_property(_major, "scale", Vector2.ONE, 0.45).set_trans(Tween.TRANS_BACK).set_ease(Tween.EASE_OUT)
+	t.tween_property(_major, "modulate:a", 1.0, 0.2)
+	t.chain().tween_interval(hold)
+	t.chain().tween_property(_major, "modulate:a", 0.0, 0.3)
+	t.chain().tween_callback(func(): _major.visible = false)
+
+
+## Is the major-milestone overlay on screen (tests / diagnostics)?
+func major_milestone_rect() -> Rect2:
+	return Rect2(_major.position, _major.size) if _major != null and _major.visible else Rect2()
+
+
+const MAJOR_MARGIN := 40.0
+var _major: VBoxContainer
 
 
 static func _fmt(n: int) -> String:

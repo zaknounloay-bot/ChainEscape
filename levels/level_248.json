@@ -1,0 +1,13 @@
+{
+	"name": "Mirror Step",
+	"mystery": true,
+	"map": [
+		".      .      .      .      .      .      .",
+		"Y>     .      .      Yv     .      .      .",
+		".      .      R>:^   .      .      Y>     Y>",
+		".      Gv@    G^?    P<     P<:^   P>@$S  Y<",
+		".      .      Y^@    .      Rv     .      .",
+		"B>     P>@    Bv     .      .      .      .",
+		".      B>     .      .      P>     R^     Y^"
+	]
+}

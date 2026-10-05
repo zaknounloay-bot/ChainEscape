@@ -1,0 +1,12 @@
+{
+	"name": "Other Side",
+	"hint": "Push it from any side. It never has to leave.",
+	"hint_finger": false,
+	"map": [
+		"P>   .    .    .    P^",
+		".    .    Yv   .    Rv@",
+		".    .    Rv   .    .",
+		".    .    G>   M    .",
+		".    .    .    .    ."
+	]
+}

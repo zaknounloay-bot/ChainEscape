@@ -1,0 +1,12 @@
+{
+	"name": "First Sequence",
+	"hint": "New: SEQUENCE. Tap once to turn it, tap again to escape.",
+	"hint_finger": false,
+	"map": [
+		".     .     .     .     Pv:^",
+		".     .     .     .     .",
+		".     .     .     .     Yv",
+		".     Bv    .     G<    B<",
+		".     .     .     .     ."
+	]
+}

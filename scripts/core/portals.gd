@@ -1,6 +1,6 @@
 class_name Portals
 extends RefCounted
-## PORTAL MECHANIC PROTOTYPE (development only, ?mechlab=1). No campaign
+## PORTAL mechanic (Classic levels 201+; also the ?mechlab=1 lab). Levels 1-200 never use it;
 ## level, Social board or backend record contains a portal: on every such
 ## board the portal data is empty and none of this code changes anything.
 ##

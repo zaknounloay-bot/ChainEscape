@@ -1,0 +1,12 @@
+{
+	"name": "Toll Gate",
+	"map": [
+		".       .       .       Yv      .       G<@     .",
+		"P>      R>      .       Y>@     Yv:>    R^      .",
+		"G^      B<      Y<      OA      .       .       XC",
+		".       Pv$G+C  Y<@     Rv      .       G>:<    OA",
+		".       .       R^      G>      Y>+C    .       Gv",
+		".       .       Y<      B<      .       .       G<",
+		".       .       .       .       .       .       ."
+	]
+}

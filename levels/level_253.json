@@ -1,0 +1,12 @@
+{
+	"name": "Where It Lands",
+	"hint": "Think where it stops: it can block you later.",
+	"hint_finger": false,
+	"map": [
+		".    .    .    P<   .",
+		".    .    .    Pv@  .",
+		".    P>   M    .    .",
+		".    .    .    .    .",
+		".    .    B>   Gv   ."
+	]
+}

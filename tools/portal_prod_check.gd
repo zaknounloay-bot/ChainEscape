@@ -70,7 +70,7 @@ func _wait(sec: float) -> void:
 
 
 static func _load(n: int) -> LevelData:
-	return LevelManager.parse_level(JSON.parse_string(FileAccess.get_file_as_string(LevelManager.LEVEL_PATH % n)), n)
+	return LevelManager.read_level(n)
 
 
 # --- Data --------------------------------------------------------------------------------
@@ -78,7 +78,7 @@ static func _load(n: int) -> LevelData:
 func _data() -> void:
 	var lm := LevelManager.new()
 	lm._ready()
-	_check(lm.level_count == 225, "225 levels found (%d)" % lm.level_count)
+	_check(lm.level_count >= 225, "at least 225 levels found (%d)" % lm.level_count)  # v0.8: 300
 	lm.free()
 	var none_before := true
 	for n in range(1, 201):
@@ -226,7 +226,7 @@ func _level_select() -> void:
 	game.open_level_select()
 	await _frames(3)
 	_check(game.select_shown["unlocked"].has(201) and game.select_shown["locked"].has(225), "Level Select: 201 open, 225 still locked")
-	_check(game.select_shown["unlocked"].size() + game.select_shown["locked"].size() == 225, "Level Select lists all 225 levels")
+	_check(game.select_shown["unlocked"].size() + game.select_shown["locked"].size() == game.level_manager.level_count, "Level Select lists every level")
 	await _frames(2)
 
 
@@ -256,9 +256,9 @@ func _milestone_225() -> void:
 	var r := game.last_result
 	_check(game.ui.is_complete_visible() and r.get("level", 0) == 225, "225 completes")
 	_check(r.get("celebration", "") == "short" and not r.get("milestone", true) and not r.get("master", true), "225: short celebration, not a paying milestone / Master")
-	_check(not "MILESTONE" in r.get("notes", []) and not p.completed_chapters.has(23), "225 pays no milestone bonus and no Chapter 23 bonus")
+	_check(not String(r.get("coin_notes", "")).contains("MILESTONE") and not p.completed_chapters.has(23), "225 pays no milestone bonus and no Chapter 23 bonus")
 	_check(p.coins - coins_before == r["coins"], "coins paid = the card's normal level reward (%d)" % r["coins"])
-	_check(r.get("is_last", false), "225 is the last level for now")
+	_check(r.get("is_last", false) == (game.level_manager.level_count == 225), "225 is the last level only while no level follows it")
 
 
 func _not_retroactive() -> void:

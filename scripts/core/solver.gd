@@ -31,7 +31,7 @@ const DEFAULT_NODE_LIMIT := 60000
 static var default_limit: int = DEFAULT_NODE_LIMIT
 const RAM := 1 << 20
 const ID_MASK := RAM - 1
-## Movable prototype: a push move (the tapped block is launched into a crate).
+## Movable: a push move (the tapped block is launched into a crate).
 const PUSH := 1 << 21
 
 var rows: int
@@ -72,7 +72,7 @@ var _shells: int = 0  # shells still intact
 var _flip_ids: Array = [[], [], [], []]  # group -> ids that reverse
 var _gate_ids: Array = [[], [], [], []]  # group -> gate ids
 var _links_alive := PackedInt32Array([0, 0, 0, 0])
-# Portal prototype (development only): cell index -> partner cell index.
+# Portal (201+): cell index -> partner cell index.
 # Static, so it is not part of the memo key. Empty on every campaign and
 # Social board, where lanes are walked exactly as before.
 var _portal_exit := PackedInt32Array()
@@ -80,7 +80,7 @@ var _has_portals := false
 ## Returned by _first_in_lane for a lane that loops (malformed portal
 ## layouts only): not free, and nothing to ram.
 const LANE_LOOP := -2
-# Sequence prototype (development only): per block 0 / 1 / 2 (see
+# Sequence (226+): per block 0 / 1 / 2 (see
 # BlockData.seq_stage) and the NEXT arrow. The stage changes during play,
 # so it is part of the memo key; a first-stage block's legal move is the
 # advance (it stays, turns / reveals its neighbours, takes its next arrow).
@@ -89,7 +89,7 @@ var _seq_stage := PackedByteArray()
 var _seq_first := PackedInt32Array()  # stage-1 arrow, to undo an advance
 var _seq_next := PackedInt32Array()
 var _seq_ids := PackedInt32Array()
-# MOVABLE prototype (development only): crates are blocks that never leave;
+# Movable (251+): crates are blocks that never leave;
 # the board is clear when only they remain (_alive_count == _crate_n).
 # Their cells change, so they are part of the memo key, and pushes can be
 # undone (one stack entry per push). With crates, the search is the cycle-
@@ -99,6 +99,9 @@ var _crate := PackedByteArray()
 var _crate_ids := PackedInt32Array()
 var _crate_n := 0
 var _push_stack: Array = []
+## v0.8 analysis only: false = pushes are not legal moves (the Movable block
+## is a fixed obstacle) - "can this level be won without pushing?".
+var allow_push := true
 var _on_path: Dictionary = {}
 var _last_low := 0
 
@@ -299,7 +302,7 @@ func legal_moves() -> Array[int]:
 				out.append(id)
 			elif _ram_target(id) != -1:
 				out.append(id | RAM)
-			elif _crate_n > 0 and _push_target(id) != -1:
+			elif _crate_n > 0 and allow_push and _push_target(id) != -1:
 				out.append(id | PUSH)
 	return out
 
@@ -333,7 +336,7 @@ func random_win_rate(playouts: int, seed: int, max_wins: int = -1) -> float:
 					mv = id
 				elif _ram_target(id) != -1:
 					mv = id | RAM
-				elif _crate_n > 0 and _push_target(id) != -1:
+				elif _crate_n > 0 and allow_push and _push_target(id) != -1:
 					mv = id | PUSH
 				if mv == -1:
 					continue
@@ -455,6 +458,16 @@ func _dead_within(depth: int) -> bool:
 ## switch) over always-safe moves. Returns the block id to tap, or -1 if no
 ## legal move keeps the board solvable.
 func recommend_move() -> int:
+	if _crate_n > 0:
+		# v0.8 Movable boards: the next move of an actual solution from here.
+		# (The rule below prefers "risky" moves, and every push is one - so
+		# following hint after hint could push a block back and forth for
+		# ever while each single hint stayed legal and safe.) Always legal,
+		# always keeps the board solvable, and always makes progress.
+		if _alive_count == _crate_n:
+			return -1
+		var sol := solve_moves()
+		return sol[0] & ID_MASK if not sol.is_empty() else -1
 	var safe_pick := -1
 	for mv in legal_moves():
 		_do(mv)
@@ -792,7 +805,7 @@ func _ram_target(id: int) -> int:
 
 
 ## Still hidden: no neighbour (at construction time) has escaped yet - or,
-## Sequence prototype, advanced past its first stage (the same neighbour
+## Sequence, advanced past its first stage (the same neighbour
 ## event; a block that was already in stage 2 at construction had revealed
 ## its neighbours then, so this stays exact).
 func _is_concealed(id: int) -> bool:
@@ -806,7 +819,7 @@ func _is_concealed(id: int) -> bool:
 	return true
 
 
-## Sequence prototype: a first-stage block (its legal move is an advance).
+## Sequence: a first-stage block (its legal move is an advance).
 func _pending(id: int) -> bool:
 	return not _seq_ids.is_empty() and _seq_stage[id] == 1
 
@@ -834,7 +847,7 @@ func _first_in_lane(id: int) -> int:
 	return -1
 
 
-## Portal prototype: the same walk, continuing from a portal's partner in
+## Portal: the same walk, continuing from a portal's partner in
 ## the same direction. Entering a portal twice (or running past the step
 ## limit) means the lane loops: LANE_LOOP.
 func _first_in_portal_lane(id: int) -> int:
@@ -946,7 +959,7 @@ func _apply(id: int) -> Array:
 	return turned
 
 
-## Sequence prototype: the first stage. Neighbour event around its cell
+## Sequence: the first stage. Neighbour event around its cell
 ## (spinners turn, hidden reveal is derived), then the next arrow.
 func _advance(id: int) -> Array:
 	var idx := _cell[id]
@@ -986,7 +999,7 @@ func _unadvance(id: int) -> void:
 				_dir[other] = Direction.rotate_ccw(_dir[other]) if cw else Direction.rotate_cw(_dir[other])
 
 
-## MOVABLE prototype: the cell the crate first in `id`'s lane would be
+## MOVABLE: the cell the crate first in `id`'s lane would be
 ## pushed to (one cell in `id`'s direction, through portals as any lane,
 ## onto an empty cell), or -1 (no crate first in the lane / no room).
 ## Same conditions as a ram for the tapped block itself.
@@ -1041,7 +1054,7 @@ func _undo_push(id: int) -> void:
 	_cell[t] = e[1]
 
 
-## MOVABLE prototype search: plain DFS over every legal move (no greedy
+## MOVABLE search: plain DFS over every legal move (no greedy
 ## moves - with crates moving into lanes, no escape is safe for sure), with
 ## the states on the current path cut off (a crate pushed back and forth)
 ## and a state remembered as lost only when no cycle through an ancestor
@@ -1062,7 +1075,19 @@ func _dfs_crates(depth: int) -> bool:
 		return false
 	_on_path[key] = depth
 	var low := depth
-	for mv in legal_moves():
+	# v0.8: escapes, first stages and rams before pushes - a solution then
+	# pushes only when it has to, so following SHOW A MOVE step by step
+	# does not wander (a push can be undone by another push; nothing else
+	# can).
+	var moves := legal_moves()
+	var ordered: Array[int] = []
+	for mv in moves:
+		if not (mv & PUSH):
+			ordered.append(mv)
+	for mv in moves:
+		if mv & PUSH:
+			ordered.append(mv)
+	for mv in ordered:
 		_do(mv)
 		_path.append(mv)
 		if _dfs_crates(depth + 1):

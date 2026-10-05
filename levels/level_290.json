@@ -1,0 +1,13 @@
+{
+	"name": "Half Light",
+	"mystery": true,
+	"map": [
+		".     .     .     B>@   .     Rv@   B>$G",
+		".     R^?   .     Yv    .     .     .",
+		".     B>    .     .     .     .     Yv",
+		"P>    .     M     P>    .     Rv@   .",
+		".     .     .     .     Y>    .     Rv",
+		".     .     Gv    .     .     B<    .",
+		"R^    .     .     .     .     .     G<"
+	]
+}

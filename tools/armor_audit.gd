@@ -19,7 +19,7 @@ func _init() -> void:
 		var path := LevelManager.LEVEL_PATH % n
 		if not FileAccess.file_exists(path):
 			continue
-		var level := LevelManager.parse_level(JSON.parse_string(FileAccess.get_file_as_string(path)), n)
+		var level := LevelManager.parse_level(JSON.parse_string(FileAccess.get_file_as_string(path)), n, true)
 		var model := BoardModel.new()
 		model.setup(level.rows, level.columns, level.blocks)
 		model.set_portals(level.portals)
@@ -58,6 +58,8 @@ static func _model_key(model: BoardModel) -> String:
 	for id in ids:
 		var b: BlockData = model.blocks[id]
 		parts.append("%d.%d.%d.%d.%d" % [id, b.direction, int(b.armored), int(b.hidden), b.spin_step])
+		if b.seq_stage > 0 or b.is_crate():  # v0.8: Sequence stage, Movable cell
+			parts.append("s%d.%d.%d" % [b.seq_stage, b.cell.x, b.cell.y])
 	return ",".join(parts)
 
 
@@ -88,8 +90,13 @@ static func _model_walk(model: BoardModel, seen: Dictionary, out: Dictionary, li
 		return
 	var snap := model.snapshot()
 	for id in moves:
-		if model.move_state(id) == "ram":
+		var st := model.move_state(id)
+		if st == "ram":
 			model.ram(id)
+		elif st == "advance":
+			model.advance(id)
+		elif st == "push":
+			model.push(id)
 		else:
 			model.remove(id)
 		_model_walk(model, seen, out, limit)

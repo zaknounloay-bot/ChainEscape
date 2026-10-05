@@ -1,0 +1,13 @@
+{
+	"name": "Wait For It",
+	"hint": "Too early can be too bad: choose WHEN to use the first tap.",
+	"hint_finger": false,
+	"map": [
+		"Rv     .      .      .      .      .",
+		"Y>:<   P>@$S  Pv     .      .      .",
+		"P<:>   Bv@    .      Y^@    .      .",
+		".      .      .      B^     .      Y<",
+		"B>     B>     B>     Y>     .      P^",
+		".      .      .      .      .      ."
+	]
+}

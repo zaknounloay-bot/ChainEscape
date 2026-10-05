@@ -1,0 +1,12 @@
+{
+	"name": "Next Arrow",
+	"hint": "The small arrow shows where it goes next.",
+	"hint_finger": false,
+	"map": [
+		"Pv    .     .     R<    .",
+		"Pv    .     R<:>  G^:>  .",
+		".     .     .     .     .",
+		".     .     P^    .     .",
+		".     .     .     .     ."
+	]
+}

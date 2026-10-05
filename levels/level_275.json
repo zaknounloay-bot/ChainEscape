@@ -1,0 +1,14 @@
+{
+	"name": "Future Perfect",
+	"hint": "Milestone. Choose where the Movable blocks will be LATER.",
+	"hint_finger": false,
+	"map": [
+		".     .     .     .     .     Yv@   P>",
+		".     .     .     .     .     B^    .",
+		"B<    Y>@   .     .     OA    Y>    Y^",
+		"Pv$G  .     .     .     .     .     .",
+		".     .     Gv    .     .     .     R^",
+		".     Rv    M     .     G<$S  P^    .",
+		"OA    M     B>    .     .     Y^    ."
+	]
+}

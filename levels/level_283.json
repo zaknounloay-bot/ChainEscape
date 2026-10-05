@@ -1,0 +1,13 @@
+{
+	"name": "Hidden Door",
+	"mystery": true,
+	"map": [
+		"Rv    .     .     R<    .     .     .",
+		".     .     .     B^    .     P<    P<:>",
+		"Yv    P^    Y>@   .     .     OA    .",
+		".     .     .     .     .     P>    R>",
+		"Yv    P>@   R^    .     .     .     .",
+		"OA    .     Pv?   G^:>  B>    .     G^$S",
+		"B^    Y<    .     B>    Y^    .     ."
+	]
+}

@@ -184,7 +184,7 @@ try {
     s = await state(g);
     await tapAt(g, s.levels_button);
     s = await waitFor(g, (x) => x.select_open, 'level select');
-    check(s.select_unlocked === 225 && s.select_max_unlocked === 225, `D: Level Select lists 225 unlocked levels (${s.select_unlocked})`);
+    check(s.select_unlocked === 226 && s.select_max_unlocked === 226, `D: after 225 Level Select has 1-226 unlocked (${s.select_unlocked}; v0.8: 226 follows)`);
     check(g.errors.length === 0, `D: no page errors (${g.errors.join(' | ')})`);
     await close(g);
   }

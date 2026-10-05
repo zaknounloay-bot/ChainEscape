@@ -1,4 +1,4 @@
-# Chain Escape — v0.7
+# Chain Escape — v0.8
 
 A one-handed portrait puzzle game built with **Godot 4.3 (GDScript)** for iOS, Android and mobile Web.
 
@@ -22,6 +22,8 @@ The feeling it aims for: *"I progressed, the game changed, and I want to see the
 
 See *v0.5.1 stabilization* below.
 
+**v0.8 completes the Third Era: levels 226-300.** SEQUENCE (226-250) and MOVABLE (251-275) join Portal as production Classic mechanics, then 276-300 combine them. Milestones: 250 (stronger), 275 (short), 300 (major - "300 LEVELS ESCAPED!", not a finale). After 300 the game opens Level Select. Levels 1-225, Social / Friend and the backend are unchanged. See *v0.8* below and `docs/era3_226_300.md`.
+
 **v0.7 opens the Third Era with the PORTAL arc: levels 201-225.** Portal is now a production Classic mechanic (introduced once with a short NEW MECHANIC card). Level 225 is a short, presentation-only milestone. Levels 1-200, Social / Friend and the backend are unchanged. See *v0.7* below and `docs/portal_arc.md`.
 
 **v0.6 opens the Second Era: levels 101-200**, with three new mechanics (Switch, Chain Gate, Armored), ten new Chapter worlds in five visual families, new music, milestone levels and a second Master Level (200). See *v0.6* below.
@@ -39,6 +41,25 @@ Everything from v0.4 is kept:
 - the mobile Web audio unlock with Stream playback
 
 Not included, on purpose: leaderboards, country ranking, accounts/login, backend, real-money purchases, ads, Daily Challenge and multiplayer.
+
+---
+
+## v0.8 — SEQUENCE, MOVABLE and INTEGRATION: levels 226-300 (Third Era complete)
+
+| Area | Change |
+|---|---|
+| **Sequence (226+)** | The human-tested lab rule, unchanged. A Sequence block shows its arrow and a small NEXT arrow. First tap with a clear lane: it launches, comes back, sends the usual neighbour event (adjacent spinners turn, hidden arrows are revealed) and takes its NEXT arrow; second tap: a normal escape. A blocked first tap is an ordinary blocked tap (no advance). A first stage into a shell cracks it (the stage stays). A first stage is not an escape for locks, gates or switches. In Classic a first stage is a productive move like a ram: never a mistake, the chain is kept. |
+| **Movable (251+)** | The human-tested lab rule, unchanged. A neutral wooden block, no arrow, never has to leave (the level is won when the arrow blocks are gone). An arrow launched into it pushes it exactly one cell (any direction, any number of times); the arrow stays. No chain pushing; a block, the edge, another Movable block or a blocked portal exit behind it make the push an ordinary blocked tap ("The Movable block can't move there"). Through a portal it comes out of the partner. A first-stage Sequence block that pushes also uses its first stage (a failed push does not). A tap on the Movable block itself is free. The Hammer never targets it. Feel: impact → push → one-cell slide → settle + CLUNK (the lab's). |
+| **Engine** | Both mechanics were already in the shared rules / Solver / board view (lab). New: campaign-only parsing (`LevelManager.parse_level(..., campaign = true)`, `read_level`) - Social, Friend and the recipient still reject `:` and `M` exactly as before. GameManager plays first stages and pushes (Undo / Restart / SHOW A MOVE / Hammer as for any move). Solver memo already includes Sequence stages and Movable cells; Movable boards use the cycle-safe search. `LevelAnalysis` measures Sequence / Movable use and impact (and "can it be won without pushing?"). |
+| **NEW MECHANIC cards** | Same card as Portal: SEQUENCE ("FIRST MOVE CHANGES IT / SECOND MOVE ESCAPES") at 226, MOVABLE ("HIT / PUSH / MOVES ONE CELL", "BLOCKED BEHIND = CAN'T MOVE · IT NEVER HAS TO LEAVE") at 251. Once per save (`intro_sequence`, `intro_movable` in `tips_seen`), skippable, reduced-motion safe, never over the title, never retroactive. |
+| **Levels 226-300** | Built by `tools/generate_era3.gd`, checked by `tools/verify_levels.gd` (new arc rules) and audited by `tools/era3_audit.gd`. Per-level ideas and metrics: `docs/era3_226_300.md`. |
+| **Milestones** | Presentation only (`chapters.json` `celebration_levels`; no coins): 250 "strong" (three bursts, a "250 LEVELS!" stamp), 275 "short", 300 "major" - "300 / LEVELS ESCAPED!" fitted to the screen with safe margins (never clipped), the biggest burst, and a "300 LEVELS ESCAPED!" card. No GRAND MASTER / FINAL wording. |
+| **After 300** | The card's button reads LEVEL SELECT and opens Level Select; when 300 also completes Chapter 30 (the usual case) it reads CONTINUE, opens the Chapter 30 card, and that card's button reads LEVEL SELECT. Nothing loops to Level 1. Title CONTINUE stays on the last level played. The rule is "the last level that exists", so 301+ will simply continue. |
+| **Level 300** | "Every Way Out" (7x7): two portal pairs, four Sequence blocks, clockwise and counter-clockwise spinners. It is the hardest level of 201-299 on both difficulty proxies. It does not contain Movable (no Movable spec beat 201-299 without clutter); Movable integrates in 14 of 276-299: 277, 278, 282, 284, 286, 287, 289-291, 293-295, 297, 298. |
+| **SHOW A MOVE on Movable boards** | `recommend_move` follows the solver's own solution, and the cycle-safe search tries non-push moves first, so following the hint never loops (every Movable level clears by hints in exactly its solution length). This changes the Movable lab golden's recommendations (intended); Classic 1-225, Portal and Sequence goldens are identical. |
+| **Unchanged** | Levels 1-225 (byte-identical files; identical Solver dumps), Portal behaviour, economy values, save format, Photo / Message Reveal, Friend (generator, difficulties, VERY HARD, `classic_board_keys.json`), Social analytics, share URLs, Supabase and the Edge Function. |
+
+Checks: `godot --headless --path . res://tools/Era3ProdCheck.tscn` and `node tools/web_era3_test.mjs build/web`, plus every existing suite. `tools/armor_audit.gd`'s independent BoardModel walk now plays first stages and pushes too (it reported false mismatches on 234 / 243 / 267 / 289 / 298 before).
 
 ---
 

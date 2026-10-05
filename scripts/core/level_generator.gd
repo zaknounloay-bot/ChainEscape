@@ -375,7 +375,9 @@ func assign_reward_blocks(level: LevelData, silver: int, gold: int) -> void:
 		return
 	var eligible := []
 	for i in range(order.size() / 2, order.size() - 1):
-		if not by_id[order[i]].hidden:
+		# v0.8: never a Sequence block (one special role per arrow) or a
+		# Movable block (it never leaves).
+		if not by_id[order[i]].hidden and by_id[order[i]].seq_stage == 0 and not by_id[order[i]].is_crate() and not eligible.has(order[i]):
 			eligible.append(order[i])
 	for g in gold:
 		if eligible.is_empty():
@@ -406,7 +408,7 @@ func _assign_strategic(level: LevelData, order: Array, by_id: Dictionary, silver
 	var final_id: int = order[-1]
 	# v0.6.2: never on an armored block (a reward must never be confused
 	# with a shell).
-	var ids := last_pos.keys().filter(func(id): return id != final_id and not by_id[id].hidden and not by_id[id].is_gate() and not by_id[id].armored)
+	var ids := last_pos.keys().filter(func(id): return id != final_id and not by_id[id].hidden and not by_id[id].is_gate() and not by_id[id].armored and by_id[id].seq_stage == 0 and not by_id[id].is_crate())
 	ids.sort_custom(func(x, y): return last_pos[x] < last_pos[y])
 	var model := BoardModel.new()
 	model.setup(level.rows, level.columns, level.blocks)
@@ -851,7 +853,9 @@ static func difficulty(m: Dictionary) -> float:
 		# v0.6 (zero for every level without the new mechanics):
 		+ m.get("switches", 0) * 0.8 + m.get("flip_targets", 0) * 0.3 + m.get("switch_decisions", 0) * 0.8
 		+ m.get("gates", 0) * 0.8 + m.get("gate_links", 0) * 0.3
-		+ m.get("armored", 0) * 0.8 + m.get("rams", 0) * 0.3)
+		+ m.get("armored", 0) * 0.8 + m.get("rams", 0) * 0.3
+		# v0.8 (zero for every level without Sequence / Movable blocks):
+		+ m.get("sequence_blocks", 0) * 0.5 + m.get("crates", 0) * 0.8 + m.get("pushes", 0) * 0.3)
 
 
 ## How hard the level is to SOLVE, ignoring how many of each mechanic it
@@ -860,7 +864,7 @@ static func difficulty(m: Dictionary) -> float:
 static func structural_difficulty(m: Dictionary) -> float:
 	return (m["depth"] * 0.6 + m["decision_points"] * 1.5 + m["trap_moves"] * 0.4 + m["start_traps"] * 1.0
 		+ (4 - mini(m["start_moves"], 4)) * 0.5 + m.get("rams", 0) * 0.3 + m.get("switch_decisions", 0) * 0.8
-		+ m.get("solution", []).size() * 0.05)
+		+ m.get("solution", []).size() * 0.05 + m.get("pushes", 0) * 0.3)
 
 
 ## Fraction of cells with the same content (same arrow, both occupied) as

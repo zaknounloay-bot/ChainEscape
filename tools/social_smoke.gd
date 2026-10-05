@@ -33,7 +33,7 @@ func _run() -> void:
 	get_tree().root.add_child(game)
 	await _frames(5)
 	AudioManager.set_music_enabled(false)
-	_check(game.level_manager.level_count == 225, "225 levels present (got %d)" % game.level_manager.level_count)
+	_check(game.level_manager.level_count == 300, "300 levels present (got %d)" % game.level_manager.level_count)
 	for n in range(1, 13):
 		game.progress.record_result(n, 1000 + n, 3)
 	game.progress.coins = 77

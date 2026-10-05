@@ -74,6 +74,15 @@ func level_from_map(map: Array) -> LevelData:
 	return LevelManager.parse_level({"map": map}, 0)
 
 
+## Plays a tap on the rules model: escape, ram, (v0.8) first stage or push.
+static func play_move(m: BoardModel, id: int) -> void:
+	match m.move_state(id):
+		"ram": m.ram(id)
+		"advance": m.advance(id)
+		"push": m.push(id)
+		_: m.remove(id)
+
+
 func model_of(level: LevelData) -> BoardModel:
 	var m := BoardModel.new()
 	m.setup(level.rows, level.columns, level.blocks)
@@ -167,7 +176,9 @@ func test_hints_never_invalid() -> void:
 		var level := lm.load_level(n)
 		for run in 3:
 			var m := model_of(level)
-			while not m.is_empty():
+			var steps := 0
+			while not m.is_empty() and steps < 80:  # v0.8: Movable blocks can go back and forth
+				steps += 1
 				var s := Solver.from_model(m)
 				var solvable := s.is_solvable()
 				var hint := Solver.from_model(m).recommend_move()
@@ -180,21 +191,15 @@ func test_hints_never_invalid() -> void:
 						var after := BoardModel.new()
 						after.setup(m.rows, m.columns, m.snapshot())
 						after.set_portals(m.portal_groups)
-						if after.move_state(hint) == "ram":
-							after.ram(hint)
-						else:
-							after.remove(hint)
-						check(Solver.from_model(after).is_solvable(), "L%d: hint keeps board solvable" % n)
+						play_move(after, hint)
+						check(after.is_empty() or Solver.from_model(after).is_solvable(), "L%d: hint keeps board solvable" % n)
 				else:
 					check(hint == -1, "L%d: no hint offered on an unsolvable board" % n)
 				var free := m.playable_ids()
 				if free.is_empty():
 					break  # stuck (only reachable after a bad move)
 				var pick: int = free[rng.randi() % free.size()]
-				if m.move_state(pick) == "ram":
-					m.ram(pick)
-				else:
-					m.remove(pick)
+				play_move(m, pick)
 	check(hint_checks > 100, "hint checked on many states (%d)" % hint_checks)
 	lm.free()
 
@@ -376,10 +381,12 @@ func test_typed_spinners_in_solver() -> void:
 				check(m.move_state(id) == "ram", "L%d solver ram %d is a ram in the model" % [n, id])
 				m.ram(id)
 			else:
-				check(m.can_escape(id), "L%d solver move %d legal in the model" % [n, id])
-				m.remove(id)
+				# v0.8: or a Sequence first stage / a push (both legal, not escapes).
+				check(m.move_state(id) in ["ok", "advance", "push"], "L%d solver move %d legal in the model" % [n, id])
+				play_move(m, id)
 			var back := BoardModel.new()
 			back.setup(m.rows, m.columns, snap)
+			back.set_portals(m.portal_groups)
 			var s2 := Solver.from_model(back)
 			s2._do(mv)
 			var agree := true
@@ -498,13 +505,15 @@ func test_hammer_safety() -> void:
 	var lost_boards := 0
 	var gates_ok := 0
 	var armored_ok := 0
-	for n in [11, 31, 45, 61, 75, 88, 97, 121, 135, 161, 174, 200, 213, 225]:  # v0.7: + two Portal levels
+	for n in [11, 31, 45, 61, 75, 88, 97, 121, 135, 161, 174, 200, 213, 225, 238, 250, 266, 275, 290, 300]:  # v0.7 / v0.8: + Third Era levels
 		if n > lm.level_count:
 			continue
 		var m := model_of(lm.load_level(n))
 		for step in 5:
 			var before := Solver.from_model(m).is_solvable()
 			for id in m.blocks.keys():
+				if m.blocks[id].is_crate():
+					continue  # v0.8: the Movable block is never a Hammer target
 				var t := BoardModel.new()
 				t.setup(m.rows, m.columns, m.snapshot())
 				t.set_portals(m.portal_groups)
@@ -524,10 +533,7 @@ func test_hammer_safety() -> void:
 				# board replays to empty.
 				if allowed and before and not t.is_empty():
 					for x in Solver.from_model(t).solve_moves():
-						if x & Solver.RAM:
-							t.ram(x & Solver.ID_MASK)
-						else:
-							t.remove(x)
+						play_move(t, x & Solver.ID_MASK)
 					check(t.is_empty(), "L%d allowed smash of %d really stays solvable" % [n, id])
 			if not before:
 				lost_boards += 1
@@ -536,10 +542,7 @@ func test_hammer_safety() -> void:
 			if moves.is_empty():
 				break
 			var mv: int = moves[rng.randi() % moves.size()]
-			if m.move_state(mv) == "ram":
-				m.ram(mv)
-			else:
-				m.remove(mv)
+			play_move(m, mv)
 	# A deliberately lost board: every block may be smashed.
 	var trap := model_of(lm.load_level(61))
 	for guard in 30:
@@ -1203,7 +1206,7 @@ func test_armor_safety() -> void:
 	var n := 1
 	var checked := 0
 	while FileAccess.file_exists(LevelManager.LEVEL_PATH % n):
-		var level := LevelManager.parse_level(JSON.parse_string(FileAccess.get_file_as_string(LevelManager.LEVEL_PATH % n)), n)
+		var level := LevelManager.read_level(n)
 		var has_armor := false
 		for b in level.blocks:
 			has_armor = has_armor or b.armored
@@ -1228,7 +1231,7 @@ func test_reward_vs_armor_look() -> void:
 	check(not Palette.REWARD_BODY[BlockData.Rarity.GOLD][1].is_equal_approx(Palette.face("yellow")), "Gold body differs from a yellow block")
 	var n := 1
 	while FileAccess.file_exists(LevelManager.LEVEL_PATH % n):
-		var level := LevelManager.parse_level(JSON.parse_string(FileAccess.get_file_as_string(LevelManager.LEVEL_PATH % n)), n)
+		var level := LevelManager.read_level(n)
 		for b in level.blocks:
 			check(not (b.is_reward() and b.armored), "L%d: no reward on an armored block" % n)
 		n += 1

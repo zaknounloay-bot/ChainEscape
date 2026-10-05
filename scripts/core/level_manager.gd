@@ -26,13 +26,14 @@ extends Node
 ##    "OA"   = a cell of portal pair A (no block; groups A-D, exactly two
 ##             cells each). Levels 1-200 never use it; Social / Friend
 ##             boards with a portal are rejected (PuzzleDefinition.verify).
-##    SEQUENCE PROTOTYPE (development only, ?mechlab=sequence; accepted only
-##    while LevelManager.dev_sequence is true - never in the game, Social or
-##    Friend parsing): "R>:^" = Sequence block, current arrow right, NEXT
-##    arrow up. A plain arrow: no other modifier.
-##    MOVABLE PROTOTYPE (development only, ?mechlab=movable; accepted only
-##    while LevelManager.dev_movable is true): "M" = a MOVABLE crate (no
-##    color, no arrow; pushed one cell by an arrow launched into it).
+##    v0.8 SEQUENCE (Classic levels 226+, and the ?mechlab=sequence lab;
+##    accepted only in campaign files - parse_level(..., campaign = true) -
+##    or while LevelManager.dev_sequence is true; never in Social / Friend
+##    parsing): "R>:^" = Sequence block, current arrow right, NEXT arrow up.
+##    A plain arrow: no other modifier.
+##    v0.8 MOVABLE (Classic levels 251+, and the ?mechlab=movable lab; same
+##    gating with dev_movable): "M" = a MOVABLE crate (no color, no arrow;
+##    pushed one cell by an arrow launched into it).
 ##    Modifiers can be combined in the order  @ ? #K $R %A &A +A =
 ##    (spinners cannot be hidden, hidden blocks cannot be locked; switches,
 ##    flip targets and armored blocks are plain arrows: no spinner, no
@@ -78,7 +79,16 @@ func load_level(number: int) -> LevelData:
 	if typeof(json) != TYPE_DICTIONARY:
 		push_error("Level file %s is not a JSON object" % path)
 		return null
-	return parse_level(json, number)
+	return parse_level(json, number, true)
+
+
+## A campaign level file, parsed as the game parses it (Classic tokens,
+## including SEQUENCE and MOVABLE). For tools; null if the file is missing.
+static func read_level(number: int) -> LevelData:
+	var json = JSON.parse_string(FileAccess.get_file_as_string(LEVEL_PATH % number))
+	if typeof(json) != TYPE_DICTIONARY:
+		return null
+	return parse_level(json, number, true)
 
 
 ## Cached summary for Level Select: {"mystery": bool, "rewards": {id: rarity}}.
@@ -99,7 +109,12 @@ func is_mystery(number: int) -> bool:
 	return level_info(number)["mystery"]
 
 
-static func parse_level(json: Dictionary, number: int = 0) -> LevelData:
+## `campaign` (v0.8): a Classic campaign level - SEQUENCE (":") and MOVABLE
+## ("M") tokens are accepted. Everything else (Social, Friend, the
+## recipient, shared challenges) parses with campaign = false, where those
+## tokens stay unknown exactly as before, so such a board is rejected.
+static func parse_level(json: Dictionary, number: int = 0, campaign: bool = false) -> LevelData:
+	_campaign = campaign
 	var level := LevelData.new()
 	level.number = number
 	level.name = json.get("name", "Level %d" % number)
@@ -114,17 +129,19 @@ static func parse_level(json: Dictionary, number: int = 0) -> LevelData:
 	else:
 		_parse_block_list(json, level)
 	level.mystery = bool(json.get("mystery", false)) or level.blocks.any(func(b): return b.hidden)
+	_campaign = false
 	return level
 
 
 static var _token_re: RegEx
-## Sequence prototype: the ":" token is parsed only while this is true (set
-## by the mechanic lab and its dev tools). Off everywhere else, so a
-## Sequence cell stays a bad token exactly as before this prototype.
+## Sequence: outside campaign files the ":" token is parsed only while
+## this is true (set by the mechanic lab and its dev tools). Off in Social /
+## Friend / recipient parsing, so a Sequence cell stays a bad token there.
 static var dev_sequence: bool = false
-## Movable prototype: the "M" crate token is parsed only while this is true
-## (the Movable lab and its dev tools). Elsewhere it stays a bad token.
+## Movable: the same for the "M" token (the Movable lab and its dev tools).
 static var dev_movable: bool = false
+## True only while a campaign level is being parsed (parse_level).
+static var _campaign: bool = false
 const CRATE_COLOR := "crate"
 
 
@@ -141,7 +158,7 @@ static func _parse_map(map: Array, level: LevelData) -> void:
 			var t := tokens[c]
 			if t == "." or t == "..":
 				continue
-			if t == "M" and dev_movable:
+			if t == "M" and (dev_movable or _campaign):
 				level.blocks.append(BlockData.new(next_id, Vector2i(c, r), CRATE_COLOR, Direction.UP, BlockData.Kind.CRATE))
 				next_id += 1
 				continue
@@ -155,8 +172,8 @@ static func _parse_map(map: Array, level: LevelData) -> void:
 				next_id += 1
 				continue
 			var m := _token_re.search(t)
-			if m != null and m.get_string(11) != "" and not dev_sequence:
-				m = null  # Sequence prototype token outside the lab: unknown, as before
+			if m != null and m.get_string(11) != "" and not (dev_sequence or _campaign):
+				m = null  # a Sequence token outside the campaign / lab: unknown, as before
 			if m == null:
 				push_error("Level %d: bad map token '%s' at row %d col %d" % [level.number, t, r, c])
 				continue
@@ -185,7 +202,7 @@ static func _parse_map(map: Array, level: LevelData) -> void:
 	_validate_portals(level)
 
 
-## Portal prototype: a malformed layout (a group without exactly two cells,
+## Portal: a malformed layout (a group without exactly two cells,
 ## or a lane that could loop) is reported and dropped entirely, never
 ## guessed at.
 static func _validate_portals(level: LevelData) -> void:
@@ -242,7 +259,7 @@ static func _validate_links(level: LevelData) -> void:
 
 
 static func _validate_block(b: BlockData, level: LevelData) -> void:
-	# Sequence prototype: a plain colored arrow, nothing else.
+	# Sequence: a plain colored arrow, nothing else.
 	if b.seq_stage != 0 and (b.is_spinner() or b.hidden or b.lock_color != "" or b.is_reward() or b.switch_group != ""
 			or b.flip_link != "" or b.gate_link != "" or b.armored):
 		push_error("Level %d: Sequence block at %s must be a plain arrow (no other modifier)" % [level.number, b.cell])

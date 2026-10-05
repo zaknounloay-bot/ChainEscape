@@ -1,0 +1,14 @@
+{
+	"name": "Perfect Timing",
+	"hint": "Milestone. WHEN you use each first tap is the whole puzzle.",
+	"hint_finger": false,
+	"map": [
+		".     Yv    P<    OA    .     .     .",
+		"Pv@   .     .     G<:>  .     .     .",
+		"Rv:<  Yv    Y^    .     Yv$S  P<$G  .",
+		".     .     B^    .     .     .     R<",
+		"Yv    B<    Y^    .     .     .     Y<@",
+		".     .     Y^:>  Y^@   B>    R^@   P<@",
+		".     .     .     Gv:^  .     OA    ."
+	]
+}

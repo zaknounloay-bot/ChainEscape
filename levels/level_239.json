@@ -1,0 +1,12 @@
+{
+	"name": "Late Turn",
+	"map": [
+		"G>     G>     Yv     .      .      OA",
+		"B^     .      Bv     .      .      .",
+		".      .      OA     G>     Rv@    .",
+		".      .      .      B^     .      .",
+		".      P>@    .      Y>     .      Rv:>",
+		"Y^@$S  Gv@    .      R<$G   B>     Y>",
+		".      Rv:^   G<     .      .      ."
+	]
+}

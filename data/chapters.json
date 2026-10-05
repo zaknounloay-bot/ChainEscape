@@ -6,8 +6,8 @@
 	"master_levels": [100, 200],
 	"milestone_levels": [125, 150, 175],
 	"eras": [{"name": "First Era", "from": 1, "to": 100}, {"name": "Second Era", "from": 101, "to": 200}, {"name": "Third Era", "from": 201, "to": 300}],
-	"_comment_celebrations": "Presentation-only milestone celebrations (no coins, no theme or music change): 'short' = MILESTONE stamp + bursts. Levels 125 / 150 / 175 keep their own milestone_levels behaviour (look, music and their one-time bonus).",
-	"celebration_levels": {"225": "short"},
+	"_comment_celebrations": "Presentation-only milestone celebrations (no coins, no theme or music change): 'short' = MILESTONE stamp + bursts; 'strong' = more bursts + a longer 'N LEVELS!' stamp; 'major' = 'N LEVELS ESCAPED!' fitted overlay + the biggest burst (300 - not a finale). Levels 125 / 150 / 175 keep their own milestone_levels behaviour (look, music and their one-time bonus).",
+	"celebration_levels": {"225": "short", "250": "strong", "275": "short", "300": "major"},
 	"chapters": [
 		{"name": "First Light", "mood": "light, welcoming", "music": "c01",
 			"bg_top": "#F7F5FD", "bg_bottom": "#E9E4F7", "board": "#E5E1F3", "slot": "#D8D2EC",
