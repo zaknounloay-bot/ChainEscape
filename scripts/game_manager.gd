@@ -116,6 +116,8 @@ func _ready() -> void:
 	elif lab != "":
 		OpeningLab.apply(lab)
 	progress = PlayerProgress.new().load_from_disk()
+	if ExperienceLab.qa_level > 0:
+		ExperienceLab.seed_qa(progress, level_manager)  # temporary QA save only
 	if not OpeningLab.active and not ExperienceLab.active:
 		_take_web_transfer()
 	background = ChapterBackground.new()
@@ -159,7 +161,7 @@ func _ready() -> void:
 	ui.set_coins(progress.coins, false)
 	# Real-app launch: show the title with CONTINUE - LEVEL X. (Music waits
 	# for the first tap on the web, see AudioManager.)
-	if not skip_title and not direct:
+	if not skip_title and not direct and ExperienceLab.qa_level == 0:
 		_show_title()
 		_update_storage_notice()
 		_open_shared_challenge()
@@ -1445,7 +1447,7 @@ func publish_state() -> void:
 		"intro_mechanic": mechanic_intro.mechanic if mechanic_intro != null else "",
 		"intros_seen": progress.tips_seen.filter(func(t): return String(t).begins_with("intro_")),
 		"portals": board.portals.size(), "celebration": last_result.get("celebration", "") if completed else "",
-		"opening_lab": OpeningLab.active, "experience_lab": ExperienceLab.active, "lab_complete_open": ExperienceLab.complete_open, "lesson": _lesson, "lesson_target": _lesson_target_pos(vis),
+		"opening_lab": OpeningLab.active, "experience_lab": ExperienceLab.active, "lab_qa_level": ExperienceLab.qa_level, "tip_text": (tutorial._text if tutorial.is_showing() else "") if ExperienceLab.active else "", "lab_complete_open": ExperienceLab.complete_open, "lesson": _lesson, "lesson_target": _lesson_target_pos(vis),
 		"lab_complete_button": center.call(get_node("ExperienceLabComplete").find_children("*", "Button", true, false)[0]) if ExperienceLab.complete_open and has_node("ExperienceLabComplete") else [],
 		"level_count": level_manager.level_count, "level_name": level.name if level else "", "max_hearts": max_hearts, "blocks_left": model.block_count(),
 		"coin_notes": last_result.get("coin_notes", "") if completed else "", "chapter_complete": last_result.get("chapter_complete", 0) if completed else 0,

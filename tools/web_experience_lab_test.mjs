@@ -14,6 +14,12 @@
 // C: lab save standing on Lab 100: The Master clears, Chapter 10 card,
 //    then the lab-complete screen (never Level 101); its button opens Level
 //    Select with 1-100. Spot checks: Lab 13 / 16 / 20 / 31 / 41 / 51 names.
+// F: QA jump ?v=123456&experiencelab=N (13 25 31 41 50 51 75 100) and the
+//    plain ?experiencelab=13: Lab N opens directly (no title) in a
+//    temporary QA save; its lesson / intro hint shows; no milestone just
+//    by opening; clearing 25/50/75/100 shows the milestone (100: card,
+//    Chapter 10, lab-complete). The normal lab save and log are unchanged
+//    and ?experiencelab=1 still continues the normal lab.
 // D: the real save and the Opening Lab save are byte-identical afterwards;
 //    without the parameter the real save opens at Level 150. No page errors.
 import http from 'node:http';
@@ -211,6 +217,53 @@ try {
   s = await waitFor(page, (x) => x.card_open && x.level === 24, 'card 24', 150000);
   check(!s.celebration && !(s.major_rect && s.major_rect[2] > 0), 'E: an ordinary level (24) shows no milestone');
   await page.keyboard.press('F1');
+  // ===== F: QA jump ?experiencelab=N =====
+  await page.goto(BASE + '?v=123456&experiencelab=1');
+  const before = await waitFor(page, (x) => x.title_open, 'title (normal lab before QA)');
+  const xlabSave = await ls(page, 'chain_escape_experiencelab_save');
+  const xlabLog = await ls(page, 'chain_escape_experiencelab_log');
+  const HINT = (n) => JSON.parse(fs.readFileSync(path.resolve(`data/dev/experience_lab/level_${String(n).padStart(2, '0')}.json`), 'utf8')).hint || '';
+  for (const [n, q] of [[13, '?experiencelab=13'], [13, '?v=123456&experiencelab=13'], [25], [31], [41, '?v=123456&experiencelab=41'], [50], [51], [75], [100]]) {
+    const url = q || `?v=123456&experiencelab=${n}`;
+    await page.goto(BASE + url);
+    s = await waitFor(page, (x) => x.experience_lab && x.level === n, `QA ${url}`);
+    await sleep(1500);
+    s = await state(page);
+    check(s.lab_qa_level === n && s.level_name === NAME(n) && !s.title_open && s.highest_completed === n - 1 && s.level_count === 100,
+      `F: ${url} opens Lab ${n} "${s.level_name}" directly (QA ${s.lab_qa_level}, title ${s.title_open}, cleared ${s.highest_completed})`);
+    if (n === 13) check(s.lesson === 'lock' && /left\)/.test(s.tip_text), `F: ${url} the lock lesson from the start ("${s.tip_text}")`);
+    else if (HINT(n)) check(s.tip_text === HINT(n), `F: ${url} Lab ${n} intro hint shows ("${s.tip_text}")`);
+    check(!s.card_open && !(s.major_rect && s.major_rect[2] > 0), `F: ${url} no milestone just by opening`);
+    if (q && n === 13) await page.screenshot({ path: path.join(shots, 'xlab_qa_L13.png') });
+    if (n === 41) await page.screenshot({ path: path.join(shots, 'xlab_qa_L41.png') });
+    if (![25, 50, 75, 100].includes(n)) continue;
+    await page.keyboard.press('F1'); await sleep(200);
+    await page.keyboard.press('s');
+    s = await waitFor(page, (x) => x.major_rect && x.major_rect[2] > 0 && x.level === n, `QA milestone ${n}`, 150000);
+    await page.keyboard.press('F1');
+    check(s.major_rect[1] >= 0 && s.major_rect[3] < 0.85, `F: Lab ${n} cleared - "${n} / LEVELS ESCAPED!" shows`);
+    s = await waitFor(page, (x) => x.card_open && x.level === n, `QA card ${n}`, 20000);
+    await sleep(500);
+    s = await state(page);
+    check(s.card_title === (n === 100 ? 'MASTER CLEARED!' : `${n} LEVELS ESCAPED!`), `F: Lab ${n} card "${s.card_title}"`);
+    if (n === 100) {
+      await tapAt(page, s.next);
+      await sleep(900);
+      s = await state(page);
+      if (s.chapter_card_open) { await tapAt(page, s.chapter_continue); await sleep(900); }
+      s = await waitFor(page, (x) => x.lab_complete_open, 'QA lab complete', 15000);
+      check(s.lab_complete_open && s.level === 100, 'F: after Lab 100 (QA): Chapter 10, then the lab-complete screen');
+    }
+  }
+  check(await ls(page, 'chain_escape_experiencelab_save') === xlabSave, 'F: the normal lab save is byte-identical after the QA jumps');
+  check(await ls(page, 'chain_escape_experiencelab_log') === xlabLog, 'F: the lab log is unchanged by the QA jumps');
+  await page.goto(BASE + '?v=123456&experiencelab=1');
+  s = await waitFor(page, (x) => x.title_open, 'title (normal lab after QA)');
+  check(s.experience_lab && !s.lab_qa_level && s.level === before.level && s.highest_completed === before.highest_completed,
+    `F: ?experiencelab=1 still continues the normal lab (Lab ${s.level}, cleared ${s.highest_completed})`);
+  await page.goto(BASE + '?v=123456&experiencelab=reset');
+  s = await waitFor(page, (x) => x.title_open, 'title (reset after QA)');
+  check(s.experience_lab && !s.lab_qa_level && s.level === 1 && s.highest_completed === 0, 'F: ?experiencelab=reset still starts the lab at Lab 1');
   // ===== D: isolation (before the real game is ever opened) =====
   check(await ls(page, 'chain_escape_save') === REAL, 'D: the real save is byte-identical after all lab sessions');
   check(await ls(page, 'chain_escape_openinglab_save') === OLAB, 'D: the Opening Lab save is byte-identical');

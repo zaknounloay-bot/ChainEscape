@@ -91,6 +91,11 @@ func _parsing() -> void:
 		["?v=1&experience%6Cab=1", "", "1"], ["?v=123456", "", ""], ["", "", ""],
 		["?xexperiencelab=1", "", ""], ["?experiencelab=0", "", ""], ["?experiencelabs=1", "", ""],
 		["?openinglab=reset", "", ""], ["?v=1&experiencelab=1&experiencelab=reset", "", "reset"],
+		# QA jump: 2..100 opens that level; anything else keeps the old meaning.
+		["?experiencelab=13", "", "13"], ["?v=123456&experiencelab=41", "", "41"], ["?experiencelab=2", "", "2"],
+		["?experiencelab=100", "", "100"], ["?v=1&experiencelab=50&x=2", "", "50"], ["", "#experiencelab=75", "75"],
+		["?experiencelab=101", "", ""], ["?experiencelab=-5", "", ""], ["?experiencelab=13abc", "", ""],
+		["?v=1&experiencelab=13&experiencelab=reset", "", "reset"],
 	]
 	for c in cases:
 		var got := ExperienceLab.parse_mode(c[0], c[1])

@@ -17,6 +17,31 @@ A candidate Levels 1–100 campaign, playable in the real game for continuous hu
 |---|---|
 | Local / any host | `index.html?experiencelab=reset` (start fresh), `index.html?experiencelab=1` (continue) |
 | **itch.io** (the page already has `?v=...`) | append **`&experiencelab=reset`**, e.g. `index.html?v=123456&experiencelab=reset`; `&experiencelab=1` to continue |
+| **QA jump** (developers, any host) | **`&experiencelab=N`** with N = 2–100 opens Lab Level N directly, e.g. `index.html?v=123456&experiencelab=13` (on a plain host: `index.html?experiencelab=13`) |
+
+### QA jump `experiencelab=N` (developer shortcut, not player progression)
+
+Every itch.io upload is a new browser-storage origin, so the lab would start again from Lab 1. `experiencelab=N` (N = 2–100) opens Lab Level N straight away:
+- **No title screen.** The board is live at once.
+- **Temporary QA save** (`user://experience_lab_qa.cfg`, localStorage `chain_escape_experiencelab_qa_save` / `_qa_beacon`). It is wiped on every QA launch and seeded with what a player arriving at Lab N would have:
+  - Levels 1..N-1 cleared with score 0 and no stars, so no stars or coins are invented. The coins are a new save's 60.
+  - The Chapters before N's complete.
+  - The one-time tips of the earlier levels seen: the Silver/Gold lines, and the Lab 13 lock lesson only when N > 13.
+- **Level N itself is a first visit.** The Lab 13 lock lesson starts from the beginning, and the intro hints of 31 / 41 / 51 show as usual. Completing 25 / 50 / 75 / 100 gives its milestone (never just by opening it). A 10th level gives its Chapter Complete. 100 gives "100 / LEVELS ESCAPED!" → MASTER → Chapter 10 → the lab-complete screen.
+- NEXT goes on to N+1 inside the same QA session.
+- **Never touched:** the real save, the Opening Lab save, the normal lab save and the lab log (in a QA session the log stays in memory only). `experiencelab=reset` and `experiencelab=1` behave as before.
+- `experiencelab=0`, `101`, `-5` and `13abc` are not jumps: as before, they do not switch the lab on.
+
+| Lab | Why test it | itch.io parameter |
+|---|---|---|
+| 13 | Lock lesson | `&experiencelab=13` |
+| 25 | milestone 25 | `&experiencelab=25` |
+| 31 | first CCW | `&experiencelab=31` |
+| 41 | first Alternating | `&experiencelab=41` |
+| 50 | milestone 50 + Chapter 5 | `&experiencelab=50` |
+| 51 | first Pattern | `&experiencelab=51` |
+| 75 | milestone 75 | `&experiencelab=75` |
+| 100 | milestone 100 → MASTER → lab complete | `&experiencelab=100` |
 
 **Parsing** is exact key/value matching on the query string and the hash, in any order and URL-decoded:
 - `xexperiencelab=1`, `experiencelabs=1` and `experiencelab=0` do **not** switch the lab on.
@@ -297,7 +322,8 @@ Human result: both testers went well beyond Level 25 and enjoyed it. The progres
 | Check | Result |
 |---|---|
 | `tools/ExperienceLabCheck.tscn` | **2388 / 2388** (polish pass; 2137 before). Adds the Lab 13 lesson: it opens; it marks the lock and every key block; the finger starts on the key nearest the lock; the counter; after key 1 the lock is still closed and the finger moves on; Undo; the LAST key opens the lock immediately; remembered; the replay shows the plain hint. Milestones: tiers exactly at 25 / 50 / 75 / 100 and nowhere else; the overlay appears only there and fits the screen; reads "N / LEVELS ESCAPED!"; card titles; no finale words. Before the polish pass: **2137 / 2137**. URL parsing (17 cases, including `?v=123456&experiencelab=reset`, hash, URL-encoded, look-alikes); labs off by default; exactly `level_01..level_100` (+ manifest); every level equals its source plus the listed edits; unique names; all 100 solvable; first appearances spinner 6 / hidden 8 / lock 13 / ccw 31 / alt 41 / pattern 51 with their hints only there; every adapted rule can show; new 16 / 20 human-solvability rules on every reachable state; SHOW A MOVE and Hammer on sampled states of all 100. **Real game, Lab 1–100 in order:** board, hearts, SHOW A MOVE, Undo exact, Restart exact, Hammer refuses unsafe smashes, clears by taps, Chapter complete at every 10th, lab-complete screen after 100 (never 101), Level Select 1–100. **Production and Opening Lab saves byte-identical** |
-| `tools/web_experience_lab_test.mjs` (Chromium 390×844, touch) | **44 / 44** (polish pass): adds real touches through the Lab 13 lesson (lock still closed after the first green, open after the last); 25 / 50 / 75 / 100 overlays inside the screen and above the controls; card titles; an ordinary level (24) shows none. Before: **23 / 23**. `?v=123456&experiencelab=reset` and `?experiencelab=reset` start a new lab player (a real save at Level 150 and an Opening Lab save present); Lab 1→4 by NEXT; Lab 13 / 16 / 20 / 31 / 41 / 51 / 100 boards; 100 → Chapter 10 card → lab-complete screen → LEVEL SELECT (100 levels); no level after 100 ever started; **real save and Opening Lab save byte-identical**; a look-alike parameter and the plain URL open the real game at Level 150 with 300 levels; no page errors |
+| `tools/ExperienceLabQaCheck.tscn -- --experiencelab=N` (QA jump, real launch path) | **all pass for N = 13, 25, 31, 41, 50, 51, 75, 100** (19–22 checks each). Lab N opens directly with no title, in the QA save. 1..N-1 are cleared with no stars and coins at a new save's 60. Lab 13 starts its lesson, and 31 / 41 / 51 / 100 show their intro hints. Opening never celebrates. Cleared by taps (through the lesson on 13), it gives exactly its milestone, card title and Chapter Complete, and NEXT goes on (after 100: Chapter 10, then lab complete). **Real save, Opening Lab save, normal lab save and lab log byte-identical.** ExperienceLabCheck: **2398 / 2398** (+10 URL cases for the jump) |
+| `tools/web_experience_lab_test.mjs` (Chromium 390×844, touch) | **81 / 81** (QA jump): section F covers `?experiencelab=13`, `?v=123456&experiencelab=13 / 25 / 31 / 41 / 50 / 51 / 75 / 100`, directly on the level. It checks the lesson and intro hints, that no milestone shows on opening, the milestone after clearing 25 / 50 / 75 / 100, and 100 → lab complete. The normal lab save and log are unchanged, `experiencelab=1` still continues, and `experiencelab=reset` still starts at Lab 1. Polish pass: **44 / 44**: adds real touches through the Lab 13 lesson (lock still closed after the first green, open after the last); 25 / 50 / 75 / 100 overlays inside the screen and above the controls; card titles; an ordinary level (24) shows none. Before: **23 / 23**. `?v=123456&experiencelab=reset` and `?experiencelab=reset` start a new lab player (a real save at Level 150 and an Opening Lab save present); Lab 1→4 by NEXT; Lab 13 / 16 / 20 / 31 / 41 / 51 / 100 boards; 100 → Chapter 10 card → lab-complete screen → LEVEL SELECT (100 levels); no level after 100 ever started; **real save and Opening Lab save byte-identical**; a look-alike parameter and the plain URL open the real game at Level 150 with 300 levels; no page errors |
 | Production | `levels/` unchanged; Classic 1–200 and 201–225 solver goldens identical; Portal / Sequence / Movable lab goldens identical; verifier all 300 levels; unit tests; Opening Lab, Era3, Portal, Sequence, Movable checks; Social smoke / play, recipient, Friend flow / API; the 300-level playtest. Browser: Opening Lab, Era3 (1–300 flow), persistence (47), recipient, Friend flow all pass on this build |
 
 ## Watch list for human testing (deferred on purpose)

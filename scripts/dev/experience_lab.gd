@@ -2,6 +2,8 @@ class_name ExperienceLab
 ## PLAYER EXPERIENCE LAB 1-100 (developer page, not production):
 ##   ?experiencelab=reset   wipe the lab save and log, start at Lab Level 1
 ##   ?experiencelab=1       continue the lab
+##   ?experiencelab=N       QA jump (N = 2..100): open Lab Level N directly
+##                          in a temporary QA session (see QA_SAVE_PATH)
 ## Works next to other query parameters (itch.io adds ?v=...):
 ##   index.html?v=123456&experiencelab=reset
 ## (headless: --experiencelab / --experiencelab=reset)
@@ -24,6 +26,12 @@ const BEACON_KEY := "chain_escape_experiencelab_beacon"
 const LOG_KEY := "chain_escape_experiencelab_log"
 const LOG_PATH := "user://experience_lab_log.json"
 const LAST_LEVEL := 100
+## QA jump (?experiencelab=N): a throwaway save, wiped on every QA launch,
+## so a jump never touches the real save, the Opening Lab save or the
+## normal lab save and lab log.
+const QA_SAVE_PATH := "user://experience_lab_qa.cfg"
+const QA_MIRROR_KEY := "chain_escape_experiencelab_qa_save"
+const QA_BEACON_KEY := "chain_escape_experiencelab_qa_beacon"
 const COMPLETE_TITLE := "PLAYER EXPERIENCE LAB COMPLETE"
 const COMPLETE_LINE := "LEVELS 1–100 TESTED"
 
@@ -35,14 +43,16 @@ const LESSONS := {13: "lock"}
 const CELEBRATIONS := {25: "lab_milestone", 50: "lab_milestone_strong", 75: "lab_milestone_plus", 100: "lab_major"}
 
 static var active := false
+## Lab level of a QA jump (0 = no jump: normal lab session).
+static var qa_level := 0
 static var complete_open := false
 static var _log: Array = []
 static var _level_start_ms := 0
 static var _card_shown_ms := 0
 
 
-## The lab mode asked for by a page's query string and hash: "reset", "1"
-## or "" (off). Parses key=value pairs exactly (any order, any other
+## The lab mode asked for by a page's query string and hash: "reset", "1",
+## a QA jump level "2".."100", or "" (off). Parses key=value pairs exactly (any order, any other
 ## parameters such as itch.io's ?v=, URL-encoded), so "xexperiencelab=1"
 ## or "experiencelab=0" never switch it on.
 static func parse_mode(search: String, fragment: String = "") -> String:
@@ -60,16 +70,23 @@ static func parse_mode(search: String, fragment: String = "") -> String:
 				return "reset"
 			if value in ["", "1", "true", "yes", "on"]:
 				mode = "1"
+			elif value.is_valid_int() and int(value) >= 2 and int(value) <= LAST_LEVEL:
+				mode = str(int(value))
 	return mode
 
 
-## "" (not asked for), "1" or "reset".
+## "" (not asked for), "1", "reset" or a QA jump level "2".."100".
 static func requested() -> String:
 	var args := OS.get_cmdline_user_args()
 	if "--" + PARAM + "=reset" in args:
 		return "reset"
 	if "--" + PARAM in args or "--" + PARAM + "=1" in args:
 		return "1"
+	for a in args:
+		if a.begins_with("--" + PARAM + "="):
+			var m := parse_mode("?" + a.substr(2))
+			if m != "":
+				return m
 	if not OS.has_feature("web"):
 		return ""
 	var loc := JavaScriptBridge.get_interface("location")
@@ -85,6 +102,20 @@ static func apply(mode: String) -> void:
 	complete_open = false
 	LevelManager.override_dir = LEVEL_DIR
 	LevelManager.override_last = LAST_LEVEL
+	qa_level = int(mode) if mode.is_valid_int() and int(mode) >= 2 else 0
+	if qa_level > 0:
+		PlayerProgress.default_path = QA_SAVE_PATH
+		PlayerProgress.mirror_key = QA_MIRROR_KEY
+		PlayerProgress.beacon_key = QA_BEACON_KEY
+		for suffix in ["", ".bak", ".tmp", ".beacon"]:
+			if FileAccess.file_exists(QA_SAVE_PATH + suffix):
+				DirAccess.remove_absolute(ProjectSettings.globalize_path(QA_SAVE_PATH + suffix))
+		if OS.has_feature("web"):
+			for key in [QA_MIRROR_KEY, QA_BEACON_KEY]:
+				WebBridge.ls_set(key, "")
+		_log = []  # in memory only: the lab log is not touched
+		print("[ExperienceLab] QA jump to Lab Level %d (temporary QA save %s)" % [qa_level, QA_SAVE_PATH])
+		return
 	PlayerProgress.default_path = SAVE_PATH
 	PlayerProgress.mirror_key = MIRROR_KEY
 	PlayerProgress.beacon_key = BEACON_KEY
@@ -100,6 +131,38 @@ static func apply(mode: String) -> void:
 		print("[ExperienceLab] reset: lab save and log wiped")
 	_log = _read_log()
 	print("[ExperienceLab] active (%s): levels 1-%d from %s, save %s" % [mode, LAST_LEVEL, LEVEL_DIR, SAVE_PATH])
+
+
+## QA jump: the temporary save holds what a player arriving at Lab Level
+## `qa_level` would have - Levels 1..N-1 cleared (score 0, no stars, so no
+## coins or stars are invented), the Chapters before N's complete, and the
+## one-time tips of the earlier levels seen (the Lab 13 lock lesson only
+## when N > 13). Level N itself is first-time: its lesson / hint, its
+## first clear, its milestone and its Chapter Complete all behave normally.
+static func seed_qa(progress: PlayerProgress, levels: LevelManager) -> void:
+	var n := qa_level
+	for i in range(1, n):
+		progress.best_scores[i] = 0
+		progress.best_stars[i] = 0
+	progress.highest_completed = n - 1
+	progress.last_completed_level = n - 1
+	progress.highest_unlocked = n
+	progress.current_level = n
+	for c in range(1, Chapters.chapter_of(n)):
+		progress.completed_chapters.append(c)
+	for level_number in LESSONS:
+		if level_number < n:
+			progress.tips_seen.append("lesson_" + String(LESSONS[level_number]))
+	for i in range(1, n):
+		var data := levels.load_level(i)
+		if data == null:
+			continue
+		for rarity in [BlockData.Rarity.GOLD, BlockData.Rarity.SILVER]:
+			var tip: String = BlockData.RARITY_NAMES[rarity]
+			if not progress.tips_seen.has(tip) and data.blocks.any(func(b): return b.rarity == rarity):
+				progress.tips_seen.append(tip)
+	progress.save()
+	print("[ExperienceLab] QA save seeded: cleared 1-%d, chapters %s, tips %s" % [n - 1, progress.completed_chapters, progress.tips_seen])
 
 
 ## The lab-only end screen (after Lab Level 100). `on_close` opens Level
@@ -214,6 +277,8 @@ static func _read_log() -> Array:
 
 
 static func _write_log() -> void:
+	if qa_level > 0:
+		return  # QA jump: the normal lab log is left as it is
 	var text := JSON.stringify(_log)
 	if OS.has_feature("web"):
 		WebBridge.ls_set(LOG_KEY, text)
