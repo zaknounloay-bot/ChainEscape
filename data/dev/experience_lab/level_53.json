@@ -1,0 +1,11 @@
+{
+	"name": "Escape Room",
+	"map": [
+		".     Pv@#G .     .     P>@   .",
+		"Gv@   .     R<    G>@*  B^    .",
+		"Rv    Pv    P>    R>    G^    .",
+		"G<    B^@   G>    .     B^    .",
+		"Rv#B  Y<    P^#Y  .     .     .",
+		".     .     Y>    .     P^    ."
+	]
+}

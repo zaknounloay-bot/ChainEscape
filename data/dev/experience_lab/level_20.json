@@ -1,0 +1,11 @@
+{
+	"name": "Secret Key",
+	"mystery": true,
+	"map": [
+		".    .    G^?  P<   .",
+		"Pv   B<   B<?  Y<   .",
+		"Yv   R>#G .    Y^   .",
+		"Y>   .    .    .    B>",
+		"Pv?  R^#G .    .    P^"
+	]
+}

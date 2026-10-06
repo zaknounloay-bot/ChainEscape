@@ -1,0 +1,10 @@
+{
+	"name": "Safe House",
+	"map": [
+		"R^   G<   .    R<   Y<",
+		"Y>   .    Rv   P^   Y^",
+		"Gv#B .    G>   Gv   P^@",
+		".    R^   .    .    B<#Y",
+		".    P<   .    R<   ."
+	]
+}

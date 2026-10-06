@@ -1,0 +1,11 @@
+{
+	"name": "Spin the Lock",
+	"map": [
+		"P<#R   .      B<     .      .      .",
+		".      Yv@    R<     Rv     .      .",
+		".      B>     .      P>     .      .",
+		".      G^     Pv@    Y<     .      R<",
+		"Y^#B$S .      Yv@    .      .      .",
+		"B>     .      .      .      .      P^"
+	]
+}

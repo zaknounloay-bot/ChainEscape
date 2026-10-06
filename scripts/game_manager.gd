@@ -103,13 +103,18 @@ var _solving := false
 
 
 func _ready() -> void:
-	# Developer page (?openinglab): candidate Levels 1-10 and a separate
-	# save; must be set before the save is loaded. Off unless asked for.
-	var lab := OpeningLab.requested()
-	if lab != "":
+	# Developer pages (?experiencelab: candidate Levels 1-100; ?openinglab:
+	# candidate Levels 1-10), each with its own save; set before the save is
+	# loaded. Off unless asked for.
+	var xlab := ExperienceLab.requested()
+	var lab := OpeningLab.requested() if xlab == "" else ""
+	if xlab != "":
+		ExperienceLab.apply(xlab)
+		level_manager.level_count = mini(level_manager.level_count, ExperienceLab.LAST_LEVEL)
+	elif lab != "":
 		OpeningLab.apply(lab)
 	progress = PlayerProgress.new().load_from_disk()
-	if not OpeningLab.active:
+	if not OpeningLab.active and not ExperienceLab.active:
 		_take_web_transfer()
 	background = ChapterBackground.new()
 	add_child(background)
@@ -446,6 +451,7 @@ func start_level(number: int, via: String = "load") -> void:
 		_maybe_mechanic_intro()
 	debug_panel.set_current_level(number)
 	OpeningLab.event("start", number, {"via": via})
+	ExperienceLab.event("start", number, {"via": via})
 	last_diag = Diagnostics.level_transition(number, current_chapter, via, get_tree(), {
 		"fx": board.fx_count(), "music": AudioManager.music_theme, "music_players": AudioManager.music_playing_count(),
 		"sfx": AudioManager.sfx_playing_count(), "save_seq": progress.seq})
@@ -465,6 +471,7 @@ func replay() -> void:
 func next_level() -> void:
 	AudioManager.play_ui_tap()
 	OpeningLab.event("next", current_level)
+	ExperienceLab.event("next", current_level)
 	if pending_chapter_card != 0:
 		_show_chapter_card(pending_chapter_card)
 		return
@@ -476,6 +483,13 @@ func next_level() -> void:
 ## later; nothing says the game is over).
 func _go_next(via: String) -> void:
 	if current_level >= level_manager.level_count:
+		if ExperienceLab.active and current_level == ExperienceLab.LAST_LEVEL:
+			# Developer page only: the lab ends at 100 (never Level 101).
+			ExperienceLab.show_complete(self, func():
+				open_level_select()
+				publish_state.call_deferred())
+			get_tree().create_timer(0.4).timeout.connect(publish_state)  # once laid out
+			return
 		open_level_select()
 		return
 	start_level(current_level + 1, via)
@@ -833,6 +847,8 @@ func _on_board_cleared() -> void:
 	r["level"] = current_level
 	last_result = r
 	OpeningLab.event("clear", current_level, {"stars": r["stars"], "mistakes": mistakes, "undos": undos_used, "hints": hints_used,
+		"hearts_left": hearts, "perfect": r["perfect"]})
+	ExperienceLab.event("clear", current_level, {"stars": r["stars"], "mistakes": mistakes, "undos": undos_used, "hints": hints_used,
 		"hearts_left": hearts, "perfect": r["perfect"]})
 	var session := _session_id
 	# Let the last block leave the screen, then celebrate, then show the card.
@@ -1382,7 +1398,9 @@ func publish_state() -> void:
 		"intro_mechanic": mechanic_intro.mechanic if mechanic_intro != null else "",
 		"intros_seen": progress.tips_seen.filter(func(t): return String(t).begins_with("intro_")),
 		"portals": board.portals.size(), "celebration": last_result.get("celebration", "") if completed else "",
-		"opening_lab": OpeningLab.active, "level_name": level.name if level else "", "max_hearts": max_hearts, "blocks_left": model.block_count(),
+		"opening_lab": OpeningLab.active, "experience_lab": ExperienceLab.active, "lab_complete_open": ExperienceLab.complete_open,
+		"lab_complete_button": center.call(get_node("ExperienceLabComplete").find_children("*", "Button", true, false)[0]) if ExperienceLab.complete_open and has_node("ExperienceLabComplete") else [],
+		"level_count": level_manager.level_count, "level_name": level.name if level else "", "max_hearts": max_hearts, "blocks_left": model.block_count(),
 		"coin_notes": last_result.get("coin_notes", "") if completed else "", "chapter_complete": last_result.get("chapter_complete", 0) if completed else 0,
 		"card_title": ui._card_title.text, "next_text": ui._next_button.text,
 		"major_rect": [ui.major_milestone_rect().position.x / vis.x, ui.major_milestone_rect().position.y / vis.y, ui.major_milestone_rect().end.x / vis.x, ui.major_milestone_rect().end.y / vis.y],
@@ -1413,7 +1431,8 @@ func debug_info() -> String:
 		progress.highest_completed, progress.highest_unlocked, progress.total_score(), progress.coins, progress.saved_text(),
 		("  HELD(%s) beacon=%s" % [progress.hold_reason, JSON.stringify(progress.beacon)]) if progress.hold_writes else "", str(st),
 		("Previous session: " + Diagnostics.previous_session) if Diagnostics.previous_session != "" else "Previous session: closed normally / first run"] \
-		+ (("\n" + OpeningLab.summary()) if OpeningLab.active else "")
+		+ (("\n" + OpeningLab.summary()) if OpeningLab.active else "") \
+		+ (("\n" + ExperienceLab.summary()) if ExperienceLab.active else "")
 
 
 # --- Settings ----------------------------------------------------------------

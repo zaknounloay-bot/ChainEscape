@@ -1,0 +1,903 @@
+{
+	"_comment": "Player Experience Lab 1-100: source of every lab level (tools/experience_lab_build.py).",
+	"levels": [
+		{
+			"level": 1,
+			"name": "First Steps",
+			"source": "Opening Lab 1",
+			"moved_from": null,
+			"edits": [],
+			"rename": null
+		},
+		{
+			"level": 2,
+			"name": "In The Way",
+			"source": "Opening Lab 2",
+			"moved_from": null,
+			"edits": [],
+			"rename": null
+		},
+		{
+			"level": 3,
+			"name": "The Knot",
+			"source": "Opening Lab 3",
+			"moved_from": null,
+			"edits": [],
+			"rename": null
+		},
+		{
+			"level": 4,
+			"name": "Two Threads",
+			"source": "Opening Lab 4",
+			"moved_from": null,
+			"edits": [],
+			"rename": null
+		},
+		{
+			"level": 5,
+			"name": "Long Way Round",
+			"source": "Opening Lab 5",
+			"moved_from": null,
+			"edits": [],
+			"rename": null
+		},
+		{
+			"level": 6,
+			"name": "Spinner",
+			"source": "Opening Lab 6",
+			"moved_from": null,
+			"edits": [],
+			"rename": null
+		},
+		{
+			"level": 7,
+			"name": "Right On Time",
+			"source": "Opening Lab 7",
+			"moved_from": null,
+			"edits": [],
+			"rename": null
+		},
+		{
+			"level": 8,
+			"name": "Hidden Arrow",
+			"source": "Opening Lab 8",
+			"moved_from": null,
+			"edits": [],
+			"rename": null
+		},
+		{
+			"level": 9,
+			"name": "Out Of Sight",
+			"source": "Opening Lab 9",
+			"moved_from": null,
+			"edits": [],
+			"rename": null
+		},
+		{
+			"level": 10,
+			"name": "Clockwork",
+			"source": "Opening Lab 10",
+			"moved_from": null,
+			"edits": [],
+			"rename": null
+		},
+		{
+			"level": 11,
+			"name": "Wrong Way",
+			"source": "production P13",
+			"moved_from": 13,
+			"edits": [],
+			"rename": null
+		},
+		{
+			"level": 12,
+			"name": "Pinwheel",
+			"source": "production P14",
+			"moved_from": 14,
+			"edits": [],
+			"rename": null
+		},
+		{
+			"level": 13,
+			"name": "Locked",
+			"source": "production P16",
+			"moved_from": 16,
+			"edits": [],
+			"rename": null
+		},
+		{
+			"level": 14,
+			"name": "Key Colors",
+			"source": "production P18",
+			"moved_from": 18,
+			"edits": [],
+			"rename": null
+		},
+		{
+			"level": 15,
+			"name": "Tight Squeeze",
+			"source": "production P15",
+			"moved_from": null,
+			"edits": [],
+			"rename": null
+		},
+		{
+			"level": 16,
+			"name": "Key Turn",
+			"source": "NEW (key_turn)",
+			"moved_from": null,
+			"edits": [],
+			"rename": null
+		},
+		{
+			"level": 17,
+			"name": "Fog",
+			"source": "production P20",
+			"moved_from": 20,
+			"edits": [],
+			"rename": null
+		},
+		{
+			"level": 18,
+			"name": "Crosswind",
+			"source": "production P19",
+			"moved_from": 19,
+			"edits": [],
+			"rename": null
+		},
+		{
+			"level": 19,
+			"name": "Padlocks",
+			"source": "production P22",
+			"moved_from": 22,
+			"edits": [],
+			"rename": null
+		},
+		{
+			"level": 20,
+			"name": "Secret Key",
+			"source": "NEW (secret_key)",
+			"moved_from": null,
+			"edits": [],
+			"rename": null
+		},
+		{
+			"level": 21,
+			"name": "Second Thoughts",
+			"source": "production P17",
+			"moved_from": 17,
+			"edits": [],
+			"rename": null
+		},
+		{
+			"level": 22,
+			"name": "Knots",
+			"source": "production P21",
+			"moved_from": 21,
+			"edits": [],
+			"rename": null
+		},
+		{
+			"level": 23,
+			"name": "Combination",
+			"source": "production P24",
+			"moved_from": 24,
+			"edits": [],
+			"rename": null
+		},
+		{
+			"level": 24,
+			"name": "Cogwheels",
+			"source": "production P23",
+			"moved_from": 23,
+			"edits": [],
+			"rename": {
+				"from": "Clockwork",
+				"to": "Cogwheels",
+				"why": "Lab 10 is already \"Clockwork\""
+			}
+		},
+		{
+			"level": 25,
+			"name": "Gridlock",
+			"source": "production P25",
+			"moved_from": null,
+			"edits": [],
+			"rename": null
+		},
+		{
+			"level": 26,
+			"name": "Master Key",
+			"source": "production P26",
+			"moved_from": null,
+			"edits": [],
+			"rename": null
+		},
+		{
+			"level": 27,
+			"name": "Gatekeeper",
+			"source": "production P41",
+			"moved_from": 41,
+			"edits": [],
+			"rename": null
+		},
+		{
+			"level": 28,
+			"name": "Safe House",
+			"source": "production P28",
+			"moved_from": null,
+			"edits": [
+				{
+					"cell": [
+						4,
+						2
+					],
+					"from": "P^",
+					"to": "P^@",
+					"why": "one arrow becomes a clockwise spinner: a lock breather that is no longer a pure-lock step back"
+				}
+			],
+			"rename": null
+		},
+		{
+			"level": 29,
+			"name": "Spin the Lock",
+			"source": "production P36",
+			"moved_from": 36,
+			"edits": [],
+			"rename": null
+		},
+		{
+			"level": 30,
+			"name": "Smoke and Mirrors",
+			"source": "production P30",
+			"moved_from": null,
+			"edits": [],
+			"rename": null
+		},
+		{
+			"level": 31,
+			"name": "Twisted Lanes",
+			"source": "production P31",
+			"moved_from": null,
+			"edits": [],
+			"rename": null
+		},
+		{
+			"level": 32,
+			"name": "Vault",
+			"source": "production P32",
+			"moved_from": null,
+			"edits": [
+				{
+					"cell": [
+						4,
+						2
+					],
+					"from": "Gv",
+					"to": "Gv@-",
+					"why": "one arrow becomes a counter-clockwise spinner: first CCW application, still a breather"
+				}
+			],
+			"rename": null
+		},
+		{
+			"level": 33,
+			"name": "Hairpin",
+			"source": "production P33",
+			"moved_from": null,
+			"edits": [
+				{
+					"cell": [
+						2,
+						3
+					],
+					"from": "R^@",
+					"to": "R^@-",
+					"why": "one clockwise spinner becomes counter-clockwise (its turns are on the solution path)"
+				}
+			],
+			"rename": null
+		},
+		{
+			"level": 34,
+			"name": "Strongroom",
+			"source": "production P34",
+			"moved_from": null,
+			"edits": [],
+			"rename": null
+		},
+		{
+			"level": 35,
+			"name": "Domino Line",
+			"source": "production P27",
+			"moved_from": 27,
+			"edits": [],
+			"rename": null
+		},
+		{
+			"level": 36,
+			"name": "Tumblers",
+			"source": "production P38",
+			"moved_from": 38,
+			"edits": [],
+			"rename": null
+		},
+		{
+			"level": 37,
+			"name": "Rush Order",
+			"source": "production P37",
+			"moved_from": null,
+			"edits": [],
+			"rename": null
+		},
+		{
+			"level": 38,
+			"name": "Traffic Jam",
+			"source": "production P29",
+			"moved_from": 29,
+			"edits": [],
+			"rename": null
+		},
+		{
+			"level": 39,
+			"name": "Labyrinth",
+			"source": "production P39",
+			"moved_from": null,
+			"edits": [],
+			"rename": null
+		},
+		{
+			"level": 40,
+			"name": "Night Shift",
+			"source": "production P40",
+			"moved_from": null,
+			"edits": [],
+			"rename": null
+		},
+		{
+			"level": 41,
+			"name": "Gearbox",
+			"source": "production P35",
+			"moved_from": 35,
+			"edits": [],
+			"rename": null
+		},
+		{
+			"level": 42,
+			"name": "Whirlpool",
+			"source": "production P42",
+			"moved_from": null,
+			"edits": [
+				{
+					"cell": [
+						3,
+						0
+					],
+					"from": "Bv@",
+					"to": "Bv@~",
+					"why": "one clockwise spinner becomes alternating (it can reach its second, opposite turn)"
+				}
+			],
+			"rename": null
+		},
+		{
+			"level": 43,
+			"name": "Turnstile",
+			"source": "production P43",
+			"moved_from": null,
+			"edits": [
+				{
+					"cell": [
+						2,
+						1
+					],
+					"from": "P<$S",
+					"to": "P<@~$S",
+					"why": "one arrow becomes an alternating spinner (no existing spinner here can ever make a second turn, so a spinner conversion would be cosmetic)"
+				}
+			],
+			"rename": null
+		},
+		{
+			"level": 44,
+			"name": "Chain Reaction",
+			"source": "production P44",
+			"moved_from": null,
+			"edits": [],
+			"rename": null
+		},
+		{
+			"level": 45,
+			"name": "Deadbolt",
+			"source": "production P45",
+			"moved_from": null,
+			"edits": [],
+			"rename": null
+		},
+		{
+			"level": 46,
+			"name": "Key Ring",
+			"source": "production P46",
+			"moved_from": null,
+			"edits": [],
+			"rename": null
+		},
+		{
+			"level": 47,
+			"name": "Grand Tangle",
+			"source": "production P47",
+			"moved_from": null,
+			"edits": [],
+			"rename": null
+		},
+		{
+			"level": 48,
+			"name": "Lockstep",
+			"source": "production P48",
+			"moved_from": null,
+			"edits": [],
+			"rename": null
+		},
+		{
+			"level": 49,
+			"name": "Detour",
+			"source": "production P49",
+			"moved_from": null,
+			"edits": [],
+			"rename": {
+				"from": "Long Way Round",
+				"to": "Detour",
+				"why": "Lab 5 is already \"Long Way Round\""
+			}
+		},
+		{
+			"level": 50,
+			"name": "Eclipse",
+			"source": "production P50",
+			"moved_from": null,
+			"edits": [
+				{
+					"cell": [
+						5,
+						4
+					],
+					"from": "Yv",
+					"to": "Yv@~",
+					"why": "one arrow becomes an alternating spinner whose second, opposite turn is on the solution path: the Chapter 5 showcase"
+				}
+			],
+			"rename": null
+		},
+		{
+			"level": 51,
+			"name": "Clockmaker",
+			"source": "production P52",
+			"moved_from": 52,
+			"edits": [],
+			"rename": null
+		},
+		{
+			"level": 52,
+			"name": "Great Escape",
+			"source": "production P51",
+			"moved_from": 51,
+			"edits": [],
+			"rename": null
+		},
+		{
+			"level": 53,
+			"name": "Escape Room",
+			"source": "production P53",
+			"moved_from": null,
+			"edits": [
+				{
+					"cell": [
+						3,
+						1
+					],
+					"from": "G>@",
+					"to": "G>@*",
+					"why": "one clockwise spinner becomes a pattern spinner; its third (left) turn is on the solution path"
+				}
+			],
+			"rename": null
+		},
+		{
+			"level": 54,
+			"name": "Mechanism",
+			"source": "production P54",
+			"moved_from": null,
+			"edits": [],
+			"rename": null
+		},
+		{
+			"level": 55,
+			"name": "Cyclone",
+			"source": "production P55",
+			"moved_from": null,
+			"edits": [],
+			"rename": null
+		},
+		{
+			"level": 56,
+			"name": "Pressure",
+			"source": "production P56",
+			"moved_from": null,
+			"edits": [
+				{
+					"cell": [
+						2,
+						5
+					],
+					"from": "Bv@",
+					"to": "Bv@*",
+					"why": "one clockwise spinner becomes a pattern spinner; its third (left) turn is on the solution path (replaces the planned 55: no spinner or arrow there can ever make a third turn)"
+				}
+			],
+			"rename": null
+		},
+		{
+			"level": 57,
+			"name": "Grand Vault",
+			"source": "production P57",
+			"moved_from": null,
+			"edits": [
+				{
+					"cell": [
+						1,
+						3
+					],
+					"from": "G^",
+					"to": "G^@*",
+					"why": "one arrow becomes a pattern spinner (no existing spinner here can make a third turn)"
+				}
+			],
+			"rename": null
+		},
+		{
+			"level": 58,
+			"name": "Last Lock",
+			"source": "production P58",
+			"moved_from": null,
+			"edits": [],
+			"rename": null
+		},
+		{
+			"level": 59,
+			"name": "Final Turn",
+			"source": "production P59",
+			"moved_from": null,
+			"edits": [],
+			"rename": null
+		},
+		{
+			"level": 60,
+			"name": "The Last Secret",
+			"source": "production P60",
+			"moved_from": null,
+			"edits": [],
+			"rename": null
+		},
+		{
+			"level": 61,
+			"name": "Neon Gate",
+			"source": "production P61",
+			"moved_from": null,
+			"edits": [],
+			"rename": null
+		},
+		{
+			"level": 62,
+			"name": "Afterglow",
+			"source": "production P62",
+			"moved_from": null,
+			"edits": [],
+			"rename": null
+		},
+		{
+			"level": 63,
+			"name": "Static",
+			"source": "production P63",
+			"moved_from": null,
+			"edits": [],
+			"rename": null
+		},
+		{
+			"level": 64,
+			"name": "Night Circuit",
+			"source": "production P64",
+			"moved_from": null,
+			"edits": [],
+			"rename": null
+		},
+		{
+			"level": 65,
+			"name": "Flicker",
+			"source": "production P65",
+			"moved_from": null,
+			"edits": [],
+			"rename": null
+		},
+		{
+			"level": 66,
+			"name": "Voltage",
+			"source": "production P66",
+			"moved_from": null,
+			"edits": [],
+			"rename": null
+		},
+		{
+			"level": 67,
+			"name": "Backspin",
+			"source": "production P67",
+			"moved_from": null,
+			"edits": [],
+			"rename": null
+		},
+		{
+			"level": 68,
+			"name": "Glowline",
+			"source": "production P68",
+			"moved_from": null,
+			"edits": [],
+			"rename": null
+		},
+		{
+			"level": 69,
+			"name": "Prism",
+			"source": "production P69",
+			"moved_from": null,
+			"edits": [],
+			"rename": null
+		},
+		{
+			"level": 70,
+			"name": "Blackout",
+			"source": "production P70",
+			"moved_from": null,
+			"edits": [],
+			"rename": null
+		},
+		{
+			"level": 71,
+			"name": "Overdrive",
+			"source": "production P71",
+			"moved_from": null,
+			"edits": [],
+			"rename": null
+		},
+		{
+			"level": 72,
+			"name": "Synthwave",
+			"source": "production P72",
+			"moved_from": null,
+			"edits": [],
+			"rename": null
+		},
+		{
+			"level": 73,
+			"name": "Pulse Lock",
+			"source": "production P73",
+			"moved_from": null,
+			"edits": [],
+			"rename": null
+		},
+		{
+			"level": 74,
+			"name": "Arcade",
+			"source": "production P74",
+			"moved_from": null,
+			"edits": [],
+			"rename": null
+		},
+		{
+			"level": 75,
+			"name": "Relay",
+			"source": "production P75",
+			"moved_from": null,
+			"edits": [],
+			"rename": null
+		},
+		{
+			"level": 76,
+			"name": "Dynamo",
+			"source": "production P76",
+			"moved_from": null,
+			"edits": [],
+			"rename": null
+		},
+		{
+			"level": 77,
+			"name": "Feedback",
+			"source": "production P77",
+			"moved_from": null,
+			"edits": [],
+			"rename": null
+		},
+		{
+			"level": 78,
+			"name": "Wavelength",
+			"source": "production P78",
+			"moved_from": null,
+			"edits": [],
+			"rename": null
+		},
+		{
+			"level": 79,
+			"name": "Hyperloop",
+			"source": "production P79",
+			"moved_from": null,
+			"edits": [],
+			"rename": null
+		},
+		{
+			"level": 80,
+			"name": "Dark Matter",
+			"source": "production P80",
+			"moved_from": null,
+			"edits": [],
+			"rename": null
+		},
+		{
+			"level": 81,
+			"name": "Summit Path",
+			"source": "production P81",
+			"moved_from": null,
+			"edits": [],
+			"rename": null
+		},
+		{
+			"level": 82,
+			"name": "Thin Air",
+			"source": "production P82",
+			"moved_from": null,
+			"edits": [],
+			"rename": null
+		},
+		{
+			"level": 83,
+			"name": "Ridge Line",
+			"source": "production P83",
+			"moved_from": null,
+			"edits": [],
+			"rename": null
+		},
+		{
+			"level": 84,
+			"name": "Iron Crown",
+			"source": "production P84",
+			"moved_from": null,
+			"edits": [],
+			"rename": null
+		},
+		{
+			"level": 85,
+			"name": "Avalanche",
+			"source": "production P85",
+			"moved_from": null,
+			"edits": [],
+			"rename": null
+		},
+		{
+			"level": 86,
+			"name": "Glacier",
+			"source": "production P86",
+			"moved_from": null,
+			"edits": [],
+			"rename": null
+		},
+		{
+			"level": 87,
+			"name": "Stormwatch",
+			"source": "production P87",
+			"moved_from": null,
+			"edits": [],
+			"rename": null
+		},
+		{
+			"level": 88,
+			"name": "High Pass",
+			"source": "production P88",
+			"moved_from": null,
+			"edits": [],
+			"rename": null
+		},
+		{
+			"level": 89,
+			"name": "Keystone",
+			"source": "production P89",
+			"moved_from": null,
+			"edits": [],
+			"rename": null
+		},
+		{
+			"level": 90,
+			"name": "Eclipse Peak",
+			"source": "production P90",
+			"moved_from": null,
+			"edits": [],
+			"rename": null
+		},
+		{
+			"level": 91,
+			"name": "Grandmaster",
+			"source": "production P91",
+			"moved_from": null,
+			"edits": [],
+			"rename": null
+		},
+		{
+			"level": 92,
+			"name": "Checkmate",
+			"source": "production P92",
+			"moved_from": null,
+			"edits": [],
+			"rename": null
+		},
+		{
+			"level": 93,
+			"name": "Gordian Knot",
+			"source": "production P93",
+			"moved_from": null,
+			"edits": [],
+			"rename": null
+		},
+		{
+			"level": 94,
+			"name": "Clockwork Crown",
+			"source": "production P94",
+			"moved_from": null,
+			"edits": [],
+			"rename": null
+		},
+		{
+			"level": 95,
+			"name": "Paradox",
+			"source": "production P95",
+			"moved_from": null,
+			"edits": [],
+			"rename": null
+		},
+		{
+			"level": 96,
+			"name": "Endgame",
+			"source": "production P96",
+			"moved_from": null,
+			"edits": [],
+			"rename": null
+		},
+		{
+			"level": 97,
+			"name": "Apex",
+			"source": "production P97",
+			"moved_from": null,
+			"edits": [],
+			"rename": null
+		},
+		{
+			"level": 98,
+			"name": "Zenith",
+			"source": "production P98",
+			"moved_from": null,
+			"edits": [],
+			"rename": null
+		},
+		{
+			"level": 99,
+			"name": "Last Light",
+			"source": "production P99",
+			"moved_from": null,
+			"edits": [],
+			"rename": null
+		},
+		{
+			"level": 100,
+			"name": "The Master",
+			"source": "production P100",
+			"moved_from": null,
+			"edits": [],
+			"rename": null
+		}
+	]
+}

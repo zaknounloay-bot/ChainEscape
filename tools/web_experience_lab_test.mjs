@@ -1,0 +1,180 @@
+// PLAYER EXPERIENCE LAB 1-100 (?experiencelab) in the exported game, real
+// Chromium at iPhone size, real touch taps on title / NEXT / Chapter /
+// lab-complete buttons; levels are cleared with the game's debug
+// auto-solve (F1, then S).
+//
+//   godot --headless --path . --export-release "Web" build/web/index.html
+//   SHOTS=<dir> node tools/web_experience_lab_test.mjs build/web
+//
+// A: itch.io-style URL index.html?v=123456&experiencelab=reset with a real
+//    save (Level 150) and an Opening Lab save present: the lab starts as a
+//    new player at Lab 1 with 100 levels; Lab 1-3 play in order.
+// B: the plain URL index.html?experiencelab=reset works too; a look-alike
+//    parameter (?v=1&xexperiencelab=1) does not start the lab.
+// C: lab save standing on Lab 100: The Master clears, Chapter 10 card,
+//    then the lab-complete screen (never Level 101); its button opens Level
+//    Select with 1-100. Spot checks: Lab 13 / 16 / 20 / 31 / 41 / 51 names.
+// D: the real save and the Opening Lab save are byte-identical afterwards;
+//    without the parameter the real save opens at Level 150. No page errors.
+import http from 'node:http';
+import fs from 'node:fs';
+import os from 'node:os';
+import path from 'node:path';
+import { createRequire } from 'node:module';
+import { execSync } from 'node:child_process';
+
+let pw;
+try { pw = await import('playwright'); } catch {
+  pw = createRequire(execSync('npm root -g').toString().trim() + '/')('playwright');
+}
+const { chromium } = pw;
+const root = path.resolve(process.argv[2] || 'build/web');
+const shots = process.env.SHOTS || os.tmpdir();
+const types = { '.html': 'text/html', '.js': 'text/javascript', '.wasm': 'application/wasm', '.pck': 'application/octet-stream', '.png': 'image/png' };
+const server = http.createServer((req, res) => {
+  const file = path.join(root, req.url === '/' ? 'index.html' : decodeURIComponent(req.url.split('?')[0]));
+  fs.readFile(file, (err, data) => {
+    if (err) { res.writeHead(404); res.end(); return; }
+    res.writeHead(200, { 'Content-Type': types[path.extname(file)] || 'application/octet-stream' });
+    res.end(data);
+  });
+}).listen(8775, '127.0.0.1');
+const BASE = 'http://127.0.0.1:8775/index.html';
+const LAB = JSON.parse(fs.readFileSync(path.resolve('data/dev/experience_lab/manifest.json'), 'utf8')).levels;
+const NAME = (n) => LAB[n - 1].name;
+
+const W = 390, H = 844;
+const results = [];
+const check = (ok, msg) => { results.push([ok, msg]); console.log((ok ? 'PASS ' : 'FAIL ') + msg); };
+const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
+const LAUNCH = { headless: !process.env.HEADED, args: ['--use-gl=angle', '--use-angle=swiftshader', '--enable-unsafe-swiftshader'] };
+const VIEW = { viewport: { width: W, height: H }, deviceScaleFactor: 1, isMobile: true, hasTouch: true };
+
+function saveText(cleared, current, seq = 5) {
+  const lines = ['[meta]', '', 'version=5', `seq=${seq}`, '', '[progress]', '', `current_level=${current}`, `highest_completed=${cleared}`,
+    `highest_unlocked=${cleared + 1}`, '', '[economy]', '', 'coins=500', '', '[scores]', ''];
+  for (let n = 1; n <= cleared; n++) lines.push(`${n}=5000`);
+  lines.push('', '[stars]', '');
+  for (let n = 1; n <= cleared; n++) lines.push(`${n}=3`);
+  return lines.join('\n') + '\n';
+}
+const REAL = saveText(149, 150);
+const OLAB = saveText(7, 8);
+
+const state = (page) => page.evaluate(() => window.chainEscapeState || null).catch(() => null);
+async function waitFor(page, pred, what, ms = 120000) {
+  const end = Date.now() + ms;
+  let s = null;
+  while (Date.now() < end) {
+    s = await state(page);
+    if (s && pred(s)) return s;
+    await sleep(150);
+  }
+  throw new Error('timeout waiting for ' + what + ' ' + JSON.stringify(s && { level: s.level, card: s.card_open, title: s.title_open, lab: s.experience_lab }));
+}
+const tapAt = (page, p) => page.touchscreen.tap(p[0] * W, p[1] * H);
+const ls = (page, k) => page.evaluate((key) => localStorage.getItem(key), k);
+
+async function solveAndNext(page, n) {
+  await page.keyboard.press('F1');
+  await sleep(200);
+  await page.keyboard.press('s');
+  let s = await waitFor(page, (x) => x.card_open && x.level === n, `level ${n} cleared`, 150000);
+  await page.keyboard.press('F1');
+  await sleep(900);
+  s = await state(page);
+  await tapAt(page, s.next);
+  await sleep(900);
+  return state(page);
+}
+
+const dir = fs.mkdtempSync(path.join(os.tmpdir(), 'ce-xlab-'));
+const ctx = await chromium.launchPersistentContext(dir, { ...LAUNCH, ...VIEW });
+const errors = [];
+try {
+  await ctx.addInitScript(([real, olab]) => {
+    try {
+      if (!localStorage.getItem('chain_escape_save')) localStorage.setItem('chain_escape_save', real);
+      if (!localStorage.getItem('chain_escape_openinglab_save')) localStorage.setItem('chain_escape_openinglab_save', olab);
+    } catch (e) {}
+  }, [REAL, OLAB]);
+  const page = ctx.pages()[0] || await ctx.newPage();
+  page.on('pageerror', (e) => errors.push(e.message));
+  // ===== A: itch.io-style URL =====
+  await page.goto(BASE + '?v=123456&experiencelab=reset');
+  let s = await waitFor(page, (x) => x.title_open, 'title');
+  check(s.experience_lab && !s.opening_lab && s.level === 1 && s.level_name === NAME(1) && s.highest_completed === 0 && s.level_count === 100,
+    `A: ?v=123456&experiencelab=reset starts the lab as a new player (${s.level_name}, cleared ${s.highest_completed}, ${s.level_count} levels)`);
+  await page.screenshot({ path: path.join(shots, 'xlab_title.png') });
+  await tapAt(page, s.title_continue);
+  s = await waitFor(page, (x) => !x.title_open, 'title closed');
+  for (let n = 1; n <= 3; n++) {
+    s = await waitFor(page, (x) => x.level === n && !x.card_open, `lab ${n}`);
+    check(s.level_name === NAME(n), `A: Lab ${n} is "${s.level_name}"`);
+    s = await solveAndNext(page, n);
+  }
+  s = await waitFor(page, (x) => x.level === 4 && !x.card_open, 'lab 4');
+  check(s.level_name === NAME(4), `A: NEXT continues to Lab 4 "${s.level_name}"`);
+  // ===== B: plain URL, look-alike =====
+  await page.goto(BASE + '?experiencelab=reset');
+  s = await waitFor(page, (x) => x.title_open, 'title (plain)');
+  check(s.experience_lab && s.level === 1 && s.highest_completed === 0, 'B: index.html?experiencelab=reset starts the lab at Lab 1');
+  // ===== C: spot checks and the end of the lab =====
+  for (const n of [13, 16, 20, 31, 41, 51]) {
+    // A newer copy than anything the lab wrote (the game keeps the highest seq).
+    await page.evaluate((t) => localStorage.setItem('chain_escape_experiencelab_save', t), saveText(n - 1, n, 100000 + n));
+    await page.goto(BASE + '?v=7&experiencelab=1');
+    s = await waitFor(page, (x) => x.title_open, `title (lab ${n})`);
+    check(s.experience_lab && s.level === n && s.level_name === NAME(n), `C: Lab ${n} is "${s.level_name}"`);
+    if (n === 16 || n === 20) {
+      await tapAt(page, s.title_continue);
+      await waitFor(page, (x) => !x.title_open, 'closed');
+      await sleep(1500);
+      await page.screenshot({ path: path.join(shots, `xlab_L${n}.png`) });
+    }
+  }
+  await page.evaluate((t) => localStorage.setItem('chain_escape_experiencelab_save', t), saveText(99, 100, 200000));
+  await page.goto(BASE + '?v=123456&experiencelab=1');
+  s = await waitFor(page, (x) => x.title_open, 'title (lab 100)');
+  check(s.level === 100 && s.level_name === NAME(100), `C: Lab 100 is "${s.level_name}"`);
+  await tapAt(page, s.title_continue);
+  await waitFor(page, (x) => !x.title_open, 'closed');
+  await sleep(1500);
+  s = await solveAndNext(page, 100);
+  if (s.chapter_card_open) {
+    check(true, 'C: the Chapter 10 card opens after Lab 100');
+    await tapAt(page, s.chapter_continue);
+    await sleep(900);
+  }
+  s = await waitFor(page, (x) => x.lab_complete_open, 'lab complete', 15000);
+  await sleep(900);
+  s = await state(page);
+  await page.screenshot({ path: path.join(shots, 'xlab_complete.png') });
+  check(s.lab_complete_open && s.level === 100 && s.level_count === 100, `C: the lab-complete screen, still on Lab ${s.level} (never 101)`);
+  const log = await page.evaluate(() => { try { return JSON.parse(localStorage.getItem('chain_escape_experiencelab_log') || '[]'); } catch (e) { return []; } });
+  check(!log.some((e) => e.kind === 'start' && e.level > 100) && log.some((e) => e.kind === 'lab_complete'), 'C: no level after 100 was ever started; the log records the lab completion');
+  check(Array.isArray(s.lab_complete_button) && s.lab_complete_button.length === 2, 'C: the lab-complete screen has its LEVEL SELECT button');
+  await tapAt(page, s.lab_complete_button);
+  s = await waitFor(page, (x) => !x.lab_complete_open && x.select_open, 'level select after lab complete', 8000).catch(() => state(page));
+  check(s && s.select_open && s.select_unlocked + (s.select_locked || 0) <= 100, `C: LEVEL SELECT opens the lab's Level Select (${s && s.select_unlocked} open)`);
+  // ===== D: isolation (before the real game is ever opened) =====
+  check(await ls(page, 'chain_escape_save') === REAL, 'D: the real save is byte-identical after all lab sessions');
+  check(await ls(page, 'chain_escape_openinglab_save') === OLAB, 'D: the Opening Lab save is byte-identical');
+  await page.goto(BASE + '?v=1&xexperiencelab=1');
+  s = await waitFor(page, (x) => x.title_open, 'title (look-alike)');
+  check(!s.experience_lab && s.level === 150, `B: a look-alike parameter opens the real game (level ${s.level})`);
+  await page.goto(BASE + '?v=123456');
+  s = await waitFor(page, (x) => x.title_open, 'title (real)');
+  check(!s.experience_lab && s.level === 150 && s.highest_completed === 149 && s.level_count === 300, `D: without the parameter the real game opens at Level ${s.level} (300 levels)`);
+  check(errors.length === 0, `D: no page errors (${errors.join(' | ')})`);
+} catch (e) {
+  check(false, 'exception: ' + e.message);
+} finally {
+  await ctx.close();
+  fs.rmSync(dir, { recursive: true, force: true });
+  server.close();
+}
+const failed = results.filter((r) => !r[0]).length;
+console.log(`\n${results.length - failed} passed, ${failed} failed`);
+console.log(failed ? 'WEB EXPERIENCE LAB TEST FAILED' : 'WEB EXPERIENCE LAB TEST PASSED');
+process.exit(failed ? 1 : 0);

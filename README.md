@@ -44,6 +44,19 @@ Not included, on purpose: leaderboards, country ranking, accounts/login, backend
 
 ---
 
+## Player Experience Lab 1–100 (developer page, not production): `?experiencelab=reset`
+
+The candidate Levels 1–100 campaign, built from the Opening Lab, the 11–25 reflow and the minimum-intervention audit. It plays in the real game for continuous human testing.
+- **Itch.io:** append `&experiencelab=reset` after itch.io's `?v=...`.
+- **Save:** its own save. The real save, Social and Challenge are never touched.
+- **End:** it stops at Lab 100 with a lab-only "PLAYER EXPERIENCE LAB COMPLETE" screen and never loads 101.
+- Production levels and systems are unchanged.
+- **Docs:** map, sources, adaptations, QA and watch list in `docs/player_experience_lab_1_100.md`.
+- **Data:** `python3 tools/experience_lab_build.py`.
+- **Checks:** `godot --headless --path . res://tools/ExperienceLabCheck.tscn` and `node tools/web_experience_lab_test.mjs build/web`.
+
+---
+
 ## Opening Experience Lab (developer page, not production): `?openinglab=reset`
 
 A candidate Levels 1–10 opening, playable in the real game for first-time-player tests. Production levels, mechanics, save, economy, Social and the backend are unchanged.

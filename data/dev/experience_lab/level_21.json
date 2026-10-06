@@ -1,0 +1,10 @@
+{
+	"name": "Second Thoughts",
+	"map": [
+		"G<  .   .   R<  G<",
+		".   Yv  .   .   R^",
+		"B^  Pv  .   .   .",
+		"P^@ .   R>  B>  P^",
+		".   P>  Y>@ G>  ."
+	]
+}

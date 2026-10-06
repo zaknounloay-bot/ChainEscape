@@ -1,0 +1,478 @@
+extends Node
+## PLAYER EXPERIENCE LAB 1-100 checks (developer page ?experiencelab).
+##   godot --headless --path . res://tools/ExperienceLabCheck.tscn
+##
+## Static:
+## - URL parsing: ?experiencelab=reset / =1, next to itch.io's ?v=, in the
+##   hash, URL-encoded; never on look-alike keys or =0.
+## - Off by default: production paths / keys / level dir untouched.
+## - Data: exactly level_01..level_100 (+ manifest), each equal to its
+##   source (Opening Lab / production board + the listed token edits),
+##   unique names, 1-10 equal to the Opening Lab.
+## - Every level solvable; mechanic introductions at the lab points
+##   (spinner 6, hidden 8, lock 13, CCW 31, alternating 41, pattern 51) with
+##   their hint texts; every adapted spinner rule can actually show (its
+##   distinguishing turn is reachable).
+## - New Levels 16 and 20 (every reachable state): every losing move shows
+##   within 3 moves (Undo reach), no move that turns nothing ever loses,
+##   a 4-move look-ahead player wins, SHOW A MOVE legal and solvable,
+##   Hammer safety exact.
+## - All 100 levels, sampled states: SHOW A MOVE legal and solvable; Hammer
+##   safety exact.
+## Game (real scene, lab active, isolated save):
+## - Each Level 1-100 loads its lab board, hearts from 6, SHOW A MOVE, Undo
+##   exact, Restart exact, Hammer refuses unsafe smashes, clears by taps;
+##   Chapter cards at 10, 20 ... 100; after 100: the lab-complete screen,
+##   never Level 101; Level Select lists 1-100 only.
+## - Save isolation: the production save and the Opening Lab save are
+##   byte-identical before and after.
+
+var game: GameManager
+var failures: Array[String] = []
+var passed := 0
+var _prod_before := ""
+var _olab_before := ""
+
+
+func _ready() -> void:
+	_run.call_deferred()
+
+
+func _check(cond: bool, what: String) -> void:
+	if cond:
+		passed += 1
+	else:
+		failures.append(what)
+		print("FAIL: " + what)
+
+
+func _frames(n: int) -> void:
+	for i in n:
+		await get_tree().process_frame
+
+
+func _run() -> void:
+	_parsing()
+	_defaults()
+	_data()
+	for n in [16, 20]:
+		_new_level_fairness(n)
+	for n in range(1, 101):
+		_sampled_tools(n)
+	await _game()
+	print("")
+	print("%d checks passed, %d failed" % [passed, failures.size()])
+	for f in failures:
+		print("  FAIL: " + f)
+	print("EXPERIENCE LAB CHECKS PASSED" if failures.is_empty() else "EXPERIENCE LAB CHECKS FAILED")
+	get_tree().quit(0 if failures.is_empty() else 1)
+
+
+static func lab_level(n: int) -> LevelData:
+	var json = JSON.parse_string(FileAccess.get_file_as_string(ExperienceLab.LEVEL_DIR.path_join("level_%02d.json" % n)))
+	return LevelManager.parse_level(json, n, true)
+
+
+static func model_of(level: LevelData) -> BoardModel:
+	var m := BoardModel.new()
+	m.setup(level.rows, level.columns, level.blocks)
+	m.set_portals(level.portals)
+	return m
+
+
+# --- Parsing / defaults ---------------------------------------------------------
+
+func _parsing() -> void:
+	var cases := [
+		["?experiencelab=reset", "", "reset"], ["?experiencelab=1", "", "1"],
+		["?v=123456&experiencelab=reset", "", "reset"], ["?v=123456&experiencelab=1", "", "1"],
+		["?experiencelab=reset&v=9", "", "reset"], ["", "#experiencelab=reset", "reset"],
+		["?EXPERIENCELAB=Reset", "", "reset"], ["?experiencelab", "", "1"], ["?experiencelab=true", "", "1"],
+		["?v=1&experience%6Cab=1", "", "1"], ["?v=123456", "", ""], ["", "", ""],
+		["?xexperiencelab=1", "", ""], ["?experiencelab=0", "", ""], ["?experiencelabs=1", "", ""],
+		["?openinglab=reset", "", ""], ["?v=1&experiencelab=1&experiencelab=reset", "", "reset"],
+	]
+	for c in cases:
+		var got := ExperienceLab.parse_mode(c[0], c[1])
+		_check(got == c[2], "parse_mode(%s %s) = '%s' (want '%s')" % [c[0], c[1], got, c[2]])
+
+
+func _defaults() -> void:
+	_check(not ExperienceLab.active and not OpeningLab.active and LevelManager.override_dir == "", "labs are off unless asked for")
+	_check(PlayerProgress.default_path == "user://progress.cfg" and PlayerProgress.mirror_key == "chain_escape_save" and PlayerProgress.beacon_key == "chain_escape_beacon",
+		"production save path and Web keys unchanged by default")
+	var lm := LevelManager.new()
+	lm._ready()
+	_check(lm.level_count == 300, "300 production levels (%d)" % lm.level_count)
+	for n in [1, 11, 16, 20, 50, 100, 101]:
+		var a := LevelManager.to_json_text(lm.load_level(n))
+		var b := LevelManager.to_json_text(LevelManager.read_level(n))
+		_check(a == b, "without the lab, Level %d is production" % n)
+	lm.free()
+
+
+# --- Data -------------------------------------------------------------------------
+
+func _data() -> void:
+	var files := Array(DirAccess.get_files_at(ExperienceLab.LEVEL_DIR)).filter(func(f): return f.ends_with(".json"))
+	var want := ["manifest.json"]
+	for n in range(1, 101):
+		want.append("level_%02d.json" % n)
+	files.sort()
+	want.sort()
+	_check(files == want, "exactly level_01..level_100 + manifest (%d files)" % files.size())
+	var manifest = JSON.parse_string(FileAccess.get_file_as_string(ExperienceLab.LEVEL_DIR.path_join("manifest.json")))
+	var entries: Array = manifest["levels"]
+	_check(entries.size() == 100, "manifest has 100 entries")
+	var names := {}
+	var first := {}
+	for e in entries:
+		var n: int = int(e["level"])
+		var lv := lab_level(n)
+		_check(lv != null and lv.blocks.size() > 0, "L%d parses" % n)
+		_check(not names.has(lv.name), "L%d name '%s' is unique" % [n, lv.name])
+		names[lv.name] = n
+		# Equal to its source + edits.
+		var src: String = e["source"]
+		var src_json: Dictionary
+		if src.begins_with("Opening Lab"):
+			src_json = JSON.parse_string(FileAccess.get_file_as_string(OpeningLab.LEVEL_DIR.path_join("level_%02d.json" % n)))
+		elif src.begins_with("production P"):
+			src_json = JSON.parse_string(FileAccess.get_file_as_string(LevelManager.LEVEL_PATH % int(src.substr(12))))
+		if not src_json.is_empty():
+			var grid := []
+			for row in src_json["map"]:
+				grid.append(Array(String(row).split(" ", false)))
+			for ed in e["edits"]:
+				var c: int = int(ed["cell"][0])
+				var r: int = int(ed["cell"][1])
+				_check(grid[r][c] == ed["from"], "L%d edit at (%d,%d) starts from %s" % [n, c, r, ed["from"]])
+				grid[r][c] = ed["to"]
+			var expect := src_json.duplicate(true)
+			expect["map"] = grid.map(func(row): return " ".join(row))
+			if e["rename"] != null:
+				_check(src_json["name"] == e["rename"]["from"], "L%d rename source name" % n)
+				expect["name"] = e["rename"]["to"]
+			var want_lv := LevelManager.parse_level(expect, n, true)
+			_check(LevelManager.to_json_text(want_lv) == LevelManager.to_json_text(lv) and want_lv.hint == lv.hint and want_lv.mystery == lv.mystery,
+				"L%d equals %s%s" % [n, src, " + edits" if not e["edits"].is_empty() else ""])
+		# Solvable.
+		var s := Solver.from_model(model_of(lv))
+		s.node_limit = 3000000
+		_check(not s.solve().is_empty(), "L%d solvable" % n)
+		# First appearance of each mechanic.
+		var feats := {"spinner": lv.blocks.any(func(b): return b.is_spinner()), "hidden": lv.blocks.any(func(b): return b.hidden),
+			"lock": lv.blocks.any(func(b): return b.lock_color != ""),
+			"ccw": lv.blocks.any(func(b): return b.is_spinner() and b.spin_rule == BlockData.SpinRule.CCW),
+			"alt": lv.blocks.any(func(b): return b.is_spinner() and b.spin_rule == BlockData.SpinRule.ALT),
+			"pattern": lv.blocks.any(func(b): return b.is_spinner() and b.spin_rule == BlockData.SpinRule.PATTERN)}
+		for k in feats:
+			if feats[k] and not first.has(k):
+				first[k] = n
+		var other := lv.blocks.filter(func(b): return b.is_switch() or b.is_gate() or b.armored or b.is_crate() or b.seq_stage != 0)
+		_check(other.is_empty() and lv.portals.is_empty(), "L%d uses only First Era mechanics" % n)
+	var want_first := {"spinner": 6, "hidden": 8, "lock": 13, "ccw": 31, "alt": 41, "pattern": 51}
+	for k in want_first:
+		_check(first.get(k, -1) == want_first[k], "%s first appears at Lab %d (%d)" % [k, want_first[k], first.get(k, -1)])
+	# The intro hints travel with their boards.
+	var hints := {6: "Spinners turn", 8: "Hidden arrows", 13: "A lock opens", 31: "Ring arrows", 41: "alternates", 51: "Pattern spinner"}
+	for n in hints:
+		_check(lab_level(n).hint.contains(hints[n]), "Lab %d keeps its intro hint ('%s')" % [n, lab_level(n).hint])
+	for n in range(1, 101):
+		if not hints.has(n):
+			for h in hints.values():
+				_check(not lab_level(n).hint.contains(h), "intro hint '%s' only at its intro level (L%d)" % [h, n])
+	# Adapted spinner rules can show (their distinguishing turn is reachable).
+	for e in entries:
+		for ed in e["edits"]:
+			var n: int = int(e["level"])
+			var to: String = ed["to"]
+			var need := 1 if to.contains("@-") else (2 if to.contains("@~") else (3 if to.contains("@*") else 1))
+			var lv := lab_level(n)
+			var wid := -1
+			for b in lv.blocks:
+				if b.cell == Vector2i(int(ed["cell"][0]), int(ed["cell"][1])):
+					wid = b.id
+			var st := {"max": 0}
+			_turns(Solver.from_model(model_of(lv)), wid, {}, st)
+			_check(st["max"] >= need, "L%d adapted spinner %s can make its distinguishing turn (%d of %d)" % [n, to, st["max"], need])
+
+
+func _turns(s: Solver, wid: int, seen: Dictionary, st: Dictionary) -> void:
+	var k := s._key()
+	if seen.has(k) or seen.size() > 200000:
+		return
+	seen[k] = true
+	if s._alive[wid] == 1:
+		st["max"] = maxi(st["max"], s._step[wid])
+	for mv in s.legal_moves():
+		s._do(mv)
+		_turns(s, wid, seen, st)
+		s._undo_move(mv)
+
+
+# --- New levels: human-solvability rules on every reachable state -------------
+
+func _new_level_fairness(n: int) -> void:
+	var lv := lab_level(n)
+	var s := Solver.from_model(model_of(lv))
+	var win := {}
+	_explore(s, win)
+	# Walk every reachable state again, checking each move (win[] filled).
+	var seen := {}
+	var res := {"fatal": 0, "deep": 0, "calm": 0, "hint_bad": 0, "hammer_bad": 0, "states": 0}
+	_check_walk(s, win, seen, res, model_of(lv))
+	_check(res["deep"] == 0, "L%d: every losing move shows within 3 moves (%d of %d do not)" % [n, res["deep"], res["fatal"]])
+	_check(res["calm"] == 0, "L%d: a move that turns nothing never loses" % n)
+	_check(res["hint_bad"] == 0, "L%d: SHOW A MOVE legal and solvable on all %d states" % [n, res["states"]])
+	_check(res["hammer_bad"] == 0, "L%d: Hammer safety exact on all states" % n)
+	var look := Solver.from_model(model_of(lv)).lookahead_win_rate(300, 4, 11)
+	_check(look >= 0.5, "L%d: a 4-move look-ahead player wins (%.2f)" % [n, look])
+	var m := LevelAnalysis.analyze(lv)
+	_check(m["lock_impact"] >= 0.5, "L%d: the lock matters (impact %.1f)" % [n, m["lock_impact"]])
+	if n == 16:
+		_check(m["spinner_impact"] >= 0.5, "L16: the spinner matters (impact %.1f)" % m["spinner_impact"])
+		_check(lv.blocks.size() >= 10 and lv.blocks.size() <= 12, "L16: 10-12 blocks (%d)" % lv.blocks.size())
+	if n == 20:
+		_check(m["mystery_impact"] >= 0.3 and m["mystery_fair"], "L20: hidden arrows matter and are fair (impact %.1f)" % m["mystery_impact"])
+		_check(lv.blocks.size() >= 12 and lv.blocks.size() <= 14 and lv.mystery, "L20: 12-14 blocks, mystery (%d)" % lv.blocks.size())
+
+
+func _explore(s: Solver, win: Dictionary) -> bool:
+	var k := s._key()
+	if win.has(k):
+		return win[k]
+	if s._alive_count == s._crate_n:
+		win[k] = true
+		return true
+	var w := false
+	for mv in s.legal_moves():
+		s._do(mv)
+		if _explore(s, win):
+			w = true
+		s._undo_move(mv)
+	win[k] = w
+	return w
+
+
+## Shortest number of further moves until no legal move is left.
+func _stuck_in(s: Solver, depth: int) -> bool:
+	if s._alive_count == s._crate_n:
+		return false
+	var legal := s.legal_moves()
+	if legal.is_empty():
+		return true
+	if depth <= 0:
+		return false
+	for mv in legal:
+		s._do(mv)
+		var r := _stuck_in(s, depth - 1)
+		s._undo_move(mv)
+		if r:
+			return true
+	return false
+
+
+func _check_walk(s: Solver, win: Dictionary, seen: Dictionary, res: Dictionary, m: BoardModel) -> void:
+	var k := s._key()
+	if seen.has(k) or s._alive_count == s._crate_n:
+		return
+	seen[k] = true
+	res["states"] += 1
+	var winnable: bool = win[k]
+	if winnable:
+		for mv in s.legal_moves():
+			s._do(mv)
+			var after: bool = s._alive_count == s._crate_n or win[s._key()]
+			if not after:
+				res["fatal"] += 1
+				# visible: some line of at most 2 more moves already has no move left
+				if not _stuck_in(s, 2):
+					res["deep"] += 1
+			s._undo_move(mv)
+			if not after and not s._is_risky(mv):
+				res["calm"] += 1
+	for mv in s.legal_moves():
+		s._do(mv)
+		_check_walk(s, win, seen, res, m)
+		s._undo_move(mv)
+
+
+# --- Sampled SHOW A MOVE / Hammer on all 100 ---------------------------------------
+
+func _sampled_tools(n: int) -> void:
+	var lv := lab_level(n)
+	var m := model_of(lv)
+	var rng := RandomNumberGenerator.new()
+	rng.seed = 100 + n
+	var bad_hint := 0
+	var bad_hammer := 0
+	var checked := 0
+	for walk in 3:
+		var snap := m.snapshot()
+		var steps := 0
+		while not m.is_empty() and steps < 40:
+			var s := Solver.from_model(m)
+			s.node_limit = 400000
+			var rec := s.recommend_move()
+			if rec == -1 or not m.is_playable(rec):
+				bad_hint += 1
+				break
+			# Hammer: one random block per state, checked exhaustively.
+			var ids := m.blocks.keys()
+			var hid: int = ids[rng.randi() % ids.size()]
+			var safe := Solver.hammer_safe(m, hid)
+			var hs := m.snapshot()
+			m.remove(hid)
+			var keeps := m.is_empty() or Solver.from_model(m).is_solvable()
+			m.restore(hs)
+			if safe and not keeps:
+				bad_hammer += 1
+			checked += 1
+			# Advance: the hint move most of the time, otherwise any safe move.
+			var mv := rec
+			if rng.randf() < 0.4:
+				var opts := m.playable_ids().filter(func(id):
+					var t := m.snapshot()
+					m.remove(id)
+					var ok := m.is_empty() or Solver.from_model(m).is_solvable()
+					m.restore(t)
+					return ok)
+				if not opts.is_empty():
+					mv = opts[rng.randi() % opts.size()]
+			var before := m.snapshot()
+			m.remove(mv)
+			if not m.is_empty() and not Solver.from_model(m).is_solvable():
+				bad_hint += 1 if mv == rec else 0
+				m.restore(before)
+				break
+			steps += 1
+		m.restore(snap)
+	_check(bad_hint == 0, "L%d SHOW A MOVE legal and solvable on sampled states (%d)" % [n, checked])
+	_check(bad_hammer == 0, "L%d Hammer never allows an unsafe smash on sampled states" % n)
+
+
+# --- The real game ------------------------------------------------------------------
+
+func _snapshot() -> Array:
+	var out := []
+	var ids: Array = game.model.blocks.keys()
+	ids.sort()
+	for id in ids:
+		var b: BlockData = game.model.blocks[id]
+		out.append([id, b.cell, b.direction, b.hidden, b.spin_step])
+	return out
+
+
+func _game() -> void:
+	# Save isolation: snapshot the production and Opening Lab saves.
+	_prod_before = _read_all("user://progress.cfg")
+	_olab_before = _read_all(OpeningLab.SAVE_PATH)
+	ExperienceLab.apply("reset")
+	GameManager.skip_title = true
+	game = load("res://scenes/Main.tscn").instantiate()
+	# The GameManager applies the lab itself only from the URL / command
+	# line; here it is applied directly, so the 100-level cap is set below.
+	get_tree().root.add_child(game)
+	await _frames(5)
+	game.level_manager.level_count = mini(game.level_manager.level_count, ExperienceLab.LAST_LEVEL)
+	AudioManager.set_music_enabled(false)
+	_check(game.progress.path == ExperienceLab.SAVE_PATH, "the game uses the lab save (%s)" % game.progress.path)
+	var started_after_100 := false
+	for n in range(1, 101):
+		game.start_level(n, "test")
+		await _frames(2)
+		var lv := lab_level(n)
+		_check(game.level.name == lv.name and LevelManager.to_json_text(game.level) == LevelManager.to_json_text(lv), "game L%d loads the lab board" % n)
+		_check(game.max_hearts == (3 if n >= 6 else 0), "L%d hearts %d" % [n, game.max_hearts])
+		var start := _snapshot()
+		game.progress.inventory["hint"] = 5
+		game.request_hint()
+		_check(game.hint_block != -1 and game.model.is_playable(game.hint_block), "L%d SHOW A MOVE marks a legal move" % n)
+		var sol := Solver.from_model(game.model).solve()
+		for i in mini(2, sol.size() - 1):
+			game._on_block_tapped(sol[i])
+			await _frames(1)
+		game.undos_used = 0
+		for i in mini(2, sol.size() - 1):
+			game.undo()
+			await _frames(1)
+		_check(_snapshot() == start, "L%d Undo restores the exact board" % n)
+		for i in mini(3, sol.size() - 1):
+			game._on_block_tapped(sol[i])
+			await _frames(1)
+		game.restart()
+		await _frames(2)
+		_check(_snapshot() == start, "L%d Restart restores the exact start" % n)
+		# Hammer: the first unsafe block (if any) is refused; a safe one keeps it solvable.
+		game.progress.inventory["hammer"] = 99
+		var unsafe := -1
+		var safe_id := -1
+		for e in start:
+			if game.is_hammer_safe(e[0]):
+				if safe_id == -1:
+					safe_id = e[0]
+			elif unsafe == -1:
+				unsafe = e[0]
+		if unsafe != -1:
+			game.toggle_hammer()
+			game._on_block_tapped(unsafe)
+			await _frames(1)
+			_check(game.model.blocks.has(unsafe), "L%d Hammer refuses an unsafe smash" % n)
+			if game.hammer_armed:
+				game.toggle_hammer()
+		if safe_id != -1:
+			game.restart()
+			await _frames(2)
+			game.toggle_hammer()
+			game._on_block_tapped(safe_id)
+			await _frames(1)
+			_check(not game.model.blocks.has(safe_id) and (game.model.is_empty() or Solver.from_model(game.model).is_solvable()), "L%d a safe smash keeps it solvable" % n)
+		game.restart()
+		await _frames(2)
+		sol = Solver.from_model(game.model).solve()
+		for id in sol:
+			game._on_block_tapped(id)
+			await _frames(1)
+		var t := 0
+		while not (game.completed and game.ui.is_complete_visible()) and t < 600:
+			await _frames(2)
+			t += 1
+		_check(game.completed and game.last_result.get("level", 0) == n, "L%d clears by taps" % n)
+		if n % 10 == 0:
+			_check(int(game.last_result.get("chapter_complete", 0)) == n / 10, "Chapter %d completes at Lab %d" % [n / 10, n])
+		if n == 100:
+			_check(game.last_result.get("is_last", false), "Lab 100 is the last level")
+	# After 100: Chapter 10 card, then the lab-complete screen, never 101.
+	game.next_level()
+	await _frames(3)
+	if game.ui.is_chapter_card_open():
+		game._after_chapter_card()
+		await _frames(3)
+	_check(ExperienceLab.complete_open and game.current_level == 100, "after Lab 100: the lab-complete screen (level %d)" % game.current_level)
+	_check(game.level_manager.level_count == 100, "the lab has exactly 100 levels")
+	started_after_100 = ExperienceLab.log_entries().any(func(e): return e.get("kind") == "start" and int(e.get("level")) > 100)
+	_check(not started_after_100, "Level 101 is never started")
+	var layer := game.get_node_or_null("ExperienceLabComplete")
+	var texts := []
+	if layer:
+		for nd in layer.find_children("*", "Label", true, false):
+			texts.append(nd.text)
+	_check(ExperienceLab.COMPLETE_TITLE in texts and ExperienceLab.COMPLETE_LINE in texts, "the lab-complete screen shows its two lines")
+	# Its button opens Level Select with the lab's 1-100 only.
+	var btn: Button = layer.find_children("*", "Button", true, false)[0] if layer else null
+	if btn:
+		btn.pressed.emit()
+		await _frames(3)
+	_check(game.ui.is_level_select_open() and game.select_shown["unlocked"].size() + game.select_shown["locked"].size() == 100, "Level Select lists Lab 1-100")
+	# Save isolation.
+	_check(_read_all("user://progress.cfg") == _prod_before, "the production save is byte-identical after the lab session")
+	_check(_read_all(OpeningLab.SAVE_PATH) == _olab_before, "the Opening Lab save is byte-identical after the lab session")
+	_check(FileAccess.file_exists(ExperienceLab.SAVE_PATH) and game.progress.highest_completed == 100, "the lab's own save holds the progress (%d)" % game.progress.highest_completed)
+
+
+static func _read_all(path: String) -> String:
+	var out := ""
+	for suffix in ["", ".bak", ".tmp", ".beacon"]:
+		out += "|" + (FileAccess.get_file_as_string(path + suffix) if FileAccess.file_exists(path + suffix) else "<none>")
+	return out

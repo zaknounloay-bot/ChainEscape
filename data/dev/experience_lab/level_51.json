@@ -1,0 +1,13 @@
+{
+	"name": "Clockmaker",
+	"hint": "Pattern spinner: right, right, left - then repeat",
+	"hint_finger": false,
+	"map": [
+		".      R>     P>     Yv     .      .",
+		"P<     Gv@*#R P<     G>     .      P^",
+		"B>@    .      .      R>     B>     R^",
+		".      .      Rv#B   Gv#B   Y>     G<@",
+		"G^     .      P<     Bv@$S  .      .",
+		"B^     .      .      P<     Y<@    ."
+	]
+}

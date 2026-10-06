@@ -1,0 +1,9 @@
+{
+	"name": "Tight Squeeze",
+	"map": [
+		".   .   .   Y<",
+		"G>  Pv  Y>  G^",
+		".   G>  R^  .",
+		".   P<@ Gv  Y<"
+	]
+}

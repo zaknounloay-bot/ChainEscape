@@ -1,0 +1,12 @@
+{
+	"name": "Paradox",
+	"map": [
+		"Rv    R<    .     .     .     .     R<",
+		".     Y^@-  .     .     .     .     .",
+		"Pv    Rv    .     B>    R>@*  .     G^",
+		".     .     Gv#R  .     Gv    B<#Y  Y^",
+		"P>@*  Y<    .     P^@   Gv@#Y P<    G^",
+		"Bv    .     B>    .     R>@   .     .",
+		".     .     .     P^    .     Y<$S  ."
+	]
+}

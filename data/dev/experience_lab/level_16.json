@@ -1,0 +1,10 @@
+{
+	"name": "Key Turn",
+	"map": [
+		".    .    Y>   .    .",
+		"G>   Pv   R<@  .    Pv",
+		"Yv   Gv   B<   .    .",
+		"G>   .    .    .    Bv#R",
+		"Yv   .    .    .    ."
+	]
+}

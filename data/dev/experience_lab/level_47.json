@@ -1,0 +1,11 @@
+{
+	"name": "Grand Tangle",
+	"map": [
+		"R>  .   .   Rv  Yv  .",
+		".   Y^@ .   .   .   G<",
+		".   R<  .   Y>  Bv  R^",
+		"Y^@ G^  P<  Gv  Rv  .",
+		".   .   R^  .   B>  Y^",
+		"G^  .   .   B>  Y>  B<@"
+	]
+}
