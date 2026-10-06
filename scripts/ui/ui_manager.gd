@@ -410,7 +410,7 @@ func show_complete(r: Dictionary) -> void:
 	_card_title.text = "PERFECT!" if perfect else "LEVEL COMPLETE"
 	if r.get("master", false):
 		_card_title.text = "GRAND MASTER!" if r.get("level", 0) > Chapters.master_level() else "MASTER CLEARED!"
-	elif r.get("celebration", "") == "major":
+	elif r.get("celebration", "") == "major" or String(r.get("celebration", "")).begins_with("lab_milestone"):
 		_card_title.text = MAJOR_MILESTONE_TITLE % r.get("level", 0)
 	elif r.get("milestone", false) or r.get("celebration", "") in ["short", "strong"]:
 		_card_title.text = "MILESTONE CLEARED!"

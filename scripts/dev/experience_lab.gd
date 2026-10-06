@@ -27,6 +27,13 @@ const LAST_LEVEL := 100
 const COMPLETE_TITLE := "PLAYER EXPERIENCE LAB COMPLETE"
 const COMPLETE_LINE := "LEVELS 1–100 TESTED"
 
+## Lab-only guided lessons (GameManager's lesson system): Lab 13 teaches
+## the Lock by cause and effect - every key-colour block must leave.
+const LESSONS := {13: "lock"}
+## Lab-only, presentation-only milestones: "N / LEVELS ESCAPED!" (no coins,
+## no rewards, nothing about the game ending; the game goes on after 100).
+const CELEBRATIONS := {25: "lab_milestone", 50: "lab_milestone_strong", 75: "lab_milestone_plus", 100: "lab_major"}
+
 static var active := false
 static var complete_open := false
 static var _log: Array = []

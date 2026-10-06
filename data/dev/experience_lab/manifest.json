@@ -7,7 +7,8 @@
 			"source": "Opening Lab 1",
 			"moved_from": null,
 			"edits": [],
-			"rename": null
+			"rename": null,
+			"hint": null
 		},
 		{
 			"level": 2,
@@ -15,7 +16,8 @@
 			"source": "Opening Lab 2",
 			"moved_from": null,
 			"edits": [],
-			"rename": null
+			"rename": null,
+			"hint": null
 		},
 		{
 			"level": 3,
@@ -23,7 +25,8 @@
 			"source": "Opening Lab 3",
 			"moved_from": null,
 			"edits": [],
-			"rename": null
+			"rename": null,
+			"hint": null
 		},
 		{
 			"level": 4,
@@ -31,7 +34,8 @@
 			"source": "Opening Lab 4",
 			"moved_from": null,
 			"edits": [],
-			"rename": null
+			"rename": null,
+			"hint": null
 		},
 		{
 			"level": 5,
@@ -39,7 +43,8 @@
 			"source": "Opening Lab 5",
 			"moved_from": null,
 			"edits": [],
-			"rename": null
+			"rename": null,
+			"hint": null
 		},
 		{
 			"level": 6,
@@ -47,7 +52,8 @@
 			"source": "Opening Lab 6",
 			"moved_from": null,
 			"edits": [],
-			"rename": null
+			"rename": null,
+			"hint": null
 		},
 		{
 			"level": 7,
@@ -55,7 +61,8 @@
 			"source": "Opening Lab 7",
 			"moved_from": null,
 			"edits": [],
-			"rename": null
+			"rename": null,
+			"hint": null
 		},
 		{
 			"level": 8,
@@ -63,7 +70,8 @@
 			"source": "Opening Lab 8",
 			"moved_from": null,
 			"edits": [],
-			"rename": null
+			"rename": null,
+			"hint": null
 		},
 		{
 			"level": 9,
@@ -71,7 +79,8 @@
 			"source": "Opening Lab 9",
 			"moved_from": null,
 			"edits": [],
-			"rename": null
+			"rename": null,
+			"hint": null
 		},
 		{
 			"level": 10,
@@ -79,7 +88,8 @@
 			"source": "Opening Lab 10",
 			"moved_from": null,
 			"edits": [],
-			"rename": null
+			"rename": null,
+			"hint": null
 		},
 		{
 			"level": 11,
@@ -87,7 +97,8 @@
 			"source": "production P13",
 			"moved_from": 13,
 			"edits": [],
-			"rename": null
+			"rename": null,
+			"hint": null
 		},
 		{
 			"level": 12,
@@ -95,7 +106,8 @@
 			"source": "production P14",
 			"moved_from": 14,
 			"edits": [],
-			"rename": null
+			"rename": null,
+			"hint": null
 		},
 		{
 			"level": 13,
@@ -103,7 +115,12 @@
 			"source": "production P16",
 			"moved_from": 16,
 			"edits": [],
-			"rename": null
+			"rename": null,
+			"hint": {
+				"from": "A lock opens when all blocks of its color are gone",
+				"to": "A lock opens when every block of the LOCK's color is gone",
+				"why": "\"its color\" read as the locked block's own colour; the rule is about the lock's key colour"
+			}
 		},
 		{
 			"level": 14,
@@ -111,7 +128,8 @@
 			"source": "production P18",
 			"moved_from": 18,
 			"edits": [],
-			"rename": null
+			"rename": null,
+			"hint": null
 		},
 		{
 			"level": 15,
@@ -119,7 +137,8 @@
 			"source": "production P15",
 			"moved_from": null,
 			"edits": [],
-			"rename": null
+			"rename": null,
+			"hint": null
 		},
 		{
 			"level": 16,
@@ -127,7 +146,8 @@
 			"source": "NEW (key_turn)",
 			"moved_from": null,
 			"edits": [],
-			"rename": null
+			"rename": null,
+			"hint": null
 		},
 		{
 			"level": 17,
@@ -135,7 +155,8 @@
 			"source": "production P20",
 			"moved_from": 20,
 			"edits": [],
-			"rename": null
+			"rename": null,
+			"hint": null
 		},
 		{
 			"level": 18,
@@ -143,7 +164,8 @@
 			"source": "production P19",
 			"moved_from": 19,
 			"edits": [],
-			"rename": null
+			"rename": null,
+			"hint": null
 		},
 		{
 			"level": 19,
@@ -151,7 +173,8 @@
 			"source": "production P22",
 			"moved_from": 22,
 			"edits": [],
-			"rename": null
+			"rename": null,
+			"hint": null
 		},
 		{
 			"level": 20,
@@ -159,7 +182,8 @@
 			"source": "NEW (secret_key)",
 			"moved_from": null,
 			"edits": [],
-			"rename": null
+			"rename": null,
+			"hint": null
 		},
 		{
 			"level": 21,
@@ -167,7 +191,8 @@
 			"source": "production P17",
 			"moved_from": 17,
 			"edits": [],
-			"rename": null
+			"rename": null,
+			"hint": null
 		},
 		{
 			"level": 22,
@@ -175,7 +200,8 @@
 			"source": "production P21",
 			"moved_from": 21,
 			"edits": [],
-			"rename": null
+			"rename": null,
+			"hint": null
 		},
 		{
 			"level": 23,
@@ -183,7 +209,8 @@
 			"source": "production P24",
 			"moved_from": 24,
 			"edits": [],
-			"rename": null
+			"rename": null,
+			"hint": null
 		},
 		{
 			"level": 24,
@@ -195,7 +222,8 @@
 				"from": "Clockwork",
 				"to": "Cogwheels",
 				"why": "Lab 10 is already \"Clockwork\""
-			}
+			},
+			"hint": null
 		},
 		{
 			"level": 25,
@@ -203,7 +231,8 @@
 			"source": "production P25",
 			"moved_from": null,
 			"edits": [],
-			"rename": null
+			"rename": null,
+			"hint": null
 		},
 		{
 			"level": 26,
@@ -211,7 +240,8 @@
 			"source": "production P26",
 			"moved_from": null,
 			"edits": [],
-			"rename": null
+			"rename": null,
+			"hint": null
 		},
 		{
 			"level": 27,
@@ -219,7 +249,8 @@
 			"source": "production P41",
 			"moved_from": 41,
 			"edits": [],
-			"rename": null
+			"rename": null,
+			"hint": null
 		},
 		{
 			"level": 28,
@@ -237,7 +268,8 @@
 					"why": "one arrow becomes a clockwise spinner: a lock breather that is no longer a pure-lock step back"
 				}
 			],
-			"rename": null
+			"rename": null,
+			"hint": null
 		},
 		{
 			"level": 29,
@@ -245,7 +277,8 @@
 			"source": "production P36",
 			"moved_from": 36,
 			"edits": [],
-			"rename": null
+			"rename": null,
+			"hint": null
 		},
 		{
 			"level": 30,
@@ -253,7 +286,8 @@
 			"source": "production P30",
 			"moved_from": null,
 			"edits": [],
-			"rename": null
+			"rename": null,
+			"hint": null
 		},
 		{
 			"level": 31,
@@ -261,7 +295,8 @@
 			"source": "production P31",
 			"moved_from": null,
 			"edits": [],
-			"rename": null
+			"rename": null,
+			"hint": null
 		},
 		{
 			"level": 32,
@@ -279,7 +314,8 @@
 					"why": "one arrow becomes a counter-clockwise spinner: first CCW application, still a breather"
 				}
 			],
-			"rename": null
+			"rename": null,
+			"hint": null
 		},
 		{
 			"level": 33,
@@ -297,7 +333,8 @@
 					"why": "one clockwise spinner becomes counter-clockwise (its turns are on the solution path)"
 				}
 			],
-			"rename": null
+			"rename": null,
+			"hint": null
 		},
 		{
 			"level": 34,
@@ -305,7 +342,8 @@
 			"source": "production P34",
 			"moved_from": null,
 			"edits": [],
-			"rename": null
+			"rename": null,
+			"hint": null
 		},
 		{
 			"level": 35,
@@ -313,7 +351,8 @@
 			"source": "production P27",
 			"moved_from": 27,
 			"edits": [],
-			"rename": null
+			"rename": null,
+			"hint": null
 		},
 		{
 			"level": 36,
@@ -321,7 +360,8 @@
 			"source": "production P38",
 			"moved_from": 38,
 			"edits": [],
-			"rename": null
+			"rename": null,
+			"hint": null
 		},
 		{
 			"level": 37,
@@ -329,7 +369,8 @@
 			"source": "production P37",
 			"moved_from": null,
 			"edits": [],
-			"rename": null
+			"rename": null,
+			"hint": null
 		},
 		{
 			"level": 38,
@@ -337,7 +378,8 @@
 			"source": "production P29",
 			"moved_from": 29,
 			"edits": [],
-			"rename": null
+			"rename": null,
+			"hint": null
 		},
 		{
 			"level": 39,
@@ -345,7 +387,8 @@
 			"source": "production P39",
 			"moved_from": null,
 			"edits": [],
-			"rename": null
+			"rename": null,
+			"hint": null
 		},
 		{
 			"level": 40,
@@ -353,7 +396,8 @@
 			"source": "production P40",
 			"moved_from": null,
 			"edits": [],
-			"rename": null
+			"rename": null,
+			"hint": null
 		},
 		{
 			"level": 41,
@@ -361,7 +405,8 @@
 			"source": "production P35",
 			"moved_from": 35,
 			"edits": [],
-			"rename": null
+			"rename": null,
+			"hint": null
 		},
 		{
 			"level": 42,
@@ -379,7 +424,8 @@
 					"why": "one clockwise spinner becomes alternating (it can reach its second, opposite turn)"
 				}
 			],
-			"rename": null
+			"rename": null,
+			"hint": null
 		},
 		{
 			"level": 43,
@@ -397,7 +443,8 @@
 					"why": "one arrow becomes an alternating spinner (no existing spinner here can ever make a second turn, so a spinner conversion would be cosmetic)"
 				}
 			],
-			"rename": null
+			"rename": null,
+			"hint": null
 		},
 		{
 			"level": 44,
@@ -405,7 +452,8 @@
 			"source": "production P44",
 			"moved_from": null,
 			"edits": [],
-			"rename": null
+			"rename": null,
+			"hint": null
 		},
 		{
 			"level": 45,
@@ -413,7 +461,8 @@
 			"source": "production P45",
 			"moved_from": null,
 			"edits": [],
-			"rename": null
+			"rename": null,
+			"hint": null
 		},
 		{
 			"level": 46,
@@ -421,7 +470,8 @@
 			"source": "production P46",
 			"moved_from": null,
 			"edits": [],
-			"rename": null
+			"rename": null,
+			"hint": null
 		},
 		{
 			"level": 47,
@@ -429,7 +479,8 @@
 			"source": "production P47",
 			"moved_from": null,
 			"edits": [],
-			"rename": null
+			"rename": null,
+			"hint": null
 		},
 		{
 			"level": 48,
@@ -437,7 +488,8 @@
 			"source": "production P48",
 			"moved_from": null,
 			"edits": [],
-			"rename": null
+			"rename": null,
+			"hint": null
 		},
 		{
 			"level": 49,
@@ -449,7 +501,8 @@
 				"from": "Long Way Round",
 				"to": "Detour",
 				"why": "Lab 5 is already \"Long Way Round\""
-			}
+			},
+			"hint": null
 		},
 		{
 			"level": 50,
@@ -467,7 +520,8 @@
 					"why": "one arrow becomes an alternating spinner whose second, opposite turn is on the solution path: the Chapter 5 showcase"
 				}
 			],
-			"rename": null
+			"rename": null,
+			"hint": null
 		},
 		{
 			"level": 51,
@@ -475,7 +529,8 @@
 			"source": "production P52",
 			"moved_from": 52,
 			"edits": [],
-			"rename": null
+			"rename": null,
+			"hint": null
 		},
 		{
 			"level": 52,
@@ -483,7 +538,8 @@
 			"source": "production P51",
 			"moved_from": 51,
 			"edits": [],
-			"rename": null
+			"rename": null,
+			"hint": null
 		},
 		{
 			"level": 53,
@@ -501,7 +557,8 @@
 					"why": "one clockwise spinner becomes a pattern spinner; its third (left) turn is on the solution path"
 				}
 			],
-			"rename": null
+			"rename": null,
+			"hint": null
 		},
 		{
 			"level": 54,
@@ -509,7 +566,8 @@
 			"source": "production P54",
 			"moved_from": null,
 			"edits": [],
-			"rename": null
+			"rename": null,
+			"hint": null
 		},
 		{
 			"level": 55,
@@ -517,7 +575,8 @@
 			"source": "production P55",
 			"moved_from": null,
 			"edits": [],
-			"rename": null
+			"rename": null,
+			"hint": null
 		},
 		{
 			"level": 56,
@@ -535,7 +594,8 @@
 					"why": "one clockwise spinner becomes a pattern spinner; its third (left) turn is on the solution path (replaces the planned 55: no spinner or arrow there can ever make a third turn)"
 				}
 			],
-			"rename": null
+			"rename": null,
+			"hint": null
 		},
 		{
 			"level": 57,
@@ -553,7 +613,8 @@
 					"why": "one arrow becomes a pattern spinner (no existing spinner here can make a third turn)"
 				}
 			],
-			"rename": null
+			"rename": null,
+			"hint": null
 		},
 		{
 			"level": 58,
@@ -561,7 +622,8 @@
 			"source": "production P58",
 			"moved_from": null,
 			"edits": [],
-			"rename": null
+			"rename": null,
+			"hint": null
 		},
 		{
 			"level": 59,
@@ -569,7 +631,8 @@
 			"source": "production P59",
 			"moved_from": null,
 			"edits": [],
-			"rename": null
+			"rename": null,
+			"hint": null
 		},
 		{
 			"level": 60,
@@ -577,7 +640,8 @@
 			"source": "production P60",
 			"moved_from": null,
 			"edits": [],
-			"rename": null
+			"rename": null,
+			"hint": null
 		},
 		{
 			"level": 61,
@@ -585,7 +649,8 @@
 			"source": "production P61",
 			"moved_from": null,
 			"edits": [],
-			"rename": null
+			"rename": null,
+			"hint": null
 		},
 		{
 			"level": 62,
@@ -593,7 +658,8 @@
 			"source": "production P62",
 			"moved_from": null,
 			"edits": [],
-			"rename": null
+			"rename": null,
+			"hint": null
 		},
 		{
 			"level": 63,
@@ -601,7 +667,8 @@
 			"source": "production P63",
 			"moved_from": null,
 			"edits": [],
-			"rename": null
+			"rename": null,
+			"hint": null
 		},
 		{
 			"level": 64,
@@ -609,7 +676,8 @@
 			"source": "production P64",
 			"moved_from": null,
 			"edits": [],
-			"rename": null
+			"rename": null,
+			"hint": null
 		},
 		{
 			"level": 65,
@@ -617,7 +685,8 @@
 			"source": "production P65",
 			"moved_from": null,
 			"edits": [],
-			"rename": null
+			"rename": null,
+			"hint": null
 		},
 		{
 			"level": 66,
@@ -625,7 +694,8 @@
 			"source": "production P66",
 			"moved_from": null,
 			"edits": [],
-			"rename": null
+			"rename": null,
+			"hint": null
 		},
 		{
 			"level": 67,
@@ -633,7 +703,8 @@
 			"source": "production P67",
 			"moved_from": null,
 			"edits": [],
-			"rename": null
+			"rename": null,
+			"hint": null
 		},
 		{
 			"level": 68,
@@ -641,7 +712,8 @@
 			"source": "production P68",
 			"moved_from": null,
 			"edits": [],
-			"rename": null
+			"rename": null,
+			"hint": null
 		},
 		{
 			"level": 69,
@@ -649,7 +721,8 @@
 			"source": "production P69",
 			"moved_from": null,
 			"edits": [],
-			"rename": null
+			"rename": null,
+			"hint": null
 		},
 		{
 			"level": 70,
@@ -657,7 +730,8 @@
 			"source": "production P70",
 			"moved_from": null,
 			"edits": [],
-			"rename": null
+			"rename": null,
+			"hint": null
 		},
 		{
 			"level": 71,
@@ -665,7 +739,8 @@
 			"source": "production P71",
 			"moved_from": null,
 			"edits": [],
-			"rename": null
+			"rename": null,
+			"hint": null
 		},
 		{
 			"level": 72,
@@ -673,7 +748,8 @@
 			"source": "production P72",
 			"moved_from": null,
 			"edits": [],
-			"rename": null
+			"rename": null,
+			"hint": null
 		},
 		{
 			"level": 73,
@@ -681,7 +757,8 @@
 			"source": "production P73",
 			"moved_from": null,
 			"edits": [],
-			"rename": null
+			"rename": null,
+			"hint": null
 		},
 		{
 			"level": 74,
@@ -689,7 +766,8 @@
 			"source": "production P74",
 			"moved_from": null,
 			"edits": [],
-			"rename": null
+			"rename": null,
+			"hint": null
 		},
 		{
 			"level": 75,
@@ -697,7 +775,8 @@
 			"source": "production P75",
 			"moved_from": null,
 			"edits": [],
-			"rename": null
+			"rename": null,
+			"hint": null
 		},
 		{
 			"level": 76,
@@ -705,7 +784,8 @@
 			"source": "production P76",
 			"moved_from": null,
 			"edits": [],
-			"rename": null
+			"rename": null,
+			"hint": null
 		},
 		{
 			"level": 77,
@@ -713,7 +793,8 @@
 			"source": "production P77",
 			"moved_from": null,
 			"edits": [],
-			"rename": null
+			"rename": null,
+			"hint": null
 		},
 		{
 			"level": 78,
@@ -721,7 +802,8 @@
 			"source": "production P78",
 			"moved_from": null,
 			"edits": [],
-			"rename": null
+			"rename": null,
+			"hint": null
 		},
 		{
 			"level": 79,
@@ -729,7 +811,8 @@
 			"source": "production P79",
 			"moved_from": null,
 			"edits": [],
-			"rename": null
+			"rename": null,
+			"hint": null
 		},
 		{
 			"level": 80,
@@ -737,7 +820,8 @@
 			"source": "production P80",
 			"moved_from": null,
 			"edits": [],
-			"rename": null
+			"rename": null,
+			"hint": null
 		},
 		{
 			"level": 81,
@@ -745,7 +829,8 @@
 			"source": "production P81",
 			"moved_from": null,
 			"edits": [],
-			"rename": null
+			"rename": null,
+			"hint": null
 		},
 		{
 			"level": 82,
@@ -753,7 +838,8 @@
 			"source": "production P82",
 			"moved_from": null,
 			"edits": [],
-			"rename": null
+			"rename": null,
+			"hint": null
 		},
 		{
 			"level": 83,
@@ -761,7 +847,8 @@
 			"source": "production P83",
 			"moved_from": null,
 			"edits": [],
-			"rename": null
+			"rename": null,
+			"hint": null
 		},
 		{
 			"level": 84,
@@ -769,7 +856,8 @@
 			"source": "production P84",
 			"moved_from": null,
 			"edits": [],
-			"rename": null
+			"rename": null,
+			"hint": null
 		},
 		{
 			"level": 85,
@@ -777,7 +865,8 @@
 			"source": "production P85",
 			"moved_from": null,
 			"edits": [],
-			"rename": null
+			"rename": null,
+			"hint": null
 		},
 		{
 			"level": 86,
@@ -785,7 +874,8 @@
 			"source": "production P86",
 			"moved_from": null,
 			"edits": [],
-			"rename": null
+			"rename": null,
+			"hint": null
 		},
 		{
 			"level": 87,
@@ -793,7 +883,8 @@
 			"source": "production P87",
 			"moved_from": null,
 			"edits": [],
-			"rename": null
+			"rename": null,
+			"hint": null
 		},
 		{
 			"level": 88,
@@ -801,7 +892,8 @@
 			"source": "production P88",
 			"moved_from": null,
 			"edits": [],
-			"rename": null
+			"rename": null,
+			"hint": null
 		},
 		{
 			"level": 89,
@@ -809,7 +901,8 @@
 			"source": "production P89",
 			"moved_from": null,
 			"edits": [],
-			"rename": null
+			"rename": null,
+			"hint": null
 		},
 		{
 			"level": 90,
@@ -817,7 +910,8 @@
 			"source": "production P90",
 			"moved_from": null,
 			"edits": [],
-			"rename": null
+			"rename": null,
+			"hint": null
 		},
 		{
 			"level": 91,
@@ -825,7 +919,8 @@
 			"source": "production P91",
 			"moved_from": null,
 			"edits": [],
-			"rename": null
+			"rename": null,
+			"hint": null
 		},
 		{
 			"level": 92,
@@ -833,7 +928,8 @@
 			"source": "production P92",
 			"moved_from": null,
 			"edits": [],
-			"rename": null
+			"rename": null,
+			"hint": null
 		},
 		{
 			"level": 93,
@@ -841,7 +937,8 @@
 			"source": "production P93",
 			"moved_from": null,
 			"edits": [],
-			"rename": null
+			"rename": null,
+			"hint": null
 		},
 		{
 			"level": 94,
@@ -849,7 +946,8 @@
 			"source": "production P94",
 			"moved_from": null,
 			"edits": [],
-			"rename": null
+			"rename": null,
+			"hint": null
 		},
 		{
 			"level": 95,
@@ -857,7 +955,8 @@
 			"source": "production P95",
 			"moved_from": null,
 			"edits": [],
-			"rename": null
+			"rename": null,
+			"hint": null
 		},
 		{
 			"level": 96,
@@ -865,7 +964,8 @@
 			"source": "production P96",
 			"moved_from": null,
 			"edits": [],
-			"rename": null
+			"rename": null,
+			"hint": null
 		},
 		{
 			"level": 97,
@@ -873,7 +973,8 @@
 			"source": "production P97",
 			"moved_from": null,
 			"edits": [],
-			"rename": null
+			"rename": null,
+			"hint": null
 		},
 		{
 			"level": 98,
@@ -881,7 +982,8 @@
 			"source": "production P98",
 			"moved_from": null,
 			"edits": [],
-			"rename": null
+			"rename": null,
+			"hint": null
 		},
 		{
 			"level": 99,
@@ -889,7 +991,8 @@
 			"source": "production P99",
 			"moved_from": null,
 			"edits": [],
-			"rename": null
+			"rename": null,
+			"hint": null
 		},
 		{
 			"level": 100,
@@ -897,7 +1000,8 @@
 			"source": "production P100",
 			"moved_from": null,
 			"edits": [],
-			"rename": null
+			"rename": null,
+			"hint": null
 		}
 	]
 }

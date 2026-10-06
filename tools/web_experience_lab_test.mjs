@@ -157,6 +157,60 @@ try {
   await tapAt(page, s.lab_complete_button);
   s = await waitFor(page, (x) => !x.lab_complete_open && x.select_open, 'level select after lab complete', 8000).catch(() => state(page));
   check(s && s.select_open && s.select_unlocked + (s.select_locked || 0) <= 100, `C: LEVEL SELECT opens the lab's Level Select (${s && s.select_unlocked} open)`);
+  // ===== E: Lab 13 lock lesson and the 25 / 50 / 75 / 100 milestones =====
+  await page.evaluate((t) => localStorage.setItem('chain_escape_experiencelab_save', t), saveText(12, 13, 300000));
+  await page.goto(BASE + '?v=123456&experiencelab=1');
+  s = await waitFor(page, (x) => x.title_open, 'title (lab 13)');
+  await tapAt(page, s.title_continue);
+  s = await waitFor(page, (x) => !x.title_open && x.level === 13, 'lab 13');
+  await sleep(1500);
+  s = await state(page);
+  check(s.lesson === 'lock', `E: Lab 13 opens the lock lesson (${s.lesson})`);
+  await page.screenshot({ path: path.join(shots, 'xlab_L13_lesson_1.png') });
+  check(Array.isArray(s.lesson_target) && s.lesson_target.length === 2, 'E: the lesson finger points at a block');
+  await tapAt(page, s.lesson_target);   // a real touch on the guided (green) block
+  await sleep(1100);
+  s = await state(page);
+  check(s.lesson === 'lock' && s.blocks_left === 4, `E: after the first green leaves the lesson continues - lock still closed (${s.lesson}, ${s.blocks_left} left)`);
+  await page.screenshot({ path: path.join(shots, 'xlab_L13_lesson_2.png') });
+  await tapAt(page, s.lesson_target);   // the last green
+  await sleep(900);
+  s = await state(page);
+  check(s.lesson === '' && s.blocks_left === 3, `E: the last green leaves - the lock opens and the lesson ends (${s.blocks_left} left)`);
+  await page.screenshot({ path: path.join(shots, 'xlab_L13_lesson_3.png') });
+  for (const n of [25, 50, 75, 100]) {
+    await page.evaluate(([t]) => localStorage.setItem('chain_escape_experiencelab_save', t), [saveText(n - 1, n, 400000 + n)]);
+    await page.goto(BASE + '?v=123456&experiencelab=1');
+    s = await waitFor(page, (x) => x.title_open, `title (lab ${n})`);
+    await tapAt(page, s.title_continue);
+    await waitFor(page, (x) => !x.title_open && x.level === n, `lab ${n}`);
+    await sleep(1200);
+    await page.keyboard.press('F1'); await sleep(200);
+    await page.keyboard.press('s');
+    s = await waitFor(page, (x) => x.major_rect && x.major_rect[2] > 0 && x.level === n, `milestone ${n}`, 150000);
+    await page.keyboard.press('F1');
+    await page.screenshot({ path: path.join(shots, `xlab_milestone_${n}.png`) });
+    const r = s.major_rect;
+    check(r[0] >= 0 && r[1] >= 0 && r[2] <= 1 && r[3] <= 1, `E: Lab ${n} "${n} / LEVELS ESCAPED!" fits the iPhone screen (${r.map((x) => x.toFixed(2)).join(', ')})`);
+    check(r[3] < 0.85, `E: Lab ${n} overlay stays clear of the bottom controls (bottom ${r[3].toFixed(2)})`);
+    s = await waitFor(page, (x) => x.card_open && x.level === n, `card ${n}`, 20000);
+    await sleep(500);
+    s = await state(page);
+    const want = n === 100 ? 'MASTER CLEARED!' : `${n} LEVELS ESCAPED!`;
+    check(s.card_title === want && s.celebration.startsWith('lab_'), `E: Lab ${n} card "${s.card_title}" (${s.celebration})`);
+    check(!/FINAL|GRAND|GAME COMPLETE|THE END|HALFWAY/i.test(s.card_title), `E: Lab ${n} no finale wording`);
+  }
+  await page.evaluate(([t]) => localStorage.setItem('chain_escape_experiencelab_save', t), [saveText(23, 24, 500000)]);
+  await page.goto(BASE + '?v=123456&experiencelab=1');
+  s = await waitFor(page, (x) => x.title_open, 'title (lab 24)');
+  await tapAt(page, s.title_continue);
+  await waitFor(page, (x) => !x.title_open && x.level === 24, 'lab 24');
+  await sleep(1000);
+  await page.keyboard.press('F1'); await sleep(200);
+  await page.keyboard.press('s');
+  s = await waitFor(page, (x) => x.card_open && x.level === 24, 'card 24', 150000);
+  check(!s.celebration && !(s.major_rect && s.major_rect[2] > 0), 'E: an ordinary level (24) shows no milestone');
+  await page.keyboard.press('F1');
   // ===== D: isolation (before the real game is ever opened) =====
   check(await ls(page, 'chain_escape_save') === REAL, 'D: the real save is byte-identical after all lab sessions');
   check(await ls(page, 'chain_escape_openinglab_save') === OLAB, 'D: the Opening Lab save is byte-identical');

@@ -58,6 +58,16 @@ RENAMES = {
     49: ("Long Way Round", "Detour", "Lab 5 is already \"Long Way Round\""),
 }
 
+# Lab-only hint text (production hints are untouched). Lab 13: "its color"
+# read as the locked block's own colour; the rule is about the LOCK's
+# (key) colour. The guided lock lesson teaches it on the board; this line
+# is the reminder on replays.
+HINTS = {
+    13: ("A lock opens when all blocks of its color are gone",
+         "A lock opens when every block of the LOCK's color is gone",
+         "\"its color\" read as the locked block's own colour; the rule is about the lock's key colour"),
+}
+
 # The two new boards (docs/player_experience_lab_1_100.md).
 NEW = {
     "key_turn": {
@@ -123,6 +133,13 @@ def main():
                 sys.exit("L%d: expected name %r, found %r" % (n, old_name, data["name"]))
             data["name"] = new_name
             rename = {"from": old_name, "to": new_name, "why": why}
+        hint = None
+        if n in HINTS:
+            old_hint, new_hint, why = HINTS[n]
+            if data.get("hint") != old_hint:
+                sys.exit("L%d: expected hint %r, found %r" % (n, old_hint, data.get("hint")))
+            data["hint"] = new_hint
+            hint = {"from": old_hint, "to": new_hint, "why": why}
         if data["name"] in names:
             sys.exit("duplicate name %r at L%d and L%d" % (data["name"], names[data["name"]], n))
         names[data["name"]] = n
@@ -136,7 +153,7 @@ def main():
             f.write("\n")
         manifest.append({"level": n, "name": data["name"], "source": source,
                          "moved_from": src if kind == "prod" and src != n else None,
-                         "edits": edits, "rename": rename})
+                         "edits": edits, "rename": rename, "hint": hint})
     with open(os.path.join(OUT, "manifest.json"), "w") as f:
         json.dump({"_comment": "Player Experience Lab 1-100: source of every lab level (tools/experience_lab_build.py).",
                    "levels": manifest}, f, indent="\t", ensure_ascii=False)

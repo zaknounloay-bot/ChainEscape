@@ -232,12 +232,72 @@ Columns:
 | 99 | Last Light | P99 | unchanged | spinners alt×1 cw×2 pat×1 ccw×2, locks×2 | 25 | 61.1 / 52 | 19 | 13.7 / 22 |
 | 100 | The Master | P100 | unchanged | spinners alt×2 cw×2 pat×2 ccw×1, locks×3, hidden×3 | 24 | 67.7 / 54.5 | 21 | 13.2 / 21 |
 
+## Polish pass (after human playtests): Lock onboarding and milestones
+
+Human result: both testers went well beyond Level 25 and enjoyed it. The progression is approved as is: no reorders, no rebalancing, no 61–100 changes. Two presentation fixes, both lab-only.
+
+### Lock onboarding (Lab 13 "Locked")
+
+**Before:**
+- The finger pointed at one green block; the player moved it, and the lock did **not** open. It opened only later, when the *other* green block left, far from where the player was looking.
+- The hint "A lock opens when all blocks of **its** color are gone" reads as the locked block's own colour (blue), not the key colour on the padlock (green).
+- An experienced tester only learned the "all of them" rule hundreds of levels later.
+
+**After** (board layout unchanged; the Lock rule unchanged):
+- A guided **lock lesson**, the same lesson system as the Switch, Gate and Armor lessons:
+  1. Brackets mark the lock **and every green block**. The finger points at the green **nearest the lock**. The line reads "The LOCK opens when every GREEN block is gone (2 left)".
+  2. **Green 1 leaves:** the lock stays shut, **rattles**, and the remaining green **hops** (the existing "locked tap" animation). The counter reads "(1 left)" and the finger moves to the last green.
+  3. **The last green leaves:** the lock **opens at once**, with the existing pop, green burst, unlock sound and haptic. The line reads "Every GREEN block is gone - the lock is open!".
+- The finger only offers moves that keep the level solvable. Undo returns to the previous step.
+- The lesson is shown once (`lesson_lock` in the lab save); replays show the plain hint.
+- **Lab-only hint fix:** "A lock opens when every block of the LOCK's color is gone". Production is untouched.
+
+**Code:**
+- `ExperienceLab.LESSONS = {13: "lock"}`.
+- "lock" in `GameManager._lesson_blocks`, `_lesson_step` and `_finish_lesson`, plus a key-escape hook. None of it runs outside the lab.
+- The hint override lives in `tools/experience_lab_build.py` (`HINTS`, recorded in the manifest).
+
+### Onboarding audit: first introduction of each mechanic
+
+| Mechanic | Lab | A. Asked action | B. Immediate visible consequence | C. Rule understood? | D. Mismatch? | Verdict |
+|---|---|---|---|---|---|---|
+| Spinner | 6 | Finger on the only free block (below the spinner); "Spinners turn when a neighbor escapes" | The spinner turns at once (move 1 of 4) and can then leave | Yes | No | **CLEAR** (unchanged) |
+| Hidden | 8 | Line "Hidden arrows appear when a neighbor escapes"; one free block; tapping the "?" is free and explains | The "?" is revealed the moment its neighbour leaves | Yes | No | **CLEAR** (unchanged) |
+| Lock | 13 | Before: finger on one green | Before: nothing (the lock stayed shut) | Before: no | Before: **yes** | Before: **ONBOARDING FAILURE**. Now **fixed** (above) |
+| CCW spinner | 31 | Line "Ring arrows show which way a spinner turns next"; no finger | Its only turn comes at move 8 of 15, among two clockwise spinners; the ring shows the direction beforehand | Mostly | Slight (late, one turn, mixed board) | **MINOR CLARITY ISSUE** (not changed) |
+| Alternating | 41 | Line "Dots show a spinner's rule: this one alternates"; no finger | The spinner can turn **at most once** anywhere in the level (it never alternates); only its dot strip shows the next turn is opposite | Weakly | **Yes**: told it alternates, but it never can | **ONBOARDING FAILURE: reported, NOT changed** |
+| Pattern | 51 | Line "Pattern spinner: right, right, left - then repeat"; no finger | The spinner can turn **at most twice** (the distinctive third, left, turn never happens) | Partly (strip and line) | Yes, but Lab 53 shows the third turn on its solution path two levels later | **MINOR CLARITY ISSUE** (not changed) |
+
+**Not changed on purpose:** the brief asked to report any other onboarding failure first. The fix candidates would be:
+- an alternating-spinner intro board whose solution needs both turns (Lab 50 is the first such level today);
+- optionally, moving the pattern's third turn into Lab 51.
+
+### Milestones 25 / 50 / 75 / 100 (presentation only)
+
+`ExperienceLab.CELEBRATIONS`, read through `Chapters.celebration_tier` only while the lab is active. Every milestone uses the existing fitted overlay: the number large and dominant, "LEVELS ESCAPED!" under it, 40 px safe margins, the font shrinking to fit, never clipped.
+
+| Level | Tier | Burst / sound | Hold before the card | Card title |
+|---|---|---|---|---|
+| 25 | short | 2 bursts, milestone jingle | ~1.6 s | "25 LEVELS ESCAPED!" |
+| 50 | stronger | 4 bursts, milestone jingle, then a sparkle and an extra burst (0.35 s later) | ~1.9 s | "50 LEVELS ESCAPED!" |
+| 75 | short+ | 3 bursts, milestone jingle | ~1.7 s | "75 LEVELS ESCAPED!" |
+| 100 | major | 6 bursts, Master jingle, **"100 / LEVELS ESCAPED!"**, then the **MASTER!** stamp (Master identity kept) | ~3.8 s | "MASTER CLEARED!" |
+
+**Before the level:** milestone levels get the gold level label and the "MILESTONE · LEVEL N" banner, the anticipation beat; 100 keeps "MASTER LEVEL".
+
+**What does not change:**
+- Chapter Complete is unchanged and still follows at 50 and 100.
+- No coins, stars or rewards change.
+- Nothing says final, finished, grand or halfway.
+
+**iPhone (390×844):** every overlay sits at 6–94% of the width and 31–53% of the height, clear of the bottom controls, touch only.
+
 ## QA
 
 | Check | Result |
 |---|---|
-| `tools/ExperienceLabCheck.tscn` | **2137 / 2137**. URL parsing (17 cases, including `?v=123456&experiencelab=reset`, hash, URL-encoded, look-alikes); labs off by default; exactly `level_01..level_100` (+ manifest); every level equals its source plus the listed edits; unique names; all 100 solvable; first appearances spinner 6 / hidden 8 / lock 13 / ccw 31 / alt 41 / pattern 51 with their hints only there; every adapted rule can show; new 16 / 20 human-solvability rules on every reachable state; SHOW A MOVE and Hammer on sampled states of all 100. **Real game, Lab 1–100 in order:** board, hearts, SHOW A MOVE, Undo exact, Restart exact, Hammer refuses unsafe smashes, clears by taps, Chapter complete at every 10th, lab-complete screen after 100 (never 101), Level Select 1–100. **Production and Opening Lab saves byte-identical** |
-| `tools/web_experience_lab_test.mjs` (Chromium 390×844, touch) | **23 / 23**. `?v=123456&experiencelab=reset` and `?experiencelab=reset` start a new lab player (a real save at Level 150 and an Opening Lab save present); Lab 1→4 by NEXT; Lab 13 / 16 / 20 / 31 / 41 / 51 / 100 boards; 100 → Chapter 10 card → lab-complete screen → LEVEL SELECT (100 levels); no level after 100 ever started; **real save and Opening Lab save byte-identical**; a look-alike parameter and the plain URL open the real game at Level 150 with 300 levels; no page errors |
+| `tools/ExperienceLabCheck.tscn` | **2388 / 2388** (polish pass; 2137 before). Adds the Lab 13 lesson: it opens; it marks the lock and every key block; the finger starts on the key nearest the lock; the counter; after key 1 the lock is still closed and the finger moves on; Undo; the LAST key opens the lock immediately; remembered; the replay shows the plain hint. Milestones: tiers exactly at 25 / 50 / 75 / 100 and nowhere else; the overlay appears only there and fits the screen; reads "N / LEVELS ESCAPED!"; card titles; no finale words. Before the polish pass: **2137 / 2137**. URL parsing (17 cases, including `?v=123456&experiencelab=reset`, hash, URL-encoded, look-alikes); labs off by default; exactly `level_01..level_100` (+ manifest); every level equals its source plus the listed edits; unique names; all 100 solvable; first appearances spinner 6 / hidden 8 / lock 13 / ccw 31 / alt 41 / pattern 51 with their hints only there; every adapted rule can show; new 16 / 20 human-solvability rules on every reachable state; SHOW A MOVE and Hammer on sampled states of all 100. **Real game, Lab 1–100 in order:** board, hearts, SHOW A MOVE, Undo exact, Restart exact, Hammer refuses unsafe smashes, clears by taps, Chapter complete at every 10th, lab-complete screen after 100 (never 101), Level Select 1–100. **Production and Opening Lab saves byte-identical** |
+| `tools/web_experience_lab_test.mjs` (Chromium 390×844, touch) | **44 / 44** (polish pass): adds real touches through the Lab 13 lesson (lock still closed after the first green, open after the last); 25 / 50 / 75 / 100 overlays inside the screen and above the controls; card titles; an ordinary level (24) shows none. Before: **23 / 23**. `?v=123456&experiencelab=reset` and `?experiencelab=reset` start a new lab player (a real save at Level 150 and an Opening Lab save present); Lab 1→4 by NEXT; Lab 13 / 16 / 20 / 31 / 41 / 51 / 100 boards; 100 → Chapter 10 card → lab-complete screen → LEVEL SELECT (100 levels); no level after 100 ever started; **real save and Opening Lab save byte-identical**; a look-alike parameter and the plain URL open the real game at Level 150 with 300 levels; no page errors |
 | Production | `levels/` unchanged; Classic 1–200 and 201–225 solver goldens identical; Portal / Sequence / Movable lab goldens identical; verifier all 300 levels; unit tests; Opening Lab, Era3, Portal, Sequence, Movable checks; Social smoke / play, recipient, Friend flow / API; the 300-level playtest. Browser: Opening Lab, Era3 (1–300 flow), persistence (47), recipient, Friend flow all pass on this build |
 
 ## Watch list for human testing (deferred on purpose)

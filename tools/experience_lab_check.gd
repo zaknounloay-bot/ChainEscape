@@ -150,6 +150,9 @@ func _data() -> void:
 				grid[r][c] = ed["to"]
 			var expect := src_json.duplicate(true)
 			expect["map"] = grid.map(func(row): return " ".join(row))
+			if e.get("hint") != null:
+				_check(src_json.get("hint", "") == e["hint"]["from"], "L%d hint override source" % n)
+				expect["hint"] = e["hint"]["to"]
 			if e["rename"] != null:
 				_check(src_json["name"] == e["rename"]["from"], "L%d rename source name" % n)
 				expect["name"] = e["rename"]["to"]
@@ -379,6 +382,7 @@ func _game() -> void:
 	AudioManager.set_music_enabled(false)
 	_check(game.progress.path == ExperienceLab.SAVE_PATH, "the game uses the lab save (%s)" % game.progress.path)
 	var started_after_100 := false
+	await _lock_lesson()
 	for n in range(1, 101):
 		game.start_level(n, "test")
 		await _frames(2)
@@ -435,10 +439,30 @@ func _game() -> void:
 			game._on_block_tapped(id)
 			await _frames(1)
 		var t := 0
+		var overlay := false
+		var fits := true
+		var vis := game.get_viewport().get_visible_rect()
 		while not (game.completed and game.ui.is_complete_visible()) and t < 600:
 			await _frames(2)
+			var rr: Rect2 = game.ui.major_milestone_rect()
+			if rr.size.x > 0.0:
+				overlay = true
+				fits = fits and rr.position.x >= 0.0 and rr.position.y >= 0.0 and rr.end.x <= vis.size.x and rr.end.y <= vis.size.y
 			t += 1
 		_check(game.completed and game.last_result.get("level", 0) == n, "L%d clears by taps" % n)
+		var tier: String = game.last_result.get("celebration", "")
+		var want_tier: String = {25: "lab_milestone", 50: "lab_milestone_strong", 75: "lab_milestone_plus", 100: "lab_major"}.get(n, "")
+		_check(tier == want_tier, "L%d milestone tier '%s' (want '%s')" % [n, tier, want_tier])
+		_check(overlay == (want_tier != ""), "L%d %s the LEVELS ESCAPED overlay" % [n, "shows" if want_tier != "" else "never shows"])
+		if overlay:
+			_check(fits, "L%d milestone overlay fits the screen" % n)
+			var big: String = game.ui._major.get_child(0).text
+			var line: String = game.ui._major.get_child(1).text
+			_check(big == str(n) and line == "LEVELS ESCAPED!", "L%d overlay reads '%s / %s'" % [n, big, line])
+			var title: String = game.ui._card_title.text
+			_check(title == ("MASTER CLEARED!" if n == 100 else "%d LEVELS ESCAPED!" % n), "L%d card title '%s'" % [n, title])
+			for word in ["FINAL", "GRAND", "GAME COMPLETE", "FINISHED", "THE END", "HALFWAY"]:
+				_check(not (big + " " + line + " " + title).to_upper().contains(word), "L%d milestone text has no '%s'" % [n, word])
 		if n % 10 == 0:
 			_check(int(game.last_result.get("chapter_complete", 0)) == n / 10, "Chapter %d completes at Lab %d" % [n / 10, n])
 		if n == 100:
@@ -469,6 +493,69 @@ func _game() -> void:
 	_check(_read_all("user://progress.cfg") == _prod_before, "the production save is byte-identical after the lab session")
 	_check(_read_all(OpeningLab.SAVE_PATH) == _olab_before, "the Opening Lab save is byte-identical after the lab session")
 	_check(FileAccess.file_exists(ExperienceLab.SAVE_PATH) and game.progress.highest_completed == 100, "the lab's own save holds the progress (%d)" % game.progress.highest_completed)
+
+
+## The block the lesson finger / highlight is on (-1 = none).
+func _lesson_target() -> int:
+	for vid in game.board._views:
+		if game.board._views[vid].hinted:
+			return vid
+	return -1
+
+
+## Lab 13: the lock lesson - cause and effect.
+func _lock_lesson() -> void:
+	game.progress.tips_seen.erase("lesson_lock")
+	game.start_level(13, "test")
+	await _frames(3)
+	_check(game._lesson == "lock", "L13 opens the lock lesson")
+	var lock_id := -1
+	var greens := []
+	for b in game.model.blocks.values():
+		if b.lock_color != "":
+			lock_id = b.id
+	var key_color: String = game.model.blocks[lock_id].lock_color
+	for b in game.model.blocks.values():
+		if b.color == key_color:
+			greens.append(b.id)
+	_check(greens.size() >= 2, "L13 has %d key-colour blocks (at least 2: 'ALL of them')" % greens.size())
+	_check(game.board._views[lock_id].marked and greens.all(func(g): return game.board._views[g].marked), "L13 lesson marks the lock and every key block")
+	var first: int = _lesson_target()
+	_check(first in greens, "L13 finger points at a key-colour block first")
+	var nearest := greens.duplicate()
+	var lc: Vector2i = game.model.blocks[lock_id].cell
+	nearest.sort_custom(func(a, b): return (game.model.blocks[a].cell - lc).length_squared() < (game.model.blocks[b].cell - lc).length_squared())
+	_check(first == nearest[0], "L13 the first key block shown is the one nearest the lock")
+	_check(game.tutorial.is_showing() and game.tutorial._text.contains("(%d left)" % greens.size()), "L13 lesson text counts the key blocks ('%s')" % game.tutorial._text)
+	# Key 1 leaves: the lock stays closed, the lesson goes on, the counter drops.
+	game._on_block_tapped(first)
+	await _frames(3)
+	_check(game.model.is_locked(lock_id), "L13 after the first key block leaves, the lock is still CLOSED")
+	_check(game._lesson == "lock" and game.tutorial._text.contains("(%d left)" % (greens.size() - 1)), "L13 counter after key 1: '%s'" % game.tutorial._text)
+	var second: int = _lesson_target()
+	_check(second in greens and second != first, "L13 finger moves to the next key block")
+	# Undo keeps the lesson consistent.
+	game.undos_used = 0
+	game.undo()
+	await _frames(2)
+	_check(game.model.is_locked(lock_id) and _lesson_target() == first and game._lesson == "lock", "L13 Undo returns to the first lesson step")
+	game._on_block_tapped(first)
+	await _frames(2)
+	# The last key block leaves: the lock opens at once, the lesson ends.
+	game._on_block_tapped(second)
+	await _frames(2)
+	_check(not game.model.is_locked(lock_id) and game.model.is_playable(lock_id), "L13 the LAST key block leaving opens the lock immediately")
+	_check(game._lesson == "" and game.progress.tips_seen.has("lesson_lock"), "L13 lesson complete and remembered")
+	# The level still clears; a replay shows the plain hint, not the lesson.
+	for id in Solver.from_model(game.model).solve():
+		game._on_block_tapped(id)
+		await _frames(1)
+	await get_tree().create_timer(1.5).timeout
+	_check(game.completed, "L13 clears after the lesson")
+	game.start_level(13, "test")
+	await _frames(2)
+	_check(game._lesson == "" and game.level.hint.contains("LOCK's color"), "L13 replay: no lesson again, the plain hint")
+	game.progress.tips_seen.erase("lesson_lock")
 
 
 static func _read_all(path: String) -> String:

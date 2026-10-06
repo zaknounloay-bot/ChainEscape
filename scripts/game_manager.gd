@@ -96,6 +96,8 @@ const CRATE_STUCK_TEXT := "The Movable block can't move there"
 const MECHANIC_INTRO_FROM := {"portal": 201, "sequence": 226, "movable": 251}
 var mechanic_intro: MechanicIntro
 var _lesson := ""
+## Experience Lab lock lesson: the key colour named in its last line.
+var _lock_lesson_color := "KEY"
 var _locked_hint_shown := false
 var _hidden_hint_shown := false
 var _session_id: int = 0  # bumps on every level start; cancels stale timers
@@ -429,7 +431,7 @@ func start_level(number: int, via: String = "load") -> void:
 	_lesson = ""
 	board.set_marks([])
 	_layout()
-	var lesson: String = LESSONS.get(number, "")
+	var lesson: String = ExperienceLab.LESSONS.get(number, "") if ExperienceLab.active else LESSONS.get(number, "")
 	if lesson != "" and not progress.tips_seen.has("lesson_" + lesson) and _lesson_blocks(lesson).size() > 0:
 		_lesson = lesson
 		_lesson_step()
@@ -582,6 +584,16 @@ func _escape(id: int) -> void:
 		board.play_unlocks(unlocked)
 		AudioManager.play_unlock()
 		Haptics.medium()
+	if _lesson == "lock":
+		if not unlocked.is_empty():
+			_lock_lesson_color = String(escaped.color).to_upper()
+			_finish_lesson()
+		else:
+			# A key block left but the lock is still shut: it rattles and
+			# the key blocks still on the board hop ("these too").
+			for lid in model.blocks.keys():
+				if model.is_locked(lid) and model.blocks[lid].lock_color == escaped.color:
+					board.play_locked_tap(lid, model.key_blocks(lid))
 	if chain in COMBO_MILESTONES:
 		AudioManager.play_combo(chain)
 	Haptics.light()
@@ -856,7 +868,42 @@ func _on_board_cleared() -> void:
 	if session != _session_id:
 		return
 	board.celebrate()
-	if r["master"]:
+	if r["celebration"] == "lab_major":
+		# Experience Lab 100: "100 LEVELS ESCAPED!" first (the biggest lab
+		# moment), then the Master identity. Not a finale: the game goes on.
+		for i in 6:
+			board.celebrate()
+		ui.show_major_milestone(str(current_level), MAJOR_MILESTONE_LINE, 1.6, SocialScreen.reduced_motion())
+		get_tree().create_timer(0.6).timeout.connect(publish_state)
+		AudioManager.play_master()
+		Haptics.medium()
+		await get_tree().create_timer(2.4).timeout
+		if session != _session_id:
+			return
+		for i in 2:
+			board.celebrate()
+		ui.show_perfect_stamp("MASTER!", 1.2)
+		AudioManager.play_perfect()
+		await get_tree().create_timer(1.4).timeout
+	elif String(r["celebration"]).begins_with("lab_milestone"):
+		# Experience Lab 25 / 50 / 75: "N / LEVELS ESCAPED!", short; 50 is
+		# richer, 75 a little more than 25. Presentation only.
+		var tier: String = r["celebration"]
+		var strong := tier == "lab_milestone_strong"
+		var plus := tier == "lab_milestone_plus"
+		for i in (4 if strong else (3 if plus else 2)):
+			board.celebrate()
+		ui.show_major_milestone(str(current_level), MAJOR_MILESTONE_LINE, 1.3 if strong else (1.1 if plus else 1.0), SocialScreen.reduced_motion())
+		get_tree().create_timer(0.6).timeout.connect(publish_state)
+		AudioManager.play_milestone()
+		Haptics.medium()
+		if strong:
+			get_tree().create_timer(0.35).timeout.connect(func():
+				if session == _session_id:
+					AudioManager.play_perfect()
+					board.celebrate())
+		await get_tree().create_timer(1.9 if strong else (1.7 if plus else 1.6)).timeout
+	elif r["master"]:
 		# Master Levels: the biggest celebration in the game (Level 200 the
 		# biggest of all).
 		var grand := current_level > Chapters.master_level()
@@ -1398,7 +1445,7 @@ func publish_state() -> void:
 		"intro_mechanic": mechanic_intro.mechanic if mechanic_intro != null else "",
 		"intros_seen": progress.tips_seen.filter(func(t): return String(t).begins_with("intro_")),
 		"portals": board.portals.size(), "celebration": last_result.get("celebration", "") if completed else "",
-		"opening_lab": OpeningLab.active, "experience_lab": ExperienceLab.active, "lab_complete_open": ExperienceLab.complete_open,
+		"opening_lab": OpeningLab.active, "experience_lab": ExperienceLab.active, "lab_complete_open": ExperienceLab.complete_open, "lesson": _lesson, "lesson_target": _lesson_target_pos(vis),
 		"lab_complete_button": center.call(get_node("ExperienceLabComplete").find_children("*", "Button", true, false)[0]) if ExperienceLab.complete_open and has_node("ExperienceLabComplete") else [],
 		"level_count": level_manager.level_count, "level_name": level.name if level else "", "max_hearts": max_hearts, "blocks_left": model.block_count(),
 		"coin_notes": last_result.get("coin_notes", "") if completed else "", "chapter_complete": last_result.get("chapter_complete", 0) if completed else 0,
@@ -1482,6 +1529,16 @@ func _lesson_blocks(kind: String) -> Array:
 		if (kind == "switch" and b.is_switch()) or (kind == "gate" and b.is_gate()) or (kind == "armor" and b.armored):
 			out.append(b.id)
 			groups[b.switch_group if kind == "switch" else b.gate_group] = true
+		elif kind == "lock" and model.is_locked(b.id):
+			out.append(b.id)
+			groups[b.lock_color] = true
+	if kind == "lock":
+		# Experience Lab lock lesson: the locked blocks and every block of
+		# their key colour (all of them must leave).
+		for b in model.blocks.values():
+			if groups.has(b.color):
+				out.append(b.id)
+		return out
 	for b in model.blocks.values():
 		if (kind == "switch" and groups.has(b.flip_link)) or (kind == "gate" and groups.has(b.gate_link)):
 			out.append(b.id)
@@ -1517,6 +1574,26 @@ func _lesson_step() -> void:
 				text = "Hit the armored block to break its shell"
 			else:
 				text = "Armored: can't escape. Clear a path for the marked block to hit it"
+		"lock":
+			# Experience Lab: point at the key-colour block nearest the lock
+			# first, so the player sees the lock stay shut until the LAST one
+			# leaves. Never a trap: only solvable-keeping moves are offered.
+			var locked := marks.filter(func(id): return model.is_locked(id))
+			if not locked.is_empty():
+				var lock_b: BlockData = model.blocks[locked[0]]
+				var keys := marks.filter(func(id): return model.blocks[id].color == lock_b.lock_color)
+				keys.sort_custom(func(a, b): return (model.blocks[a].cell - lock_b.cell).length_squared() < (model.blocks[b].cell - lock_b.cell).length_squared())
+				for k in keys:
+					if model.is_playable(k):
+						var snap := model.snapshot()
+						model.remove(k)
+						var ok := model.is_empty() or Solver.from_model(model).is_solvable()
+						model.restore(snap)
+						if ok:
+							next = k
+							break
+				var color := String(lock_b.lock_color).to_upper()
+				text = "The LOCK opens when every %s block is gone (%d left)" % [color, keys.size()]
 	board.set_marks(marks)
 	if next == -1:
 		board.set_hint(-1)
@@ -1525,6 +1602,20 @@ func _lesson_step() -> void:
 		return
 	board.set_hint(next)
 	tutorial.show_hint(text, _message_position(), board.block_screen_position(next), true)
+	if ExperienceLab.active:
+		publish_state.call_deferred()  # developer page: tests follow each lesson step
+
+
+## Where the lesson finger points, as a fraction of the screen (diagnostics
+## for tests: [] when no lesson is showing).
+func _lesson_target_pos(vis: Vector2) -> Array:
+	if _lesson == "":
+		return []
+	for id in model.blocks.keys():
+		if board._views.has(id) and board._views[id].hinted:
+			var p: Vector2 = board.get_global_transform_with_canvas() * (board._views[id] as BlockView).home
+			return [snappedf(p.x / vis.x, 0.0001), snappedf(p.y / vis.y, 0.0001)]
+	return []
 
 
 ## The player did the key action once: remove the lesson for good.
@@ -1538,8 +1629,11 @@ func _finish_lesson() -> void:
 		progress.save()
 	var done: String = {"switch": "The marked arrows turned around - now plan your switches!",
 		"gate": "The gate is open - its lane is free!",
-		"armor": "Shell cracked! Now it moves like any other block"}[kind]
+		"armor": "Shell cracked! Now it moves like any other block",
+		"lock": "Every %s block is gone - the lock is open!" % _lock_lesson_color}[kind]
 	_show_message(done, 2.8)
+	if ExperienceLab.active:
+		publish_state.call_deferred()
 
 
 ## One line of text under the board that fades out by itself. Kept above
