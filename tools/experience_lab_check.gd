@@ -58,6 +58,7 @@ func _run() -> void:
 	for n in [16, 20]:
 		_new_level_fairness(n)
 	_alternating_onboarding()
+	_pattern_onboarding()
 	for n in range(1, 101):
 		_sampled_tools(n)
 	await _game()
@@ -185,7 +186,7 @@ func _data() -> void:
 	for k in want_first:
 		_check(first.get(k, -1) == want_first[k], "%s first appears at Lab %d (%d)" % [k, want_first[k], first.get(k, -1)])
 	# The intro hints travel with their boards.
-	var hints := {6: "Spinners turn", 8: "Hidden arrows", 13: "A lock opens", 31: "Ring arrows", 41: "alternates", 51: "Pattern spinner"}
+	var hints := {6: "Spinners turn", 8: "Hidden arrows", 13: "A lock opens", 31: "Ring arrows", 41: "alternates", 51: "follows a pattern"}
 	for n in hints:
 		_check(lab_level(n).hint.contains(hints[n]), "Lab %d keeps its intro hint ('%s')" % [n, lab_level(n).hint])
 	for n in range(1, 101):
@@ -197,6 +198,8 @@ func _data() -> void:
 		for ed in e["edits"]:
 			var n: int = int(e["level"])
 			var to: String = ed["to"]
+			if not to.contains("@"):
+				continue  # a plain arrow (e.g. Lab 51's new neighbour), not a spinner rule
 			var need := 1 if to.contains("@-") else (2 if to.contains("@~") else (3 if to.contains("@*") else 1))
 			var lv := lab_level(n)
 			var wid := -1
@@ -242,6 +245,28 @@ func _alternating_onboarding() -> void:
 				dirs.append("CW" if cw else "CCW")
 	_check(dirs == ["CW", "CCW"], "Lab 41: its Alternating spinner turns CW then CCW on the solution (%s)" % [dirs])
 	_check(m.is_empty(), "Lab 41 solution clears the board")
+
+
+## Lab 51 teaches Pattern through play: on the solution its Pattern
+## spinner turns right, right, then left - and only then leaves.
+func _pattern_onboarding() -> void:
+	var m := model_of(lab_level(51))
+	var pat := -1
+	for b in m.blocks.values():
+		if b.is_spinner() and b.spin_rule == BlockData.SpinRule.PATTERN:
+			pat = b.id
+	_check(pat != -1, "Lab 51 has a Pattern spinner")
+	var dirs := []
+	var exit_step := -1
+	for id in Solver.from_model(m).solve():
+		if id == pat:
+			exit_step = m.blocks[pat].spin_step
+		var cw: bool = m.blocks[pat].next_turn_cw() if m.blocks.has(pat) else false
+		for t in m.remove(id):
+			if t == pat:
+				dirs.append("CW" if cw else "CCW")
+	_check(dirs == ["CW", "CW", "CCW"] and exit_step == 3, "Lab 51: its Pattern spinner turns CW, CW, CCW, then leaves (%s, left after %d)" % [dirs, exit_step])
+	_check(m.is_empty(), "Lab 51 solution clears the board")
 
 
 func _new_level_fairness(n: int) -> void:

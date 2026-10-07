@@ -50,6 +50,8 @@ EDITS = {
     42: [(3, 0, "Bv@", "Bv@~", "one clockwise spinner becomes alternating (it can reach its second, opposite turn)")],
     43: [(2, 1, "P<$S", "P<@~$S", "one arrow becomes an alternating spinner (no existing spinner here can ever make a second turn, so a spinner conversion would be cosmetic)")],
     50: [(5, 4, "Yv", "Yv@~", "one arrow becomes an alternating spinner whose second, opposite turn is on the solution path: the Chapter 5 showcase")],
+    51: [(1, 2, ".", "Y>", "one new arrow under the Pattern spinner gives it a third neighbour: on every winning path it turns right, right, then LEFT - and that reversed turn (with the last red key) is what lets it out"),
+         (4, 3, "Y>", "Y<", "with the new arrow, limits the level's only trap to a shallow one (no losing first move; mistakes recoverable within 1-4 Undos)")],
     53: [(3, 1, "G>@", "G>@*", "one clockwise spinner becomes a pattern spinner; its third (left) turn is on the solution path")],
     56: [(2, 5, "Bv@", "Bv@*", "one clockwise spinner becomes a pattern spinner; its third (left) turn is on the solution path (replaces the planned 55: no spinner or arrow there can ever make a third turn)")],
     57: [(1, 3, "G^", "G^@*", "one arrow becomes a pattern spinner (no existing spinner here can make a third turn)")],
@@ -66,6 +68,9 @@ RENAMES = {
 # (key) colour. The guided lock lesson teaches it on the board; this line
 # is the reminder on replays.
 HINTS = {
+    51: ("Pattern spinner: right, right, left - then repeat",
+         "This spinner follows a pattern: watch its bold hook",
+         "the level itself now shows right, right, left; the hint points at the three-hook visual instead of spelling out the rule"),
     41: ("Dots show a spinner's rule: this one alternates",
          "This spinner alternates: watch its bold arrow",
          "the lab draws Alternating as a two-way ring, not dots; the level itself now shows the alternation"),

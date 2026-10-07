@@ -1,12 +1,12 @@
 {
 	"name": "Clockmaker",
-	"hint": "Pattern spinner: right, right, left - then repeat",
+	"hint": "This spinner follows a pattern: watch its bold hook",
 	"hint_finger": false,
 	"map": [
 		".      R>     P>     Yv     .      .",
 		"P<     Gv@*#R P<     G>     .      P^",
-		"B>@    .      .      R>     B>     R^",
-		".      .      Rv#B   Gv#B   Y>     G<@",
+		"B>@    Y>     .      R>     B>     R^",
+		".      .      Rv#B   Gv#B   Y<     G<@",
 		"G^     .      P<     Bv@$S  .      .",
 		"B^     .      .      P<     Y<@    ."
 	]

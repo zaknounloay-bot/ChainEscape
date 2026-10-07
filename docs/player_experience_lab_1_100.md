@@ -376,6 +376,59 @@ In the same level the purple clockwise spinner turns clockwise twice before it l
 
 It is impossible to win without seeing the alternation. ExperienceLabCheck checks the CW → CCW turns on the solution.
 
+## Lab 51 Pattern onboarding (after the 51–53 audit)
+
+**Problem.**
+- **Lab 51:** its Pattern spinner (green, locked by red) always turned exactly twice, right then right, then left the board. So the introduction never showed the defining left beat, and play taught "Pattern = clockwise".
+- **Lab 52:** has no Pattern spinner.
+- **Lab 53:** the first level where the full right, right, left was seen.
+- **Fairness:** Lab 51 also had a losing first move and delayed dead ends (33 losing moves, up to 8 more moves before being stuck).
+
+**Search.**
+- **Two-token search:** 7,952 one- and two-token adaptations around the spinner, each on its full state graph. 584 force right → right → left on every winning path.
+- **Three-token search:** 3,558 adaptations of the spinner orientation or lock, its neighbours, the empty cell below it and the chain above it. None was fair.
+- **On this board,** every candidate that groups the three beats early, at moves 1–8, carries 100+ deep dead ends. In every fair candidate the left beat is triggered by the top red neighbour, so it comes near the end.
+- **The previously considered two-token edit** (`P>` at (2,1) plus a left-facing spinner) is worse: turns at moves 7, 10 and 21, a losing first move, and 49 losing moves up to 9 deep.
+
+**Change (two tokens, lab only; production Level 52 is untouched):**
+
+```
+OLD                                       NEW
+.   R>     P>  Yv    .   .                .   R>     P>  Yv    .   .
+P<  Gv@*#R P<  G>    .   P^               P<  Gv@*#R P<  G>    .   P^
+B>@ .      .   R>    B>  R^               B>@ Y>     .   R>    B>  R^
+.   .      Rv#B Gv#B Y>  G<@              .   .      Rv#B Gv#B Y<  G<@
+G^  .      P<  Bv@$S .   .                G^  .      P<  Bv@$S .   .
+B^  .      .   P<    Y<@ .                B^  .      .   P<    Y<@ .
+```
+
+- **(1,2)** new `Y>` under the Pattern spinner: it is the spinner's third neighbour that can leave.
+- **(4,3)** `Y>` → `Y<`: with the new arrow, this keeps the level's only trap shallow.
+- **Hint:** "This spinner follows a pattern: watch its bold hook".
+
+**How it teaches.** The spinner points down.
+1. The purple arrow on its left leaves (usually early). It turns **right**, to the left.
+2. The new yellow arrow under it leaves (around move 8). It turns **right** again, to up. It now faces the red arrow above it and is still locked. The bold hook now sits on the mirrored, reversed hook, and stays there.
+3. When the red arrow above it leaves (the last red key, around move 21), it turns **left**, back to the left. The lock opens at the same moment, and it escapes left.
+
+A third right turn would have pointed it at the purple arrow on its right, which faces it and could never leave first. So the reversal is what frees it.
+
+**State-graph audit:**
+
+| | Old 51 | New 51 |
+|---|---|---|
+| Positions (winnable) | 176 (139) | 138 (130) |
+| Winning move orders | 204,747 | 478,218 |
+| Pattern turns on **every** winning path | right, right (never left) | **right, right, left**, then it leaves |
+| Turns, human-like play (median move) | 9, 20, — | 2, 8, 21 (the exit follows at 22) |
+| First moves (losing) | 2 (1) | 2 (0) |
+| Losing moves; Undos to recover (worst case) | 33; up to 8 | 8; 1–4 (one case needs 4) |
+| Random free-tap play wins | 1.5% | 50% |
+
+It is impossible to win Lab 51 without seeing right, right, left. ExperienceLabCheck checks CW, CW, CCW and the exit after the third turn on the solution.
+
+**Known trade-off.** The left beat comes near the end (move 21 of 23), about 13 moves after the second right turn. No fair one- to three-token adaptation of this board groups the beats more tightly. During the gap the bold hook previews the reversed beat, so the left turn can be predicted and then confirmed.
+
 ## QA
 
 | Check | Result |
