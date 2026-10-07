@@ -334,6 +334,48 @@ The human QA on a real iPhone found the 2-dot (Alternating) and 3-dot (Pattern) 
 - **No other change:** no level layout, mechanic, solution, scoring, economy or save change.
 - **Known, deliberately left as is:** Silver/Gold clockwise and counter-clockwise spinner coins still carry the colour inlay band under their ring (Silver CW in Labs 46, 50, 51 and 58; Silver CCW in Lab 98; Gold CCW in Lab 64). Clockwise and counter-clockwise were to stay unchanged.
 
+## Lab 41 Alternating onboarding (after the real-iPhone QA)
+
+**Problem.** On every winning path of the old Lab 41, its Alternating spinner (red, top row) turned exactly once, clockwise. A player could finish the first Alternating level without ever seeing it alternate. The old level also had a deep dead end, which is unchanged production design: tapping the blue edge arrow (5,2) first turns the purple spinner into a losing position, and the player only notices 11–13 moves later.
+
+**Change (three tokens, lab only; production Level 35 is untouched):**
+
+```
+OLD                                   NEW
+.  P>  R<@~ Y>  Rv   .                .  P>  R<@  Y>  Rv   .
+G> .   .    P^  G>   Pv               G> .   .    P^  G>   Pv
+.  .   .    R^  Pv@  B>               .  .   .    R^  P<@  B>
+Y> Gv  Bv@  .   .    .                Y> Gv  Bv@~ .   .    .
+Gv R<  G<   .   R^@  .                Gv R<  G<   .   R^@  .
+Y< P<  .    .   G<   .                Y< P<  .    .   G<   .
+```
+
+- **(2,0)** `R<@~` → `R<@`: the old Alternating spinner, which never alternated, becomes clockwise.
+- **(2,3)** `Bv@` → `Bv@~`: the Alternating rule moves to the blue spinner in the middle-left.
+- **(4,2)** `Pv@` → `P<@`: the purple clockwise spinner starts pointing left. This removes the deep dead end.
+- **Hint:** "This spinner alternates: watch its bold arrow".
+
+**How it teaches (cause → effect).** The blue spinner points down, blocked by the green arrow under it.
+1. When a neighbour leaves (the green arrow beside it or the one under it), it turns **clockwise**, to the left. It now faces the yellow arrow, which is waiting for it, so it is stuck, and the bold side of its ring has jumped to the other half.
+2. When its other neighbour leaves, it turns **counter-clockwise**, back down, and its lane is now clear, so it escapes.
+
+A player expecting a normal spinner would expect it to point up after a second turn. Instead it came back.
+
+In the same level the purple clockwise spinner turns clockwise twice before it leaves, which gives a direct contrast.
+
+**State-graph audit (every reachable position):**
+
+| | Old 41 | New 41 |
+|---|---|---|
+| Reachable / winnable positions | 232 / 163 | 273 / 273 |
+| Winning move orders | 739,436 | 81,753,280 |
+| Alternating turns on **every** winning path | CW only (never alternates) | **CW, then CCW**, then it leaves |
+| First moves (losing) | 2 (1) | 2 (0) |
+| Losing moves anywhere | 23 (deepest: 11 more moves before stuck) | **0** |
+| Solution length | 21 | 21 (its two turns are moves 9 and 10; the earliest first turn is after 4 moves) |
+
+It is impossible to win without seeing the alternation. ExperienceLabCheck checks the CW → CCW turns on the solution.
+
 ## QA
 
 | Check | Result |

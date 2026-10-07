@@ -44,6 +44,9 @@ EDITS = {
     28: [(4, 2, "P^", "P^@", "one arrow becomes a clockwise spinner: a lock breather that is no longer a pure-lock step back")],
     32: [(4, 2, "Gv", "Gv@-", "one arrow becomes a counter-clockwise spinner: first CCW application, still a breather")],
     33: [(2, 3, "R^@", "R^@-", "one clockwise spinner becomes counter-clockwise (its turns are on the solution path)")],
+    41: [(2, 0, "R<@~", "R<@", "the top-row Alternating spinner could only ever turn once (it never alternated): it becomes clockwise"),
+         (2, 3, "Bv@", "Bv@~", "the Alternating rule moves to this spinner: on every winning path it turns clockwise, then counter-clockwise (back down), and only then can it leave"),
+         (4, 2, "Pv@", "P<@", "removes an inherited deep dead end (tapping the blue edge arrow first lost the level 11-13 moves later); this clockwise spinner now turns clockwise twice, a contrast to the Alternating one")],
     42: [(3, 0, "Bv@", "Bv@~", "one clockwise spinner becomes alternating (it can reach its second, opposite turn)")],
     43: [(2, 1, "P<$S", "P<@~$S", "one arrow becomes an alternating spinner (no existing spinner here can ever make a second turn, so a spinner conversion would be cosmetic)")],
     50: [(5, 4, "Yv", "Yv@~", "one arrow becomes an alternating spinner whose second, opposite turn is on the solution path: the Chapter 5 showcase")],
@@ -64,8 +67,8 @@ RENAMES = {
 # is the reminder on replays.
 HINTS = {
     41: ("Dots show a spinner's rule: this one alternates",
-         "This spinner alternates: the bold arrow shows its next turn",
-         "the lab draws Alternating as a two-way ring, not dots"),
+         "This spinner alternates: watch its bold arrow",
+         "the lab draws Alternating as a two-way ring, not dots; the level itself now shows the alternation"),
     13: ("A lock opens when all blocks of its color are gone",
          "A lock opens when every block of the LOCK's color is gone",
          "\"its color\" read as the locked block's own colour; the rule is about the lock's key colour"),

@@ -404,12 +404,40 @@
 			"name": "Gearbox",
 			"source": "production P35",
 			"moved_from": 35,
-			"edits": [],
+			"edits": [
+				{
+					"cell": [
+						2,
+						0
+					],
+					"from": "R<@~",
+					"to": "R<@",
+					"why": "the top-row Alternating spinner could only ever turn once (it never alternated): it becomes clockwise"
+				},
+				{
+					"cell": [
+						2,
+						3
+					],
+					"from": "Bv@",
+					"to": "Bv@~",
+					"why": "the Alternating rule moves to this spinner: on every winning path it turns clockwise, then counter-clockwise (back down), and only then can it leave"
+				},
+				{
+					"cell": [
+						4,
+						2
+					],
+					"from": "Pv@",
+					"to": "P<@",
+					"why": "removes an inherited deep dead end (tapping the blue edge arrow first lost the level 11-13 moves later); this clockwise spinner now turns clockwise twice, a contrast to the Alternating one"
+				}
+			],
 			"rename": null,
 			"hint": {
 				"from": "Dots show a spinner's rule: this one alternates",
-				"to": "This spinner alternates: the bold arrow shows its next turn",
-				"why": "the lab draws Alternating as a two-way ring, not dots"
+				"to": "This spinner alternates: watch its bold arrow",
+				"why": "the lab draws Alternating as a two-way ring, not dots; the level itself now shows the alternation"
 			}
 		},
 		{

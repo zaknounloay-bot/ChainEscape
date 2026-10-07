@@ -57,6 +57,7 @@ func _run() -> void:
 	_data()
 	for n in [16, 20]:
 		_new_level_fairness(n)
+	_alternating_onboarding()
 	for n in range(1, 101):
 		_sampled_tools(n)
 	await _game()
@@ -221,6 +222,27 @@ func _turns(s: Solver, wid: int, seen: Dictionary, st: Dictionary) -> void:
 
 
 # --- New levels: human-solvability rules on every reachable state -------------
+
+## Lab 41 teaches Alternating through play: on the solution its
+## Alternating spinner turns clockwise, then counter-clockwise, and only
+## then leaves (the full state-graph audit is in the docs).
+func _alternating_onboarding() -> void:
+	var lv := lab_level(41)
+	var m := model_of(lv)
+	var alt := -1
+	for b in m.blocks.values():
+		if b.is_spinner() and b.spin_rule == BlockData.SpinRule.ALT:
+			alt = b.id
+	_check(alt != -1, "Lab 41 has an Alternating spinner")
+	var dirs := []
+	for id in Solver.from_model(m).solve():
+		var cw: bool = m.blocks[alt].next_turn_cw() if m.blocks.has(alt) else false
+		for t in m.remove(id):
+			if t == alt:
+				dirs.append("CW" if cw else "CCW")
+	_check(dirs == ["CW", "CCW"], "Lab 41: its Alternating spinner turns CW then CCW on the solution (%s)" % [dirs])
+	_check(m.is_empty(), "Lab 41 solution clears the board")
+
 
 func _new_level_fairness(n: int) -> void:
 	var lv := lab_level(n)
