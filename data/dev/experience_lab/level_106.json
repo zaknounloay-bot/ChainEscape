@@ -1,0 +1,12 @@
+{
+	"name": "Neon Hinge",
+	"hint": "Plan the switch: fire it when the reversed arrow helps you.",
+	"hint_finger": false,
+	"map": [
+		"B>%A .    Gv   .    .",
+		"Bv&A Pv   .    R<   P^@",
+		"P^   Y>&B .    .    B^",
+		"Rv%B G<   .    .    .",
+		".    .    R>   R>&B R^"
+	]
+}

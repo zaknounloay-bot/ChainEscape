@@ -1,5 +1,5 @@
 {
-	"_comment": "Player Experience Lab 1-100: source of every lab level (tools/experience_lab_build.py).",
+	"_comment": "Player Experience Lab 1-110: source of every lab level (tools/experience_lab_build.py).",
 	"levels": [
 		{
 			"level": 1,
@@ -1053,6 +1053,166 @@
 			"level": 100,
 			"name": "The Master",
 			"source": "production P100",
+			"moved_from": null,
+			"edits": [],
+			"rename": null,
+			"hint": null
+		},
+		{
+			"level": 101,
+			"name": "First Switch",
+			"source": "production P101",
+			"moved_from": null,
+			"edits": [],
+			"rename": null,
+			"hint": null
+		},
+		{
+			"level": 102,
+			"name": "Mirror Turn",
+			"source": "production P102",
+			"moved_from": null,
+			"edits": [
+				{
+					"cell": [
+						2,
+						0
+					],
+					"from": ".",
+					"to": "Yv",
+					"why": "an UNMARKED twin of the marked yellow arrow: the switch reverses only the marked one; the twin can only leave after the switch, so the contrast is seen on every winning path"
+				},
+				{
+					"cell": [
+						2,
+						4
+					],
+					"from": "R^",
+					"to": "R>",
+					"why": "the twin would face this red arrow head-on; pointing right keeps the board solvable"
+				}
+			],
+			"rename": null,
+			"hint": null
+		},
+		{
+			"level": 103,
+			"name": "Flip Side",
+			"source": "production P103",
+			"moved_from": null,
+			"edits": [
+				{
+					"cell": [
+						0,
+						3
+					],
+					"from": "P^",
+					"to": "P^&A",
+					"why": "a second arrow marked A: the two purples face each other head-on and ONE switch turns both around"
+				},
+				{
+					"cell": [
+						1,
+						0
+					],
+					"from": "Yv",
+					"to": "Y^",
+					"why": "a second safe first move (the old board had one legal move at every step)"
+				}
+			],
+			"rename": null,
+			"hint": null
+		},
+		{
+			"level": 104,
+			"name": "Not Yet",
+			"source": "NEW (now_or_later)",
+			"moved_from": null,
+			"edits": [],
+			"rename": null,
+			"hint": null
+		},
+		{
+			"level": 105,
+			"name": "Two Ways",
+			"source": "production P105",
+			"moved_from": null,
+			"edits": [
+				{
+					"cell": [
+						0,
+						4
+					],
+					"from": "Y>",
+					"to": "Y>%B",
+					"why": "switch B (the second, independent group)"
+				},
+				{
+					"cell": [
+						3,
+						3
+					],
+					"from": "B<",
+					"to": "B^&B",
+					"why": "the arrow marked B: only switch B reverses it; both groups are required"
+				},
+				{
+					"cell": [
+						3,
+						0
+					],
+					"from": "Yv",
+					"to": "Y^",
+					"why": "a second safe first move"
+				}
+			],
+			"rename": null,
+			"hint": {
+				"from": null,
+				"to": "Each switch turns only its own mark",
+				"why": "two independent groups (A and B) are new here; one short line, no finger"
+			}
+		},
+		{
+			"level": 106,
+			"name": "Neon Hinge",
+			"source": "production P106",
+			"moved_from": null,
+			"edits": [],
+			"rename": null,
+			"hint": null
+		},
+		{
+			"level": 107,
+			"name": "Glass Relay",
+			"source": "production P107",
+			"moved_from": null,
+			"edits": [],
+			"rename": null,
+			"hint": null
+		},
+		{
+			"level": 108,
+			"name": "Backlight",
+			"source": "production P108",
+			"moved_from": null,
+			"edits": [],
+			"rename": null,
+			"hint": null
+		},
+		{
+			"level": 109,
+			"name": "Switchback",
+			"source": "production P109",
+			"moved_from": null,
+			"edits": [],
+			"rename": null,
+			"hint": null
+		},
+		{
+			"level": 110,
+			"name": "Prism Row",
+			"source": "production P110",
 			"moved_from": null,
 			"edits": [],
 			"rename": null,

@@ -429,6 +429,65 @@ It is impossible to win Lab 51 without seeing right, right, left. ExperienceLabC
 
 **Known trade-off.** The left beat comes near the end (move 21 of 23), about 13 moves after the second right turn. No fair one- to three-token adaptation of this board groups the beats more tightly. During the gap the bold hook previews the reversed beat, so the left turn can be predicted and then confirmed.
 
+## Switch learning ramp (Lab 101–110)
+
+The lab now runs to **Lab 110**, a temporary lab boundary rather than the end of the game:
+- **Lab 100:** The Master leads on, through its Chapter 10 card, into Lab 101.
+- **After Lab 110:** a lab-only screen, "END OF THIS TEST BUILD · LAB LEVELS 1–110 · MORE LEVELS COME LATER".
+- **Level jumps:** QA jumps now accept `&experiencelab=2` … `&experiencelab=110`.
+- **Lab 101:** keeps production's Switch lesson (added to `ExperienceLab.LESSONS`).
+- **Jumps past 101:** count the one-time Switch explanation as already seen, as natural play does.
+
+| Lab | Source | Role | Learning event |
+|---|---|---|---|
+| 101 | production, unchanged | discover (lesson) | A switch reverses its marked arrow. |
+| 102 | production + 2 tokens | reinforce | Two identical yellow arrows: only the one marked A turns when the switch fires. The unmarked twin can only leave after the switch, so the contrast is seen on every winning path. |
+| 103 | production + 2 tokens | small Aha | Two purples marked A face each other head-on. One switch turns both, and they leave in opposite directions. |
+| 104 | **new board** ("Not Yet") | timing | The yellow arrow holds back both the switch and the purple marked A. If the purple leaves first, all is well. If the switch fires first, the purple turns to face the red arrow below it, head-on and visibly stuck. |
+| 105 | production + 3 tokens | two systems | Switch A turns only the A-marked green; switch B turns only the B-marked blue. Both are required. |
+| 106–110 | production, unchanged | application / challenge | Unchanged for now. Their fairness pass comes later. |
+
+**Token changes:**
+- **102:**
+  - (2,0) `.` → `Yv`: the unmarked twin.
+  - (2,4) `R^` → `R>`: keeps the board solvable.
+- **103:**
+  - (0,3) `P^` → `P^&A`: the second marked arrow.
+  - (1,0) `Yv` → `Y^`: a second safe first move.
+- **105:**
+  - (0,4) `Y>` → `Y>%B`: switch B.
+  - (3,3) `B<` → `B^&B`: the arrow marked B.
+  - (3,0) `Yv` → `Y^`: a second safe first move.
+  - New hint: "Each switch turns only its own mark".
+- **104, new board** (hint "Fire a switch at the right moment", no finger):
+
+```
+.    .    .   .
+.    B>&A .   B<
+G>%A .    Y^  .
+.    .    P^&A G<
+.    P>   R^  .
+```
+
+**Full state graph** (each move checked from every reachable position):
+
+| Lab | Winning orders | First moves (losing) | Losing moves | Max Undos | Random free-tap wins |
+|---|---|---|---|---|---|
+| 102 | 44 | 2 (0) | 0 | — | 100% |
+| 103 | 60 | 2 (0) | 0 | — | 100% |
+| 104 | 60 | 1 (0) | 1 kind: firing the switch early | 3 (worst case) | 50% |
+| 105 | 90 | 2 (0) | 0 | — | 100% |
+
+ExperienceLabCheck (`_switch_ramp`) proves the following on every move of each board:
+- every switch reverses exactly the arrows with its own mark;
+- no first move loses, and every mistake is recoverable within 3 Undos;
+- **102:** the marked arrow always leaves reversed; the twin never reverses and is always still on the board when the switch fires;
+- **103:** switch A is required; one firing turns both purples; both always leave reversed;
+- **104:** firing while the purple is still there always loses, and the purple then faces the red arrow head-on at once; firing after it left wins; the purple always leaves unreversed;
+- **105:** switches A and B are each required; the marked arrows always leave reversed.
+
+**Known nuance (103).** The two purples only block each other, so reversing either one alone would already break the face-off. In play both always turn together and both leave reversed, but the second reversal is not individually necessary. A stricter variant guards the purples' column with two extra arrows: `B^` at (0,1) and `Gv` at (0,2). That makes each reversal individually necessary (1,414 winning orders, no losing moves), but it loses the head-on look. It is not used.
+
 ## QA
 
 | Check | Result |

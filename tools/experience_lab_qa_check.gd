@@ -35,7 +35,7 @@ func _frames(n: int) -> void:
 func _run() -> void:
 	var mode := ExperienceLab.requested()
 	var n := int(mode) if mode.is_valid_int() else 0
-	_check(n >= 2 and n <= 100, "QA jump asked for on the command line (%s)" % mode)
+	_check(n >= 2 and n <= ExperienceLab.LAST_LEVEL, "QA jump asked for on the command line (%s)" % mode)
 	if n < 2:
 		_finish()
 		return
@@ -50,13 +50,15 @@ func _run() -> void:
 	_check(game.progress.path == ExperienceLab.QA_SAVE_PATH, "QA uses the temporary QA save (%s)" % game.progress.path)
 	_check(game.current_level == n and game.level.name == _lab_level(n).name, "Lab Level %d opens directly ('%s')" % [n, game.level.name])
 	_check(not game.ui.is_title_open(), "L%d: no title screen in the way" % n)
-	_check(game.level_manager.level_count == 100, "the lab's 100 levels")
+	_check(game.level_manager.level_count == ExperienceLab.LAST_LEVEL, "the lab's %d levels" % ExperienceLab.LAST_LEVEL)
 	_check(game.progress.highest_completed == n - 1 and game.progress.highest_unlocked == n and not game.progress.best_scores.has(n),
 		"QA save: 1-%d cleared, %d open and not yet cleared" % [n - 1, n])
 	_check(game.progress.total_stars() == 0 and game.progress.coins == int(Economy.config()["starting_coins"]), "QA save invents no stars or coins (%d coins = a new save)" % game.progress.coins)
 	# First-visit onboarding.
 	if n == 13:
 		_check(game._lesson == "lock" and game.tutorial.is_showing() and game.tutorial._text.contains("left)"), "L13: the lock lesson starts from the beginning ('%s')" % game.tutorial._text)
+	elif n == 101:
+		_check(game._lesson == "switch" and game.tutorial.is_showing(), "L101: production's Switch lesson starts ('%s')" % game.tutorial._text)
 	else:
 		_check(game._lesson == "", "L%d: no lesson" % n)
 		if game.level.hint != "":
@@ -83,6 +85,8 @@ func _run() -> void:
 	_check(game.completed and game.last_result.get("level", 0) == n, "L%d clears by taps" % n)
 	if n == 13:
 		_check(game.progress.tips_seen.has("lesson_lock"), "L13: the lesson completed during the clear")
+	if n == 101:
+		_check(game.progress.tips_seen.has("lesson_switch"), "L101: the Switch lesson completed during the clear")
 	var want: String = MILESTONES.get(n, "")
 	_check(String(game.last_result.get("celebration", "")) == want and overlay == (want != ""),
 		"L%d: milestone '%s' after the clear (want '%s', overlay %s)" % [n, game.last_result.get("celebration", ""), want, overlay])
@@ -96,8 +100,8 @@ func _run() -> void:
 		_check(game.ui.is_chapter_card_open(), "L%d: the Chapter %d card after NEXT" % [n, n / 10])
 		game._after_chapter_card()
 		await _frames(3)
-	if n == 100:
-		_check(ExperienceLab.complete_open and game.current_level == 100, "after Lab 100: the lab-complete screen")
+	if n == ExperienceLab.LAST_LEVEL:
+		_check(ExperienceLab.complete_open and game.current_level == n, "after Lab %d: the end-of-test-build screen" % n)
 	else:
 		_check(game.current_level == n + 1 and not ExperienceLab.complete_open, "NEXT goes on to Lab %d" % (n + 1))
 	for path in before:

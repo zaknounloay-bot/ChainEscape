@@ -1,0 +1,12 @@
+{
+	"name": "Not Yet",
+	"hint": "Fire a switch at the right moment",
+	"hint_finger": false,
+	"map": [
+		".    .    .    .",
+		".    B>&A .    B<",
+		"G>%A .    Y^   .",
+		".    .    P^&A G<",
+		".    P>   R^   ."
+	]
+}

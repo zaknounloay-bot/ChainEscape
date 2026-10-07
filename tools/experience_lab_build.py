@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""PLAYER EXPERIENCE LAB 1-100: builds data/dev/experience_lab/ from its
+"""PLAYER EXPERIENCE LAB 1-110: builds data/dev/experience_lab/ from its
 sources (developer content, never production):
 
   * Levels 1-10: the human-approved Opening Lab (data/dev/opening_lab/).
@@ -7,8 +7,11 @@ sources (developer content, never production):
     order of docs/progression_reflow_11_25.md and the minimum-intervention map
     of docs/progression_audit_1_100.md, with the token adaptations, renames
     and the two new boards (16, 20) listed below.
+  * Levels 101-110: the Switch era. 101 and 106-110 are the production
+    boards, unchanged; 102-105 are the lab's Switch learning ramp (102, 103,
+    105 adapted production boards, 104 a new board "now or later").
 
-Writes level_01..level_100.json and manifest.json (source + edits of every
+Writes level_01..level_110.json and manifest.json (source + edits of every
 level). Every edit asserts the exact original token, so a changed source can
 never be adapted silently. Run from the repository root:
 
@@ -36,6 +39,10 @@ SOURCES.update({
     51: ("prod", 52), 52: ("prod", 51),
 })
 SOURCES.update({n: ("prod", n) for n in range(53, 101)})
+# Switch era (temporary lab boundary at 110): 104 is a new board.
+LAST = 110
+SOURCES.update({n: ("prod", n) for n in range(101, LAST + 1)})
+SOURCES[104] = ("new", "now_or_later")
 
 # Token adaptations: lab level -> [(column, row, expected old token, new token, why)].
 # Map tokens: colour + arrow, then "@" spinner ("" cw, "-" ccw, "~" alternating,
@@ -52,6 +59,14 @@ EDITS = {
     50: [(5, 4, "Yv", "Yv@~", "one arrow becomes an alternating spinner whose second, opposite turn is on the solution path: the Chapter 5 showcase")],
     51: [(1, 2, ".", "Y>", "one new arrow under the Pattern spinner gives it a third neighbour: on every winning path it turns right, right, then LEFT - and that reversed turn (with the last red key) is what lets it out"),
          (4, 3, "Y>", "Y<", "with the new arrow, limits the level's only trap to a shallow one (no losing first move; mistakes recoverable within 1-4 Undos)")],
+    # Switch ramp (docs/player_experience_lab_1_100.md, "Switch learning ramp").
+    102: [(2, 0, ".", "Yv", "an UNMARKED twin of the marked yellow arrow: the switch reverses only the marked one; the twin can only leave after the switch, so the contrast is seen on every winning path"),
+          (2, 4, "R^", "R>", "the twin would face this red arrow head-on; pointing right keeps the board solvable")],
+    103: [(0, 3, "P^", "P^&A", "a second arrow marked A: the two purples face each other head-on and ONE switch turns both around"),
+          (1, 0, "Yv", "Y^", "a second safe first move (the old board had one legal move at every step)")],
+    105: [(0, 4, "Y>", "Y>%B", "switch B (the second, independent group)"),
+          (3, 3, "B<", "B^&B", "the arrow marked B: only switch B reverses it; both groups are required"),
+          (3, 0, "Yv", "Y^", "a second safe first move")],
     53: [(3, 1, "G>@", "G>@*", "one clockwise spinner becomes a pattern spinner; its third (left) turn is on the solution path")],
     56: [(2, 5, "Bv@", "Bv@*", "one clockwise spinner becomes a pattern spinner; its third (left) turn is on the solution path (replaces the planned 55: no spinner or arrow there can ever make a third turn)")],
     57: [(1, 3, "G^", "G^@*", "one arrow becomes a pattern spinner (no existing spinner here can make a third turn)")],
@@ -68,6 +83,9 @@ RENAMES = {
 # (key) colour. The guided lock lesson teaches it on the board; this line
 # is the reminder on replays.
 HINTS = {
+    105: (None,
+          "Each switch turns only its own mark",
+          "two independent groups (A and B) are new here; one short line, no finger"),
     51: ("Pattern spinner: right, right, left - then repeat",
          "This spinner follows a pattern: watch its bold hook",
          "the level itself now shows right, right, left; the hint points at the three-hook visual instead of spelling out the rule"),
@@ -81,6 +99,21 @@ HINTS = {
 
 # The two new boards (docs/player_experience_lab_1_100.md).
 NEW = {
+    # Switch timing: the yellow arrow holds back both the switch and the
+    # purple arrow marked A. The purple must leave UP before the switch fires;
+    # fired early, it turns to face the red arrow under it, head-on.
+    "now_or_later": {
+        "name": "Not Yet",
+        "hint": "Fire a switch at the right moment",
+        "hint_finger": False,
+        "map": [
+            ".    .    .   .",
+            ".    B>&A .   B<",
+            "G>%A .    Y^  .",
+            ".    .    P^&A G<",
+            ".    P>   R^  .",
+        ],
+    },
     "key_turn": {
         "name": "Key Turn",
         "map": [
@@ -117,7 +150,7 @@ def main():
     os.makedirs(OUT, exist_ok=True)
     manifest = []
     names = {}
-    for n in range(1, 101):
+    for n in range(1, LAST + 1):
         kind, src = SOURCES[n]
         if kind == "lab":
             path = os.path.join(ROOT, "data", "dev", "opening_lab", "level_%02d.json" % src)
@@ -150,6 +183,8 @@ def main():
             if data.get("hint") != old_hint:
                 sys.exit("L%d: expected hint %r, found %r" % (n, old_hint, data.get("hint")))
             data["hint"] = new_hint
+            if old_hint is None:
+                data["hint_finger"] = False  # a reminder line, never a finger on the solution
             hint = {"from": old_hint, "to": new_hint, "why": why}
         if data["name"] in names:
             sys.exit("duplicate name %r at L%d and L%d" % (data["name"], names[data["name"]], n))
@@ -166,13 +201,13 @@ def main():
                          "moved_from": src if kind == "prod" and src != n else None,
                          "edits": edits, "rename": rename, "hint": hint})
     with open(os.path.join(OUT, "manifest.json"), "w") as f:
-        json.dump({"_comment": "Player Experience Lab 1-100: source of every lab level (tools/experience_lab_build.py).",
+        json.dump({"_comment": "Player Experience Lab 1-110: source of every lab level (tools/experience_lab_build.py).",
                    "levels": manifest}, f, indent="\t", ensure_ascii=False)
         f.write("\n")
-    extra = [p for p in os.listdir(OUT) if p.startswith("level_") and p not in {"level_%02d.json" % n for n in range(1, 101)}]
+    extra = [p for p in os.listdir(OUT) if p.startswith("level_") and p not in {"level_%02d.json" % n for n in range(1, LAST + 1)}]
     if extra:
         sys.exit("unexpected files: %s" % extra)
-    print("wrote 100 levels + manifest to %s" % OUT)
+    print("wrote %d levels + manifest to %s" % (LAST, OUT))
 
 
 if __name__ == "__main__":

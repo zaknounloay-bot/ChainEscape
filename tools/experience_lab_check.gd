@@ -1,5 +1,5 @@
 extends Node
-## PLAYER EXPERIENCE LAB 1-100 checks (developer page ?experiencelab).
+## PLAYER EXPERIENCE LAB 1-110 checks (developer page ?experiencelab).
 ##   godot --headless --path . res://tools/ExperienceLabCheck.tscn
 ##
 ## Static:
@@ -20,10 +20,12 @@ extends Node
 ## - All 100 levels, sampled states: SHOW A MOVE legal and solvable; Hammer
 ##   safety exact.
 ## Game (real scene, lab active, isolated save):
-## - Each Level 1-100 loads its lab board, hearts from 6, SHOW A MOVE, Undo
+## - Each Level 1-110 loads its lab board, hearts from 6, SHOW A MOVE, Undo
 ##   exact, Restart exact, Hammer refuses unsafe smashes, clears by taps;
-##   Chapter cards at 10, 20 ... 100; after 100: the lab-complete screen,
-##   never Level 101; Level Select lists 1-100 only.
+##   Chapter cards at 10, 20 ... 110; Lab 100 goes on to Lab 101; after 110
+##   (a temporary lab boundary): the end-of-test-build screen, never Level
+##   111; Level Select lists 1-110 only.
+## - Switch ramp 102-105 on the full state graph (_switch_ramp).
 ## - Save isolation: the production save and the Opening Lab save are
 ##   byte-identical before and after.
 
@@ -59,7 +61,8 @@ func _run() -> void:
 		_new_level_fairness(n)
 	_alternating_onboarding()
 	_pattern_onboarding()
-	for n in range(1, 101):
+	_switch_ramp()
+	for n in range(1, ExperienceLab.LAST_LEVEL + 1):
 		_sampled_tools(n)
 	await _game()
 	print("")
@@ -96,7 +99,7 @@ func _parsing() -> void:
 		# QA jump: 2..100 opens that level; anything else keeps the old meaning.
 		["?experiencelab=13", "", "13"], ["?v=123456&experiencelab=41", "", "41"], ["?experiencelab=2", "", "2"],
 		["?experiencelab=100", "", "100"], ["?v=1&experiencelab=50&x=2", "", "50"], ["", "#experiencelab=75", "75"],
-		["?experiencelab=101", "", ""], ["?experiencelab=-5", "", ""], ["?experiencelab=13abc", "", ""],
+		["?experiencelab=101", "", "101"], ["?experiencelab=110", "", "110"], ["?experiencelab=111", "", ""], ["?experiencelab=-5", "", ""], ["?experiencelab=13abc", "", ""],
 		["?v=1&experiencelab=13&experiencelab=reset", "", "reset"],
 	]
 	for c in cases:
@@ -124,14 +127,14 @@ func _defaults() -> void:
 func _data() -> void:
 	var files := Array(DirAccess.get_files_at(ExperienceLab.LEVEL_DIR)).filter(func(f): return f.ends_with(".json"))
 	var want := ["manifest.json"]
-	for n in range(1, 101):
+	for n in range(1, ExperienceLab.LAST_LEVEL + 1):
 		want.append("level_%02d.json" % n)
 	files.sort()
 	want.sort()
-	_check(files == want, "exactly level_01..level_100 + manifest (%d files)" % files.size())
+	_check(files == want, "exactly level_01..level_%d + manifest (%d files)" % [ExperienceLab.LAST_LEVEL, files.size()])
 	var manifest = JSON.parse_string(FileAccess.get_file_as_string(ExperienceLab.LEVEL_DIR.path_join("manifest.json")))
 	var entries: Array = manifest["levels"]
-	_check(entries.size() == 100, "manifest has 100 entries")
+	_check(entries.size() == ExperienceLab.LAST_LEVEL, "manifest has %d entries" % ExperienceLab.LAST_LEVEL)
 	var names := {}
 	var first := {}
 	for e in entries:
@@ -159,8 +162,11 @@ func _data() -> void:
 			var expect := src_json.duplicate(true)
 			expect["map"] = grid.map(func(row): return " ".join(row))
 			if e.get("hint") != null:
-				_check(src_json.get("hint", "") == e["hint"]["from"], "L%d hint override source" % n)
+				var from = e["hint"]["from"]
+				_check(src_json.get("hint", "") == (from if from != null else ""), "L%d hint override source" % n)
 				expect["hint"] = e["hint"]["to"]
+				if from == null:
+					expect["hint_finger"] = false
 			if e["rename"] != null:
 				_check(src_json["name"] == e["rename"]["from"], "L%d rename source name" % n)
 				expect["name"] = e["rename"]["to"]
@@ -180,8 +186,13 @@ func _data() -> void:
 		for k in feats:
 			if feats[k] and not first.has(k):
 				first[k] = n
-		var other := lv.blocks.filter(func(b): return b.is_switch() or b.is_gate() or b.armored or b.is_crate() or b.seq_stage != 0)
-		_check(other.is_empty() and lv.portals.is_empty(), "L%d uses only First Era mechanics" % n)
+		if n <= 100:
+			var other := lv.blocks.filter(func(b): return b.is_switch() or b.flip_link != "" or b.is_gate() or b.armored or b.is_crate() or b.seq_stage != 0)
+			_check(other.is_empty() and lv.portals.is_empty(), "L%d uses only First Era mechanics" % n)
+		else:
+			# Lab 101-110: the Switch era - Switch/Flip and nothing newer.
+			var other := lv.blocks.filter(func(b): return b.is_gate() or b.armored or b.is_crate() or b.seq_stage != 0)
+			_check(other.is_empty() and lv.portals.is_empty() and lv.blocks.any(func(b): return b.is_switch()), "L%d is a Switch level with no newer mechanic" % n)
 	var want_first := {"spinner": 6, "hidden": 8, "lock": 13, "ccw": 31, "alt": 41, "pattern": 51}
 	for k in want_first:
 		_check(first.get(k, -1) == want_first[k], "%s first appears at Lab %d (%d)" % [k, want_first[k], first.get(k, -1)])
@@ -189,7 +200,7 @@ func _data() -> void:
 	var hints := {6: "Spinners turn", 8: "Hidden arrows", 13: "A lock opens", 31: "Ring arrows", 41: "alternates", 51: "follows a pattern"}
 	for n in hints:
 		_check(lab_level(n).hint.contains(hints[n]), "Lab %d keeps its intro hint ('%s')" % [n, lab_level(n).hint])
-	for n in range(1, 101):
+	for n in range(1, ExperienceLab.LAST_LEVEL + 1):
 		if not hints.has(n):
 			for h in hints.values():
 				_check(not lab_level(n).hint.contains(h), "intro hint '%s' only at its intro level (L%d)" % [h, n])
@@ -267,6 +278,184 @@ func _pattern_onboarding() -> void:
 				dirs.append("CW" if cw else "CCW")
 	_check(dirs == ["CW", "CW", "CCW"] and exit_step == 3, "Lab 51: its Pattern spinner turns CW, CW, CCW, then leaves (%s, left after %d)" % [dirs, exit_step])
 	_check(m.is_empty(), "Lab 51 solution clears the board")
+
+
+## Switch ramp (Lab 102-105), checked on the full state graph of each board:
+## every reachable position, every move, every winning path.
+func _switch_graph(blocks: Array, rows: int, cols: int) -> Dictionary:
+	var m := BoardModel.new()
+	m.setup(rows, cols, blocks)
+	var dir0 := {}
+	for b in m.blocks.values():
+		dir0[b.id] = b.direction
+	var key := func(mm: BoardModel) -> String:
+		var ids: Array = mm.blocks.keys()
+		ids.sort()
+		return ",".join(PackedStringArray(ids.map(func(i): return "%d:%d:%d" % [i, mm.blocks[i].direction, mm.blocks[i].spin_step])))
+	var k0: String = key.call(m)
+	var st := {k0: {"snap": m.snapshot(), "kids": [], "empty": false, "ids": m.blocks.keys()}}
+	var order := [k0]
+	var i := 0
+	while i < order.size():
+		var k: String = order[i]
+		i += 1
+		m.restore(st[k]["snap"])
+		for id in m.playable_ids():
+			m.restore(st[k]["snap"])
+			if not m.can_escape(id):
+				continue
+			var b: BlockData = m.blocks[id]
+			var before := {}
+			for o in m.blocks.values():
+				before[o.id] = o.direction
+			var mv := {"id": id, "switch": b.switch_group, "reversed": b.direction != dir0[id] and not b.is_spinner(), "changed": []}
+			m.remove(id)
+			for o in m.blocks.values():
+				if o.direction != before[o.id] and not o.is_spinner():
+					mv["changed"].append(o.id)
+			var nk: String = key.call(m)
+			mv["to"] = nk
+			st[k]["kids"].append(mv)
+			if not st.has(nk):
+				st[nk] = {"snap": m.snapshot(), "kids": [], "empty": m.is_empty(), "ids": m.blocks.keys()}
+				order.append(nk)
+	var ways := {}
+	var longest := {}
+	for idx in range(order.size() - 1, -1, -1):
+		var k: String = order[idx]
+		var w := 1 if st[k]["empty"] else 0
+		var lg := 0
+		for c in st[k]["kids"]:
+			w += ways[c["to"]]
+			lg = maxi(lg, 1 + longest[c["to"]])
+		ways[k] = w
+		longest[k] = lg
+	return {"st": st, "order": order, "ways": ways, "longest": longest, "k0": k0, "model": m}
+
+
+func _id_at(lv: LevelData, cell: Vector2i) -> int:
+	for b in lv.blocks:
+		if b.cell == cell:
+			return b.id
+	return -1
+
+
+## Winning moves only: every transition from a winnable state into a winnable state.
+func _winning_moves(g: Dictionary) -> Array:
+	var out := []
+	for k in g["order"]:
+		if g["ways"][k] == 0:
+			continue
+		for c in g["st"][k]["kids"]:
+			if g["ways"][c["to"]] > 0:
+				out.append([k, c])
+	return out
+
+
+func _solvable_without(lv: LevelData, flip_ids: Array, groups: Array) -> bool:
+	var nb := []
+	for b in lv.blocks:
+		var c: BlockData = b.duplicate_data()
+		if c.id in flip_ids:
+			c.flip_link = ""
+		if c.switch_group in groups:
+			c.switch_group = ""
+		nb.append(c)
+	var g := _switch_graph(nb, lv.rows, lv.columns)
+	return g["ways"][g["k0"]] > 0
+
+
+func _switch_ramp() -> void:
+	for n in [102, 103, 104, 105]:
+		var lv := lab_level(n)
+		var g := _switch_graph(lv.blocks, lv.rows, lv.columns)
+		var ways: Dictionary = g["ways"]
+		var k0: String = g["k0"]
+		_check(ways[k0] > 0, "L%d winnable" % n)
+		var worst := 0
+		var losing := []
+		var first_bad := 0
+		for k in g["order"]:
+			if ways[k] == 0:
+				continue
+			for c in g["st"][k]["kids"]:
+				if ways[c["to"]] == 0:
+					losing.append(c)
+					worst = maxi(worst, g["longest"][c["to"]] + 1)
+					if k == k0:
+						first_bad += 1
+		_check(first_bad == 0, "L%d: no losing first move" % n)
+		_check(worst <= 3, "L%d: every mistake is recoverable within 3 Undos (worst %d)" % [n, worst])
+		# A switch reverses exactly the arrows carrying its own mark.
+		var only_own := true
+		for k in g["order"]:
+			for c in g["st"][k]["kids"]:
+				var gname: String = c["switch"]
+				var want := []
+				g["model"].restore(g["st"][k]["snap"])
+				if gname != "":
+					for o in g["model"].blocks.values():
+						if o.flip_link == gname:
+							want.append(o.id)
+				var got: Array = c["changed"].duplicate()
+				want.sort()
+				got.sort()
+				if got != want:
+					only_own = false
+		_check(only_own, "L%d: each switch reverses exactly the arrows with its own mark, nothing else" % n)
+		var wins := _winning_moves(g)
+		match n:
+			102:
+				var marked := _id_at(lv, Vector2i(1, 0))
+				var twin := _id_at(lv, Vector2i(2, 0))
+				var ok_marked := wins.all(func(e): return e[1]["id"] != marked or e[1]["reversed"])
+				var ok_twin := wins.all(func(e): return e[1]["id"] != twin or not e[1]["reversed"])
+				var twin_seen := wins.all(func(e): return e[1]["switch"] == "" or twin in g["st"][e[0]]["ids"])
+				_check(ok_marked, "L102: the marked arrow escapes reversed on every winning path")
+				_check(ok_twin, "L102: the unmarked twin never reverses")
+				_check(twin_seen, "L102: the twin is still on the board whenever the switch fires (the contrast is always seen)")
+			103:
+				var p1 := _id_at(lv, Vector2i(0, 0))
+				var p2 := _id_at(lv, Vector2i(0, 3))
+				for id in [p1, p2]:
+					_check(wins.all(func(e): return e[1]["id"] != id or e[1]["reversed"]), "L103: marked arrow %d escapes reversed on every winning path" % id)
+				# The face-off: neither purple can leave until the switch turns them
+				# (the switch is required); one reversal alone would already break
+				# it, but both always turn together and both leave reversed.
+				_check(not _solvable_without(lv, [], ["A"]), "L103: switch A is required (the purple face-off has no other way out)")
+				var both := wins.all(func(e): return e[1]["switch"] == "" or (e[1]["changed"].has(p1) and e[1]["changed"].has(p2)))
+				_check(both, "L103: the one switch turns BOTH marked arrows at once")
+			104:
+				var purple := _id_at(lv, Vector2i(2, 3))
+				var sw_early_lose := true
+				var sw_late_ok := false
+				var visible := true
+				for k in g["order"]:
+					if ways[k] == 0:
+						continue
+					for c in g["st"][k]["kids"]:
+						if c["switch"] == "":
+							continue
+						if purple in g["st"][k]["ids"]:
+							sw_early_lose = sw_early_lose and ways[c["to"]] == 0
+							# Visible at once: the purple now points DOWN at the red arrow, which points UP at it.
+							g["model"].restore(g["st"][c["to"]]["snap"])
+							var pb: BlockData = g["model"].blocks.get(purple)
+							var red: BlockData = g["model"].block_at(Vector2i(2, 4))
+							visible = visible and pb != null and pb.direction == Direction.DOWN and red != null and red.direction == Direction.UP
+						elif ways[c["to"]] > 0:
+							sw_late_ok = true
+				_check(sw_early_lose, "L104: firing the switch while the purple is still there always loses")
+				_check(sw_late_ok, "L104: firing it after the purple left wins")
+				_check(visible, "L104: the early mistake shows at once (purple and red face each other head-on)")
+				_check(losing.all(func(c): return c["switch"] != ""), "L104: the early switch is the only kind of mistake")
+				_check(wins.all(func(e): return e[1]["id"] != purple or not e[1]["reversed"]), "L104: the purple always leaves unreversed (before the switch)")
+			105:
+				_check(not _solvable_without(lv, [], ["A"]), "L105: switch A is required")
+				_check(not _solvable_without(lv, [], ["B"]), "L105: switch B is required")
+				for cell in [Vector2i(2, 0), Vector2i(3, 3)]:
+					var id := _id_at(lv, cell)
+					_check(wins.all(func(e): return e[1]["id"] != id or e[1]["reversed"]), "L105: marked arrow at %s escapes reversed on every winning path" % cell)
 
 
 func _new_level_fairness(n: int) -> void:
@@ -437,7 +626,7 @@ func _game() -> void:
 	_check(_rule_visual_kinds() == [BlockData.SpinRule.ALT, BlockData.SpinRule.PATTERN], "in the lab only Alternating / Pattern spinners use the new rule symbols (%s)" % [_rule_visual_kinds()])
 	var started_after_100 := false
 	await _lock_lesson()
-	for n in range(1, 101):
+	for n in range(1, ExperienceLab.LAST_LEVEL + 1):
 		game.start_level(n, "test")
 		await _frames(2)
 		var lv := lab_level(n)
@@ -520,33 +709,44 @@ func _game() -> void:
 		if n % 10 == 0:
 			_check(int(game.last_result.get("chapter_complete", 0)) == n / 10, "Chapter %d completes at Lab %d" % [n / 10, n])
 		if n == 100:
-			_check(game.last_result.get("is_last", false), "Lab 100 is the last level")
-	# After 100: Chapter 10 card, then the lab-complete screen, never 101.
+			# The Master no longer ends the lab: Chapter 10 card, then Lab 101.
+			_check(not game.last_result.get("is_last", false), "Lab 100 is not the last lab level")
+			game.next_level()
+			await _frames(3)
+			_check(game.ui.is_chapter_card_open(), "after Lab 100: the Chapter 10 card")
+			game._after_chapter_card()
+			await _frames(3)
+			_check(game.current_level == 101 and not ExperienceLab.complete_open, "after Lab 100's card: NEXT goes on to Lab 101 (level %d)" % game.current_level)
+		if n == ExperienceLab.LAST_LEVEL:
+			_check(game.last_result.get("is_last", false), "Lab %d is the last lab level (a temporary boundary)" % n)
+	# After 110: Chapter 11 card, then the end-of-test-build screen, never 111.
 	game.next_level()
 	await _frames(3)
 	if game.ui.is_chapter_card_open():
 		game._after_chapter_card()
 		await _frames(3)
-	_check(ExperienceLab.complete_open and game.current_level == 100, "after Lab 100: the lab-complete screen (level %d)" % game.current_level)
-	_check(game.level_manager.level_count == 100, "the lab has exactly 100 levels")
-	started_after_100 = ExperienceLab.log_entries().any(func(e): return e.get("kind") == "start" and int(e.get("level")) > 100)
-	_check(not started_after_100, "Level 101 is never started")
+	_check(ExperienceLab.complete_open and game.current_level == ExperienceLab.LAST_LEVEL, "after Lab %d: the end-of-test-build screen (level %d)" % [ExperienceLab.LAST_LEVEL, game.current_level])
+	_check(game.level_manager.level_count == ExperienceLab.LAST_LEVEL, "the lab has exactly %d levels" % ExperienceLab.LAST_LEVEL)
+	started_after_100 = ExperienceLab.log_entries().any(func(e): return e.get("kind") == "start" and int(e.get("level")) > ExperienceLab.LAST_LEVEL)
+	_check(not started_after_100, "Level %d is never started" % (ExperienceLab.LAST_LEVEL + 1))
+	for word in ["GAME COMPLETE", "THE END", "FINAL"]:
+		_check(not (ExperienceLab.COMPLETE_TITLE + " " + ExperienceLab.COMPLETE_LINE).to_upper().contains(word), "the end-of-test-build screen does not say '%s'" % word)
 	var layer := game.get_node_or_null("ExperienceLabComplete")
 	var texts := []
 	if layer:
 		for nd in layer.find_children("*", "Label", true, false):
 			texts.append(nd.text)
 	_check(ExperienceLab.COMPLETE_TITLE in texts and ExperienceLab.COMPLETE_LINE in texts, "the lab-complete screen shows its two lines")
-	# Its button opens Level Select with the lab's 1-100 only.
+	# Its button opens Level Select with the lab's levels only.
 	var btn: Button = layer.find_children("*", "Button", true, false)[0] if layer else null
 	if btn:
 		btn.pressed.emit()
 		await _frames(3)
-	_check(game.ui.is_level_select_open() and game.select_shown["unlocked"].size() + game.select_shown["locked"].size() == 100, "Level Select lists Lab 1-100")
+	_check(game.ui.is_level_select_open() and game.select_shown["unlocked"].size() + game.select_shown["locked"].size() == ExperienceLab.LAST_LEVEL, "Level Select lists Lab 1-%d" % ExperienceLab.LAST_LEVEL)
 	# Save isolation.
 	_check(_read_all("user://progress.cfg") == _prod_before, "the production save is byte-identical after the lab session")
 	_check(_read_all(OpeningLab.SAVE_PATH) == _olab_before, "the Opening Lab save is byte-identical after the lab session")
-	_check(FileAccess.file_exists(ExperienceLab.SAVE_PATH) and game.progress.highest_completed == 100, "the lab's own save holds the progress (%d)" % game.progress.highest_completed)
+	_check(FileAccess.file_exists(ExperienceLab.SAVE_PATH) and game.progress.highest_completed == ExperienceLab.LAST_LEVEL, "the lab's own save holds the progress (%d)" % game.progress.highest_completed)
 
 
 ## The block the lesson finger / highlight is on (-1 = none).

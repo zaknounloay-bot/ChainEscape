@@ -1,4 +1,4 @@
-// PLAYER EXPERIENCE LAB 1-100 (?experiencelab) in the exported game, real
+// PLAYER EXPERIENCE LAB 1-110 (?experiencelab) in the exported game, real
 // Chromium at iPhone size, real touch taps on title / NEXT / Chapter /
 // lab-complete buttons; levels are cleared with the game's debug
 // auto-solve (F1, then S).
@@ -8,18 +8,20 @@
 //
 // A: itch.io-style URL index.html?v=123456&experiencelab=reset with a real
 //    save (Level 150) and an Opening Lab save present: the lab starts as a
-//    new player at Lab 1 with 100 levels; Lab 1-3 play in order.
+//    new player at Lab 1 with 110 levels; Lab 1-3 play in order.
 // B: the plain URL index.html?experiencelab=reset works too; a look-alike
 //    parameter (?v=1&xexperiencelab=1) does not start the lab.
 // C: lab save standing on Lab 100: The Master clears, Chapter 10 card,
-//    then the lab-complete screen (never Level 101); its button opens Level
-//    Select with 1-100. Spot checks: Lab 13 / 16 / 20 / 31 / 41 / 51 names.
-// F: QA jump ?v=123456&experiencelab=N (13 25 31 41 50 51 75 100) and the
-//    plain ?experiencelab=13: Lab N opens directly (no title) in a
-//    temporary QA save; its lesson / intro hint shows; no milestone just
-//    by opening; clearing 25/50/75/100 shows the milestone (100: card,
-//    Chapter 10, lab-complete). The normal lab save and log are unchanged
-//    and ?experiencelab=1 still continues the normal lab.
+//    then NEXT goes on to Lab 101 (no end screen). Standing on Lab 110 (a
+//    temporary lab boundary): Chapter 11 card, then the end-of-test-build
+//    screen (never Level 111); its button opens Level Select. Spot checks:
+//    Lab 13 / 16 / 20 / 31 / 41 / 51 names.
+// F: QA jump ?v=123456&experiencelab=N (13 25 31 41 50 51 75 100 101 102 104
+//    105) and the plain ?experiencelab=13: Lab N opens directly (no title)
+//    in a temporary QA save; its lesson (13 lock, 101 switch) / intro hint
+//    shows; no milestone just by opening; clearing 25/50/75/100 shows the
+//    milestone (100: card, Chapter 10, then Lab 101). The normal lab save
+//    and log are unchanged and ?experiencelab=1 still continues the normal lab.
 // D: the real save and the Opening Lab save are byte-identical afterwards;
 //    without the parameter the real save opens at Level 150. No page errors.
 import http from 'node:http';
@@ -48,6 +50,7 @@ const server = http.createServer((req, res) => {
 const BASE = 'http://127.0.0.1:8775/index.html';
 const LAB = JSON.parse(fs.readFileSync(path.resolve('data/dev/experience_lab/manifest.json'), 'utf8')).levels;
 const NAME = (n) => LAB[n - 1].name;
+const LAST = LAB.length;  // 110: a temporary lab boundary
 
 const W = 390, H = 844;
 const results = [];
@@ -109,7 +112,7 @@ try {
   // ===== A: itch.io-style URL =====
   await page.goto(BASE + '?v=123456&experiencelab=reset');
   let s = await waitFor(page, (x) => x.title_open, 'title');
-  check(s.experience_lab && !s.opening_lab && s.level === 1 && s.level_name === NAME(1) && s.highest_completed === 0 && s.level_count === 100,
+  check(s.experience_lab && !s.opening_lab && s.level === 1 && s.level_name === NAME(1) && s.highest_completed === 0 && s.level_count === LAST,
     `A: ?v=123456&experiencelab=reset starts the lab as a new player (${s.level_name}, cleared ${s.highest_completed}, ${s.level_count} levels)`);
   await page.screenshot({ path: path.join(shots, 'xlab_title.png') });
   await tapAt(page, s.title_continue);
@@ -147,22 +150,29 @@ try {
   await waitFor(page, (x) => !x.title_open, 'closed');
   await sleep(1500);
   s = await solveAndNext(page, 100);
-  if (s.chapter_card_open) {
-    check(true, 'C: the Chapter 10 card opens after Lab 100');
-    await tapAt(page, s.chapter_continue);
-    await sleep(900);
-  }
-  s = await waitFor(page, (x) => x.lab_complete_open, 'lab complete', 15000);
+  check(!!s.chapter_card_open, 'C: the Chapter 10 card opens after Lab 100');
+  if (s.chapter_card_open) { await tapAt(page, s.chapter_continue); await sleep(900); }
+  s = await waitFor(page, (x) => x.level === 101 && !x.card_open, 'lab 101 after 100', 15000);
+  check(s.level === 101 && !s.lab_complete_open && s.level_name === NAME(101), `C: after Lab 100 the lab goes on to Lab 101 "${s.level_name}" (no end screen)`);
+  await page.evaluate((t) => localStorage.setItem('chain_escape_experiencelab_save', t), saveText(LAST - 1, LAST, 210000));
+  await page.goto(BASE + '?v=123456&experiencelab=1');
+  s = await waitFor(page, (x) => x.title_open, `title (lab ${LAST})`);
+  await tapAt(page, s.title_continue);
+  await waitFor(page, (x) => !x.title_open, 'closed');
+  await sleep(1500);
+  s = await solveAndNext(page, LAST);
+  if (s.chapter_card_open) { await tapAt(page, s.chapter_continue); await sleep(900); }
+  s = await waitFor(page, (x) => x.lab_complete_open, 'lab boundary screen', 15000);
   await sleep(900);
   s = await state(page);
   await page.screenshot({ path: path.join(shots, 'xlab_complete.png') });
-  check(s.lab_complete_open && s.level === 100 && s.level_count === 100, `C: the lab-complete screen, still on Lab ${s.level} (never 101)`);
+  check(s.lab_complete_open && s.level === LAST && s.level_count === LAST, `C: after Lab ${LAST}: the end-of-test-build screen, still on Lab ${s.level} (never ${LAST + 1})`);
   const log = await page.evaluate(() => { try { return JSON.parse(localStorage.getItem('chain_escape_experiencelab_log') || '[]'); } catch (e) { return []; } });
-  check(!log.some((e) => e.kind === 'start' && e.level > 100) && log.some((e) => e.kind === 'lab_complete'), 'C: no level after 100 was ever started; the log records the lab completion');
-  check(Array.isArray(s.lab_complete_button) && s.lab_complete_button.length === 2, 'C: the lab-complete screen has its LEVEL SELECT button');
+  check(!log.some((e) => e.kind === 'start' && e.level > LAST) && log.some((e) => e.kind === 'lab_complete'), `C: no level after ${LAST} was ever started; the log records the boundary`);
+  check(Array.isArray(s.lab_complete_button) && s.lab_complete_button.length === 2, 'C: the end-of-test-build screen has its LEVEL SELECT button');
   await tapAt(page, s.lab_complete_button);
   s = await waitFor(page, (x) => !x.lab_complete_open && x.select_open, 'level select after lab complete', 8000).catch(() => state(page));
-  check(s && s.select_open && s.select_unlocked + (s.select_locked || 0) <= 100, `C: LEVEL SELECT opens the lab's Level Select (${s && s.select_unlocked} open)`);
+  check(s && s.select_open && s.select_unlocked + (s.select_locked || 0) <= LAST, `C: LEVEL SELECT opens the lab's Level Select (${s && s.select_unlocked} open)`);
   // ===== E: Lab 13 lock lesson and the 25 / 50 / 75 / 100 milestones =====
   await page.evaluate((t) => localStorage.setItem('chain_escape_experiencelab_save', t), saveText(12, 13, 300000));
   await page.goto(BASE + '?v=123456&experiencelab=1');
@@ -223,19 +233,20 @@ try {
   const xlabSave = await ls(page, 'chain_escape_experiencelab_save');
   const xlabLog = await ls(page, 'chain_escape_experiencelab_log');
   const HINT = (n) => JSON.parse(fs.readFileSync(path.resolve(`data/dev/experience_lab/level_${String(n).padStart(2, '0')}.json`), 'utf8')).hint || '';
-  for (const [n, q] of [[13, '?experiencelab=13'], [13, '?v=123456&experiencelab=13'], [25], [31], [41, '?v=123456&experiencelab=41'], [50], [51], [75], [100]]) {
+  for (const [n, q] of [[13, '?experiencelab=13'], [13, '?v=123456&experiencelab=13'], [25], [31], [41, '?v=123456&experiencelab=41'], [50], [51], [75], [100], [101], [102], [104], [105]]) {
     const url = q || `?v=123456&experiencelab=${n}`;
     await page.goto(BASE + url);
     s = await waitFor(page, (x) => x.experience_lab && x.level === n, `QA ${url}`);
     await sleep(1500);
     s = await state(page);
-    check(s.lab_qa_level === n && s.level_name === NAME(n) && !s.title_open && s.highest_completed === n - 1 && s.level_count === 100,
+    check(s.lab_qa_level === n && s.level_name === NAME(n) && !s.title_open && s.highest_completed === n - 1 && s.level_count === LAST,
       `F: ${url} opens Lab ${n} "${s.level_name}" directly (QA ${s.lab_qa_level}, title ${s.title_open}, cleared ${s.highest_completed})`);
     if (n === 13) check(s.lesson === 'lock' && /left\)/.test(s.tip_text), `F: ${url} the lock lesson from the start ("${s.tip_text}")`);
+    else if (n === 101) check(s.lesson === 'switch' && /SWITCH/.test(s.tip_text), `F: ${url} production's Switch lesson ("${s.tip_text}")`);
     else if (HINT(n)) check(s.tip_text === HINT(n), `F: ${url} Lab ${n} intro hint shows ("${s.tip_text}")`);
     check(!s.card_open && !(s.major_rect && s.major_rect[2] > 0), `F: ${url} no milestone just by opening`);
     if (q && n === 13) await page.screenshot({ path: path.join(shots, 'xlab_qa_L13.png') });
-    if (n === 41) await page.screenshot({ path: path.join(shots, 'xlab_qa_L41.png') });
+    if (n === 41 || n > 100) await page.screenshot({ path: path.join(shots, `xlab_qa_L${n}.png`) });
     if (![25, 50, 75, 100].includes(n)) continue;
     await page.keyboard.press('F1'); await sleep(200);
     await page.keyboard.press('s');
@@ -251,8 +262,8 @@ try {
       await sleep(900);
       s = await state(page);
       if (s.chapter_card_open) { await tapAt(page, s.chapter_continue); await sleep(900); }
-      s = await waitFor(page, (x) => x.lab_complete_open, 'QA lab complete', 15000);
-      check(s.lab_complete_open && s.level === 100, 'F: after Lab 100 (QA): Chapter 10, then the lab-complete screen');
+      s = await waitFor(page, (x) => x.level === 101 && !x.card_open, 'QA lab 101 after 100', 15000);
+      check(s.level === 101 && !s.lab_complete_open, 'F: after Lab 100 (QA): Chapter 10, then on to Lab 101');
     }
   }
   check(await ls(page, 'chain_escape_experiencelab_save') === xlabSave, 'F: the normal lab save is byte-identical after the QA jumps');
