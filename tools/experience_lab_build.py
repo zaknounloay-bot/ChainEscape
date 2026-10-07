@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""PLAYER EXPERIENCE LAB 1-110: builds data/dev/experience_lab/ from its
+"""PLAYER EXPERIENCE LAB 1-130: builds data/dev/experience_lab/ from its
 sources (developer content, never production):
 
   * Levels 1-10: the human-approved Opening Lab (data/dev/opening_lab/).
@@ -7,11 +7,12 @@ sources (developer content, never production):
     order of docs/progression_reflow_11_25.md and the minimum-intervention map
     of docs/progression_audit_1_100.md, with the token adaptations, renames
     and the two new boards (16, 20) listed below.
-  * Levels 101-110: the Switch era. 101 and 106-110 are the production
-    boards, unchanged; 102-105 are the lab's Switch learning ramp (102, 103,
-    105 adapted production boards, 104 a new board "now or later").
+  * Levels 101-130: the Second Era. 101 and 106-130 are the production
+    boards, unchanged (111-120 Switch application, 121-130 Chain Gate);
+    102-105 are the lab's Switch learning ramp (102, 103, 105 adapted
+    production boards, 104 a new board "now or later").
 
-Writes level_01..level_110.json and manifest.json (source + edits of every
+Writes level_01..level_130.json and manifest.json (source + edits of every
 level). Every edit asserts the exact original token, so a changed source can
 never be adapted silently. Run from the repository root:
 
@@ -39,8 +40,9 @@ SOURCES.update({
     51: ("prod", 52), 52: ("prod", 51),
 })
 SOURCES.update({n: ("prod", n) for n in range(53, 101)})
-# Switch era (temporary lab boundary at 110): 104 is a new board.
-LAST = 110
+# Second era (temporary lab boundary at 130): 101 and 106-130 are the
+# production boards, unchanged; 104 is a new board.
+LAST = 130
 SOURCES.update({n: ("prod", n) for n in range(101, LAST + 1)})
 SOURCES[104] = ("new", "now_or_later")
 
@@ -137,6 +139,20 @@ NEW = {
     },
 }
 
+def prod_name(n):
+    return json.load(open(os.path.join(ROOT, "levels", "level_%02d.json" % n)))["name"]
+
+
+def prod_repeat(n, kind, src, name, edits, rename, hint):
+    """A repeated name is allowed only on an unchanged production board of the
+    Second Era (101+) whose name production itself already gives another
+    level (e.g. 62 and 115 "Afterglow"): those boards reproduce production
+    exactly, so the lab never renames them."""
+    if n <= 100 or kind != "prod" or src != n or edits or rename or hint:
+        return False
+    return any(prod_name(m) == name for m in range(1, n))
+
+
 ORDER = ["name", "mystery", "hint", "hint_finger", "blocked_hint", "hearts", "hints", "stars", "map"]
 
 
@@ -186,7 +202,7 @@ def main():
             if old_hint is None:
                 data["hint_finger"] = False  # a reminder line, never a finger on the solution
             hint = {"from": old_hint, "to": new_hint, "why": why}
-        if data["name"] in names:
+        if data["name"] in names and not prod_repeat(n, kind, src, data["name"], edits, rename, hint):
             sys.exit("duplicate name %r at L%d and L%d" % (data["name"], names[data["name"]], n))
         names[data["name"]] = n
         data["map"] = fmt([" ".join(r) for r in grid])
@@ -201,7 +217,7 @@ def main():
                          "moved_from": src if kind == "prod" and src != n else None,
                          "edits": edits, "rename": rename, "hint": hint})
     with open(os.path.join(OUT, "manifest.json"), "w") as f:
-        json.dump({"_comment": "Player Experience Lab 1-110: source of every lab level (tools/experience_lab_build.py).",
+        json.dump({"_comment": "Player Experience Lab 1-130: source of every lab level (tools/experience_lab_build.py).",
                    "levels": manifest}, f, indent="\t", ensure_ascii=False)
         f.write("\n")
     extra = [p for p in os.listdir(OUT) if p.startswith("level_") and p not in {"level_%02d.json" % n for n in range(1, LAST + 1)}]

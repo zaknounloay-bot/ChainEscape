@@ -1,5 +1,5 @@
 {
-	"_comment": "Player Experience Lab 1-110: source of every lab level (tools/experience_lab_build.py).",
+	"_comment": "Player Experience Lab 1-130: source of every lab level (tools/experience_lab_build.py).",
 	"levels": [
 		{
 			"level": 1,
@@ -1213,6 +1213,186 @@
 			"level": 110,
 			"name": "Prism Row",
 			"source": "production P110",
+			"moved_from": null,
+			"edits": [],
+			"rename": null,
+			"hint": null
+		},
+		{
+			"level": 111,
+			"name": "Neon Loop",
+			"source": "production P111",
+			"moved_from": null,
+			"edits": [],
+			"rename": null,
+			"hint": null
+		},
+		{
+			"level": 112,
+			"name": "Relay Garden",
+			"source": "production P112",
+			"moved_from": null,
+			"edits": [],
+			"rename": null,
+			"hint": null
+		},
+		{
+			"level": 113,
+			"name": "Night Glass",
+			"source": "production P113",
+			"moved_from": null,
+			"edits": [],
+			"rename": null,
+			"hint": null
+		},
+		{
+			"level": 114,
+			"name": "Toggle Tide",
+			"source": "production P114",
+			"moved_from": null,
+			"edits": [],
+			"rename": null,
+			"hint": null
+		},
+		{
+			"level": 115,
+			"name": "Afterglow",
+			"source": "production P115",
+			"moved_from": null,
+			"edits": [],
+			"rename": null,
+			"hint": null
+		},
+		{
+			"level": 116,
+			"name": "Pane Shift",
+			"source": "production P116",
+			"moved_from": null,
+			"edits": [],
+			"rename": null,
+			"hint": null
+		},
+		{
+			"level": 117,
+			"name": "Signal Fade",
+			"source": "production P117",
+			"moved_from": null,
+			"edits": [],
+			"rename": null,
+			"hint": null
+		},
+		{
+			"level": 118,
+			"name": "Glass Knot",
+			"source": "production P118",
+			"moved_from": null,
+			"edits": [],
+			"rename": null,
+			"hint": null
+		},
+		{
+			"level": 119,
+			"name": "Lumen Lock",
+			"source": "production P119",
+			"moved_from": null,
+			"edits": [],
+			"rename": null,
+			"hint": null
+		},
+		{
+			"level": 120,
+			"name": "Neon Crown",
+			"source": "production P120",
+			"moved_from": null,
+			"edits": [],
+			"rename": null,
+			"hint": null
+		},
+		{
+			"level": 121,
+			"name": "First Gate",
+			"source": "production P121",
+			"moved_from": null,
+			"edits": [],
+			"rename": null,
+			"hint": null
+		},
+		{
+			"level": 122,
+			"name": "Chain Link",
+			"source": "production P122",
+			"moved_from": null,
+			"edits": [],
+			"rename": null,
+			"hint": null
+		},
+		{
+			"level": 123,
+			"name": "Steel Door",
+			"source": "production P123",
+			"moved_from": null,
+			"edits": [],
+			"rename": null,
+			"hint": null
+		},
+		{
+			"level": 124,
+			"name": "Rivet Row",
+			"source": "production P124",
+			"moved_from": null,
+			"edits": [],
+			"rename": null,
+			"hint": null
+		},
+		{
+			"level": 125,
+			"name": "Gatekeeper",
+			"source": "production P125",
+			"moved_from": null,
+			"edits": [],
+			"rename": null,
+			"hint": null
+		},
+		{
+			"level": 126,
+			"name": "Twin Links",
+			"source": "production P126",
+			"moved_from": null,
+			"edits": [],
+			"rename": null,
+			"hint": null
+		},
+		{
+			"level": 127,
+			"name": "Iron Latch",
+			"source": "production P127",
+			"moved_from": null,
+			"edits": [],
+			"rename": null,
+			"hint": null
+		},
+		{
+			"level": 128,
+			"name": "Cog Line",
+			"source": "production P128",
+			"moved_from": null,
+			"edits": [],
+			"rename": null,
+			"hint": null
+		},
+		{
+			"level": 129,
+			"name": "Hinge Works",
+			"source": "production P129",
+			"moved_from": null,
+			"edits": [],
+			"rename": null,
+			"hint": null
+		},
+		{
+			"level": 130,
+			"name": "Foundry",
+			"source": "production P130",
 			"moved_from": null,
 			"edits": [],
 			"rename": null,

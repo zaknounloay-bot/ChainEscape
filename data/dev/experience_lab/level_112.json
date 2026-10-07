@@ -1,0 +1,11 @@
+{
+	"name": "Relay Garden",
+	"map": [
+		".      G>     .      R<@    B>     Bv@",
+		".      R^@-   Y<$S&A R<     Y>%A   .",
+		".      B^#P   .      .      .      Pv",
+		"Yv     .      G<     P<     B^     Bv",
+		".      .      .      .      .      Rv",
+		"P>&A   B^     Y^     .      Y^#P   ."
+	]
+}

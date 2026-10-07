@@ -59,10 +59,20 @@ func _run() -> void:
 		_check(game._lesson == "lock" and game.tutorial.is_showing() and game.tutorial._text.contains("left)"), "L13: the lock lesson starts from the beginning ('%s')" % game.tutorial._text)
 	elif n == 101:
 		_check(game._lesson == "switch" and game.tutorial.is_showing(), "L101: production's Switch lesson starts ('%s')" % game.tutorial._text)
+	elif n == 121:
+		_check(game._lesson == "gate" and game.tutorial.is_showing() and game.tutorial._text == "GATE C opens when every block chained C escapes (1 left)",
+			"L121: production's Chain Gate lesson starts ('%s')" % game.tutorial._text)
 	else:
 		_check(game._lesson == "", "L%d: no lesson" % n)
 		if game.level.hint != "":
 			_check(game.tutorial.is_showing() and game.tutorial._text == game.level.hint, "L%d: the level's intro hint shows ('%s')" % [n, game.tutorial._text])
+	# Earlier lessons / mechanic tips count as seen (as for a real player).
+	if n > 101:
+		_check(game.progress.tips_seen.has("lesson_switch") and game.progress.tips_seen.has("switch"), "L%d: the Switch lesson and tip count as seen" % n)
+	if n > 121:
+		_check(game.progress.tips_seen.has("lesson_gate") and game.progress.tips_seen.has("gate"), "L%d: the Chain Gate lesson and tip count as seen" % n)
+	if n == 125:
+		_check(game.level.hint == "" and not game.tutorial.is_showing() and game.hint_block == -1, "L125: production start - no hint, message or finger")
 	# Opening alone never celebrates.
 	await _frames(20)
 	_check(game.ui.major_milestone_rect().size.x == 0.0 and not game.completed, "L%d: no milestone just by opening" % n)
@@ -87,6 +97,8 @@ func _run() -> void:
 		_check(game.progress.tips_seen.has("lesson_lock"), "L13: the lesson completed during the clear")
 	if n == 101:
 		_check(game.progress.tips_seen.has("lesson_switch"), "L101: the Switch lesson completed during the clear")
+	if n == 121:
+		_check(game.progress.tips_seen.has("lesson_gate"), "L121: the Chain Gate lesson completed during the clear")
 	var want: String = MILESTONES.get(n, "")
 	_check(String(game.last_result.get("celebration", "")) == want and overlay == (want != ""),
 		"L%d: milestone '%s' after the clear (want '%s', overlay %s)" % [n, game.last_result.get("celebration", ""), want, overlay])

@@ -1,0 +1,11 @@
+{
+	"name": "Iron Latch",
+	"map": [
+		"Rv    .     .     G<@   P<    .",
+		".     .     G>    P>    B^    .",
+		".     B<    Y^    B>    Yv    .",
+		"Yv+C  .     P^    .     .     XC",
+		"Gv+C  .     Y^+C  .     B^@~  P^",
+		"P>@   B^    .     G>    R>@$S ."
+	]
+}

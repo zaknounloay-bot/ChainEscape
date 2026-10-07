@@ -1,5 +1,5 @@
 extends Node
-## PLAYER EXPERIENCE LAB 1-110 checks (developer page ?experiencelab).
+## PLAYER EXPERIENCE LAB 1-130 checks (developer page ?experiencelab).
 ##   godot --headless --path . res://tools/ExperienceLabCheck.tscn
 ##
 ## Static:
@@ -20,12 +20,17 @@ extends Node
 ## - All 100 levels, sampled states: SHOW A MOVE legal and solvable; Hammer
 ##   safety exact.
 ## Game (real scene, lab active, isolated save):
-## - Each Level 1-110 loads its lab board, hearts from 6, SHOW A MOVE, Undo
+## - Each Level 1-130 loads its lab board, hearts from 6, SHOW A MOVE, Undo
 ##   exact, Restart exact, Hammer refuses unsafe smashes, clears by taps;
-##   Chapter cards at 10, 20 ... 110; Lab 100 goes on to Lab 101; after 110
-##   (a temporary lab boundary): the end-of-test-build screen, never Level
-##   111; Level Select lists 1-110 only.
+##   Chapter cards at 10, 20 ... 130; Lab 100 goes on to Lab 101; NEXT goes
+##   110 -> 111, 120 -> 121, 121 -> 122, 129 -> 130; after 130 (a temporary
+##   lab boundary): the end-of-test-build screen, never Level 131; Level
+##   Select lists 1-130 only.
 ## - Switch ramp 102-105 on the full state graph (_switch_ramp).
+## - Lab 101 and 106-130 are the production boards, unchanged (_production_era).
+## - Lab 121 runs production's Chain Gate lesson unchanged (_gate_lesson);
+##   Lab 125 is production behaviour with no lesson, hint, finger or extra
+##   feedback: its gate counters only count down (_gate_125).
 ## - Save isolation: the production save and the Opening Lab save are
 ##   byte-identical before and after.
 
@@ -62,6 +67,7 @@ func _run() -> void:
 	_alternating_onboarding()
 	_pattern_onboarding()
 	_switch_ramp()
+	_production_era()
 	for n in range(1, ExperienceLab.LAST_LEVEL + 1):
 		_sampled_tools(n)
 	await _game()
@@ -99,7 +105,8 @@ func _parsing() -> void:
 		# QA jump: 2..100 opens that level; anything else keeps the old meaning.
 		["?experiencelab=13", "", "13"], ["?v=123456&experiencelab=41", "", "41"], ["?experiencelab=2", "", "2"],
 		["?experiencelab=100", "", "100"], ["?v=1&experiencelab=50&x=2", "", "50"], ["", "#experiencelab=75", "75"],
-		["?experiencelab=101", "", "101"], ["?experiencelab=110", "", "110"], ["?experiencelab=111", "", ""], ["?experiencelab=-5", "", ""], ["?experiencelab=13abc", "", ""],
+		["?experiencelab=101", "", "101"], ["?experiencelab=110", "", "110"], ["?experiencelab=111", "", "111"],
+		["?v=123456&experiencelab=121", "", "121"], ["?experiencelab=125", "", "125"], ["?experiencelab=130", "", "130"], ["?experiencelab=131", "", ""], ["?experiencelab=-5", "", ""], ["?experiencelab=13abc", "", ""],
 		["?v=1&experiencelab=13&experiencelab=reset", "", "reset"],
 	]
 	for c in cases:
@@ -115,7 +122,7 @@ func _defaults() -> void:
 	lm._ready()
 	_check(lm.level_count == 300, "300 production levels (%d)" % lm.level_count)
 	_check(_rule_visual_kinds() == [], "without the lab every spinner keeps the production drawing (%s)" % [_rule_visual_kinds()])
-	for n in [1, 11, 16, 20, 50, 100, 101]:
+	for n in [1, 11, 16, 20, 50, 100, 101, 111, 121, 125, 130]:
 		var a := LevelManager.to_json_text(lm.load_level(n))
 		var b := LevelManager.to_json_text(LevelManager.read_level(n))
 		_check(a == b, "without the lab, Level %d is production" % n)
@@ -141,7 +148,10 @@ func _data() -> void:
 		var n: int = int(e["level"])
 		var lv := lab_level(n)
 		_check(lv != null and lv.blocks.size() > 0, "L%d parses" % n)
-		_check(not names.has(lv.name), "L%d name '%s' is unique" % [n, lv.name])
+		# Unique - except on an unchanged production board of 101+ whose name
+		# production itself already uses (e.g. 62 / 115 "Afterglow").
+		var prod_repeat: bool = n > 100 and e["source"] == "production P%d" % n and e["edits"].is_empty() and e["rename"] == null and e["hint"] == null
+		_check(not names.has(lv.name) or prod_repeat, "L%d name '%s' is unique" % [n, lv.name])
 		names[lv.name] = n
 		# Equal to its source + edits.
 		var src: String = e["source"]
@@ -189,10 +199,14 @@ func _data() -> void:
 		if n <= 100:
 			var other := lv.blocks.filter(func(b): return b.is_switch() or b.flip_link != "" or b.is_gate() or b.armored or b.is_crate() or b.seq_stage != 0)
 			_check(other.is_empty() and lv.portals.is_empty(), "L%d uses only First Era mechanics" % n)
-		else:
-			# Lab 101-110: the Switch era - Switch/Flip and nothing newer.
+		elif n <= 120:
+			# Lab 101-120: the Switch era - Switch/Flip and nothing newer.
 			var other := lv.blocks.filter(func(b): return b.is_gate() or b.armored or b.is_crate() or b.seq_stage != 0)
 			_check(other.is_empty() and lv.portals.is_empty() and lv.blocks.any(func(b): return b.is_switch()), "L%d is a Switch level with no newer mechanic" % n)
+		else:
+			# Lab 121-130: the production Chain Gate levels - nothing newer.
+			var other := lv.blocks.filter(func(b): return b.armored or b.is_crate() or b.seq_stage != 0)
+			_check(other.is_empty() and lv.portals.is_empty() and lv.blocks.any(func(b): return b.is_gate()), "L%d is a Chain Gate level with no newer mechanic" % n)
 	var want_first := {"spinner": 6, "hidden": 8, "lock": 13, "ccw": 31, "alt": 41, "pattern": 51}
 	for k in want_first:
 		_check(first.get(k, -1) == want_first[k], "%s first appears at Lab %d (%d)" % [k, want_first[k], first.get(k, -1)])
@@ -626,6 +640,8 @@ func _game() -> void:
 	_check(_rule_visual_kinds() == [BlockData.SpinRule.ALT, BlockData.SpinRule.PATTERN], "in the lab only Alternating / Pattern spinners use the new rule symbols (%s)" % [_rule_visual_kinds()])
 	var started_after_100 := false
 	await _lock_lesson()
+	await _gate_lesson()
+	await _gate_125()
 	for n in range(1, ExperienceLab.LAST_LEVEL + 1):
 		game.start_level(n, "test")
 		await _frames(2)
@@ -717,9 +733,19 @@ func _game() -> void:
 			game._after_chapter_card()
 			await _frames(3)
 			_check(game.current_level == 101 and not ExperienceLab.complete_open, "after Lab 100's card: NEXT goes on to Lab 101 (level %d)" % game.current_level)
+		if n in [110, 120, 121, 129]:
+			# Natural progression through the Second Era (a Chapter card after 110 / 120).
+			_check(not game.last_result.get("is_last", false), "Lab %d is not the last lab level" % n)
+			game.next_level()
+			await _frames(3)
+			if n % 10 == 0:
+				_check(game.ui.is_chapter_card_open(), "after Lab %d: the Chapter %d card" % [n, n / 10])
+				game._after_chapter_card()
+				await _frames(3)
+			_check(game.current_level == n + 1 and not ExperienceLab.complete_open, "Lab %d: NEXT goes on to Lab %d (level %d)" % [n, n + 1, game.current_level])
 		if n == ExperienceLab.LAST_LEVEL:
 			_check(game.last_result.get("is_last", false), "Lab %d is the last lab level (a temporary boundary)" % n)
-	# After 110: Chapter 11 card, then the end-of-test-build screen, never 111.
+	# After 130: Chapter 13 card, then the end-of-test-build screen, never 131.
 	game.next_level()
 	await _frames(3)
 	if game.ui.is_chapter_card_open():
@@ -810,6 +836,119 @@ func _lock_lesson() -> void:
 	await _frames(2)
 	_check(game._lesson == "" and game.level.hint.contains("LOCK's color"), "L13 replay: no lesson again, the plain hint")
 	game.progress.tips_seen.erase("lesson_lock")
+
+
+## Lab 101 and 106-130 are the production boards: same JSON (map tokens,
+## name, hint, finger, hearts, stars, ...) and the same parsed level.
+func _production_era() -> void:
+	for n in [101] + range(106, ExperienceLab.LAST_LEVEL + 1):
+		var lab_json: Dictionary = JSON.parse_string(FileAccess.get_file_as_string(ExperienceLab.LEVEL_DIR.path_join("level_%02d.json" % n)))
+		var prod_json: Dictionary = JSON.parse_string(FileAccess.get_file_as_string(LevelManager.LEVEL_PATH % n))
+		for d in [lab_json, prod_json]:
+			d["map"] = d["map"].map(func(row): return Array(String(row).split(" ", false)))
+		_check(lab_json == prod_json, "Lab %d JSON is production Level %d (every field, every map token)" % [n, n])
+		var lab := lab_level(n)
+		var prod := LevelManager.read_level(n)
+		_check(LevelManager.to_json_text(lab) == LevelManager.to_json_text(prod) and lab.name == prod.name and lab.hint == prod.hint
+			and lab.hint_finger == prod.hint_finger and lab.mystery == prod.mystery, "Lab %d parses to production Level %d" % [n, n])
+	# Lessons: the lab keeps production's Switch (101) and Gate (121) lessons
+	# and adds none in 102-130 (125 especially).
+	_check(ExperienceLab.LESSONS == {13: "lock", 101: "switch", 121: "gate"}, "lab lessons are 13 lock, 101 switch, 121 gate (%s)" % [ExperienceLab.LESSONS])
+	_check(ExperienceLab.LESSONS[121] == GameManager.LESSONS[121] and ExperienceLab.LESSONS[101] == GameManager.LESSONS[101], "Lab 101 / 121 use production's own lesson kinds")
+	# Milestone 125: production's milestone level, no lab celebration on top.
+	_check(Chapters.is_milestone(125) and not ExperienceLab.CELEBRATIONS.has(125) and ExperienceLab.CELEBRATIONS.keys().all(func(k): return k <= 100),
+		"125 keeps production's milestone; lab celebrations stay at 25/50/75/100")
+
+
+## Lab 121: production's Chain Gate lesson, step by step.
+func _gate_lesson() -> void:
+	game.progress.tips_seen.erase("lesson_gate")
+	game.start_level(121, "test")
+	await _frames(3)
+	_check(game._lesson == "gate", "L121 opens the production Chain Gate lesson")
+	var gate := -1
+	var links := []
+	for b in game.model.blocks.values():
+		if b.is_gate():
+			gate = b.id
+		elif b.gate_link != "":
+			links.append(b.id)
+	_check(gate != -1 and links.size() == 1, "L121 has one gate and one chained block (production)")
+	_check(game.board._views[gate].marked and links.all(func(l): return game.board._views[l].marked), "L121 lesson highlights the gate and its chained block")
+	var waiting := game.model.blocks.keys().filter(func(id): return id != gate and game.model.find_blocker(id) != null and game.model.find_blocker(id).id == gate)
+	_check(waiting.size() == 2, "L121 two blocks wait behind the gate (%d)" % waiting.size())
+	var steps := 0
+	var opened := false
+	while game._lesson == "gate" and steps < 30:
+		var want := Solver.from_model(game.model).recommend_move()
+		var g: String = game.model.blocks[gate].gate_group
+		_check(_lesson_target() == want, "L121 step %d: finger on production's pick" % steps)
+		_check(game.tutorial.is_showing() and game.tutorial._text == "GATE %s opens when every block chained %s escapes (%d left)" % [g, g, game.model.gate_remaining(g)],
+			"L121 step %d: production lesson text ('%s')" % [steps, game.tutorial._text])
+		var sfx := AudioManager.sfx_played
+		var is_link: bool = want in links
+		game._on_block_tapped(want)
+		await _frames(2)
+		steps += 1
+		if is_link:
+			opened = true
+			_check(not game.model.blocks.has(gate) and game.board.get_view(gate) == null, "L121 the chained block escapes and the gate opens at once")
+			_check(game.model.last_opened_gates.size() == 1, "L121 the gate-open event fires")
+			_check(AudioManager.sfx_played >= sfx + 2 or not AudioManager.sfx_enabled, "L121 gate sound plays with the escape (%d sfx)" % (AudioManager.sfx_played - sfx))
+			_check(waiting.all(func(id): return game.model.can_escape(id)), "L121 the waiting blocks are free")
+			_check(game.tutorial._text == "The gate is open - its lane is free!", "L121 production completion line ('%s')" % game.tutorial._text)
+		else:
+			_check(game.model.blocks.has(gate), "L121 the gate stays until its chained block leaves")
+	_check(opened and game._lesson == "" and game.progress.tips_seen.has("lesson_gate"), "L121 lesson complete and remembered (%d steps)" % steps)
+	for id in Solver.from_model(game.model).solve():
+		game._on_block_tapped(id)
+		await _frames(1)
+	await get_tree().create_timer(1.5).timeout
+	_check(game.completed, "L121 clears after the lesson")
+	game.start_level(121, "test")
+	await _frames(2)
+	_check(game._lesson == "", "L121 replay: no lesson again")
+	game.progress.tips_seen.erase("lesson_gate")
+
+
+## Lab 125: exactly production - no lesson, hint, finger, message or extra
+## feedback; a chained block leaving only lowers its gate's counter.
+func _gate_125() -> void:
+	if not game.progress.tips_seen.has("gate"):
+		game.progress.tips_seen.append("gate")  # as after Lab 121
+	game.start_level(125, "test")
+	await _frames(3)
+	_check(game._lesson == "" and game.level.hint == "" and not game.tutorial.is_showing() and _lesson_target() == -1,
+		"L125 starts with no lesson, hint, message or finger")
+	_check(game.board._views.values().all(func(v): return not v.marked), "L125 nothing is highlighted")
+	var gates := {}
+	for b in game.model.blocks.values():
+		if b.is_gate():
+			gates[b.gate_group] = b.id
+	_check(gates.size() == 2 and game.board._views[gates["C"]].gate_count == 3 and game.board._views[gates["D"]].gate_count == 2, "L125 gate counters start C 3, D 2")
+	var counts := {"C": [3], "D": [2]}
+	await get_tree().create_timer(1.5).timeout  # the level's pop-in is over
+	for id in Solver.from_model(game.model).solve():
+		var link: String = game.model.blocks[id].gate_link
+		var before := []
+		if link != "":
+			var v0: BlockView = game.board._views[gates[link]]
+			before = [v0.scale, v0.modulate]
+		game._on_block_tapped(id)
+		await _frames(1)
+		if link != "" and game.model.blocks.has(gates[link]):
+			# Not the last link: the gate stays shut, its number drops - nothing else.
+			counts[link].append(game.board._views[gates[link]].gate_count)
+			_check(game.model.last_opened_gates.is_empty() and not game.tutorial.is_showing(), "L125 a chained block leaves: no message, gate %s stays shut" % link)
+			# The gate sound / pop only ever play on an opening (none here):
+			# the slab itself is untouched apart from its number.
+			var gv: BlockView = game.board._views[gates[link]]
+			_check(gv.scale == before[0] and gv.modulate == before[1] and not gv.marked and not gv.hinted, "L125 gate %s's slab gets no animation, mark or finger" % link)
+		elif link != "":
+			counts[link].append(0)
+	_check(counts == {"C": [3, 2, 1, 0], "D": [2, 1, 0]}, "L125 counters count down C 3-2-1-open, D 2-1-open (%s)" % [counts])
+	await get_tree().create_timer(1.5).timeout
+	_check(game.completed and Chapters.is_milestone(125), "L125 clears (production milestone level)")
 
 
 ## Which spin rules draw the lab's rule symbols (BlockView._lab_rule_visuals)
