@@ -63,6 +63,9 @@ RENAMES = {
 # (key) colour. The guided lock lesson teaches it on the board; this line
 # is the reminder on replays.
 HINTS = {
+    41: ("Dots show a spinner's rule: this one alternates",
+         "This spinner alternates: the bold arrow shows its next turn",
+         "the lab draws Alternating as a two-way ring, not dots"),
     13: ("A lock opens when all blocks of its color are gone",
          "A lock opens when every block of the LOCK's color is gone",
          "\"its color\" read as the locked block's own colour; the rule is about the lock's key colour"),

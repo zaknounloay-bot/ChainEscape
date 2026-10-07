@@ -317,6 +317,23 @@ Human result: both testers went well beyond Level 25 and enjoyed it. The progres
 
 **iPhone (390×844):** every overlay sits at 6–94% of the width and 31–53% of the height, clear of the bottom controls, touch only.
 
+## Spinner rule visuals (lab only, after the real-iPhone QA)
+
+The human QA on a real iPhone found the 2-dot (Alternating) and 3-dot (Pattern) notation unreadable. After mockup rounds rendered with the game's own renderer, the approved design is drawn in `BlockView` **only while the Experience Lab is active** (`_lab_rule_visuals()`). Production 1–300 keeps its existing drawing.
+
+| Spinner | In the lab |
+|---|---|
+| Clockwise / counter-clockwise | **Unchanged** (two arcs chasing each other), on normal blocks and on Silver/Gold coins. |
+| Alternating | **Two-way ring.** The left half (head clockwise) and the right half (head counter-clockwise) meet at the top. The half of the NEXT turn is bold and bright; the other half is dimmed. No dots. |
+| Pattern | **Three hooks.** Short, heavy curved arrows at 12, 4 and 8 o'clock with wide gaps, read clockwise: CW, CW, then the mirrored CCW hook. The NEXT beat is bold and bright; the other two are dimmed. No dots. |
+| Silver coin with an Alternating / Pattern spinner | The colour inlay band is removed. The symbol sits directly on the metal face (gradients, highlight, milled rim and sparkles unchanged). The dimmed parts are slightly stronger on metal. The symbol is drawn above the coin's frame and gem. |
+| Gold coin with an Alternating / Pattern spinner | The colour inlay moves from under the symbol to a slim trim at the face's edge. The rest is as on Silver. |
+| Locked | The existing padlock and veil, unchanged, over the new symbol. |
+
+- **Lab 41 hint:** "Dots show a spinner's rule: this one alternates" became "This spinner alternates: the bold arrow shows its next turn". This is a lab-only text change via `HINTS` in `tools/experience_lab_build.py`, because the dots no longer exist.
+- **No other change:** no level layout, mechanic, solution, scoring, economy or save change.
+- **Known, deliberately left as is:** Silver/Gold clockwise and counter-clockwise spinner coins still carry the colour inlay band under their ring (Silver CW in Labs 46, 50, 51 and 58; Silver CCW in Lab 98; Gold CCW in Lab 64). Clockwise and counter-clockwise were to stay unchanged.
+
 ## QA
 
 | Check | Result |

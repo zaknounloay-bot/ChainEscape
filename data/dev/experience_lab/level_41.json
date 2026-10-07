@@ -1,6 +1,6 @@
 {
 	"name": "Gearbox",
-	"hint": "Dots show a spinner's rule: this one alternates",
+	"hint": "This spinner alternates: the bold arrow shows its next turn",
 	"hint_finger": false,
 	"map": [
 		".    P>   R<@~ Y>   Rv   .",

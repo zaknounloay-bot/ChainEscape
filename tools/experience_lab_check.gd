@@ -109,6 +109,7 @@ func _defaults() -> void:
 	var lm := LevelManager.new()
 	lm._ready()
 	_check(lm.level_count == 300, "300 production levels (%d)" % lm.level_count)
+	_check(_rule_visual_kinds() == [], "without the lab every spinner keeps the production drawing (%s)" % [_rule_visual_kinds()])
 	for n in [1, 11, 16, 20, 50, 100, 101]:
 		var a := LevelManager.to_json_text(lm.load_level(n))
 		var b := LevelManager.to_json_text(LevelManager.read_level(n))
@@ -386,6 +387,7 @@ func _game() -> void:
 	game.level_manager.level_count = mini(game.level_manager.level_count, ExperienceLab.LAST_LEVEL)
 	AudioManager.set_music_enabled(false)
 	_check(game.progress.path == ExperienceLab.SAVE_PATH, "the game uses the lab save (%s)" % game.progress.path)
+	_check(_rule_visual_kinds() == [BlockData.SpinRule.ALT, BlockData.SpinRule.PATTERN], "in the lab only Alternating / Pattern spinners use the new rule symbols (%s)" % [_rule_visual_kinds()])
 	var started_after_100 := false
 	await _lock_lesson()
 	for n in range(1, 101):
@@ -561,6 +563,23 @@ func _lock_lesson() -> void:
 	await _frames(2)
 	_check(game._lesson == "" and game.level.hint.contains("LOCK's color"), "L13 replay: no lesson again, the plain hint")
 	game.progress.tips_seen.erase("lesson_lock")
+
+
+## Which spin rules draw the lab's rule symbols (BlockView._lab_rule_visuals)
+## right now - on a normal block and on a Silver coin.
+func _rule_visual_kinds() -> Array:
+	var out := []
+	for rule in [BlockData.SpinRule.CW, BlockData.SpinRule.CCW, BlockData.SpinRule.ALT, BlockData.SpinRule.PATTERN]:
+		for rarity in [BlockData.Rarity.NORMAL, BlockData.Rarity.SILVER]:
+			var b := BlockData.new(0, Vector2i.ZERO, "blue", 0, BlockData.Kind.SPINNER)
+			b.spin_rule = rule
+			b.rarity = rarity
+			var v := BlockView.new()
+			v.data = b
+			if v._lab_rule_visuals() and not out.has(rule):
+				out.append(rule)
+			v.free()
+	return out
 
 
 static func _read_all(path: String) -> String:

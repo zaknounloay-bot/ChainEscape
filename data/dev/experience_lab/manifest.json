@@ -406,7 +406,11 @@
 			"moved_from": 35,
 			"edits": [],
 			"rename": null,
-			"hint": null
+			"hint": {
+				"from": "Dots show a spinner's rule: this one alternates",
+				"to": "This spinner alternates: the bold arrow shows its next turn",
+				"why": "the lab draws Alternating as a two-way ring, not dots"
+			}
 		},
 		{
 			"level": 42,

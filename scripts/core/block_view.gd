@@ -104,6 +104,10 @@ func setup(p_data: BlockData, p_cell_size: float) -> void:
 	_arrow = _part(_draw_arrow_part)
 	_badge = _part(_draw_badge)
 	_over = _part(_draw_overlay)
+	if _lab_rule_visuals() and data.is_reward():
+		# Experience Lab: on a Silver/Gold coin the rule symbol sits above
+		# the coin's frame and gem, so the mechanic reads first.
+		move_child(_badge, _over.get_index())
 	_twinkle = _part(_draw_twinkle)
 	_ring = _part(_draw_hint_ring)
 	_mark = _part(_draw_lesson_mark)
@@ -307,8 +311,17 @@ func _draw_coin(f: Rect2, size: float) -> void:
 	draw_arc(ctr, r * 0.86, PI * 0.15, PI * 0.85, 24, Color(body[2], 0.8), maxf(2.0, size * 0.03), true)
 	# Inlay ring in the block's OWN color (locks count reward blocks by color).
 	var ring_w := maxf(3.0, size * 0.055)
-	draw_arc(ctr, r * 0.74, 0.0, TAU, 56, Color(body[3], 0.9), ring_w + 3.0, true)
-	draw_arc(ctr, r * 0.74, 0.0, TAU, 56, Palette.styled_face(data.color), ring_w, true)
+	if _lab_rule_visuals():
+		# Experience Lab, Alternating / Pattern coins: no inlay under the rule
+		# symbol - the metal face runs on beneath it. Gold keeps its colour as
+		# a slim trim at the face's edge; Silver has none.
+		if data.rarity >= BlockData.Rarity.GOLD:
+			var tw := maxf(2.0, size * 0.024)
+			draw_arc(ctr, r * 0.875, 0.0, TAU, 64, Color(body[3], 0.55), tw + 2.0, true)
+			draw_arc(ctr, r * 0.875, 0.0, TAU, 64, Palette.styled_face(data.color), tw, true)
+	else:
+		draw_arc(ctr, r * 0.74, 0.0, TAU, 56, Color(body[3], 0.9), ring_w + 3.0, true)
+		draw_arc(ctr, r * 0.74, 0.0, TAU, 56, Palette.styled_face(data.color), ring_w, true)
 	# Static sparkles.
 	draw_colored_polygon(_star(ctr + Vector2(r * 0.5, -r * 0.5), size * 0.11, size * 0.03), Color(1, 1, 1, 0.95))
 	draw_colored_polygon(_star(ctr + Vector2(-r * 0.56, r * 0.46), size * 0.07, size * 0.02), Color(1, 1, 1, 0.8))
@@ -455,6 +468,9 @@ func _draw_arrow_part(c: CanvasItem) -> void:
 func _draw_badge(c: CanvasItem) -> void:
 	if not data.is_spinner() or data.hidden:
 		return
+	if _lab_rule_visuals():
+		_draw_rule_symbol(c)
+		return
 	var size := cell_size * FACE_RATIO
 	var col := Color(_arrow_color(), 0.85)
 	var r := size * 0.39
@@ -478,7 +494,7 @@ func _draw_overlay(c: CanvasItem) -> void:
 	var size := f.size.x
 	if data.hidden:
 		_draw_mystery(c, f, size)
-	elif data.is_spinner():
+	elif data.is_spinner() and not _lab_rule_visuals():
 		_draw_rule_strip(c, f.get_center(), size)
 	if data.is_gate():
 		_draw_gate(c, f, size)
@@ -515,6 +531,66 @@ func _draw_mystery(c: CanvasItem, face_rect: Rect2, size: float) -> void:
 	var fs := int(size * 0.55)
 	var w := font.get_string_size("?", HORIZONTAL_ALIGNMENT_LEFT, -1, fs).x
 	c.draw_string(font, face_rect.get_center() + Vector2(-w * 0.5, fs * 0.36), "?", HORIZONTAL_ALIGNMENT_LEFT, -1, fs, col)
+
+
+## Experience Lab only (developer page): Alternating and Pattern spinners
+## use the approved rule symbols instead of the ring + dot strip. CW / CCW
+## spinners and every production level keep the drawing above.
+func _lab_rule_visuals() -> bool:
+	return ExperienceLab.active and data != null and data.is_spinner() and data.spin_rule >= BlockData.SpinRule.ALT
+
+
+## ALT: two-way ring - the left half (head clockwise) and the right half
+## (head counter-clockwise) meet at the top; the half of the NEXT turn is
+## bold and bright, the other dimmed.
+## PATTERN: three hooks - short heavy curved arrows at 12, 4 and 8 o'clock
+## with wide gaps, read clockwise (CW, CW, then the mirrored CCW hook); the
+## NEXT beat is bold and bright, the other two dimmed.
+func _draw_rule_symbol(c: CanvasItem) -> void:
+	var size := cell_size * FACE_RATIO
+	var base := _arrow_color()
+	var on := Color(base, 1.0)
+	var off := Color(base, 0.72 if _metal_body() else 0.58)
+	var w_on := maxf(3.0, size * 0.072)
+	var w_off := maxf(2.0, size * 0.047)
+	var hs_on := size * 0.105
+	var hs_off := size * 0.078
+	if data.spin_rule == BlockData.SpinRule.ALT:
+		var r := size * 0.39
+		var top_gap := 0.50
+		var bottom_gap := 0.32
+		var next_cw := data.next_turn_cw()
+		for bright in [false, true]:
+			var cw: bool = next_cw == bright
+			var col: Color = on if bright else off
+			var w: float = w_on if bright else w_off
+			var hs: float = hs_on if bright else hs_off
+			if cw:
+				c.draw_arc(Vector2.ZERO, r, PI * 0.5 + bottom_gap, PI * 1.5 - top_gap, 24, col, w, true)
+				_rule_head(c, PI * 1.5 - top_gap, r, true, hs, col)
+			else:
+				c.draw_arc(Vector2.ZERO, r, -PI * 0.5 + top_gap, PI * 0.5 - bottom_gap, 24, col, w, true)
+				_rule_head(c, -PI * 0.5 + top_gap, r, false, hs, col)
+		return
+	var r := size * 0.38
+	var next_i := posmod(data.spin_step, BlockData.rule_period(data.spin_rule))
+	for bright in [false, true]:
+		for i in 3:
+			if (i == next_i) != bright:
+				continue
+			var mid := -PI * 0.5 + i * TAU / 3.0
+			var cw := BlockData.turn_is_cw(data.spin_rule, i)
+			var col: Color = on if bright else off
+			c.draw_arc(Vector2.ZERO, r, mid - 0.55, mid + 0.55, 16, col, (w_on if bright else w_off) * 1.25, true)
+			_rule_head(c, mid + 0.55 if cw else mid - 0.55, r, cw, (hs_on if bright else hs_off) * 1.15, col)
+
+
+## An arrowhead at angle `at` on a circle of radius `r`, pointing along it.
+func _rule_head(c: CanvasItem, at: float, r: float, cw: bool, hs: float, col: Color) -> void:
+	var tip := Vector2.from_angle(at) * r
+	var tangent := Vector2.from_angle(at + (PI * 0.5 if cw else -PI * 0.5))
+	var normal := Vector2.from_angle(at)
+	c.draw_colored_polygon(PackedVector2Array([tip + tangent * hs * 1.35, tip + normal * hs, tip - normal * hs]), col)
 
 
 ## ALT / PATTERN: a small sequence strip at the bottom of the face. Filled
