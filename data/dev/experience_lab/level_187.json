@@ -1,12 +1,14 @@
 {
-	"name": "Apex",
+	"name": "Shell Game",
+	"hint": "Twins can't crack a shell - another block must",
+	"hint_finger": false,
 	"map": [
-		"Bv    .     .     .     .     .     P<",
-		".     .     .     .     R>%B  .     P^",
-		".     Pv&B  G<    .     G<#R  Gv@~  Bv@",
-		"Rv    Y<    .     G>    .     .     G^@#B",
-		".     .     .     Y^&A  .     .     .",
-		"Y>@   .     P>@-  .     .     .     Gv@*",
-		".     Y>    .     P^    .     P>%A  ."
+		".      .      Bv@-   Yv@~   .      Rv@",
+		".      R>     .      Y>@-   P>+C!T R>=",
+		"B<     .      .      .      P>!T   .",
+		".      .      .      .      .      .",
+		"B<     .      Bv     XC     .      G^#B",
+		".      .      .      .      .      R<",
+		"Y^@    .      B<     P^     .      G^@"
 	]
 }

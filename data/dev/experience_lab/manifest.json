@@ -6,6 +6,7 @@
 			"name": "First Steps",
 			"source": "Opening Lab 1",
 			"moved_from": null,
+			"twins": false,
 			"edits": [],
 			"rename": null,
 			"hint": null
@@ -15,6 +16,7 @@
 			"name": "In The Way",
 			"source": "Opening Lab 2",
 			"moved_from": null,
+			"twins": false,
 			"edits": [],
 			"rename": null,
 			"hint": null
@@ -24,6 +26,7 @@
 			"name": "The Knot",
 			"source": "Opening Lab 3",
 			"moved_from": null,
+			"twins": false,
 			"edits": [],
 			"rename": null,
 			"hint": null
@@ -33,6 +36,7 @@
 			"name": "Two Threads",
 			"source": "Opening Lab 4",
 			"moved_from": null,
+			"twins": false,
 			"edits": [],
 			"rename": null,
 			"hint": null
@@ -42,6 +46,7 @@
 			"name": "Long Way Round",
 			"source": "Opening Lab 5",
 			"moved_from": null,
+			"twins": false,
 			"edits": [],
 			"rename": null,
 			"hint": null
@@ -51,6 +56,7 @@
 			"name": "Spinner",
 			"source": "Opening Lab 6",
 			"moved_from": null,
+			"twins": false,
 			"edits": [],
 			"rename": null,
 			"hint": null
@@ -60,6 +66,7 @@
 			"name": "Right On Time",
 			"source": "Opening Lab 7",
 			"moved_from": null,
+			"twins": false,
 			"edits": [],
 			"rename": null,
 			"hint": null
@@ -69,6 +76,7 @@
 			"name": "Hidden Arrow",
 			"source": "Opening Lab 8",
 			"moved_from": null,
+			"twins": false,
 			"edits": [],
 			"rename": null,
 			"hint": null
@@ -78,6 +86,7 @@
 			"name": "Out Of Sight",
 			"source": "Opening Lab 9",
 			"moved_from": null,
+			"twins": false,
 			"edits": [],
 			"rename": null,
 			"hint": null
@@ -87,6 +96,7 @@
 			"name": "Clockwork",
 			"source": "Opening Lab 10",
 			"moved_from": null,
+			"twins": false,
 			"edits": [],
 			"rename": null,
 			"hint": null
@@ -96,6 +106,7 @@
 			"name": "Wrong Way",
 			"source": "production P13",
 			"moved_from": 13,
+			"twins": false,
 			"edits": [],
 			"rename": null,
 			"hint": null
@@ -105,6 +116,7 @@
 			"name": "Pinwheel",
 			"source": "production P14",
 			"moved_from": 14,
+			"twins": false,
 			"edits": [],
 			"rename": null,
 			"hint": null
@@ -114,6 +126,7 @@
 			"name": "Locked",
 			"source": "production P16",
 			"moved_from": 16,
+			"twins": false,
 			"edits": [],
 			"rename": null,
 			"hint": {
@@ -127,6 +140,7 @@
 			"name": "Key Colors",
 			"source": "production P18",
 			"moved_from": 18,
+			"twins": false,
 			"edits": [],
 			"rename": null,
 			"hint": null
@@ -136,6 +150,7 @@
 			"name": "Tight Squeeze",
 			"source": "production P15",
 			"moved_from": null,
+			"twins": false,
 			"edits": [],
 			"rename": null,
 			"hint": null
@@ -145,6 +160,7 @@
 			"name": "Key Turn",
 			"source": "NEW (key_turn)",
 			"moved_from": null,
+			"twins": false,
 			"edits": [],
 			"rename": null,
 			"hint": null
@@ -154,6 +170,7 @@
 			"name": "Fog",
 			"source": "production P20",
 			"moved_from": 20,
+			"twins": false,
 			"edits": [],
 			"rename": null,
 			"hint": null
@@ -163,6 +180,7 @@
 			"name": "Crosswind",
 			"source": "production P19",
 			"moved_from": 19,
+			"twins": false,
 			"edits": [],
 			"rename": null,
 			"hint": null
@@ -172,6 +190,7 @@
 			"name": "Padlocks",
 			"source": "production P22",
 			"moved_from": 22,
+			"twins": false,
 			"edits": [],
 			"rename": null,
 			"hint": null
@@ -181,6 +200,7 @@
 			"name": "Secret Key",
 			"source": "NEW (secret_key)",
 			"moved_from": null,
+			"twins": false,
 			"edits": [],
 			"rename": null,
 			"hint": null
@@ -190,6 +210,7 @@
 			"name": "Second Thoughts",
 			"source": "production P17",
 			"moved_from": 17,
+			"twins": false,
 			"edits": [],
 			"rename": null,
 			"hint": null
@@ -199,6 +220,7 @@
 			"name": "Knots",
 			"source": "production P21",
 			"moved_from": 21,
+			"twins": false,
 			"edits": [],
 			"rename": null,
 			"hint": null
@@ -208,6 +230,7 @@
 			"name": "Combination",
 			"source": "production P24",
 			"moved_from": 24,
+			"twins": false,
 			"edits": [],
 			"rename": null,
 			"hint": null
@@ -217,6 +240,7 @@
 			"name": "Cogwheels",
 			"source": "production P23",
 			"moved_from": 23,
+			"twins": false,
 			"edits": [],
 			"rename": {
 				"from": "Clockwork",
@@ -230,6 +254,7 @@
 			"name": "Gridlock",
 			"source": "production P25",
 			"moved_from": null,
+			"twins": false,
 			"edits": [],
 			"rename": null,
 			"hint": null
@@ -239,6 +264,7 @@
 			"name": "Master Key",
 			"source": "production P26",
 			"moved_from": null,
+			"twins": false,
 			"edits": [],
 			"rename": null,
 			"hint": null
@@ -248,6 +274,7 @@
 			"name": "Gatekeeper",
 			"source": "production P41",
 			"moved_from": 41,
+			"twins": false,
 			"edits": [],
 			"rename": null,
 			"hint": null
@@ -257,6 +284,7 @@
 			"name": "Safe House",
 			"source": "production P28",
 			"moved_from": null,
+			"twins": false,
 			"edits": [
 				{
 					"cell": [
@@ -276,6 +304,7 @@
 			"name": "Spin the Lock",
 			"source": "production P36",
 			"moved_from": 36,
+			"twins": false,
 			"edits": [],
 			"rename": null,
 			"hint": null
@@ -285,6 +314,7 @@
 			"name": "Smoke and Mirrors",
 			"source": "production P30",
 			"moved_from": null,
+			"twins": false,
 			"edits": [],
 			"rename": null,
 			"hint": null
@@ -294,6 +324,7 @@
 			"name": "Twisted Lanes",
 			"source": "production P31",
 			"moved_from": null,
+			"twins": false,
 			"edits": [],
 			"rename": null,
 			"hint": null
@@ -303,6 +334,7 @@
 			"name": "Vault",
 			"source": "production P32",
 			"moved_from": null,
+			"twins": false,
 			"edits": [
 				{
 					"cell": [
@@ -322,6 +354,7 @@
 			"name": "Hairpin",
 			"source": "production P33",
 			"moved_from": null,
+			"twins": false,
 			"edits": [
 				{
 					"cell": [
@@ -341,6 +374,7 @@
 			"name": "Strongroom",
 			"source": "production P34",
 			"moved_from": null,
+			"twins": false,
 			"edits": [],
 			"rename": null,
 			"hint": null
@@ -350,6 +384,7 @@
 			"name": "Domino Line",
 			"source": "production P27",
 			"moved_from": 27,
+			"twins": false,
 			"edits": [],
 			"rename": null,
 			"hint": null
@@ -359,6 +394,7 @@
 			"name": "Tumblers",
 			"source": "production P38",
 			"moved_from": 38,
+			"twins": false,
 			"edits": [],
 			"rename": null,
 			"hint": null
@@ -368,6 +404,7 @@
 			"name": "Rush Order",
 			"source": "production P37",
 			"moved_from": null,
+			"twins": false,
 			"edits": [],
 			"rename": null,
 			"hint": null
@@ -377,6 +414,7 @@
 			"name": "Traffic Jam",
 			"source": "production P29",
 			"moved_from": 29,
+			"twins": false,
 			"edits": [],
 			"rename": null,
 			"hint": null
@@ -386,6 +424,7 @@
 			"name": "Labyrinth",
 			"source": "production P39",
 			"moved_from": null,
+			"twins": false,
 			"edits": [],
 			"rename": null,
 			"hint": null
@@ -395,6 +434,7 @@
 			"name": "Night Shift",
 			"source": "production P40",
 			"moved_from": null,
+			"twins": false,
 			"edits": [],
 			"rename": null,
 			"hint": null
@@ -404,6 +444,7 @@
 			"name": "Gearbox",
 			"source": "production P35",
 			"moved_from": 35,
+			"twins": false,
 			"edits": [
 				{
 					"cell": [
@@ -445,6 +486,7 @@
 			"name": "Whirlpool",
 			"source": "production P42",
 			"moved_from": null,
+			"twins": false,
 			"edits": [
 				{
 					"cell": [
@@ -464,6 +506,7 @@
 			"name": "Turnstile",
 			"source": "production P43",
 			"moved_from": null,
+			"twins": false,
 			"edits": [
 				{
 					"cell": [
@@ -483,6 +526,7 @@
 			"name": "Chain Reaction",
 			"source": "production P44",
 			"moved_from": null,
+			"twins": false,
 			"edits": [],
 			"rename": null,
 			"hint": null
@@ -492,6 +536,7 @@
 			"name": "Deadbolt",
 			"source": "production P45",
 			"moved_from": null,
+			"twins": false,
 			"edits": [],
 			"rename": null,
 			"hint": null
@@ -501,6 +546,7 @@
 			"name": "Key Ring",
 			"source": "production P46",
 			"moved_from": null,
+			"twins": false,
 			"edits": [],
 			"rename": null,
 			"hint": null
@@ -510,6 +556,7 @@
 			"name": "Grand Tangle",
 			"source": "production P47",
 			"moved_from": null,
+			"twins": false,
 			"edits": [],
 			"rename": null,
 			"hint": null
@@ -519,6 +566,7 @@
 			"name": "Lockstep",
 			"source": "production P48",
 			"moved_from": null,
+			"twins": false,
 			"edits": [],
 			"rename": null,
 			"hint": null
@@ -528,6 +576,7 @@
 			"name": "Detour",
 			"source": "production P49",
 			"moved_from": null,
+			"twins": false,
 			"edits": [],
 			"rename": {
 				"from": "Long Way Round",
@@ -541,6 +590,7 @@
 			"name": "Eclipse",
 			"source": "production P50",
 			"moved_from": null,
+			"twins": false,
 			"edits": [
 				{
 					"cell": [
@@ -560,6 +610,7 @@
 			"name": "Clockmaker",
 			"source": "production P52",
 			"moved_from": 52,
+			"twins": false,
 			"edits": [
 				{
 					"cell": [
@@ -592,6 +643,7 @@
 			"name": "Great Escape",
 			"source": "production P51",
 			"moved_from": 51,
+			"twins": false,
 			"edits": [],
 			"rename": null,
 			"hint": null
@@ -601,6 +653,7 @@
 			"name": "Escape Room",
 			"source": "production P53",
 			"moved_from": null,
+			"twins": false,
 			"edits": [
 				{
 					"cell": [
@@ -620,6 +673,7 @@
 			"name": "Mechanism",
 			"source": "production P54",
 			"moved_from": null,
+			"twins": false,
 			"edits": [],
 			"rename": null,
 			"hint": null
@@ -629,6 +683,7 @@
 			"name": "Cyclone",
 			"source": "production P55",
 			"moved_from": null,
+			"twins": false,
 			"edits": [],
 			"rename": null,
 			"hint": null
@@ -638,6 +693,7 @@
 			"name": "Pressure",
 			"source": "production P56",
 			"moved_from": null,
+			"twins": false,
 			"edits": [
 				{
 					"cell": [
@@ -657,6 +713,7 @@
 			"name": "Grand Vault",
 			"source": "production P57",
 			"moved_from": null,
+			"twins": false,
 			"edits": [
 				{
 					"cell": [
@@ -676,6 +733,7 @@
 			"name": "Last Lock",
 			"source": "production P58",
 			"moved_from": null,
+			"twins": false,
 			"edits": [],
 			"rename": null,
 			"hint": null
@@ -685,6 +743,7 @@
 			"name": "Final Turn",
 			"source": "production P59",
 			"moved_from": null,
+			"twins": false,
 			"edits": [],
 			"rename": null,
 			"hint": null
@@ -694,6 +753,7 @@
 			"name": "The Last Secret",
 			"source": "production P60",
 			"moved_from": null,
+			"twins": false,
 			"edits": [],
 			"rename": null,
 			"hint": null
@@ -703,6 +763,7 @@
 			"name": "Neon Gate",
 			"source": "production P61",
 			"moved_from": null,
+			"twins": false,
 			"edits": [],
 			"rename": null,
 			"hint": null
@@ -712,6 +773,7 @@
 			"name": "Afterglow",
 			"source": "production P62",
 			"moved_from": null,
+			"twins": false,
 			"edits": [],
 			"rename": null,
 			"hint": null
@@ -721,6 +783,7 @@
 			"name": "Static",
 			"source": "production P63",
 			"moved_from": null,
+			"twins": false,
 			"edits": [],
 			"rename": null,
 			"hint": null
@@ -730,6 +793,7 @@
 			"name": "Night Circuit",
 			"source": "production P64",
 			"moved_from": null,
+			"twins": false,
 			"edits": [],
 			"rename": null,
 			"hint": null
@@ -739,6 +803,7 @@
 			"name": "Flicker",
 			"source": "production P65",
 			"moved_from": null,
+			"twins": false,
 			"edits": [],
 			"rename": null,
 			"hint": null
@@ -748,6 +813,7 @@
 			"name": "Voltage",
 			"source": "production P66",
 			"moved_from": null,
+			"twins": false,
 			"edits": [],
 			"rename": null,
 			"hint": null
@@ -757,6 +823,7 @@
 			"name": "Backspin",
 			"source": "production P67",
 			"moved_from": null,
+			"twins": false,
 			"edits": [],
 			"rename": null,
 			"hint": null
@@ -766,6 +833,7 @@
 			"name": "Glowline",
 			"source": "production P68",
 			"moved_from": null,
+			"twins": false,
 			"edits": [],
 			"rename": null,
 			"hint": null
@@ -775,6 +843,7 @@
 			"name": "Prism",
 			"source": "production P69",
 			"moved_from": null,
+			"twins": false,
 			"edits": [],
 			"rename": null,
 			"hint": null
@@ -784,6 +853,7 @@
 			"name": "Blackout",
 			"source": "production P70",
 			"moved_from": null,
+			"twins": false,
 			"edits": [],
 			"rename": null,
 			"hint": null
@@ -793,6 +863,7 @@
 			"name": "Overdrive",
 			"source": "production P71",
 			"moved_from": null,
+			"twins": false,
 			"edits": [],
 			"rename": null,
 			"hint": null
@@ -802,6 +873,7 @@
 			"name": "Synthwave",
 			"source": "production P72",
 			"moved_from": null,
+			"twins": false,
 			"edits": [],
 			"rename": null,
 			"hint": null
@@ -811,6 +883,7 @@
 			"name": "Pulse Lock",
 			"source": "production P73",
 			"moved_from": null,
+			"twins": false,
 			"edits": [],
 			"rename": null,
 			"hint": null
@@ -820,6 +893,7 @@
 			"name": "Arcade",
 			"source": "production P74",
 			"moved_from": null,
+			"twins": false,
 			"edits": [],
 			"rename": null,
 			"hint": null
@@ -829,6 +903,7 @@
 			"name": "Relay",
 			"source": "production P75",
 			"moved_from": null,
+			"twins": false,
 			"edits": [],
 			"rename": null,
 			"hint": null
@@ -838,6 +913,7 @@
 			"name": "Dynamo",
 			"source": "production P76",
 			"moved_from": null,
+			"twins": false,
 			"edits": [],
 			"rename": null,
 			"hint": null
@@ -847,6 +923,7 @@
 			"name": "Feedback",
 			"source": "production P77",
 			"moved_from": null,
+			"twins": false,
 			"edits": [],
 			"rename": null,
 			"hint": null
@@ -856,6 +933,7 @@
 			"name": "Wavelength",
 			"source": "production P78",
 			"moved_from": null,
+			"twins": false,
 			"edits": [],
 			"rename": null,
 			"hint": null
@@ -865,6 +943,7 @@
 			"name": "Hyperloop",
 			"source": "production P79",
 			"moved_from": null,
+			"twins": false,
 			"edits": [],
 			"rename": null,
 			"hint": null
@@ -874,6 +953,7 @@
 			"name": "Dark Matter",
 			"source": "production P80",
 			"moved_from": null,
+			"twins": false,
 			"edits": [],
 			"rename": null,
 			"hint": null
@@ -883,6 +963,7 @@
 			"name": "Summit Path",
 			"source": "production P81",
 			"moved_from": null,
+			"twins": false,
 			"edits": [],
 			"rename": null,
 			"hint": null
@@ -892,6 +973,7 @@
 			"name": "Thin Air",
 			"source": "production P82",
 			"moved_from": null,
+			"twins": false,
 			"edits": [],
 			"rename": null,
 			"hint": null
@@ -901,6 +983,7 @@
 			"name": "Ridge Line",
 			"source": "production P83",
 			"moved_from": null,
+			"twins": false,
 			"edits": [],
 			"rename": null,
 			"hint": null
@@ -910,6 +993,7 @@
 			"name": "Iron Crown",
 			"source": "production P84",
 			"moved_from": null,
+			"twins": false,
 			"edits": [],
 			"rename": null,
 			"hint": null
@@ -919,6 +1003,7 @@
 			"name": "Avalanche",
 			"source": "production P85",
 			"moved_from": null,
+			"twins": false,
 			"edits": [],
 			"rename": null,
 			"hint": null
@@ -928,6 +1013,7 @@
 			"name": "Glacier",
 			"source": "production P86",
 			"moved_from": null,
+			"twins": false,
 			"edits": [],
 			"rename": null,
 			"hint": null
@@ -937,6 +1023,7 @@
 			"name": "Stormwatch",
 			"source": "production P87",
 			"moved_from": null,
+			"twins": false,
 			"edits": [],
 			"rename": null,
 			"hint": null
@@ -946,6 +1033,7 @@
 			"name": "High Pass",
 			"source": "production P88",
 			"moved_from": null,
+			"twins": false,
 			"edits": [],
 			"rename": null,
 			"hint": null
@@ -955,6 +1043,7 @@
 			"name": "Keystone",
 			"source": "production P89",
 			"moved_from": null,
+			"twins": false,
 			"edits": [],
 			"rename": null,
 			"hint": null
@@ -964,6 +1053,7 @@
 			"name": "Eclipse Peak",
 			"source": "production P90",
 			"moved_from": null,
+			"twins": false,
 			"edits": [],
 			"rename": null,
 			"hint": null
@@ -973,6 +1063,7 @@
 			"name": "Grandmaster",
 			"source": "production P91",
 			"moved_from": null,
+			"twins": false,
 			"edits": [],
 			"rename": null,
 			"hint": null
@@ -982,6 +1073,7 @@
 			"name": "Checkmate",
 			"source": "production P92",
 			"moved_from": null,
+			"twins": false,
 			"edits": [],
 			"rename": null,
 			"hint": null
@@ -991,6 +1083,7 @@
 			"name": "Gordian Knot",
 			"source": "production P93",
 			"moved_from": null,
+			"twins": false,
 			"edits": [],
 			"rename": null,
 			"hint": null
@@ -1000,6 +1093,7 @@
 			"name": "Clockwork Crown",
 			"source": "production P94",
 			"moved_from": null,
+			"twins": false,
 			"edits": [],
 			"rename": null,
 			"hint": null
@@ -1009,6 +1103,7 @@
 			"name": "Paradox",
 			"source": "production P95",
 			"moved_from": null,
+			"twins": false,
 			"edits": [],
 			"rename": null,
 			"hint": null
@@ -1018,6 +1113,7 @@
 			"name": "Endgame",
 			"source": "production P96",
 			"moved_from": null,
+			"twins": false,
 			"edits": [],
 			"rename": null,
 			"hint": null
@@ -1027,6 +1123,7 @@
 			"name": "Apex",
 			"source": "production P97",
 			"moved_from": null,
+			"twins": false,
 			"edits": [],
 			"rename": null,
 			"hint": null
@@ -1036,6 +1133,7 @@
 			"name": "Zenith",
 			"source": "production P98",
 			"moved_from": null,
+			"twins": false,
 			"edits": [],
 			"rename": null,
 			"hint": null
@@ -1045,6 +1143,7 @@
 			"name": "Last Light",
 			"source": "production P99",
 			"moved_from": null,
+			"twins": false,
 			"edits": [],
 			"rename": null,
 			"hint": null
@@ -1054,6 +1153,7 @@
 			"name": "The Master",
 			"source": "production P100",
 			"moved_from": null,
+			"twins": false,
 			"edits": [],
 			"rename": null,
 			"hint": null
@@ -1063,6 +1163,7 @@
 			"name": "First Switch",
 			"source": "production P101",
 			"moved_from": null,
+			"twins": false,
 			"edits": [],
 			"rename": null,
 			"hint": null
@@ -1072,6 +1173,7 @@
 			"name": "Mirror Turn",
 			"source": "production P102",
 			"moved_from": null,
+			"twins": false,
 			"edits": [
 				{
 					"cell": [
@@ -1100,6 +1202,7 @@
 			"name": "Flip Side",
 			"source": "production P103",
 			"moved_from": null,
+			"twins": false,
 			"edits": [
 				{
 					"cell": [
@@ -1128,6 +1231,7 @@
 			"name": "Not Yet",
 			"source": "NEW (now_or_later)",
 			"moved_from": null,
+			"twins": false,
 			"edits": [],
 			"rename": null,
 			"hint": null
@@ -1137,6 +1241,7 @@
 			"name": "Two Ways",
 			"source": "production P105",
 			"moved_from": null,
+			"twins": false,
 			"edits": [
 				{
 					"cell": [
@@ -1178,6 +1283,7 @@
 			"name": "Neon Hinge",
 			"source": "production P106",
 			"moved_from": null,
+			"twins": false,
 			"edits": [],
 			"rename": null,
 			"hint": null
@@ -1187,6 +1293,7 @@
 			"name": "Glass Relay",
 			"source": "production P107",
 			"moved_from": null,
+			"twins": false,
 			"edits": [],
 			"rename": null,
 			"hint": null
@@ -1196,6 +1303,7 @@
 			"name": "Backlight",
 			"source": "production P108",
 			"moved_from": null,
+			"twins": false,
 			"edits": [],
 			"rename": null,
 			"hint": null
@@ -1205,6 +1313,7 @@
 			"name": "Switchback",
 			"source": "production P109",
 			"moved_from": null,
+			"twins": false,
 			"edits": [],
 			"rename": null,
 			"hint": null
@@ -1214,6 +1323,7 @@
 			"name": "Prism Row",
 			"source": "production P110",
 			"moved_from": null,
+			"twins": false,
 			"edits": [],
 			"rename": null,
 			"hint": null
@@ -1223,6 +1333,7 @@
 			"name": "Neon Loop",
 			"source": "production P111",
 			"moved_from": null,
+			"twins": false,
 			"edits": [],
 			"rename": null,
 			"hint": null
@@ -1232,6 +1343,7 @@
 			"name": "Relay Garden",
 			"source": "production P112",
 			"moved_from": null,
+			"twins": false,
 			"edits": [],
 			"rename": null,
 			"hint": null
@@ -1241,6 +1353,7 @@
 			"name": "Night Glass",
 			"source": "production P113",
 			"moved_from": null,
+			"twins": false,
 			"edits": [],
 			"rename": null,
 			"hint": null
@@ -1250,6 +1363,7 @@
 			"name": "Toggle Tide",
 			"source": "production P114",
 			"moved_from": null,
+			"twins": false,
 			"edits": [],
 			"rename": null,
 			"hint": null
@@ -1259,6 +1373,7 @@
 			"name": "Afterglow",
 			"source": "production P115",
 			"moved_from": null,
+			"twins": false,
 			"edits": [],
 			"rename": null,
 			"hint": null
@@ -1268,6 +1383,7 @@
 			"name": "Pane Shift",
 			"source": "production P116",
 			"moved_from": null,
+			"twins": false,
 			"edits": [],
 			"rename": null,
 			"hint": null
@@ -1277,6 +1393,7 @@
 			"name": "Signal Fade",
 			"source": "production P117",
 			"moved_from": null,
+			"twins": false,
 			"edits": [],
 			"rename": null,
 			"hint": null
@@ -1286,6 +1403,7 @@
 			"name": "Glass Knot",
 			"source": "production P118",
 			"moved_from": null,
+			"twins": false,
 			"edits": [],
 			"rename": null,
 			"hint": null
@@ -1295,6 +1413,7 @@
 			"name": "Lumen Lock",
 			"source": "production P119",
 			"moved_from": null,
+			"twins": false,
 			"edits": [],
 			"rename": null,
 			"hint": null
@@ -1304,6 +1423,7 @@
 			"name": "Neon Crown",
 			"source": "production P120",
 			"moved_from": null,
+			"twins": false,
 			"edits": [],
 			"rename": null,
 			"hint": null
@@ -1313,6 +1433,7 @@
 			"name": "First Gate",
 			"source": "production P121",
 			"moved_from": null,
+			"twins": false,
 			"edits": [],
 			"rename": null,
 			"hint": null
@@ -1322,6 +1443,7 @@
 			"name": "Chain Link",
 			"source": "production P122",
 			"moved_from": null,
+			"twins": false,
 			"edits": [],
 			"rename": null,
 			"hint": null
@@ -1331,6 +1453,7 @@
 			"name": "Steel Door",
 			"source": "production P123",
 			"moved_from": null,
+			"twins": false,
 			"edits": [],
 			"rename": null,
 			"hint": null
@@ -1340,6 +1463,7 @@
 			"name": "Rivet Row",
 			"source": "production P124",
 			"moved_from": null,
+			"twins": false,
 			"edits": [],
 			"rename": null,
 			"hint": null
@@ -1349,6 +1473,7 @@
 			"name": "Gatekeeper",
 			"source": "production P125",
 			"moved_from": null,
+			"twins": false,
 			"edits": [],
 			"rename": null,
 			"hint": null
@@ -1358,6 +1483,7 @@
 			"name": "Twin Links",
 			"source": "production P126",
 			"moved_from": null,
+			"twins": false,
 			"edits": [],
 			"rename": null,
 			"hint": null
@@ -1367,6 +1493,7 @@
 			"name": "Iron Latch",
 			"source": "production P127",
 			"moved_from": null,
+			"twins": false,
 			"edits": [],
 			"rename": null,
 			"hint": null
@@ -1376,6 +1503,7 @@
 			"name": "Cog Line",
 			"source": "production P128",
 			"moved_from": null,
+			"twins": false,
 			"edits": [],
 			"rename": null,
 			"hint": null
@@ -1385,6 +1513,7 @@
 			"name": "Hinge Works",
 			"source": "production P129",
 			"moved_from": null,
+			"twins": false,
 			"edits": [],
 			"rename": null,
 			"hint": null
@@ -1394,6 +1523,7 @@
 			"name": "Foundry",
 			"source": "production P130",
 			"moved_from": null,
+			"twins": false,
 			"edits": [],
 			"rename": null,
 			"hint": null
@@ -1403,6 +1533,7 @@
 			"name": "Piston",
 			"source": "production P131",
 			"moved_from": null,
+			"twins": false,
 			"edits": [],
 			"rename": null,
 			"hint": {
@@ -1416,6 +1547,7 @@
 			"name": "Gear Train",
 			"source": "production P132",
 			"moved_from": null,
+			"twins": false,
 			"edits": [],
 			"rename": null,
 			"hint": null
@@ -1425,6 +1557,7 @@
 			"name": "Pressure Plate",
 			"source": "production P133",
 			"moved_from": null,
+			"twins": false,
 			"edits": [],
 			"rename": null,
 			"hint": null
@@ -1434,6 +1567,7 @@
 			"name": "Conveyor",
 			"source": "production P134",
 			"moved_from": null,
+			"twins": false,
 			"edits": [],
 			"rename": null,
 			"hint": null
@@ -1443,6 +1577,7 @@
 			"name": "Bolt Cutter",
 			"source": "production P135",
 			"moved_from": null,
+			"twins": false,
 			"edits": [],
 			"rename": null,
 			"hint": null
@@ -1452,6 +1587,7 @@
 			"name": "Crank Shaft",
 			"source": "production P136",
 			"moved_from": null,
+			"twins": false,
 			"edits": [],
 			"rename": null,
 			"hint": null
@@ -1461,6 +1597,7 @@
 			"name": "Flywheel",
 			"source": "production P137",
 			"moved_from": null,
+			"twins": false,
 			"edits": [],
 			"rename": null,
 			"hint": null
@@ -1470,6 +1607,7 @@
 			"name": "Turnstile",
 			"source": "production P138",
 			"moved_from": null,
+			"twins": false,
 			"edits": [],
 			"rename": null,
 			"hint": null
@@ -1479,6 +1617,7 @@
 			"name": "Forge Gate",
 			"source": "production P139",
 			"moved_from": null,
+			"twins": false,
 			"edits": [],
 			"rename": null,
 			"hint": null
@@ -1488,6 +1627,7 @@
 			"name": "Assembly",
 			"source": "production P140",
 			"moved_from": null,
+			"twins": false,
 			"edits": [],
 			"rename": null,
 			"hint": null
@@ -1497,6 +1637,7 @@
 			"name": "Charge",
 			"source": "production P141",
 			"moved_from": null,
+			"twins": false,
 			"edits": [],
 			"rename": null,
 			"hint": null
@@ -1506,6 +1647,7 @@
 			"name": "Arc Line",
 			"source": "production P142",
 			"moved_from": null,
+			"twins": false,
 			"edits": [],
 			"rename": null,
 			"hint": null
@@ -1515,6 +1657,7 @@
 			"name": "Ion Field",
 			"source": "production P143",
 			"moved_from": null,
+			"twins": false,
 			"edits": [],
 			"rename": null,
 			"hint": null
@@ -1524,6 +1667,7 @@
 			"name": "Surge",
 			"source": "production P144",
 			"moved_from": null,
+			"twins": false,
 			"edits": [],
 			"rename": null,
 			"hint": null
@@ -1533,6 +1677,7 @@
 			"name": "Pulse Grid",
 			"source": "production P145",
 			"moved_from": null,
+			"twins": false,
 			"edits": [],
 			"rename": null,
 			"hint": null
@@ -1542,6 +1687,7 @@
 			"name": "Static",
 			"source": "production P146",
 			"moved_from": null,
+			"twins": false,
 			"edits": [],
 			"rename": null,
 			"hint": null
@@ -1551,6 +1697,7 @@
 			"name": "Current Knot",
 			"source": "production P147",
 			"moved_from": null,
+			"twins": false,
 			"edits": [],
 			"rename": null,
 			"hint": null
@@ -1560,6 +1707,7 @@
 			"name": "Overload",
 			"source": "production P148",
 			"moved_from": null,
+			"twins": false,
 			"edits": [],
 			"rename": null,
 			"hint": null
@@ -1569,6 +1717,7 @@
 			"name": "Capacitor",
 			"source": "production P149",
 			"moved_from": null,
+			"twins": false,
 			"edits": [],
 			"rename": null,
 			"hint": null
@@ -1578,6 +1727,7 @@
 			"name": "Halfway Deep",
 			"source": "production P150",
 			"moved_from": null,
+			"twins": false,
 			"edits": [],
 			"rename": null,
 			"hint": null
@@ -1587,6 +1737,7 @@
 			"name": "First Shell",
 			"source": "production P161",
 			"moved_from": 161,
+			"twins": false,
 			"edits": [
 				{
 					"cell": [
@@ -1606,6 +1757,7 @@
 			"name": "Quartz Wall",
 			"source": "production P166",
 			"moved_from": 166,
+			"twins": false,
 			"edits": [],
 			"rename": null,
 			"hint": null
@@ -1615,6 +1767,7 @@
 			"name": "Plasma Veil",
 			"source": "production P151",
 			"moved_from": 151,
+			"twins": false,
 			"edits": [],
 			"rename": null,
 			"hint": null
@@ -1624,6 +1777,7 @@
 			"name": "Hard Case",
 			"source": "production P162",
 			"moved_from": 162,
+			"twins": false,
 			"edits": [],
 			"rename": null,
 			"hint": null
@@ -1633,6 +1787,7 @@
 			"name": "Resonance",
 			"source": "production P155",
 			"moved_from": null,
+			"twins": false,
 			"edits": [],
 			"rename": null,
 			"hint": null
@@ -1642,6 +1797,7 @@
 			"name": "Geode",
 			"source": "production P168",
 			"moved_from": 168,
+			"twins": false,
 			"edits": [],
 			"rename": null,
 			"hint": null
@@ -1651,6 +1807,7 @@
 			"name": "Discharge",
 			"source": "production P157",
 			"moved_from": null,
+			"twins": false,
 			"edits": [],
 			"rename": null,
 			"hint": null
@@ -1660,6 +1817,7 @@
 			"name": "Deep Shard",
 			"source": "production P165",
 			"moved_from": 165,
+			"twins": false,
 			"edits": [],
 			"rename": null,
 			"hint": null
@@ -1669,6 +1827,7 @@
 			"name": "Spark Gap",
 			"source": "production P154",
 			"moved_from": 154,
+			"twins": false,
 			"edits": [],
 			"rename": null,
 			"hint": null
@@ -1678,6 +1837,7 @@
 			"name": "Plasma Core",
 			"source": "production P160",
 			"moved_from": null,
+			"twins": false,
 			"edits": [],
 			"rename": null,
 			"hint": null
@@ -1687,6 +1847,7 @@
 			"name": "Ice Vault",
 			"source": "production P167",
 			"moved_from": 167,
+			"twins": false,
 			"edits": [],
 			"rename": null,
 			"hint": null
@@ -1696,6 +1857,7 @@
 			"name": "Flux",
 			"source": "production P152",
 			"moved_from": 152,
+			"twins": false,
 			"edits": [],
 			"rename": null,
 			"hint": null
@@ -1705,6 +1867,7 @@
 			"name": "Cracked Glass",
 			"source": "production P164",
 			"moved_from": 164,
+			"twins": false,
 			"edits": [],
 			"rename": null,
 			"hint": null
@@ -1714,6 +1877,7 @@
 			"name": "Live Wire",
 			"source": "production P156",
 			"moved_from": 156,
+			"twins": false,
 			"edits": [],
 			"rename": null,
 			"hint": null
@@ -1723,6 +1887,7 @@
 			"name": "Star Frost",
 			"source": "production P169",
 			"moved_from": 169,
+			"twins": false,
 			"edits": [],
 			"rename": null,
 			"hint": null
@@ -1732,6 +1897,7 @@
 			"name": "Field Lines",
 			"source": "production P158",
 			"moved_from": 158,
+			"twins": false,
 			"edits": [],
 			"rename": null,
 			"hint": null
@@ -1741,6 +1907,7 @@
 			"name": "Crystal Ward",
 			"source": "production P163",
 			"moved_from": 163,
+			"twins": false,
 			"edits": [],
 			"rename": null,
 			"hint": null
@@ -1750,6 +1917,7 @@
 			"name": "Ionic Drift",
 			"source": "production P159",
 			"moved_from": 159,
+			"twins": false,
 			"edits": [],
 			"rename": null,
 			"hint": null
@@ -1759,6 +1927,7 @@
 			"name": "Coil",
 			"source": "production P153",
 			"moved_from": 153,
+			"twins": false,
 			"edits": [],
 			"rename": null,
 			"hint": null
@@ -1768,6 +1937,7 @@
 			"name": "Void Prism",
 			"source": "production P170",
 			"moved_from": null,
+			"twins": false,
 			"edits": [],
 			"rename": null,
 			"hint": null
@@ -1777,6 +1947,7 @@
 			"name": "Nebula",
 			"source": "production P171",
 			"moved_from": null,
+			"twins": false,
 			"edits": [],
 			"rename": null,
 			"hint": null
@@ -1786,6 +1957,7 @@
 			"name": "Dark Matter",
 			"source": "production P172",
 			"moved_from": null,
+			"twins": false,
 			"edits": [],
 			"rename": null,
 			"hint": null
@@ -1795,6 +1967,7 @@
 			"name": "Crystal Orbit",
 			"source": "production P173",
 			"moved_from": null,
+			"twins": false,
 			"edits": [],
 			"rename": null,
 			"hint": null
@@ -1804,6 +1977,7 @@
 			"name": "Cold Star",
 			"source": "production P174",
 			"moved_from": null,
+			"twins": false,
 			"edits": [],
 			"rename": null,
 			"hint": null
@@ -1813,24 +1987,27 @@
 			"name": "Shatter Point",
 			"source": "production P175",
 			"moved_from": null,
+			"twins": false,
 			"edits": [],
 			"rename": null,
 			"hint": null
 		},
 		{
 			"level": 176,
-			"name": "Event Horizon",
-			"source": "production P176",
+			"name": "Twin Lights",
+			"source": "Twins prototype 1",
 			"moved_from": null,
+			"twins": true,
 			"edits": [],
 			"rename": null,
 			"hint": null
 		},
 		{
 			"level": 177,
-			"name": "Frozen Relay",
-			"source": "production P177",
+			"name": "Double Link",
+			"source": "NEW (double_link)",
 			"moved_from": null,
+			"twins": true,
 			"edits": [],
 			"rename": null,
 			"hint": null
@@ -1840,24 +2017,27 @@
 			"name": "Crystal Heart",
 			"source": "production P178",
 			"moved_from": null,
+			"twins": false,
 			"edits": [],
 			"rename": null,
 			"hint": null
 		},
 		{
 			"level": 179,
-			"name": "Deep Field",
-			"source": "production P179",
+			"name": "Hold Fire",
+			"source": "Twins prototype 2",
 			"moved_from": null,
+			"twins": true,
 			"edits": [],
 			"rename": null,
 			"hint": null
 		},
 		{
 			"level": 180,
-			"name": "Pulsar",
-			"source": "production P180",
-			"moved_from": null,
+			"name": "Deep Field",
+			"source": "production P179",
+			"moved_from": 179,
+			"twins": false,
 			"edits": [],
 			"rename": null,
 			"hint": null
@@ -1867,6 +2047,7 @@
 			"name": "Elite Entry",
 			"source": "production P181",
 			"moved_from": null,
+			"twins": false,
 			"edits": [],
 			"rename": null,
 			"hint": null
@@ -1876,7 +2057,27 @@
 			"name": "Gold Standard",
 			"source": "production P182",
 			"moved_from": null,
-			"edits": [],
+			"twins": true,
+			"edits": [
+				{
+					"cell": [
+						4,
+						5
+					],
+					"from": "R<",
+					"to": "R<!T",
+					"why": "bonded to the yellow arrow beside it: the pair's release turns the Pattern spinner next to it, a timing decision"
+				},
+				{
+					"cell": [
+						5,
+						5
+					],
+					"from": "Y<",
+					"to": "Y<!T",
+					"why": "the red arrow's twin"
+				}
+			],
 			"rename": null,
 			"hint": null
 		},
@@ -1885,42 +2086,47 @@
 			"name": "High Council",
 			"source": "production P183",
 			"moved_from": null,
+			"twins": false,
 			"edits": [],
 			"rename": null,
 			"hint": null
 		},
 		{
 			"level": 184,
-			"name": "Grand Design",
-			"source": "production P184",
+			"name": "Turnabout",
+			"source": "Twins prototype 3",
 			"moved_from": null,
+			"twins": true,
 			"edits": [],
 			"rename": null,
 			"hint": null
 		},
 		{
 			"level": 185,
-			"name": "Crown Line",
-			"source": "production P185",
-			"moved_from": null,
+			"name": "Masterwork",
+			"source": "production P186",
+			"moved_from": 186,
+			"twins": false,
 			"edits": [],
 			"rename": null,
 			"hint": null
 		},
 		{
 			"level": 186,
-			"name": "Masterwork",
-			"source": "production P186",
-			"moved_from": null,
+			"name": "Crown Line",
+			"source": "production P185",
+			"moved_from": 185,
+			"twins": false,
 			"edits": [],
 			"rename": null,
 			"hint": null
 		},
 		{
 			"level": 187,
-			"name": "Apex",
-			"source": "production P187",
+			"name": "Shell Game",
+			"source": "NEW (shell_game)",
 			"moved_from": null,
+			"twins": true,
 			"edits": [],
 			"rename": null,
 			"hint": null
@@ -1930,6 +2136,7 @@
 			"name": "Summit Key",
 			"source": "production P188",
 			"moved_from": null,
+			"twins": false,
 			"edits": [],
 			"rename": null,
 			"hint": null
@@ -1939,15 +2146,17 @@
 			"name": "Champion",
 			"source": "production P189",
 			"moved_from": null,
+			"twins": false,
 			"edits": [],
 			"rename": null,
 			"hint": null
 		},
 		{
 			"level": 190,
-			"name": "Laurel",
-			"source": "production P190",
+			"name": "Two Bonds",
+			"source": "NEW (two_bonds)",
 			"moved_from": null,
+			"twins": true,
 			"edits": [],
 			"rename": null,
 			"hint": null
@@ -1957,15 +2166,17 @@
 			"name": "Final Ascent",
 			"source": "production P191",
 			"moved_from": null,
+			"twins": false,
 			"edits": [],
 			"rename": null,
 			"hint": null
 		},
 		{
 			"level": 192,
-			"name": "Sovereign",
-			"source": "production P192",
+			"name": "Reversal",
+			"source": "NEW (reversal)",
 			"moved_from": null,
+			"twins": true,
 			"edits": [],
 			"rename": null,
 			"hint": null
@@ -1975,15 +2186,17 @@
 			"name": "Last Light",
 			"source": "production P193",
 			"moved_from": null,
+			"twins": false,
 			"edits": [],
 			"rename": null,
 			"hint": null
 		},
 		{
 			"level": 194,
-			"name": "Paragon",
-			"source": "production P194",
+			"name": "Pattern Lock",
+			"source": "NEW (pattern_lock)",
 			"moved_from": null,
+			"twins": true,
 			"edits": [],
 			"rename": null,
 			"hint": null
@@ -1993,6 +2206,7 @@
 			"name": "Zenith",
 			"source": "production P195",
 			"moved_from": null,
+			"twins": false,
 			"edits": [],
 			"rename": null,
 			"hint": null
@@ -2002,15 +2216,17 @@
 			"name": "Grandmaster Path",
 			"source": "production P196",
 			"moved_from": null,
+			"twins": false,
 			"edits": [],
 			"rename": null,
 			"hint": null
 		},
 		{
 			"level": 197,
-			"name": "Pinnacle",
-			"source": "production P197",
+			"name": "Bond of Ages",
+			"source": "NEW (bond_of_ages)",
 			"moved_from": null,
+			"twins": true,
 			"edits": [],
 			"rename": null,
 			"hint": null
@@ -2020,6 +2236,7 @@
 			"name": "Legacy",
 			"source": "production P198",
 			"moved_from": null,
+			"twins": false,
 			"edits": [],
 			"rename": null,
 			"hint": null
@@ -2029,6 +2246,7 @@
 			"name": "Eternal Chain",
 			"source": "production P199",
 			"moved_from": null,
+			"twins": false,
 			"edits": [],
 			"rename": null,
 			"hint": null
@@ -2038,6 +2256,7 @@
 			"name": "The Grand Master",
 			"source": "production P200",
 			"moved_from": null,
+			"twins": false,
 			"edits": [],
 			"rename": null,
 			"hint": null

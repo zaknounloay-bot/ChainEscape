@@ -1068,7 +1068,16 @@ func _twins_era() -> void:
 		else:
 			_check(g["winnable_start"], "L%d solvable (full graph)" % n)
 			_check(g["plain"] == 0, "L%d: every fatal move is visible (spinner / switch / pair-turn), %d plain" % [n, g["plain"]])
-			_check(g["first_bad"] == 0, "L%d: no losing first move (%d)" % [n, g["first_bad"]])
+			# 182 keeps its production board's one losing first move (its source
+			# has the same); 192 may have one (plan, section F); all others none.
+			var allowed := 0
+			if n == 182:
+				var src := _twin_graph(Solver.from_model(model_of(LevelManager.read_level(182))), 400000)
+				allowed = src.get("first_bad", -1)
+				_check(allowed == 1, "production 182 itself has one losing first move (%d)" % allowed)
+			elif n == 192:
+				allowed = 1
+			_check(g["first_bad"] <= allowed, "L%d: losing first moves %d (allowed %d)" % [n, g["first_bad"], allowed])
 			if n >= 179:
 				_check(g["decisions"] > 0, "L%d: Twins create a decision (fatal pair release or switch / spinner timing near the pair: %d)" % [n, g["decisions"]])
 			print("TWINS L%d %s" % [n, JSON.stringify(g)])

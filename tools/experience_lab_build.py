@@ -157,10 +157,87 @@ NEW = {
         "map": [
             "B^ .  .        .   .  .",
             "P> .  .        Y>  R^ .",
-            ".  .  R>+C!T   Bv@ .  .",
-            ".  .  R<+C!T   .   .  .",
+            ".  .  Y>+C!T   Bv@ .  .",
+            ".  .  Y<+C!T   .   .  .",
             ".  .  .        .   .  .",
             "G> XC .        .   .  .",
+        ],
+    },
+    # 187: the top twin's lane runs into a shell, and twins never ram - the
+    # red spinner above the shell is the rammer. Every fatal move is a pair
+    # release at the wrong time (it turns the yellow spinner beside it).
+    "shell_game": {
+        "name": "Shell Game",
+        "hint": "Twins can't crack a shell - another block must",
+        "hint_finger": False,
+        "map": [
+            ".   .  Bv@- Yv@~ .      Rv@",
+            ".   R> .    Y>@- P>+C!T R>=",
+            "B<  .  .    .    P>!T   .",
+            ".   .  .    .    .      .",
+            "B<  .  Bv   XC   .      G^#B",
+            ".   .  .    .    .      R<",
+            "Y^@ .  B<   P^   .      G^@",
+        ],
+    },
+    # 190 (Chapter 19 finale): two pairs - a horizontal purple pair and an
+    # L-shaped red pair - each with its own spinner neighbours; both have
+    # wrong release moments, and they share lanes.
+    "two_bonds": {
+        "name": "Two Bonds",
+        "map": [
+            ".  .    G<@- R^#P . B>  .",
+            ".  Y>@* P^@  .    . B^@ .",
+            ".  P<!T P<!T .    Y< Pv .",
+            ".  .    .    .    .  .  .",
+            ".  .    .    .    Y^ .  .",
+            "Y^ R<@* Rv!U .    P^ .  B<",
+            ".  .    R<!U .    Pv .  Bv@-",
+        ],
+    },
+    # 192: switch A reverses BOTH twins - back to back, they turn to face
+    # each other - and the purple arrow beside it. The twins are two of
+    # Gate C's three links.
+    "reversal": {
+        "name": "Reversal",
+        "map": [
+            "P>   .    .    .   G<@-       .",
+            "Pv&A R^%A Y<   Bv  Y<&A+C!T   Y>&A+C!T",
+            ".    .    Bv   .   .          Bv",
+            "B>   Rv@- P^@* .   .          .",
+            ".    .    .    .   XC         .",
+            ".    .    .    .   R<         .",
+            "Y<   B<   .    R^@ P^@        Bv+C",
+        ],
+    },
+    # 194: the red pair sits under an Alternating and a clockwise spinner;
+    # every fatal move is a release at the wrong moment. Red is also the
+    # purple lock's key colour.
+    "pattern_lock": {
+        "name": "Pattern Lock",
+        "map": [
+            "P> Y<@* Rv   .    . .",
+            ".  R<   .    R>   . P<@",
+            ".  .    G^@~ Y<@  . Pv",
+            ".  .    Rv!T Rv!T . Yv",
+            "Yv .    .    .    . .",
+            "Bv P>   B>@  .    . .",
+            "R< P^#R .    .    . B>",
+        ],
+    },
+    # 197 (the Twins exam): an L-shaped pair - one twin marked by switch A,
+    # both Gate C links - between two spinners, with the switch, two locks
+    # and the gate around it.
+    "bond_of_ages": {
+        "name": "Bond of Ages",
+        "map": [
+            ".    .         .      .  .    .    B>@*",
+            "R^@- G^&A+C!T  G<+C!T G^ .    .    .",
+            ".    Gv        Y>@*   .  .    B>   R^",
+            "Rv#B .         .      .  B^   .    .",
+            ".    .         .      .  .    Y>%A Yv",
+            ".    .         .      Pv B^@- Pv@  .",
+            ".    Gv#Y      Y^@-   .  XC   G<   .",
         ],
     },
     # Switch timing: the yellow arrow holds back both the switch and the

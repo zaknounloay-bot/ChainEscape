@@ -12,6 +12,8 @@ extends Node
 ## - size5 / size7 / colors6: bonds on 5x5 and 7x7 boards, horizontal and
 ##   vertical, in every block color (temporary demo boards written to
 ##   user://, never shipped).
+## With --lab: the Experience Lab's Twins levels instead (lab_176.png ...
+## lab_197.png; 176 with its lesson showing), in a throwaway QA save.
 
 var out := "user://twins_capture"
 var game: GameManager
@@ -70,6 +72,9 @@ func _id_at(c: int, r: int) -> int:
 
 
 func _run() -> void:
+	if "--lab" in OS.get_cmdline_user_args():
+		await _run_lab()
+		return
 	TwinsPrototype.apply("1")
 	GameManager.skip_title = true
 	game = load("res://scenes/Main.tscn").instantiate()
@@ -120,4 +125,24 @@ func _run() -> void:
 		await _wait(1.6)
 		await _shot(["", "size5", "size7", "colors6"][n])
 		print("bonds on demo %d: %d" % [n, game.board.bond_count()])
+	get_tree().quit(0)
+
+
+func _run_lab() -> void:
+	ExperienceLab.apply("2")  # a QA jump: the throwaway QA save, never the lab save
+	GameManager.skip_title = true
+	game = load("res://scenes/Main.tscn").instantiate()
+	get_tree().root.add_child(game)
+	await _frames(5)
+	game.level_manager.level_count = ExperienceLab.LAST_LEVEL
+	AudioManager.set_music_enabled(false)
+	for n in [176, 177, 179, 182, 184, 187, 190, 192, 194, 197]:
+		if n == 176:
+			game.progress.tips_seen.erase("lesson_twins")
+		elif not game.progress.tips_seen.has("lesson_twins"):
+			game.progress.tips_seen.append("lesson_twins")
+		game.start_level(n, "capture")
+		await _wait(1.6)
+		await _shot("lab_%d" % n)
+		print("lab %d bonds %d" % [n, game.board.bond_count()])
 	get_tree().quit(0)

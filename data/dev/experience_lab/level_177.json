@@ -1,12 +1,13 @@
 {
-	"name": "Frozen Relay",
+	"name": "Double Link",
+	"hint": "Each twin is a gate link - one move, two links",
+	"hint_finger": false,
 	"map": [
-		".      R<=    .      Y>     .      Yv@",
-		"XC     R>@*   .      .      P^     .",
-		"B^&A   .      B>     .      G^+C   .",
-		"Y>     .      .      Pv     R>%A   .",
-		".      P^     G^     .      G<@-+C .",
-		".      .      .      .      .      Pv#G",
-		".      R<#B   G<@~   G<&A   .      R<="
+		"B^     .      .      .      .      .",
+		"P>     .      .      Y>     R^     .",
+		".      .      Y>+C!T Bv@    .      .",
+		".      .      Y<+C!T .      .      .",
+		".      .      .      .      .      .",
+		"G>     XC     .      .      .      ."
 	]
 }

@@ -1,12 +1,12 @@
 {
-	"name": "Pinnacle",
+	"name": "Bond of Ages",
 	"map": [
-		"G>    B>    Rv    .     .     B>    Rv@-",
-		".     R>    P>@   .     XC    P^=   Pv",
-		"G^    .     Rv    .     G>    .     Pv+C",
-		".     .     .     .     .     Bv#R  .",
-		".     .     Pv@   P<@*  Y<    .     B<@~",
-		".     .     .     .     .     R<    .",
-		"R^+C  B^    .     .     .     P<@#G ."
+		".        .        .        .        .        .        B>@*",
+		"R^@-     G^&A+C!T G<+C!T   G^       .        .        .",
+		".        Gv       Y>@*     .        .        B>       R^",
+		"Rv#B     .        .        .        B^       .        .",
+		".        .        .        .        .        Y>%A     Yv",
+		".        .        .        Pv       B^@-     Pv@      .",
+		".        Gv#Y     Y^@-     .        XC       G<       ."
 	]
 }

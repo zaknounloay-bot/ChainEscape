@@ -1,13 +1,12 @@
 {
-	"name": "Masterwork",
-	"mystery": true,
+	"name": "Crown Line",
 	"map": [
-		".      .      B^%A   .      .      .      Gv@-#R",
-		".      Gv@    Pv     Y<     Yv?    .      Y<@",
-		".      .      .      Y^     .      P>&A   G>$G+C",
-		"Yv&A   .      B<+C   .      B>?    B^=    .",
-		"XC     B<@~   .      .      .      R>     R>#P",
-		".      R^@*$S .      .      .      .      .",
-		".      .      .      .      .      B^@    R<"
+		"G>@-   .      B>+C   P>=    G>=    .",
+		"Y^     G<     .      .      .      .",
+		".      Yv@    .      G<     B<     .",
+		".      .      Yv     Pv+C   .      .",
+		"Pv@    .      .      B<     .      .",
+		"Gv@    G^     Y<     .      Y>     XC",
+		"P^@#B  .      .      .      P>@*#Y Rv"
 	]
 }
