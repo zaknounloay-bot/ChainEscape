@@ -121,3 +121,28 @@ All three are exactly the design-report boards. Full state graphs were measured 
 | Headless suite | `godot --headless --path . res://tools/TwinsCheck.tscn` | URL parsing, token gating, validation, rules on both engines, randomized agreement, puzzle graphs, game flow, save isolation |
 | Design review frames | `xvfb-run godot --path . --resolution 390x844 res://tools/TwinsCapture.tscn -- --out=DIR` | Bonds, pair escape, blocked feedback, 5×5 / 7×7 demo boards |
 | Browser test | `SHOTS=DIR node tools/web_twins_prototype_test.mjs build/web` | Real Chromium at 390×844, 375×667 and 430×932, real touch taps |
+
+## Results (build from commit `8a4c144`, clean `git archive` checkout)
+
+**Twins checks:** 225 / 225 pass.
+- **Agreement on randomized legal states:**
+  - 2,000 random boards (5×5 to 7×7) with twins, spinners of all four rules, switches, flip targets, gates and links, locks, hidden and armored blocks.
+  - 12,179 states walked by random moves, including 2,005 pair escapes and 5,431 partner-blocked twins.
+  - At every state, both engines produced the same playable moves and the same full state after the move, and Solver Undo was exact.
+  - 10,872 Solver win / lose verdicts were identical to an exhaustive BoardModel search.
+- **Hammer safety:** exact on every state and block of the three puzzles (217 + 1,100 + 644 checks).
+- **SHOW A MOVE:** legal and winnable from every winnable state.
+
+**Browser:** `web_twins_prototype_test.mjs` 44 / 44 at 390×844, 375×667 and 430×932, with no page or console errors.
+
+**Regression:** every suite passed.
+
+| Area | Suites |
+|---|---|
+| Production 1–300 | `run_tests` (34,448 checks); `verify_levels` (all 300 OK); `classic_golden` (sha256 `53f27b83…`, unchanged); `Playtest` (all 300 cleared); `PortalProdCheck`; `Era3ProdCheck` |
+| Mech labs | `mechlab_golden` (`4786669…`, unchanged); `PortalCheck`; `SequenceCheck`; `MovableCheck` |
+| Other labs | `OpeningLabCheck`; `LockPrototypeCheck`; `VhHumanTestCheck` |
+| Experience Lab | `ExperienceLabCheck` (5,621); QA jumps 13 / 101 / 121 / 151 / 176 / 200; browser test (190 / 190); `web_level_select_test` (24) |
+| Social / Friend | `SocialSmoke`; `SocialPlayTest`; `SocialApiTest`; `FriendFlowTest` (150); `FriendChallengeApiTest` (58); `RecipientTest` (149); `friend_generator_test` (493) |
+
+**Screenshots:** in `docs/twins_prototype_shots/`. `strip2.png` shows the pair escape frame by frame.
