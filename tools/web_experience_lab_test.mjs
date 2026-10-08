@@ -62,7 +62,8 @@ const server = http.createServer((req, res) => {
 const BASE = 'http://127.0.0.1:8775/index.html';
 const LAB = JSON.parse(fs.readFileSync(path.resolve('data/dev/experience_lab/manifest.json'), 'utf8')).levels;
 const NAME = (n) => LAB[n - 1].name;
-const LAST = LAB.length;  // 200: a temporary lab boundary
+const LAST = LAB.length;
+const TWINS = [176, 177, 179, 182, 184, 187, 190, 192, 194, 197];  // the lab's Twins levels  // 200: a temporary lab boundary
 
 const W = 390, H = 844;
 const results = [];
@@ -260,7 +261,7 @@ try {
   const xlabSave = await ls(page, 'chain_escape_experiencelab_save');
   const xlabLog = await ls(page, 'chain_escape_experiencelab_log');
   const HINT = (n) => JSON.parse(fs.readFileSync(path.resolve(`data/dev/experience_lab/level_${String(n).padStart(2, '0')}.json`), 'utf8')).hint || '';
-  for (const [n, q] of [[13, '?experiencelab=13'], [13, '?v=123456&experiencelab=13'], [25], [31], [41, '?v=123456&experiencelab=41'], [50], [51], [75], [100], [101], [102], [104], [105], [111], [121, '?v=123456&experiencelab=121'], [125, '?experiencelab=125'], [130], [131, '?experiencelab=131'], [140], [144], [150], [151, '?experiencelab=151'], [152], [153], [154], [156], [158], [160], [163], [165], [167], [169], [170], [175], [176], [180], [181], [183], [188], [189], [190], [192], [196], [198], [199], [200, '?experiencelab=200']]) {
+  for (const [n, q] of [[13, '?experiencelab=13'], [13, '?v=123456&experiencelab=13'], [25], [31], [41, '?v=123456&experiencelab=41'], [50], [51], [75], [100], [101], [102], [104], [105], [111], [121, '?v=123456&experiencelab=121'], [125, '?experiencelab=125'], [130], [131, '?experiencelab=131'], [140], [144], [150], [151, '?experiencelab=151'], [152], [153], [154], [156], [158], [160], [163], [165], [167], [169], [170], [175], [176, '?v=123456&experiencelab=176'], [177], [179], [180], [181], [182], [183], [184], [185], [186], [187], [188], [189], [190], [192], [194], [196], [197], [198], [199], [200, '?experiencelab=200']]) {
     const url = q || `?v=123456&experiencelab=${n}`;
     await page.goto(BASE + url);
     s = await waitFor(page, (x) => x.experience_lab && x.level === n, `QA ${url}`);
@@ -274,11 +275,13 @@ try {
     else if (n === 125) check(s.lesson === '' && !s.tip_text, `F: ${url} Lab 125 starts as production: no lesson, no hint ("${s.tip_text}")`);
     else if (n === 151) check(s.lesson === 'armor' && /^Armored: can't escape/.test(s.tip_text) && s.lesson_target.length === 2, `F: ${url} production's Armor lesson with its finger ("${s.tip_text}")`);
     else if (n === 131) check(s.lesson === '' && s.tip_text === 'A switch turns the spinners beside it, too.', `F: ${url} Lab 131 shows the corrected hint, no lesson ("${s.tip_text}")`);
+    else if (n === 176) check(s.lesson === 'twins' && /TWIN/.test(s.tip_text) && s.bonds === 2 && s.lesson_target.length === 2, `F: ${url} the Twins lesson with its finger on Twin Lights ("${s.tip_text}", ${s.bonds} bonds)`);
     else if (HINT(n)) check(s.tip_text === HINT(n), `F: ${url} Lab ${n} intro hint shows ("${s.tip_text}")`);
     check(!s.card_open && !(s.major_rect && s.major_rect[2] > 0), `F: ${url} no milestone just by opening`);
     if (q && n === 13) await page.screenshot({ path: path.join(shots, 'xlab_qa_L13.png') });
     if (n === 41 || n > 100) await page.screenshot({ path: path.join(shots, `xlab_qa_L${n}.png`) });
     if (n === 161) check(s.lesson === '' && !s.tip_text, `F: ${url} Lab 161 has no second Armor introduction ("${s.tip_text}")`);
+    if (n >= 176 && n <= 199) check((s.bonds > 0) === TWINS.includes(n), `F: ${url} Lab ${n} ${TWINS.includes(n) ? 'draws its bonds' : 'has no Twins'} (${s.bonds})`);
     if (![25, 50, 75, 100].includes(n)) continue;
     await page.keyboard.press('F1'); await sleep(200);
     await page.keyboard.press('s');
@@ -299,7 +302,7 @@ try {
     }
   }
   // ===== G: natural progression 110 -> 111, 120 -> 121, 121 -> 122, 129 -> 130 =====
-  for (const n of [110, 120, 121, 129, 130, 139, 149, 150, 151, 159, 160, 169, 170, 174, 175, 179, 189, 199]) {
+  for (const n of [110, 120, 121, 129, 130, 139, 149, 150, 151, 159, 160, 169, 170, 174, 175, 176, 177, 179, 180, 184, 185, 186, 187, 190, 192, 194, 197, 198, 199]) {
     await page.goto(BASE + `?v=123456&experiencelab=${n}`);
     s = await waitFor(page, (x) => x.experience_lab && x.level === n, `QA ${n} (progression)`);
     await sleep(1200);

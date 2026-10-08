@@ -561,8 +561,8 @@ func _on_block_tapped(id: int) -> void:
 		"twin_wait": _twin_wait_tap(id)
 	# Free "explain" taps (gate, shell, hidden, locked) keep their message;
 	# the lesson moves on after real moves.
-	if _lesson != "" and not completed and not game_over and tap_state in ["ok", "ram", "blocked"]:
-		_lesson_step()
+	if _lesson != "" and not completed and not game_over and (tap_state in ["ok", "ram", "blocked"] or (_lesson == "twins" and tap_state == "twin_wait")):
+		_lesson_step(tap_state == "twin_wait")
 
 
 ## PORTAL: the portals `id`'s lane runs through ([] on every level without
@@ -585,7 +585,8 @@ func _escape(id: int) -> void:
 		at = (at + board.get_view(twin_ids[1]).home) * 0.5
 	var revealed := model.last_revealed.duplicate()
 	var unlocked := model.last_unlocked.duplicate()
-	if (_lesson == "switch" and not model.last_flipped.is_empty()) or (_lesson == "gate" and not model.last_opened_gates.is_empty()):
+	if (_lesson == "switch" and not model.last_flipped.is_empty()) or (_lesson == "gate" and not model.last_opened_gates.is_empty()) \
+			or (_lesson == "twins" and pair):
 		_finish_lesson()
 	_play_second_era_effects()
 	chain += 1
@@ -1391,8 +1392,9 @@ func _chapter_news(chapter: int) -> String:
 	var news := []
 	# v0.6 Second Era mechanics, where each is introduced.
 	# (The Experience Lab introduces Armor earlier: developer page only.)
+	# (The Experience Lab also introduces TWINS at 176: developer page only.)
 	for intro in [[101, "Switch Blocks"], [121, "Chain Gates"], [ExperienceLab.ARMOR_INTRO if ExperienceLab.active else 161, "Armored Blocks"],
-			[201, "Portals"], [226, "Sequence Blocks"], [251, "Movable Blocks"]]:
+			[201, "Portals"], [226, "Sequence Blocks"], [251, "Movable Blocks"]] + ([[ExperienceLab.TWINS_INTRO, "Twins"]] if ExperienceLab.active else []):
 		if intro[0] >= rg.x and intro[0] <= rg.y:
 			news.append(intro[1])
 	var blocks: Dictionary = Economy.config().get("reward_blocks", {})
@@ -1515,8 +1517,8 @@ func publish_state() -> void:
 		"intros_seen": progress.tips_seen.filter(func(t): return String(t).begins_with("intro_")),
 		"portals": board.portals.size(), "celebration": last_result.get("celebration", "") if completed else "",
 		"twins_prototype": TwinsPrototype.active, "twins_complete_open": TwinsPrototype.complete_open,
-		"tw_blocks": _twins_block_states(vis) if TwinsPrototype.active else [],
-		"tw_message": (tutorial._text if tutorial.visible else "") if TwinsPrototype.active else "",
+		"tw_blocks": _twins_block_states(vis) if TwinsPrototype.active or ExperienceLab.active else [],
+		"tw_message": (tutorial._text if tutorial.visible else "") if TwinsPrototype.active or ExperienceLab.active else "",
 		"twins_complete_button": center.call(get_node("TwinsPrototypeComplete").find_children("*", "Button", true, false)[0]) if TwinsPrototype.complete_open and has_node("TwinsPrototypeComplete") else [], "bonds": board.bond_count(), "hearts": hearts, "chain": chain,
 		"undo_steps": history.size(), "undos_used": undos_used, "twin_msg": twin_wait_explained, "hint_block": hint_block,
 		"twin_ids": model.blocks.values().filter(func(b): return b.twin != "").map(func(b): return b.id) if model else [],
@@ -1612,6 +1614,12 @@ func _show_start_hint() -> void:
 func _lesson_blocks(kind: String) -> Array:
 	var out := []
 	var groups := {}
+	if kind == "twins":
+		# Experience Lab Twins lesson: every bonded block.
+		for b in model.blocks.values():
+			if model.twin_partner(b.id) >= 0:
+				out.append(b.id)
+		return out
 	for b in model.blocks.values():
 		if (kind == "switch" and b.is_switch()) or (kind == "gate" and b.is_gate()) or (kind == "armor" and b.armored):
 			out.append(b.id)
@@ -1636,7 +1644,7 @@ func _lesson_blocks(kind: String) -> Array:
 ## correct move (the solver's pick, so never a trap) and one short line.
 ## Called at the start and after every tap / undo until the player has
 ## done the mechanic's key action once.
-func _lesson_step() -> void:
+func _lesson_step(twin_wait := false) -> void:
 	var marks := _lesson_blocks(_lesson)
 	var next := Solver.from_model(model).recommend_move()
 	var text := ""
@@ -1661,6 +1669,17 @@ func _lesson_step() -> void:
 				text = "Hit the armored block to break its shell"
 			else:
 				text = "Armored: can't escape. Clear a path for the marked block to hit it"
+		"twins":
+			# Experience Lab: a twin tapped while its partner's path was blocked
+			# (free) gets the rule itself; otherwise the next correct move.
+			is_key = next != -1 and model.twin_partner(next) >= 0
+			if twin_wait:
+				twin_wait_explained = true
+				text = TWIN_WAIT_TEXT
+			elif is_key:
+				text = "Both paths are clear - tap a TWIN and both leave together"
+			else:
+				text = "TWINS leave together - clear BOTH of their paths first"
 		"lock":
 			# Experience Lab: point at the key-colour block nearest the lock
 			# first, so the player sees the lock stay shut until the LAST one
@@ -1689,6 +1708,8 @@ func _lesson_step() -> void:
 		return
 	board.set_hint(next)
 	tutorial.show_hint(text, _message_position(), board.block_screen_position(next), true)
+	if next >= 0 and _lesson == "twins":
+		board.set_hint(next, model.twin_partner(next))
 	if ExperienceLab.active:
 		publish_state.call_deferred()  # developer page: tests follow each lesson step
 
@@ -1717,6 +1738,7 @@ func _finish_lesson() -> void:
 	var done: String = {"switch": "The marked arrows turned around - now plan your switches!",
 		"gate": "The gate is open - its lane is free!",
 		"armor": "Shell cracked! Now it moves like any other block",
+		"twins": "Both twins escaped together - one move, both lanes!",
 		"lock": "Every %s block is gone - the lock is open!" % _lock_lesson_color}[kind]
 	_show_message(done, 2.8)
 	if ExperienceLab.active:

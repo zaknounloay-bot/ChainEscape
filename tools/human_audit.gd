@@ -60,6 +60,7 @@ var level_dir := ""  # --dir=res://...: read level_NN.json from there (e.g. the 
 
 
 func _solver(n: int) -> Solver:
+	LevelManager.dev_twins = level_dir != ""  # lab level files may carry Twins
 	var lv := LevelManager.read_level(n) if level_dir == "" else \
 		LevelManager.parse_level(JSON.parse_string(FileAccess.get_file_as_string(level_dir.path_join("level_%02d.json" % n))), n, true)
 	var model := BoardModel.new()
@@ -78,6 +79,9 @@ func _kind(s: Solver, mv: int) -> int:
 	var id := mv & Solver.ID_MASK
 	if not s._seq_ids.is_empty() and s._seq_stage[id] == 1:
 		return 2
+	if s._partner(id) >= 0:
+		# TWINS (lab boards): a pair release is a "turn" only when it turns a spinner.
+		return 1 if s._spinner_neighbours(id) > 0 else 0
 	return 1 if s._is_risky(mv) else 0
 
 
@@ -86,7 +90,13 @@ func _new_state(s: Solver, k: String) -> int:
 	keys[k] = id
 	var w := s._alive_count == s._crate_n
 	win.append(1 if w else 0)
-	var pm := PackedInt32Array() if w else PackedInt32Array(s.legal_moves())
+	var pm := PackedInt32Array()
+	if not w:
+		for mv in s.legal_moves():
+			# TWINS: tapping either twin is the same move - count the pair once.
+			var p := s._partner(mv & Solver.ID_MASK) if (mv & (Solver.RAM | Solver.PUSH)) == 0 else -1
+			if p < 0 or p > (mv & Solver.ID_MASK):
+				pm.append(mv)
 	var ms := pm
 	var pk := PackedByteArray()
 	for mv in ms:

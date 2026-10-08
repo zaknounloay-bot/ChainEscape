@@ -65,6 +65,9 @@ func _run() -> void:
 	elif n == 121:
 		_check(game._lesson == "gate" and game.tutorial.is_showing() and game.tutorial._text == "GATE C opens when every block chained C escapes (1 left)",
 			"L121: production's Chain Gate lesson starts ('%s')" % game.tutorial._text)
+	elif n == 176:
+		_check(game._lesson == "twins" and game.tutorial.visible and game.tutorial._text.contains("TWIN") and game.board.bond_count() == 2,
+			"L176: the Twins lesson starts on Twin Lights ('%s')" % game.tutorial._text)
 	else:
 		_check(game._lesson == "", "L%d: no lesson" % n)
 		if game.level.hint != "":
@@ -78,6 +81,10 @@ func _run() -> void:
 		_check(game.progress.tips_seen.has("lesson_armor") and game.progress.tips_seen.has("armor"), "L%d: the Armor lesson and tip count as seen" % n)
 	if n == 161:
 		_check(game._lesson == "", "Lab 161: no Armor lesson again")
+	if n > 176:
+		_check(game.progress.tips_seen.has("lesson_twins"), "L%d: the Twins lesson counts as seen" % n)
+	_check(LevelManager.dev_twins and game.level.blocks.any(func(b): return b.twin != "") == (n in [176, 177, 179, 182, 184, 187, 190, 192, 194, 197]),
+		"L%d: Twins exactly in the lab's Twins levels" % n)
 	if n == 125:
 		_check(game.level.hint == "" and not game.tutorial.is_showing() and game.hint_block == -1, "L125: production start - no hint, message or finger")
 	# Opening alone never celebrates.
@@ -108,6 +115,9 @@ func _run() -> void:
 		_check(game.progress.tips_seen.has("lesson_gate"), "L121: the Chain Gate lesson completed during the clear")
 	if n == 151:
 		_check(game.progress.tips_seen.has("lesson_armor"), "L151: the Armor lesson completed during the clear")
+	if n == 176:
+		_check(game.progress.tips_seen.has("lesson_twins"), "L176: the Twins lesson completed during the clear")
+	_check(game.mistakes == 0, "L%d: SHOW A MOVE's line costs no heart" % n)
 	if n == 200:
 		_check(game.last_result.get("master", false) and game.ui._card_title.text == "GRAND MASTER!" and str(game.last_result.get("coin_notes", "")).contains("GRAND MASTER")
 			and game.progress.achievements.has("master_200"), "L200: Grand Master card and its one-time bonus (in the QA save) ('%s')" % game.last_result.get("coin_notes", ""))

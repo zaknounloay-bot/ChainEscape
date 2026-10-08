@@ -45,11 +45,15 @@ const COMPLETE_LINE := "LAB LEVELS 1–200 · MORE LEVELS COME LATER"
 ## Lab 101 keeps production's Switch lesson and Lab 121 production's Chain
 ## Gate lesson, unchanged; production's Armor lesson (161) runs at Lab 151,
 ## where Armor starts in the lab (the lab's lessons replace
-## GameManager.LESSONS while the lab is active).
-const LESSONS := {13: "lock", 101: "switch", 121: "gate", 151: "armor"}
+## GameManager.LESSONS while the lab is active). Lab 176 introduces TWINS
+## (the approved prototype mechanic; lab-only) with its own lesson.
+const LESSONS := {13: "lock", 101: "switch", 121: "gate", 151: "armor", 176: "twins"}
 ## Where the lab introduces ARMOR (production: 161). The Chapter card's
 ## "NEW: Armored Blocks" line follows it (GameManager._chapter_news).
 const ARMOR_INTRO := 151
+## Where the lab introduces TWINS (lab only; production has none). The
+## Chapter 18 card's "NEW:" line names it (GameManager._chapter_news).
+const TWINS_INTRO := 176
 ## Lab-only, presentation-only milestones: "N / LEVELS ESCAPED!" (no coins,
 ## no rewards, nothing about the game ending; the game goes on after 100).
 const CELEBRATIONS := {25: "lab_milestone", 50: "lab_milestone_strong", 75: "lab_milestone_plus", 100: "lab_major"}
@@ -114,6 +118,9 @@ static func apply(mode: String) -> void:
 	complete_open = false
 	LevelManager.override_dir = LEVEL_DIR
 	LevelManager.override_last = LAST_LEVEL
+	# TWINS (Lab 176-199): the "!" token in the lab's own level files only
+	# (Social / Friend parsing still rejects it; production never has it).
+	LevelManager.dev_twins = true
 	qa_level = int(mode) if mode.is_valid_int() and int(mode) >= 2 else 0
 	if qa_level > 0:
 		PlayerProgress.default_path = QA_SAVE_PATH

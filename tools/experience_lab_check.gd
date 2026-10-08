@@ -78,6 +78,7 @@ func _run() -> void:
 	_pattern_onboarding()
 	_switch_ramp()
 	_production_era()
+	_twins_era()
 	for n in range(1, ExperienceLab.LAST_LEVEL + 1):
 		_sampled_tools(n)
 	await _game()
@@ -91,7 +92,11 @@ func _run() -> void:
 
 static func lab_level(n: int) -> LevelData:
 	var json = JSON.parse_string(FileAccess.get_file_as_string(ExperienceLab.LEVEL_DIR.path_join("level_%02d.json" % n)))
-	return LevelManager.parse_level(json, n, true)
+	var keep := LevelManager.dev_twins
+	LevelManager.dev_twins = true  # the lab's own files may carry Twins (176-199)
+	var lv := LevelManager.parse_level(json, n, true)
+	LevelManager.dev_twins = keep
+	return lv
 
 
 static func model_of(level: LevelData) -> BoardModel:
@@ -174,6 +179,10 @@ func _data() -> void:
 			src_json = JSON.parse_string(FileAccess.get_file_as_string(OpeningLab.LEVEL_DIR.path_join("level_%02d.json" % n)))
 		elif src.begins_with("production P"):
 			src_json = JSON.parse_string(FileAccess.get_file_as_string(LevelManager.LEVEL_PATH % int(src.substr(12))))
+		elif src.begins_with("Twins prototype "):
+			src_json = JSON.parse_string(FileAccess.get_file_as_string(TwinsPrototype.LEVEL_DIR.path_join("level_%02d.json" % int(src.substr(16)))))
+			src_json.erase("hearts")  # prototype-only keys, equal to the lab defaults
+			src_json.erase("hints")
 		if not src_json.is_empty():
 			var grid := []
 			for row in src_json["map"]:
@@ -194,7 +203,9 @@ func _data() -> void:
 			if e["rename"] != null:
 				_check(src_json["name"] == e["rename"]["from"], "L%d rename source name" % n)
 				expect["name"] = e["rename"]["to"]
+			LevelManager.dev_twins = true
 			var want_lv := LevelManager.parse_level(expect, n, true)
+			LevelManager.dev_twins = false
 			_check(LevelManager.to_json_text(want_lv) == LevelManager.to_json_text(lv) and want_lv.hint == lv.hint and want_lv.mystery == lv.mystery,
 				"L%d equals %s%s" % [n, src, " + edits" if not e["edits"].is_empty() else ""])
 		# Solvable.
@@ -206,7 +217,8 @@ func _data() -> void:
 			"lock": lv.blocks.any(func(b): return b.lock_color != ""),
 			"ccw": lv.blocks.any(func(b): return b.is_spinner() and b.spin_rule == BlockData.SpinRule.CCW),
 			"alt": lv.blocks.any(func(b): return b.is_spinner() and b.spin_rule == BlockData.SpinRule.ALT),
-			"pattern": lv.blocks.any(func(b): return b.is_spinner() and b.spin_rule == BlockData.SpinRule.PATTERN)}
+			"pattern": lv.blocks.any(func(b): return b.is_spinner() and b.spin_rule == BlockData.SpinRule.PATTERN),
+			"twins": lv.blocks.any(func(b): return b.twin != "")}
 		for k in feats:
 			if feats[k] and not first.has(k):
 				first[k] = n
@@ -237,13 +249,16 @@ func _data() -> void:
 			var newer := lv.blocks.filter(func(b): return b.is_crate() or b.seq_stage != 0)
 			_check(newer.is_empty() and lv.portals.is_empty() and lv.blocks.any(func(b): return b.armored), "L%d combines Armor with older mechanics, nothing newer" % n)
 		else:
-			# Lab 176-200: production Second Era expert levels - never a
-			# Third Era mechanic (Portal, Sequence, Movable).
+			# Lab 176-200: Second Era expert levels and the lab's TWINS - never a
+			# Third Era mechanic (Portal, Sequence, Movable); Twins only in
+			# their planned slots (never 200).
 			var newer := lv.blocks.filter(func(b): return b.is_crate() or b.seq_stage != 0)
-			_check(newer.is_empty() and lv.portals.is_empty(), "L%d uses only Second Era mechanics" % n)
+			_check(newer.is_empty() and lv.portals.is_empty(), "L%d uses only Second Era mechanics (+ Twins)" % n)
+		var has_twins := lv.blocks.any(func(b): return b.twin != "")
+		_check(has_twins == (n in TWINS_LEVELS), "L%d %s Twins" % [n, "has" if n in TWINS_LEVELS else "has no"])
 		if lv.blocks.any(func(b): return b.armored) and not first.has("armor"):
 			first["armor"] = n
-	var want_first := {"spinner": 6, "hidden": 8, "lock": 13, "ccw": 31, "alt": 41, "pattern": 51, "armor": 151}
+	var want_first := {"spinner": 6, "hidden": 8, "lock": 13, "ccw": 31, "alt": 41, "pattern": 51, "armor": 151, "twins": 176}
 	for k in want_first:
 		_check(first.get(k, -1) == want_first[k], "%s first appears at Lab %d (%d)" % [k, want_first[k], first.get(k, -1)])
 	# The intro hints travel with their boards.
@@ -652,6 +667,8 @@ func _sampled_tools(n: int) -> void:
 static func _tap(m: BoardModel, id: int) -> void:
 	if m.move_state(id) == "ram":
 		m.ram(id)
+	elif m.twin_partner(id) >= 0:
+		m.remove_pair(id)  # TWINS: the pair leaves as one move
 	else:
 		m.remove(id)
 
@@ -688,6 +705,7 @@ func _game() -> void:
 	await _gate_lesson()
 	await _gate_125()
 	await _armor_lesson()
+	await _twins_lesson()
 	for n in range(1, ExperienceLab.LAST_LEVEL + 1):
 		game.start_level(n, "test")
 		await _frames(2)
@@ -779,7 +797,7 @@ func _game() -> void:
 			game._after_chapter_card()
 			await _frames(3)
 			_check(game.current_level == 101 and not ExperienceLab.complete_open, "after Lab 100's card: NEXT goes on to Lab 101 (level %d)" % game.current_level)
-		if n in [110, 120, 121, 129, 130, 139, 149, 150, 151, 159, 160, 169, 170, 174, 175, 179, 189, 199]:
+		if n in [110, 120, 121, 129, 130, 139, 149, 150, 151, 159, 160, 169, 170, 174, 175, 176, 177, 179, 180, 184, 185, 186, 187, 190, 192, 194, 197, 198, 199]:
 			# Natural progression through the Second Era (a Chapter card after 110 / 120).
 			_check(not game.last_result.get("is_last", false), "Lab %d is not the last lab level" % n)
 			game.next_level()
@@ -904,10 +922,10 @@ const LAB_151_EDIT := [2, 6, "Gv", "G>"]
 func _production_era() -> void:
 	var manifest: Array = JSON.parse_string(FileAccess.get_file_as_string(ExperienceLab.LEVEL_DIR.path_join("manifest.json")))["levels"]
 	var used := []
-	for n in [101] + range(106, ExperienceLab.LAST_LEVEL + 1):
+	for n in [101] + range(106, 176) + [ExperienceLab.LAST_LEVEL]:
 		var src: int = ARMOR_ORDER.get(n, n)
 		_check(manifest[n - 1]["source"] == "production P%d" % src, "Lab %d comes from production %d (%s)" % [n, src, manifest[n - 1]["source"]])
-		if n >= 151:
+		if n >= 151 and n <= 175:
 			used.append(src)
 		var lab_json: Dictionary = JSON.parse_string(FileAccess.get_file_as_string(ExperienceLab.LEVEL_DIR.path_join("level_%02d.json" % n)))
 		var prod_json: Dictionary = JSON.parse_string(FileAccess.get_file_as_string(LevelManager.LEVEL_PATH % src))
@@ -932,9 +950,7 @@ func _production_era() -> void:
 			_check(LevelManager.to_json_text(lab) == LevelManager.to_json_text(prod) and lab.name == prod.name and lab.hint == prod.hint
 				and lab.hint_finger == prod.hint_finger and lab.mystery == prod.mystery, "Lab %d parses to production Level %d" % [n, src])
 	used.sort()
-	_check(used == range(151, ExperienceLab.LAST_LEVEL + 1), "production 151-%d each appear exactly once in Lab 151-%d" % [ExperienceLab.LAST_LEVEL, ExperienceLab.LAST_LEVEL])
-	for n in range(176, ExperienceLab.LAST_LEVEL + 1):
-		_check(ARMOR_ORDER.get(n, n) == n, "Lab %d is production %d (no reorder past 175)" % [n, n])
+	_check(used == range(151, 176), "production 151-175 each appear exactly once in Lab 151-175")
 	# Lab 151 (adapted 161): same shell, same first rammer; no losing first
 	# move; no fatal option anywhere on SHOW A MOVE's line.
 	var a := model_of(lab_level(151))
@@ -986,7 +1002,7 @@ func _production_era() -> void:
 	# Lessons: the lab keeps production's Switch (101) and Gate (121) lessons,
 	# runs production's Armor lesson at 151 (never again at 161) and adds none
 	# elsewhere (125 especially).
-	_check(ExperienceLab.LESSONS == {13: "lock", 101: "switch", 121: "gate", 151: "armor"}, "lab lessons are 13 lock, 101 switch, 121 gate, 151 armor (%s)" % [ExperienceLab.LESSONS])
+	_check(ExperienceLab.LESSONS == {13: "lock", 101: "switch", 121: "gate", 151: "armor", 176: "twins"}, "lab lessons are 13 lock, 101 switch, 121 gate, 151 armor, 176 twins (%s)" % [ExperienceLab.LESSONS])
 	_check(ExperienceLab.LESSONS[121] == GameManager.LESSONS[121] and ExperienceLab.LESSONS[101] == GameManager.LESSONS[101] and ExperienceLab.LESSONS[151] == GameManager.LESSONS[161],
 		"Lab 101 / 121 / 151 use production's own lesson kinds")
 	_check(GameManager.LESSONS == {101: "switch", 121: "gate", 161: "armor"}, "production lessons unchanged (Armor at 161)")
@@ -998,16 +1014,289 @@ func _production_era() -> void:
 		"150 and 175 keep production's milestone levels; no lab celebration added")
 
 
+# --- TWINS at 176-199 (docs/twins_176_199_lab.md) ---------------------------------
+
+## The lab's Twins levels (docs/twins_176_199_integration_plan.md, section C).
+const TWINS_LEVELS := [176, 177, 179, 182, 184, 187, 190, 192, 194, 197]
+## Lab 176-199 sources: production boards (moved where listed), the approved
+## prototype boards and the new boards.
+const TWINS_SOURCES := {
+	176: "Twins prototype 1", 177: "NEW (double_link)", 178: "production P178", 179: "Twins prototype 2", 180: "production P179",
+	181: "production P181", 182: "production P182", 183: "production P183", 184: "Twins prototype 3", 185: "production P186",
+	186: "production P185", 187: "NEW (shell_game)", 188: "production P188", 189: "production P189", 190: "NEW (two_bonds)",
+	191: "production P191", 192: "NEW (reversal)", 193: "production P193", 194: "NEW (pattern_lock)", 195: "production P195",
+	196: "production P196", 197: "NEW (bond_of_ages)", 198: "production P198", 199: "production P199",
+}
+const LAB_182_EDITS := [[4, 5, "R<", "R<!T"], [5, 5, "Y<", "Y<!T"]]
+
+
+func _twins_era() -> void:
+	var manifest: Array = JSON.parse_string(FileAccess.get_file_as_string(ExperienceLab.LEVEL_DIR.path_join("manifest.json")))["levels"]
+	var used := []
+	for n in range(176, 200):
+		var e: Dictionary = manifest[n - 1]
+		_check(e["source"] == TWINS_SOURCES[n], "Lab %d comes from %s (%s)" % [n, TWINS_SOURCES[n], e["source"]])
+		_check(bool(e.get("twins", false)) == (n in TWINS_LEVELS), "manifest marks Lab %d's Twins correctly" % n)
+		var src: String = TWINS_SOURCES[n]
+		if src.begins_with("production P"):
+			var p := int(src.substr(12))
+			used.append(p)
+			var lab_json: Dictionary = JSON.parse_string(FileAccess.get_file_as_string(ExperienceLab.LEVEL_DIR.path_join("level_%02d.json" % n)))
+			var prod_json: Dictionary = JSON.parse_string(FileAccess.get_file_as_string(LevelManager.LEVEL_PATH % p))
+			for d in [lab_json, prod_json]:
+				d["map"] = d["map"].map(func(row): return Array(String(row).split(" ", false)))
+			if n == 182:
+				_check(e["edits"].size() == 2, "Lab 182 lists exactly its two Twins edits")
+				for ed in LAB_182_EDITS:
+					_check(lab_json["map"][ed[1]][ed[0]] == ed[3] and prod_json["map"][ed[1]][ed[0]] == ed[2], "Lab 182: (%d,%d) %s -> %s" % ed)
+					lab_json["map"][ed[1]][ed[0]] = ed[2]
+			else:
+				_check(e["edits"].is_empty() and e["hint"] == null and e["rename"] == null, "Lab %d: no edit, hint or rename" % n)
+			_check(lab_json == prod_json, "Lab %d JSON is production Level %d%s" % [n, p, " apart from the bond" if n == 182 else ""])
+	used.sort()
+	_check(used == [178, 179, 181, 182, 183, 185, 186, 188, 189, 191, 193, 195, 196, 198, 199],
+		"Lab 176-199 use production 178 179 181 182 183 185 186 188 189 191 193 195 196 198 199 once each (%s)" % [used])
+	for n in [1, 50, 100, 101, 150, 151, 175, 200]:
+		_check(not lab_level(n).blocks.any(func(b): return b.twin != ""), "Lab %d has no Twins" % n)
+	# Every Twins level: complete state graph on the Solver's rules (a pair =
+	# one move) and BoardModel <-> Solver agreement on random walks.
+	for n in TWINS_LEVELS:
+		var lv := lab_level(n)
+		var g := _twin_graph(Solver.from_model(model_of(lv)), 400000)
+		if g.is_empty():
+			_check(n == 182, "L%d full state graph within budget" % n)
+		else:
+			_check(g["winnable_start"], "L%d solvable (full graph)" % n)
+			_check(g["plain"] == 0, "L%d: every fatal move is visible (spinner / switch / pair-turn), %d plain" % [n, g["plain"]])
+			_check(g["first_bad"] == 0, "L%d: no losing first move (%d)" % [n, g["first_bad"]])
+			if n >= 179:
+				_check(g["decisions"] > 0, "L%d: Twins create a decision (fatal pair release or switch / spinner timing near the pair: %d)" % [n, g["decisions"]])
+			print("TWINS L%d %s" % [n, JSON.stringify(g)])
+		_check(_agree(lv, 600 + n), "L%d: BoardModel and Solver agree on random walks" % n)
+	# 182: the bond adds a real release-timing decision (B.3 of the plan).
+	var m := model_of(lab_level(182))
+	var fatal_release := 0
+	var guard := 0
+	while not m.is_empty() and guard < 60:
+		guard += 1
+		for id in m.blocks.keys():
+			if m.twin_partner(id) > id and m.move_state(id) == "ok":
+				var t := BoardModel.new()
+				t.setup(m.rows, m.columns, m.snapshot())
+				t.remove_pair(id)
+				var ts := Solver.from_model(t)
+				ts.node_limit = 400000
+				if not t.is_empty() and not ts.is_solvable() and not ts.aborted:
+					fatal_release += 1
+		_tap(m, Solver.from_model(m).recommend_move())
+	_check(m.is_empty() and fatal_release >= 5, "Lab 182: SHOW A MOVE's line clears it; releasing the pair is fatal at %d steps (a timing decision)" % fatal_release)
+
+
+## Complete state graph with the Solver's rules, a pair counted once. {} if
+## it exceeds `limit` states.
+func _twin_graph(s: Solver, limit: int) -> Dictionary:
+	var keys := {}
+	var kids := []
+	var flags := []
+	var empty := PackedByteArray()
+	var post := PackedInt32Array()
+	var add := func(k: String) -> int:
+		var id := kids.size()
+		keys[k] = id
+		empty.append(1 if s._alive_count == s._crate_n else 0)
+		kids.append(PackedInt32Array())
+		var fl := PackedByteArray()
+		var ms := PackedInt32Array()
+		if empty[id] == 0:
+			for mv in s.legal_moves():
+				var bid := mv & Solver.ID_MASK
+				var p := s._partner(bid)
+				if (mv & Solver.RAM) == 0 and p >= 0 and p < bid:
+					continue
+				var f := 0
+				if (mv & Solver.RAM) == 0:
+					f = (1 if s._spinner_neighbours(bid) > 0 else 0) | (2 if s._switch[bid] >= 0 else 0) | (4 if p >= 0 else 0)
+				ms.append(mv)
+				fl.append(f)
+		flags.append([ms, fl])
+		return id
+	var st_id := PackedInt32Array([add.call(s._key())])
+	var st_idx := PackedInt32Array([0])
+	var st_mv := PackedInt32Array([-1])
+	while not st_id.is_empty():
+		var top := st_id.size() - 1
+		var sid := st_id[top]
+		var ms: PackedInt32Array = flags[sid][0]
+		if st_idx[top] < ms.size():
+			var mv := ms[st_idx[top]]
+			st_idx[top] += 1
+			s._do(mv)
+			var k := s._key()
+			if keys.has(k):
+				kids[sid].append(keys[k])
+				s._undo_move(mv)
+			else:
+				if kids.size() >= limit:
+					s._undo_move(mv)
+					for i in range(st_mv.size() - 1, 0, -1):
+						s._undo_move(st_mv[i])
+					return {}
+				var nid: int = add.call(k)
+				kids[sid].append(nid)
+				st_id.append(nid)
+				st_idx.append(0)
+				st_mv.append(mv)
+		else:
+			post.append(sid)
+			var back := st_mv[top]
+			st_id.resize(top)
+			st_idx.resize(top)
+			st_mv.resize(top)
+			if back != -1:
+				s._undo_move(back)
+	var win := PackedByteArray()
+	win.resize(kids.size())
+	for sid in post:
+		var w := empty[sid]
+		for c in kids[sid]:
+			if win[c] == 1:
+				w = 1
+		win[sid] = w
+	var r := {"states": kids.size(), "winnable_start": win[0] == 1, "fatal": 0, "plain": 0, "first_bad": 0, "decisions": 0}
+	for sid in kids.size():
+		if win[sid] == 0:
+			continue
+		for i in kids[sid].size():
+			if win[kids[sid][i]] == 1:
+				continue
+			var f: int = flags[sid][1][i]
+			r["fatal"] += 1
+			if sid == 0:
+				r["first_bad"] += 1
+			if f == 0 or f == 4:
+				r["plain"] += 1
+			if f & 4 or f & 2 or f & 1:
+				r["decisions"] += 1
+	return r
+
+
+## BoardModel and Solver: same playable moves and same state after every
+## move, on 8 random walks.
+func _agree(lv: LevelData, seed: int) -> bool:
+	var rng := RandomNumberGenerator.new()
+	rng.seed = seed
+	for walk in 8:
+		var m := model_of(lv)
+		var s := Solver.from_model(m)
+		while not m.is_empty():
+			var a: Array = m.playable_ids()
+			a.sort()
+			var b := []
+			for mv in s.legal_moves():
+				b.append(mv & Solver.ID_MASK)
+			b.sort()
+			if a != b or _model_state(m) != _solver_state(s):
+				print("  disagreement: model %s solver %s" % [a, b])
+				return false
+			if b.is_empty():
+				break
+			var moves := s.legal_moves()
+			var mv: int = moves[rng.randi_range(0, moves.size() - 1)]
+			s._do(mv)
+			_tap(m, mv & Solver.ID_MASK)
+	return true
+
+
+## Comparable full states (alive blocks: cell, arrow, concealed, shell,
+## spinner step within its rule period).
+static func _model_state(m: BoardModel) -> String:
+	var ids: Array = m.blocks.keys()
+	ids.sort()
+	var parts := PackedStringArray()
+	for id in ids:
+		var b: BlockData = m.blocks[id]
+		parts.append("%d:%d,%d:%d:%d:%d:%d" % [id, b.cell.x, b.cell.y, b.direction, 1 if b.hidden else 0, 1 if b.armored else 0,
+			posmod(b.spin_step, BlockData.rule_period(b.spin_rule)) if b.is_spinner() else 0])
+	return "|".join(parts)
+
+
+static func _solver_state(s: Solver) -> String:
+	var parts := PackedStringArray()
+	for id in s._alive.size():
+		if s._alive[id] == 0:
+			continue
+		var idx: int = s._cell[id]
+		parts.append("%d:%d,%d:%d:%d:%d:%d" % [id, idx % s.columns, idx / s.columns, s._dir[id], 1 if s._is_concealed(id) else 0,
+			s._armor[id], posmod(s._step[id], BlockData.rule_period(s._rule[id])) if s._spinner[id] == 1 else 0])
+	return "|".join(parts)
+
+
+## Lab 176: the Twins lesson - marks, finger on the next correct move, the
+## free partner-blocked tap explained, finished by the first pair escape.
+func _twins_lesson() -> void:
+	game.progress.tips_seen.erase("lesson_twins")
+	GameManager.twin_wait_explained = false
+	game.start_level(176, "test")
+	await _frames(3)
+	_check(game._lesson == "twins", "L176 opens the Twins lesson")
+	_check(game.level.name == "Twin Lights" and game.board.bond_count() == 2, "L176 is Twin Lights with two bonds")
+	var marks: Array = game.board._views.keys().filter(func(v): return game.board._views[v].marked)
+	marks.sort()
+	var twins: Array = game.model.blocks.keys().filter(func(id): return game.model.twin_partner(id) >= 0)
+	twins.sort()
+	_check(marks == twins, "L176 lesson marks every twin (%s / %s)" % [marks, twins])
+	var target := _lesson_target()
+	_check(target != -1 and game.model.is_playable(target), "L176 lesson finger is on a playable block")
+	_check(game.tutorial.is_showing() or game.tutorial.visible, "L176 lesson line shows")
+	# A partner-blocked tap: free, explained, the lesson goes on.
+	var wait_id := -1
+	for id in game.model.blocks:
+		if game.model.move_state(id) == "twin_wait":
+			wait_id = id
+	if wait_id == -1:
+		game._on_block_tapped(_lesson_target())
+		await _frames(2)
+		for id in game.model.blocks:
+			if game.model.move_state(id) == "twin_wait":
+				wait_id = id
+	var hearts: int = game.hearts
+	if wait_id != -1:
+		game._on_block_tapped(wait_id)
+		await _frames(2)
+		_check(game.hearts == hearts and game._lesson == "twins" and game.tutorial._text == GameManager.TWIN_WAIT_TEXT,
+			"L176 partner-blocked tap: free, explained, lesson continues ('%s')" % game.tutorial._text)
+	else:
+		_check(false, "L176 has a partner-blocked tap early on")
+	var guard := 0
+	while game._lesson == "twins" and guard < 20:
+		guard += 1
+		var t := _lesson_target()
+		if t == -1:
+			break
+		game._on_block_tapped(t)
+		await _frames(2)
+	_check(game._lesson == "" and game.progress.tips_seen.has("lesson_twins"), "L176 lesson ends with the first pair escape and is remembered")
+	_check(game.mistakes == 0, "L176 lesson costs no heart")
+	game.start_level(176, "test")
+	await _frames(3)
+	_check(game._lesson == "", "L176 replay: no lesson again")
+	game.progress.tips_seen.erase("lesson_twins")
+
+
 ## Lab 151: production's Armor lesson on the adapted board, step by step;
 ## the Chapter card announces Armor before Chapter 16 (lab) / 17 (production).
 func _armor_lesson() -> void:
 	_check(game._chapter_news(16).contains("Armored Blocks") and not game._chapter_news(17).contains("Armored Blocks"),
 		"lab: the card before Chapter 16 says NEW: Armored Blocks, Chapter 17's does not ('%s' / '%s')" % [game._chapter_news(16), game._chapter_news(17)])
+	_check(game._chapter_news(18).contains("Twins") and not game._chapter_news(17).contains("Twins") and not game._chapter_news(19).contains("Twins"),
+		"lab: the card before Chapter 18 says NEW: Twins, no other card does ('%s')" % game._chapter_news(18))
 	ExperienceLab.active = false
 	var prod16: String = game._chapter_news(16)
 	var prod17: String = game._chapter_news(17)
+	var prod_twins := range(1, 31).filter(func(c): return game._chapter_news(c).contains("Twins"))
 	ExperienceLab.active = true
 	_check(not prod16.contains("Armored") and prod17.contains("Armored Blocks"), "production: Armored Blocks is still announced for Chapter 17 ('%s' / '%s')" % [prod16, prod17])
+	_check(prod_twins.is_empty(), "production: no Chapter card mentions Twins (%s)" % [prod_twins])
 	game.progress.tips_seen.erase("lesson_armor")
 	game.start_level(151, "test")
 	await _frames(3)

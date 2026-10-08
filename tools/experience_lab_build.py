@@ -14,6 +14,14 @@ sources (developer content, never production):
     starts at 151 (151 = production 161 with one token adapted);
     102-105 are the lab's Switch learning ramp (102, 103, 105 adapted
     production boards, 104 a new board "now or later").
+  * Levels 176-199: TWINS (docs/twins_176_199_integration_plan.md and
+    docs/twins_176_199_lab.md). 176 / 179 / 184 are the approved Twins
+    prototype boards (data/dev/twins_prototype/, copied unchanged apart from
+    the prototype-only hearts / hints keys, which equal the lab defaults);
+    177, 187, 190, 192, 194, 197 are new boards; 182 is production 182 with
+    one bonded pair; 180 / 185 / 186 are production 179 / 186 / 185 moved by
+    one slot; the other slots are production boards, unchanged. Level 200
+    is production's Grand Master, unchanged.
 
 Writes level_01..level_200.json and manifest.json (source + edits of every
 level). Every edit asserts the exact original token, so a changed source can
@@ -57,6 +65,14 @@ ARMOR_INTERLEAVE = {
     161: 167, 162: 152, 163: 164, 164: 156, 165: 169, 166: 158, 167: 163, 168: 159, 169: 153, 170: 170,
 }
 SOURCES.update({n: ("prod", src) for n, src in ARMOR_INTERLEAVE.items()})
+# TWINS at 176 (docs/twins_176_199_integration_plan.md, section C):
+# ("proto", n) = Twins prototype level n (approved on iPhone).
+TWINS_PLAN = {
+    176: ("proto", 1), 177: ("new", "double_link"), 179: ("proto", 2), 180: ("prod", 179),
+    184: ("proto", 3), 185: ("prod", 186), 186: ("prod", 185), 187: ("new", "shell_game"),
+    190: ("new", "two_bonds"), 192: ("new", "reversal"), 194: ("new", "pattern_lock"), 197: ("new", "bond_of_ages"),
+}
+SOURCES.update(TWINS_PLAN)
 
 # Token adaptations: lab level -> [(column, row, expected old token, new token, why)].
 # Map tokens: colour + arrow, then "@" spinner ("" cw, "-" ccw, "~" alternating,
@@ -91,6 +107,12 @@ EDITS = {
     # MOVE's line before or after the lesson; same shell, same rammer.
     151: [(2, 6, "Gv", "G>", "removes the first-encounter decoy: the edge arrow could leave at any time and strand the board 8+ moves later, also after the lesson; it now waits behind the green spinner")],
     57: [(1, 3, "G^", "G^@*", "one arrow becomes a pattern spinner (no existing spinner here can make a third turn)")],
+    # TWINS in a full Elite board (docs/twins_176_199_integration_plan.md,
+    # B.3): the only measured in-place pair that adds a decision - releasing
+    # it turns the Pattern spinner beside it, fatal at 7 steps of SHOW A
+    # MOVE's line (a visible spinner turn, never a plain escape).
+    182: [(4, 5, "R<", "R<!T", "bonded to the yellow arrow beside it: the pair's release turns the Pattern spinner next to it, a timing decision"),
+          (5, 5, "Y<", "Y<!T", "the red arrow's twin")],
 }
 
 # Lab-only names (production names are untouched).
@@ -121,8 +143,26 @@ HINTS = {
          "\"its color\" read as the locked block's own colour; the rule is about the lock's key colour"),
 }
 
-# The two new boards (docs/player_experience_lab_1_100.md).
+# The new boards: 16, 20 and 104 (docs/player_experience_lab_1_100.md) and
+# the Twins boards of 177-197 (docs/twins_176_199_lab.md; found and verified
+# with the real engine).
 NEW = {
+    # 177: both twins are links of Gate C, so the pair opens it in one move
+    # and the green arrow aimed at the gate follows. A vertical pair (176's
+    # pairs are horizontal); one spinner gives the board a little bite.
+    "double_link": {
+        "name": "Double Link",
+        "hint": "Each twin is a gate link - one move, two links",
+        "hint_finger": False,
+        "map": [
+            "B^ .  .        .   .  .",
+            "P> .  .        Y>  R^ .",
+            ".  .  R>+C!T   Bv@ .  .",
+            ".  .  R<+C!T   .   .  .",
+            ".  .  .        .   .  .",
+            "G> XC .        .   .  .",
+        ],
+    },
     # Switch timing: the yellow arrow holds back both the switch and the
     # purple arrow marked A. The purple must leave UP before the switch fires;
     # fired early, it turns to face the red arrow under it, head-on.
@@ -190,7 +230,14 @@ def main():
     names = {}
     for n in range(1, LAST + 1):
         kind, src = SOURCES[n]
-        if kind == "lab":
+        if kind == "proto":
+            path = os.path.join(ROOT, "data", "dev", "twins_prototype", "level_%02d.json" % src)
+            data = json.load(open(path))
+            for k in ("hearts", "hints"):
+                if data.pop(k) != {"hearts": 3, "hints": 2}[k]:
+                    sys.exit("L%d: the prototype's %s no longer equals the lab default" % (n, k))
+            source = "Twins prototype %d" % src
+        elif kind == "lab":
             path = os.path.join(ROOT, "data", "dev", "opening_lab", "level_%02d.json" % src)
             data = json.load(open(path))
             source = "Opening Lab %d" % src
@@ -237,6 +284,7 @@ def main():
             f.write("\n")
         manifest.append({"level": n, "name": data["name"], "source": source,
                          "moved_from": src if kind == "prod" and src != n else None,
+                         "twins": any("!" in t for r in grid for t in r),
                          "edits": edits, "rename": rename, "hint": hint})
     with open(os.path.join(OUT, "manifest.json"), "w") as f:
         json.dump({"_comment": "Player Experience Lab 1-200: source of every lab level (tools/experience_lab_build.py).",
