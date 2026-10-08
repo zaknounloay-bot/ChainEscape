@@ -1324,7 +1324,8 @@ func _chapter_news(chapter: int) -> String:
 	var rg := Chapters.chapter_range(chapter)
 	var news := []
 	# v0.6 Second Era mechanics, where each is introduced.
-	for intro in [[101, "Switch Blocks"], [121, "Chain Gates"], [161, "Armored Blocks"],
+	# (The Experience Lab introduces Armor earlier: developer page only.)
+	for intro in [[101, "Switch Blocks"], [121, "Chain Gates"], [ExperienceLab.ARMOR_INTRO if ExperienceLab.active else 161, "Armored Blocks"],
 			[201, "Portals"], [226, "Sequence Blocks"], [251, "Movable Blocks"]]:
 		if intro[0] >= rg.x and intro[0] <= rg.y:
 			news.append(intro[1])

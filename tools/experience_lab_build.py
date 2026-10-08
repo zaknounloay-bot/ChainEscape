@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""PLAYER EXPERIENCE LAB 1-160: builds data/dev/experience_lab/ from its
+"""PLAYER EXPERIENCE LAB 1-175: builds data/dev/experience_lab/ from its
 sources (developer content, never production):
 
   * Levels 1-10: the human-approved Opening Lab (data/dev/opening_lab/).
@@ -7,13 +7,15 @@ sources (developer content, never production):
     order of docs/progression_reflow_11_25.md and the minimum-intervention map
     of docs/progression_audit_1_100.md, with the token adaptations, renames
     and the two new boards (16, 20) listed below.
-  * Levels 101-160: the Second Era. 101 and 106-160 are the production
-    boards, unchanged (111-120 Switch application, 121-130 Chain Gate,
-    131-160 Switch + Gate; 131 keeps its board with a corrected hint);
+  * Levels 101-175: the Second Era. 101 and 106-175 are production boards
+    (111-120 Switch application, 121-130 Chain Gate, 131-150 Switch + Gate;
+    131 keeps its board with a corrected hint). 151-170 interleave the
+    production Switch levels 151-160 and Armor levels 161-170 so Armor
+    starts at 151 (151 = production 161 with one token adapted);
     102-105 are the lab's Switch learning ramp (102, 103, 105 adapted
     production boards, 104 a new board "now or later").
 
-Writes level_01..level_160.json and manifest.json (source + edits of every
+Writes level_01..level_175.json and manifest.json (source + edits of every
 level). Every edit asserts the exact original token, so a changed source can
 never be adapted silently. Run from the repository root:
 
@@ -41,11 +43,20 @@ SOURCES.update({
     51: ("prod", 52), 52: ("prod", 51),
 })
 SOURCES.update({n: ("prod", n) for n in range(53, 101)})
-# Second era (temporary lab boundary at 160): 101 and 106-160 are the
-# production boards, unchanged; 104 is a new board.
-LAST = 160
+# Second era (temporary lab boundary at 175): 101 and 106-175 are production
+# boards; 104 is a new board.
+LAST = 175
 SOURCES.update({n: ("prod", n) for n in range(101, LAST + 1)})
 SOURCES[104] = ("new", "now_or_later")
+# Armor at 151 (docs/armor_151_progression_design_audit.md, section 5): the
+# production Switch levels 151-160 and Armor levels 161-170 interleaved.
+# 155, 157, 160, 170 and 171-175 keep their slots; 151 is production 161
+# with one token adapted (EDITS[151]).
+ARMOR_INTERLEAVE = {
+    151: 161, 152: 166, 153: 151, 154: 162, 155: 155, 156: 168, 157: 157, 158: 165, 159: 154, 160: 160,
+    161: 167, 162: 152, 163: 164, 164: 156, 165: 169, 166: 158, 167: 163, 168: 159, 169: 153, 170: 170,
+}
+SOURCES.update({n: ("prod", src) for n, src in ARMOR_INTERLEAVE.items()})
 
 # Token adaptations: lab level -> [(column, row, expected old token, new token, why)].
 # Map tokens: colour + arrow, then "@" spinner ("" cw, "-" ccw, "~" alternating,
@@ -72,6 +83,13 @@ EDITS = {
           (3, 0, "Yv", "Y^", "a second safe first move")],
     53: [(3, 1, "G>@", "G>@*", "one clockwise spinner becomes a pattern spinner; its third (left) turn is on the solution path")],
     56: [(2, 5, "Bv@", "Bv@*", "one clockwise spinner becomes a pattern spinner; its third (left) turn is on the solution path (replaces the planned 55: no spinner or arrow there can ever make a third turn)")],
+    # Armor intro (production 161 "First Shell" at Lab 151): the bottom-edge
+    # green could leave at any time and turn its spinner neighbours into a
+    # dead end that showed 8+ moves later, also after the guided lesson.
+    # Pointing it right (into the green spinner) keeps it on the board until
+    # that spinner has left: no losing first move, no fatal option on SHOW A
+    # MOVE's line before or after the lesson; same shell, same rammer.
+    151: [(2, 6, "Gv", "G>", "removes the first-encounter decoy: the edge arrow could leave at any time and strand the board 8+ moves later, also after the lesson; it now waits behind the green spinner")],
     57: [(1, 3, "G^", "G^@*", "one arrow becomes a pattern spinner (no existing spinner here can make a third turn)")],
 }
 
@@ -221,7 +239,7 @@ def main():
                          "moved_from": src if kind == "prod" and src != n else None,
                          "edits": edits, "rename": rename, "hint": hint})
     with open(os.path.join(OUT, "manifest.json"), "w") as f:
-        json.dump({"_comment": "Player Experience Lab 1-160: source of every lab level (tools/experience_lab_build.py).",
+        json.dump({"_comment": "Player Experience Lab 1-175: source of every lab level (tools/experience_lab_build.py).",
                    "levels": manifest}, f, indent="\t", ensure_ascii=False)
         f.write("\n")
     extra = [p for p in os.listdir(OUT) if p.startswith("level_") and p not in {"level_%02d.json" % n for n in range(1, LAST + 1)}]

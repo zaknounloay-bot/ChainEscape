@@ -1,5 +1,5 @@
 extends Node
-## PLAYER EXPERIENCE LAB 1-160 checks (developer page ?experiencelab).
+## PLAYER EXPERIENCE LAB 1-175 checks (developer page ?experiencelab).
 ##   godot --headless --path . res://tools/ExperienceLabCheck.tscn
 ##
 ## Static:
@@ -20,16 +20,20 @@ extends Node
 ## - All 100 levels, sampled states: SHOW A MOVE legal and solvable; Hammer
 ##   safety exact.
 ## Game (real scene, lab active, isolated save):
-## - Each Level 1-160 loads its lab board, hearts from 6, SHOW A MOVE, Undo
+## - Each Level 1-175 loads its lab board, hearts from 6, SHOW A MOVE, Undo
 ##   exact, Restart exact, Hammer refuses unsafe smashes, clears by taps;
-##   Chapter cards at 10, 20 ... 160; Lab 100 goes on to Lab 101; NEXT goes
+##   Chapter cards at 10, 20 ... 170; Lab 100 goes on to Lab 101; NEXT goes
 ##   110 -> 111, 120 -> 121, 121 -> 122, 129 -> 130, 130 -> 131,
-##   139 -> 140, 149 -> 150, 159 -> 160; after 160 (a temporary lab
-##   boundary): the end-of-test-build screen, never Level 161; Level Select
-##   lists 1-160 only.
+##   139 -> 140, 149 -> 150 -> 151 -> 152, 159 -> 160 -> 161,
+##   169 -> 170 -> 171, 174 -> 175; after 175 (a temporary lab boundary):
+##   the end-of-test-build screen, never Level 176; Level Select lists
+##   1-175 only.
 ## - Switch ramp 102-105 on the full state graph (_switch_ramp).
-## - Lab 101 and 106-160 are the production boards, unchanged; Lab 131
-##   differs only by its corrected hint (_production_era).
+## - Lab 101 and 106-175 are production boards, unchanged; Lab 131 differs
+##   only by its corrected hint; 151-170 are production 151-170 interleaved
+##   (Armor from 151) and Lab 151 is production 161 with one adapted token
+##   (_production_era). Armor lesson at Lab 151 (_armor_lesson); Chapter
+##   card "NEW: Armored Blocks" before Chapter 16.
 ## - Lab 121 runs production's Chain Gate lesson unchanged (_gate_lesson);
 ##   Lab 125 is production behaviour with no lesson, hint, finger or extra
 ##   feedback: its gate counters only count down (_gate_125).
@@ -110,7 +114,8 @@ func _parsing() -> void:
 		["?experiencelab=101", "", "101"], ["?experiencelab=110", "", "110"], ["?experiencelab=111", "", "111"],
 		["?v=123456&experiencelab=121", "", "121"], ["?experiencelab=125", "", "125"], ["?experiencelab=130", "", "130"], ["?experiencelab=131", "", "131"],
 		["?v=123456&experiencelab=140", "", "140"], ["?experiencelab=144", "", "144"], ["?experiencelab=150", "", "150"], ["?experiencelab=153", "", "153"],
-		["?experiencelab=156", "", "156"], ["?v=1&experiencelab=160", "", "160"], ["?experiencelab=161", "", ""], ["?experiencelab=-5", "", ""], ["?experiencelab=13abc", "", ""],
+		["?experiencelab=156", "", "156"], ["?v=1&experiencelab=160", "", "160"], ["?experiencelab=161", "", "161"],
+		["?experiencelab=151", "", "151"], ["?experiencelab=170", "", "170"], ["?v=123456&experiencelab=175", "", "175"], ["?experiencelab=176", "", ""], ["?experiencelab=-5", "", ""], ["?experiencelab=13abc", "", ""],
 		["?v=1&experiencelab=13&experiencelab=reset", "", "reset"],
 	]
 	for c in cases:
@@ -126,7 +131,7 @@ func _defaults() -> void:
 	lm._ready()
 	_check(lm.level_count == 300, "300 production levels (%d)" % lm.level_count)
 	_check(_rule_visual_kinds() == [], "without the lab every spinner keeps the production drawing (%s)" % [_rule_visual_kinds()])
-	for n in [1, 11, 16, 20, 50, 100, 101, 111, 121, 125, 130, 131, 150, 160]:
+	for n in [1, 11, 16, 20, 50, 100, 101, 111, 121, 125, 130, 131, 150, 151, 160, 161, 170, 175]:
 		var a := LevelManager.to_json_text(lm.load_level(n))
 		var b := LevelManager.to_json_text(LevelManager.read_level(n))
 		_check(a == b, "without the lab, Level %d is production" % n)
@@ -211,11 +216,24 @@ func _data() -> void:
 			# Lab 121-130: the production Chain Gate levels - nothing newer.
 			var other := lv.blocks.filter(func(b): return b.armored or b.is_crate() or b.seq_stage != 0)
 			_check(other.is_empty() and lv.portals.is_empty() and lv.blocks.any(func(b): return b.is_gate()), "L%d is a Chain Gate level with no newer mechanic" % n)
-		else:
-			# Lab 131-160: production Switch (+ Gate) levels - never Armored.
+		elif n <= 150:
+			# Lab 131-150: production Switch (+ Gate) levels - never Armored.
 			var other := lv.blocks.filter(func(b): return b.armored or b.is_crate() or b.seq_stage != 0)
 			_check(other.is_empty() and lv.portals.is_empty() and lv.blocks.any(func(b): return b.is_switch()), "L%d is a Switch / Gate level with no newer mechanic" % n)
-	var want_first := {"spinner": 6, "hidden": 8, "lock": 13, "ccw": 31, "alt": 41, "pattern": 51}
+		elif n <= 170:
+			# Lab 151-170: Armor levels (Armor, spinners, locks only) and
+			# Switch levels, interleaved - never both, nothing newer.
+			var newer := lv.blocks.filter(func(b): return b.is_crate() or b.seq_stage != 0)
+			var armor := lv.blocks.any(func(b): return b.armored)
+			var sw := lv.blocks.any(func(b): return b.is_switch() or b.is_gate())
+			_check(newer.is_empty() and lv.portals.is_empty() and armor != sw, "L%d is an Armor level or a Switch level (armor %s, switch/gate %s)" % [n, armor, sw])
+		else:
+			# Lab 171-175: production Armor + Switch + Gate levels.
+			var newer := lv.blocks.filter(func(b): return b.is_crate() or b.seq_stage != 0)
+			_check(newer.is_empty() and lv.portals.is_empty() and lv.blocks.any(func(b): return b.armored), "L%d combines Armor with older mechanics, nothing newer" % n)
+		if lv.blocks.any(func(b): return b.armored) and not first.has("armor"):
+			first["armor"] = n
+	var want_first := {"spinner": 6, "hidden": 8, "lock": 13, "ccw": 31, "alt": 41, "pattern": 51, "armor": 151}
 	for k in want_first:
 		_check(first.get(k, -1) == want_first[k], "%s first appears at Lab %d (%d)" % [k, want_first[k], first.get(k, -1)])
 	# The intro hints travel with their boards.
@@ -601,14 +619,14 @@ func _sampled_tools(n: int) -> void:
 			if rng.randf() < 0.4:
 				var opts := m.playable_ids().filter(func(id):
 					var t := m.snapshot()
-					m.remove(id)
+					_tap(m, id)
 					var ok := m.is_empty() or Solver.from_model(m).is_solvable()
 					m.restore(t)
 					return ok)
 				if not opts.is_empty():
 					mv = opts[rng.randi() % opts.size()]
 			var before := m.snapshot()
-			m.remove(mv)
+			_tap(m, mv)
 			if not m.is_empty() and not Solver.from_model(m).is_solvable():
 				bad_hint += 1 if mv == rec else 0
 				m.restore(before)
@@ -619,6 +637,15 @@ func _sampled_tools(n: int) -> void:
 	_check(bad_hammer == 0, "L%d Hammer never allows an unsafe smash on sampled states" % n)
 
 
+## One tap on the model: a ram cracks the shell (the rammer stays), any
+## other playable block escapes.
+static func _tap(m: BoardModel, id: int) -> void:
+	if m.move_state(id) == "ram":
+		m.ram(id)
+	else:
+		m.remove(id)
+
+
 # --- The real game ------------------------------------------------------------------
 
 func _snapshot() -> Array:
@@ -627,7 +654,7 @@ func _snapshot() -> Array:
 	ids.sort()
 	for id in ids:
 		var b: BlockData = game.model.blocks[id]
-		out.append([id, b.cell, b.direction, b.hidden, b.spin_step])
+		out.append([id, b.cell, b.direction, b.hidden, b.spin_step, b.armored])
 	return out
 
 
@@ -650,6 +677,7 @@ func _game() -> void:
 	await _lock_lesson()
 	await _gate_lesson()
 	await _gate_125()
+	await _armor_lesson()
 	for n in range(1, ExperienceLab.LAST_LEVEL + 1):
 		game.start_level(n, "test")
 		await _frames(2)
@@ -741,7 +769,7 @@ func _game() -> void:
 			game._after_chapter_card()
 			await _frames(3)
 			_check(game.current_level == 101 and not ExperienceLab.complete_open, "after Lab 100's card: NEXT goes on to Lab 101 (level %d)" % game.current_level)
-		if n in [110, 120, 121, 129, 130, 139, 149, 159]:
+		if n in [110, 120, 121, 129, 130, 139, 149, 150, 151, 159, 160, 169, 170, 174]:
 			# Natural progression through the Second Era (a Chapter card after 110 / 120).
 			_check(not game.last_result.get("is_last", false), "Lab %d is not the last lab level" % n)
 			game.next_level()
@@ -753,7 +781,7 @@ func _game() -> void:
 			_check(game.current_level == n + 1 and not ExperienceLab.complete_open, "Lab %d: NEXT goes on to Lab %d (level %d)" % [n, n + 1, game.current_level])
 		if n == ExperienceLab.LAST_LEVEL:
 			_check(game.last_result.get("is_last", false), "Lab %d is the last lab level (a temporary boundary)" % n)
-	# After 160: Chapter 16 card, then the end-of-test-build screen, never 161.
+	# After 175: the end-of-test-build screen (175 is a Milestone, not a Chapter end), never 176.
 	game.next_level()
 	await _frames(3)
 	if game.ui.is_chapter_card_open():
@@ -846,29 +874,89 @@ func _lock_lesson() -> void:
 	game.progress.tips_seen.erase("lesson_lock")
 
 
-## Lab 101 and 106-160 are the production boards: same JSON (map tokens,
-## name, hint, finger, hearts, stars, ...) and the same parsed level. Lab
-## 131 differs only by its corrected hint.
+## Lab 101 and 106-175 are production boards: same JSON (map tokens, name,
+## hint, finger, hearts, stars, ...) and the same parsed level as their
+## source. Lab 131 differs only by its corrected hint; 151-170 come from the
+## approved Armor interleave; Lab 151 (production 161) differs only by the
+## one adapted token.
 const LAB_131_HINT := "A switch turns the spinners beside it, too."
 const PROD_131_HINT := "Switches can be gate links too."
+## docs/armor_151_progression_design_audit.md, section 5.
+const ARMOR_ORDER := {151: 161, 152: 166, 153: 151, 154: 162, 155: 155, 156: 168, 157: 157, 158: 165, 159: 154, 160: 160,
+	161: 167, 162: 152, 163: 164, 164: 156, 165: 169, 166: 158, 167: 163, 168: 159, 169: 153, 170: 170,
+	171: 171, 172: 172, 173: 173, 174: 174, 175: 175}
+const LAB_151_EDIT := [2, 6, "Gv", "G>"]
 
 
 func _production_era() -> void:
+	var manifest: Array = JSON.parse_string(FileAccess.get_file_as_string(ExperienceLab.LEVEL_DIR.path_join("manifest.json")))["levels"]
+	var used := []
 	for n in [101] + range(106, ExperienceLab.LAST_LEVEL + 1):
+		var src: int = ARMOR_ORDER.get(n, n)
+		_check(manifest[n - 1]["source"] == "production P%d" % src, "Lab %d comes from production %d (%s)" % [n, src, manifest[n - 1]["source"]])
+		if n >= 151:
+			used.append(src)
 		var lab_json: Dictionary = JSON.parse_string(FileAccess.get_file_as_string(ExperienceLab.LEVEL_DIR.path_join("level_%02d.json" % n)))
-		var prod_json: Dictionary = JSON.parse_string(FileAccess.get_file_as_string(LevelManager.LEVEL_PATH % n))
+		var prod_json: Dictionary = JSON.parse_string(FileAccess.get_file_as_string(LevelManager.LEVEL_PATH % src))
 		for d in [lab_json, prod_json]:
 			d["map"] = d["map"].map(func(row): return Array(String(row).split(" ", false)))
+		if n == 151:
+			var e: Array = LAB_151_EDIT
+			_check(lab_json["map"][e[1]][e[0]] == e[3] and prod_json["map"][e[1]][e[0]] == e[2], "Lab 151: (%d,%d) %s -> %s is its one adaptation" % e)
+			lab_json["map"][e[1]][e[0]] = e[2]
+			_check(manifest[150]["edits"].size() == 1, "Lab 151 lists exactly one edit")
+		elif n >= 152:
+			_check(manifest[n - 1]["edits"].is_empty() and manifest[n - 1]["hint"] == null and manifest[n - 1]["rename"] == null, "Lab %d: no edit, hint or rename" % n)
 		if n == 131:
 			_check(lab_json["hint"] == LAB_131_HINT and prod_json["hint"] == PROD_131_HINT, "Lab 131 has the corrected hint, production 131 keeps its own ('%s' / '%s')" % [lab_json["hint"], prod_json["hint"]])
 			lab_json["hint"] = prod_json["hint"]
-		_check(lab_json == prod_json, "Lab %d JSON is production Level %d (every field, every map token%s)" % [n, n, " except the hint" if n == 131 else ""])
+		_check(lab_json == prod_json, "Lab %d JSON is production Level %d (every field, every map token%s)" % [n, src, " except the hint" if n == 131 else (" except the adapted token" if n == 151 else "")])
 		var lab := lab_level(n)
-		var prod := LevelManager.read_level(n)
+		var prod := LevelManager.read_level(src)
 		if n == 131:
 			lab.hint = prod.hint  # the only difference (checked above)
-		_check(LevelManager.to_json_text(lab) == LevelManager.to_json_text(prod) and lab.name == prod.name and lab.hint == prod.hint
-			and lab.hint_finger == prod.hint_finger and lab.mystery == prod.mystery, "Lab %d parses to production Level %d" % [n, n])
+		if n != 151:
+			_check(LevelManager.to_json_text(lab) == LevelManager.to_json_text(prod) and lab.name == prod.name and lab.hint == prod.hint
+				and lab.hint_finger == prod.hint_finger and lab.mystery == prod.mystery, "Lab %d parses to production Level %d" % [n, src])
+	used.sort()
+	_check(used == range(151, 176), "production 151-175 each appear exactly once in Lab 151-175")
+	# Lab 151 (adapted 161): same shell, same first rammer; no losing first
+	# move; no fatal option anywhere on SHOW A MOVE's line.
+	var a := model_of(lab_level(151))
+	_check(a.blocks.values().filter(func(b): return b.armored).size() == 1, "Lab 151 has one shell")
+	var first_bad := 0
+	for id in a.blocks.keys():
+		if a.is_playable(id):
+			var sn := a.snapshot()
+			if a.move_state(id) == "ram": a.ram(id)
+			else: a.remove(id)
+			if not Solver.from_model(a).is_solvable(): first_bad += 1
+			a.restore(sn)
+	_check(first_bad == 0, "Lab 151: no losing first move (%d)" % first_bad)
+	var steps := 0
+	var fatal_steps := 0
+	var ram_step := -1
+	var rammer := Vector2i(-1, -1)
+	while not a.is_empty() and steps < 40:
+		steps += 1
+		for id in a.blocks.keys():
+			if a.is_playable(id):
+				var sn := a.snapshot()
+				if a.move_state(id) == "ram": a.ram(id)
+				else: a.remove(id)
+				if not (a.is_empty() or Solver.from_model(a).is_solvable()):
+					fatal_steps += 1
+				a.restore(sn)
+		var mv := Solver.from_model(a).recommend_move()
+		if a.move_state(mv) == "ram":
+			if ram_step == -1:
+				ram_step = steps
+				rammer = a.blocks[mv].cell
+			a.ram(mv)
+		else:
+			a.remove(mv)
+	_check(a.is_empty() and fatal_steps == 0, "Lab 151: SHOW A MOVE's line clears it with no fatal option on the way (%d)" % fatal_steps)
+	_check(ram_step == 9 and rammer == Vector2i(0, 0), "Lab 151: the first ram (end of the lesson) is the red arrow at (0,0), move %d %s" % [ram_step, rammer])
 	# The corrected 131 hint is true on the board: the switch's escape turns
 	# a neighbouring spinner (no block anywhere is both a switch and a link).
 	var m := model_of(lab_level(131))
@@ -880,13 +968,78 @@ func _production_era() -> void:
 	for n in range(1, 301):
 		var lv := LevelManager.read_level(n)
 		_check(not lv.blocks.any(func(b): return b.is_switch() and b.gate_link != ""), "production L%d: no block is both a switch and a gate link" % n)
-	# Lessons: the lab keeps production's Switch (101) and Gate (121) lessons
-	# and adds none in 102-160 (125 especially).
-	_check(ExperienceLab.LESSONS == {13: "lock", 101: "switch", 121: "gate"}, "lab lessons are 13 lock, 101 switch, 121 gate (%s)" % [ExperienceLab.LESSONS])
-	_check(ExperienceLab.LESSONS[121] == GameManager.LESSONS[121] and ExperienceLab.LESSONS[101] == GameManager.LESSONS[101], "Lab 101 / 121 use production's own lesson kinds")
+	# Lessons: the lab keeps production's Switch (101) and Gate (121) lessons,
+	# runs production's Armor lesson at 151 (never again at 161) and adds none
+	# elsewhere (125 especially).
+	_check(ExperienceLab.LESSONS == {13: "lock", 101: "switch", 121: "gate", 151: "armor"}, "lab lessons are 13 lock, 101 switch, 121 gate, 151 armor (%s)" % [ExperienceLab.LESSONS])
+	_check(ExperienceLab.LESSONS[121] == GameManager.LESSONS[121] and ExperienceLab.LESSONS[101] == GameManager.LESSONS[101] and ExperienceLab.LESSONS[151] == GameManager.LESSONS[161],
+		"Lab 101 / 121 / 151 use production's own lesson kinds")
+	_check(GameManager.LESSONS == {101: "switch", 121: "gate", 161: "armor"}, "production lessons unchanged (Armor at 161)")
+	_check(ExperienceLab.ARMOR_INTRO == 151 and not ExperienceLab.LESSONS.has(161), "the lab introduces Armor at 151, no lesson at Lab 161")
 	# Milestone 125: production's milestone level, no lab celebration on top.
 	_check(Chapters.is_milestone(125) and not ExperienceLab.CELEBRATIONS.has(125) and ExperienceLab.CELEBRATIONS.keys().all(func(k): return k <= 100),
 		"125 keeps production's milestone; lab celebrations stay at 25/50/75/100")
+	_check(Chapters.is_milestone(150) and Chapters.is_milestone(175) and Chapters.celebration_tier(175) == "",
+		"150 and 175 keep production's milestone levels; no lab celebration added")
+
+
+## Lab 151: production's Armor lesson on the adapted board, step by step;
+## the Chapter card announces Armor before Chapter 16 (lab) / 17 (production).
+func _armor_lesson() -> void:
+	_check(game._chapter_news(16).contains("Armored Blocks") and not game._chapter_news(17).contains("Armored Blocks"),
+		"lab: the card before Chapter 16 says NEW: Armored Blocks, Chapter 17's does not ('%s' / '%s')" % [game._chapter_news(16), game._chapter_news(17)])
+	ExperienceLab.active = false
+	var prod16: String = game._chapter_news(16)
+	var prod17: String = game._chapter_news(17)
+	ExperienceLab.active = true
+	_check(not prod16.contains("Armored") and prod17.contains("Armored Blocks"), "production: Armored Blocks is still announced for Chapter 17 ('%s' / '%s')" % [prod16, prod17])
+	game.progress.tips_seen.erase("lesson_armor")
+	game.start_level(151, "test")
+	await _frames(3)
+	_check(game._lesson == "armor", "L151 opens production's Armor lesson")
+	var shell := -1
+	for b in game.model.blocks.values():
+		if b.armored:
+			shell = b.id
+	var rammer := -1
+	for mv in Solver.from_model(game.model).solve_moves():
+		if mv & Solver.RAM:
+			rammer = mv & Solver.ID_MASK
+			break
+	_check(shell != -1 and rammer != -1 and game.model.blocks[rammer].cell == Vector2i(0, 0), "L151: the shell and its rammer (the red arrow at (0,0))")
+	_check(game.board._views[shell].marked and game.board._views[rammer].marked, "L151 lesson highlights the shell and the rammer")
+	var steps := 0
+	var cracked := false
+	while game._lesson == "armor" and steps < 30:
+		var want := Solver.from_model(game.model).recommend_move()
+		var is_ram: bool = game.model.move_state(want) == "ram"
+		_check(_lesson_target() == want, "L151 step %d: finger on production's pick" % steps)
+		var text: String = "Hit the armored block to break its shell" if is_ram else "Armored: can't escape. Clear a path for the marked block to hit it"
+		_check(game.tutorial.is_showing() and game.tutorial._text == text, "L151 step %d: production lesson text ('%s')" % [steps, game.tutorial._text])
+		game._on_block_tapped(want)
+		await _frames(2)
+		steps += 1
+		if is_ram:
+			cracked = true
+			_check(want == rammer and game.model.blocks.has(rammer) and not game.model.blocks[shell].armored, "L151 the ram cracks the shell; the rammer stays")
+			_check(game.tutorial._text == "Shell cracked! Now it moves like any other block", "L151 production completion line ('%s')" % game.tutorial._text)
+		else:
+			_check(game.model.blocks[shell].armored, "L151 the shell holds until the ram")
+	_check(cracked and steps == 9 and game._lesson == "" and game.progress.tips_seen.has("lesson_armor"), "L151 lesson complete after %d steps and remembered" % steps)
+	var sol := Solver.from_model(game.model).solve()
+	_check(not sol.is_empty() and sol.has(shell), "L151 the cracked block can now escape like any other")
+	for id in sol:
+		game._on_block_tapped(id)
+		await _frames(1)
+	await get_tree().create_timer(1.5).timeout
+	_check(game.completed, "L151 clears after the lesson")
+	game.start_level(151, "test")
+	await _frames(2)
+	_check(game._lesson == "", "L151 replay: no lesson again")
+	game.start_level(161, "test")
+	await _frames(2)
+	_check(game._lesson == "" and game.level.hint == "", "Lab 161 (Ice Vault): no Armor lesson or intro hint")
+	game.progress.tips_seen.erase("lesson_armor")
 
 
 ## Lab 121: production's Chain Gate lesson, step by step.

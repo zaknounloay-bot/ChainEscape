@@ -521,6 +521,47 @@ The lab now runs to **Lab 160**: production Levels 131–160 with their puzzles 
 - **Boundary:** NEXT after Lab 160 shows "END OF THIS TEST BUILD · LAB LEVELS 1–160 · MORE LEVELS COME LATER".
 - **QA jumps:** `&experiencelab=2` … `&experiencelab=160`.
 
+## Armor from Lab 151 (lab 1–175)
+
+The lab runs to **Lab 175** and introduces **Armor at Lab 151** instead of production's 161. This follows `docs/armor_151_progression_design_audit.md` (approved for the lab only). Production is unchanged.
+
+**Order** (Lab ← production): Armor and Switch levels alternate.
+
+| Lab | 151 | 152 | 153 | 154 | 155 | 156 | 157 | 158 | 159 | 160 |
+|---|---|---|---|---|---|---|---|---|---|---|
+| **From** | 161* | 166 | 151 | 162 | 155 | 168 | 157 | 165 | 154 | 160 |
+
+| Lab | 161 | 162 | 163 | 164 | 165 | 166 | 167 | 168 | 169 | 170 |
+|---|---|---|---|---|---|---|---|---|---|---|
+| **From** | 167 | 152 | 164 | 156 | 169 | 158 | 163 | 159 | 153 | 170 |
+
+171–175 keep their slots and Milestone 175 is unchanged. Each of production 151–175 appears exactly once.
+
+**\* Lab 151:** production 161 "First Shell" with **one token changed**: (2,6) `Gv` → `G>`.
+- **Why:** the bottom-edge green could leave at any time and turn its spinner neighbours into a dead end that only showed 8+ moves later, also after the guided lesson ends.
+- **Now:** it points right into the green spinner and waits for it.
+- **Unchanged:** the same shell, the same first rammer (the red arrow at (0,0), at move 9) and the same lesson.
+
+| Full state graph | Before | After |
+|---|---|---|
+| Losing first moves | 1 | **0** |
+| Losing moves in total | 64 | 10 |
+| Fatal options on SHOW A MOVE's line | at 16 of 22 steps | **none** |
+| Forced steps | 5 | 0 |
+| Deviation survival | .46 | .84 |
+| Look-ahead-8 wins | 2% | 78% |
+| Random tapping wins | 0% | 75% |
+
+**Lessons:** the lab table routes production's Armor lesson to 151 (`ExperienceLab.LESSONS[151] = "armor"`). Lab 161 has no Armor lesson; production keeps it at 161.
+
+**Chapter card:** "NEW: Armored Blocks" is announced before Chapter 16 in the lab (`ExperienceLab.ARMOR_INTRO`, used by `GameManager._chapter_news` only while the lab is active).
+
+**QA jumps:** past 151, the Armor lesson and the Armor tip count as seen.
+
+**Boundary:** NEXT after Lab 175 shows "END OF THIS TEST BUILD · LAB LEVELS 1–175 · MORE LEVELS COME LATER".
+
+**Names:** relocated levels keep their names, so some Crystal-named levels sit in Chapter 16 and some Energy-named ones in Chapter 17. Not renamed (cosmetic).
+
 ## QA
 
 | Check | Result |

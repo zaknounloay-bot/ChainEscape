@@ -1,5 +1,5 @@
 {
-	"_comment": "Player Experience Lab 1-160: source of every lab level (tools/experience_lab_build.py).",
+	"_comment": "Player Experience Lab 1-175: source of every lab level (tools/experience_lab_build.py).",
 	"levels": [
 		{
 			"level": 1,
@@ -1584,36 +1584,46 @@
 		},
 		{
 			"level": 151,
-			"name": "Plasma Veil",
-			"source": "production P151",
-			"moved_from": null,
-			"edits": [],
+			"name": "First Shell",
+			"source": "production P161",
+			"moved_from": 161,
+			"edits": [
+				{
+					"cell": [
+						2,
+						6
+					],
+					"from": "Gv",
+					"to": "G>",
+					"why": "removes the first-encounter decoy: the edge arrow could leave at any time and strand the board 8+ moves later, also after the lesson; it now waits behind the green spinner"
+				}
+			],
 			"rename": null,
 			"hint": null
 		},
 		{
 			"level": 152,
-			"name": "Flux",
-			"source": "production P152",
-			"moved_from": null,
+			"name": "Quartz Wall",
+			"source": "production P166",
+			"moved_from": 166,
 			"edits": [],
 			"rename": null,
 			"hint": null
 		},
 		{
 			"level": 153,
-			"name": "Coil",
-			"source": "production P153",
-			"moved_from": null,
+			"name": "Plasma Veil",
+			"source": "production P151",
+			"moved_from": 151,
 			"edits": [],
 			"rename": null,
 			"hint": null
 		},
 		{
 			"level": 154,
-			"name": "Spark Gap",
-			"source": "production P154",
-			"moved_from": null,
+			"name": "Hard Case",
+			"source": "production P162",
+			"moved_from": 162,
 			"edits": [],
 			"rename": null,
 			"hint": null
@@ -1629,9 +1639,9 @@
 		},
 		{
 			"level": 156,
-			"name": "Live Wire",
-			"source": "production P156",
-			"moved_from": null,
+			"name": "Geode",
+			"source": "production P168",
+			"moved_from": 168,
 			"edits": [],
 			"rename": null,
 			"hint": null
@@ -1647,18 +1657,18 @@
 		},
 		{
 			"level": 158,
-			"name": "Field Lines",
-			"source": "production P158",
-			"moved_from": null,
+			"name": "Deep Shard",
+			"source": "production P165",
+			"moved_from": 165,
 			"edits": [],
 			"rename": null,
 			"hint": null
 		},
 		{
 			"level": 159,
-			"name": "Ionic Drift",
-			"source": "production P159",
-			"moved_from": null,
+			"name": "Spark Gap",
+			"source": "production P154",
+			"moved_from": 154,
 			"edits": [],
 			"rename": null,
 			"hint": null
@@ -1667,6 +1677,141 @@
 			"level": 160,
 			"name": "Plasma Core",
 			"source": "production P160",
+			"moved_from": null,
+			"edits": [],
+			"rename": null,
+			"hint": null
+		},
+		{
+			"level": 161,
+			"name": "Ice Vault",
+			"source": "production P167",
+			"moved_from": 167,
+			"edits": [],
+			"rename": null,
+			"hint": null
+		},
+		{
+			"level": 162,
+			"name": "Flux",
+			"source": "production P152",
+			"moved_from": 152,
+			"edits": [],
+			"rename": null,
+			"hint": null
+		},
+		{
+			"level": 163,
+			"name": "Cracked Glass",
+			"source": "production P164",
+			"moved_from": 164,
+			"edits": [],
+			"rename": null,
+			"hint": null
+		},
+		{
+			"level": 164,
+			"name": "Live Wire",
+			"source": "production P156",
+			"moved_from": 156,
+			"edits": [],
+			"rename": null,
+			"hint": null
+		},
+		{
+			"level": 165,
+			"name": "Star Frost",
+			"source": "production P169",
+			"moved_from": 169,
+			"edits": [],
+			"rename": null,
+			"hint": null
+		},
+		{
+			"level": 166,
+			"name": "Field Lines",
+			"source": "production P158",
+			"moved_from": 158,
+			"edits": [],
+			"rename": null,
+			"hint": null
+		},
+		{
+			"level": 167,
+			"name": "Crystal Ward",
+			"source": "production P163",
+			"moved_from": 163,
+			"edits": [],
+			"rename": null,
+			"hint": null
+		},
+		{
+			"level": 168,
+			"name": "Ionic Drift",
+			"source": "production P159",
+			"moved_from": 159,
+			"edits": [],
+			"rename": null,
+			"hint": null
+		},
+		{
+			"level": 169,
+			"name": "Coil",
+			"source": "production P153",
+			"moved_from": 153,
+			"edits": [],
+			"rename": null,
+			"hint": null
+		},
+		{
+			"level": 170,
+			"name": "Void Prism",
+			"source": "production P170",
+			"moved_from": null,
+			"edits": [],
+			"rename": null,
+			"hint": null
+		},
+		{
+			"level": 171,
+			"name": "Nebula",
+			"source": "production P171",
+			"moved_from": null,
+			"edits": [],
+			"rename": null,
+			"hint": null
+		},
+		{
+			"level": 172,
+			"name": "Dark Matter",
+			"source": "production P172",
+			"moved_from": null,
+			"edits": [],
+			"rename": null,
+			"hint": null
+		},
+		{
+			"level": 173,
+			"name": "Crystal Orbit",
+			"source": "production P173",
+			"moved_from": null,
+			"edits": [],
+			"rename": null,
+			"hint": null
+		},
+		{
+			"level": 174,
+			"name": "Cold Star",
+			"source": "production P174",
+			"moved_from": null,
+			"edits": [],
+			"rename": null,
+			"hint": null
+		},
+		{
+			"level": 175,
+			"name": "Shatter Point",
+			"source": "production P175",
 			"moved_from": null,
 			"edits": [],
 			"rename": null,

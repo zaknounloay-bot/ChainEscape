@@ -1,24 +1,25 @@
 class_name ExperienceLab
-## PLAYER EXPERIENCE LAB 1-160 (developer page, not production):
+## PLAYER EXPERIENCE LAB 1-175 (developer page, not production):
 ##   ?experiencelab=reset   wipe the lab save and log, start at Lab Level 1
 ##   ?experiencelab=1       continue the lab
-##   ?experiencelab=N       QA jump (N = 2..160): open Lab Level N directly
+##   ?experiencelab=N       QA jump (N = 2..175): open Lab Level N directly
 ##                          in a temporary QA session (see QA_SAVE_PATH)
 ## Works next to other query parameters (itch.io adds ?v=...):
 ##   index.html?v=123456&experiencelab=reset
 ## (headless: --experiencelab / --experiencelab=reset)
 ##
 ## The real game - same GameManager, board, hints, hearts, stars, tools,
-## sounds - with Levels 1-160 read from res://data/dev/experience_lab/ (the
+## sounds - with Levels 1-175 read from res://data/dev/experience_lab/ (the
 ## candidate progression, docs/player_experience_lab_1_100.md) and
 ## progress in its own save (its own file and localStorage keys): the real
 ## save, the Opening Lab save, Social and Challenge state are never read or
 ## written. Lab 100 (the Master) leads straight on into the Switch era (Lab
-## 101-160: 101 and 106-160 are the production boards, 102-105 the lab's
-## Switch ramp; 121-130 the production Chain Gate levels; 131 keeps its
-## board with a corrected lab hint). The level count is 160 - a temporary
-## lab boundary, not the end of the game: NEXT after Lab 160 shows a
-## lab-only "end of this test build" screen. Nothing here runs unless the page is opened with the
+## 101-175: production boards, 102-105 the lab's Switch ramp; 121-130 the
+## production Chain Gate levels; 131 keeps its board with a corrected lab
+## hint; 151-170 interleave production 151-160 and 161-170 so ARMOR starts
+## at Lab 151 (production 161 with one adapted token)). The level count is
+## 175 - a temporary lab boundary, not the end of the game: NEXT after Lab
+## 175 shows a lab-only "end of this test build" screen. Nothing here runs unless the page is opened with the
 ## parameter.
 
 const PARAM := "experiencelab"
@@ -28,7 +29,7 @@ const MIRROR_KEY := "chain_escape_experiencelab_save"
 const BEACON_KEY := "chain_escape_experiencelab_beacon"
 const LOG_KEY := "chain_escape_experiencelab_log"
 const LOG_PATH := "user://experience_lab_log.json"
-const LAST_LEVEL := 160
+const LAST_LEVEL := 175
 ## QA jump (?experiencelab=N): a throwaway save, wiped on every QA launch,
 ## so a jump never touches the real save, the Opening Lab save or the
 ## normal lab save and lab log.
@@ -36,14 +37,18 @@ const QA_SAVE_PATH := "user://experience_lab_qa.cfg"
 const QA_MIRROR_KEY := "chain_escape_experiencelab_qa_save"
 const QA_BEACON_KEY := "chain_escape_experiencelab_qa_beacon"
 const COMPLETE_TITLE := "END OF THIS TEST BUILD"
-const COMPLETE_LINE := "LAB LEVELS 1–160 · MORE LEVELS COME LATER"
+const COMPLETE_LINE := "LAB LEVELS 1–175 · MORE LEVELS COME LATER"
 
 ## Lab-only guided lessons (GameManager's lesson system): Lab 13 teaches
 ## the Lock by cause and effect - every key-colour block must leave.
 ## Lab 101 keeps production's Switch lesson and Lab 121 production's Chain
-## Gate lesson, unchanged (the lab's lessons replace GameManager.LESSONS
-## while the lab is active).
-const LESSONS := {13: "lock", 101: "switch", 121: "gate"}
+## Gate lesson, unchanged; production's Armor lesson (161) runs at Lab 151,
+## where Armor starts in the lab (the lab's lessons replace
+## GameManager.LESSONS while the lab is active).
+const LESSONS := {13: "lock", 101: "switch", 121: "gate", 151: "armor"}
+## Where the lab introduces ARMOR (production: 161). The Chapter card's
+## "NEW: Armored Blocks" line follows it (GameManager._chapter_news).
+const ARMOR_INTRO := 151
 ## Lab-only, presentation-only milestones: "N / LEVELS ESCAPED!" (no coins,
 ## no rewards, nothing about the game ending; the game goes on after 100).
 const CELEBRATIONS := {25: "lab_milestone", 50: "lab_milestone_strong", 75: "lab_milestone_plus", 100: "lab_major"}
@@ -58,7 +63,7 @@ static var _card_shown_ms := 0
 
 
 ## The lab mode asked for by a page's query string and hash: "reset", "1",
-## a QA jump level "2".."160", or "" (off). Parses key=value pairs exactly (any order, any other
+## a QA jump level "2".."175", or "" (off). Parses key=value pairs exactly (any order, any other
 ## parameters such as itch.io's ?v=, URL-encoded), so "xexperiencelab=1"
 ## or "experiencelab=0" never switch it on.
 static func parse_mode(search: String, fragment: String = "") -> String:
@@ -81,7 +86,7 @@ static func parse_mode(search: String, fragment: String = "") -> String:
 	return mode
 
 
-## "" (not asked for), "1", "reset" or a QA jump level "2".."160".
+## "" (not asked for), "1", "reset" or a QA jump level "2".."175".
 static func requested() -> String:
 	var args := OS.get_cmdline_user_args()
 	if "--" + PARAM + "=reset" in args:
@@ -171,15 +176,16 @@ static func seed_qa(progress: PlayerProgress, levels: LevelManager) -> void:
 		# (as GameManager.start_level does), e.g. the Switch at Lab 101 and
 		# the Chain Gate at Lab 121.
 		if data.hint != "":
-			for pair in [["switch", data.blocks.any(func(b): return b.is_switch())], ["gate", data.blocks.any(func(b): return b.is_gate())]]:
+			for pair in [["switch", data.blocks.any(func(b): return b.is_switch())], ["gate", data.blocks.any(func(b): return b.is_gate())],
+					["armor", data.blocks.any(func(b): return b.armored)]]:
 				if pair[1] and not progress.tips_seen.has(pair[0]):
 					progress.tips_seen.append(pair[0])
 	progress.save()
 	print("[ExperienceLab] QA save seeded: cleared 1-%d, chapters %s, tips %s" % [n - 1, progress.completed_chapters, progress.tips_seen])
 
 
-## The lab-only "end of this test build" screen (after Lab Level 160 - a
-## temporary lab boundary). `on_close` opens Level Select (the lab's 1-160).
+## The lab-only "end of this test build" screen (after Lab Level 175 - a
+## temporary lab boundary). `on_close` opens Level Select (the lab's 1-175).
 static func show_complete(host: Node, on_close: Callable) -> void:
 	complete_open = true
 	event("lab_complete", LAST_LEVEL)

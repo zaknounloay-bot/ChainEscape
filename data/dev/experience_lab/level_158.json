@@ -1,11 +1,12 @@
 {
-	"name": "Field Lines",
+	"name": "Deep Shard",
 	"map": [
-		".      G>     R>     Bv@    .      B>%B",
-		"B^%A   P^     P<&B   .      Y<@    G<@",
-		"R^     Bv     B<     .      .      B<",
-		".      Y<@#R  B^&A   Bv     .      .",
-		".      Gv$G&A .      .      Y>     Gv@-#B",
-		".      R>     .      P>     .      R^&B"
+		"G>@#P .     .     B>    G>@   Y^    .",
+		"R^    B>    .     .     R>    Rv@   .",
+		".     G<=   Yv@   .     .     .     R<",
+		".     .     Gv    .     P<    Gv    B^",
+		".     .     .     .     .     .     .",
+		"R^#G  .     Pv    .     .     .     .",
+		"P<    B<@~  G<    .     .     G>    R^"
 	]
 }

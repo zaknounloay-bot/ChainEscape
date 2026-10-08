@@ -1,12 +1,14 @@
 {
-	"name": "Flux",
+	"name": "Quartz Wall",
+	"hint": "Cracking a shell is free - aim first, then clear.",
+	"hint_finger": false,
 	"map": [
-		".      Rv     .      R<     Yv@    .",
-		".      Gv     .      B>@    B<@~   R<$S",
-		".      Yv     .      .      G<     R^",
-		".      .      .      Y>     Bv     .",
-		".      .      B^%A   .      G>#R   B^&A",
-		".      G>     .      B>     .      .",
-		".      .      G^     Y<@    .      G<@*#R"
+		".    .    Yv@  .    .    P<@",
+		"G^=  Bv@  Y<   Y>   P>   Y^",
+		"Gv   .    Yv   .    R>#P G^",
+		".    Pv   R>@  B^   .    .",
+		".    G>@* .    .    Bv   .",
+		".    R<   .    .    .    .",
+		"B>#P .    .    R^=  Yv   P^@-"
 	]
 }

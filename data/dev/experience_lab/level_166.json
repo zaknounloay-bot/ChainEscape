@@ -1,0 +1,11 @@
+{
+	"name": "Field Lines",
+	"map": [
+		".      G>     R>     Bv@    .      B>%B",
+		"B^%A   P^     P<&B   .      Y<@    G<@",
+		"R^     Bv     B<     .      .      B<",
+		".      Y<@#R  B^&A   Bv     .      .",
+		".      Gv$G&A .      .      Y>     Gv@-#B",
+		".      R>     .      P>     .      R^&B"
+	]
+}
