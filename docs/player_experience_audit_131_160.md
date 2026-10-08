@@ -105,8 +105,8 @@ So the felt curve is flatter than the estimate. Growing mastery is real in Chapt
 ## D. Mechanics and novelty
 
 **Switch** (every level):
-- **Hazard only** (fire it late; its reversal never helps) in 18 levels: 131's timing case excluded, the rest marked H in table A.
-- **A required tool** in 10.
+- **Hazard only** (fire it late; its reversal never helps) in 17 levels: those marked H in table A.
+- **A tool** in 11 (T, including 131, where the switch's job is turning a spinner) and **mixed** in 2 (M).
 - Many levels repeat the same lesson: the switch is the trap.
 
 **Gate** (131–140 every level; then only 142, 145, 150, 155, 160):
