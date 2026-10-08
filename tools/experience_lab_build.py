@@ -166,6 +166,9 @@ NEW = {
     # 187: the top twin's lane runs into a shell, and twins never ram - the
     # red spinner above the shell is the rammer. Every fatal move is a pair
     # release at the wrong time (it turns the yellow spinner beside it).
+    # Boards 187-197 were refined so that neither "hold the pair to the end"
+    # nor a short look-ahead solves them (habit / look-ahead players as in
+    # tools/human_audit.gd; docs/twins_176_199_lab.md).
     "shell_game": {
         "name": "Shell Game",
         "hint": "Twins can't crack a shell - another block must",
@@ -173,26 +176,26 @@ NEW = {
         "map": [
             ".   .  Bv@- Yv@~ .      Rv@",
             ".   R> .    Y>@- P>+C!T R>=",
-            "B<  .  .    .    P>!T   .",
-            ".   .  .    .    .      .",
-            "B<  .  Bv   XC   .      G^#B",
+            "B>  .  .    .    P>!T   .",
+            "G<  .  .    .    .      .",
+            ".   .  Bv   XC   .      G^#B",
             ".   .  .    .    .      R<",
-            "Y^@ .  B<   P^   .      G^@",
+            "Y^@ .  B>   P>   .      G^@",
         ],
     },
-    # 190 (Chapter 19 finale): two pairs - a horizontal purple pair and an
-    # L-shaped red pair - each with its own spinner neighbours; both have
-    # wrong release moments, and they share lanes.
+    # 190 (Chapter 19 finale): two pairs - a horizontal purple pair and a
+    # vertical, L-shaped red pair - each beside its own spinners; both have
+    # wrong release moments.
     "two_bonds": {
         "name": "Two Bonds",
         "map": [
-            ".  .    G<@- R^#P . B>  .",
-            ".  Y>@* P^@  .    . B^@ .",
-            ".  P<!T P<!T .    Y< Pv .",
+            ".  .    Gv@- R^#P . B> Bv@-",
+            ".  Y>@  B^@  P>@  P^ .  .",
+            ".  P<!T P<!T .    Y< P< P<",
             ".  .    .    .    .  .  .",
             ".  .    .    .    Y^ .  .",
             "Y^ R<@* Rv!U .    P^ .  B<",
-            ".  .    R<!U .    Pv .  Bv@-",
+            ".  .    R<!U .    .  .  .",
         ],
     },
     # 192: switch A reverses BOTH twins - back to back, they turn to face
@@ -201,13 +204,13 @@ NEW = {
     "reversal": {
         "name": "Reversal",
         "map": [
-            "P>   .    .    .   G<@-       .",
-            "Pv&A R^%A Y<   Bv  Y<&A+C!T   Y>&A+C!T",
-            ".    .    Bv   .   .          Bv",
-            "B>   Rv@- P^@* .   .          .",
-            ".    .    .    .   XC         .",
-            ".    .    .    .   R<         .",
-            "Y<   B<   .    R^@ P^@        Bv+C",
+            "P>    .    G<@- .   .           .",
+            "Pv&A  R^%A Y<   Bv  Y<&A+C!T    Y>&A+C!T",
+            ".     .    B>   .   .           Bv",
+            "B>    R<@- P^@~ .   .           .",
+            ".     .    .    .   XC          .",
+            ".     .    .    .   R<          .",
+            "Yv@-  B<   .    R^@* P^@-       Bv+C",
         ],
     },
     # 194: the red pair sits under an Alternating and a clockwise spinner;
@@ -216,13 +219,13 @@ NEW = {
     "pattern_lock": {
         "name": "Pattern Lock",
         "map": [
-            "P> Y<@* Rv   .    . .",
-            ".  R<   .    R>   . P<@",
-            ".  .    G^@~ Y<@  . Pv",
-            ".  .    Rv!T Rv!T . Yv",
-            "Yv .    .    .    . .",
-            "Bv P>   B>@  .    . .",
-            "R< P^#R .    .    . B>",
+            ".  .    Rv   .    . .",
+            ".  R<   .    R>   . P<@-",
+            ".  .    G^@~ Y^@  . Pv",
+            "Y> Yv@- Rv!T Rv!T . Yv",
+            ".  P^   .    .    . .",
+            ".  P<   B>@  .    . .",
+            "R< P^#R .    .    Yv@~ Bv",
         ],
     },
     # 197 (the Twins exam): an L-shaped pair - one twin marked by switch A,
@@ -231,13 +234,13 @@ NEW = {
     "bond_of_ages": {
         "name": "Bond of Ages",
         "map": [
-            ".    .         .      .  .    .    B>@*",
-            "R^@- G^&A+C!T  G<+C!T G^ .    .    .",
-            ".    Gv        Y>@*   .  .    B>   R^",
-            "Rv#B .         .      .  B^   .    .",
-            ".    .         .      .  .    Y>%A Yv",
-            ".    .         .      Pv B^@- Pv@  .",
-            ".    Gv#Y      Y^@-   .  XC   G<   .",
+            ".     .        .      .  .  .    B^",
+            "R<@   G^&A+C!T G<+C!T G> .  B>   .",
+            ".     Gv       Y>@*   .  .  B>@~ R^",
+            "Rv#B  .        .      .  .  .    .",
+            ".     .        .      .  .  Y>%A Yv",
+            "Y<@-  .        .      P> Bv Pv@  .",
+            ".     Gv#Y     Y^@    .  XC G<   .",
         ],
     },
     # Switch timing: the yellow arrow holds back both the switch and the

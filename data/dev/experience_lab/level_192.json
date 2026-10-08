@@ -1,12 +1,12 @@
 {
 	"name": "Reversal",
 	"map": [
-		"P>       .        .        .        G<@-     .",
+		"P>       .        G<@-     .        .        .",
 		"Pv&A     R^%A     Y<       Bv       Y<&A+C!T Y>&A+C!T",
-		".        .        Bv       .        .        Bv",
-		"B>       Rv@-     P^@*     .        .        .",
+		".        .        B>       .        .        Bv",
+		"B>       R<@-     P^@~     .        .        .",
 		".        .        .        .        XC       .",
 		".        .        .        .        R<       .",
-		"Y<       B<       .        R^@      P^@      Bv+C"
+		"Yv@-     B<       .        R^@*     P^@-     Bv+C"
 	]
 }

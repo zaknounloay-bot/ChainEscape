@@ -1,12 +1,12 @@
 {
 	"name": "Bond of Ages",
 	"map": [
-		".        .        .        .        .        .        B>@*",
-		"R^@-     G^&A+C!T G<+C!T   G^       .        .        .",
-		".        Gv       Y>@*     .        .        B>       R^",
-		"Rv#B     .        .        .        B^       .        .",
+		".        .        .        .        .        .        B^",
+		"R<@      G^&A+C!T G<+C!T   G>       .        B>       .",
+		".        Gv       Y>@*     .        .        B>@~     R^",
+		"Rv#B     .        .        .        .        .        .",
 		".        .        .        .        .        Y>%A     Yv",
-		".        .        .        Pv       B^@-     Pv@      .",
-		".        Gv#Y     Y^@-     .        XC       G<       ."
+		"Y<@-     .        .        P>       Bv       Pv@      .",
+		".        Gv#Y     Y^@      .        XC       G<       ."
 	]
 }

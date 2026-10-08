@@ -1,12 +1,12 @@
 {
 	"name": "Pattern Lock",
 	"map": [
-		"P>   Y<@* Rv   .    .    .",
-		".    R<   .    R>   .    P<@",
-		".    .    G^@~ Y<@  .    Pv",
-		".    .    Rv!T Rv!T .    Yv",
-		"Yv   .    .    .    .    .",
-		"Bv   P>   B>@  .    .    .",
-		"R<   P^#R .    .    .    B>"
+		".    .    Rv   .    .    .",
+		".    R<   .    R>   .    P<@-",
+		".    .    G^@~ Y^@  .    Pv",
+		"Y>   Yv@- Rv!T Rv!T .    Yv",
+		".    P^   .    .    .    .",
+		".    P<   B>@  .    .    .",
+		"R<   P^#R .    .    Yv@~ Bv"
 	]
 }
