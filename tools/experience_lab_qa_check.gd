@@ -108,6 +108,9 @@ func _run() -> void:
 		_check(game.progress.tips_seen.has("lesson_gate"), "L121: the Chain Gate lesson completed during the clear")
 	if n == 151:
 		_check(game.progress.tips_seen.has("lesson_armor"), "L151: the Armor lesson completed during the clear")
+	if n == 200:
+		_check(game.last_result.get("master", false) and game.ui._card_title.text == "GRAND MASTER!" and str(game.last_result.get("coin_notes", "")).contains("GRAND MASTER")
+			and game.progress.achievements.has("master_200"), "L200: Grand Master card and its one-time bonus (in the QA save) ('%s')" % game.last_result.get("coin_notes", ""))
 	var want: String = MILESTONES.get(n, "")
 	_check(String(game.last_result.get("celebration", "")) == want and overlay == (want != ""),
 		"L%d: milestone '%s' after the clear (want '%s', overlay %s)" % [n, game.last_result.get("celebration", ""), want, overlay])

@@ -1,0 +1,13 @@
+{
+	"name": "High Council",
+	"mystery": true,
+	"map": [
+		"Rv@      .        .        .        P<+C     Bv       P<",
+		".        .        Pv%A     Y^=      .        .        B^",
+		".        Rv@#G    .        XC       .        P<       R<@~",
+		"Y>?      .        .        .        .        .        .",
+		"Y>@      .        .        G^       B^+C     .        .",
+		"R<@      .        .        .        R>@      .        R^",
+		".        .        .        R>?      R>#G$G&A .        Y^"
+	]
+}

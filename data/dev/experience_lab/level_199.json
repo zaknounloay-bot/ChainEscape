@@ -1,0 +1,12 @@
+{
+	"name": "Eternal Chain",
+	"map": [
+		"Y>   .    .    .    G>   .",
+		".    P>@~ .    .    .    B^#Y",
+		".    Pv@* G<   .    .    P<%B",
+		"B^@  .    G<&B G<#Y .    .",
+		".    .    .    P>   Bv   .",
+		"Pv%A B>@  P>&A G^   Rv   .",
+		".    P^   .    P<   B<&B P^@-"
+	]
+}

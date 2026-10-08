@@ -562,6 +562,43 @@ The lab runs to **Lab 175** and introduces **Armor at Lab 151** instead of produ
 
 **Names:** relocated levels keep their names, so some Crystal-named levels sit in Chapter 16 and some Energy-named ones in Chapter 17. Not renamed (cosmetic).
 
+## Production Levels 176–200 (lab 1–200)
+
+The lab now runs to **Lab 200, the Grand Master**, for human testing of the existing levels 176–200 (audit: `docs/player_experience_audit_176_200.md`).
+
+- **Lab 1–175 are unchanged** (approved): the same files, the same Armor-at-151 interleave, the adapted 151, lessons and the Chapter-card override.
+- **Lab 176–200 are the production levels, byte-for-byte in content:** boards, hints, names, rewards, no reorder and no lesson.
+- **Level 200 keeps everything:**
+  - its board and hint;
+  - the Grand Master theme (black and gold) and music (`master2`);
+  - the "GRAND MASTER" header and the five-burst celebration;
+  - the GRAND MASTER! stamp and card;
+  - the one-time 600-coin bonus. It is paid in the lab save, once; a replay pays no second bonus.
+- **Boundary:** after Lab 200, the Chapter 20 card (with no "UP NEXT", because the lab has no Level 201), then "END OF THIS TEST BUILD · LAB LEVELS 1–200 · MORE LEVELS COME LATER". Level 201 never starts in the lab. Production 201–300 and the Portal introduction are untouched.
+- **QA jumps:** `&experiencelab=2` … `&experiencelab=200`. Past 151, the Armor lesson and tip count as seen. Lab 176–200 have no lesson.
+- **Unchanged rules:** save isolation and save format.
+
+**Lab ↔ production differences (all levels 1–200):**
+- 1–100: the approved reflow and adaptations (earlier sections).
+- 102–105: the Switch ramp.
+- 131: the corrected hint.
+- 151–170: the Armor interleave.
+- 151: one adapted token.
+- Lessons at 13 / 101 / 121 / 151.
+- Lab-only spinner visuals and the 25 / 50 / 75 / 100 celebrations.
+
+Everything else, including 176–200, equals production.
+
+**Human-test priorities (from the audit):**
+- 176 (after Milestone 175);
+- 179 / 186 (chained blocks that turn spinners);
+- 180 (Chapter end);
+- 183 or 192 (estimate spikes that a habit solves);
+- 188 / 191 (two gates + Armor);
+- 189 / 190 (costly mistakes);
+- 194 / 197 (fatigue);
+- **200:** restarts, SHOW A MOVE use, and the feeling at the GRAND MASTER! stamp.
+
 ## QA
 
 | Check | Result |

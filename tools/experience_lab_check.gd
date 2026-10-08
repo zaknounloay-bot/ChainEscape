@@ -1,5 +1,5 @@
 extends Node
-## PLAYER EXPERIENCE LAB 1-175 checks (developer page ?experiencelab).
+## PLAYER EXPERIENCE LAB 1-200 checks (developer page ?experiencelab).
 ##   godot --headless --path . res://tools/ExperienceLabCheck.tscn
 ##
 ## Static:
@@ -20,20 +20,24 @@ extends Node
 ## - All 100 levels, sampled states: SHOW A MOVE legal and solvable; Hammer
 ##   safety exact.
 ## Game (real scene, lab active, isolated save):
-## - Each Level 1-175 loads its lab board, hearts from 6, SHOW A MOVE, Undo
+## - Each Level 1-200 loads its lab board, hearts from 6, SHOW A MOVE, Undo
 ##   exact, Restart exact, Hammer refuses unsafe smashes, clears by taps;
-##   Chapter cards at 10, 20 ... 170; Lab 100 goes on to Lab 101; NEXT goes
+##   Chapter cards at 10, 20 ... 200; Lab 100 goes on to Lab 101; NEXT goes
 ##   110 -> 111, 120 -> 121, 121 -> 122, 129 -> 130, 130 -> 131,
 ##   139 -> 140, 149 -> 150 -> 151 -> 152, 159 -> 160 -> 161,
-##   169 -> 170 -> 171, 174 -> 175; after 175 (a temporary lab boundary):
-##   the end-of-test-build screen, never Level 176; Level Select lists
-##   1-175 only.
+##   169 -> 170 -> 171, 174 -> 175 -> 176, 179 -> 180, 189 -> 190,
+##   199 -> 200; after 200 (a temporary lab boundary): the Chapter 20 card,
+##   then the end-of-test-build screen, never Level 201; Level Select lists
+##   1-200 only.
 ## - Switch ramp 102-105 on the full state graph (_switch_ramp).
-## - Lab 101 and 106-175 are production boards, unchanged; Lab 131 differs
+## - Lab 101 and 106-200 are production boards, unchanged; Lab 131 differs
 ##   only by its corrected hint; 151-170 are production 151-170 interleaved
 ##   (Armor from 151) and Lab 151 is production 161 with one adapted token
 ##   (_production_era). Armor lesson at Lab 151 (_armor_lesson); Chapter
 ##   card "NEW: Armored Blocks" before Chapter 16.
+## - Lab 200: production's Grand Master - board, theme, music, celebration,
+##   GRAND MASTER! card, the one-time 600-coin bonus (never on a replay)
+##   (_grand_master).
 ## - Lab 121 runs production's Chain Gate lesson unchanged (_gate_lesson);
 ##   Lab 125 is production behaviour with no lesson, hint, finger or extra
 ##   feedback: its gate counters only count down (_gate_125).
@@ -115,7 +119,8 @@ func _parsing() -> void:
 		["?v=123456&experiencelab=121", "", "121"], ["?experiencelab=125", "", "125"], ["?experiencelab=130", "", "130"], ["?experiencelab=131", "", "131"],
 		["?v=123456&experiencelab=140", "", "140"], ["?experiencelab=144", "", "144"], ["?experiencelab=150", "", "150"], ["?experiencelab=153", "", "153"],
 		["?experiencelab=156", "", "156"], ["?v=1&experiencelab=160", "", "160"], ["?experiencelab=161", "", "161"],
-		["?experiencelab=151", "", "151"], ["?experiencelab=170", "", "170"], ["?v=123456&experiencelab=175", "", "175"], ["?experiencelab=176", "", ""], ["?experiencelab=-5", "", ""], ["?experiencelab=13abc", "", ""],
+		["?experiencelab=151", "", "151"], ["?experiencelab=170", "", "170"], ["?v=123456&experiencelab=175", "", "175"], ["?experiencelab=176", "", "176"],
+		["?experiencelab=183", "", "183"], ["?v=123456&experiencelab=200", "", "200"], ["?experiencelab=201", "", ""], ["?experiencelab=300", "", ""], ["?experiencelab=-5", "", ""], ["?experiencelab=13abc", "", ""],
 		["?v=1&experiencelab=13&experiencelab=reset", "", "reset"],
 	]
 	for c in cases:
@@ -227,10 +232,15 @@ func _data() -> void:
 			var armor := lv.blocks.any(func(b): return b.armored)
 			var sw := lv.blocks.any(func(b): return b.is_switch() or b.is_gate())
 			_check(newer.is_empty() and lv.portals.is_empty() and armor != sw, "L%d is an Armor level or a Switch level (armor %s, switch/gate %s)" % [n, armor, sw])
-		else:
+		elif n <= 175:
 			# Lab 171-175: production Armor + Switch + Gate levels.
 			var newer := lv.blocks.filter(func(b): return b.is_crate() or b.seq_stage != 0)
 			_check(newer.is_empty() and lv.portals.is_empty() and lv.blocks.any(func(b): return b.armored), "L%d combines Armor with older mechanics, nothing newer" % n)
+		else:
+			# Lab 176-200: production Second Era expert levels - never a
+			# Third Era mechanic (Portal, Sequence, Movable).
+			var newer := lv.blocks.filter(func(b): return b.is_crate() or b.seq_stage != 0)
+			_check(newer.is_empty() and lv.portals.is_empty(), "L%d uses only Second Era mechanics" % n)
 		if lv.blocks.any(func(b): return b.armored) and not first.has("armor"):
 			first["armor"] = n
 	var want_first := {"spinner": 6, "hidden": 8, "lock": 13, "ccw": 31, "alt": 41, "pattern": 51, "armor": 151}
@@ -769,7 +779,7 @@ func _game() -> void:
 			game._after_chapter_card()
 			await _frames(3)
 			_check(game.current_level == 101 and not ExperienceLab.complete_open, "after Lab 100's card: NEXT goes on to Lab 101 (level %d)" % game.current_level)
-		if n in [110, 120, 121, 129, 130, 139, 149, 150, 151, 159, 160, 169, 170, 174]:
+		if n in [110, 120, 121, 129, 130, 139, 149, 150, 151, 159, 160, 169, 170, 174, 175, 179, 189, 199]:
 			# Natural progression through the Second Era (a Chapter card after 110 / 120).
 			_check(not game.last_result.get("is_last", false), "Lab %d is not the last lab level" % n)
 			game.next_level()
@@ -781,7 +791,7 @@ func _game() -> void:
 			_check(game.current_level == n + 1 and not ExperienceLab.complete_open, "Lab %d: NEXT goes on to Lab %d (level %d)" % [n, n + 1, game.current_level])
 		if n == ExperienceLab.LAST_LEVEL:
 			_check(game.last_result.get("is_last", false), "Lab %d is the last lab level (a temporary boundary)" % n)
-	# After 175: the end-of-test-build screen (175 is a Milestone, not a Chapter end), never 176.
+	# After 200: the Chapter 20 card, then the end-of-test-build screen, never 201.
 	game.next_level()
 	await _frames(3)
 	if game.ui.is_chapter_card_open():
@@ -809,6 +819,9 @@ func _game() -> void:
 	_check(_read_all("user://progress.cfg") == _prod_before, "the production save is byte-identical after the lab session")
 	_check(_read_all(OpeningLab.SAVE_PATH) == _olab_before, "the Opening Lab save is byte-identical after the lab session")
 	_check(FileAccess.file_exists(ExperienceLab.SAVE_PATH) and game.progress.highest_completed == ExperienceLab.LAST_LEVEL, "the lab's own save holds the progress (%d)" % game.progress.highest_completed)
+	# The Grand Master after the full run (its first clear is the run's own).
+	await _grand_master()
+	_check(_read_all("user://progress.cfg") == _prod_before, "the production save is still byte-identical after the Grand Master checks")
 
 
 ## The block the lesson finger / highlight is on (-1 = none).
@@ -919,7 +932,9 @@ func _production_era() -> void:
 			_check(LevelManager.to_json_text(lab) == LevelManager.to_json_text(prod) and lab.name == prod.name and lab.hint == prod.hint
 				and lab.hint_finger == prod.hint_finger and lab.mystery == prod.mystery, "Lab %d parses to production Level %d" % [n, src])
 	used.sort()
-	_check(used == range(151, 176), "production 151-175 each appear exactly once in Lab 151-175")
+	_check(used == range(151, ExperienceLab.LAST_LEVEL + 1), "production 151-%d each appear exactly once in Lab 151-%d" % [ExperienceLab.LAST_LEVEL, ExperienceLab.LAST_LEVEL])
+	for n in range(176, ExperienceLab.LAST_LEVEL + 1):
+		_check(ARMOR_ORDER.get(n, n) == n, "Lab %d is production %d (no reorder past 175)" % [n, n])
 	# Lab 151 (adapted 161): same shell, same first rammer; no losing first
 	# move; no fatal option anywhere on SHOW A MOVE's line.
 	var a := model_of(lab_level(151))
@@ -1040,6 +1055,40 @@ func _armor_lesson() -> void:
 	await _frames(2)
 	_check(game._lesson == "" and game.level.hint == "", "Lab 161 (Ice Vault): no Armor lesson or intro hint")
 	game.progress.tips_seen.erase("lesson_armor")
+
+
+## Lab 200: production's Grand Master, unchanged: board, theme, music,
+## celebration, card, and the one-time 600-coin bonus (paid once per save).
+func _grand_master() -> void:
+	_check(Chapters.is_master(200) and Chapters.celebration_tier(200) == "", "Lab 200 is production's Grand Master (no lab celebration on top)")
+	var t: Dictionary = Chapters.theme_for_level(200)
+	_check(t.get("name") == "Grand Master" and t.get("music") == "master2", "Lab 200 keeps the Grand Master theme and music (%s / %s)" % [t.get("name"), t.get("music")])
+	_check(int(Economy.config()["rewards"].get("master_clear_200", 0)) == 600, "the Grand Master bonus is 600 coins")
+	game.progress.achievements.erase("master_200")  # replay the first clear's bonus check
+	game.start_level(200, "test")
+	await _frames(3)
+	_check(game.level.name == "The Grand Master" and game.level.hint == "The Grand Master. Every rule of both eras." and game._lesson == "", "L200: production board and hint, no lesson")
+	_check(AudioManager.music_theme == "master2", "L200 plays the Grand Master music (%s)" % AudioManager.music_theme)
+	_check(game.ui._level_label.text == "GRAND MASTER", "L200 header reads GRAND MASTER ('%s')" % game.ui._level_label.text)
+	for pass_i in 2:
+		if pass_i == 1:
+			game.start_level(200, "test")
+			await _frames(3)
+		var coins_before: int = game.progress.coins
+		for id in Solver.from_model(game.model).solve():
+			game._on_block_tapped(id)
+			await _frames(1)
+		var t2 := 0
+		while not (game.completed and game.ui.is_complete_visible()) and t2 < 600:
+			await _frames(2)
+			t2 += 1
+		var gained: int = game.progress.coins - coins_before
+		var notes: String = str(game.last_result.get("coin_notes", ""))
+		_check(game.completed and game.last_result.get("master", false) and game.ui._card_title.text == "GRAND MASTER!", "L200 clear %d: Master result and GRAND MASTER! card ('%s')" % [pass_i + 1, game.ui._card_title.text])
+		if pass_i == 0:
+			_check(game.progress.achievements.has("master_200") and gained >= 600 and notes.contains("GRAND MASTER"), "L200 first clear pays the 600-coin Grand Master bonus once (+%d, '%s')" % [gained, notes])
+		else:
+			_check(gained < 600 and not notes.contains("GRAND MASTER"), "L200 replay: no second Grand Master bonus (+%d, '%s')" % [gained, notes])
 
 
 ## Lab 121: production's Chain Gate lesson, step by step.

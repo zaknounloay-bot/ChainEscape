@@ -1,5 +1,5 @@
 {
-	"_comment": "Player Experience Lab 1-175: source of every lab level (tools/experience_lab_build.py).",
+	"_comment": "Player Experience Lab 1-200: source of every lab level (tools/experience_lab_build.py).",
 	"levels": [
 		{
 			"level": 1,
@@ -1812,6 +1812,231 @@
 			"level": 175,
 			"name": "Shatter Point",
 			"source": "production P175",
+			"moved_from": null,
+			"edits": [],
+			"rename": null,
+			"hint": null
+		},
+		{
+			"level": 176,
+			"name": "Event Horizon",
+			"source": "production P176",
+			"moved_from": null,
+			"edits": [],
+			"rename": null,
+			"hint": null
+		},
+		{
+			"level": 177,
+			"name": "Frozen Relay",
+			"source": "production P177",
+			"moved_from": null,
+			"edits": [],
+			"rename": null,
+			"hint": null
+		},
+		{
+			"level": 178,
+			"name": "Crystal Heart",
+			"source": "production P178",
+			"moved_from": null,
+			"edits": [],
+			"rename": null,
+			"hint": null
+		},
+		{
+			"level": 179,
+			"name": "Deep Field",
+			"source": "production P179",
+			"moved_from": null,
+			"edits": [],
+			"rename": null,
+			"hint": null
+		},
+		{
+			"level": 180,
+			"name": "Pulsar",
+			"source": "production P180",
+			"moved_from": null,
+			"edits": [],
+			"rename": null,
+			"hint": null
+		},
+		{
+			"level": 181,
+			"name": "Elite Entry",
+			"source": "production P181",
+			"moved_from": null,
+			"edits": [],
+			"rename": null,
+			"hint": null
+		},
+		{
+			"level": 182,
+			"name": "Gold Standard",
+			"source": "production P182",
+			"moved_from": null,
+			"edits": [],
+			"rename": null,
+			"hint": null
+		},
+		{
+			"level": 183,
+			"name": "High Council",
+			"source": "production P183",
+			"moved_from": null,
+			"edits": [],
+			"rename": null,
+			"hint": null
+		},
+		{
+			"level": 184,
+			"name": "Grand Design",
+			"source": "production P184",
+			"moved_from": null,
+			"edits": [],
+			"rename": null,
+			"hint": null
+		},
+		{
+			"level": 185,
+			"name": "Crown Line",
+			"source": "production P185",
+			"moved_from": null,
+			"edits": [],
+			"rename": null,
+			"hint": null
+		},
+		{
+			"level": 186,
+			"name": "Masterwork",
+			"source": "production P186",
+			"moved_from": null,
+			"edits": [],
+			"rename": null,
+			"hint": null
+		},
+		{
+			"level": 187,
+			"name": "Apex",
+			"source": "production P187",
+			"moved_from": null,
+			"edits": [],
+			"rename": null,
+			"hint": null
+		},
+		{
+			"level": 188,
+			"name": "Summit Key",
+			"source": "production P188",
+			"moved_from": null,
+			"edits": [],
+			"rename": null,
+			"hint": null
+		},
+		{
+			"level": 189,
+			"name": "Champion",
+			"source": "production P189",
+			"moved_from": null,
+			"edits": [],
+			"rename": null,
+			"hint": null
+		},
+		{
+			"level": 190,
+			"name": "Laurel",
+			"source": "production P190",
+			"moved_from": null,
+			"edits": [],
+			"rename": null,
+			"hint": null
+		},
+		{
+			"level": 191,
+			"name": "Final Ascent",
+			"source": "production P191",
+			"moved_from": null,
+			"edits": [],
+			"rename": null,
+			"hint": null
+		},
+		{
+			"level": 192,
+			"name": "Sovereign",
+			"source": "production P192",
+			"moved_from": null,
+			"edits": [],
+			"rename": null,
+			"hint": null
+		},
+		{
+			"level": 193,
+			"name": "Last Light",
+			"source": "production P193",
+			"moved_from": null,
+			"edits": [],
+			"rename": null,
+			"hint": null
+		},
+		{
+			"level": 194,
+			"name": "Paragon",
+			"source": "production P194",
+			"moved_from": null,
+			"edits": [],
+			"rename": null,
+			"hint": null
+		},
+		{
+			"level": 195,
+			"name": "Zenith",
+			"source": "production P195",
+			"moved_from": null,
+			"edits": [],
+			"rename": null,
+			"hint": null
+		},
+		{
+			"level": 196,
+			"name": "Grandmaster Path",
+			"source": "production P196",
+			"moved_from": null,
+			"edits": [],
+			"rename": null,
+			"hint": null
+		},
+		{
+			"level": 197,
+			"name": "Pinnacle",
+			"source": "production P197",
+			"moved_from": null,
+			"edits": [],
+			"rename": null,
+			"hint": null
+		},
+		{
+			"level": 198,
+			"name": "Legacy",
+			"source": "production P198",
+			"moved_from": null,
+			"edits": [],
+			"rename": null,
+			"hint": null
+		},
+		{
+			"level": 199,
+			"name": "Eternal Chain",
+			"source": "production P199",
+			"moved_from": null,
+			"edits": [],
+			"rename": null,
+			"hint": null
+		},
+		{
+			"level": 200,
+			"name": "The Grand Master",
+			"source": "production P200",
 			"moved_from": null,
 			"edits": [],
 			"rename": null,

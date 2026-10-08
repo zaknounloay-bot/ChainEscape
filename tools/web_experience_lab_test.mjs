@@ -1,4 +1,4 @@
-// PLAYER EXPERIENCE LAB 1-175 (?experiencelab) in the exported game, real
+// PLAYER EXPERIENCE LAB 1-200 (?experiencelab) in the exported game, real
 // Chromium at iPhone size, real touch taps on title / NEXT / Chapter /
 // lab-complete buttons; levels are cleared with the game's debug
 // auto-solve (F1, then S).
@@ -8,17 +8,19 @@
 //
 // A: itch.io-style URL index.html?v=123456&experiencelab=reset with a real
 //    save (Level 150) and an Opening Lab save present: the lab starts as a
-//    new player at Lab 1 with 175 levels; Lab 1-3 play in order.
+//    new player at Lab 1 with 200 levels; Lab 1-3 play in order.
 // B: the plain URL index.html?experiencelab=reset works too; a look-alike
 //    parameter (?v=1&xexperiencelab=1) does not start the lab.
 // C: lab save standing on Lab 100: The Master clears, Chapter 10 card,
-//    then NEXT goes on to Lab 101 (no end screen). Standing on Lab 175 (a
-//    temporary lab boundary): the end-of-test-build screen (never Level
-//    176); its button opens Level Select. Spot checks:
+//    then NEXT goes on to Lab 101 (no end screen). Standing on Lab 200 (the
+//    Grand Master, a temporary lab boundary): GRAND MASTER! card, Chapter 20
+//    card, then the end-of-test-build screen (never Level 201); its button
+//    opens Level Select. Spot checks:
 //    Lab 13 / 16 / 20 / 31 / 41 / 51 names.
 // F: QA jump ?v=123456&experiencelab=N (13 25 31 41 50 51 75 100 101 102 104
 //    105 111 121 125 130 131 140 144 150 151 152 153 154 156 158 160 163 165
-//    167 169 170 175) and the plain
+//    167 169 170 175 176 180 181 183 188 189 190 192 196 198 199 200) and
+//    the plain
 //    ?experiencelab=13: Lab N opens
 //    directly (no title) in a temporary QA save; its lesson (13 lock, 101
 //    switch, 121 production's Chain Gate lesson) / intro hint (125: none;
@@ -30,7 +32,8 @@
 //    lesson starts), 121 -> 122, 129 -> 130, 130 -> 131, 139 -> 140,
 //    149 -> 150 -> 151 (Armor lesson; the card says NEW: Armored Blocks),
 //    151 -> 152, 159 -> 160 -> 161, 169 -> 170 -> 171, 174 -> 175 (real
-//    taps on NEXT / Chapter).
+//    taps on NEXT / Chapter), 175 -> 176, 179 -> 180, 189 -> 190,
+//    199 -> 200.
 // D: the real save and the Opening Lab save are byte-identical afterwards;
 //    without the parameter the real save opens at Level 150. No page errors.
 import http from 'node:http';
@@ -59,7 +62,7 @@ const server = http.createServer((req, res) => {
 const BASE = 'http://127.0.0.1:8775/index.html';
 const LAB = JSON.parse(fs.readFileSync(path.resolve('data/dev/experience_lab/manifest.json'), 'utf8')).levels;
 const NAME = (n) => LAB[n - 1].name;
-const LAST = LAB.length;  // 175: a temporary lab boundary
+const LAST = LAB.length;  // 200: a temporary lab boundary
 
 const W = 390, H = 844;
 const results = [];
@@ -169,8 +172,23 @@ try {
   await tapAt(page, s.title_continue);
   await waitFor(page, (x) => !x.title_open, 'closed');
   await sleep(1500);
-  s = await solveAndNext(page, LAST);
-  if (s.chapter_card_open) { await tapAt(page, s.chapter_continue); await sleep(900); }
+  // The Grand Master: solve, check its card, then NEXT.
+  await page.keyboard.press('F1'); await sleep(200);
+  await page.keyboard.press('s');
+  s = await waitFor(page, (x) => x.completed && x.level === LAST, `level ${LAST} completed`, 150000);
+  await sleep(700);
+  await page.screenshot({ path: path.join(shots, 'xlab_L200_celebration.png') });
+  s = await waitFor(page, (x) => x.card_open && x.level === LAST, `level ${LAST} cleared`, 150000);
+  await page.keyboard.press('F1');
+  await sleep(1200);
+  s = await state(page);
+  await page.screenshot({ path: path.join(shots, 'xlab_L200_card.png') });
+  check(s.card_title === 'GRAND MASTER!' && /GRAND MASTER/.test(s.coin_notes || ''), `C: Lab ${LAST} clears with the GRAND MASTER! card and its bonus ("${s.card_title}", "${s.coin_notes}")`);
+  await tapAt(page, s.next);
+  await sleep(900);
+  s = await state(page);
+  check(!!s.chapter_card_open, 'C: the Chapter 20 card follows the Grand Master');
+  if (s.chapter_card_open) { await page.screenshot({ path: path.join(shots, 'xlab_card_after_200.png') }); await tapAt(page, s.chapter_continue); await sleep(900); }
   s = await waitFor(page, (x) => x.lab_complete_open, 'lab boundary screen', 15000);
   await sleep(900);
   s = await state(page);
@@ -242,7 +260,7 @@ try {
   const xlabSave = await ls(page, 'chain_escape_experiencelab_save');
   const xlabLog = await ls(page, 'chain_escape_experiencelab_log');
   const HINT = (n) => JSON.parse(fs.readFileSync(path.resolve(`data/dev/experience_lab/level_${String(n).padStart(2, '0')}.json`), 'utf8')).hint || '';
-  for (const [n, q] of [[13, '?experiencelab=13'], [13, '?v=123456&experiencelab=13'], [25], [31], [41, '?v=123456&experiencelab=41'], [50], [51], [75], [100], [101], [102], [104], [105], [111], [121, '?v=123456&experiencelab=121'], [125, '?experiencelab=125'], [130], [131, '?experiencelab=131'], [140], [144], [150], [151, '?experiencelab=151'], [152], [153], [154], [156], [158], [160], [163], [165], [167], [169], [170], [175]]) {
+  for (const [n, q] of [[13, '?experiencelab=13'], [13, '?v=123456&experiencelab=13'], [25], [31], [41, '?v=123456&experiencelab=41'], [50], [51], [75], [100], [101], [102], [104], [105], [111], [121, '?v=123456&experiencelab=121'], [125, '?experiencelab=125'], [130], [131, '?experiencelab=131'], [140], [144], [150], [151, '?experiencelab=151'], [152], [153], [154], [156], [158], [160], [163], [165], [167], [169], [170], [175], [176], [180], [181], [183], [188], [189], [190], [192], [196], [198], [199], [200, '?experiencelab=200']]) {
     const url = q || `?v=123456&experiencelab=${n}`;
     await page.goto(BASE + url);
     s = await waitFor(page, (x) => x.experience_lab && x.level === n, `QA ${url}`);
@@ -281,7 +299,7 @@ try {
     }
   }
   // ===== G: natural progression 110 -> 111, 120 -> 121, 121 -> 122, 129 -> 130 =====
-  for (const n of [110, 120, 121, 129, 130, 139, 149, 150, 151, 159, 160, 169, 170, 174]) {
+  for (const n of [110, 120, 121, 129, 130, 139, 149, 150, 151, 159, 160, 169, 170, 174, 175, 179, 189, 199]) {
     await page.goto(BASE + `?v=123456&experiencelab=${n}`);
     s = await waitFor(page, (x) => x.experience_lab && x.level === n, `QA ${n} (progression)`);
     await sleep(1200);

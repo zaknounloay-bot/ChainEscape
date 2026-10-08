@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""PLAYER EXPERIENCE LAB 1-175: builds data/dev/experience_lab/ from its
+"""PLAYER EXPERIENCE LAB 1-200: builds data/dev/experience_lab/ from its
 sources (developer content, never production):
 
   * Levels 1-10: the human-approved Opening Lab (data/dev/opening_lab/).
@@ -7,7 +7,7 @@ sources (developer content, never production):
     order of docs/progression_reflow_11_25.md and the minimum-intervention map
     of docs/progression_audit_1_100.md, with the token adaptations, renames
     and the two new boards (16, 20) listed below.
-  * Levels 101-175: the Second Era. 101 and 106-175 are production boards
+  * Levels 101-200: the Second Era. 101 and 106-200 are production boards
     (111-120 Switch application, 121-130 Chain Gate, 131-150 Switch + Gate;
     131 keeps its board with a corrected hint). 151-170 interleave the
     production Switch levels 151-160 and Armor levels 161-170 so Armor
@@ -15,7 +15,7 @@ sources (developer content, never production):
     102-105 are the lab's Switch learning ramp (102, 103, 105 adapted
     production boards, 104 a new board "now or later").
 
-Writes level_01..level_175.json and manifest.json (source + edits of every
+Writes level_01..level_200.json and manifest.json (source + edits of every
 level). Every edit asserts the exact original token, so a changed source can
 never be adapted silently. Run from the repository root:
 
@@ -43,9 +43,9 @@ SOURCES.update({
     51: ("prod", 52), 52: ("prod", 51),
 })
 SOURCES.update({n: ("prod", n) for n in range(53, 101)})
-# Second era (temporary lab boundary at 175): 101 and 106-175 are production
+# Second era (temporary lab boundary at 200): 101 and 106-200 are production
 # boards; 104 is a new board.
-LAST = 175
+LAST = 200
 SOURCES.update({n: ("prod", n) for n in range(101, LAST + 1)})
 SOURCES[104] = ("new", "now_or_later")
 # Armor at 151 (docs/armor_151_progression_design_audit.md, section 5): the
@@ -239,7 +239,7 @@ def main():
                          "moved_from": src if kind == "prod" and src != n else None,
                          "edits": edits, "rename": rename, "hint": hint})
     with open(os.path.join(OUT, "manifest.json"), "w") as f:
-        json.dump({"_comment": "Player Experience Lab 1-175: source of every lab level (tools/experience_lab_build.py).",
+        json.dump({"_comment": "Player Experience Lab 1-200: source of every lab level (tools/experience_lab_build.py).",
                    "levels": manifest}, f, indent="\t", ensure_ascii=False)
         f.write("\n")
     extra = [p for p in os.listdir(OUT) if p.startswith("level_") and p not in {"level_%02d.json" % n for n in range(1, LAST + 1)}]
