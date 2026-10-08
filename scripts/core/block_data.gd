@@ -72,6 +72,10 @@ var armored: bool = false
 ## spinners turn, adjacent hidden arrows are revealed) and moves to stage 2.
 var seq_stage: int = 0
 var seq_next: int = -1
+## TWINS (Twins Prototype lab only, ?twinsprototype): two adjacent plain
+## arrows bonded together; both carry the same group letter. Tapping either
+## one releases both at once, or neither. "" = not a twin.
+var twin: String = ""
 
 const LINK_GROUPS := ["A", "B", "C", "D"]
 ## Switches use A / B, Chain Gates C / D (their own letters and colors, so a
@@ -168,4 +172,5 @@ func duplicate_data() -> BlockData:
 	b.armored = armored
 	b.seq_stage = seq_stage
 	b.seq_next = seq_next
+	b.twin = twin
 	return b

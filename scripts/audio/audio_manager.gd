@@ -14,7 +14,7 @@ const SOUND_IDS := ["escape", "invalid", "combo", "level_complete", "ui_tap", "u
 	"turn", "heart_lost", "hint", "try_again", "unlock", "reveal", "star", "perfect", "new_best",
 	"coin", "hammer", "chest", "master", "chapter", "silver", "gold", "chapter_complete",
 	# v0.6 Second Era
-	"switch", "gate", "crack", "milestone",
+	"switch", "gate", "crack", "milestone", "twins",
 	# Levels 201+
 	"portal"]
 const MUSIC_ID := "music"
@@ -330,6 +330,11 @@ func play_escape(chain: int) -> void:
 	play("escape", chain_pitch(chain), -4.0)
 
 
+## TWINS (prototype lab): a pair escaped together. Pitch follows the chain.
+func play_twins(chain: int) -> void:
+	play("twins", chain_pitch(chain), -3.0)
+
+
 func play_invalid() -> void:
 	play("invalid", 1.0, -6.0)
 
@@ -560,6 +565,10 @@ func _load_or_synthesize(id: String) -> AudioStream:
 		"portal":
 			# In, through, out: a soft low tone sweeping up into a bright ping.
 			return _synth_notes([[392.0, 0.0], [587.0, 0.06], [880.0, 0.13], [1319.0, 0.2]], 0.45, 9.0)
+		"twins":
+			# TWINS (prototype lab): two notes struck together (a fifth) -
+			# the pair leaves as one.
+			return _synth_notes([[784.0, 0.0], [1175.0, 0.0], [1568.0, 0.012]], 0.3, 15.0)
 		"milestone":
 			return _synth_notes([[587.0, 0.0], [740.0, 0.1], [880.0, 0.2], [1175.0, 0.32], [1480.0, 0.46], [1760.0, 0.62]], 1.5, 3.4)
 	return null

@@ -1,0 +1,15 @@
+{
+	"name": "Turnabout",
+	"hint": "A switch can reverse a twin - watch what else it turns",
+	"hint_finger": false,
+	"hearts": 3,
+	"hints": 2,
+	"map": [
+		".    B<   .    .    .    .",
+		".    .    R^   .    G>   .",
+		".    .    .    .    R^%A .",
+		".    .    Bv   B<&A B^&A!T B<!T",
+		".    .    .    Y^   Y<   .",
+		".    .    .    Y^   .    Y^"
+	]
+}

@@ -1,0 +1,15 @@
+{
+	"name": "Hold Fire",
+	"hint": "Twins turn a spinner beside them. Pick your moment.",
+	"hint_finger": false,
+	"hearts": 3,
+	"hints": 2,
+	"map": [
+		"Rv   .    .    B>   .    .",
+		".    Rv   .    .    .    .",
+		".    .    Yv@  R^   .    .",
+		".    .    P^   Rv@  .    G<",
+		".    .    P>!T P<!T B>   .",
+		".    .    Y>   .    .    ."
+	]
+}

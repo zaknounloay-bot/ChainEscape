@@ -60,11 +60,13 @@ var _rest_position := Vector2.ZERO
 var _pulse_tween: Tween
 @onready var _blocks_root := Node2D.new()
 @onready var _fx_root := Node2D.new()
+@onready var _bonds := TwinBonds.new()  # TWINS bond bars, drawn above the blocks
 @onready var _coords_layer := Node2D.new()  # debug labels, drawn above blocks
 
 
 func _ready() -> void:
 	add_child(_blocks_root)
+	add_child(_bonds)
 	add_child(_fx_root)
 	add_child(_coords_layer)
 	_coords_layer.draw.connect(_draw_coords)
@@ -86,6 +88,8 @@ func build(p_rows: int, p_columns: int, blocks: Array, animate: bool) -> void:
 	for v in _fx_root.get_children():
 		v.queue_free()
 	_views.clear()
+	_bonds.board = self
+	_bonds.pairs = []
 	for b in blocks:
 		var view := _create_view(b)
 		if animate:
@@ -498,10 +502,127 @@ func play_smash(id: int) -> void:
 ## Shows every view's padlock according to the model (no animation), and
 ## (v0.6) every Chain Gate's counter.
 func refresh_locks(model: BoardModel) -> void:
+	refresh_bonds(model)
 	for id in _views:
 		_views[id].set_locked(model.is_locked(id), false)
 		if _views[id].data.is_gate():
 			_views[id].gate_count = model.gate_remaining(_views[id].data.gate_group)
+
+
+## TWINS: one bond bar per bonded pair still on the board (a pair the Hammer
+## broke, or one that escaped, has none). Nothing on boards without twins.
+func refresh_bonds(model: BoardModel) -> void:
+	var pairs := []
+	for e in _bonds.pairs:
+		# A pair that has just escaped keeps its bar until it snaps.
+		var leaving: bool = e.get("leaving", false) or (_views.has(e["a"]) and _views.has(e["b"])
+				and not model.blocks.has(e["a"]) and not model.blocks.has(e["b"]))
+		if leaving:
+			pairs.append(e)
+	for id in model.blocks:
+		var p := model.twin_partner(id)
+		if p > id and _views.has(id) and _views.has(p):
+			pairs.append({"a": id, "b": p, "va": _views[id], "vb": _views[p], "glow": 0.0})
+	_bonds.board = self
+	_bonds.pairs = pairs
+	_bonds.queue_redraw()
+
+
+func bond_count() -> int:
+	return _bonds.pairs.filter(func(e): return not e.get("leaving", false)).size()
+
+
+## TWINS: the pair escape (~0.45 s). (1) Both blocks squash ("ready"),
+## (2) the bond glows, (3) it snaps with a small gold spark burst, (4) both
+## fly out together. The pair's spinners animate as for any escape.
+const TWIN_REACT := 0.10
+const TWIN_SNAP := 0.16
+func play_twin_escape(ids: Array, chain: int, turned: Array = []) -> void:
+	var bond := _bonds.find(ids[0], ids[1])
+	if bond.is_empty():
+		bond = {"a": ids[0], "b": ids[1], "va": _views.get(ids[0]), "vb": _views.get(ids[1]), "glow": 0.0}
+		_bonds.pairs.append(bond)
+	bond["leaving"] = true
+	var mid := Vector2.ZERO
+	var views := []
+	for id in ids:
+		var v: BlockView = _views.get(id)
+		if v == null:
+			continue
+		_views.erase(id)
+		v.hinted = false
+		views.append(v)
+		mid += v.home * 0.5
+	animate_turns(turned)
+	var gt := create_tween()
+	gt.tween_method(_set_glow.bind(bond), 0.0, 1.0, TWIN_SNAP)
+	gt.tween_callback(func():
+		_bonds.pairs.erase(bond)
+		_bonds.queue_redraw()
+		_burst(mid, Vector2.UP, TwinBonds.FILL, 12, 0.7, 180.0)
+		_burst(mid, Vector2.UP, Color.WHITE, 5, 0.5, 180.0))
+	var duration := clampf(0.28 - 0.012 * (chain - 1), 0.22, 0.28)
+	for v in views:
+		var dir := Direction.vector(v.data.direction)
+		v.position = v.home
+		var t: Tween = v._new_tween()
+		v.flash = 0.6
+		t.tween_property(v, "scale", Vector2(0.9, 0.9), TWIN_REACT * 0.5).set_trans(Tween.TRANS_SINE)
+		t.tween_property(v, "scale", Vector2(1.06, 1.06), TWIN_REACT * 0.5).set_trans(Tween.TRANS_SINE)
+		t.tween_interval(TWIN_SNAP - TWIN_REACT)
+		t.tween_callback(func():
+			var fly: Tween = v.play_escape(_offscreen_point(v.home, dir), duration)
+			fly.finished.connect(v.queue_free)
+			var ghost := EscapeGhost.new()
+			ghost.size = cell_size * BlockView.FACE_RATIO
+			ghost.color = Palette.face(v.data.color)
+			ghost.strength = 1.0 + 0.08 * mini(chain, 8)
+			ghost.position = v.home
+			_fx_root.add_child(ghost)
+			_burst(v.home, -dir, Palette.face(v.data.color), 5 + mini(chain, 8), 0.8 + 0.05 * mini(chain, 8), 70.0))
+	if chain >= 5:
+		_pulse(0.008 + 0.002 * mini(chain - 5, 5))
+
+
+func _set_glow(g: float, bond: Dictionary) -> void:
+	bond["glow"] = g
+	_bonds.queue_redraw()
+
+
+## TWINS: a tap that could not release the pair. Both twins wobble, the
+## bond flickers and the blocker of each blocked lane is ringed in red
+## (`blockers`: the blocking block ids, -1 = that lane is clear).
+func play_twin_blocked(ids: Array, blockers: Array) -> void:
+	for id in ids:
+		var v: BlockView = _views.get(id)
+		if v:
+			v.play_rattle()
+	var bond := _bonds.find(ids[0], ids[1])
+	if not bond.is_empty():
+		var t := create_tween()
+		for i in 2:
+			t.tween_method(_set_glow.bind(bond), 0.0, -1.0, 0.08)
+			t.tween_method(_set_glow.bind(bond), -1.0, 0.0, 0.1)
+	for i in blockers.size():
+		var bid: int = blockers[i]
+		if bid < 0:
+			continue
+		var bv: BlockView = _views.get(bid)
+		var src: BlockView = _views.get(ids[i]) if i < ids.size() else null
+		if bv == null:
+			continue
+		bv.play_rattle()
+		var ring := RewardRing.new()
+		ring.color = Color("#FF4D4D")
+		ring.max_radius = cell_size * 0.7
+		ring.position = bv.home
+		_fx_root.add_child(ring)
+		if src:
+			var lane := LaneFlash.new()
+			lane.from = src.home
+			lane.to = bv.home
+			lane.width = cell_size * 0.16
+			_fx_root.add_child(lane)
 
 
 ## v0.6: a switch escaped - its linked arrows reverse (one after another).
@@ -616,9 +737,9 @@ func show_points(at_local: Vector2, text: String, color: Color = Palette.ACCENT)
 
 
 ## Highlights one block as the hint (clears any previous highlight).
-func set_hint(id: int) -> void:
+func set_hint(id: int, also: int = -1) -> void:
 	for vid in _views:
-		_views[vid].hinted = (vid == id)
+		_views[vid].hinted = (vid == id) or (also >= 0 and vid == also)
 
 
 func clear_hint() -> void:
@@ -721,3 +842,80 @@ static func _make_dot_texture() -> Texture2D:
 	tex.width = 32
 	tex.height = 32
 	return tex
+
+
+## TWINS: the bond bars. A short cream bar with a gold rim across the gap
+## between the two faces (it never reaches the arrows, and it is nothing like
+## a Chain Gate slab). Follows the views, so it wobbles with them. `glow` > 0
+## brightens it (the pair escaping), < 0 tints it red (a blocked pair).
+class TwinBonds extends Node2D:
+	const FILL := Color("#F6E3B0")
+	const RIM := Color("#B8893A")
+	var board  # the Board (untyped: inner class)
+	var pairs: Array = []
+
+	func find(a: int, b: int) -> Dictionary:
+		for p in pairs:
+			if (p["a"] == a and p["b"] == b) or (p["a"] == b and p["b"] == a):
+				return p
+		return {}
+
+	func _process(_delta: float) -> void:
+		if not pairs.is_empty():
+			queue_redraw()
+
+	func _draw() -> void:
+		if board == null:
+			return
+		var cs: float = board.cell_size
+		for p in pairs:
+			var va = p["va"]
+			var vb = p["vb"]
+			if not is_instance_valid(va) or not is_instance_valid(vb):
+				continue
+			var a: Vector2 = va.position
+			var b: Vector2 = vb.position
+			var axis := (b - a).normalized()
+			var mid := (a + b) * 0.5
+			var half := cs * 0.17  # half length: spans the gap, overlaps each face edge
+			var thick := cs * 0.19
+			var g: float = p["glow"]
+			var fill := FILL
+			var rim := RIM
+			if g > 0.0:
+				fill = FILL.lerp(Color.WHITE, g)
+				rim = RIM.lerp(Color("#FFE680"), g)
+				thick *= 1.0 + 0.25 * g
+			elif g < 0.0:
+				fill = FILL.lerp(Color("#FF8A8A"), -g)
+			var p0 := mid - axis * half
+			var p1 := mid + axis * half
+			draw_line(p0, p1, Color(0, 0, 0, 0.22), thick + cs * 0.05, true)
+			draw_line(p0, p1, rim, thick + cs * 0.03, true)
+			draw_circle(p0, (thick + cs * 0.03) * 0.5, rim)
+			draw_circle(p1, (thick + cs * 0.03) * 0.5, rim)
+			draw_line(p0, p1, fill, thick, true)
+			draw_circle(p0, thick * 0.5, fill)
+			draw_circle(p1, thick * 0.5, fill)
+			# Two rivets: reads as a link, not a wall.
+			draw_circle(mid - axis * half * 0.45, thick * 0.17, rim)
+			draw_circle(mid + axis * half * 0.45, thick * 0.17, rim)
+
+
+## TWINS: a blocked lane, briefly highlighted in red (fades out).
+class LaneFlash extends Node2D:
+	var from: Vector2
+	var to: Vector2
+	var width: float = 10.0
+	var _t := 0.0
+
+	func _process(delta: float) -> void:
+		_t += delta
+		if _t > 0.6:
+			queue_free()
+			return
+		queue_redraw()
+
+	func _draw() -> void:
+		var a := 0.45 * (1.0 - _t / 0.6)
+		draw_line(from, to, Color(1.0, 0.3, 0.3, a), width, true)

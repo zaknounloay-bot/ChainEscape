@@ -108,9 +108,15 @@ func _ready() -> void:
 	# Developer pages (?experiencelab: candidate Levels 1-100; ?openinglab:
 	# candidate Levels 1-10), each with its own save; set before the save is
 	# loaded. Off unless asked for.
-	var xlab := ExperienceLab.requested()
-	var lab := OpeningLab.requested() if xlab == "" else ""
-	if xlab != "":
+	# ?twinsprototype=1..3: the three-level Twins Prototype (its own levels,
+	# temporary save and the Twins token); it excludes the other labs.
+	var twins := TwinsPrototype.requested()
+	var xlab := ExperienceLab.requested() if twins == "" else ""
+	var lab := OpeningLab.requested() if xlab == "" and twins == "" else ""
+	if twins != "":
+		TwinsPrototype.apply(twins)
+		level_manager.level_count = mini(level_manager.level_count, TwinsPrototype.LAST_LEVEL)
+	elif xlab != "":
 		ExperienceLab.apply(xlab)
 		level_manager.level_count = mini(level_manager.level_count, ExperienceLab.LAST_LEVEL)
 	elif lab != "":
@@ -118,7 +124,9 @@ func _ready() -> void:
 	progress = PlayerProgress.new().load_from_disk()
 	if ExperienceLab.qa_level > 0:
 		ExperienceLab.seed_qa(progress, level_manager)  # temporary QA save only
-	if not OpeningLab.active and not ExperienceLab.active:
+	if TwinsPrototype.active:
+		TwinsPrototype.seed_save(progress)  # its own temporary save only
+	if not OpeningLab.active and not ExperienceLab.active and not TwinsPrototype.active:
 		_take_web_transfer()
 	background = ChapterBackground.new()
 	add_child(background)
@@ -161,7 +169,7 @@ func _ready() -> void:
 	ui.set_coins(progress.coins, false)
 	# Real-app launch: show the title with CONTINUE - LEVEL X. (Music waits
 	# for the first tap on the web, see AudioManager.)
-	if not skip_title and not direct and ExperienceLab.qa_level == 0:
+	if not skip_title and not direct and ExperienceLab.qa_level == 0 and not TwinsPrototype.active:
 		_show_title()
 		_update_storage_notice()
 		_open_shared_challenge()
@@ -455,6 +463,7 @@ func start_level(number: int, via: String = "load") -> void:
 		_maybe_mechanic_intro()
 	debug_panel.set_current_level(number)
 	OpeningLab.event("start", number, {"via": via})
+	TwinsPrototype.event("start", {"level": number, "via": via})
 	ExperienceLab.event("start", number, {"via": via})
 	last_diag = Diagnostics.level_transition(number, current_chapter, via, get_tree(), {
 		"fx": board.fx_count(), "music": AudioManager.music_theme, "music_players": AudioManager.music_playing_count(),
@@ -487,6 +496,12 @@ func next_level() -> void:
 ## later; nothing says the game is over).
 func _go_next(via: String) -> void:
 	if current_level >= level_manager.level_count:
+		if TwinsPrototype.active and current_level == TwinsPrototype.LAST_LEVEL:
+			TwinsPrototype.show_complete(self, func():
+				open_level_select()
+				publish_state.call_deferred())
+			get_tree().create_timer(0.4).timeout.connect(publish_state)
+			return
 		if ExperienceLab.active and current_level == ExperienceLab.LAST_LEVEL:
 			# Developer page only: the lab ends at 100 (never Level 101).
 			ExperienceLab.show_complete(self, func():
@@ -524,6 +539,8 @@ func hints_allowed() -> int:
 func _on_block_tapped(id: int) -> void:
 	if completed or game_over or not model.blocks.has(id):
 		return
+	if TwinsPrototype.active:
+		publish_state.call_deferred()  # browser tests read every tap's result
 	if tutorial.is_showing():
 		tutorial.hide_hint()
 	if hammer_armed:
@@ -541,6 +558,7 @@ func _on_block_tapped(id: int) -> void:
 		"gate": _gate_tap(id)
 		"armored": _armored_tap(id)
 		"crate": _crate_tap(id)
+		"twin_wait": _twin_wait_tap(id)
 	# Free "explain" taps (gate, shell, hidden, locked) keep their message;
 	# the lesson moves on after real moves.
 	if _lesson != "" and not completed and not game_over and tap_state in ["ok", "ram", "blocked"]:
@@ -558,7 +576,13 @@ func _escape(id: int) -> void:
 	var at := board.get_view(id).home
 	var escaped: BlockData = model.blocks[id]
 	var via := _portal_via(id)
-	var turned := model.remove(id)
+	# TWINS (prototype lab only): the pair leaves as ONE move - one Undo
+	# step (the snapshot above), chain +1, one score event.
+	var pair := model.twin_partner(id) >= 0
+	var turned := model.remove_pair(id) if pair else model.remove(id)
+	var twin_ids := model.last_twin.duplicate() if pair else []
+	if pair:
+		at = (at + board.get_view(twin_ids[1]).home) * 0.5
 	var revealed := model.last_revealed.duplicate()
 	var unlocked := model.last_unlocked.duplicate()
 	if (_lesson == "switch" and not model.last_flipped.is_empty()) or (_lesson == "gate" and not model.last_opened_gates.is_empty()):
@@ -570,13 +594,21 @@ func _escape(id: int) -> void:
 	escape_points += points
 	_clear_hint()
 
-	board.play_escape(id, chain, turned, via)
+	if pair:
+		board.play_twin_escape(twin_ids, chain, turned)
+		board.refresh_bonds(model)
+	else:
+		board.play_escape(id, chain, turned, via)
 	board.show_points(at, "+%d" % points)
 	if not via.is_empty():
 		AudioManager.play_portal()
 	if escaped.is_reward():
 		_collect_reward(escaped, at)
-	AudioManager.play_escape(chain)
+	if pair:
+		AudioManager.play_twins(chain)
+		TwinsPrototype.event("pair_escape", {"ids": twin_ids, "chain": chain})
+	else:
+		AudioManager.play_escape(chain)
 	if not turned.is_empty():
 		AudioManager.play_turn()
 	if not revealed.is_empty():
@@ -615,6 +647,15 @@ func _escape(id: int) -> void:
 
 
 func _blocked(id: int) -> void:
+	var partner := model.twin_partner(id)
+	if partner >= 0:
+		# TWINS: the tapped twin's OWN lane is blocked - an ordinary blocked
+		# tap (one heart). Both twins wobble, the blocked lane(s) flash.
+		var tb := model.twin_blockers(id)
+		board.play_twin_blocked([id, partner], [tb["own"], tb["partner"]])
+		TwinsPrototype.event("twin_blocked", {"id": id})
+		_mistake()
+		return
 	var blocker := model.find_blocker(id)
 	var via := _portal_via(id)
 	board.play_bump(id, blocker.id if blocker else -1, via)
@@ -629,6 +670,23 @@ func _blocked(id: int) -> void:
 	if level.blocked_hint != "" and not _blocked_hint_shown:
 		_blocked_hint_shown = true
 		_show_message(level.blocked_hint, 2.6)
+
+
+## TWINS: the tapped twin's own lane is clear but its partner's is not. The
+## pair can't leave; that is not this twin's fault, so the tap is FREE (no
+## heart, the chain is kept): both wobble, the partner's blocked lane
+## flashes, and the rule is explained once per session.
+const TWIN_WAIT_TEXT := "Twins leave together - clear the other twin's path first"
+static var twin_wait_explained := false
+func _twin_wait_tap(id: int) -> void:
+	var partner := model.twin_partner(id)
+	var tb := model.twin_blockers(id)
+	board.play_twin_blocked([id, partner], [tb["own"], tb["partner"]])
+	AudioManager.play_invalid()
+	TwinsPrototype.event("twin_wait", {"id": id})
+	if not twin_wait_explained:
+		twin_wait_explained = true
+		_show_message(TWIN_WAIT_TEXT, 2.8)
 
 
 ## Tapping a locked block is a mistake like a blocked tap, but it also shows
@@ -864,6 +922,8 @@ func _on_board_cleared() -> void:
 		"hearts_left": hearts, "perfect": r["perfect"]})
 	ExperienceLab.event("clear", current_level, {"stars": r["stars"], "mistakes": mistakes, "undos": undos_used, "hints": hints_used,
 		"hearts_left": hearts, "perfect": r["perfect"]})
+	TwinsPrototype.event("clear", {"level": current_level, "stars": r["stars"], "mistakes": mistakes, "undos": undos_used,
+		"hints": hints_used, "hammers": hammers_used, "hearts_left": hearts})
 	var session := _session_id
 	# Let the last block leave the screen, then celebrate, then show the card.
 	await get_tree().create_timer(0.22).timeout
@@ -1032,7 +1092,7 @@ func request_hint() -> void:
 			progress.inventory["hint"] = owned - 1
 			progress.save()
 	hint_block = id
-	board.set_hint(id)
+	board.set_hint(id, model.twin_partner(id))
 	AudioManager.play_hint()
 	_refresh_buttons()
 
@@ -1108,6 +1168,9 @@ func _smash(id: int) -> void:
 	# Reward rule: a Hammer never collects a Silver/Gold reward (the block is
 	# not marked collected either, so it can still be earned by play later).
 	var smashed_reward: bool = model.blocks[id].is_reward() and not progress.has_reward_block(current_level, id)
+	# TWINS: the Hammer removes only the smashed twin; the bond breaks and
+	# the other twin plays on as an ordinary block.
+	var broke_bond := model.twin_partner(id) >= 0
 	var turned := model.remove(id)
 	var revealed := model.last_revealed.duplicate()
 	var unlocked := model.last_unlocked.duplicate()
@@ -1119,6 +1182,9 @@ func _smash(id: int) -> void:
 	Haptics.medium()
 	if smashed_reward:
 		_show_message("Smashed - Silver/Gold coins only pay when a block escapes", 2.8)
+	if broke_bond:
+		_show_message("Bond broken - the other twin is now a normal block", 2.6)
+		TwinsPrototype.event("bond_broken", {"id": id})
 	if not revealed.is_empty():
 		board.play_reveals(revealed)
 	if not unlocked.is_empty():
@@ -1448,6 +1514,12 @@ func publish_state() -> void:
 		"intro_mechanic": mechanic_intro.mechanic if mechanic_intro != null else "",
 		"intros_seen": progress.tips_seen.filter(func(t): return String(t).begins_with("intro_")),
 		"portals": board.portals.size(), "celebration": last_result.get("celebration", "") if completed else "",
+		"twins_prototype": TwinsPrototype.active, "twins_complete_open": TwinsPrototype.complete_open,
+		"tw_blocks": _twins_block_states(vis) if TwinsPrototype.active else [],
+		"tw_message": (tutorial._text if tutorial.visible else "") if TwinsPrototype.active else "",
+		"twins_complete_button": center.call(get_node("TwinsPrototypeComplete").find_children("*", "Button", true, false)[0]) if TwinsPrototype.complete_open and has_node("TwinsPrototypeComplete") else [], "bonds": board.bond_count(), "hearts": hearts, "chain": chain,
+		"undo_steps": history.size(), "undos_used": undos_used, "twin_msg": twin_wait_explained, "hint_block": hint_block,
+		"twin_ids": model.blocks.values().filter(func(b): return b.twin != "").map(func(b): return b.id) if model else [],
 		"opening_lab": OpeningLab.active, "experience_lab": ExperienceLab.active, "lab_qa_level": ExperienceLab.qa_level, "tip_text": (tutorial._text if tutorial.is_showing() else "") if ExperienceLab.active else "", "lab_complete_open": ExperienceLab.complete_open, "lesson": _lesson, "lesson_target": _lesson_target_pos(vis),
 		"lab_complete_button": center.call(get_node("ExperienceLabComplete").find_children("*", "Button", true, false)[0]) if ExperienceLab.complete_open and has_node("ExperienceLabComplete") else [],
 		"level_count": level_manager.level_count, "level_name": level.name if level else "", "max_hearts": max_hearts, "blocks_left": model.block_count(),
@@ -1471,6 +1543,18 @@ func publish_state() -> void:
 		"select_locked_first": (select_shown.get("locked", []) as Array).min() if not select_shown.get("locked", []).is_empty() else 0,
 	}
 	WebBridge.publish("chainEscapeState", st)
+
+
+## TWINS PROTOTYPE browser tests: every block's cell, screen position
+## (fraction of the viewport), tap state and bond letter.
+func _twins_block_states(vis: Vector2) -> Array:
+	var out := []
+	for id in model.blocks:
+		var b: BlockData = model.blocks[id]
+		var p := board.block_screen_position(id)
+		out.append({"id": id, "c": b.cell.x, "r": b.cell.y, "x": snappedf(p.x / vis.x, 0.0001), "y": snappedf(p.y / vis.y, 0.0001),
+			"st": model.move_state(id), "twin": b.twin, "partner": model.twin_partner(id)})
+	return out
 
 
 ## Text for the debug panel (tap the level title 5 times on a phone).

@@ -147,6 +147,10 @@ static var _token_re: RegEx
 static var dev_sequence: bool = false
 ## Movable: the same for the "M" token (the Movable lab and its dev tools).
 static var dev_movable: bool = false
+## Twins: the "!" suffix is parsed only in level files read while this is
+## true (the Twins Prototype lab, see TwinsPrototype). Never in Social /
+## Friend parsing (campaign = false) and never in the production campaign.
+static var dev_twins: bool = false
 ## True only while a campaign level is being parsed (parse_level).
 static var _campaign: bool = false
 const CRATE_COLOR := "crate"
@@ -154,7 +158,7 @@ const CRATE_COLOR := "crate"
 
 static func _parse_map(map: Array, level: LevelData) -> void:
 	if _token_re == null:
-		_token_re = RegEx.create_from_string("^([RBGYPrbgyp])([\\^v<>])(@[-~*]?)?(\\?)?(#[RBGYPrbgyp])?(\\$[SGD])?(%[ABCD])?(&[ABCD])?(\\+[ABCD])?(=)?(:[\\^v<>])?$")
+		_token_re = RegEx.create_from_string("^([RBGYPrbgyp])([\\^v<>])(@[-~*]?)?(\\?)?(#[RBGYPrbgyp])?(\\$[SGD])?(%[ABCD])?(&[ABCD])?(\\+[ABCD])?(=)?(:[\\^v<>])?(![TUVW])?$")
 	level.rows = map.size()
 	level.columns = 0
 	var next_id := 0
@@ -181,6 +185,8 @@ static func _parse_map(map: Array, level: LevelData) -> void:
 			var m := _token_re.search(t)
 			if m != null and m.get_string(11) != "" and not (dev_sequence or _campaign):
 				m = null  # a Sequence token outside the campaign / lab: unknown, as before
+			if m != null and m.get_string(12) != "" and not (dev_twins and _campaign):
+				m = null  # a Twins token outside the Twins Prototype level files: unknown
 			if m == null:
 				push_error("Level %d: bad map token '%s' at row %d col %d" % [level.number, t, r, c])
 				continue
@@ -202,11 +208,42 @@ static func _parse_map(map: Array, level: LevelData) -> void:
 			if m.get_string(11) != "":
 				b.seq_stage = 1
 				b.seq_next = Direction.MAP_CHARS[m.get_string(11).substr(1)]
+			b.twin = m.get_string(12).substr(1)
 			_validate_block(b, level)
 			level.blocks.append(b)
 			next_id += 1
 	_validate_links(level)
 	_validate_portals(level)
+	_validate_twins(level)
+
+
+## Twins: every group is exactly two orthogonally adjacent plain arrows
+## (no spinner, hidden, lock, switch, armor, reward or Sequence role; a
+## switch may still flip them and they may link a gate). Anything else is
+## reported and the bond is dropped, never guessed at.
+static func _validate_twins(level: LevelData) -> void:
+	var groups := {}
+	for b in level.blocks:
+		if b.twin == "":
+			continue
+		if b.is_spinner() or b.hidden or b.lock_color != "" or b.switch_group != "" or b.armored \
+				or b.is_reward() or b.seq_stage != 0 or b.kind != BlockData.Kind.NORMAL:
+			push_error("Level %d: twin at %s must be a plain arrow" % [level.number, b.cell])
+			b.twin = ""
+			continue
+		if not groups.has(b.twin):
+			groups[b.twin] = []
+		groups[b.twin].append(b)
+	for g in groups:
+		var pair: Array = groups[g]
+		var ok: bool = pair.size() == 2 and level.portals.is_empty()
+		if ok:
+			var d: Vector2i = pair[0].cell - pair[1].cell
+			ok = absi(d.x) + absi(d.y) == 1
+		if not ok:
+			push_error("Level %d: twins %s must be exactly two adjacent blocks" % [level.number, g])
+			for b in pair:
+				b.twin = ""
 
 
 ## Portal: a malformed layout (a group without exactly two cells,
@@ -350,7 +387,8 @@ static func to_json_text(level: LevelData) -> String:
 				+ ("$" + BlockData.RARITY_TOKENS[b.rarity] if b.is_reward() else "")
 				+ ("%" + b.switch_group if b.switch_group != "" else "") + ("&" + b.flip_link if b.flip_link != "" else "")
 				+ ("+" + b.gate_link if b.gate_link != "" else "") + ("=" if b.armored else "")
-				+ (":" + arrows[b.seq_next] if b.seq_stage == 1 else ""))
+				+ (":" + arrows[b.seq_next] if b.seq_stage == 1 else "")
+				+ ("!" + b.twin if b.twin != "" else ""))
 	var rows := []
 	for row in grid:
 		rows.append(" ".join(PackedStringArray(row)))

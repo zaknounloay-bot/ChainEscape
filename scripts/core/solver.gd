@@ -99,6 +99,10 @@ var _crate := PackedByteArray()
 var _crate_ids := PackedInt32Array()
 var _crate_n := 0
 var _push_stack: Array = []
+## Twins: per block the partner's id (-1 = not a twin, or its partner was
+## not on the board at construction - a bond the Hammer broke). Inside the
+## search both twins always leave together, so a pair is alive or gone.
+var _twin := PackedInt32Array()
 ## v0.8 analysis only: false = pushes are not legal moves (the Movable block
 ## is a fixed obstacle) - "can this level be won without pushing?".
 var allow_push := true
@@ -162,6 +166,17 @@ func _init(p_rows: int, p_columns: int, blocks: Array, portals: Dictionary = {})
 			_seq_stage[b.id] = b.seq_stage
 			_seq_next[b.id] = b.seq_next
 			_seq_first[b.id] = b.direction
+	var twins := {}
+	for b in blocks:
+		if b.twin != "":
+			if twins.has(b.twin):
+				if _twin.is_empty():
+					_twin.resize(n)
+					_twin.fill(-1)
+				_twin[b.id] = twins[b.twin]
+				_twin[twins[b.twin]] = b.id
+			else:
+				twins[b.twin] = b.id
 	for b in blocks:
 		_rule[b.id] = b.spin_rule
 		_step[b.id] = b.spin_step
@@ -696,7 +711,8 @@ func _dfs() -> bool:
 			if _alive[id] == 0:
 				continue
 			if _is_legal(id):
-				if _spinner_neighbours(id) == 0 and _switch[id] < 0 and (_shells == 0 or _turnable[id] == 0) and not _pending(id):
+				if _spinner_neighbours(id) == 0 and _switch[id] < 0 and (_shells == 0 or _turnable[id] == 0) and not _pending(id) \
+						and _partner(id) < 0:
 					_apply(id)
 					safe.append(id)
 					_path.append(id)
@@ -712,7 +728,7 @@ func _dfs() -> bool:
 	if not _failed.has(key):
 		# 2) Branch on moves that turn spinners or fire a switch.
 		for id in _alive.size():
-			if _alive[id] == 1 and _is_legal(id):
+			if _alive[id] == 1 and _is_legal(id) and not (_partner(id) >= 0 and _partner(id) < id):
 				_apply(id)
 				_path.append(id)
 				if _dfs():
@@ -773,11 +789,36 @@ func _is_risky(move: int) -> bool:
 		return true
 	if move & RAM:
 		return false
-	return _spinner_neighbours(move) > 0 or _switch[move] >= 0 or (_shells > 0 and _turnable[move] == 1) or _pending(move)
+	return _spinner_neighbours(move) > 0 or _switch[move] >= 0 or (_shells > 0 and _turnable[move] == 1) or _pending(move) \
+			or _partner(move) >= 0
 
 
 ## Can escape now: not a gate, not hidden, not locked, not armored, lane clear.
+## Twins: both twins can, each lane ignoring the partner's cell.
 func _is_legal(id: int) -> bool:
+	var p := _partner(id)
+	if p < 0:
+		return _is_legal_one(id)
+	_grid[_cell[p]] = -1
+	var own := _is_legal_one(id)
+	_grid[_cell[p]] = p
+	if not own:
+		return false
+	_grid[_cell[id]] = -1
+	var other := _is_legal_one(p)
+	_grid[_cell[id]] = id
+	return other
+
+
+## Twins: the live partner of `id`, or -1.
+func _partner(id: int) -> int:
+	if _twin.is_empty():
+		return -1
+	var p := _twin[id]
+	return p if p >= 0 and _alive[p] == 1 else -1
+
+
+func _is_legal_one(id: int) -> bool:
 	if _gate[id] == 1 or _armor[id] == 1:
 		return false
 	if _crate_n > 0 and _crate[id] == 1:
@@ -792,6 +833,8 @@ func _is_legal(id: int) -> bool:
 ## If `id` could be tapped and its lane runs straight into a shelled block,
 ## that block's id (a ram); else -1.
 func _ram_target(id: int) -> int:
+	if _partner(id) >= 0:
+		return -1  # twins never ram
 	if _gate[id] == 1 or _armor[id] == 1:
 		return -1
 	if _crate_n > 0 and _crate[id] == 1:
@@ -884,6 +927,13 @@ func _first_in_portal_lane(id: int) -> int:
 
 
 func _spinner_neighbours(id: int) -> int:
+	var p := _partner(id)
+	if p >= 0:
+		return _spinner_neighbours_one(id) + _spinner_neighbours_one(p)
+	return _spinner_neighbours_one(id)
+
+
+func _spinner_neighbours_one(id: int) -> int:
 	var idx := _cell[id]
 	var c := idx % columns
 	var r := idx / columns
@@ -924,7 +974,21 @@ func _undo_move(move: int) -> void:
 
 ## Removes `id`: turns adjacent spinners, fires its switch, and opens its
 ## Chain Gate if it was the last link. Returns the turned spinner ids.
+## Twins: the pair leaves as one move. Removing them one after the other is
+## the same event as BoardModel.remove_pair: no cell touches both twins
+## (each adjacent spinner turns once), twins are never switches or
+## spinners, and a gate opened by the first is never a spinner next to the
+## second.
 func _apply(id: int) -> Array:
+	var p := _partner(id)
+	if p < 0:
+		return _apply_one(id)
+	var turned := _apply_one(id)
+	turned.append_array(_apply_one(p))
+	return turned
+
+
+func _apply_one(id: int) -> Array:
 	if _pending(id):
 		return _advance(id)
 	var idx := _cell[id]
@@ -1004,6 +1068,8 @@ func _unadvance(id: int) -> void:
 ## onto an empty cell), or -1 (no crate first in the lane / no room).
 ## Same conditions as a ram for the tapped block itself.
 func _push_target(id: int) -> int:
+	if _partner(id) >= 0:
+		return -1  # twins never push
 	if _gate[id] == 1 or _armor[id] == 1 or _crate[id] == 1:
 		return -1
 	if _hidden[id] == 1 and _is_concealed(id):
@@ -1168,6 +1234,12 @@ func _rewind(path: Array[int]) -> void:
 ## and turns its spinner neighbours back. Must be called in reverse order
 ## of _apply, so the neighbours are exactly those turned.
 func _undo(id: int, _turned: Array = []) -> void:
+	if not _twin.is_empty() and _twin[id] >= 0 and _alive[id] == 0:
+		_undo_one(_twin[id])  # the pair left together: LIFO
+	_undo_one(id)
+
+
+func _undo_one(id: int) -> void:
 	if _alive[id] == 1 and not _seq_ids.is_empty() and _seq_stage[id] == 2:
 		_unadvance(id)  # the move was the advance (the block never left)
 		return

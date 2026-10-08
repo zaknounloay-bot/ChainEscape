@@ -1,0 +1,15 @@
+{
+	"name": "Twin Lights",
+	"hint": "New: TWINS leave together - both paths must be clear",
+	"hint_finger": false,
+	"hearts": 3,
+	"hints": 2,
+	"map": [
+		".    .    R>!U R<!U .    Gv",
+		".    .    .    .    .    .",
+		".    P>   .    .    Y^   .",
+		"G^   .    .    .    .    .",
+		".    B^!T B>!T .    Gv   .",
+		".    .    .    .    .    ."
+	]
+}

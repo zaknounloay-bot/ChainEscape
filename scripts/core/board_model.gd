@@ -144,6 +144,15 @@ func move_state(id: int) -> String:
 		return "locked"
 	if b.armored:
 		return "armored"
+	# Twins: both lanes must be clear (the partner's cell is not an obstacle,
+	# it leaves too). The tapped twin's own lane blocked = an ordinary blocked
+	# tap (twins never ram or push); its own lane clear but the partner's
+	# blocked = "twin_wait" (a free explanation tap).
+	var partner := twin_partner(id)
+	if partner >= 0:
+		if _straight_blocker(id, partner) != null:
+			return "blocked"
+		return "twin_wait" if _straight_blocker(partner, id) != null else "ok"
 	var blocker := find_blocker(id)
 	if blocker == null:
 		if not portals.is_empty() and lane(id)["loop"]:
@@ -156,6 +165,43 @@ func move_state(id: int) -> String:
 		# can move one cell, else an ordinary blocked tap.
 		return "push" if push_target(id)["cell"].x >= 0 else "blocked"
 	return "ram" if blocker.armored else "blocked"
+
+
+## Twins: the live partner of `id` (same group letter), or -1 (not a twin,
+## or the partner is gone - the Hammer broke the bond: an ordinary block).
+func twin_partner(id: int) -> int:
+	var b: BlockData = blocks.get(id)
+	if b == null or b.twin == "":
+		return -1
+	for other in blocks.values():
+		if other.twin == b.twin and other.id != id:
+			return other.id
+	return -1
+
+
+## The first block in `id`'s straight lane, skipping `ignore`'s cell (Twins
+## levels have no portals).
+func _straight_blocker(id: int, ignore: int) -> BlockData:
+	var b: BlockData = blocks[id]
+	var step := Direction.step(b.direction)
+	var cell := b.cell + step
+	while is_inside(cell):
+		var other := block_at(cell)
+		if other != null and other.id != ignore:
+			return other
+		cell += step
+	return null
+
+
+## Twins: the lane(s) that keep the pair from leaving, as
+## {"own": blocker id or -1, "partner": blocker id or -1}.
+func twin_blockers(id: int) -> Dictionary:
+	var partner := twin_partner(id)
+	if partner < 0:
+		return {"own": -1, "partner": -1}
+	var own := _straight_blocker(id, partner)
+	var other := _straight_blocker(partner, id)
+	return {"own": own.id if own else -1, "partner": other.id if other else -1}
 
 
 ## A tap that does something: an escape or a ram.
@@ -250,6 +296,57 @@ func remove(id: int) -> Array:
 				_occupancy.erase(g.cell)
 				blocks.erase(g.id)
 				_color_count[g.color] = _color_count.get(g.color, 1) - 1
+	return turned
+
+
+## Twins: `id` and its partner leave together as ONE move (caller checks
+## move_state == "ok"). Fixed order: (1) both leave the board, (2) the
+## neighbour event of both cells - every adjacent spinner turns once
+## (no cell touches both twins), adjacent hidden arrows are revealed,
+## (3) locks whose key color is gone open, (4) a Chain Gate whose last links
+## left opens (each twin is one link). Twins are never switches; a switch
+## may have reversed them earlier. Returns the spinners that turned;
+## last_twin = [id, partner]. Without a live partner this is remove(id).
+var last_twin: Array = []
+func remove_pair(id: int) -> Array:
+	var partner := twin_partner(id)
+	last_twin = []
+	if partner < 0:
+		return remove(id)
+	var pair: Array = [blocks[id], blocks[partner]]
+	last_twin = [id, partner]
+	var was_locked := []
+	for other in blocks.values():
+		if is_locked(other.id) and (other.lock_color == pair[0].color or other.lock_color == pair[1].color):
+			was_locked.append(other.id)
+	for b in pair:
+		_occupancy.erase(b.cell)
+		blocks.erase(b.id)
+		_color_count[b.color] = _color_count.get(b.color, 1) - 1
+	var turned := []
+	last_revealed = []
+	for b in pair:
+		for step in Direction.STEPS:
+			var n := block_at(b.cell + step)
+			if n == null:
+				continue
+			if n.is_spinner() and not turned.has(n.id):
+				n.apply_turn()
+				turned.append(n.id)
+			if n.hidden:
+				n.hidden = false
+				last_revealed.append(n.id)
+	last_unlocked = was_locked.filter(func(x): return not is_locked(x))
+	last_flipped = []
+	last_opened_gates = []
+	for b in pair:
+		if b.gate_link != "" and gate_remaining(b.gate_link) == 0:
+			for g in blocks.values().duplicate():
+				if g.is_gate() and g.gate_group == b.gate_link:
+					last_opened_gates.append({"id": g.id, "cell": g.cell, "group": g.gate_group})
+					_occupancy.erase(g.cell)
+					blocks.erase(g.id)
+					_color_count[g.color] = _color_count.get(g.color, 1) - 1
 	return turned
 
 
@@ -348,6 +445,12 @@ func turns_spinners(id: int) -> bool:
 		var n := block_at(b.cell + step)
 		if n != null and n.is_spinner():
 			return true
+	var partner := twin_partner(id)
+	if partner >= 0:
+		for step in Direction.STEPS:
+			var n := block_at(blocks[partner].cell + step)
+			if n != null and n.is_spinner():
+				return true
 	return false
 
 
