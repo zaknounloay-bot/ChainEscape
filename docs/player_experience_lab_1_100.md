@@ -501,6 +501,26 @@ The lab now runs to **Lab 130**. This is test infrastructure only: Levels 111–
 - **QA jumps:** `&experiencelab=2` … `&experiencelab=130`. A jump past 121 counts the Gate lesson and the Gate tip as seen, as for a real player.
 - **Watch (from the 111–130 audit, no change):** 125's silent first countdown; deep dead ends in 112 and 127; repetition of "fire the switch last" in 117–118.
 
+## Production Levels 131–160 (lab 1–160)
+
+The lab now runs to **Lab 160**: production Levels 131–160 with their puzzles unchanged, for human testing of Chapters 14–16 (audit: `docs/player_experience_audit_131_160.md`).
+
+- **Boards:** Lab 131–160 equal production in every JSON field and map token.
+- **The one lab-only change is the Lab 131 hint.**
+  - **Before:** "Switches can be gate links too."
+  - **After:** "A switch turns the spinners beside it, too."
+  - **Why:** no block in Levels 1–300 is both a switch and a gate link, so the old hint was false. On this board, the switch's escape turns the CCW spinner beside it, which is an existing rule.
+  - It reveals neither the timing nor the target.
+  - There is still no finger and no lesson.
+  - Production 131 keeps its old hint.
+- **Unchanged:**
+  - 150 keeps production's milestone; the lab's celebrations stay at 25/50/75/100;
+  - the Gate lesson stays at 121;
+  - no lesson is added in 131–160;
+  - Level 161 (Armored) is not loaded.
+- **Boundary:** NEXT after Lab 160 shows "END OF THIS TEST BUILD · LAB LEVELS 1–160 · MORE LEVELS COME LATER".
+- **QA jumps:** `&experiencelab=2` … `&experiencelab=160`.
+
 ## QA
 
 | Check | Result |

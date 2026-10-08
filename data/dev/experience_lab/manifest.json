@@ -1,5 +1,5 @@
 {
-	"_comment": "Player Experience Lab 1-130: source of every lab level (tools/experience_lab_build.py).",
+	"_comment": "Player Experience Lab 1-160: source of every lab level (tools/experience_lab_build.py).",
 	"levels": [
 		{
 			"level": 1,
@@ -1393,6 +1393,280 @@
 			"level": 130,
 			"name": "Foundry",
 			"source": "production P130",
+			"moved_from": null,
+			"edits": [],
+			"rename": null,
+			"hint": null
+		},
+		{
+			"level": 131,
+			"name": "Piston",
+			"source": "production P131",
+			"moved_from": null,
+			"edits": [],
+			"rename": null,
+			"hint": {
+				"from": "Switches can be gate links too.",
+				"to": "A switch turns the spinners beside it, too.",
+				"why": "no block in 1-300 is both a switch and a gate link; on this board the switch's escape turns its neighbour spinner (an existing rule, nothing new)"
+			}
+		},
+		{
+			"level": 132,
+			"name": "Gear Train",
+			"source": "production P132",
+			"moved_from": null,
+			"edits": [],
+			"rename": null,
+			"hint": null
+		},
+		{
+			"level": 133,
+			"name": "Pressure Plate",
+			"source": "production P133",
+			"moved_from": null,
+			"edits": [],
+			"rename": null,
+			"hint": null
+		},
+		{
+			"level": 134,
+			"name": "Conveyor",
+			"source": "production P134",
+			"moved_from": null,
+			"edits": [],
+			"rename": null,
+			"hint": null
+		},
+		{
+			"level": 135,
+			"name": "Bolt Cutter",
+			"source": "production P135",
+			"moved_from": null,
+			"edits": [],
+			"rename": null,
+			"hint": null
+		},
+		{
+			"level": 136,
+			"name": "Crank Shaft",
+			"source": "production P136",
+			"moved_from": null,
+			"edits": [],
+			"rename": null,
+			"hint": null
+		},
+		{
+			"level": 137,
+			"name": "Flywheel",
+			"source": "production P137",
+			"moved_from": null,
+			"edits": [],
+			"rename": null,
+			"hint": null
+		},
+		{
+			"level": 138,
+			"name": "Turnstile",
+			"source": "production P138",
+			"moved_from": null,
+			"edits": [],
+			"rename": null,
+			"hint": null
+		},
+		{
+			"level": 139,
+			"name": "Forge Gate",
+			"source": "production P139",
+			"moved_from": null,
+			"edits": [],
+			"rename": null,
+			"hint": null
+		},
+		{
+			"level": 140,
+			"name": "Assembly",
+			"source": "production P140",
+			"moved_from": null,
+			"edits": [],
+			"rename": null,
+			"hint": null
+		},
+		{
+			"level": 141,
+			"name": "Charge",
+			"source": "production P141",
+			"moved_from": null,
+			"edits": [],
+			"rename": null,
+			"hint": null
+		},
+		{
+			"level": 142,
+			"name": "Arc Line",
+			"source": "production P142",
+			"moved_from": null,
+			"edits": [],
+			"rename": null,
+			"hint": null
+		},
+		{
+			"level": 143,
+			"name": "Ion Field",
+			"source": "production P143",
+			"moved_from": null,
+			"edits": [],
+			"rename": null,
+			"hint": null
+		},
+		{
+			"level": 144,
+			"name": "Surge",
+			"source": "production P144",
+			"moved_from": null,
+			"edits": [],
+			"rename": null,
+			"hint": null
+		},
+		{
+			"level": 145,
+			"name": "Pulse Grid",
+			"source": "production P145",
+			"moved_from": null,
+			"edits": [],
+			"rename": null,
+			"hint": null
+		},
+		{
+			"level": 146,
+			"name": "Static",
+			"source": "production P146",
+			"moved_from": null,
+			"edits": [],
+			"rename": null,
+			"hint": null
+		},
+		{
+			"level": 147,
+			"name": "Current Knot",
+			"source": "production P147",
+			"moved_from": null,
+			"edits": [],
+			"rename": null,
+			"hint": null
+		},
+		{
+			"level": 148,
+			"name": "Overload",
+			"source": "production P148",
+			"moved_from": null,
+			"edits": [],
+			"rename": null,
+			"hint": null
+		},
+		{
+			"level": 149,
+			"name": "Capacitor",
+			"source": "production P149",
+			"moved_from": null,
+			"edits": [],
+			"rename": null,
+			"hint": null
+		},
+		{
+			"level": 150,
+			"name": "Halfway Deep",
+			"source": "production P150",
+			"moved_from": null,
+			"edits": [],
+			"rename": null,
+			"hint": null
+		},
+		{
+			"level": 151,
+			"name": "Plasma Veil",
+			"source": "production P151",
+			"moved_from": null,
+			"edits": [],
+			"rename": null,
+			"hint": null
+		},
+		{
+			"level": 152,
+			"name": "Flux",
+			"source": "production P152",
+			"moved_from": null,
+			"edits": [],
+			"rename": null,
+			"hint": null
+		},
+		{
+			"level": 153,
+			"name": "Coil",
+			"source": "production P153",
+			"moved_from": null,
+			"edits": [],
+			"rename": null,
+			"hint": null
+		},
+		{
+			"level": 154,
+			"name": "Spark Gap",
+			"source": "production P154",
+			"moved_from": null,
+			"edits": [],
+			"rename": null,
+			"hint": null
+		},
+		{
+			"level": 155,
+			"name": "Resonance",
+			"source": "production P155",
+			"moved_from": null,
+			"edits": [],
+			"rename": null,
+			"hint": null
+		},
+		{
+			"level": 156,
+			"name": "Live Wire",
+			"source": "production P156",
+			"moved_from": null,
+			"edits": [],
+			"rename": null,
+			"hint": null
+		},
+		{
+			"level": 157,
+			"name": "Discharge",
+			"source": "production P157",
+			"moved_from": null,
+			"edits": [],
+			"rename": null,
+			"hint": null
+		},
+		{
+			"level": 158,
+			"name": "Field Lines",
+			"source": "production P158",
+			"moved_from": null,
+			"edits": [],
+			"rename": null,
+			"hint": null
+		},
+		{
+			"level": 159,
+			"name": "Ionic Drift",
+			"source": "production P159",
+			"moved_from": null,
+			"edits": [],
+			"rename": null,
+			"hint": null
+		},
+		{
+			"level": 160,
+			"name": "Plasma Core",
+			"source": "production P160",
 			"moved_from": null,
 			"edits": [],
 			"rename": null,

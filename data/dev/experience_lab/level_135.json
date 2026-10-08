@@ -1,0 +1,11 @@
+{
+	"name": "Bolt Cutter",
+	"map": [
+		".      G>     P>     .      R>     Bv",
+		"B^     .      .      Yv@-#P .      Pv",
+		".      .      .      .      .      .",
+		".      B^     R<&A   .      R^#B   .",
+		"B^+C   .      P>@    Bv%A   Rv&A   XC",
+		".      Y^     B<@    .      P<     ."
+	]
+}

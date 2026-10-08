@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""PLAYER EXPERIENCE LAB 1-130: builds data/dev/experience_lab/ from its
+"""PLAYER EXPERIENCE LAB 1-160: builds data/dev/experience_lab/ from its
 sources (developer content, never production):
 
   * Levels 1-10: the human-approved Opening Lab (data/dev/opening_lab/).
@@ -7,12 +7,13 @@ sources (developer content, never production):
     order of docs/progression_reflow_11_25.md and the minimum-intervention map
     of docs/progression_audit_1_100.md, with the token adaptations, renames
     and the two new boards (16, 20) listed below.
-  * Levels 101-130: the Second Era. 101 and 106-130 are the production
-    boards, unchanged (111-120 Switch application, 121-130 Chain Gate);
+  * Levels 101-160: the Second Era. 101 and 106-160 are the production
+    boards, unchanged (111-120 Switch application, 121-130 Chain Gate,
+    131-160 Switch + Gate; 131 keeps its board with a corrected hint);
     102-105 are the lab's Switch learning ramp (102, 103, 105 adapted
     production boards, 104 a new board "now or later").
 
-Writes level_01..level_130.json and manifest.json (source + edits of every
+Writes level_01..level_160.json and manifest.json (source + edits of every
 level). Every edit asserts the exact original token, so a changed source can
 never be adapted silently. Run from the repository root:
 
@@ -40,9 +41,9 @@ SOURCES.update({
     51: ("prod", 52), 52: ("prod", 51),
 })
 SOURCES.update({n: ("prod", n) for n in range(53, 101)})
-# Second era (temporary lab boundary at 130): 101 and 106-130 are the
+# Second era (temporary lab boundary at 160): 101 and 106-160 are the
 # production boards, unchanged; 104 is a new board.
-LAST = 130
+LAST = 160
 SOURCES.update({n: ("prod", n) for n in range(101, LAST + 1)})
 SOURCES[104] = ("new", "now_or_later")
 
@@ -85,6 +86,9 @@ RENAMES = {
 # (key) colour. The guided lock lesson teaches it on the board; this line
 # is the reminder on replays.
 HINTS = {
+    131: ("Switches can be gate links too.",
+          "A switch turns the spinners beside it, too.",
+          "no block in 1-300 is both a switch and a gate link; on this board the switch's escape turns its neighbour spinner (an existing rule, nothing new)"),
     105: (None,
           "Each switch turns only its own mark",
           "two independent groups (A and B) are new here; one short line, no finger"),
@@ -217,7 +221,7 @@ def main():
                          "moved_from": src if kind == "prod" and src != n else None,
                          "edits": edits, "rename": rename, "hint": hint})
     with open(os.path.join(OUT, "manifest.json"), "w") as f:
-        json.dump({"_comment": "Player Experience Lab 1-130: source of every lab level (tools/experience_lab_build.py).",
+        json.dump({"_comment": "Player Experience Lab 1-160: source of every lab level (tools/experience_lab_build.py).",
                    "levels": manifest}, f, indent="\t", ensure_ascii=False)
         f.write("\n")
     extra = [p for p in os.listdir(OUT) if p.startswith("level_") and p not in {"level_%02d.json" % n for n in range(1, LAST + 1)}]

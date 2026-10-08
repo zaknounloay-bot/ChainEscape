@@ -1,0 +1,11 @@
+{
+	"name": "Conveyor",
+	"map": [
+		".      R<%A   G<$S   .      .      .",
+		"Rv     Y<$G&A Pv@    G<     .      XC",
+		".      .      B^#R   B^     .      .",
+		"R>     P>     Y<@    Bv     .      Y^",
+		"G^@    .      B>     G>     .      Y^",
+		"G^@    .      Pv+C   .      .      ."
+	]
+}

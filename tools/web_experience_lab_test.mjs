@@ -1,4 +1,4 @@
-// PLAYER EXPERIENCE LAB 1-130 (?experiencelab) in the exported game, real
+// PLAYER EXPERIENCE LAB 1-160 (?experiencelab) in the exported game, real
 // Chromium at iPhone size, real touch taps on title / NEXT / Chapter /
 // lab-complete buttons; levels are cleared with the game's debug
 // auto-solve (F1, then S).
@@ -8,23 +8,26 @@
 //
 // A: itch.io-style URL index.html?v=123456&experiencelab=reset with a real
 //    save (Level 150) and an Opening Lab save present: the lab starts as a
-//    new player at Lab 1 with 130 levels; Lab 1-3 play in order.
+//    new player at Lab 1 with 160 levels; Lab 1-3 play in order.
 // B: the plain URL index.html?experiencelab=reset works too; a look-alike
 //    parameter (?v=1&xexperiencelab=1) does not start the lab.
 // C: lab save standing on Lab 100: The Master clears, Chapter 10 card,
-//    then NEXT goes on to Lab 101 (no end screen). Standing on Lab 130 (a
-//    temporary lab boundary): Chapter 13 card, then the end-of-test-build
-//    screen (never Level 131); its button opens Level Select. Spot checks:
+//    then NEXT goes on to Lab 101 (no end screen). Standing on Lab 160 (a
+//    temporary lab boundary): Chapter 16 card, then the end-of-test-build
+//    screen (never Level 161); its button opens Level Select. Spot checks:
 //    Lab 13 / 16 / 20 / 31 / 41 / 51 names.
 // F: QA jump ?v=123456&experiencelab=N (13 25 31 41 50 51 75 100 101 102 104
-//    105 111 121 125 130) and the plain ?experiencelab=13: Lab N opens
+//    105 111 121 125 130 131 140 144 150 153 156 160) and the plain
+//    ?experiencelab=13: Lab N opens
 //    directly (no title) in a temporary QA save; its lesson (13 lock, 101
-//    switch, 121 production's Chain Gate lesson) / intro hint (125: none)
+//    switch, 121 production's Chain Gate lesson) / intro hint (125: none;
+//    131: the lab's corrected hint)
 //    shows; no milestone just by opening; clearing 25/50/75/100 shows the
 //    milestone (100: card, Chapter 10, then Lab 101). The normal lab save
 //    and log are unchanged and ?experiencelab=1 still continues the normal lab.
 // G: natural progression from QA jumps: 110 -> 111, 120 -> 121 (the Gate
-//    lesson starts), 121 -> 122, 129 -> 130 (real taps on NEXT / Chapter).
+//    lesson starts), 121 -> 122, 129 -> 130, 130 -> 131, 139 -> 140,
+//    149 -> 150, 159 -> 160 (real taps on NEXT / Chapter).
 // D: the real save and the Opening Lab save are byte-identical afterwards;
 //    without the parameter the real save opens at Level 150. No page errors.
 import http from 'node:http';
@@ -53,7 +56,7 @@ const server = http.createServer((req, res) => {
 const BASE = 'http://127.0.0.1:8775/index.html';
 const LAB = JSON.parse(fs.readFileSync(path.resolve('data/dev/experience_lab/manifest.json'), 'utf8')).levels;
 const NAME = (n) => LAB[n - 1].name;
-const LAST = LAB.length;  // 130: a temporary lab boundary
+const LAST = LAB.length;  // 160: a temporary lab boundary
 
 const W = 390, H = 844;
 const results = [];
@@ -236,7 +239,7 @@ try {
   const xlabSave = await ls(page, 'chain_escape_experiencelab_save');
   const xlabLog = await ls(page, 'chain_escape_experiencelab_log');
   const HINT = (n) => JSON.parse(fs.readFileSync(path.resolve(`data/dev/experience_lab/level_${String(n).padStart(2, '0')}.json`), 'utf8')).hint || '';
-  for (const [n, q] of [[13, '?experiencelab=13'], [13, '?v=123456&experiencelab=13'], [25], [31], [41, '?v=123456&experiencelab=41'], [50], [51], [75], [100], [101], [102], [104], [105], [111], [121, '?v=123456&experiencelab=121'], [125, '?experiencelab=125'], [130]]) {
+  for (const [n, q] of [[13, '?experiencelab=13'], [13, '?v=123456&experiencelab=13'], [25], [31], [41, '?v=123456&experiencelab=41'], [50], [51], [75], [100], [101], [102], [104], [105], [111], [121, '?v=123456&experiencelab=121'], [125, '?experiencelab=125'], [130], [131, '?experiencelab=131'], [140], [144], [150], [153], [156], [160]]) {
     const url = q || `?v=123456&experiencelab=${n}`;
     await page.goto(BASE + url);
     s = await waitFor(page, (x) => x.experience_lab && x.level === n, `QA ${url}`);
@@ -248,6 +251,7 @@ try {
     else if (n === 101) check(s.lesson === 'switch' && /SWITCH/.test(s.tip_text), `F: ${url} production's Switch lesson ("${s.tip_text}")`);
     else if (n === 121) check(s.lesson === 'gate' && s.tip_text === 'GATE C opens when every block chained C escapes (1 left)', `F: ${url} production's Chain Gate lesson ("${s.tip_text}")`);
     else if (n === 125) check(s.lesson === '' && !s.tip_text, `F: ${url} Lab 125 starts as production: no lesson, no hint ("${s.tip_text}")`);
+    else if (n === 131) check(s.lesson === '' && s.tip_text === 'A switch turns the spinners beside it, too.', `F: ${url} Lab 131 shows the corrected hint, no lesson ("${s.tip_text}")`);
     else if (HINT(n)) check(s.tip_text === HINT(n), `F: ${url} Lab ${n} intro hint shows ("${s.tip_text}")`);
     check(!s.card_open && !(s.major_rect && s.major_rect[2] > 0), `F: ${url} no milestone just by opening`);
     if (q && n === 13) await page.screenshot({ path: path.join(shots, 'xlab_qa_L13.png') });
@@ -272,7 +276,7 @@ try {
     }
   }
   // ===== G: natural progression 110 -> 111, 120 -> 121, 121 -> 122, 129 -> 130 =====
-  for (const n of [110, 120, 121, 129]) {
+  for (const n of [110, 120, 121, 129, 130, 139, 149, 159]) {
     await page.goto(BASE + `?v=123456&experiencelab=${n}`);
     s = await waitFor(page, (x) => x.experience_lab && x.level === n, `QA ${n} (progression)`);
     await sleep(1200);
