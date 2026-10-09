@@ -533,11 +533,11 @@ func _draw_mystery(c: CanvasItem, face_rect: Rect2, size: float) -> void:
 	c.draw_string(font, face_rect.get_center() + Vector2(-w * 0.5, fs * 0.36), "?", HORIZONTAL_ALIGNMENT_LEFT, -1, fs, col)
 
 
-## Experience Lab only (developer page): Alternating and Pattern spinners
-## use the approved rule symbols instead of the ring + dot strip. CW / CCW
-## spinners and every production level keep the drawing above.
+## Alternating and Pattern spinners use the approved rule symbols (approved
+## in the Experience Lab; the game's look since the 1-300 freeze) instead of
+## the ring + dot strip. CW / CCW spinners keep the drawing above.
 func _lab_rule_visuals() -> bool:
-	return ExperienceLab.active and data != null and data.is_spinner() and data.spin_rule >= BlockData.SpinRule.ALT
+	return data != null and data.is_spinner() and data.spin_rule >= BlockData.SpinRule.ALT
 
 
 ## ALT: two-way ring - the left half (head clockwise) and the right half

@@ -1,0 +1,11 @@
+{
+	"name": "Backspin",
+	"map": [
+		".      Pv     P<     .      B>@-   B<@#R",
+		".      Gv     P>@    .      .      Y<",
+		".      .      Bv     B^     G^@    B^#G",
+		"Rv     Y>     Gv     .      .      .",
+		"Rv     P<     P>@    .      G^     Y^",
+		".      .      .      .      P^     ."
+	]
+}

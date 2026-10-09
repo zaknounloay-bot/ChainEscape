@@ -1,12 +1,12 @@
 {
-	"name": "Cracked Glass",
+	"name": "Live Wire",
 	"map": [
-		".       .       Bv      .       .       Y<      B<",
-		"G>      .       .       .       Gv      .       .",
-		".       Bv      .       .       R<      .       Y^@~",
-		".       B>#P    Bv$G    .       P>      .       G<@",
-		"P>      .       .       .       .       R>@     .",
-		"P>@     G<$S    P<      .       .       B>      Y^@-#G",
-		".       .       R<=     .       .       .       Yv@"
+		"Y>@*#B .      .      .      .      Yv",
+		".      Y^%A   P<     .      .      P<",
+		"Gv     .      .      G>     Rv     .",
+		"Bv     .      .      R^@    .      .",
+		".      Pv&B   .      .      P<     Bv&A",
+		".      .      .      R^     .      Y<@-#G",
+		"G>%B   P>     .      R>     Y>     ."
 	]
 }

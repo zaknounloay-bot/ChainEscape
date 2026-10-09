@@ -1,0 +1,11 @@
+{
+	"name": "Pane Shift",
+	"map": [
+		"Yv      R>      .       .       Y>      P>",
+		".       G^      .       .       R^&A    .",
+		".       B^%A    R<#G    .       G^      P<$G&B",
+		".       .       G>      .       .       Gv@",
+		"Rv      B^@#R   .       .       Y^@     Yv%B",
+		"B>      .       P>      Y>&B    R^&A    ."
+	]
+}

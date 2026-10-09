@@ -1,12 +1,11 @@
 {
-	"name": "Star Frost",
+	"name": "Coil",
 	"map": [
-		".      .      .      .      .      B^#G   .",
-		".      P<=    Y>     Pv     .      .      .",
-		".      G>@-   Y^@$S  Pv     .      .      Y^",
-		".      .      .      .      G>     P>#R   Rv@",
-		"Y>     P^     .      Gv     Bv=    .      .",
-		".      .      Rv@    P<     .      B^@    .",
-		"R^@~   B<     .      .      .      .      R<"
+		".      .      B<%A   .      G>&A   Pv",
+		"R>     .      R^@    .      B^     .",
+		".      .      .      Pv%B   G^&A   .",
+		"R^&B   Rv#G   Y<     Bv@    Y<@    .",
+		"B^     Gv     Y>@*#G .      .      .",
+		"B>@~   R<     .      Y>     P^     Yv"
 	]
 }

@@ -1,11 +1,11 @@
 {
 	"name": "Key Ring",
 	"map": [
-		".      .      Pv     G<     P>@$S  .",
-		"Yv@    .      .      .      G^@    Bv",
-		".      B<@    Yv     B^     Y^     .",
-		".      G^     B<     .      .      P<",
-		"Bv#G   P^     .      B<#P   .      .",
-		"Y>#G   P>     .      P>     B^     ."
+		".     .     Pv    G<    P>@$S .",
+		"Yv@   .     .     .     G^@   Bv",
+		".     B<@   Yv    B^    Y^    .",
+		".     G^    B<    .     .     P<",
+		"Bv#G  P^    .     B<#P  .     .",
+		"Y>#G  P>    .     P>    B^    ."
 	]
 }

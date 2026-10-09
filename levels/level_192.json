@@ -1,13 +1,12 @@
 {
-	"name": "Sovereign",
-	"mystery": true,
+	"name": "Reversal",
 	"map": [
-		".      Yv@    .      .      .      G<     B<+C",
-		".      .      .      .      Y<?    Pv     Y^",
-		".      .      .      P>#B   .      .      Rv=",
-		"XC     .      Y>     .      Y^@    .      .",
-		"R^@    .      .      .      .      Y<     Bv@#G",
-		"Y^$S   Bv     Y>@    .      R<     .      R>%A",
-		".      P>&A   G>@~   .      Y>?    Pv+C   ."
+		"P>       .        G<@-     .        .        .",
+		"Pv&A     R^%A     Y<       Bv       Y<&A+C!T Y>&A+C!T",
+		".        .        B>       .        .        Bv",
+		"B>       R<@-     P^@~     .        .        .",
+		".        .        .        .        XC       .",
+		".        .        .        .        R<       .",
+		"Yv@-     B<       .        R^@*     P^@-     Bv+C"
 	]
 }

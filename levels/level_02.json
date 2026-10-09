@@ -2,8 +2,9 @@
 	"name": "In The Way",
 	"blocked_hint": "Blocked! Clear its path first",
 	"map": [
-		".  .  .",
-		"B> R^ .",
-		".  Y^ ."
+		".  .  .  .",
+		"G> B> R^ .",
+		".  .  Y^ .",
+		".  .  .  ."
 	]
 }

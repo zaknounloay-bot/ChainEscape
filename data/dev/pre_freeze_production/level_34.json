@@ -1,0 +1,11 @@
+{
+	"name": "Strongroom",
+	"map": [
+		".     .     Pv    .     P<    .",
+		".     P>#Y  .     .     .     .",
+		".     G^#Y  .     .     P^#R  .",
+		"Gv#Y  .     G<    .     .     .",
+		"B>    Y>$S  R>    P>    R>    Gv",
+		"G<    G<    .     .     Y<    B<"
+	]
+}

@@ -1,0 +1,9 @@
+{
+	"name": "First Steps",
+	"hint": "Tap a block to let it escape",
+	"map": [
+		".  .  .",
+		"R< B^ G>",
+		".  .  ."
+	]
+}

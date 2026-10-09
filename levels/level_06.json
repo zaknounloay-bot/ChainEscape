@@ -1,12 +1,11 @@
 {
-	"name": "Rush Hour",
-	"hint": "From now on, blocked taps cost a heart",
-	"hint_finger": false,
+	"name": "Spinner",
+	"hint": "Spinners turn when a neighbor escapes",
+	"blocked_hint": "Careful: from now on, blocked taps cost a heart",
 	"map": [
-		"Rv .  B^ Y> .",
-		"R> G> .  .  P^",
-		".  Yv B< Pv .",
-		"G< .  .  R> Bv",
-		".  P< Y^ .  G>"
+		".   Yv  .   .",
+		".   P>@ R<  .",
+		".   Bv  .   .",
+		".   .   .   ."
 	]
 }

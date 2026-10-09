@@ -1,0 +1,14 @@
+{
+	"name": "Quartz Wall",
+	"hint": "Cracking a shell is free - aim first, then clear.",
+	"hint_finger": false,
+	"map": [
+		".     .     Yv@   .     .     P<@",
+		"G^=   Bv@   Y<    Y>    P>    Y^",
+		"Gv    .     Yv    .     R>#P  G^",
+		".     Pv    R>@   B^    .     .",
+		".     G>@*  .     .     Bv    .",
+		".     R<    .     .     .     .",
+		"B>#P  .     .     R^=   Yv    P^@-"
+	]
+}

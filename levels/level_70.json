@@ -2,12 +2,12 @@
 	"name": "Blackout",
 	"mystery": true,
 	"map": [
-		"Gv      .       .       .       .       Gv",
-		".       B^?     Rv      .       G<@     .",
-		"G>      R>      .       .       Y^      Bv",
-		"R<      B<      R<      .       .       .",
-		".       B^?     G^@~#P  P>      B>      G>?",
-		".       .       B^@     Y<#B$S  Bv?     Y^@",
-		"P<      B<      Rv?     .       B<@~    ."
+		"Gv     .      .      .      .      Gv",
+		".      B^?    Rv     .      G<@    .",
+		"G>     R>     .      .      Y^     Bv",
+		"R<     B<     R<     .      .      .",
+		".      B^?    G^@~#P P>     B>     G>?",
+		".      .      B^@    Y<#B$S Bv?    Y^@",
+		"P<     B<     Rv?    .      B<@~   ."
 	]
 }

@@ -3,10 +3,10 @@
 	"hint": "Look for the matching mark: only those arrows turn around.",
 	"hint_finger": false,
 	"map": [
-		".     Yv&A  .     .",
-		"P>    P^    .     .",
-		".     B^    .     .",
-		"Bv%A  Y^    B<    .",
-		"Gv    .     R^    ."
+		".    Yv&A Yv   .",
+		"P>   P^   .    .",
+		".    B^   .    .",
+		"Bv%A Y^   B<   .",
+		"Gv   .    R>   ."
 	]
 }

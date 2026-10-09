@@ -105,7 +105,39 @@ const ARCS := [
 ]
 ## Chapters that hold a new mechanic's first level start their own
 ## difficulty curve (like an era): the lessons are easier on purpose.
-const ARC_STARTS := [201, 226, 251]
+## Chapters that introduce a new mechanic start their own difficulty curve:
+## Armor (151) and Twins (176) since the 1-300 freeze, then the Third Era arcs.
+const ARC_STARTS := [151, 176, 201, 226, 251]
+## Since the 1-300 freeze (docs/freeze_1_300.md): Armor from 151 (approved in
+## the Experience Lab; production had 161) and TWINS only in 176-199.
+const ARMOR_FROM := 151
+const TWINS_FROM := 176
+const TWINS_TO := 199
+## The Twins learning boards (approved prototype boards A / B / C and Double
+## Link): like the Switch lessons 101-105 they may be small.
+const TWINS_LESSONS := [176, 177, 179, 184]
+const TWINS_LESSON_MAX_START := 6
+## The Elite Twins boards (187-197) were designed and validated with stronger
+## measures than the start-move proxy (habit / look-ahead players inside the
+## production Elite band, full state graphs: docs/twins_176_199_lab.md) and
+## deliberately give more freedom: up to 6 opening moves (a pair counted
+## once). Depth and decision rules still apply.
+const TWINS_MAX_START := 6
+## Human-approved Twins board whose SHOW A MOVE line crosses only one trap
+## step (decision_points 1) although 54% of its winnable states hold a fatal
+## option (full graph). Reported in docs/freeze_1_300.md.
+const TWINS_DECISIONS_ACCEPTED := [190]
+## Human-approved Twins board with 47% of its arrows in one direction (rule:
+## 45%). Reported in docs/freeze_1_300.md.
+const TWINS_DIRECTION_ACCEPTED := [187]
+## Human-approved Twins boards whose locks measure as decorative (lock impact
+## < 0.5). Reported in docs/freeze_1_300.md.
+const TWINS_LOCKS_ACCEPTED := [190, 197]
+## Human-approved Twins boards (iPhone playtest of Lab 176-200, commit 44db502)
+## whose Chain Gate measures as decorative here (structural impact 0.0).
+## Accepted by decision - "no further Twins redesign" - and reported as a known
+## issue in docs/freeze_1_300.md; every other gate must still matter.
+const TWINS_GATE_ACCEPTED := [187, 192, 197]
 
 
 func _initialize() -> void:
@@ -267,11 +299,13 @@ static func _rule_issue(n: int, m: Dictionary) -> String:
 		return "SWITCH BEFORE 101"
 	if m["gates"] > 0 and n < 121:
 		return "CHAIN GATE BEFORE 121"
-	if m["armored"] > 0 and n < 161:
-		return "ARMOR BEFORE 161"
+	if m["armored"] > 0 and n < ARMOR_FROM:
+		return "ARMOR BEFORE %d" % ARMOR_FROM
+	if m.get("twins", 0) > 0 and (n < TWINS_FROM or n > TWINS_TO):
+		return "TWINS OUTSIDE %d-%d" % [TWINS_FROM, TWINS_TO]
 	if m["switches"] > 0 and m["switch_impact"] < 1.0:
 		return "SWITCH DECORATIVE"
-	if m["gates"] > 0 and m["gate_impact"] < 1.0:
+	if m["gates"] > 0 and m["gate_impact"] < 1.0 and not TWINS_GATE_ACCEPTED.has(n):
 		return "GATE DECORATIVE"
 	if m["armored"] > 0 and m["armor_impact"] < 1.0:
 		return "ARMOR DECORATIVE"
@@ -308,31 +342,44 @@ static func _rule_issue(n: int, m: Dictionary) -> String:
 		if m["start_moves"] > 3 or m["depth"] < 3:
 			return "SWITCH LESSON SHAPE"
 		return ""
+	if n == ARMOR_FROM:
+		# The approved Armor lesson (Lab 151): gentle on purpose, like the
+		# Switch lessons - the shell must matter, the shape may be small.
+		if m["armored"] == 0 or m["armor_impact"] < 1.0:
+			return "ARMOR LESSON NEEDS A SHELL THAT MATTERS"
+		return ""
+	if TWINS_LESSONS.has(n):
+		if m.get("twins", 0) == 0:
+			return "TWINS LESSON WITHOUT TWINS"
+		if m["start_moves"] > TWINS_LESSON_MAX_START:
+			return "TWINS LESSON SHAPE"
+		return ""
 	if n == 200:
 		var kinds := int(m["rule_cw"] > 0) + int(m["rule_ccw"] > 0) + int(m["rule_alt"] > 0) + int(m["rule_pattern"] > 0)
 		if kinds < 3 or m["locks"] == 0 or m["hidden"] == 0 or m["switches"] == 0 or m["gates"] == 0 or m["armored"] == 0:
 			return "GRAND MASTER NEEDS EVERY MECHANIC FAMILY"
 	if n >= LATE_LEVEL:
-		if m["start_moves"] > 2:
+		var twins: bool = m.get("twins", 0) > 0
+		if m["start_moves"] > (TWINS_MAX_START if twins else 2):
 			return "TOO MANY START MOVES (61+)"
 		if m["depth"] < 8:
 			return "TOO SHALLOW (61+)"
-		if m["decision_points"] < 4:
+		if m["decision_points"] < 4 and not TWINS_DECISIONS_ACCEPTED.has(n):
 			return "TOO FEW DECISIONS (61+)"
 	if n == Chapters.master_level():
 		var rule_kinds := int(m["rule_cw"] > 0) + int(m["rule_ccw"] > 0) + int(m["rule_alt"] > 0) + int(m["rule_pattern"] > 0)
 		if rule_kinds < 3 or m["locks"] == 0 or m["hidden"] == 0:
 			return "MASTER NEEDS SPINNER RULES + LOCKS + MYSTERY"
 	if n >= HIGH_LEVEL:
-		if m["start_moves"] > 3:
+		if m["start_moves"] > (TWINS_MAX_START if m.get("twins", 0) > 0 else 3):
 			return "TOO MANY START MOVES"
 		if m["depth"] < 5:
 			return "TOO SHALLOW"
-		if m["directions_used"] < 4 or m["direction_share"] > 0.45:
+		if m["directions_used"] < 4 or (m["direction_share"] > 0.45 and not TWINS_DIRECTION_ACCEPTED.has(n)):
 			return "ONE DIRECTION DOMINATES"
 	if m["spinners"] > 0 and m["spinner_impact"] < 0.5:
 		return "SPINNERS DECORATIVE"
-	if m["locks"] > 0 and m["lock_impact"] < 0.5:
+	if m["locks"] > 0 and m["lock_impact"] < 0.5 and not TWINS_LOCKS_ACCEPTED.has(n):
 		return "LOCKS DECORATIVE"
 	if m["hidden"] > 0:
 		if not m["mystery_fair"]:

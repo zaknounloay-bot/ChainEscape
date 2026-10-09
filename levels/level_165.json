@@ -1,12 +1,12 @@
 {
-	"name": "Deep Shard",
+	"name": "Star Frost",
 	"map": [
-		"G>@#P  .      .      B>     G>@    Y^     .",
-		"R^     B>     .      .      R>     Rv@    .",
-		".      G<=    Yv@    .      .      .      R<",
-		".      .      Gv     .      P<     Gv     B^",
-		".      .      .      .      .      .      .",
-		"R^#G   .      Pv     .      .      .      .",
-		"P<     B<@~   G<     .      .      G>     R^"
+		".     .     .     .     .     B^#G  .",
+		".     P<=   Y>    Pv    .     .     .",
+		".     G>@-  Y^@$S Pv    .     .     Y^",
+		".     .     .     .     G>    P>#R  Rv@",
+		"Y>    P^    .     Gv    Bv=   .     .",
+		".     .     Rv@   P<    .     B^@   .",
+		"R^@~  B<    .     .     .     .     R<"
 	]
 }

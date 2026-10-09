@@ -2,12 +2,12 @@
 	"name": "Champion",
 	"mystery": true,
 	"map": [
-		".       Gv#Y+C  .       .       .       G>%A    .",
-		"B^      .       R<      Pv@     Rv      B^@*    Y>=",
-		"P^      .       .       .       .       .       R<",
-		".       .       P^      .       .       .       B>?",
-		"Rv@     P<&A    .       R^      Y>&A    G>#B    .",
-		"G^+C    Y<?     G<@     .       .       XC      .",
-		".       G>@~    R>@-    .       G>      P^      B^"
+		".      Gv#Y+C .      .      .      G>%A   .",
+		"B^     .      R<     Pv@    Rv     B^@*   Y>=",
+		"P^     .      .      .      .      .      R<",
+		".      .      P^     .      .      .      B>?",
+		"Rv@    P<&A   .      R^     Y>&A   G>#B   .",
+		"G^+C   Y<?    G<@    .      .      XC     .",
+		".      G>@~   R>@-   .      G>     P^     B^"
 	]
 }

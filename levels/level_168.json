@@ -1,12 +1,11 @@
 {
-	"name": "Geode",
+	"name": "Ionic Drift",
 	"map": [
-		".     .     G>#Y  .     .     B<@   Gv#Y",
-		"Y^    .     R^    .     Gv    Y>=   .",
-		".     .     .     .     Rv    R>=   .",
-		"B^    .     .     .     .     G<    .",
-		".     .     Gv$G  .     .     .     Y<@",
-		"Y^@   .     .     .     .     .     Y<",
-		"R<@   G>@-  R<    .     B>    B^    ."
+		"R>$S%B .      B>     .      P>&A   .",
+		".      Y<%A   R^&B   .      Y<@    .",
+		"R^@    .      B>     P>@    .      Yv#P",
+		".      .      P<#G   B>     G^     Bv&A",
+		".      .      .      .      Bv     P^@*",
+		"R^     .      .      G<     Y^@    ."
 	]
 }

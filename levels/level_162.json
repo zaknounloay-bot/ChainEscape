@@ -1,12 +1,12 @@
 {
-	"name": "Hard Case",
+	"name": "Flux",
 	"map": [
-		".      Bv@~   P<@-   .      .      G<",
-		".      .      P<     Y<     Bv     R<",
-		"P>     Yv     .      .      .      .",
-		"B^     B^@    P>=    .      .      .",
-		".      .      .      Rv     Pv@    P<",
-		"Y^     .      .      Rv     G>@#Y  .",
-		"Rv#Y   .      R<@$S  G>     .      ."
+		".      Rv     .      R<     Yv@    .",
+		".      Gv     .      B>@    B<@~   R<$S",
+		".      Yv     .      .      G<     R^",
+		".      .      .      Y>     Bv     .",
+		".      .      B^%A   .      G>#R   B^&A",
+		".      G>     .      B>     .      .",
+		".      .      G^     Y<@    .      G<@*#R"
 	]
 }

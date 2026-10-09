@@ -1,11 +1,14 @@
 {
-	"name": "Plasma Veil",
+	"name": "First Shell",
+	"hint": "New: ARMORED block. Launch another block into it to crack the shell.",
+	"hint_finger": false,
 	"map": [
-		"Y^@       .         R<        B<%B      .         .",
-		"Y<        G>        .         .         Yv        Bv@-",
-		".         .         B<#Y$G&A  Gv@~      Pv        P<#Y",
-		".         .         .         .         Y^@       Bv",
-		".         .         .         R>%A      .         Pv",
-		"Y>        B^        Y>&A      .         .         B<&B"
+		"Rv   P<@~ .    .    P>   B^$G",
+		".    .    .    .    .    .",
+		"Y>   .    P>   B>   G^   .",
+		".    .    Y^   R^@  .    .",
+		".    Y^   Bv#Y .    Bv   .",
+		"Pv=  R^   Pv@  .    G<@- R<#Y",
+		".    .    G>   G^@  P<@  ."
 	]
 }

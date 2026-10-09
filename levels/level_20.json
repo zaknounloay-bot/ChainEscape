@@ -1,11 +1,11 @@
 {
-	"name": "Fog",
+	"name": "Secret Key",
 	"mystery": true,
 	"map": [
-		".    Y<   G>?  .    .",
-		".    R^   Y<   Yv?  .",
-		".    .    G<?  .    B<",
-		".    .    .    .    .",
-		"R>   .    B^   Y>   G^"
+		".    .    G^?  P<   .",
+		"Pv   B<   B<?  Y<   .",
+		"Yv   R>#G .    Y^   .",
+		"Y>   .    .    .    B>",
+		"Pv?  R^#G .    .    P^"
 	]
 }

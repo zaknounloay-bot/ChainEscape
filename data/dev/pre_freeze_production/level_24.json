@@ -1,0 +1,10 @@
+{
+	"name": "Combination",
+	"map": [
+		".     Pv#G  G^#B  .     .",
+		"R>    .     Gv#B  .     .",
+		".     Yv    G<    .     .",
+		".     Pv    .     .     B<",
+		"R^    B>    .     B>    P>"
+	]
+}

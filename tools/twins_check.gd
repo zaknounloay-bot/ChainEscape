@@ -114,7 +114,7 @@ func _gating() -> void:
 	_check(_parse(map, true, true).blocks.size() == 2 and _twin_count(_parse(map, true, true)) == 2, "prototype files parse the Twins token")
 	_check(_parse(map, false, true).blocks.size() == 0, "Social / Friend parsing (campaign = false) rejects it even while the prototype is on")
 	_check(_parse(map, false, false).blocks.size() == 0, "Social / Friend parsing rejects it")
-	_check(_parse(map, true, false).blocks.size() == 0, "production campaign parsing rejects it")
+	_check(_parse(map, true, false).blocks.size() == 2, "campaign level files accept it (Levels 176-199 since the 1-300 freeze)")
 	var def := PuzzleDefinition.new()
 	def.rows = 2
 	def.columns = 4

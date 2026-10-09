@@ -1,12 +1,12 @@
 {
-	"name": "Paragon",
+	"name": "Pattern Lock",
 	"map": [
-		".      .      .      R^#Y   P>@#Y  .      P<",
-		".      R^+C   R<+C   .      .      .      P<+C",
-		".      B>@    B<     R^@*   .      .      .",
-		".      .      .      Pv     P>=    .      .",
-		"Rv     .      R<$S   Rv@    .      .      B^=",
-		"Bv     .      .      Rv     .      XC     .",
-		"G>     B>     .      .      .      Y^@-   B<@~"
+		".    .    Rv   .    .    .",
+		".    R<   .    R>   .    P<@-",
+		".    .    G^@~ Y^@  .    Pv",
+		"Y>   Yv@- Rv!T Rv!T .    Yv",
+		".    P^   .    .    .    .",
+		".    P<   B>@  .    .    .",
+		"R<   P^#R .    .    Yv@~ Bv"
 	]
 }

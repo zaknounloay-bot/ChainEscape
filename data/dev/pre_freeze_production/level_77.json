@@ -1,0 +1,11 @@
+{
+	"name": "Feedback",
+	"map": [
+		".       .       P<      .       .       Pv",
+		"R>      R>      Gv@     .       P>      P^@#Y",
+		"B^@*    .       .       .       R>      Yv",
+		".       B<#Y    Gv      .       .       .",
+		"Rv      G<      P<      .       Y>      Pv",
+		"R>@*#Y  G>@     .       .       G^      ."
+	]
+}

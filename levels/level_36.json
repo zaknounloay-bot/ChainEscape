@@ -1,11 +1,11 @@
 {
-	"name": "Spin the Lock",
+	"name": "Tumblers",
 	"map": [
-		"P<#R    .       B<      .       .       .",
-		".       Yv@     R<      Rv      .       .",
-		".       B>      .       P>      .       .",
-		".       G^      Pv@     Y<      .       R<",
-		"Y^#B$S  .       Yv@     .       .       .",
-		"B>      .       .       .       .       P^"
+		".     .     .     G>    .     .",
+		".     Y>@#B .     R^    .     .",
+		"P^    G<    Pv    Y^    .     .",
+		"G^    P<    G>    .     .     Gv$S",
+		"B>@   P<    .     R^    .     .",
+		".     R^    P<#Y  .     .     P<"
 	]
 }

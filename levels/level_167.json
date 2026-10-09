@@ -1,12 +1,12 @@
 {
-	"name": "Ice Vault",
+	"name": "Crystal Ward",
 	"map": [
-		".      Gv@    Yv     R<     G<@    Pv@",
-		"B^#R   .      .      Y^     .      .",
-		".      Y^     .      G<     G>     Pv",
-		".      .      P>     .      Pv     .",
-		"P^     Y<     .      .      R>     Y>@-",
-		".      .      B>=    .      .      B>=",
-		"P^@    Yv@$S  .      G<#B   .      ."
+		".    B^   G>@  .    Yv   Yv   R>#P",
+		"G>   G>   .    .    .    Gv   .",
+		"R^@  .    .    .    .    .    .",
+		".    R<=  .    Bv@- G<   G<   .",
+		".    .    B^   .    .    .    .",
+		"G^   Y<   .    P>@  G<   .    .",
+		"R^#Y P<   .    R>   B^@  Rv@  ."
 	]
 }

@@ -1,12 +1,10 @@
 {
-	"name": "Hidden Arrow",
+	"name": "Clockwork",
 	"mystery": true,
-	"hint": "Hidden arrows appear when a neighbor escapes",
-	"hint_finger": false,
 	"map": [
-		".   Bv   .   P<",
-		"R>  Y>?  .   .",
-		".   Gv   .   .",
-		".   .    .   ."
+		".   .   Bv  .   .",
+		"G^  R^@ .   .   G>?",
+		".   G^  Y>@ Rv  R<",
+		".   .   G>  .   G^"
 	]
 }

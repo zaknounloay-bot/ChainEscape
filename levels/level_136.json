@@ -1,12 +1,12 @@
 {
 	"name": "Crank Shaft",
 	"map": [
-		"XC     G<@-   .      .      .      B<",
-		"Pv     .      Bv+C   .      .      .",
-		"Rv     B>&A   .      .      Gv     .",
-		".      .      .      .      Rv     .",
-		"P>     .      G>@    R^#Y   .      P^@~",
-		".      .      G<     Y>@#B  R>     Y^",
-		".      G<%A   .      .      .      R^"
+		"XC    G<@-  .     .     .     B<",
+		"Pv    .     Bv+C  .     .     .",
+		"Rv    B>&A  .     .     Gv    .",
+		".     .     .     .     Rv    .",
+		"P>    .     G>@   R^#Y  .     P^@~",
+		".     .     G<    Y>@#B R>    Y^",
+		".     G<%A  .     .     .     R^"
 	]
 }

@@ -1,0 +1,11 @@
+{
+	"name": "Assembly",
+	"map": [
+		"Y<+C   .      .      .      XC     Yv+C",
+		"P^     G<     Y<     .      .      .",
+		"Yv@-   B>     R<@~   B>&A   R^     Yv",
+		"Rv@    Y^     R^@+C  .      .      .",
+		"Bv%A   .      B^     .      P<     .",
+		".      .      B^     .      .      B<"
+	]
+}

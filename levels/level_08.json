@@ -1,10 +1,12 @@
 {
-	"name": "Look Closer",
+	"name": "Hidden Arrow",
+	"mystery": true,
+	"hint": "Hidden arrows appear when a neighbor escapes",
+	"hint_finger": false,
 	"map": [
-		"Y> .  .  .  Pv",
-		".  B< P< Y< Rv",
-		".  .  R^ .  Y<",
-		".  G^ .  .  G<",
-		"R^ .  P> B^ ."
+		".   Bv  .   P<",
+		"R>  Y>? .   .",
+		".   Gv  .   .",
+		".   .   .   ."
 	]
 }

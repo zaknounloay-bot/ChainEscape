@@ -1,10 +1,10 @@
 {
-	"name": "Combination",
+	"name": "Cogwheels",
 	"map": [
-		".     Pv#G  G^#B  .     .",
-		"R>    .     Gv#B  .     .",
-		".     Yv    G<    .     .",
-		".     Pv    .     .     B<",
-		"R^    B>    .     B>    P>"
+		"P^  Y<  P<  .   .",
+		"Gv  R<  Gv  R<@ P<",
+		".   B>  .   .   G^",
+		"Pv  .   Gv  .   .",
+		"Y>@ B>  Yv@ G>  ."
 	]
 }

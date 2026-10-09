@@ -1,11 +1,11 @@
 {
 	"name": "Night Circuit",
 	"map": [
-		".       .       Rv      Rv      G<@     G>#B",
-		".       .       .       .       Y^      .",
-		"Bv@-$G  .       P<@-    Rv      R^      .",
-		"P>#Y    P>      .       .       G^$S    Rv",
-		"G>@     .       .       Y>      R>      Rv",
-		"Yv      R^@     .       .       P<      ."
+		".      .      Rv     Rv     G<@    G>#B",
+		".      .      .      .      Y^     .",
+		"Bv@-$G .      P<@-   Rv     R^     .",
+		"P>#Y   P>     .      .      G^$S   Rv",
+		"G>@    .      .      Y>     R>     Rv",
+		"Yv     R^@    .      .      P<     ."
 	]
 }

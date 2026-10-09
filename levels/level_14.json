@@ -1,10 +1,9 @@
 {
-	"name": "Pinwheel",
+	"name": "Key Colors",
 	"map": [
-		".   Bv  Y<@ .   G<",
-		".   Yv  G<  Y<  .",
-		"R>  .   .   G^  .",
-		".   .   Bv@ .   .",
-		".   Gv  R>  P^  Y^"
+		"B>   .    .    G^",
+		"G^   Y<   P>#Y .",
+		".    Pv#G .    R<",
+		"G^   .    Y<   ."
 	]
 }

@@ -1,10 +1,11 @@
 {
-	"name": "Second Thoughts",
+	"name": "Fog",
+	"mystery": true,
 	"map": [
-		"G<  .   .   R<  G<",
-		".   Yv  .   .   R^",
-		"B^  Pv  .   .   .",
-		"P^@ .   R>  B>  P^",
-		".   P>  Y>@ G>  ."
+		".   Y<  G>? .   .",
+		".   R^  Y<  Yv? .",
+		".   .   G<? .   B<",
+		".   .   .   .   .",
+		"R>  .   B^  Y>  G^"
 	]
 }

@@ -2,11 +2,11 @@
 	"name": "Resonance",
 	"mystery": true,
 	"map": [
-		"Yv     .      Y<@#R  .      Yv     XC",
-		"Bv+C   G>     .      .      R^@    .",
-		"G>@    .      P^&A   Pv#Y   R>?    P^&A",
-		"Pv?    R^     .      .      .      .",
-		"Y>@~   .      .      .      R>?    Yv+C",
-		".      .      G^     .      Y>%A   ."
+		"Yv    .     Y<@#R .     Yv    XC",
+		"Bv+C  G>    .     .     R^@   .",
+		"G>@   .     P^&A  Pv#Y  R>?   P^&A",
+		"Pv?   R^    .     .     .     .",
+		"Y>@~  .     .     .     R>?   Yv+C",
+		".     .     G^    .     Y>%A  ."
 	]
 }

@@ -2,12 +2,12 @@
 	"name": "Zenith",
 	"mystery": true,
 	"map": [
-		".      .      G>     .      .      Pv@    .",
-		"G^%A   R>@    Yv     G^?    Y<@    .      Y<",
-		".      Bv&A   .      Gv     .      Y>     XC",
-		".      .      G>@#P  .      .      Pv     .",
-		".      Y<?    .      .      .      B>     Pv",
-		"Bv     G<+C   Y<     R^@-   .      .      .",
-		".      Y<=    R>@~   P<+C   G^+C   .      Bv#R"
+		".     .     G>    .     .     Pv@   .",
+		"G^%A  R>@   Yv    G^?   Y<@   .     Y<",
+		".     Bv&A  .     Gv    .     Y>    XC",
+		".     .     G>@#P .     .     Pv    .",
+		".     Y<?   .     .     .     B>    Pv",
+		"Bv    G<+C  Y<    R^@-  .     .     .",
+		".     Y<=   R>@~  P<+C  G^+C  .     Bv#R"
 	]
 }

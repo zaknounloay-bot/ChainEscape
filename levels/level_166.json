@@ -1,14 +1,11 @@
 {
-	"name": "Quartz Wall",
-	"hint": "Cracking a shell is free - aim first, then clear.",
-	"hint_finger": false,
+	"name": "Field Lines",
 	"map": [
-		".     .     Yv@   .     .     P<@",
-		"G^=   Bv@   Y<    Y>    P>    Y^",
-		"Gv    .     Yv    .     R>#P  G^",
-		".     Pv    R>@   B^    .     .",
-		".     G>@*  .     .     Bv    .",
-		".     R<    .     .     .     .",
-		"B>#P  .     .     R^=   Yv    P^@-"
+		".      G>     R>     Bv@    .      B>%B",
+		"B^%A   P^     P<&B   .      Y<@    G<@",
+		"R^     Bv     B<     .      .      B<",
+		".      Y<@#R  B^&A   Bv     .      .",
+		".      Gv$G&A .      .      Y>     Gv@-#B",
+		".      R>     .      P>     .      R^&B"
 	]
 }

@@ -1,0 +1,11 @@
+{
+	"name": "Gridlock",
+	"map": [
+		".   Gv  .   .   .   .",
+		"R>  .   .   R^  Pv  .",
+		"P>@ .   G<  P<@ Gv  R<",
+		"Bv  G>  B>@ .   Yv  .",
+		"Y<  B>  .   G^  Bv  Y^",
+		".   G>  .   .   .   R^"
+	]
+}

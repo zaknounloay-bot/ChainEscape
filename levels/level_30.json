@@ -2,11 +2,11 @@
 	"name": "Smoke and Mirrors",
 	"mystery": true,
 	"map": [
-		".    Gv   .    R<   G>   .",
-		".    R>   Bv   .    Y^@  B>",
-		"G>   .    .    .    P^   .",
-		".    .    .    .    G^   .",
-		".    Yv   .    .    .    .",
-		"Y^   Bv?  R<@  Gv?  Y^   Y>?"
+		".   Gv  .   R<  G>  .",
+		".   R>  Bv  .   Y^@ B>",
+		"G>  .   .   .   P^  .",
+		".   .   .   .   G^  .",
+		".   Yv  .   .   .   .",
+		"Y^  Bv? R<@ Gv? Y^  Y>?"
 	]
 }

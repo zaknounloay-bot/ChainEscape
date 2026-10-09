@@ -93,6 +93,8 @@ static func parse_mode(search: String, fragment: String = "") -> String:
 
 ## "" (not asked for), "1", "reset" or a QA jump level "2".."200".
 static func requested() -> String:
+	if BuildFlags.player_build():
+		return ""  # player build: developer pages off
 	var args := OS.get_cmdline_user_args()
 	if "--" + PARAM + "=reset" in args:
 		return "reset"

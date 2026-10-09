@@ -1,0 +1,12 @@
+{
+	"name": "Pressure",
+	"map": [
+		"R>@   .     .     R>    .     Pv",
+		"G^    G>$S  R>@   .     B<@   .",
+		".     .     P<    B^    P^@   .",
+		".     .     .     .     .     Gv",
+		".     P^    Bv    .     Pv$G  .",
+		"G^    Y^#R  Bv@   Pv#R  B>#Y  .",
+		".     B^    R>    .     .     G>"
+	]
+}

@@ -1,12 +1,12 @@
 {
 	"name": "Crystal Orbit",
 	"map": [
-		"Y<%A    .       B>      .       B>@     .",
-		"Rv      B<      .       .       .       XC",
-		"P>      .       P^      .       .       .",
-		".       Y<=     .       Yv      Y^+C    R^",
-		".       B<#P    B<      Yv@~    Y<$G&A  .",
-		"G>      .       .       G>&A    B^      P^@*",
-		".       B^@     Yv@#B   .       .       ."
+		"Y<%A   .      B>     .      B>@    .",
+		"Rv     B<     .      .      .      XC",
+		"P>     .      P^     .      .      .",
+		".      Y<=    .      Yv     Y^+C   R^",
+		".      B<#P   B<     Yv@~   Y<$G&A .",
+		"G>     .      .      G>&A   B^     P^@*",
+		".      B^@    Yv@#B  .      .      ."
 	]
 }

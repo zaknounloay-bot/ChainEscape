@@ -1,12 +1,12 @@
 {
-	"name": "Laurel",
+	"name": "Two Bonds",
 	"map": [
-		".     R>@-  Y<    B<    Y<    .",
-		".     Yv    .     P^%B  P^    R<&B",
-		"R>    .     P>    Bv@   .     .",
-		"P^#Y  .     Bv    .     R^@~  B^$S",
-		".     R>@   B<    B<    .     R^",
-		"Bv%A  Gv    .     .     Y^&A  .",
-		".     Bv@   .     G>&B  B>#Y  ."
+		".    .    Gv@- R^#P .    B>   Bv@-",
+		".    Y>@  B^@  P>@  P^   .    .",
+		".    P<!T P<!T .    Y<   P<   P<",
+		".    .    .    .    .    .    .",
+		".    .    .    .    Y^   .    .",
+		"Y^   R<@* Rv!U .    P^   .    B<",
+		".    .    R<!U .    .    .    ."
 	]
 }

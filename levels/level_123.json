@@ -1,11 +1,11 @@
 {
 	"name": "Steel Door",
 	"map": [
-		".     XC    .     G<    .     R^",
-		"G>+C  .     Yv    .     .     P^",
-		".     .     .     G^@   G<    .",
-		".     Pv@   P<    Y>    .     .",
-		".     Gv    Y<    R>#G  B<@   .",
-		".     Y>    .     G>    R>    Y^"
+		".    XC   .    G<   .    R^",
+		"G>+C .    Yv   .    .    P^",
+		".    .    .    G^@  G<   .",
+		".    Pv@  P<   Y>   .    .",
+		".    Gv   Y<   R>#G B<@  .",
+		".    Y>   .    G>   R>   Y^"
 	]
 }

@@ -1,14 +1,12 @@
 {
-	"name": "First Shell",
-	"hint": "New: ARMORED block. Launch another block into it to crack the shell.",
-	"hint_finger": false,
+	"name": "Ice Vault",
 	"map": [
-		"Rv    P<@~  .     .     P>    B^$G",
-		".     .     .     .     .     .",
-		"Y>    .     P>    B>    G^    .",
-		".     .     Y^    R^@   .     .",
-		".     Y^    Bv#Y  .     Bv    .",
-		"Pv=   R^    Pv@   .     G<@-  R<#Y",
-		".     .     Gv    G^@   P<@   ."
+		".     Gv@   Yv    R<    G<@   Pv@",
+		"B^#R  .     .     Y^    .     .",
+		".     Y^    .     G<    G>    Pv",
+		".     .     P>    .     Pv    .",
+		"P^    Y<    .     .     R>    Y>@-",
+		".     .     B>=   .     .     B>=",
+		"P^@   Yv@$S .     G<#B  .     ."
 	]
 }

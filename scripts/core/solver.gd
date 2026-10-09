@@ -497,13 +497,25 @@ func recommend_move() -> int:
 	return safe_pick
 
 
+## legal_moves() with a bonded pair counted once (tapping either twin is the
+## same move): the move count a player sees. Only boards with twins differ.
+func _distinct_legal() -> Array[int]:
+	var out: Array[int] = []
+	for mv in legal_moves():
+		var p := _partner(mv & ID_MASK) if (mv & (RAM | PUSH)) == 0 else -1
+		if p < 0 or p > (mv & ID_MASK):
+			out.append(mv)
+	return out
+
+
 ## Difficulty metrics for tools and the LevelGenerator. Can be slow on big
 ## boards (it solves once per legal move along the solution).
 func analyze() -> Dictionary:
 	var m := {
 		"rows": rows, "columns": columns, "blocks": _alive_count,
 		"spinners": _spinner_ids.size(),
-		"start_moves": legal_moves().size(),
+		"start_moves": _distinct_legal().size(),
+		"twins": 0 if _twin.is_empty() else range(_alive.size()).filter(func(i): return _alive[i] == 1 and _twin[i] >= 0).size(),
 		"solvable": false, "solution": [],
 		"start_traps": 0, "decision_points": 0, "trap_moves": 0,
 		"depth": 0, "direction_share": 0.0, "directions_used": 0,
@@ -557,7 +569,7 @@ func analyze() -> Dictionary:
 	# Walk the solution; at every state count legal moves that are traps
 	# (legal now, but the board becomes unsolvable afterwards).
 	var applied: Array = []
-	var round_free: Array[int] = legal_moves()
+	var round_free: Array[int] = _distinct_legal()
 	var depth := 1
 	var legal_sum := 0
 	var safe_sum := 0
@@ -575,7 +587,7 @@ func analyze() -> Dictionary:
 			m["locked_free_steps"] += 1
 			m["lock_wait"] += tempting
 		var traps := 0
-		var legal := legal_moves()
+		var legal := _distinct_legal()
 		legal_sum += legal.size()
 		for mv in legal:
 			if not _is_risky(mv):

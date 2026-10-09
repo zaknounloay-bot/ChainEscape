@@ -1,10 +1,10 @@
 {
-	"name": "Crosswind",
+	"name": "Padlocks",
 	"map": [
-		".   R>  .   G>  .",
-		"P^@ G^  .   .   Y<",
-		"B^@ .   .   .   P^",
-		"R^  .   G>  R>  Yv",
-		"G<  P<  Y<  .   R<"
+		".    .    G>   Gv   .",
+		".    R<   B^#R .    .",
+		".    B^   .    Yv   .",
+		"Y^#B .    .    Pv   .",
+		".    P^   B<   P<   ."
 	]
 }

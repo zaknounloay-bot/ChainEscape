@@ -1,10 +1,10 @@
 {
-	"name": "Locked",
-	"hint": "A lock opens when all blocks of its color are gone",
+	"name": "Key Turn",
 	"map": [
-		"Rv   .   Y<  .",
-		"B>#G .   .   .",
-		"Gv   .   .   Gv",
-		".    .   .   ."
+		".    .    Y>   .    .",
+		"G>   Pv   R<@  .    Pv",
+		"Yv   Gv   B<   .    .",
+		"G>   .    .    .    Bv#R",
+		"Yv   .    .    .    ."
 	]
 }

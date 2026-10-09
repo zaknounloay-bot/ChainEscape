@@ -1,0 +1,10 @@
+{
+	"name": "Spinner",
+	"hint": "Spinners turn when a neighbor escapes",
+	"map": [
+		".   Yv  .   .",
+		".   P>@ R<  .",
+		".   Bv  .   .",
+		".   .   .   ."
+	]
+}

@@ -1,9 +1,9 @@
 {
-	"name": "Around The Corner",
+	"name": "Two Threads",
 	"map": [
 		".  .  .  .",
-		".  B> R> Yv",
-		".  .  .  .",
-		".  .  .  G<"
+		".  Yv R< G>",
+		".  Rv B^ Y^",
+		".  .  .  B^"
 	]
 }

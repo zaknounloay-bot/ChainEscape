@@ -1,11 +1,11 @@
 {
 	"name": "Arc Line",
 	"map": [
-		".     B>@   .     Gv+C  Yv    .",
-		".     P^    G>@   .     .     Y>%A",
-		".     .     Pv    Bv    Bv#R  R^",
-		"P^+C  Y<    .     G<    R>@~  P^",
-		"Y^$S  B^@   B<    .     Yv&A  .",
-		".     .     XC    .     Y<@   ."
+		".    B>@  .    Gv+C Yv   .",
+		".    P^   G>@  .    .    Y>%A",
+		".    .    Pv   Bv   Bv#R R^",
+		"P^+C Y<   .    G<   R>@~ P^",
+		"Y^$S B^@  B<   .    Yv&A .",
+		".    .    XC   .    Y<@  ."
 	]
 }

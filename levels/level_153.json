@@ -1,11 +1,11 @@
 {
-	"name": "Coil",
+	"name": "Plasma Veil",
 	"map": [
-		".       .       B<%A    .       G>&A    Pv",
-		"R>      .       R^@     .       B^      .",
-		".       .       .       Pv%B    G^&A    .",
-		"R^&B    Rv#G    Y<      Bv@     Y<@     .",
-		"B^      Gv      Y>@*#G  .       .       .",
-		"B>@~    R<      .       Y>      P^      Yv"
+		"Y^@      .        R<       B<%B     .        .",
+		"Y<       G>       .        .        Yv       Bv@-",
+		".        .        B<#Y$G&A Gv@~     Pv       P<#Y",
+		".        .        .        .        Y^@      Bv",
+		".        .        .        R>%A     .        Pv",
+		"Y>       B^       Y>&A     .        .        B<&B"
 	]
 }

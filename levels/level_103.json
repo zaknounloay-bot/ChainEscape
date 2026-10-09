@@ -1,9 +1,9 @@
 {
 	"name": "Flip Side",
 	"map": [
-		"Pv&A  Yv    G<    .",
-		".     R>%A  P>    B>",
-		".     .     .     .",
-		"P^    G<    R^    ."
+		"Pv&A Y^   G<   .",
+		".    R>%A P>   B>",
+		".    .    .    .",
+		"P^&A G<   R^   ."
 	]
 }

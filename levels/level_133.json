@@ -1,11 +1,11 @@
 {
 	"name": "Pressure Plate",
 	"map": [
-		"Rv&A   R<&A   .      Bv     Y^     B<",
-		".      .      .      .      Y^@+C  .",
-		"Bv#P   .      Pv     .      .      .",
-		".      .      XC     .      P<     .",
-		"B<#P   G^     G>@-   .      R^     .",
-		".      G^@~   Y>@    B<     B>%A   ."
+		"Rv&A  R<&A  .     Bv    Y^    B<",
+		".     .     .     .     Y^@+C .",
+		"Bv#P  .     Pv    .     .     .",
+		".     .     XC    .     P<    .",
+		"B<#P  G^    G>@-  .     R^    .",
+		".     G^@~  Y>@   B<    B>%A  ."
 	]
 }

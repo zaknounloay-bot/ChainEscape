@@ -7,7 +7,8 @@ extends SceneTree
 ## (tools/run_tests.gd recomputes the keys and fails if this file is stale.)
 ## v0.7 / v0.8: Portal, Sequence and Movable levels (201+) are skipped - a
 ## Friend board never has those (PuzzleDefinition rejects them), so it can
-## never be one of them, and the Friend data stays exactly as it was.
+## never be one of them, and the Friend data stays exactly as it was. The
+## same for TWINS levels (176-199 since the 1-300 freeze).
 
 
 static func compute() -> Array:
@@ -17,7 +18,7 @@ static func compute() -> Array:
 		var json = JSON.parse_string(FileAccess.get_file_as_string(LevelManager.LEVEL_PATH % n))
 		var level := LevelManager.parse_level(json, n, true)
 		n += 1
-		if not level.portals.is_empty() or level.blocks.any(func(b): return b.seq_stage != 0 or b.is_crate()):
+		if not level.portals.is_empty() or level.blocks.any(func(b): return b.seq_stage != 0 or b.is_crate() or b.twin != ""):
 			continue
 		keys.append(FriendGenerator.board_key(PuzzleDefinition.from_level(level)))
 	return keys

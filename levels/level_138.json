@@ -1,12 +1,12 @@
 {
 	"name": "Turnstile",
 	"map": [
-		".       G<#Y    .       .       .       .",
-		"Y>      .       .       Rv@     B^      G^",
-		".       P^      .       .       Rv$G+C  .",
-		"R^      .       Y<      .       .       .",
-		".       Rv&A    XC      B<      Rv      .",
-		"Yv@     .       .       .       Pv%A    .",
-		"R>      G^@~    R>      G>@     B>      R^&A"
+		".      G<#Y   .      .      .      .",
+		"Y>     .      .      Rv@    B^     G^",
+		".      P^     .      .      Rv$G+C .",
+		"R^     .      Y<     .      .      .",
+		".      Rv&A   XC     B<     Rv     .",
+		"Yv@    .      .      .      Pv%A   .",
+		"R>     G^@~   R>     G>@    B>     R^&A"
 	]
 }

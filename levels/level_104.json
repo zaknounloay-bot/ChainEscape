@@ -1,10 +1,12 @@
 {
-	"name": "Reverse Gear",
+	"name": "Not Yet",
+	"hint": "Fire a switch at the right moment",
+	"hint_finger": false,
 	"map": [
-		"Gv%A  R>    Yv    .",
-		".     P^    .     B<",
-		".     P^&A  B<    .",
-		".     .     .     .",
-		"Pv    .     P<    ."
+		".    .    .    .",
+		".    B>&A .    B<",
+		"G>%A .    Y^   .",
+		".    .    P^&A G<",
+		".    P>   R^   ."
 	]
 }

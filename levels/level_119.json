@@ -1,11 +1,11 @@
 {
 	"name": "Lumen Lock",
 	"map": [
-		"Y>      .       .       .       P^$S%A  .",
-		".       Yv      Y<      B<      Pv#B    .",
-		"B^&B    .       R^%B    R^&A    .       Yv",
-		"P^      Gv&A    .       Yv@     .       .",
-		".       .       .       R^      G>@     R<",
-		".       Gv      .       .       R<      ."
+		"Y>     .      .      .      P^$S%A .",
+		".      Yv     Y<     B<     Pv#B   .",
+		"B^&B   .      R^%B   R^&A   .      Yv",
+		"P^     Gv&A   .      Yv@    .      .",
+		".      .      .      R^     G>@    R<",
+		".      Gv     .      .      R<     ."
 	]
 }

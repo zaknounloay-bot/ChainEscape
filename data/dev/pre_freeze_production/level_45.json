@@ -1,0 +1,10 @@
+{
+	"name": "Deadbolt",
+	"map": [
+		".       B>      Y>@     G>@     B^@",
+		"R<      .       .       Bv#P$S  .",
+		"B>      .       Pv      .       .",
+		".       B^      Yv#R    P>      Bv",
+		"Y^      .       .       .       Y<"
+	]
+}

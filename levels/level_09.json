@@ -1,10 +1,10 @@
 {
-	"name": "Spinner",
-	"hint": "Spinners turn when a neighbor escapes",
+	"name": "Out Of Sight",
+	"mystery": true,
 	"map": [
-		".   Yv  .   .",
-		".   P>@ R<  .",
-		".   Bv  .   .",
-		".   .   .   ."
+		"B^  P^? .   .",
+		"P>  P<@ B^  .",
+		".   B<  .   .",
+		"R^? Y^  .   ."
 	]
 }

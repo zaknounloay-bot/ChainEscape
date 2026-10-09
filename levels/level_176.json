@@ -1,12 +1,13 @@
 {
-	"name": "Event Horizon",
+	"name": "Twin Lights",
+	"hint": "New: TWINS leave together - both paths must be clear",
+	"hint_finger": false,
 	"map": [
-		"G>=     .       B>      P>+C    B>      .",
-		"Y^=     .       XC      R<      Y<      Yv@~$S",
-		".       Rv@     .       .       P^$G&A  B^@",
-		".       .       .       .       .       .",
-		"Y<%A    Bv      .       .       .       .",
-		".       .       Bv      .       .       .",
-		".       Rv#Y    P>@     .       G^      R^@*"
+		".    .    R>!U R<!U .    Gv",
+		".    .    .    .    .    .",
+		".    P>   .    .    Y^   .",
+		"G^   .    .    .    .    .",
+		".    B^!T B>!T .    Gv   .",
+		".    .    .    .    .    ."
 	]
 }

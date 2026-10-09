@@ -25,7 +25,7 @@
 	],
 	"_reward_blocks": "Coins for escaping a special block by normal play. Each block pays once per save; a Hammer smash pays nothing. 'from_level' is where the campaign starts using it. Diamond is reserved (disabled).",
 	"reward_blocks": {
-		"silver": {"coins": 5, "from_level": 31, "enabled": true},
+		"silver": {"coins": 5, "from_level": 27, "enabled": true},
 		"gold": {"coins": 15, "from_level": 51, "enabled": true},
 		"diamond": {"coins": 40, "from_level": 101, "enabled": false}
 	},

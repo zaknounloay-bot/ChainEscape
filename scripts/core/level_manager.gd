@@ -147,9 +147,10 @@ static var _token_re: RegEx
 static var dev_sequence: bool = false
 ## Movable: the same for the "M" token (the Movable lab and its dev tools).
 static var dev_movable: bool = false
-## Twins: the "!" suffix is parsed only in level files read while this is
-## true (the Twins Prototype lab, see TwinsPrototype). Never in Social /
-## Friend parsing (campaign = false) and never in the production campaign.
+## Twins: the "!" suffix is parsed in campaign level files (Levels 176-199
+## since the 1-300 freeze) and the developer pages' level files; never in
+## Social / Friend parsing (campaign = false). This flag is kept for the
+## developer pages and their tools.
 static var dev_twins: bool = false
 ## True only while a campaign level is being parsed (parse_level).
 static var _campaign: bool = false
@@ -185,8 +186,8 @@ static func _parse_map(map: Array, level: LevelData) -> void:
 			var m := _token_re.search(t)
 			if m != null and m.get_string(11) != "" and not (dev_sequence or _campaign):
 				m = null  # a Sequence token outside the campaign / lab: unknown, as before
-			if m != null and m.get_string(12) != "" and not (dev_twins and _campaign):
-				m = null  # a Twins token outside the Twins Prototype level files: unknown
+			if m != null and m.get_string(12) != "" and not _campaign:
+				m = null  # a Twins token outside campaign / lab level files (Social, Friend): unknown
 			if m == null:
 				push_error("Level %d: bad map token '%s' at row %d col %d" % [level.number, t, r, c])
 				continue

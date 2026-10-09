@@ -82,6 +82,8 @@ static func requested() -> bool:
 
 ## "vhtest3", "vhtest2", "vhtest" or "" (not asked for).
 static func requested_test() -> String:
+	if BuildFlags.player_build():
+		return ""  # player build: developer pages off
 	for key in ["vhtest3", "vhtest2", "vhtest"]:
 		if "--" + key in OS.get_cmdline_user_args():
 			return key

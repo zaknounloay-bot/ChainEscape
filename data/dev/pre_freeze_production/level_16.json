@@ -1,0 +1,10 @@
+{
+	"name": "Locked",
+	"hint": "A lock opens when all blocks of its color are gone",
+	"map": [
+		"Rv   .   Y<  .",
+		"B>#G .   .   .",
+		"Gv   .   .   Gv",
+		".    .   .   ."
+	]
+}

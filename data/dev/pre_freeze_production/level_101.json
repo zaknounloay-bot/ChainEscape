@@ -1,0 +1,12 @@
+{
+	"name": "First Switch",
+	"hint": "New: SWITCH. When it escapes, every arrow with its mark reverses.",
+	"hint_finger": false,
+	"map": [
+		"Bv%A  .     Yv    G<",
+		".     .     G^&A  .",
+		"G<    R>    P>    Yv",
+		".     .     .     G<",
+		".     .     .     ."
+	]
+}

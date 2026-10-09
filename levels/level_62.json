@@ -1,11 +1,11 @@
 {
 	"name": "Afterglow",
 	"map": [
-		".       .       P>@     G>      B>#R    .",
-		"Yv@-    P<      R<      P^      B<      .",
-		".       Y^      B<      .       .       P<@",
-		"Gv      .       .       B>      R>      R^",
-		"Pv      P>      .       Gv@-    P^      .",
-		".       .       Bv      Rv@-#Y  R<$S    ."
+		".      .      P>@    G>     B>#R   .",
+		"Yv@-   P<     R<     P^     B<     .",
+		".      Y^     B<     .      .      P<@",
+		"Gv     .      .      B>     R>     R^",
+		"Pv     P>     .      Gv@-   P^     .",
+		".      .      Bv     Rv@-#Y R<$S   ."
 	]
 }

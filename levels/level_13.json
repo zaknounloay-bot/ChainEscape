@@ -1,9 +1,10 @@
 {
-	"name": "Wrong Way",
+	"name": "Locked",
+	"hint": "A lock opens when every block of the LOCK's color is gone",
 	"map": [
-		"Rv  .   Y^  R<",
-		"B>  R>  .   Gv",
-		".   .   Yv  B<",
-		"P>  .   Bv@ P>"
+		"Rv   .    Y<   .",
+		"B>#G .    .    .",
+		"Gv   .    .    Gv",
+		".    .    .    ."
 	]
 }

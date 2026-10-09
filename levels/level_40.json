@@ -2,11 +2,11 @@
 	"name": "Night Shift",
 	"mystery": true,
 	"map": [
-		".     Bv    .     R>    B>    B>",
-		"B>    .     .     B^@   R<@   .",
-		"P^    .     .     B>$S  .     P^",
-		"R^    G<?   .     R<    .     B^",
-		"B^?   Pv?   .     .     .     Gv",
-		".     .     .     Yv    .     B<"
+		".    Bv   .    R>   B>   B>",
+		"B>   .    .    B^@  R<@  .",
+		"P^   .    .    B>$S .    P^",
+		"R^   G<?  .    R<   .    B^",
+		"B^?  Pv?  .    .    .    Gv",
+		".    .    .    Yv   .    B<"
 	]
 }

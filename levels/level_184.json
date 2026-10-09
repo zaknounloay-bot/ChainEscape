@@ -1,12 +1,13 @@
 {
-	"name": "Grand Design",
+	"name": "Turnabout",
+	"hint": "A switch can reverse a twin - watch what else it turns",
+	"hint_finger": false,
 	"map": [
-		".       Bv@     .       .       R<@~    G<%B    .",
-		".       G<      .       G>&B    .       .       Y<",
-		"B>      Bv@-    Bv      Y^@*    Y^@-    .       .",
-		".       .       .       .       .       .       .",
-		"Gv#Y    B^&B    G>$S%A  .       .       .       .",
-		".       Y>@     .       .       .       .       R^&A",
-		"G>      .       P>&A    B^#Y    .       B^      ."
+		".      B<     .      .      .      .",
+		".      .      R^     .      G>     .",
+		".      .      .      .      R^%A   .",
+		".      .      Bv     B<&A   B^&A!T B<!T",
+		".      .      .      Y^     Y<     .",
+		".      .      .      Y^     .      Y^"
 	]
 }

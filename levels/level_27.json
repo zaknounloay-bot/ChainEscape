@@ -1,10 +1,11 @@
 {
-	"name": "Domino Line",
+	"name": "Gatekeeper",
 	"map": [
-		".   B>@ .   G>  P>",
-		".   G<  .   Y<  .",
-		"Y>  .   .   .   Gv",
-		"B^  .   .   R^  Yv",
-		".   R^@ Pv  .   B<"
+		"Pv    .     .     .     Y<    R<",
+		".     Y>    .     .     .     .",
+		".     .     B^@#P .     G^    Y^@",
+		".     .     .     B>#Y  .     Pv@",
+		".     Y^    .     .     R<    .",
+		".     Y^    .     Y<    .     G<$S"
 	]
 }

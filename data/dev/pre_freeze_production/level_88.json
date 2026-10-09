@@ -1,0 +1,12 @@
+{
+	"name": "High Pass",
+	"map": [
+		".       Rv      .       P<      .       Y<",
+		"Pv      B<      .       Y>      R>      B^",
+		"Pv      Yv      .       Y^#R    Y<$G    R^$S",
+		"Rv      Y<      G<      Y^#B    B>      .",
+		".       Bv@*    Bv      .       Y<@-    .",
+		"P<      Y>@-    .       Gv      .       B>@-#G",
+		".       P>@~    B<      R<      P^      ."
+	]
+}

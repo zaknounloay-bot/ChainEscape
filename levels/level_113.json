@@ -1,11 +1,11 @@
 {
 	"name": "Night Glass",
 	"map": [
-		".     Y<%A  Bv    Pv    R>    G>",
-		".     .     Pv    P^&B  P^    .",
-		"G>    Gv@-  .     .     P^&B  .",
-		"G>&A  P<@   Yv&A  .     .     .",
-		".     .     .     .     .     .",
-		"B^%B  .     G^@   Bv#R  B^    ."
+		".    Y<%A Bv   Pv   R>   G>",
+		".    .    Pv   P^&B P^   .",
+		"G>   Gv@- .    .    P^&B .",
+		"G>&A P<@  Yv&A .    .    .",
+		".    .    .    .    .    .",
+		"B^%B .    G^@  Bv#R B^   ."
 	]
 }

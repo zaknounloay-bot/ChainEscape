@@ -1,0 +1,15 @@
+{
+	"name": "The Grand Master",
+	"mystery": true,
+	"hint": "The Grand Master. Every rule of both eras.",
+	"hint_finger": false,
+	"map": [
+		".        .        R^@#B$G  .        P<@*     .        P<$G+C",
+		"P^%B     .        Yv       Rv$S&B   .        G>%A     .",
+		".        .        .        P>@~#G   R>?      .        .",
+		"G^@      G>@      .        Pv&A     .        .        .",
+		".        .        P>       Rv@-     Pv?      Pv&A     .",
+		".        .        Y>       Y<@-     .        G^&B     R>=",
+		"R^       .        B<+C     B<       Rv=      XC       ."
+	]
+}

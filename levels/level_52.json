@@ -1,13 +1,12 @@
 {
-	"name": "Clockmaker",
-	"hint": "Pattern spinner: right, right, left - then repeat",
-	"hint_finger": false,
+	"name": "Great Escape",
 	"map": [
-		".       R>      P>      Yv      .       .",
-		"P<      Gv@*#R  P<      G>      .       P^",
-		"B>@     .       .       R>      B>      R^",
-		".       .       Rv#B    Gv#B    Y>      G<@",
-		"G^      .       P<      Bv@$S   .       .",
-		"B^      .       .       P<      Y<@     ."
+		".    .    B>   G>$G .    Rv",
+		"Yv@  Gv   Y^   .    .    Bv",
+		".    Bv   Gv@  B<   Y<   .",
+		"Y^   .    Y^@  Rv   B<@  P<",
+		".    .    R>   .    Y^   .",
+		"Y>@  B<   .    .    B^   .",
+		"G>@  P>   R>   .    P>   ."
 	]
 }

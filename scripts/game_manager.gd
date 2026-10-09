@@ -80,7 +80,10 @@ var _blocked_hint_shown := false
 ## v0.6.2 first-time guided lesson on the level that introduces a Second Era
 ## mechanic ("switch" / "gate" / "armor"; "" = none). Finished once per
 ## save: stored as "lesson_<kind>" in progress.tips_seen.
-const LESSONS := {101: "switch", 121: "gate", 161: "armor"}
+## Since the 1-300 freeze (docs/freeze_1_300.md) the approved Experience Lab
+## lessons are the game's: Lock 13, Switch 101, Chain Gate 121, Armor 151,
+## Twins 176.
+const LESSONS := {13: "lock", 101: "switch", 121: "gate", 151: "armor", 176: "twins"}
 ## PORTAL (levels 201+): shown under the board when a lane through a portal
 ## is blocked on the far side (one translatable string).
 const PORTAL_BLOCKED_TEXT := "Blocked after portal %s"
@@ -1391,10 +1394,9 @@ func _chapter_news(chapter: int) -> String:
 	var rg := Chapters.chapter_range(chapter)
 	var news := []
 	# v0.6 Second Era mechanics, where each is introduced.
-	# (The Experience Lab introduces Armor earlier: developer page only.)
-	# (The Experience Lab also introduces TWINS at 176: developer page only.)
-	for intro in [[101, "Switch Blocks"], [121, "Chain Gates"], [ExperienceLab.ARMOR_INTRO if ExperienceLab.active else 161, "Armored Blocks"],
-			[201, "Portals"], [226, "Sequence Blocks"], [251, "Movable Blocks"]] + ([[ExperienceLab.TWINS_INTRO, "Twins"]] if ExperienceLab.active else []):
+	# (Armor at 151 and Twins at 176 since the 1-300 freeze.)
+	for intro in [[101, "Switch Blocks"], [121, "Chain Gates"], [ExperienceLab.ARMOR_INTRO, "Armored Blocks"], [ExperienceLab.TWINS_INTRO, "Twins"],
+			[201, "Portals"], [226, "Sequence Blocks"], [251, "Movable Blocks"]]:
 		if intro[0] >= rg.x and intro[0] <= rg.y:
 			news.append(intro[1])
 	var blocks: Dictionary = Economy.config().get("reward_blocks", {})
@@ -1522,6 +1524,7 @@ func publish_state() -> void:
 		"twins_complete_button": center.call(get_node("TwinsPrototypeComplete").find_children("*", "Button", true, false)[0]) if TwinsPrototype.complete_open and has_node("TwinsPrototypeComplete") else [], "bonds": board.bond_count(), "hearts": hearts, "chain": chain,
 		"undo_steps": history.size(), "undos_used": undos_used, "twin_msg": twin_wait_explained, "hint_block": hint_block,
 		"twin_ids": model.blocks.values().filter(func(b): return b.twin != "").map(func(b): return b.id) if model else [],
+		"debug_open": debug_panel.visible, "player_build": BuildFlags.player_build(), "level_label": center.call(ui._level_label),
 		"opening_lab": OpeningLab.active, "experience_lab": ExperienceLab.active, "lab_qa_level": ExperienceLab.qa_level, "tip_text": (tutorial._text if tutorial.is_showing() else "") if ExperienceLab.active else "", "lab_complete_open": ExperienceLab.complete_open, "lesson": _lesson, "lesson_target": _lesson_target_pos(vis),
 		"lab_complete_button": center.call(get_node("ExperienceLabComplete").find_children("*", "Button", true, false)[0]) if ExperienceLab.complete_open and has_node("ExperienceLabComplete") else [],
 		"level_count": level_manager.level_count, "level_name": level.name if level else "", "max_hearts": max_hearts, "blocks_left": model.block_count(),

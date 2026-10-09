@@ -1,11 +1,13 @@
 {
-	"name": "Gatekeeper",
+	"name": "Gearbox",
+	"hint": "This spinner alternates: watch its bold arrow",
+	"hint_finger": false,
 	"map": [
-		"Pv     .      .      .      Y<     R<",
-		".      Y>     .      .      .      .",
-		".      .      B^@#P  .      G^     Y^@",
-		".      .      .      B>#Y   .      Pv@",
-		".      Y^     .      .      R<     .",
-		".      Y^     .      Y<     .      G<$S"
+		".    P>   R<@  Y>   Rv   .",
+		"G>   .    .    P^   G>   Pv",
+		".    .    .    R^   P<@  B>",
+		"Y>   Gv   Bv@~ .    .    .",
+		"Gv   R<   G<   .    R^@  .",
+		"Y<   P<   .    .    G<   ."
 	]
 }

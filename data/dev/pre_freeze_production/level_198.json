@@ -1,0 +1,13 @@
+{
+	"name": "Legacy",
+	"mystery": true,
+	"map": [
+		".          .          .          P>         .          Pv         .",
+		"P^@        Y<         .          .          .          Bv+C       XC",
+		".          G^         Y<&A       Rv@        P<         G>%A       .",
+		".          Yv@*       Gv@#R$G+C  .          .          .          Y^",
+		".          B>@-$S     R^@~       G^&A       .          P>=        .",
+		".          G^         Rv         .          R^+C       .          .",
+		".          .          R<#P       .          G>?        .          ."
+	]
+}

@@ -1,12 +1,13 @@
 {
-	"name": "Deep Field",
+	"name": "Hold Fire",
+	"hint": "Twins turn a spinner beside them. Pick your moment.",
+	"hint_finger": false,
 	"map": [
-		".     P^#B  .     .     .     R<@~  .",
-		".     Yv@*  P<    .     .     G<@-  .",
-		"Y>&A  R>@   .     Rv+C  .     .     .",
-		".     .     .     P>    .     Y>    Bv&A",
-		".     Y^@   G<    .     .     .     XC",
-		".     G<+C  B>%A  Yv=   G^=   .     .",
-		".     .     .     .     Bv#R  .     ."
+		"Rv   .    .    B>   .    .",
+		".    Rv   .    .    .    .",
+		".    .    Yv@  R^   .    .",
+		".    .    P^   Rv@  .    G<",
+		".    .    P>!T P<!T B>   .",
+		".    .    Y>   .    .    ."
 	]
 }

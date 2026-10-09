@@ -3,11 +3,11 @@
 	"hint": "Switches and spinners: think one step ahead.",
 	"hint_finger": false,
 	"map": [
-		".       .       .       .       .       P>",
-		".       G>      .       R>@     Pv      .",
-		".       B^      G<      .       .       .",
-		"Gv%A    .       .       Bv&A    .       P^",
-		".       .       .       Gv      Y<      G^",
-		".       P>#B    R^$G&A  P>      P^@     Y^@"
+		".      .      .      .      .      P>",
+		".      G>     .      R>@    Pv     .",
+		".      B^     G<     .      .      .",
+		"Gv%A   .      .      Bv&A   .      P^",
+		".      .      .      Gv     Y<     G^",
+		".      P>#B   R^$G&A P>     P^@    Y^@"
 	]
 }

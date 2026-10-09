@@ -1,11 +1,11 @@
 {
 	"name": "Voltage",
 	"map": [
-		"R<      R<      G<      .       R<      Rv@-",
-		"R<#Y$S  Y^      .       R<      G^      B^",
-		"B^@~    P<      P<      G>@     .       G^",
-		"Bv#G    .       .       G^      R^      .",
-		".       P>      Rv      B>@~    .       B^",
-		".       Y^@-    .       G^      P<      ."
+		"R<     R<     G<     .      R<     Rv@-",
+		"R<#Y$S Y^     .      R<     G^     B^",
+		"B^@~   P<     P<     G>@    .      G^",
+		"Bv#G   .      .      G^     R^     .",
+		".      P>     Rv     B>@~   .      B^",
+		".      Y^@-   .      G^     P<     ."
 	]
 }

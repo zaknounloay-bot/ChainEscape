@@ -80,7 +80,7 @@ static func play_move(m: BoardModel, id: int) -> void:
 		"ram": m.ram(id)
 		"advance": m.advance(id)
 		"push": m.push(id)
-		_: m.remove(id)
+		_: m.remove_pair(id)  # TWINS: a bonded pair leaves as one move (= remove without a partner)
 
 
 func model_of(level: LevelData) -> BoardModel:

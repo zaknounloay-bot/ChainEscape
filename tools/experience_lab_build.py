@@ -35,6 +35,14 @@ import sys
 
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 OUT = os.path.join(ROOT, "data", "dev", "experience_lab")
+# Production levels 1-200 as they were before the freeze (commit 1fadb37):
+# the lab's sources. Since the freeze, levels/level_01..200 ARE this lab's
+# output (docs/freeze_1_300.md), so the lab is rebuilt from the archive.
+PROD = os.path.join(ROOT, "data", "dev", "pre_freeze_production")
+
+
+def prod_path(n):
+    return os.path.join(PROD if n <= 200 else os.path.join(ROOT, "levels"), "level_%02d.json" % n)
 
 # Lab level -> source. ("lab", n) = Opening Lab n; ("prod", n) = production n;
 # ("new", key) = a new board defined below.
@@ -282,7 +290,7 @@ NEW = {
 }
 
 def prod_name(n):
-    return json.load(open(os.path.join(ROOT, "levels", "level_%02d.json" % n)))["name"]
+    return json.load(open(prod_path(n)))["name"]
 
 
 def prod_repeat(n, kind, src, name, edits, rename, hint):
@@ -322,7 +330,7 @@ def main():
             data = json.load(open(path))
             source = "Opening Lab %d" % src
         elif kind == "prod":
-            path = os.path.join(ROOT, "levels", "level_%02d.json" % src)
+            path = prod_path(src)
             data = json.load(open(path))
             source = "production P%d" % src
         else:

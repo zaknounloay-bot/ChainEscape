@@ -20,11 +20,30 @@ tag += '\n<script>\n' + social + '</script>'
 # Developer share test page (?sharetest=1); inert without the parameter.
 sharetest = open(os.path.join(root, 'web', 'share_test.js')).read()
 tag += '\n<script>\n' + sharetest + '</script>'
-# ConfigFile string: escape backslashes and double quotes.
-value = tag.replace('\\', '\\\\').replace('"', '\\"')
+# The player build ("Web Friend Test", preset 1) gets everything except the
+# developer share test page.
+player_tag = tag.replace('\n<script>\n' + sharetest + '</script>', '')
+assert player_tag != tag
+
+
+def esc(t):
+    # ConfigFile string: escape backslashes and double quotes.
+    return t.replace('\\', '\\\\').replace('"', '\\"')
+
+
 path = os.path.join(root, 'export_presets.cfg')
 cfg = open(path).read()
-new, n = re.subn(r'html/head_include=".*?(?<!\\)"', lambda m: 'html/head_include="' + value + '"', cfg, flags=re.S)
-assert n == 1, 'html/head_include not found in export_presets.cfg'
-open(path, 'w').write(new)
+parts = re.split(r'(?m)^(?=\[preset\.\d+\.options\])', cfg)
+out = []
+done = 0
+for part in parts:
+    m = re.match(r'\[preset\.(\d+)\.options\]', part)
+    if m:
+        value = esc(tag if m.group(1) == '0' else player_tag)
+        part, n = re.subn(r'html/head_include=".*?(?<!\\)"', lambda _m: 'html/head_include="' + value + '"', part, flags=re.S)
+        assert n == 1, 'html/head_include not found in preset %s' % m.group(1)
+        done += 1
+    out.append(part)
+assert done == 2, 'expected presets 0 (Web) and 1 (Web Friend Test)'
+open(path, 'w').write(''.join(out))
 print('head_include updated (%d + %d + %d bytes of JS)' % (len(js), len(social), len(sharetest)))

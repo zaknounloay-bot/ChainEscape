@@ -1,10 +1,12 @@
 {
 	"name": "Two Ways",
+	"hint": "Each switch turns only its own mark",
+	"hint_finger": false,
 	"map": [
-		".     .     Gv&A  Yv",
-		".     .     .     .",
-		"Rv%A  .     .     Pv",
-		".     P<    B^    B<",
-		"Y>    B^    .     ."
+		".    .    Gv&A Y^",
+		".    .    .    .",
+		"Rv%A .    .    Pv",
+		".    P<   B^   B^&B",
+		"Y>%B B^   .    ."
 	]
 }

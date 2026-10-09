@@ -1,12 +1,12 @@
 {
-	"name": "Pulsar",
+	"name": "Deep Field",
 	"map": [
-		".       XC      G<@-    R<@     Y>%A    .",
-		".       Bv@+C   .       .       P^@     Bv",
-		"G<=     .       .       .       .       .",
-		"G^      .       .       G^      .       .",
-		"P^      B<      B>&A    .       R>#B    Gv@~",
-		".       B<=     B^      .       R>#P$S  .",
-		".       .       .       G^      .       Y<"
+		".    P^#B .    .    .    R<@~ .",
+		".    Yv@* P<   .    .    G<@- .",
+		"Y>&A R>@  .    Rv+C .    .    .",
+		".    .    .    P>   .    Y>   Bv&A",
+		".    Y^@  G<   .    .    .    XC",
+		".    G<+C B>%A Yv=  G^=  .    .",
+		".    .    .    .    Bv#R .    ."
 	]
 }

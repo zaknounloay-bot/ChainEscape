@@ -1,12 +1,12 @@
 {
 	"name": "Crystal Heart",
 	"map": [
-		".       XC      .       P>      .       R>      Bv",
-		".       G^      .       .       .       .       .",
-		".       .       Y<=     B^$G&A  .       .       Pv",
-		".       Y^      P<      R^#Y    G<      .       .",
-		"Gv%A    .       B^      .       .       G<#R    .",
-		"Rv@     Y>@~$S  .       .       B>+C    Rv      .",
-		".       Y>@*    P<@     .       .       .       B<@"
+		".      XC     .      P>     .      R>     Bv",
+		".      G^     .      .      .      .      .",
+		".      .      Y<=    B^$G&A .      .      Pv",
+		".      Y^     P<     R^#Y   G<     .      .",
+		"Gv%A   .      B^     .      .      G<#R   .",
+		"Rv@    Y>@~$S .      .      B>+C   Rv     .",
+		".      Y>@*   P<@    .      .      .      B<@"
 	]
 }

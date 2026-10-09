@@ -3,11 +3,11 @@
 	"hint": "The number on a gate shows how many linked blocks are left.",
 	"hint_finger": false,
 	"map": [
-		".     .     G<    B<+C  B<    Pv@",
-		".     .     XC    .     B<    G^",
-		"B>+C  P>    .     R^    R>    P<@",
-		"G^    Rv    .     .     .     .",
-		"B^    .     B^    .     .     .",
-		".     P>@   Y<@~  Bv    P^    ."
+		".    .    G<   B<+C B<   Pv@",
+		".    .    XC   .    B<   G^",
+		"B>+C P>   .    R^   R>   P<@",
+		"G^   Rv   .    .    .    .",
+		"B^   .    B^   .    .    .",
+		".    P>@  Y<@~ Bv   P^   ."
 	]
 }

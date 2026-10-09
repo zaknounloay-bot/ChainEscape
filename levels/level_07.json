@@ -1,10 +1,9 @@
 {
-	"name": "Crossroads",
+	"name": "Right On Time",
 	"map": [
-		"R>  .   .   R>  Gv",
-		"G>  .   R>  .   .",
-		"R^  .   .   .   .",
-		".   .   R^  .   .",
-		".   G<  .   .   R<"
+		".   Y<  .   .",
+		"G>  P<@ R>  .",
+		".   B<  .   .",
+		"R>  Y^  .   ."
 	]
 }

@@ -4,12 +4,12 @@
 	"hint": "The Master Level. Every rule you have learned.",
 	"hint_finger": false,
 	"map": [
-		"Yv      .       .       Y<      .       .       P^@~#R",
-		".       .       .       B^      .       Rv      .",
-		"P>@     R>@     .       .       B<#G    B<?     B<#G",
-		".       Pv      R<      Yv      .       Pv?     .",
-		".       Y<?     .       Y>@*$S  .       .       Y^",
-		".       Pv      R^      Gv@*    G^@-    .       .",
-		".       .       B^      Y<@~$G  B>$G    .       ."
+		"Yv     .      .      Y<     .      .      P^@~#R",
+		".      .      .      B^     .      Rv     .",
+		"P>@    R>@    .      .      B<#G   B<?    B<#G",
+		".      Pv     R<     Yv     .      Pv?    .",
+		".      Y<?    .      Y>@*$S .      .      Y^",
+		".      Pv     R^     Gv@*   G^@-   .      .",
+		".      .      B^     Y<@~$G B>$G   .      ."
 	]
 }

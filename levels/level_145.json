@@ -2,11 +2,11 @@
 	"name": "Pulse Grid",
 	"mystery": true,
 	"map": [
-		".       .       R<?     .       R^%A    .",
-		"Rv+C    Gv?     Pv      .       .       G<",
-		".       .       Yv      .       .       .",
-		"B<      P<      R>@     .       B>@~#G  .",
-		".       .       Yv      .       R^      R^&A",
-		".       .       XC      R<@     P^      G^@#Y"
+		".      .      R<?    .      R^%A   .",
+		"Rv+C   Gv?    Pv     .      .      G<",
+		".      .      Yv     .      .      .",
+		"B<     P<     R>@    .      B>@~#G .",
+		".      .      Yv     .      R^     R^&A",
+		".      .      XC     R<@    P^     G^@#Y"
 	]
 }

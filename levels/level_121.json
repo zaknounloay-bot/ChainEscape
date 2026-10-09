@@ -3,11 +3,11 @@
 	"hint": "New: CHAIN GATE. It opens once every block with its chain mark escapes.",
 	"hint_finger": false,
 	"map": [
-		"XC      .       .       .       .       B<@",
-		"B^@     Bv      .       G<      .       P<",
-		".       .       B>      Y^@     P>#R    .",
-		"Pv      .       P^      .       .       .",
-		"R>      .       R>      .       .       Pv",
-		".       .       B^$G+C  Y>      .       Bv"
+		"XC     .      .      .      .      B<@",
+		"B^@    Bv     .      G<     .      P<",
+		".      .      B>     Y^@    P>#R   .",
+		"Pv     .      P^     .      .      .",
+		"R>     .      R>     .      .      Pv",
+		".      .      B^$G+C Y>     .      Bv"
 	]
 }

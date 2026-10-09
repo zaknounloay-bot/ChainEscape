@@ -1,11 +1,12 @@
 {
-	"name": "Spark Gap",
+	"name": "Hard Case",
 	"map": [
-		".       Yv      P<      R>@~    .       B<",
-		"P>      .       .       .       P<@$S   B^",
-		".       .       B>@-    .       R>@     Bv@*",
-		".       .       P^#G    .       G>$G&A  Yv",
-		"B^      .       .       .       .       R<",
-		"Pv%A    Rv&A    Y<#G    .       .       ."
+		".     Bv@~  P<@-  .     .     G<",
+		".     .     P<    Y<    Bv    R<",
+		"P>    Yv    .     .     .     .",
+		"B^    B^@   P>=   .     .     .",
+		".     .     .     Rv    Pv@   P<",
+		"Y^    .     .     Rv    G>@#Y .",
+		"Rv#Y  .     R<@$S G>    .     ."
 	]
 }

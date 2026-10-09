@@ -1,11 +1,11 @@
 {
-	"name": "Long Way Round",
+	"name": "Detour",
 	"map": [
-		".     .     .     .     R>    Pv",
-		"Pv    R<    .     P<#R  .     Yv",
-		".     .     B>#Y  G^    .     .",
-		"P<#Y  Y>    .     Yv    .     .",
-		".     Rv    Y<    R<    .     Gv",
-		".     B>    .     B>    P^    ."
+		".    .    .    .    R>   Pv",
+		"Pv   R<   .    P<#R .    Yv",
+		".    .    B>#Y G^   .    .",
+		"P<#Y Y>   .    Yv   .    .",
+		".    Rv   Y<   R<   .    Gv",
+		".    B>   .    B>   P^   ."
 	]
 }

@@ -190,6 +190,8 @@ static func requested() -> bool:
 ## "sequence" (?mechlab=sequence), "portal" (?mechlab=1 / =true / =portal)
 ## or "" (not asked for).
 static func requested_mechanic() -> String:
+	if BuildFlags.player_build():
+		return ""  # player build: developer pages off
 	var args := OS.get_cmdline_user_args()
 	if "--" + PARAM + "=sequence" in args:
 		return "sequence"

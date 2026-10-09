@@ -90,6 +90,24 @@ func _run() -> void:
 	get_tree().quit(0 if failures.is_empty() else 1)
 
 
+## The lab's production sources: production 1-200 as they were before the
+## 1-300 freeze (data/dev/pre_freeze_production), 201+ unchanged. Since the
+## freeze, levels/ 1-200 ARE the lab (checked in _frozen).
+const PRE_FREEZE_DIR := "res://data/dev/pre_freeze_production"
+
+
+static func src_path(n: int) -> String:
+	return PRE_FREEZE_DIR.path_join("level_%02d.json" % n) if n <= 200 else LevelManager.LEVEL_PATH % n
+
+
+static func src_level(n: int) -> LevelData:
+	var keep := LevelManager.dev_twins
+	LevelManager.dev_twins = true
+	var lv := LevelManager.parse_level(JSON.parse_string(FileAccess.get_file_as_string(src_path(n))), n, true)
+	LevelManager.dev_twins = keep
+	return lv
+
+
 static func lab_level(n: int) -> LevelData:
 	var json = JSON.parse_string(FileAccess.get_file_as_string(ExperienceLab.LEVEL_DIR.path_join("level_%02d.json" % n)))
 	var keep := LevelManager.dev_twins
@@ -140,12 +158,28 @@ func _defaults() -> void:
 	var lm := LevelManager.new()
 	lm._ready()
 	_check(lm.level_count == 300, "300 production levels (%d)" % lm.level_count)
-	_check(_rule_visual_kinds() == [], "without the lab every spinner keeps the production drawing (%s)" % [_rule_visual_kinds()])
+	_check(_rule_visual_kinds() == [BlockData.SpinRule.ALT, BlockData.SpinRule.PATTERN], "since the freeze the game draws Alternating / Pattern spinners with the approved symbols (%s)" % [_rule_visual_kinds()])
+	_frozen()
 	for n in [1, 11, 16, 20, 50, 100, 101, 111, 121, 125, 130, 131, 150, 151, 160, 161, 170, 175]:
 		var a := LevelManager.to_json_text(lm.load_level(n))
 		var b := LevelManager.to_json_text(LevelManager.read_level(n))
 		_check(a == b, "without the lab, Level %d is production" % n)
 	lm.free()
+
+
+# --- The 1-300 freeze (docs/freeze_1_300.md) ---------------------------------------
+
+## Production 1-200 are the approved lab levels, byte for byte; 201-300 are
+## untouched production (the archive covers 1-200 only).
+func _frozen() -> void:
+	var same := 0
+	for n in range(1, 201):
+		var a := FileAccess.get_file_as_string(LevelManager.LEVEL_PATH % n)
+		var b := FileAccess.get_file_as_string(ExperienceLab.LEVEL_DIR.path_join("level_%02d.json" % n))
+		if a == b and a != "":
+			same += 1
+	_check(same == 200, "production levels 1-200 are the approved lab levels byte for byte (%d / 200)" % same)
+	_check(not FileAccess.file_exists(PRE_FREEZE_DIR.path_join("level_201.json")), "the pre-freeze archive holds 1-200 only")
 
 
 # --- Data -------------------------------------------------------------------------
@@ -178,7 +212,7 @@ func _data() -> void:
 		if src.begins_with("Opening Lab"):
 			src_json = JSON.parse_string(FileAccess.get_file_as_string(OpeningLab.LEVEL_DIR.path_join("level_%02d.json" % n)))
 		elif src.begins_with("production P"):
-			src_json = JSON.parse_string(FileAccess.get_file_as_string(LevelManager.LEVEL_PATH % int(src.substr(12))))
+			src_json = JSON.parse_string(FileAccess.get_file_as_string(src_path(int(src.substr(12)))))
 		elif src.begins_with("Twins prototype "):
 			src_json = JSON.parse_string(FileAccess.get_file_as_string(TwinsPrototype.LEVEL_DIR.path_join("level_%02d.json" % int(src.substr(16)))))
 			src_json.erase("hearts")  # prototype-only keys, equal to the lab defaults
@@ -699,7 +733,7 @@ func _game() -> void:
 	game.level_manager.level_count = mini(game.level_manager.level_count, ExperienceLab.LAST_LEVEL)
 	AudioManager.set_music_enabled(false)
 	_check(game.progress.path == ExperienceLab.SAVE_PATH, "the game uses the lab save (%s)" % game.progress.path)
-	_check(_rule_visual_kinds() == [BlockData.SpinRule.ALT, BlockData.SpinRule.PATTERN], "in the lab only Alternating / Pattern spinners use the new rule symbols (%s)" % [_rule_visual_kinds()])
+	_check(_rule_visual_kinds() == [BlockData.SpinRule.ALT, BlockData.SpinRule.PATTERN], "in the lab Alternating / Pattern spinners use the approved rule symbols (%s)" % [_rule_visual_kinds()])
 	var started_after_100 := false
 	await _lock_lesson()
 	await _gate_lesson()
@@ -928,7 +962,7 @@ func _production_era() -> void:
 		if n >= 151 and n <= 175:
 			used.append(src)
 		var lab_json: Dictionary = JSON.parse_string(FileAccess.get_file_as_string(ExperienceLab.LEVEL_DIR.path_join("level_%02d.json" % n)))
-		var prod_json: Dictionary = JSON.parse_string(FileAccess.get_file_as_string(LevelManager.LEVEL_PATH % src))
+		var prod_json: Dictionary = JSON.parse_string(FileAccess.get_file_as_string(src_path(src)))
 		for d in [lab_json, prod_json]:
 			d["map"] = d["map"].map(func(row): return Array(String(row).split(" ", false)))
 		if n == 151:
@@ -943,7 +977,7 @@ func _production_era() -> void:
 			lab_json["hint"] = prod_json["hint"]
 		_check(lab_json == prod_json, "Lab %d JSON is production Level %d (every field, every map token%s)" % [n, src, " except the hint" if n == 131 else (" except the adapted token" if n == 151 else "")])
 		var lab := lab_level(n)
-		var prod := LevelManager.read_level(src)
+		var prod := src_level(src)
 		if n == 131:
 			lab.hint = prod.hint  # the only difference (checked above)
 		if n != 151:
@@ -1003,9 +1037,7 @@ func _production_era() -> void:
 	# runs production's Armor lesson at 151 (never again at 161) and adds none
 	# elsewhere (125 especially).
 	_check(ExperienceLab.LESSONS == {13: "lock", 101: "switch", 121: "gate", 151: "armor", 176: "twins"}, "lab lessons are 13 lock, 101 switch, 121 gate, 151 armor, 176 twins (%s)" % [ExperienceLab.LESSONS])
-	_check(ExperienceLab.LESSONS[121] == GameManager.LESSONS[121] and ExperienceLab.LESSONS[101] == GameManager.LESSONS[101] and ExperienceLab.LESSONS[151] == GameManager.LESSONS[161],
-		"Lab 101 / 121 / 151 use production's own lesson kinds")
-	_check(GameManager.LESSONS == {101: "switch", 121: "gate", 161: "armor"}, "production lessons unchanged (Armor at 161)")
+	_check(GameManager.LESSONS == ExperienceLab.LESSONS, "since the freeze the game's lessons are the lab's (%s)" % [GameManager.LESSONS])
 	_check(ExperienceLab.ARMOR_INTRO == 151 and not ExperienceLab.LESSONS.has(161), "the lab introduces Armor at 151, no lesson at Lab 161")
 	# Milestone 125: production's milestone level, no lab celebration on top.
 	_check(Chapters.is_milestone(125) and not ExperienceLab.CELEBRATIONS.has(125) and ExperienceLab.CELEBRATIONS.keys().all(func(k): return k <= 100),
@@ -1042,7 +1074,7 @@ func _twins_era() -> void:
 			var p := int(src.substr(12))
 			used.append(p)
 			var lab_json: Dictionary = JSON.parse_string(FileAccess.get_file_as_string(ExperienceLab.LEVEL_DIR.path_join("level_%02d.json" % n)))
-			var prod_json: Dictionary = JSON.parse_string(FileAccess.get_file_as_string(LevelManager.LEVEL_PATH % p))
+			var prod_json: Dictionary = JSON.parse_string(FileAccess.get_file_as_string(src_path(p)))
 			for d in [lab_json, prod_json]:
 				d["map"] = d["map"].map(func(row): return Array(String(row).split(" ", false)))
 			if n == 182:
@@ -1072,7 +1104,7 @@ func _twins_era() -> void:
 			# has the same); 192 may have one (plan, section F); all others none.
 			var allowed := 0
 			if n == 182:
-				var src := _twin_graph(Solver.from_model(model_of(LevelManager.read_level(182))), 400000)
+				var src := _twin_graph(Solver.from_model(model_of(src_level(182))), 400000)
 				allowed = src.get("first_bad", -1)
 				_check(allowed == 1, "production 182 itself has one losing first move (%d)" % allowed)
 			elif n == 192:
@@ -1304,8 +1336,8 @@ func _armor_lesson() -> void:
 	var prod17: String = game._chapter_news(17)
 	var prod_twins := range(1, 31).filter(func(c): return game._chapter_news(c).contains("Twins"))
 	ExperienceLab.active = true
-	_check(not prod16.contains("Armored") and prod17.contains("Armored Blocks"), "production: Armored Blocks is still announced for Chapter 17 ('%s' / '%s')" % [prod16, prod17])
-	_check(prod_twins.is_empty(), "production: no Chapter card mentions Twins (%s)" % [prod_twins])
+	_check(prod16.contains("Armored Blocks") and not prod17.contains("Armored"), "since the freeze the game announces Armored Blocks for Chapter 16 ('%s' / '%s')" % [prod16, prod17])
+	_check(prod_twins == [18], "since the freeze the game announces Twins on the Chapter 18 card only (%s)" % [prod_twins])
 	game.progress.tips_seen.erase("lesson_armor")
 	game.start_level(151, "test")
 	await _frames(3)
