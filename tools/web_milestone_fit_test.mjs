@@ -109,19 +109,33 @@ for (const [W, H, label] of [[390, 844, 'iphone14'], [375, 667, 'iphoneSE'], [43
         continue;
       }
       let s = await waitFor(page, (x) => x.level === n && x.major_rect && x.major_rect[2] > 0, `overlay ${n}`).catch(() => null);
+      // Capture first (the overlay holds ~1-2 s, the stamp follows it), judge
+      // afterwards: the overlay frame showing the most of it is judged.
+      const frames = [];
       if (s) {
-        await sleep(700);
-        const r = (await state(page)).major_rect;
-        const g = await edgeGold(await page.screenshot(), Math.floor(r[1] * H), Math.ceil(r[3] * H), 2);
+        for (let i = 0; i < 3; i++) frames.push(await page.screenshot());
+      }
+      let stamp = null, stampBuf = null;
+      if (n === 100 || n === 200) {
+        stamp = await waitFor(page, (x) => x.stamp && x.stamp.text && x.stamp.scale > 0.98 && x.stamp.scale < 1.02 && x.stamp.alpha > 0.98, `stamp ${n}`, 20000);
+        stampBuf = await page.screenshot();
+      }
+      if (s) {
+        const r = s.major_rect;
+        let g = { edge: 0, inner: -1 };
+        for (const buf of frames) {
+          const f = await edgeGold(buf, Math.floor(r[1] * H), Math.ceil(r[3] * H), 2);
+          if (f.edge > 0) { g = f; break; }
+          if (f.inner > g.inner) g = f;
+        }
         check(g.inner > 50 && g.edge === 0, `[${label}] L${n}: "${n} / LEVELS ESCAPED!" fully visible (gold at the edges ${g.edge}, inside ${g.inner})`);
       }
-      if (n === 100 || n === 200) {
-        s = await waitFor(page, (x) => x.stamp && x.stamp.text && x.stamp.scale > 0.98 && x.stamp.scale < 1.02 && x.stamp.alpha > 0.98, `stamp ${n}`, 20000);
-        const buf = await page.screenshot();
-        fs.writeFileSync(path.join(shots, `fit_${label}_L${n}_stamp.png`), buf);
+      if (stamp) {
+        s = stamp;
+        fs.writeFileSync(path.join(shots, `fit_${label}_L${n}_stamp.png`), stampBuf);
         const scale = W / 720;  // logical 720 px wide (canvas_items, expand)
         const rest = s.stamp.rest;
-        const g = await edgeGold(buf, Math.floor(rest[1] * scale) - 4, Math.ceil(rest[3] * scale) + 4, 2);
+        const g = await edgeGold(stampBuf, Math.floor(rest[1] * scale) - 4, Math.ceil(rest[3] * scale) + 4, 2);
         const vw = g.width;
         const want = n === 200 ? 'GRAND MASTER!' : 'MASTER!';
         const fits = rest[0] >= 0 && rest[2] <= 720;
