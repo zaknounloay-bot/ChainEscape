@@ -112,9 +112,10 @@ func _clear_level(n: int) -> void:
 		await _tap(id)
 		await _frames(2)
 	var total_before := game.progress.total_score()
-	# Card appears after the celebration (Master Level: longest).
+	# Card appears after the celebration (Master Level: longest - the LEVELS
+	# ESCAPED overlay, then the MASTER / GRAND MASTER stamp, then the card).
 	var t := 0.0
-	while not game.ui.is_complete_visible() and t < 4.0:
+	while not game.ui.is_complete_visible() and t < 10.0:
 		await _wait(0.1)
 		t += 0.1
 	if not game.ui.is_complete_visible():
