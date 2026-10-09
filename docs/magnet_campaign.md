@@ -164,3 +164,39 @@ All 22 levels are solvable, and every reachable state graph is complete and fini
 The Experience Lab mirrors levels 1–200 byte-for-byte, including the new 76–99.
 
 Browser tests only (no effect on the Friend Test build, where `player_build` is set): in dev and QA builds, `window.chainEscapeState` now also refreshes after each tap, Undo, Hint and Hammer. It additionally lists block positions, magnets and the Undo, Hint, Hammer and Restart button positions.
+
+## Regression (clean checkout of `37540d1`; test fixes re-run on `27f83f4`)
+
+**No-change goldens, `beca155` vs new:**
+- All **278 protected levels** (1–75, 80, 90, 100–300) are byte-identical: Solver solutions, analysis, first hint and every move state.
+- The Portal, Sequence and Movable lab boards are byte-identical too.
+
+**Headless suites:**
+- Unit tests: 33,697 checks, 0 failures.
+- All pass: verifier, friend generator (493 checks), Magnet build, armor audit, MagnetCheck, Era3ProdCheck (168 board keys), PortalProdCheck, Twins, Opening Lab, Social, Friend, Recipient, Lock, VH, Portal, Sequence, Movable, Music.
+
+**QA checkpoint sequence: 41/41 pass.** Coverage:
+- every 25-level checkpoint from 50 to 275, fresh and resumed;
+- the 50 edge cases;
+- lesson and transition levels 13, 76–81, 89–91, 98, 99, 151, 176, 201, 226, 251 and 300.
+
+**Browser tests, all pass:**
+
+| Group | Results |
+|---|---|
+| Builds | Magnet campaign 36/36, Web QA 53/53, Friend Test 25/25, Magnet lab 21/21 |
+| Campaign and labs | milestone fit 15/15, Experience Lab, Era 3, Portal arc, Twins 44/44, Opening Lab |
+| UI and saves | Level Select (24), audio (75), persistence (47) |
+| Friend and social | Friend flow 30/30, Friend Challenge route 14/14, mechanic-lab pages (10, 11, 12), recipient 33/33, share options 14/14, share-test page 28/28, VH-test page 17/17 |
+| Backend | contract test (mock) 40/40 |
+
+**Three suites needed test-only updates:**
+
+| Suite | What was outdated | Fixed in |
+|---|---|---|
+| Playtest (300 levels) | did not expect the Magnet card at 76 | `e99d0de` |
+| ExperienceLabCheck | compared lab 76–99 with the pre-freeze archive instead of production; its Hammer sampler pulled on a smash | `d0b7f62` |
+| Soak | gave up after 4 s waiting for the Level 200 card, which follows the Phase 1 milestone overlay and stamp | `27f83f4` |
+
+- The Soak timeout is **not related to Magnets**: Soak fails the same way on `beca155`.
+- All three suites pass after their fixes.
