@@ -126,7 +126,7 @@ func _isolation() -> void:
 		_check(not FriendGenerator.mechanics_ok(def, FriendGenerator.MEDIUM) and not FriendGenerator.mechanics_ok(def, FriendGenerator.VERY_HARD), "Friend validation rejects %s" % str(map))
 	var keys: Array = load("res://tools/classic_board_keys.gd").compute()
 	var data = JSON.parse_string(FileAccess.get_file_as_string(FriendGenerator.CLASSIC_KEYS_PATH))
-	_check(keys.size() == 200 and data["keys"] == keys, "Friend campaign keys: still exactly levels 1-200 (data file unchanged)")
+	_check(keys.size() == 190 and data["keys"] == keys, "Friend campaign keys: levels 1-200 minus the 10 Twins levels, data file up to date (%d)" % keys.size())
 
 
 # --- Data -------------------------------------------------------------------------------

@@ -157,6 +157,7 @@ func _play_level(n: int) -> void:
 		var snapshot := _state()
 		var before_count := game.model.block_count()
 		var kind := game.model.move_state(id)
+		var pair := game.model.twin_partner(id) >= 0  # TWINS: a pair leaves as one move
 		var chain_before_tap := game.chain
 		await _tap(id)
 		if kind == "ram" or kind == "advance" or kind == "push":
@@ -165,7 +166,7 @@ func _play_level(n: int) -> void:
 			_check(game.model.block_count() == before_count and game.model.blocks.has(id), "L%d %s by block %d must not remove it" % [n, kind, id])
 		else:
 			# An escape removes the block (and opens any Chain Gate it completed).
-			_check(game.model.block_count() == before_count - 1 - game.model.last_opened_gates.size(), "L%d tap on block %d did not remove it" % [n, id])
+			_check(game.model.block_count() == before_count - (2 if pair else 1) - game.model.last_opened_gates.size(), "L%d tap on block %d did not remove it" % [n, id])
 		taps += 1
 		if taps == 3:
 			_shot("L%02d_chain" % n)
@@ -392,15 +393,15 @@ func _test_reward_blocks() -> void:
 	await _solve_cleanly()
 	await _wait(1.3)
 	_check(game.last_result["reward_coins"] == 0, "no reward coins on a farming attempt")
-	# Gold on level 51 (Chapter 6).
-	game.start_level(51)
+	# Gold on level 52 (Chapter 6; since the 1-300 freeze the first Gold block).
+	game.start_level(52)
 	await _wait(0.4)
 	var gold := _reward_id(BlockData.Rarity.GOLD)
-	_check(gold != -1 and game.tutorial._text.begins_with("Gold Block"), "level 51 has a Gold block and explains it")
+	_check(gold != -1 and game.tutorial._text.begins_with("Gold Block"), "level 52 has a Gold block and explains it")
 	var g0 := game.progress.coins
 	await _play_until_escaped(gold)
 	await _wait(0.1)
-	_check(game.progress.coins == g0 + 15 and game.progress.has_reward_block(51, gold), "Gold escape pays +15")
+	_check(game.progress.coins == g0 + 15 and game.progress.has_reward_block(52, gold), "Gold escape pays +15")
 	var gfly := game.ui._root.get_children().filter(func(c): return c is Label and c.text == "+15")
 	_check(gfly.size() == 1 and gfly[0].get_theme_color("font_color").is_equal_approx(Palette.REWARD_BODY[BlockData.Rarity.GOLD][1]), "a Gold-colored '+15' pops up")
 	await _solve_cleanly()
@@ -439,7 +440,7 @@ func _test_reward_blocks() -> void:
 		_check(game.progress.has_reward_block(level_n, target) and game.progress.coins == h0 + 15 + others,
 			"the smashed Gold block can still be earned by play (coins %d -> %d, others %d)" % [h0, game.progress.coins, others])
 	var disk := PlayerProgress.new(PROGRESS_PATH).load_from_disk()
-	_check(disk.has_reward_block(32, silver) and disk.has_reward_block(51, gold), "collected rewards persisted")
+	_check(disk.has_reward_block(32, silver) and disk.has_reward_block(52, gold), "collected rewards persisted")
 	print("Silver / Gold rewards, anti-farming (Undo, Restart, Replay, Hammer) OK")
 
 
@@ -466,7 +467,10 @@ func _test_chapter_complete() -> void:
 	_check(game.ui.is_chapter_card_open() and game.ui.chapter_card_chapter() == 3, "Chapter Complete card shown")
 	var card: ChapterCard = game.ui._chapter_card
 	_check(card._kicker.text == "CHAPTER 3" and card._stars.text == "★ %d / 30" % Economy.chapter_stars(game.progress, 3), "card shows the Chapter's stars / 30")
-	_check(card._next_title.text == "CHAPTER 4  ·  EMBER RIDGE" and card._next_new.text == "NEW: Silver Blocks", "card previews Chapter 4 and its Silver Blocks")
+	# Since the 1-300 freeze Silver Blocks start at 27 (Chapter 3), so the
+	# Chapter 3 card announced them and Chapter 4 brings nothing new.
+	_check(card._next_title.text == "CHAPTER 4  ·  EMBER RIDGE" and card._next_new.text == game._chapter_news(4) and game._chapter_news(4) == ""
+		and game._chapter_news(3) == "NEW: Silver Blocks", "card previews Chapter 4; Silver Blocks were announced for Chapter 3 ('%s')" % game._chapter_news(3))
 	_shot("chapter3_complete_card")
 	# Claim the chest tiers right here.
 	var c1 := game.progress.coins
@@ -893,22 +897,23 @@ func _test_second_era_mechanics() -> void:
 	await _wait(0.6)
 	_check(not game.model.blocks.has(gate) and game.board.get_view(gate) == null, "the gate opened when its last link escaped")
 	_check(game._lesson == "" and game.progress.tips_seen.has("lesson_gate"), "L121 lesson finished when the gate opened, and saved")
-	# ARMOR (161): a ram is not a mistake; the shell breaks; Undo restores it.
-	game.start_level(161)
+	# ARMOR (151 since the 1-300 freeze): a ram is not a mistake; the shell
+	# breaks; Undo restores it.
+	game.start_level(ExperienceLab.ARMOR_INTRO)
 	await _wait(0.5)
 	var armored := -1
 	for id in game.model.blocks:
 		if game.model.blocks[id].armored:
 			armored = id
-	_check(armored != -1, "level 161 has an armored block")
+	_check(armored != -1, "level 151 has an armored block")
 	var source := -1
 	for mv in Solver.from_model(game.model).solve_moves():
 		if mv & Solver.RAM:
 			source = mv & Solver.ID_MASK
 			break
 	_check(game._lesson == "armor" and game.board.get_view(armored).marked and source != -1 and game.board.get_view(source).marked
-		and game.tutorial._show_finger, "L161 lesson: the armored target and the block to launch are marked, finger shown")
-	_shot("L161_lesson")
+		and game.tutorial._show_finger, "L151 lesson: the armored target and the block to launch are marked, finger shown")
+	_shot("L151_lesson")
 	await _tap(armored)
 	await _wait(0.1)
 	_check(game.mistakes == 0 and game.tutorial._text.begins_with("Armored"), "tapping a shell is free and explains the ram")
@@ -936,25 +941,26 @@ func _test_second_era_mechanics() -> void:
 				same = same and ob != null and others[oid] == [ob.cell, ob.direction, ob.armored]
 			_check(same, "the shell burst is visual only: every other block is unchanged")
 			_check(game.board.get_view(armored).get("_arrow").visible, "the burst reveals the block's arrow")
-			_check(game.tutorial._text == "" or game.tutorial._text.begins_with("Shell cracked"), "L161 lesson: success line after the first ram ('%s')" % game.tutorial._text)
+			_check(game.tutorial._text == "" or game.tutorial._text.begins_with("Shell cracked"), "L151 lesson: success line after the first ram ('%s')" % game.tutorial._text)
 			rammed = true
 			_check(game.hearts == h and game.mistakes == 0 and game.model.blocks.has(id), "a ram costs no heart and removes nothing")
 	await _wait(0.4)
 	_check(rammed and not game.model.blocks[armored].armored and not game.board.get_view(armored).data.armored, "the shell broke (model and view)")
-	_shot("L161_after_ram")
+	_shot("L151_after_ram")
 	game.undo()
 	await _wait(0.3)
 	_check(game.model.blocks[armored].armored and game.board.get_view(armored).data.armored, "Undo restores the shell")
-	_check(game._lesson == "" and game.progress.tips_seen.has("lesson_armor"), "L161 lesson finished by the first ram and stays finished after Undo")
+	_check(game._lesson == "" and game.progress.tips_seen.has("lesson_armor"), "L151 lesson finished by the first ram and stays finished after Undo")
 	# Later Armor levels: no lesson; tapping a shell gives the short reminder.
-	game.start_level(166)
+	game.start_level(152)
 	await _wait(0.3)
-	_check(game._lesson == "", "L166: no lesson")
+	_check(game._lesson == "", "L152: no lesson")
 	var shell := _first_in_state("armored")
+	_check(shell != -1, "L152 has a shell")
 	if shell != -1:
 		await _tap(shell)
 		await _wait(0.1)
-		_check(game.tutorial._text.begins_with("Armored") and game.mistakes == 0, "L166: tapping a shell shows the short reminder")
+		_check(game.tutorial._text.begins_with("Armored") and game.mistakes == 0, "L152: tapping a shell shows the short reminder")
 	print("Second Era mechanics OK (switch flip, gate open, armor ram + undo)")
 
 

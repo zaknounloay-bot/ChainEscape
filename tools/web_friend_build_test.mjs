@@ -75,12 +75,15 @@ for (const [W, H, label] of [[390, 844, 'iphone14'], [375, 667, 'iphoneSE'], [43
     check(!s.card_open && s.blocks_left > 0, `A[${label}]: CONTINUE starts Level 1 "${s.level_name}" (${s.blocks_left} blocks)`);
     await page.screenshot({ path: path.join(shots, `friend_${label}_level1.png`) });
     // ===== B =====
+    await page.focus('canvas').catch(() => {});
     await page.keyboard.press('F1');
     await sleep(400);
-    await page.keyboard.press('s');
-    await sleep(1500);
     s = await state(page);
-    check(!s.debug_open && !s.completed, `B[${label}]: F1 (+ S) opens no debug panel and solves nothing`);
+    const f1Open = s.debug_open;
+    await page.keyboard.press('s');
+    await sleep(6000);  // a dev build would be auto-solving by now
+    s = await state(page);
+    check(!f1Open && !s.debug_open && !s.completed, `B[${label}]: F1 (+ S) opens no debug panel and solves nothing (open after F1: ${f1Open})`);
     for (let i = 0; i < 6; i++) { await tap(page, s.level_label); await sleep(120); }
     await sleep(500);
     s = await state(page);

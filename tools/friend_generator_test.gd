@@ -64,13 +64,21 @@ func _test_specs() -> void:
 func _test_classic_keys() -> void:
 	var live: Array = load("res://tools/classic_board_keys.gd").compute()
 	var data = JSON.parse_string(FileAccess.get_file_as_string(FriendGenerator.CLASSIC_KEYS_PATH))
-	_check(live.size() == 200, "200 campaign levels read")
-	_check(typeof(data) == TYPE_DICTIONARY and data["keys"] == live, "data/classic_board_keys.json is up to date")
+	# Since the 1-300 freeze: 200 First / Second Era levels, of which the 10
+	# Twins levels (176-199) are skipped like the Third Era ones (a Friend
+	# board can never contain twins).
+	var twins := 0
 	var all := true
 	for n in range(1, 201):
 		var json = JSON.parse_string(FileAccess.get_file_as_string(LevelManager.LEVEL_PATH % n))
-		all = all and FriendGenerator.is_classic_board(PuzzleDefinition.from_level(LevelManager.parse_level(json, n)))
-	_check(all, "all 200 campaign boards recognised as campaign boards")
+		var lv := LevelManager.parse_level(json, n, true)
+		if lv.blocks.any(func(b): return b.twin != ""):
+			twins += 1
+			continue
+		all = all and FriendGenerator.is_classic_board(PuzzleDefinition.from_level(lv))
+	_check(twins == 10 and live.size() == 190, "190 campaign levels read (200 minus %d Twins levels)" % twins)
+	_check(typeof(data) == TYPE_DICTIONARY and data["keys"] == live, "data/classic_board_keys.json is up to date")
+	_check(all, "all 190 campaign boards recognised as campaign boards")
 
 
 func _test_generation() -> void:

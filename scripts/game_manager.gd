@@ -164,6 +164,7 @@ func _ready() -> void:
 	debug_panel.hint_requested.connect(play_hint_move)
 	debug_panel.solve_requested.connect(auto_solve)
 	debug_panel.visibility_changed.connect(_refresh_buttons)
+	debug_panel.visibility_changed.connect(publish_state.call_deferred)  # web tests: debug_open
 	debug_panel.info_source = debug_info
 	get_viewport().size_changed.connect(_layout)
 	var direct: bool = Array(OS.get_cmdline_user_args()).any(func(a): return a.begins_with("--level="))
