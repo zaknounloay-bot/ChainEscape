@@ -562,8 +562,8 @@ func hints_allowed() -> int:
 func _on_block_tapped(id: int) -> void:
 	if completed or game_over or not model.blocks.has(id):
 		return
-	if TwinsPrototype.active:
-		publish_state.call_deferred()  # browser tests read every tap's result
+	if TwinsPrototype.active or not BuildFlags.player_build():
+		publish_state.call_deferred()  # browser tests read every tap's result (not in the Friend build)
 	if tutorial.is_showing():
 		tutorial.hide_hint()
 	if hammer_armed:
@@ -1150,6 +1150,8 @@ func _clear_hint() -> void:
 func _refresh_buttons() -> void:
 	if level == null:
 		return
+	if not BuildFlags.player_build():
+		publish_state.call_deferred()  # browser tests: Undo / Hint / Hammer results (not in the Friend build)
 	ui.set_undo_state(history.can_undo() and not completed, MAX_UNDOS - undos_used)
 	ui.set_hint_state(hints_allowed() - free_hints_used, hints_allowed(), unlimited_hints(), progress.inventory.get("hint", 0))
 	ui.set_hammer_state(progress.inventory.get("hammer", 0), hammer_armed, not completed and hammers_used < _hammer_limit())
@@ -1564,13 +1566,13 @@ func publish_state() -> void:
 		"intros_seen": progress.tips_seen.filter(func(t): return String(t).begins_with("intro_")),
 		"portals": board.portals.size(), "celebration": last_result.get("celebration", "") if completed else "",
 		"twins_prototype": TwinsPrototype.active, "twins_complete_open": TwinsPrototype.complete_open,
-		"tw_blocks": _twins_block_states(vis) if TwinsPrototype.active or ExperienceLab.active else [],
+		"tw_blocks": _twins_block_states(vis) if TwinsPrototype.active or ExperienceLab.active or not BuildFlags.player_build() else [],
 		"tw_message": (tutorial._text if tutorial.visible else "") if TwinsPrototype.active or ExperienceLab.active else "",
 		"twins_complete_button": center.call(get_node("TwinsPrototypeComplete").find_children("*", "Button", true, false)[0]) if TwinsPrototype.complete_open and has_node("TwinsPrototypeComplete") else [], "bonds": board.bond_count(), "hearts": hearts, "chain": chain,
 		"undo_steps": history.size(), "undos_used": undos_used, "twin_msg": twin_wait_explained, "hint_block": hint_block,
 		"twin_ids": model.blocks.values().filter(func(b): return b.twin != "").map(func(b): return b.id) if model else [],
 		"debug_open": debug_panel.visible, "player_build": BuildFlags.player_build(), "magnet_lab": BuildFlags.magnet_lab(), "level_label": center.call(ui._level_label),
-		"opening_lab": OpeningLab.active, "experience_lab": ExperienceLab.active, "lab_qa_level": ExperienceLab.qa_level, "lab_qa": ExperienceLab.qa, "qa_build": BuildFlags.qa_build(), "tip_text": (tutorial._text if tutorial.is_showing() else "") if ExperienceLab.active else "", "lab_complete_open": ExperienceLab.complete_open, "lesson": _lesson, "lesson_target": _lesson_target_pos(vis),
+		"opening_lab": OpeningLab.active, "experience_lab": ExperienceLab.active, "lab_qa_level": ExperienceLab.qa_level, "lab_qa": ExperienceLab.qa, "qa_build": BuildFlags.qa_build(), "tip_text": (tutorial._text if tutorial.is_showing() else "") if ExperienceLab.active or not BuildFlags.player_build() else "", "lab_complete_open": ExperienceLab.complete_open, "lesson": _lesson, "lesson_target": _lesson_target_pos(vis),
 		"lab_complete_button": center.call(get_node("ExperienceLabComplete").find_children("*", "Button", true, false)[0]) if ExperienceLab.complete_open and has_node("ExperienceLabComplete") else [],
 		"level_count": level_manager.level_count, "level_name": level.name if level else "", "max_hearts": max_hearts, "blocks_left": model.block_count(),
 		"coin_notes": last_result.get("coin_notes", "") if completed else "", "chapter_complete": last_result.get("chapter_complete", 0) if completed else 0,
@@ -1588,6 +1590,10 @@ func publish_state() -> void:
 		"settings_button": center.call(ui._settings_button), "backup_button": center.call(ui._backup_button),
 		"restore_button": center.call(ui._restore_button), "recovery_restore": center.call(ui._recovery_restore),
 		"recovery_new": center.call(ui._recovery_new),
+		"undo_button": center.call(ui._undo_button), "restart_button": center.call(ui._restart_button),
+		"hint_button": center.call(ui._hint_button), "hammer_button": center.call(ui._hammer_button), "hammer_armed": hammer_armed,
+		"magnets": model.blocks.values().filter(func(b): return b.magnet).size() if model else 0,
+		"hammers_used": hammers_used,
 		"select_open": ui.is_level_select_open(), "select_unlocked": select_shown.get("unlocked", []).size(),
 		"select_max_unlocked": (select_shown.get("unlocked", []) as Array).max() if not select_shown.get("unlocked", []).is_empty() else 0,
 		"select_locked_first": (select_shown.get("locked", []) as Array).min() if not select_shown.get("locked", []).is_empty() else 0,
@@ -1603,7 +1609,7 @@ func _twins_block_states(vis: Vector2) -> Array:
 		var b: BlockData = model.blocks[id]
 		var p := board.block_screen_position(id)
 		out.append({"id": id, "c": b.cell.x, "r": b.cell.y, "x": snappedf(p.x / vis.x, 0.0001), "y": snappedf(p.y / vis.y, 0.0001),
-			"st": model.move_state(id), "twin": b.twin, "partner": model.twin_partner(id)})
+			"st": model.move_state(id), "twin": b.twin, "partner": model.twin_partner(id), "mag": b.magnet})
 	return out
 
 
@@ -1830,7 +1836,7 @@ func _lesson_step(twin_wait := false) -> void:
 	tutorial.show_hint(text, _message_position(), board.block_screen_position(next), true)
 	if next >= 0 and _lesson == "twins":
 		board.set_hint(next, model.twin_partner(next))
-	if ExperienceLab.active:
+	if ExperienceLab.active or not BuildFlags.player_build():
 		publish_state.call_deferred()  # developer page: tests follow each lesson step
 
 

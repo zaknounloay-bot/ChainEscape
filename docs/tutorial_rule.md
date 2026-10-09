@@ -40,6 +40,6 @@ At a mechanic's **first appearance** in the campaign, the game runs a one-time i
 | 201 | Portal | a block escapes through a portal |
 | 226 | Sequence | a Sequence block escapes |
 | 251 | Movable | a block is pushed |
-| 76 *(planned)* | Magnet | a magnet escapes and pulls a block |
+| 76 | Magnet | a magnet escapes and pulls a block |
 
 Existing lessons are not changed by this rule.

@@ -517,7 +517,7 @@ func test_hammer_safety() -> void:
 				var t := BoardModel.new()
 				t.setup(m.rows, m.columns, m.snapshot())
 				t.set_portals(m.portal_groups)
-				t.remove(id)
+				t.remove(id, false)  # a smash: a smashed magnet pulls nothing (76-99)
 				var after := t.is_empty() or Solver.from_model(t).is_solvable()
 				var allowed := Solver.hammer_safe(m, id)
 				check(allowed == (after or not before), "L%d step %d: smash of %d allowed=%s (before %s, after %s)" % [n, step, id, allowed, before, after])

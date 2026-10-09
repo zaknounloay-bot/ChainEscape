@@ -221,6 +221,15 @@ func _run() -> void:
 		_check(game.current_level == n + 1 and not ExperienceLab.complete_open and game.level.name == _prod_level(n + 1).name,
 			"NEXT goes on to Level %d ('%s')" % [n + 1, game.level.name])
 		_check(game.progress.current_level == n + 1 and game.progress.best_scores.has(n), "the QA save holds the progress (Level %d next, %d cleared)" % [n + 1, n])
+		if THIRD_ERA.has(n + 1):
+			# Reached by play: the NEW MECHANIC card first, then the lesson.
+			_check(game.mechanic_intro != null and not game.board.input_enabled, "L%d reached by NEXT opens the NEW MECHANIC card" % (n + 1))
+			var w2 := 0
+			while game.mechanic_intro != null and w2 < 600:
+				await _frames(2)
+				w2 += 1
+			await _frames(4)
+			_check(game._lesson == THIRD_ERA[n + 1] and _finger(game) >= 0, "L%d reached by NEXT: the %s lesson starts after the card" % [n + 1, THIRD_ERA[n + 1]])
 	for path in before:
 		_check(_read_all(path) == before[path], "%s is byte-identical after the QA session" % path)
 	_finish()

@@ -31,13 +31,19 @@ func _check(cond: bool, what: String) -> void:
 
 
 func _ready() -> void:
+	_run.call_deferred()
+
+
+func _run() -> void:
 	_gating()
 	LevelManager.dev_magnet = true
 	_validation()
 	_rules()
 	_solver_fuzz()
 	_lab()
-	_check(_done == ["gating", "validation", "rules", "solver", "lab"], "every section ran to its end (%s)" % [_done])
+	_campaign_levels()
+	await _campaign_game()
+	_check(_done == ["gating", "validation", "rules", "solver", "lab", "campaign", "game"], "every section ran to its end (%s)" % [_done])
 	print("")
 	print("%d checks passed, %d failed" % [passed, failures.size()])
 	print("MAGNET CHECKS PASSED" if failures.is_empty() else "MAGNET CHECKS FAILED")
@@ -254,6 +260,133 @@ static func _random_map(rng: RandomNumberGenerator, size: int, n: int, magnets: 
 			row.append(grid.get(Vector2i(c, r), "."))
 		map.append(" ".join(row))
 	return map
+
+
+# --- E: the campaign Magnet levels (76-99, docs/magnet_campaign_plan.md) -----------
+
+const CAMPAIGN := [76, 77, 78, 79, 81, 82, 83, 84, 85, 86, 87, 88, 89, 91, 92, 93, 94, 95, 96, 97, 98, 99]
+
+
+static func _campaign_level(n: int) -> LevelData:
+	return LevelManager.parse_level(JSON.parse_string(FileAccess.get_file_as_string("res://levels/level_%02d.json" % n)), n, true)
+
+
+## Every smash on every magnet level (start position): a smashed magnet pulls
+## nothing, hammer_safe judges exactly that smash, Undo (restore) puts the
+## magnet back with the same preview.
+func _campaign_levels() -> void:
+	var smashes := 0
+	var agree := 0
+	var nopull := 0
+	var undo_ok := 0
+	for n in CAMPAIGN:
+		var level := _campaign_level(n)
+		_check(level.blocks.any(func(b): return b.magnet), "L%d has magnets" % n)
+		var m := BoardModel.new()
+		m.setup(level.rows, level.columns, level.blocks)
+		var before := Solver.from_model(m).is_solvable()
+		for id in m.blocks.keys():
+			if not m.blocks[id].magnet:
+				continue
+			var preview := m.pull_target(id)
+			var snap := m.snapshot()
+			var cells := {}
+			for b in m.blocks.values():
+				cells[b.id] = b.cell
+			var turned := m.remove(id, false)
+			smashes += 1
+			var moved := m.blocks.values().any(func(b): return b.cell != cells[b.id])
+			if not moved and m.last_pull.is_empty():
+				nopull += 1
+			var after := m.is_empty() or Solver.from_model(m).is_solvable()
+			m.restore(snap)
+			if Solver.hammer_safe(m, id) == (after or not before):
+				agree += 1
+			if m.blocks.has(id) and m.pull_target(id) == preview:
+				undo_ok += 1
+	_check(smashes >= 30 and nopull == smashes, "a smashed magnet pulls nothing (%d / %d smashes on the 22 levels)" % [nopull, smashes])
+	_check(agree == smashes, "hammer_safe judges the no-pull smash (%d / %d)" % [agree, smashes])
+	_check(undo_ok == smashes, "Undo puts the magnet back with the same preview (%d / %d)" % [undo_ok, smashes])
+	_done.append("campaign")
+
+
+## In the real game (its own save file): a magnet escape pulls and the pulled
+## block's view moves; a Hammer smash of a magnet pulls nothing, still turns
+## its neighbour spinners, explains itself and is undone by Undo.
+func _campaign_game() -> void:
+	PlayerProgress.default_path = "user://magnet_check_progress.cfg"
+	for suffix in ["", ".bak", ".tmp", ".beacon"]:
+		if FileAccess.file_exists(PlayerProgress.default_path + suffix):
+			DirAccess.remove_absolute(ProjectSettings.globalize_path(PlayerProgress.default_path + suffix))
+	var game: GameManager = load("res://scenes/Main.tscn").instantiate()
+	get_tree().root.add_child(game)
+	for i in 6:
+		await get_tree().process_frame
+	AudioManager.set_music_enabled(false)
+	# A smash: the first level with a magnet that has a spinner beside it and
+	# may be smashed.
+	var found := false
+	for n in CAMPAIGN:
+		game.start_level(n, "select")
+		await get_tree().process_frame
+		game._lesson = ""
+		var mid := -1
+		for b in game.model.blocks.values():
+			if not b.magnet or game.model.pull_target(b.id).is_empty() or not game.is_hammer_safe(b.id):
+				continue
+			for st in Direction.STEPS:
+				var o := game.model.block_at(b.cell + st)
+				if o != null and o.is_spinner():
+					mid = b.id
+		if mid < 0:
+			continue
+		found = true
+		var cells := {}
+		var dirs := {}
+		for b in game.model.blocks.values():
+			cells[b.id] = b.cell
+			dirs[b.id] = b.direction
+		var neighbours := []
+		for st in Direction.STEPS:
+			var o := game.model.block_at(game.model.blocks[mid].cell + st)
+			if o != null and o.is_spinner():
+				neighbours.append(o.id)
+		var preview := game.model.pull_target(mid)
+		game.progress.inventory["hammer"] = 3
+		game.toggle_hammer()
+		game._on_block_tapped(mid)
+		for i in 3:
+			await get_tree().process_frame
+		_check(not game.model.blocks.has(mid) and game.model.blocks.values().all(func(b): return b.cell == cells[b.id]),
+			"L%d: the smashed magnet is gone and nothing moved (no pull)" % n)
+		_check(neighbours.all(func(id): return game.model.blocks[id].direction != dirs[id]), "L%d: its neighbour spinners still turned" % n)
+		_check(game.tutorial._text == GameManager.MAGNET_SMASH_TEXT, "L%d: the smash explains itself ('%s')" % [n, game.tutorial._text])
+		game.undo()
+		for i in 3:
+			await get_tree().process_frame
+		_check(game.model.blocks.has(mid) and game.model.pull_target(mid) == preview and game.board.get_view(mid) != null,
+			"L%d: Undo brings the magnet back with the same pull line" % n)
+		break
+	_check(found, "a magnet beside a spinner was smashed on a campaign level")
+	# An escape: play the solver's line on 76 until the magnet pulls.
+	game.start_level(76, "select")
+	await get_tree().process_frame
+	var pulled := {}
+	for i in 40:
+		var id := Solver.from_model(game.model).recommend_move()
+		if id < 0:
+			break
+		var is_magnet: bool = game.model.blocks[id].magnet
+		game._on_block_tapped(id)
+		for k in 2:
+			await get_tree().process_frame
+		if is_magnet and not game.model.last_pull.is_empty():
+			pulled = game.model.last_pull.duplicate()
+			break
+	_check(not pulled.is_empty() and game.board.get_view(pulled["block"]).data.cell == pulled["to"],
+		"L76: a magnet escape pulls in the game and the pulled block's view moves to %s" % [pulled.get("to", "?")])
+	game.queue_free()
+	_done.append("game")
 
 
 # --- D ------------------------------------------------------------------------------

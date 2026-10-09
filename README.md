@@ -22,6 +22,8 @@ The feeling it aims for: *"I progressed, the game changed, and I want to see the
 
 See *v0.5.1 stabilization* below.
 
+**Magnet campaign (QA, not yet in the public Friend Test build): Levels 76-99.** MAGNET is a production Classic mechanic: when a magnet escapes, the block straight behind it slides into its place (dotted-line preview; a Hammer-smashed magnet pulls nothing). 22 new boards; Levels 80 and 90 unchanged; Level 76 gets the NEW MECHANIC card and a one-time finger lesson. Names, Silver/Gold rewards, economy and all other levels are unchanged. See `docs/magnet_campaign.md`.
+
 **v0.8 completes the Third Era: levels 226-300.** SEQUENCE (226-250) and MOVABLE (251-275) join Portal as production Classic mechanics, then 276-300 combine them. Milestones: 250 (stronger), 275 (short), 300 (major - "300 LEVELS ESCAPED!", not a finale). After 300 the game opens Level Select. Levels 1-225, Social / Friend and the backend are unchanged. See *v0.8* below and `docs/era3_226_300.md`.
 
 **v0.7 opens the Third Era with the PORTAL arc: levels 201-225.** Portal is now a production Classic mechanic (introduced once with a short NEW MECHANIC card). Level 225 is a short, presentation-only milestone. Levels 1-200, Social / Friend and the backend are unchanged. See *v0.7* below and `docs/portal_arc.md`.
