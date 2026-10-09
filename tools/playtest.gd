@@ -92,12 +92,12 @@ func _play_level(n: int) -> void:
 	var total_prev := game.progress.total_score()
 	var seen_before: Array = game.progress.tips_seen.duplicate()
 	game.start_level(n)
-	# v0.7 / v0.8: the first Portal / Sequence / Movable level opens with its
-	# NEW MECHANIC card (once each).
+	# v0.7 / v0.8: the first Portal / Sequence / Movable / Magnet level opens
+	# with its NEW MECHANIC card (once each).
 	var expect := ""
-	for k in ["movable", "sequence", "portal"]:
+	for k in ["movable", "sequence", "portal", "magnet"]:
 		var has: bool = (k == "portal" and not game.level.portals.is_empty()) or (k == "sequence" and game.level.blocks.any(func(b): return b.seq_stage != 0)) \
-			or (k == "movable" and game.level.blocks.any(func(b): return b.is_crate()))
+			or (k == "movable" and game.level.blocks.any(func(b): return b.is_crate())) or (k == "magnet" and game.level.blocks.any(func(b): return b.magnet))
 		if has and not seen_before.has("intro_" + k) and game.progress.highest_completed < GameManager.MECHANIC_INTRO_FROM[k]:
 			expect = k
 			break
