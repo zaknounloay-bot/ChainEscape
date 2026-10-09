@@ -7,7 +7,8 @@
 // A: a brand-new player: the title opens, CONTINUE starts Level 1 of 300,
 //    hearts / boosters as a new save, no developer page active.
 // B: the debug panel never opens: F1, and 5 quick taps on the LEVEL title.
-// C: developer pages are off: ?experiencelab=176, ?experiencelab=1,
+// C: developer pages are off: ?experiencelab=176, the QA session
+//    (?experiencelab=250&qareset=1, =300), ?experiencelab=1,
 //    ?openinglab=1, ?twinsprototype=1, ?mechlab=1, ?friendbench=1, ?vhtest
 //    and ?sharetest=1 all give the normal game (no lab, no overlay).
 // D: persistence: after a reload the save is still there (CONTINUE at the
@@ -95,7 +96,7 @@ for (const [W, H, label] of [[390, 844, 'iphone14'], [375, 667, 'iphoneSE'], [43
     s = await waitFor(page, (x) => x.title_open, 'title after reload');
     check(s.level === 1 && s.save_seq >= seq && s.save_source !== 'new', `D: after a reload the save is kept (source ${s.save_source}, seq ${s.save_seq} >= ${seq})`);
     // ===== C =====
-    for (const q of ['?experiencelab=176', '?v=123&experiencelab=1', '?openinglab=1', '?twinsprototype=1', '?mechlab=1', '?mechlab=sequence', '?friendbench=1', '?vhtest=1', '?sharetest=1']) {
+    for (const q of ['?experiencelab=176', '?v=123&experiencelab=250&qareset=1', '?experiencelab=300', '?v=123&experiencelab=1', '?openinglab=1', '?twinsprototype=1', '?mechlab=1', '?mechlab=sequence', '?friendbench=1', '?vhtest=1', '?sharetest=1']) {
       await page.goto(BASE + q);
       s = await waitFor(page, (x) => x.title_open || x.level > 0, 'page ' + q);
       await sleep(1500);

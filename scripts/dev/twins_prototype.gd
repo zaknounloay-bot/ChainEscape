@@ -58,8 +58,8 @@ static func parse_mode(search: String, fragment: String = "") -> String:
 
 
 static func requested() -> String:
-	if BuildFlags.player_build():
-		return ""  # player build: developer pages off
+	if BuildFlags.dev_pages_off():
+		return ""  # player / QA build: developer pages off
 	for a in OS.get_cmdline_user_args():
 		if a == "--" + PARAM:
 			return "1"

@@ -34,8 +34,8 @@ static var _card_shown_ms := 0
 
 ## "" (not asked for), "1" or "reset".
 static func requested() -> String:
-	if BuildFlags.player_build():
-		return ""  # player build: developer pages off
+	if BuildFlags.dev_pages_off():
+		return ""  # player / QA build: developer pages off
 	var args := OS.get_cmdline_user_args()
 	if "--" + PARAM + "=reset" in args:
 		return "reset"

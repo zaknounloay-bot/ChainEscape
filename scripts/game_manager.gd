@@ -121,12 +121,13 @@ func _ready() -> void:
 		level_manager.level_count = mini(level_manager.level_count, TwinsPrototype.LAST_LEVEL)
 	elif xlab != "":
 		ExperienceLab.apply(xlab)
-		level_manager.level_count = mini(level_manager.level_count, ExperienceLab.LAST_LEVEL)
+		if not ExperienceLab.qa:  # a QA session plays all of Levels 1-300
+			level_manager.level_count = mini(level_manager.level_count, ExperienceLab.LAST_LEVEL)
 	elif lab != "":
 		OpeningLab.apply(lab)
 	progress = PlayerProgress.new().load_from_disk()
-	if ExperienceLab.qa_level > 0:
-		ExperienceLab.seed_qa(progress, level_manager)  # temporary QA save only
+	if ExperienceLab.qa:
+		progress = ExperienceLab.qa_session(progress, level_manager)  # QA save only: resume or a fresh session
 	if TwinsPrototype.active:
 		TwinsPrototype.seed_save(progress)  # its own temporary save only
 	if not OpeningLab.active and not ExperienceLab.active and not TwinsPrototype.active:
@@ -445,7 +446,7 @@ func start_level(number: int, via: String = "load") -> void:
 	_lesson = ""
 	board.set_marks([])
 	_layout()
-	var lesson: String = ExperienceLab.LESSONS.get(number, "") if ExperienceLab.active else LESSONS.get(number, "")
+	var lesson: String = ExperienceLab.LESSONS.get(number, "") if ExperienceLab.active and not ExperienceLab.qa else LESSONS.get(number, "")
 	if lesson != "" and not progress.tips_seen.has("lesson_" + lesson) and _lesson_blocks(lesson).size() > 0:
 		_lesson = lesson
 		_lesson_step()
@@ -506,7 +507,7 @@ func _go_next(via: String) -> void:
 				publish_state.call_deferred())
 			get_tree().create_timer(0.4).timeout.connect(publish_state)
 			return
-		if ExperienceLab.active and current_level == ExperienceLab.LAST_LEVEL:
+		if ExperienceLab.active and not ExperienceLab.qa and current_level == ExperienceLab.LAST_LEVEL:
 			# Developer page only: the lab ends at 100 (never Level 101).
 			ExperienceLab.show_complete(self, func():
 				open_level_select()
@@ -1526,7 +1527,7 @@ func publish_state() -> void:
 		"undo_steps": history.size(), "undos_used": undos_used, "twin_msg": twin_wait_explained, "hint_block": hint_block,
 		"twin_ids": model.blocks.values().filter(func(b): return b.twin != "").map(func(b): return b.id) if model else [],
 		"debug_open": debug_panel.visible, "player_build": BuildFlags.player_build(), "level_label": center.call(ui._level_label),
-		"opening_lab": OpeningLab.active, "experience_lab": ExperienceLab.active, "lab_qa_level": ExperienceLab.qa_level, "tip_text": (tutorial._text if tutorial.is_showing() else "") if ExperienceLab.active else "", "lab_complete_open": ExperienceLab.complete_open, "lesson": _lesson, "lesson_target": _lesson_target_pos(vis),
+		"opening_lab": OpeningLab.active, "experience_lab": ExperienceLab.active, "lab_qa_level": ExperienceLab.qa_level, "lab_qa": ExperienceLab.qa, "qa_build": BuildFlags.qa_build(), "tip_text": (tutorial._text if tutorial.is_showing() else "") if ExperienceLab.active else "", "lab_complete_open": ExperienceLab.complete_open, "lesson": _lesson, "lesson_target": _lesson_target_pos(vis),
 		"lab_complete_button": center.call(get_node("ExperienceLabComplete").find_children("*", "Button", true, false)[0]) if ExperienceLab.complete_open and has_node("ExperienceLabComplete") else [],
 		"level_count": level_manager.level_count, "level_name": level.name if level else "", "max_hearts": max_hearts, "blocks_left": model.block_count(),
 		"coin_notes": last_result.get("coin_notes", "") if completed else "", "chapter_complete": last_result.get("chapter_complete", 0) if completed else 0,

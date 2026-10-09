@@ -617,6 +617,16 @@ func _log(msg: String) -> void:
 
 # --- Queries -------------------------------------------------------------------
 
+## Keys no field owns (e.g. the QA session's qa/origin): kept in the save
+## file as they are (_fill_cfg only writes the known keys).
+func extra(section: String, key: String, default: Variant = null) -> Variant:
+	return _cfg.get_value(section, key, default)
+
+
+func set_extra(section: String, key: String, value: Variant) -> void:
+	_cfg.set_value(section, key, value)
+
+
 func _int_section(section: String) -> Dictionary:
 	var out := {}
 	if _cfg.has_section(section):

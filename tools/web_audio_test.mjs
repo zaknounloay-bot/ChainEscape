@@ -67,7 +67,9 @@ const MOBILE = {
 const DESKTOP = { viewport: { width: 1280, height: 800 } };
 const ORIGIN = 'http://localhost:8765';
 const GAME = ORIGIN + '/index.html';
-const SAVE_KEY = '/userfs/godot/app_userdata/Chain Escape/progress.cfg';
+// The save lives in user:// = app_userdata/<config/name> (project.godot).
+const APP_NAME = fs.readFileSync(new URL('../project.godot', import.meta.url), 'utf8').match(/^config\/name="(.*)"$/m)[1];
+const SAVE_KEY = `/userfs/godot/app_userdata/${APP_NAME}/progress.cfg`;
 
 // Taps everything the engine sends to the speakers into an AnalyserNode and
 // keeps the running maximum, so even a 40 ms UI click is caught.
@@ -223,12 +225,19 @@ async function scenario(page, label, { mobile, vp, musicOn, sfxOn, expectSuspend
 // and loads the newest, so every copy that exists gets the same edit and
 // a higher save sequence.
 async function setSaved(page, edits) {
-  await page.waitForFunction(async (key) => {
+  // (a polling loop: waitForFunction would take an async function's Promise
+  // as truthy and never wait)
+  const hasFile = (key) => page.evaluate(async (k) => {
     const db = await new Promise((r) => { const q = indexedDB.open('/userfs'); q.onsuccess = () => r(q.result); });
-    const v = await new Promise((r) => { const q = db.transaction('FILE_DATA').objectStore('FILE_DATA').get(key); q.onsuccess = () => r(q.result); });
+    const v = await new Promise((r) => { const q = db.transaction('FILE_DATA').objectStore('FILE_DATA').get(k); q.onsuccess = () => r(q.result); });
     db.close();
     return !!v;
-  }, SAVE_KEY, { timeout: 30000, polling: 500 });
+  }, key).catch(() => false);
+  const until = Date.now() + 30000;
+  while (!(await hasFile(SAVE_KEY))) {
+    if (Date.now() > until) throw new Error('setSaved: no save file at ' + SAVE_KEY);
+    await page.waitForTimeout(500);
+  }
   await page.waitForTimeout(1500);  // let the game's last sync land
   await page.goto(ORIGIN + '/blank');
   const edited = await page.evaluate(async ([key, edits]) => {
@@ -237,7 +246,7 @@ async function setSaved(page, edits) {
       // newest copy on load: a late sync of the old page can't win a tie
       return text.replace(/^seq=(\d+)$/m, (_, n) => 'seq=' + (Number(n) + 1000));
     };
-    let n = 0;
+    let n = 0, main = false;
     const db = await new Promise((r) => { const q = indexedDB.open('/userfs'); q.onsuccess = () => r(q.result); });
     const store = db.transaction('FILE_DATA', 'readwrite').objectStore('FILE_DATA');
     for (const k of [key, key + '.bak', key + '.tmp']) {
@@ -247,13 +256,14 @@ async function setSaved(page, edits) {
       v.timestamp = new Date();
       await new Promise((r) => { const q = store.put(v, k); q.onsuccess = () => r(); });
       n++;
+      main = main || k === key;
     }
     db.close();
     const m = localStorage.getItem('chain_escape_save');
     if (m) { localStorage.setItem('chain_escape_save', edit(m)); n++; }
-    return n;
+    return main ? n : 0;
   }, [SAVE_KEY, edits]);
-  if (!edited) throw new Error('setSaved: no save copy found to edit');
+  if (!edited) throw new Error('setSaved: the save file was not found to edit');
 }
 
 try {

@@ -135,7 +135,8 @@ func _parsing() -> void:
 		["?v=1&experience%6Cab=1", "", "1"], ["?v=123456", "", ""], ["", "", ""],
 		["?xexperiencelab=1", "", ""], ["?experiencelab=0", "", ""], ["?experiencelabs=1", "", ""],
 		["?openinglab=reset", "", ""], ["?v=1&experiencelab=1&experiencelab=reset", "", "reset"],
-		# QA jump: 2..100 opens that level; anything else keeps the old meaning.
+		# QA jump: 2..300 opens that level (since the 1-300 freeze: production
+		# Levels 1-300); anything else keeps the old meaning.
 		["?experiencelab=13", "", "13"], ["?v=123456&experiencelab=41", "", "41"], ["?experiencelab=2", "", "2"],
 		["?experiencelab=100", "", "100"], ["?v=1&experiencelab=50&x=2", "", "50"], ["", "#experiencelab=75", "75"],
 		["?experiencelab=101", "", "101"], ["?experiencelab=110", "", "110"], ["?experiencelab=111", "", "111"],
@@ -143,12 +144,18 @@ func _parsing() -> void:
 		["?v=123456&experiencelab=140", "", "140"], ["?experiencelab=144", "", "144"], ["?experiencelab=150", "", "150"], ["?experiencelab=153", "", "153"],
 		["?experiencelab=156", "", "156"], ["?v=1&experiencelab=160", "", "160"], ["?experiencelab=161", "", "161"],
 		["?experiencelab=151", "", "151"], ["?experiencelab=170", "", "170"], ["?v=123456&experiencelab=175", "", "175"], ["?experiencelab=176", "", "176"],
-		["?experiencelab=183", "", "183"], ["?v=123456&experiencelab=200", "", "200"], ["?experiencelab=201", "", ""], ["?experiencelab=300", "", ""], ["?experiencelab=-5", "", ""], ["?experiencelab=13abc", "", ""],
+		["?experiencelab=183", "", "183"], ["?v=123456&experiencelab=200", "", "200"], ["?experiencelab=201", "", "201"], ["?v=1&experiencelab=250", "", "250"], ["?experiencelab=300", "", "300"], ["?experiencelab=301", "", ""], ["?experiencelab=-5", "", ""], ["?experiencelab=13abc", "", ""],
 		["?v=1&experiencelab=13&experiencelab=reset", "", "reset"],
 	]
 	for c in cases:
 		var got := ExperienceLab.parse_mode(c[0], c[1])
 		_check(got == c[2], "parse_mode(%s %s) = '%s' (want '%s')" % [c[0], c[1], got, c[2]])
+	# QA session restart: &qareset=1 (exact key, any order, itch.io's ?v=).
+	for c in [["?experiencelab=250&qareset=1", true], ["?v=1&qareset=1&experiencelab=50", true], ["?qareset", true], ["#qareset=yes", true],
+			["?experiencelab=250", false], ["?qareset=0", false], ["?xqareset=1", false], ["?qaresets=1", false]]:
+		var search: String = c[0] if not String(c[0]).begins_with("#") else ""
+		var got := ExperienceLab.parse_qa_reset(search, c[0] if search == "" else "")
+		_check(got == c[1], "parse_qa_reset(%s) = %s (want %s)" % [c[0], got, c[1]])
 
 
 func _defaults() -> void:

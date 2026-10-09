@@ -20,10 +20,14 @@ tag += '\n<script>\n' + social + '</script>'
 # Developer share test page (?sharetest=1); inert without the parameter.
 sharetest = open(os.path.join(root, 'web', 'share_test.js')).read()
 tag += '\n<script>\n' + sharetest + '</script>'
-# The player build ("Web Friend Test", preset 1) gets everything except the
-# developer share test page.
+# The player build ("Web Friend Test", preset 1) and the QA build ("Web QA",
+# preset 2) get everything except the developer share test page.
 player_tag = tag.replace('\n<script>\n' + sharetest + '</script>', '')
 assert player_tag != tag
+# The QA build keeps its page crash-forensics log apart from the normal
+# game's (the QA and Friend Test builds may share one browser origin).
+qa_tag = player_tag.replace("'chain_escape_page_events'", "'chain_escape_qa_page_events'")
+assert qa_tag.count("'chain_escape_qa_page_events'") == 1
 
 
 def esc(t):
@@ -39,11 +43,11 @@ done = 0
 for part in parts:
     m = re.match(r'\[preset\.(\d+)\.options\]', part)
     if m:
-        value = esc(tag if m.group(1) == '0' else player_tag)
+        value = esc({'0': tag, '1': player_tag, '2': qa_tag}[m.group(1)])
         part, n = re.subn(r'html/head_include=".*?(?<!\\)"', lambda _m: 'html/head_include="' + value + '"', part, flags=re.S)
         assert n == 1, 'html/head_include not found in preset %s' % m.group(1)
         done += 1
     out.append(part)
-assert done == 2, 'expected presets 0 (Web) and 1 (Web Friend Test)'
+assert done == 3, 'expected presets 0 (Web), 1 (Web Friend Test) and 2 (Web QA)'
 open(path, 'w').write(''.join(out))
 print('head_include updated (%d + %d + %d bytes of JS)' % (len(js), len(social), len(sharetest)))

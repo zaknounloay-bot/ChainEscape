@@ -1,14 +1,20 @@
 extends Node
-## Experience Lab QA jump (?experiencelab=N): run once per level with the
-## real launch path (GameManager reads the command line):
-##   godot --headless --path . res://tools/ExperienceLabQaCheck.tscn -- --experiencelab=13
-## Checks: Lab Level N opens directly (no title), in the temporary QA save;
-## its lesson / start hint shows as on a first visit; no milestone just by
-## opening; clearing it by taps gives its normal milestone and Chapter
-## Complete (and after 100 the lab-complete screen); the real save, the
-## Opening Lab save, the normal lab save and the lab log are byte-identical.
+## Experience Lab QA session (?experiencelab=N, N = 2..300): run once per
+## level with the real launch path (GameManager reads the command line):
+##   godot --headless --path . res://tools/ExperienceLabQaCheck.tscn -- --experiencelab=13 --qareset
+## --qaexpect=full (default): a FRESH session at N (from --qareset, a new
+##   checkpoint, or no QA save): Level N (the frozen production board) opens
+##   directly (no title) in the QA save; its lesson / start hint shows as on
+##   a first visit; no milestone just by opening; clearing it by taps gives
+##   its normal milestone and Chapter Complete; NEXT goes on to N+1 (200 ->
+##   201 too); the real save, the Opening Lab save, the normal lab save, the
+##   lab log and the normal game's session diagnostics are byte-identical.
+## --qaexpect=fresh: only the fresh-session checks (nothing is played).
+## --qaexpect=resume: the same N again without --qareset (a Safari reload):
+##   the stored session resumes where it was (after a full run: Level N+1,
+##   N cleared), nothing re-seeded.
 
-const MILESTONES := {25: "lab_milestone", 50: "lab_milestone_strong", 75: "lab_milestone_plus", 100: "lab_major"}
+const PROTECTED := ["user://progress.cfg", "user://chain_escape_diag_last.json", "user://chain_escape_session.json"]
 
 var game: GameManager
 var failures: Array[String] = []
@@ -35,25 +41,51 @@ func _frames(n: int) -> void:
 func _run() -> void:
 	var mode := ExperienceLab.requested()
 	var n := int(mode) if mode.is_valid_int() else 0
-	_check(n >= 2 and n <= ExperienceLab.LAST_LEVEL, "QA jump asked for on the command line (%s)" % mode)
+	var expect := "full"
+	for a in OS.get_cmdline_user_args():
+		if a.begins_with("--qaexpect="):
+			expect = a.get_slice("=", 1)
+	_check(n >= 2 and n <= ExperienceLab.QA_LAST_LEVEL, "QA jump asked for on the command line (%s)" % mode)
 	if n < 2:
 		_finish()
 		return
 	var before := {}
-	for path in ["user://progress.cfg", OpeningLab.SAVE_PATH, ExperienceLab.SAVE_PATH, ExperienceLab.LOG_PATH]:
+	for path in PROTECTED + [OpeningLab.SAVE_PATH, ExperienceLab.SAVE_PATH, ExperienceLab.LOG_PATH]:
 		before[path] = _read_all(path)
+	var stored := ConfigFile.new()
+	var stored_seq := int(stored.get_value("meta", "seq", 0)) if stored.load(ExperienceLab.QA_SAVE_PATH) == OK else 0
 	game = load("res://scenes/Main.tscn").instantiate()
 	get_tree().root.add_child(game)
 	await _frames(6)
 	AudioManager.set_music_enabled(false)
-	_check(ExperienceLab.active and ExperienceLab.qa_level == n, "Experience Lab QA mode for Lab %d" % n)
-	_check(game.progress.path == ExperienceLab.QA_SAVE_PATH, "QA uses the temporary QA save (%s)" % game.progress.path)
-	_check(game.current_level == n and game.level.name == _lab_level(n).name, "Lab Level %d opens directly ('%s')" % [n, game.level.name])
+	_check(ExperienceLab.active and ExperienceLab.qa and ExperienceLab.qa_level == n, "Experience Lab QA session for Level %d" % n)
+	_check(game.progress.path == ExperienceLab.QA_SAVE_PATH and PlayerProgress.mirror_key == ExperienceLab.QA_MIRROR_KEY
+		and PlayerProgress.beacon_key == ExperienceLab.QA_BEACON_KEY, "QA uses the QA save and its own Web keys (%s)" % game.progress.path)
+	_check(game.level_manager.level_count == ExperienceLab.QA_LAST_LEVEL and LevelManager.override_dir == "",
+		"the QA session plays the frozen production Levels 1-%d" % game.level_manager.level_count)
 	_check(not game.ui.is_title_open(), "L%d: no title screen in the way" % n)
-	_check(game.level_manager.level_count == ExperienceLab.LAST_LEVEL, "the lab's %d levels" % ExperienceLab.LAST_LEVEL)
+	_check(int(game.progress.extra("qa", "origin", 0)) == n, "the QA save records its checkpoint (qa/origin %s)" % game.progress.extra("qa", "origin", 0))
+	if expect == "resume":
+		_check(game.progress.load_source != "new" and stored_seq > 1 and game.progress.seq > stored_seq,
+			"resume: the stored QA save is loaded and goes on, not re-seeded (source %s, seq %d after %d)" % [game.progress.load_source, game.progress.seq, stored_seq])
+		_check(game.current_level == n + 1 and game.progress.current_level == n + 1 and game.progress.best_scores.has(n) and game.progress.highest_completed >= n,
+			"resume: the session continues at Level %d with Level %d cleared (level %d, highest %d)" % [n + 1, n, game.current_level, game.progress.highest_completed])
+		_check(game.level.name == _prod_level(n + 1).name, "resume: Level %d is the production board ('%s')" % [n + 1, game.level.name])
+		for path in before:
+			_check(_read_all(path) == before[path], "%s is byte-identical" % path)
+		_finish()
+		return
+	_check(game.current_level == n and game.level.name == _prod_level(n).name, "Level %d (production board) opens directly ('%s')" % [n, game.level.name])
 	_check(game.progress.highest_completed == n - 1 and game.progress.highest_unlocked == n and not game.progress.best_scores.has(n),
-		"QA save: 1-%d cleared, %d open and not yet cleared" % [n - 1, n])
-	_check(game.progress.total_stars() == 0 and game.progress.coins == int(Economy.config()["starting_coins"]), "QA save invents no stars or coins (%d coins = a new save)" % game.progress.coins)
+		"fresh QA save: 1-%d cleared, %d open and not yet cleared" % [n - 1, n])
+	_check(game.progress.total_stars() == 0 and game.progress.coins == int(Economy.config()["starting_coins"]) and game.progress.achievements.is_empty()
+		and game.progress.perfect_levels.is_empty() and game.progress.reward_blocks.is_empty(),
+		"fresh QA save invents no stars, coins, achievements or rewards (%d coins = a new save)" % game.progress.coins)
+	if expect == "fresh":
+		for path in before:
+			_check(_read_all(path) == before[path], "%s is byte-identical" % path)
+		_finish()
+		return
 	# First-visit onboarding.
 	if n == 13:
 		_check(game._lesson == "lock" and game.tutorial.is_showing() and game.tutorial._text.contains("left)"), "L13: the lock lesson starts from the beginning ('%s')" % game.tutorial._text)
@@ -83,8 +115,8 @@ func _run() -> void:
 		_check(game._lesson == "", "Lab 161: no Armor lesson again")
 	if n > 176:
 		_check(game.progress.tips_seen.has("lesson_twins"), "L%d: the Twins lesson counts as seen" % n)
-	_check(LevelManager.dev_twins and game.level.blocks.any(func(b): return b.twin != "") == (n in [176, 177, 179, 182, 184, 187, 190, 192, 194, 197]),
-		"L%d: Twins exactly in the lab's Twins levels" % n)
+	_check(game.level.blocks.any(func(b): return b.twin != "") == (n in [176, 177, 179, 182, 184, 187, 190, 192, 194, 197]),
+		"L%d: Twins exactly in the Twins levels" % n)
 	if n == 125:
 		_check(game.level.hint == "" and not game.tutorial.is_showing() and game.hint_block == -1, "L125: production start - no hint, message or finger")
 	# Opening alone never celebrates.
@@ -121,10 +153,11 @@ func _run() -> void:
 	if n == 200:
 		_check(game.last_result.get("master", false) and game.ui._card_title.text == "GRAND MASTER!" and str(game.last_result.get("coin_notes", "")).contains("GRAND MASTER")
 			and game.progress.achievements.has("master_200"), "L200: Grand Master card and its one-time bonus (in the QA save) ('%s')" % game.last_result.get("coin_notes", ""))
-	var want: String = MILESTONES.get(n, "")
-	_check(String(game.last_result.get("celebration", "")) == want and overlay == (want != ""),
+	var want := String(Chapters.config().get("celebration_levels", {}).get(str(n), ""))  # production's tiers
+	var big := want.begins_with("lab_") or want == "major"  # the "N / LEVELS ESCAPED!" overlay
+	_check(String(game.last_result.get("celebration", "")) == want and overlay == big,
 		"L%d: milestone '%s' after the clear (want '%s', overlay %s)" % [n, game.last_result.get("celebration", ""), want, overlay])
-	if want != "":
+	if big:
 		_check(game.ui._major.get_child(0).text == str(n) and game.ui._major.get_child(1).text == "LEVELS ESCAPED!", "L%d overlay reads %d / LEVELS ESCAPED!" % [n, n])
 		_check(game.ui._card_title.text == ("MASTER CLEARED!" if n == 100 else "%d LEVELS ESCAPED!" % n), "L%d card title '%s'" % [n, game.ui._card_title.text])
 	_check(int(game.last_result.get("chapter_complete", 0)) == (n / 10 if n % 10 == 0 else 0), "L%d Chapter Complete as in normal progression (%s)" % [n, game.last_result.get("chapter_complete", 0)])
@@ -134,10 +167,9 @@ func _run() -> void:
 		_check(game.ui.is_chapter_card_open(), "L%d: the Chapter %d card after NEXT" % [n, n / 10])
 		game._after_chapter_card()
 		await _frames(3)
-	if n == ExperienceLab.LAST_LEVEL:
-		_check(ExperienceLab.complete_open and game.current_level == n, "after Lab %d: the end-of-test-build screen" % n)
-	else:
-		_check(game.current_level == n + 1 and not ExperienceLab.complete_open, "NEXT goes on to Lab %d" % (n + 1))
+	_check(game.current_level == n + 1 and not ExperienceLab.complete_open and game.level.name == _prod_level(n + 1).name,
+		"NEXT goes on to Level %d ('%s')" % [n + 1, game.level.name])
+	_check(game.progress.current_level == n + 1 and game.progress.best_scores.has(n), "the QA save holds the progress (Level %d next, %d cleared)" % [n + 1, n])
 	for path in before:
 		_check(_read_all(path) == before[path], "%s is byte-identical after the QA session" % path)
 	_finish()
@@ -152,8 +184,8 @@ func _finish() -> void:
 	get_tree().quit(0 if failures.is_empty() else 1)
 
 
-static func _lab_level(n: int) -> LevelData:
-	var json = JSON.parse_string(FileAccess.get_file_as_string(ExperienceLab.LEVEL_DIR.path_join("level_%02d.json" % n)))
+static func _prod_level(n: int) -> LevelData:
+	var json = JSON.parse_string(FileAccess.get_file_as_string("res://levels/level_%02d.json" % n))
 	return LevelManager.parse_level(json, n, true)
 
 

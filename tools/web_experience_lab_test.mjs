@@ -267,7 +267,7 @@ try {
     s = await waitFor(page, (x) => x.experience_lab && x.level === n, `QA ${url}`);
     await sleep(1500);
     s = await state(page);
-    check(s.lab_qa_level === n && s.level_name === NAME(n) && !s.title_open && s.highest_completed === n - 1 && s.level_count === LAST,
+    check(s.lab_qa_level === n && s.level_name === NAME(n) && !s.title_open && s.highest_completed === n - 1 && s.level_count === 300 && s.lab_qa,
       `F: ${url} opens Lab ${n} "${s.level_name}" directly (QA ${s.lab_qa_level}, title ${s.title_open}, cleared ${s.highest_completed})`);
     if (n === 13) check(s.lesson === 'lock' && /left\)/.test(s.tip_text), `F: ${url} the lock lesson from the start ("${s.tip_text}")`);
     else if (n === 101) check(s.lesson === 'switch' && /SWITCH/.test(s.tip_text), `F: ${url} production's Switch lesson ("${s.tip_text}")`);

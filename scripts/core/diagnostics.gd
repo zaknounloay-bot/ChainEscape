@@ -12,6 +12,9 @@ const LAST_KEY := "chain_escape_diag_last"
 const SESSION_KEY := "chain_escape_session"
 
 static var enabled: bool = true
+## The Experience Lab QA session keeps its session marker apart from the
+## normal game's ("chain_escape_qa_..."), so neither reports the other's.
+static var key_prefix: String = ""
 static var session_start_ms: int = Time.get_ticks_msec()
 static var last_line: String = ""
 ## What the previous session left behind ("" = clean or first run).
@@ -111,7 +114,12 @@ static func growth(tree: SceneTree) -> Dictionary:
 	return out
 
 
+static func _key(key: String) -> String:
+	return key if key_prefix == "" else key_prefix + key.trim_prefix("chain_escape_")
+
+
 static func _store(key: String, value: String) -> void:
+	key = _key(key)
 	if OS.has_feature("web"):
 		WebBridge.ls_set(key, value)
 	else:
@@ -121,6 +129,7 @@ static func _store(key: String, value: String) -> void:
 
 
 static func _load(key: String) -> String:
+	key = _key(key)
 	if OS.has_feature("web"):
 		return WebBridge.ls_get(key)
 	if FileAccess.file_exists("user://%s.json" % key):

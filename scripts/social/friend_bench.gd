@@ -21,8 +21,8 @@ var results: Array = []
 ## also has ?challenge=. Read by the page script (web/social_creator.js,
 ## which splits parameters on ? & #), with the address itself as a fallback.
 static func requested() -> bool:
-	if BuildFlags.player_build():
-		return false  # player build: developer pages off
+	if BuildFlags.dev_pages_off():
+		return false  # player / QA build: developer pages off
 	if "--" + PARAM in OS.get_cmdline_user_args():
 		return true
 	if not OS.has_feature("web"):

@@ -92,8 +92,8 @@ static func is_milestone(level_number: int) -> bool:
 ## Presentation-only milestone tier of a level ("short", or "" = none):
 ## celebration only - never coins, theme or music (see chapters.json).
 static func celebration_tier(level_number: int) -> String:
-	if ExperienceLab.active:
-		return String(ExperienceLab.CELEBRATIONS.get(level_number, ""))  # developer page only
+	if ExperienceLab.active and not ExperienceLab.qa:
+		return String(ExperienceLab.CELEBRATIONS.get(level_number, ""))  # developer page only (QA: production's)
 	return String(config().get("celebration_levels", {}).get(str(level_number), ""))
 
 
