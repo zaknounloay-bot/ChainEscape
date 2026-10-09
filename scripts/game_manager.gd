@@ -583,7 +583,16 @@ func _on_block_tapped(id: int) -> void:
 	# Free "explain" taps (gate, shell, hidden, locked) keep their message;
 	# the lesson moves on after real moves.
 	if _lesson != "" and not completed and not game_over and (tap_state in ["ok", "ram", "blocked", "advance", "push"] or (_lesson == "twins" and tap_state == "twin_wait")):
-		_lesson_step(tap_state == "twin_wait")
+		if tap_state == "blocked" and _lesson in ["portal", "sequence", "movable"] and tutorial.is_showing():
+			# Third Era lessons: a blocked tap keeps its own explanation
+			# (e.g. "Blocked after portal A"); the lesson comes back after it.
+			var session := _session_id
+			var kind := _lesson
+			get_tree().create_timer(2.4).timeout.connect(func():
+				if session == _session_id and _lesson == kind and not completed and not game_over:
+					_lesson_step())
+		else:
+			_lesson_step(tap_state == "twin_wait")
 
 
 ## PORTAL: the portals `id`'s lane runs through ([] on every level without

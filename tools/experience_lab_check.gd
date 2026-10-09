@@ -815,7 +815,7 @@ func _game() -> void:
 			t += 1
 		_check(game.completed and game.last_result.get("level", 0) == n, "L%d clears by taps" % n)
 		var tier: String = game.last_result.get("celebration", "")
-		var want_tier: String = {25: "lab_milestone", 50: "lab_milestone_strong", 75: "lab_milestone_plus", 100: "lab_major"}.get(n, "")
+		var want_tier: String = ExperienceLab.CELEBRATIONS.get(n, "")  # every 25th level (the approved presentation)
 		_check(tier == want_tier, "L%d milestone tier '%s' (want '%s')" % [n, tier, want_tier])
 		_check(overlay == (want_tier != ""), "L%d %s the LEVELS ESCAPED overlay" % [n, "shows" if want_tier != "" else "never shows"])
 		if overlay:

@@ -185,6 +185,12 @@ func _play_level(n: int) -> void:
 	# PERFECT and the Master Level celebrate longer before the card.
 	var extra := 1.3 if Chapters.is_milestone(n) or Chapters.celebration_tier(n) != "" else 0.0
 	await _wait(extra + (2.8 if Chapters.is_master(n) or Chapters.celebration_tier(n) == "major" else (1.0 if not game.last_result.get("perfect", false) else 1.6)))
+	# Master Levels: the LEVELS ESCAPED overlay, then the MASTER / GRAND
+	# MASTER stamp - the card follows (at most a few seconds more).
+	var waited := 0.0
+	while not game.ui.is_complete_visible() and waited < 4.0:
+		await _wait(0.2)
+		waited += 0.2
 	_shot("L%02d_complete" % n)
 	var r := game.last_result
 	_check(game.ui.is_complete_visible(), "L%d complete card not shown" % n)
