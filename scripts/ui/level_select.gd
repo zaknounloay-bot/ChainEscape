@@ -76,7 +76,9 @@ func _ready() -> void:
 	_list.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	_list.add_theme_constant_override("separation", 14)
 	_scroll.add_child(_list)
-	_scroll.get_v_scroll_bar().value_changed.connect(func(_v): _publish())
+	# After the list has moved (next frame): positions measured right at the
+	# scroll change are still those of the previous offset.
+	_scroll.get_v_scroll_bar().value_changed.connect(func(_v): _publish_after_layout())
 
 
 ## `chapters`: Array of GameManager.chapter_summary() dictionaries, each
@@ -227,6 +229,18 @@ func _tap_at(pos: Vector2) -> void:
 		if is_instance_valid(b) and b.is_visible_in_tree() and not b.disabled and b.get_global_rect().has_point(pos):
 			b.pressed.emit()
 			return
+
+
+var _publish_pending := false
+
+
+func _publish_after_layout() -> void:
+	if _publish_pending or not OS.has_feature("web"):
+		return
+	_publish_pending = true
+	await get_tree().process_frame
+	_publish_pending = false
+	_publish()
 
 
 ## Web only (browser tests): scroll position plus the screen positions of a
