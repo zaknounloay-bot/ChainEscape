@@ -217,8 +217,11 @@ async function scenario(page, label, { mobile, vp, musicOn, sfxOn, expectSuspend
   return s;
 }
 
-// Edits the real save file in IndexedDB (settings), from a same-origin page
-// where the game is not running, so the next load starts with them.
+// Edits the real save (settings) from a same-origin page where the game is
+// not running, so the next load starts with them. The game keeps several
+// copies (progress.cfg, .bak, .tmp in IndexedDB + the localStorage mirror)
+// and loads the newest, so every copy that exists gets the same edit and
+// a higher save sequence.
 async function setSaved(page, edits) {
   await page.waitForFunction(async (key) => {
     const db = await new Promise((r) => { const q = indexedDB.open('/userfs'); q.onsuccess = () => r(q.result); });
@@ -228,17 +231,29 @@ async function setSaved(page, edits) {
   }, SAVE_KEY, { timeout: 30000, polling: 500 });
   await page.waitForTimeout(1500);  // let the game's last sync land
   await page.goto(ORIGIN + '/blank');
-  await page.evaluate(async ([key, edits]) => {
+  const edited = await page.evaluate(async ([key, edits]) => {
+    const edit = (text) => {
+      for (const k in edits) text = text.replace(new RegExp('^' + k + '=.*$', 'm'), k + '=' + edits[k]);
+      // newest copy on load: a late sync of the old page can't win a tie
+      return text.replace(/^seq=(\d+)$/m, (_, n) => 'seq=' + (Number(n) + 1000));
+    };
+    let n = 0;
     const db = await new Promise((r) => { const q = indexedDB.open('/userfs'); q.onsuccess = () => r(q.result); });
     const store = db.transaction('FILE_DATA', 'readwrite').objectStore('FILE_DATA');
-    const v = await new Promise((r) => { const q = store.get(key); q.onsuccess = () => r(q.result); });
-    let text = new TextDecoder().decode(v.contents);
-    for (const k in edits) text = text.replace(new RegExp('^' + k + '=.*$', 'm'), k + '=' + edits[k]);
-    v.contents = new TextEncoder().encode(text);
-    v.timestamp = new Date();
-    await new Promise((r) => { const q = store.put(v, key); q.onsuccess = () => r(); });
+    for (const k of [key, key + '.bak', key + '.tmp']) {
+      const v = await new Promise((r) => { const q = store.get(k); q.onsuccess = () => r(q.result); });
+      if (!v || !v.contents) continue;
+      v.contents = new TextEncoder().encode(edit(new TextDecoder().decode(v.contents)));
+      v.timestamp = new Date();
+      await new Promise((r) => { const q = store.put(v, k); q.onsuccess = () => r(); });
+      n++;
+    }
     db.close();
+    const m = localStorage.getItem('chain_escape_save');
+    if (m) { localStorage.setItem('chain_escape_save', edit(m)); n++; }
+    return n;
   }, [SAVE_KEY, edits]);
+  if (!edited) throw new Error('setSaved: no save copy found to edit');
 }
 
 try {

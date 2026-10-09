@@ -107,7 +107,8 @@ try {
     if (s.chapter_card_open) { await tapAt(page, s.chapter_continue); await sleep(900); }
   }
   s = await waitFor(page, (x) => x.level === 11 && !x.card_open && !x.chapter_card_open, 'level 11');
-  check(s.level_name === 'Order Matters', `B: NEXT after Level 10 opens production Level 11 (${s.level_name})`);
+  const prod11 = JSON.parse(fs.readFileSync(new URL('../levels/level_11.json', import.meta.url))).name;
+  check(s.level_name === prod11, `B: NEXT after Level 10 opens production Level 11 (${s.level_name}, expected ${prod11})`);
   const log = await page.evaluate(() => { try { return JSON.parse(localStorage.getItem('chain_escape_openinglab_log') || '[]'); } catch (e) { return []; } });
   check([...Array(10).keys()].every((i) => log.some((e) => e.kind === 'next' && e.level === i + 1)), `B: the lab log has NEXT for Levels 1-10 (${log.length} events)`);
   const realNow = await page.evaluate(() => localStorage.getItem('chain_escape_save'));
