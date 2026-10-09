@@ -97,6 +97,10 @@ const PRE_FREEZE_DIR := "res://data/dev/pre_freeze_production"
 
 
 static func src_path(n: int) -> String:
+	# The 22 Magnet levels (76-99 without 80 / 90) are production's own boards
+	# (tools/experience_lab_build.py prod_path): the lab mirrors levels/.
+	if n >= 76 and n <= 99 and n != 80 and n != 90:
+		return LevelManager.LEVEL_PATH % n
 	return PRE_FREEZE_DIR.path_join("level_%02d.json" % n) if n <= 200 else LevelManager.LEVEL_PATH % n
 
 
@@ -674,7 +678,7 @@ func _sampled_tools(n: int) -> void:
 			var hid: int = ids[rng.randi() % ids.size()]
 			var safe := Solver.hammer_safe(m, hid)
 			var hs := m.snapshot()
-			m.remove(hid)
+			m.remove(hid, false)  # a smash: a smashed magnet pulls nothing
 			var keeps := m.is_empty() or Solver.from_model(m).is_solvable()
 			m.restore(hs)
 			if safe and not keeps:
