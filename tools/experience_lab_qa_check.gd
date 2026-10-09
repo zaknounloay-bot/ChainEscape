@@ -87,7 +87,8 @@ func _run() -> void:
 		_finish()
 		return
 	# First-visit onboarding.
-	const THIRD_ERA := {201: "portal", 226: "sequence", 251: "movable"}
+	# The NEW MECHANIC card, then the finger lesson (docs/tutorial_rule.md).
+	const THIRD_ERA := {76: "magnet", 201: "portal", 226: "sequence", 251: "movable"}
 	if THIRD_ERA.has(n):
 		# The NEW MECHANIC card first (input off, nothing of the lesson under
 		# it), then the guided finger lesson.

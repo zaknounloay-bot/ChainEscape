@@ -111,6 +111,12 @@ var allow_push := true
 var _magnet := PackedByteArray()
 var _mag_n := 0
 var _pull_stack: Array = []
+# Cells a magnet's pull can ever reach or touch: every back line (for every
+# magnet direction) from every cell a magnet starts on, and their
+# neighbours. Blocks only ever move INTO a magnet's starting cell, so a block
+# outside this zone is never pulled, never changes a pull and never gains a
+# spinner neighbour - its plain escape stays "safe" for the greedy search.
+var _mag_zone := PackedByteArray()
 var _on_path: Dictionary = {}
 var _last_low := 0
 
@@ -171,12 +177,30 @@ func _init(p_rows: int, p_columns: int, blocks: Array, portals: Dictionary = {})
 			_seq_stage[b.id] = b.seq_stage
 			_seq_next[b.id] = b.seq_next
 			_seq_first[b.id] = b.direction
+	var mag_dirs := {}
 	for b in blocks:
 		if b.magnet:
 			if _magnet.is_empty():
 				_magnet.resize(n)
 			_magnet[b.id] = 1
 			_mag_n += 1
+			mag_dirs[b.direction] = true
+	if _mag_n > 0:
+		_mag_zone.resize(rows * columns)
+		for b in blocks:
+			if not b.magnet:
+				continue
+			_mag_zone[b.cell.y * columns + b.cell.x] = 1
+			for step in Direction.STEPS:
+				var nb: Vector2i = b.cell + step
+				if nb.x >= 0 and nb.y >= 0 and nb.x < columns and nb.y < rows:
+					_mag_zone[nb.y * columns + nb.x] = 1
+			for d in mag_dirs:
+				var back: Vector2i = Direction.STEPS[Direction.opposite(d)]
+				var c: Vector2i = b.cell + back
+				while c.x >= 0 and c.y >= 0 and c.x < columns and c.y < rows:
+					_mag_zone[c.y * columns + c.x] = 1
+					c += back
 	var twins := {}
 	for b in blocks:
 		if b.twin != "":
@@ -272,7 +296,7 @@ static func hammer_safe(model: BoardModel, id: int) -> bool:
 	var test := BoardModel.new()
 	test.setup(model.rows, model.columns, model.snapshot())
 	test.set_portals(model.portal_groups)
-	test.remove(id)
+	test.remove(id, false)  # the Hammer: a smashed magnet pulls nothing
 	if test.is_empty():
 		return true
 	var after := Solver.from_model(test)
@@ -721,8 +745,6 @@ func _solve_keep_state() -> Array[int]:
 func _dfs() -> bool:
 	if _crate_n > 0:
 		return _dfs_crates(_path.size())
-	if _mag_n > 0:
-		return _dfs_magnet()
 	nodes += 1
 	if nodes > node_limit:
 		aborted = true
@@ -737,7 +759,7 @@ func _dfs() -> bool:
 				continue
 			if _is_legal(id):
 				if _spinner_neighbours(id) == 0 and _switch[id] < 0 and (_shells == 0 or _turnable[id] == 0) and not _pending(id) \
-						and _partner(id) < 0:
+						and _partner(id) < 0 and (_mag_n == 0 or (_magnet[id] == 0 and _mag_zone[_cell[id]] == 0)):
 					_apply(id)
 					safe.append(id)
 					_path.append(id)
@@ -1077,35 +1099,6 @@ func _pull(id: int, idx: int) -> void:
 		c += back.x
 		r += back.y
 	_pull_stack.append([-1, -1])
-
-
-## MAGNET search: every escape removes a block, so there are no cycles; the
-## greedy "safe moves" of _dfs do not apply (any escape can change what a
-## magnet will pull later). Plain DFS, lost states remembered.
-func _dfs_magnet() -> bool:
-	nodes += 1
-	if nodes > node_limit:
-		aborted = true
-		return false
-	if _alive_count == _crate_n:
-		return true
-	var key := _key()
-	if _failed.has(key):
-		return false
-	for mv in legal_moves():
-		var id := mv & ID_MASK
-		if (mv & (RAM | PUSH)) == 0 and _partner(id) >= 0 and _partner(id) < id:
-			continue
-		_do(mv)
-		_path.append(mv)
-		if _dfs_magnet():
-			return true
-		_path.pop_back()
-		_undo_move(mv)
-		if aborted:
-			return false
-	_failed[key] = true
-	return false
 
 
 ## Sequence: the first stage. Neighbour event around its cell

@@ -1,12 +1,11 @@
 {
 	"name": "Zenith",
 	"map": [
-		"Y>       Rv       .        .        .        .",
-		"Pv@      .        G<@~     R<       G>       Bv",
-		".        Gv       Y^       G^       .        .",
-		".        Rv       Bv#P     .        P^@-#R$S .",
-		".        Bv       Y<       .        B>$G     .",
-		".        R<@*     B>       .        B^       .",
-		"R^       .        R<@*     P^@      .        B>#R"
+		".    .    B>$G G>$S Yv   .    .",
+		"Yv   Pv   R^@  Y^   .    Rv   .",
+		".    .    .    R>   G^@  Pv   .",
+		"P>@  .    G^*  R<@  Rv*  Gv   .",
+		".    .    .    .    G>@  Pv*  .",
+		".    .    B>   G<   .    .    ."
 	]
 }

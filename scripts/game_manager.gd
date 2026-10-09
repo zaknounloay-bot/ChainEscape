@@ -83,7 +83,7 @@ var _blocked_hint_shown := false
 ## Since the 1-300 freeze (docs/freeze_1_300.md) the approved Experience Lab
 ## lessons are the game's: Lock 13, Switch 101, Chain Gate 121, Armor 151,
 ## Twins 176.
-const LESSONS := {13: "lock", 101: "switch", 121: "gate", 151: "armor", 176: "twins", 201: "portal", 226: "sequence", 251: "movable"}
+const LESSONS := {13: "lock", 76: "magnet", 101: "switch", 121: "gate", 151: "armor", 176: "twins", 201: "portal", 226: "sequence", 251: "movable"}
 ## PORTAL (levels 201+): shown under the board when a lane through a portal
 ## is blocked on the far side (one translatable string).
 const PORTAL_BLOCKED_TEXT := "Blocked after portal %s"
@@ -96,7 +96,8 @@ const CRATE_TAP_TEXT := "Movable - launch an arrow into it to push it one cell"
 const CRATE_STUCK_TEXT := "The Movable block can't move there"
 ## The level that introduces each mechanic with its NEW MECHANIC card; a
 ## player who already cleared it never gets the card (not retroactive).
-const MECHANIC_INTRO_FROM := {"portal": 201, "sequence": 226, "movable": 251}
+const MAGNET_SMASH_TEXT := "Magnet smashed - nothing is pulled"
+const MECHANIC_INTRO_FROM := {"magnet": 76, "portal": 201, "sequence": 226, "movable": 251}
 var mechanic_intro: MechanicIntro
 var _lesson := ""
 ## Experience Lab lock lesson: the key colour named in its last line.
@@ -370,9 +371,10 @@ func _maybe_mechanic_intro() -> void:
 	# (one card per level start at most).
 	var present := {"portal": not level.portals.is_empty(),
 		"sequence": level.blocks.any(func(b): return b.seq_stage != 0),
-		"movable": level.blocks.any(func(b): return b.is_crate())}
+		"movable": level.blocks.any(func(b): return b.is_crate()),
+		"magnet": level.blocks.any(func(b): return b.magnet)}
 	var mech := ""
-	for k in ["movable", "sequence", "portal"]:
+	for k in ["movable", "sequence", "portal", "magnet"]:
 		if present[k] and not progress.tips_seen.has("intro_" + k) and progress.highest_completed < MECHANIC_INTRO_FROM[k]:
 			mech = k
 			break
@@ -583,7 +585,7 @@ func _on_block_tapped(id: int) -> void:
 	# Free "explain" taps (gate, shell, hidden, locked) keep their message;
 	# the lesson moves on after real moves.
 	if _lesson != "" and not completed and not game_over and (tap_state in ["ok", "ram", "blocked", "advance", "push"] or (_lesson == "twins" and tap_state == "twin_wait")):
-		if tap_state == "blocked" and _lesson in ["portal", "sequence", "movable"] and tutorial.is_showing():
+		if tap_state == "blocked" and _lesson in ["magnet", "portal", "sequence", "movable"] and tutorial.is_showing():
 			# Third Era lessons: a blocked tap keeps its own explanation
 			# (e.g. "Blocked after portal A"); the lesson comes back after it.
 			var session := _session_id
@@ -609,7 +611,9 @@ func _escape(id: int) -> void:
 	# TWINS (prototype lab only): the pair leaves as ONE move - one Undo
 	# step (the snapshot above), chain +1, one score event.
 	var pair := model.twin_partner(id) >= 0
+	var magnet: bool = escaped.magnet
 	var turned := model.remove_pair(id) if pair else model.remove(id)
+	var pull := model.last_pull.duplicate()
 	var twin_ids := model.last_twin.duplicate() if pair else []
 	if pair:
 		at = (at + board.get_view(twin_ids[1]).home) * 0.5
@@ -617,7 +621,7 @@ func _escape(id: int) -> void:
 	var unlocked := model.last_unlocked.duplicate()
 	if (_lesson == "switch" and not model.last_flipped.is_empty()) or (_lesson == "gate" and not model.last_opened_gates.is_empty()) \
 			or (_lesson == "twins" and pair) or (_lesson == "portal" and not via.is_empty()) \
-			or (_lesson == "sequence" and escaped.seq_stage != 0):
+			or (_lesson == "sequence" and escaped.seq_stage != 0) or (_lesson == "magnet" and not pull.is_empty()):
 		_finish_lesson()
 	_play_second_era_effects()
 	chain += 1
@@ -631,6 +635,10 @@ func _escape(id: int) -> void:
 		board.refresh_bonds(model)
 	else:
 		board.play_escape(id, chain, turned, via)
+	if magnet and not pull.is_empty():
+		# MAGNET (76-99): the block behind slides into the cell it left.
+		board.play_pull(pull, SocialScreen.reduced_motion())
+		AudioManager.play_push()
 	board.show_points(at, "+%d" % points)
 	if not via.is_empty():
 		AudioManager.play_portal()
@@ -1207,7 +1215,10 @@ func _smash(id: int) -> void:
 	# TWINS: the Hammer removes only the smashed twin; the bond breaks and
 	# the other twin plays on as an ordinary block.
 	var broke_bond := model.twin_partner(id) >= 0
-	var turned := model.remove(id)
+	# MAGNET: a smashed magnet pulls nothing (the Hammer stays a predictable
+	# rescue); its neighbour spinners still turn, as for every smash.
+	var smashed_magnet: bool = model.blocks[id].magnet
+	var turned := model.remove(id, false)
 	var revealed := model.last_revealed.duplicate()
 	var unlocked := model.last_unlocked.duplicate()
 	_play_second_era_effects()
@@ -1218,6 +1229,8 @@ func _smash(id: int) -> void:
 	Haptics.medium()
 	if smashed_reward:
 		_show_message("Smashed - Silver/Gold coins only pay when a block escapes", 2.8)
+	if smashed_magnet:
+		_show_message(MAGNET_SMASH_TEXT, 2.6)
 	if broke_bond:
 		_show_message("Bond broken - the other twin is now a normal block", 2.6)
 		TwinsPrototype.event("bond_broken", {"id": id})
@@ -1427,7 +1440,7 @@ func _chapter_news(chapter: int) -> String:
 	var news := []
 	# v0.6 Second Era mechanics, where each is introduced.
 	# (Armor at 151 and Twins at 176 since the 1-300 freeze.)
-	for intro in [[101, "Switch Blocks"], [121, "Chain Gates"], [ExperienceLab.ARMOR_INTRO, "Armored Blocks"], [ExperienceLab.TWINS_INTRO, "Twins"],
+	for intro in [[76, "Magnets"], [101, "Switch Blocks"], [121, "Chain Gates"], [ExperienceLab.ARMOR_INTRO, "Armored Blocks"], [ExperienceLab.TWINS_INTRO, "Twins"],
 			[201, "Portals"], [226, "Sequence Blocks"], [251, "Movable Blocks"]]:
 		if intro[0] >= rg.x and intro[0] <= rg.y:
 			news.append(intro[1])
@@ -1649,6 +1662,15 @@ func _show_start_hint() -> void:
 func _lesson_blocks(kind: String) -> Array:
 	var out := []
 	var groups := {}
+	if kind == "magnet":
+		# Magnet lesson (76): every magnet and the block it would pull.
+		for b in model.blocks.values():
+			if b.magnet:
+				out.append(b.id)
+				var t := model.pull_target(b.id)
+				if not t.is_empty():
+					out.append(t["block"])
+		return out
 	if kind in ["portal", "sequence", "movable"]:
 		# Third Era lessons: the blocks whose lane runs through a portal, the
 		# Sequence blocks, or the Movable blocks and every block that would
@@ -1734,6 +1756,14 @@ func _lesson_step(twin_wait := false) -> void:
 				text = "Hit the armored block to break its shell"
 			else:
 				text = "Armored: can't escape. Clear a path for the marked block to hit it"
+		"magnet":
+			var key := _lesson_key_move(func(id): return model.blocks[id].magnet and not model.pull_target(id).is_empty())
+			is_key = key != -1
+			if is_key:
+				next = key
+				text = "MAGNET: when it leaves, the block on the dotted line slides into its place - tap it"
+			else:
+				text = "MAGNET: clear its way first - then it pulls the block behind it"
 		"portal":
 			var key := _lesson_key_move(func(id): return model.move_state(id) == "ok" and not _portal_via(id).is_empty())
 			is_key = key != -1
@@ -1831,6 +1861,7 @@ func _finish_lesson() -> void:
 		"twins": "Both twins escaped together - one move, both lanes!",
 		"lock": "Every %s block is gone - the lock is open!" % _lock_lesson_color,
 		"portal": "Through the portal - same direction, other side!",
+		"magnet": "Pulled! The block behind took the magnet's place",
 		"sequence": "Turn, then escape - that's a SEQUENCE block!",
 		"movable": "Pushed one cell - Movable blocks never leave on their own"}[kind]
 	_show_message(done, 2.8)

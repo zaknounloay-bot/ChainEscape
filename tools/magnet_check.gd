@@ -60,24 +60,27 @@ static func _at(m: BoardModel, c: int, r: int) -> BlockData:
 func _gating() -> void:
 	LevelManager.dev_magnet = false
 	var camp := LevelManager.parse_level({"name": "c", "map": ["R^* .", ". B>"]}, 1, true)
-	_check(camp.blocks.size() == 1 and not camp.blocks.any(func(b): return b.magnet), "campaign parsing rejects the Magnet token (%d blocks)" % camp.blocks.size())
+	_check(camp.blocks.size() == 2 and camp.blocks.any(func(b): return b.magnet), "campaign level files accept the Magnet token (Levels 76-99)")
 	var social := LevelManager.parse_level({"name": "s", "map": ["R^* .", ". B>"]})
 	_check(social.blocks.size() == 1, "Social / Friend parsing rejects the Magnet token")
 	var def := PuzzleDefinition.from_dict({"format": PuzzleDefinition.FORMAT, "v": PuzzleDefinition.VERSION, "rules": PuzzleDefinition.RULES,
 		"rows": 2, "cols": 2, "map": ["R^* .", ". B>"]})
 	_check(def != null and not def.verify(), "a Friend Challenge puzzle with a magnet never verifies")
 	_check(LevelManager.parse_level({"name": "p", "map": ["R>@* ."]}).blocks[0].is_spinner(), "'@*' is still a PATTERN spinner, not a magnet")
-	var bad := 0
+	var bad := []
 	var dir := DirAccess.open("res://levels")
 	for f in dir.get_files():
 		if not f.ends_with(".json"):
+			continue
+		var n := int(f.get_basename().trim_prefix("level_"))
+		if n >= 76 and n <= 99 and n != 80 and n != 90:
 			continue
 		var j = JSON.parse_string(FileAccess.get_file_as_string("res://levels/" + f))
 		for row in j.get("map", []):
 			for t in String(row).split(" ", false):
 				if t.ends_with("*") and not t.ends_with("@*"):
-					bad += 1
-	_check(bad == 0, "no campaign level file uses the Magnet token (%d found)" % bad)
+					bad.append(n)
+	_check(bad.is_empty(), "the Magnet token appears only in Levels 76-99 (never 80, 90 or elsewhere) (%s)" % [bad])
 	_done.append("gating")
 
 

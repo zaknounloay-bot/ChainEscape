@@ -63,6 +63,11 @@ extends SceneTree
 ##         (spinners, locks, mystery, switches, gates, armor) per level
 ##       - Level 225 (the arc's milestone) is the hardest level of the arc,
 ##         by difficulty AND by structural difficulty
+##   * MAGNET arc 76-99 (80 and 90 unchanged): magnets only there, every
+##     arc level pulls, the Magnet is necessary outside the breathers 85 / 97,
+##     lessons 76-79 may be small, Level 98 is the arc's hardest; Chapter 8
+##     starts its own curve (ARC_STARTS) and Chapter 9 is compared with
+##     Chapter 8 on Magnet levels only (MAGNET_ARC_CHAPTER_CHECK)
 ##   * v0.8 Third Era arcs: SEQUENCE 226-250, MOVABLE 251-275, INTEGRATION
 ##     276-300 (ARCS below):
 ##       - Sequence blocks only from 226, Movable blocks only from 251
@@ -107,7 +112,25 @@ const ARCS := [
 ## difficulty curve (like an era): the lessons are easier on purpose.
 ## Chapters that introduce a new mechanic start their own difficulty curve:
 ## Armor (151) and Twins (176) since the 1-300 freeze, then the Third Era arcs.
-const ARC_STARTS := [151, 176, 201, 226, 251]
+const ARC_STARTS := [76, 151, 176, 201, 226, 251]
+## MAGNET arc (docs/magnet_campaign_plan.md, approved): 76-99 except the
+## unchanged Mystery levels 80 and 90. Magnets only here; every arc level
+## pulls; outside the breathers the Magnet is NECESSARY (no win with every
+## magnet a plain arrow); the lessons 76-79 may be small (<= 3 start moves,
+## depth >= 3); Level 98 is the arc's hardest level.
+const MAGNET_FROM := 76
+const MAGNET_TO := 99
+const MAGNET_UNCHANGED := [80, 90]
+const MAGNET_LESSONS := [76, 77, 78, 79]
+const MAGNET_BREATHERS := [85, 97]
+const MAGNET_HARDEST := 98
+## MAGNET_ARC_CHAPTER_CHECK (approved, narrow): Chapter 9 is compared with
+## Chapter 8 on their MAGNET levels only (76-79 vs 81-89). Chapter 8 mixes
+## the unchanged pre-arc boards 71-75 and Level 80 (about 49.5 on average)
+## with the gentle Magnet lessons, so its full average says nothing about the
+## arc's curve. The step is the same MIN_CHAPTER_STEP; every other Chapter
+## check (including C10 vs C9 on full averages) is unchanged.
+const MAGNET_ARC_CHAPTER := 9
 ## Since the 1-300 freeze (docs/freeze_1_300.md): Armor from 151 (approved in
 ## the Experience Lab; production had 161) and TWINS only in 176-199.
 const ARMOR_FROM := 151
@@ -276,10 +299,33 @@ func _initialize() -> void:
 			for a in ARC_STARTS:
 				if a >= rg.x and a <= rg.y:
 					prev = -1.0  # v0.8: so does a Chapter that introduces a new mechanic
-			if prev >= 0.0 and avg < prev + MIN_CHAPTER_STEP:
+			if c == MAGNET_ARC_CHAPTER and files.size() >= MAGNET_TO:
+				# MAGNET_ARC_CHAPTER_CHECK: Magnet levels only (see above).
+				var m8 := _arc_avg(diffs, Chapters.chapter_range(c - 1))
+				var m9 := _arc_avg(diffs, rg)
+				print("MAGNET_ARC_CHAPTER_CHECK: Chapter %d vs %d on Magnet levels only: %.1f vs %.1f (full averages %.1f vs %.1f)" % [c, c - 1, m9, m8, avg, prev])
+				if m9 < m8 + MIN_CHAPTER_STEP:
+					problems.append("Chapter %d Magnet-level average %.1f is not above Chapter %d's (%.1f) by %.1f" % [c, m9, c - 1, m8, MIN_CHAPTER_STEP])
+			elif prev >= 0.0 and avg < prev + MIN_CHAPTER_STEP:
 				problems.append("Chapter %d average difficulty %.1f is not above Chapter %d (%.1f) by %.1f" % [c, avg, c - 1, prev, MIN_CHAPTER_STEP])
 			prev = avg
 		print("Chapter difficulty: " + "  ".join(line))
+		if files.size() >= MAGNET_TO:
+			var arc_line := PackedStringArray()
+			for c in [8, 9, 10]:
+				arc_line.append("C%d %.1f" % [c, _arc_avg(diffs, Chapters.chapter_range(c))])
+			print("Magnet-level averages (76-99 without 80 / 90): " + "  ".join(arc_line))
+			# Level 98: the arc's hardest, by difficulty AND structural difficulty.
+			var top_d := -1.0
+			var top_s := -1.0
+			for k in range(MAGNET_FROM, MAGNET_TO + 1):
+				if k == MAGNET_HARDEST or MAGNET_UNCHANGED.has(k):
+					continue
+				top_d = maxf(top_d, diffs[k])
+				top_s = maxf(top_s, structs[k])
+			print("L%d (Magnet arc) difficulty %.1f structural %.1f; next: %.1f / %.1f" % [MAGNET_HARDEST, diffs[MAGNET_HARDEST], structs[MAGNET_HARDEST], top_d, top_s])
+			if diffs[MAGNET_HARDEST] <= top_d or structs[MAGNET_HARDEST] <= top_s:
+				problems.append("L%d is not the hardest Magnet level" % MAGNET_HARDEST)
 	if campaign:
 		for i in range(10, levels.size()):
 			for j in range(10, i):
@@ -303,6 +349,9 @@ static func _rule_issue(n: int, m: Dictionary) -> String:
 		return "ARMOR BEFORE %d" % ARMOR_FROM
 	if m.get("twins", 0) > 0 and (n < TWINS_FROM or n > TWINS_TO):
 		return "TWINS OUTSIDE %d-%d" % [TWINS_FROM, TWINS_TO]
+	var magnet := _magnet_issue(n, m)
+	if magnet != "-":
+		return magnet
 	if m["switches"] > 0 and m["switch_impact"] < 1.0:
 		return "SWITCH DECORATIVE"
 	if m["gates"] > 0 and m["gate_impact"] < 1.0 and not TWINS_GATE_ACCEPTED.has(n):
@@ -389,6 +438,31 @@ static func _rule_issue(n: int, m: Dictionary) -> String:
 	return ""
 
 
+## MAGNET arc 76-99. "-" = keep checking (the usual late-game rules
+## follow); "" = fine (a lesson: the late-game shape rules are skipped).
+static func _magnet_issue(n: int, m: Dictionary) -> String:
+	var in_arc := n >= MAGNET_FROM and n <= MAGNET_TO and not MAGNET_UNCHANGED.has(n)
+	if m.get("magnets", 0) > 0 and not in_arc:
+		return "MAGNET OUTSIDE %d-%d (80 and 90 excluded)" % [MAGNET_FROM, MAGNET_TO]
+	if not in_arc:
+		return "-"
+	if m.get("magnets", 0) == 0:
+		return "MAGNET ARC LEVEL WITHOUT A MAGNET"
+	if m.get("pulls", 0) == 0:
+		return "MAGNET NEVER PULLS"
+	if m["hidden"] > 0:
+		return "MAGNET WITH MYSTERY BLOCKS"
+	if not MAGNET_BREATHERS.has(n) and m.get("magnet_impact", 0.0) < LevelAnalysis.ESSENTIAL:
+		return "MAGNET NOT NECESSARY"
+	if n in MAGNET_LESSONS:
+		if m["start_moves"] > 3 or m["depth"] < 3:
+			return "MAGNET LESSON SHAPE"
+		if m["spinners"] > 0 and m["spinner_impact"] < 0.5:
+			return "SPINNERS DECORATIVE"
+		return ""
+	return "-"
+
+
 ## v0.8 arcs 226-300. "-" = not an arc level (keep checking); "" = fine
 ## (lessons skip the late-game shape rules, as the Switch / Portal lessons).
 static func _era3_issue(n: int, m: Dictionary) -> String:
@@ -436,6 +510,17 @@ static func _era3_issue(n: int, m: Dictionary) -> String:
 			return ""
 		return "-"
 	return "-"
+
+
+## Average difficulty of a Chapter's Magnet-arc levels (80 / 90 excluded).
+static func _arc_avg(diffs: Dictionary, rg: Vector2i) -> float:
+	var sum := 0.0
+	var cnt := 0
+	for k in range(rg.x, rg.y + 1):
+		if k >= MAGNET_FROM and k <= MAGNET_TO and not MAGNET_UNCHANGED.has(k) and diffs.has(k):
+			sum += diffs[k]
+			cnt += 1
+	return sum / maxf(cnt, 1)
 
 
 ## Mechanic families on a level (for the no-stacking rules).

@@ -41,7 +41,15 @@ OUT = os.path.join(ROOT, "data", "dev", "experience_lab")
 PROD = os.path.join(ROOT, "data", "dev", "pre_freeze_production")
 
 
+# MAGNET campaign (docs/magnet_campaign_plan.md): the 22 Magnet levels are
+# production's own boards (levels/, written by tools/magnet_campaign_build.gd),
+# so the lab keeps mirroring production byte for byte.
+MAGNET_LEVELS = [n for n in range(76, 100) if n not in (80, 90)]
+
+
 def prod_path(n):
+    if n in MAGNET_LEVELS:
+        return os.path.join(ROOT, "levels", "level_%02d.json" % n)
     return os.path.join(PROD if n <= 200 else os.path.join(ROOT, "levels"), "level_%02d.json" % n)
 
 # Lab level -> source. ("lab", n) = Opening Lab n; ("prod", n) = production n;

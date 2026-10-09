@@ -67,7 +67,9 @@ func _test_classic_keys() -> void:
 	# Since the 1-300 freeze: 200 First / Second Era levels, of which the 10
 	# Twins levels (176-199) are skipped like the Third Era ones (a Friend
 	# board can never contain twins).
+	# The 22 MAGNET levels (76-99 without 80 / 90) are skipped the same way.
 	var twins := 0
+	var magnets := 0
 	var all := true
 	for n in range(1, 201):
 		var json = JSON.parse_string(FileAccess.get_file_as_string(LevelManager.LEVEL_PATH % n))
@@ -75,10 +77,13 @@ func _test_classic_keys() -> void:
 		if lv.blocks.any(func(b): return b.twin != ""):
 			twins += 1
 			continue
+		if lv.blocks.any(func(b): return b.magnet):
+			magnets += 1
+			continue
 		all = all and FriendGenerator.is_classic_board(PuzzleDefinition.from_level(lv))
-	_check(twins == 10 and live.size() == 190, "190 campaign levels read (200 minus %d Twins levels)" % twins)
+	_check(twins == 10 and magnets == 22 and live.size() == 168, "168 campaign levels read (200 minus %d Twins and %d Magnet levels)" % [twins, magnets])
 	_check(typeof(data) == TYPE_DICTIONARY and data["keys"] == live, "data/classic_board_keys.json is up to date")
-	_check(all, "all 190 campaign boards recognised as campaign boards")
+	_check(all, "all 168 campaign boards recognised as campaign boards")
 
 
 func _test_generation() -> void:

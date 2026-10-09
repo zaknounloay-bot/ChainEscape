@@ -64,7 +64,7 @@ const COMPLETE_LINE := "LAB LEVELS 1–200 · MORE LEVELS COME LATER"
 ## (the approved prototype mechanic; lab-only) with its own lesson.
 ## (201 / 226 / 251: production's Third Era lessons, kept in step with
 ## GameManager.LESSONS - the lab ends at 200, QA sessions use production's.)
-const LESSONS := {13: "lock", 101: "switch", 121: "gate", 151: "armor", 176: "twins", 201: "portal", 226: "sequence", 251: "movable"}
+const LESSONS := {13: "lock", 76: "magnet", 101: "switch", 121: "gate", 151: "armor", 176: "twins", 201: "portal", 226: "sequence", 251: "movable"}
 ## Where the lab introduces ARMOR (production: 161). The Chapter card's
 ## "NEW: Armored Blocks" line follows it (GameManager._chapter_news).
 const ARMOR_INTRO := 151

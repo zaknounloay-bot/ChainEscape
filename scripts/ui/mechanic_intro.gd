@@ -11,6 +11,7 @@ extends CanvasLayer
 ## - Sequence: the FIRST MOVE launches and comes back with its next arrow,
 ##   the SECOND MOVE escapes.
 ## - Movable: an arrow HITs the Movable block, PUSHes it, it MOVES ONE CELL.
+## - Magnet (76): the magnet LEAVES, the block BEHIND it slides into its place.
 ## Reduced motion: the same picture, still. Every visible word comes from
 ## TEXT, one entry per mechanic, so it can be translated in one place.
 
@@ -21,6 +22,8 @@ const TEXT := {
 	"sequence": {"badge": "NEW MECHANIC!", "name": "SEQUENCE", "steps": ["FIRST MOVE CHANGES IT", "SECOND MOVE ESCAPES"]},
 	"movable": {"badge": "NEW MECHANIC!", "name": "MOVABLE", "steps": ["HIT", "PUSH", "MOVES ONE CELL"],
 		"note": "BLOCKED BEHIND = CAN'T MOVE  ·  IT NEVER HAS TO LEAVE"},
+	"magnet": {"badge": "NEW MECHANIC!", "name": "MAGNET", "steps": ["BLOCK BEHIND", "MAGNET LEAVES"],
+		"note": "THE BLOCK BEHIND SLIDES INTO ITS PLACE  ·  NOTHING BEHIND = NOTHING MOVES"},
 }
 const HOLD := 1.8  # seconds before play starts by itself
 const HOLD_LONG := 2.2  # a card with a note line (Movable)
@@ -29,6 +32,7 @@ const BLOCK_COLOR := Color("#FF4D5E")
 const SEQ_COLOR := Color("#2F8CFF")
 const CRATE_FACE := Color("#C08A4B")
 const CRATE_DARK := Color("#4A2C12")
+const MAGNET_PINK := Color("#E0457B")
 
 var mechanic := "portal"
 var reduced := false
@@ -102,7 +106,7 @@ func _ready() -> void:
 	get_tree().create_timer(hold_seconds()).timeout.connect(close)
 	match mechanic:
 		"sequence": AudioManager.play_sequence()
-		"movable": AudioManager.play_push()
+		"movable", "magnet": AudioManager.play_push()
 		_: AudioManager.play_portal()
 
 
@@ -156,6 +160,7 @@ class Diagram extends Control:
 		match mechanic:
 			"sequence": _draw_sequence()
 			"movable": _draw_movable()
+			"magnet": _draw_magnet()
 			_: _draw_portal()
 
 	func _draw_portal() -> void:
@@ -251,6 +256,39 @@ class Diagram extends Control:
 		_block(arrow_pos, 1.0, MechanicIntro.BLOCK_COLOR, Vector2.RIGHT)
 		_crate(crate_pos)
 		_words([w * 0.22, w * 0.50, w * 0.80], y + 76)
+
+	## Magnet: red (the magnet, a horseshoe on its back) flies out to the
+	## right; blue, behind it on the dotted line, slides into its cell.
+	func _draw_magnet() -> void:
+		var w := size.x
+		var y := 52.0
+		var mag_home := Vector2(w * 0.62, y)
+		var blue_home := Vector2(w * 0.24, y)
+		for x in [blue_home.x, mag_home.x]:
+			draw_rect(Rect2(Vector2(x - 28, y - 28), Vector2(56, 56)), Color(1, 1, 1, 0.08), true)
+		var mag_pos := mag_home
+		var blue_pos := blue_home
+		var mag_gone := reduced
+		if reduced:
+			blue_pos = mag_home
+		else:
+			if t < 0.4:
+				mag_pos = mag_home.lerp(Vector2(w + 40.0, y), t / 0.4)
+			else:
+				mag_gone = true
+			if t > 0.4:
+				blue_pos = blue_home.lerp(mag_home, clampf((t - 0.4) / 0.35, 0.0, 1.0))
+		if not mag_gone:
+			var dot := blue_pos.x + 30.0
+			while dot < mag_pos.x - 30.0:
+				draw_circle(Vector2(dot, y), 3.0, MechanicIntro.MAGNET_PINK)
+				dot += 12.0
+			_block(mag_pos, 1.0, MechanicIntro.BLOCK_COLOR, Vector2.RIGHT)
+			var c := mag_pos + Vector2(-15, 0)
+			draw_arc(c, 9.0, PI * 0.5, PI * 1.5, 12, Color.WHITE, 7.0, true)
+			draw_arc(c, 9.0, PI * 0.5, PI * 1.5, 12, MechanicIntro.MAGNET_PINK, 4.0, true)
+		_block(blue_pos, 1.0, MechanicIntro.SEQ_COLOR, Vector2.UP)
+		_words([w * 0.24, w * 0.66], y + 76)
 
 	func _words(xs: Array, y: float) -> void:
 		var font := Palette.font(900)

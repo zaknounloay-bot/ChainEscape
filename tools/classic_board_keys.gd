@@ -8,7 +8,8 @@ extends SceneTree
 ## v0.7 / v0.8: Portal, Sequence and Movable levels (201+) are skipped - a
 ## Friend board never has those (PuzzleDefinition rejects them), so it can
 ## never be one of them, and the Friend data stays exactly as it was. The
-## same for TWINS levels (176-199 since the 1-300 freeze).
+## same for TWINS levels (176-199 since the 1-300 freeze) and MAGNET levels
+## (76-99 without 80 / 90).
 
 
 static func compute() -> Array:
@@ -18,7 +19,7 @@ static func compute() -> Array:
 		var json = JSON.parse_string(FileAccess.get_file_as_string(LevelManager.LEVEL_PATH % n))
 		var level := LevelManager.parse_level(json, n, true)
 		n += 1
-		if not level.portals.is_empty() or level.blocks.any(func(b): return b.seq_stage != 0 or b.is_crate() or b.twin != ""):
+		if not level.portals.is_empty() or level.blocks.any(func(b): return b.seq_stage != 0 or b.is_crate() or b.twin != "" or b.magnet):
 			continue
 		keys.append(FriendGenerator.board_key(PuzzleDefinition.from_level(level)))
 	return keys

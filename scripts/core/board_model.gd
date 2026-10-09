@@ -256,7 +256,9 @@ func count_of_color(color: String) -> int:
 ## Removes the block from the board. Caller must check can_escape first.
 ## Spinners orthogonally adjacent to the removed block turn (by their rule).
 ## Returns the ids of the spinners that turned (for animation).
-func remove(id: int) -> Array:
+## `pull` = false: a MAGNET removed without its pull (the Hammer: a smashed
+## magnet pulls nothing; every other removal effect is the same).
+func remove(id: int, pull: bool = true) -> Array:
 	var b: BlockData = blocks.get(id)
 	if b == null:
 		return []
@@ -302,7 +304,7 @@ func remove(id: int) -> Array:
 	# MAGNET: last of all (after the spinners it turned), the first block
 	# straight behind it slides into the cell it left.
 	last_pull = {}
-	if b.magnet:
+	if b.magnet and pull:
 		var t := _first_behind(b.cell, b.direction)
 		if not t.is_empty():
 			var o: BlockData = blocks[t["block"]]

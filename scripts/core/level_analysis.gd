@@ -48,8 +48,25 @@ static func analyze(level: LevelData, with_impacts: bool = true) -> Dictionary:
 	# with every portal cell turned into an empty cell).
 	m["portal_pairs"] = level.portals.size() / 2
 	m["portal_impact"] = 0.0
+	# MAGNET (76-99): magnets on the board, pulls in the solver's solution
+	# (replayed through BoardModel) and what the magnets add (structural;
+	# ESSENTIAL if the level can't be won with every magnet a plain arrow).
+	m["magnets"] = level.blocks.filter(func(b): return b.magnet).size()
+	m["pulls"] = 0
+	m["magnet_impact"] = 0.0
+	if m["solvable"] and m["magnets"] > 0:
+		var r := BoardModel.new()
+		r.setup(level.rows, level.columns, level.blocks)
+		for mv in m["solution"]:
+			var id: int = mv & Solver.ID_MASK
+			if r.blocks.has(id) and r.move_state(id) == "ok":
+				r.remove(id)
+				if not r.last_pull.is_empty():
+					m["pulls"] += 1
 	if not m["solvable"] or not with_impacts:
 		return m
+	if m["magnets"] > 0:
+		m["magnet_impact"] = _impact(level, m, func(b): b.magnet = false, false, true)
 	# v0.6 mechanics are measured STRUCTURALLY (depth, decisions, traps,
 	# start moves, rams) - their own count terms don't count, so a switch,
 	# gate or shell that changes nothing about how the level is solved is

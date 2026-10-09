@@ -1043,8 +1043,8 @@ func _production_era() -> void:
 	# Lessons: the lab keeps production's Switch (101) and Gate (121) lessons,
 	# runs production's Armor lesson at 151 (never again at 161) and adds none
 	# elsewhere (125 especially).
-	_check(ExperienceLab.LESSONS == {13: "lock", 101: "switch", 121: "gate", 151: "armor", 176: "twins", 201: "portal", 226: "sequence", 251: "movable"},
-		"lessons are 13 lock, 101 switch, 121 gate, 151 armor, 176 twins, 201 portal, 226 sequence, 251 movable (%s)" % [ExperienceLab.LESSONS])
+	_check(ExperienceLab.LESSONS == {13: "lock", 76: "magnet", 101: "switch", 121: "gate", 151: "armor", 176: "twins", 201: "portal", 226: "sequence", 251: "movable"},
+		"lessons are 13 lock, 76 magnet, 101 switch, 121 gate, 151 armor, 176 twins, 201 portal, 226 sequence, 251 movable (%s)" % [ExperienceLab.LESSONS])
 	_check(GameManager.LESSONS == ExperienceLab.LESSONS, "since the freeze the game's lessons are the lab's (%s)" % [GameManager.LESSONS])
 	_check(ExperienceLab.ARMOR_INTRO == 151 and not ExperienceLab.LESSONS.has(161), "the lab introduces Armor at 151, no lesson at Lab 161")
 	# Every 25th level: the same LEVELS ESCAPED presentation in the lab and

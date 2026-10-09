@@ -152,9 +152,10 @@ static var dev_movable: bool = false
 ## Social / Friend parsing (campaign = false). This flag is kept for the
 ## developer pages and their tools.
 static var dev_twins: bool = false
-## Magnet (prototype): the "*" suffix is parsed ONLY while this is true (the
-## Magnet lab and its dev tools). Never in campaign level files, Social or
-## Friend Challenge parsing: there a magnet cell stays a bad token.
+## Magnet: the "*" suffix is parsed in campaign level files (Levels 76-99,
+## docs/magnet_campaign_plan.md) and while this is true (the Magnet lab and
+## its dev tools). Never in Social / Friend Challenge parsing (campaign =
+## false): there a magnet cell stays a bad token.
 static var dev_magnet: bool = false
 ## True only while a campaign level is being parsed (parse_level).
 static var _campaign: bool = false
@@ -192,8 +193,8 @@ static func _parse_map(map: Array, level: LevelData) -> void:
 				m = null  # a Sequence token outside the campaign / lab: unknown, as before
 			if m != null and m.get_string(12) != "" and not _campaign:
 				m = null  # a Twins token outside campaign / lab level files (Social, Friend): unknown
-			if m != null and m.get_string(13) != "" and not dev_magnet:
-				m = null  # a Magnet token outside the Magnet lab (campaign too): unknown
+			if m != null and m.get_string(13) != "" and not (dev_magnet or _campaign):
+				m = null  # a Magnet token outside campaign / lab level files (Social, Friend): unknown
 			if m == null:
 				push_error("Level %d: bad map token '%s' at row %d col %d" % [level.number, t, r, c])
 				continue
