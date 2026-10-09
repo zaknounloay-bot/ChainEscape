@@ -83,7 +83,7 @@ var _blocked_hint_shown := false
 ## Since the 1-300 freeze (docs/freeze_1_300.md) the approved Experience Lab
 ## lessons are the game's: Lock 13, Switch 101, Chain Gate 121, Armor 151,
 ## Twins 176.
-const LESSONS := {13: "lock", 101: "switch", 121: "gate", 151: "armor", 176: "twins"}
+const LESSONS := {13: "lock", 101: "switch", 121: "gate", 151: "armor", 176: "twins", 201: "portal", 226: "sequence", 251: "movable"}
 ## PORTAL (levels 201+): shown under the board when a lane through a portal
 ## is blocked on the far side (one translatable string).
 const PORTAL_BLOCKED_TEXT := "Blocked after portal %s"
@@ -373,12 +373,20 @@ func _maybe_mechanic_intro() -> void:
 	progress.tips_seen.append("intro_" + mech)
 	progress.save()
 	board.input_enabled = false
+	# A guided lesson on this level (201 / 226 / 251) waits for the card:
+	# nothing of it shows underneath, it starts once the card is gone.
+	if _lesson != "":
+		tutorial.hide_hint(true)
+		board.set_marks([])
+		board.set_hint(-1)
 	var session := _session_id
 	mechanic_intro = MechanicIntro.new(mech, SocialScreen.reduced_motion())
 	mechanic_intro.finished.connect(func():
 		mechanic_intro = null
 		if session == _session_id and not completed and not game_over:
 			board.input_enabled = true
+			if _lesson != "":
+				_lesson_step()
 		publish_state.call_deferred())
 	add_child(mechanic_intro)
 	publish_state.call_deferred()
@@ -566,7 +574,7 @@ func _on_block_tapped(id: int) -> void:
 		"twin_wait": _twin_wait_tap(id)
 	# Free "explain" taps (gate, shell, hidden, locked) keep their message;
 	# the lesson moves on after real moves.
-	if _lesson != "" and not completed and not game_over and (tap_state in ["ok", "ram", "blocked"] or (_lesson == "twins" and tap_state == "twin_wait")):
+	if _lesson != "" and not completed and not game_over and (tap_state in ["ok", "ram", "blocked", "advance", "push"] or (_lesson == "twins" and tap_state == "twin_wait")):
 		_lesson_step(tap_state == "twin_wait")
 
 
@@ -591,7 +599,8 @@ func _escape(id: int) -> void:
 	var revealed := model.last_revealed.duplicate()
 	var unlocked := model.last_unlocked.duplicate()
 	if (_lesson == "switch" and not model.last_flipped.is_empty()) or (_lesson == "gate" and not model.last_opened_gates.is_empty()) \
-			or (_lesson == "twins" and pair):
+			or (_lesson == "twins" and pair) or (_lesson == "portal" and not via.is_empty()) \
+			or (_lesson == "sequence" and escaped.seq_stage != 0):
 		_finish_lesson()
 	_play_second_era_effects()
 	chain += 1
@@ -785,6 +794,8 @@ func _push(id: int) -> void:
 		return
 	var revealed := model.last_revealed.duplicate() if info["advanced"] else []
 	_clear_hint()
+	if _lesson == "movable":
+		_finish_lesson()
 	board.play_push(id, info, pusher_via, SocialScreen.reduced_motion())
 	AudioManager.play_push()
 	if not pusher_via.is_empty() or not info["via"].is_empty():
@@ -937,9 +948,11 @@ func _on_board_cleared() -> void:
 		return
 	board.celebrate()
 	if r["celebration"] == "lab_major":
-		# Experience Lab 100: "100 LEVELS ESCAPED!" first (the biggest lab
-		# moment), then the Master identity. Not a finale: the game goes on.
-		for i in 6:
+		# Master Levels 100 and 200: "N LEVELS ESCAPED!" first (the standard
+		# milestone presentation), then the MASTER / GRAND MASTER identity
+		# as a second, fitted stamp. Not a finale: the game goes on.
+		var grand := current_level > Chapters.master_level()
+		for i in (8 if grand else 6):
 			board.celebrate()
 		ui.show_major_milestone(str(current_level), MAJOR_MILESTONE_LINE, 1.6, SocialScreen.reduced_motion())
 		get_tree().create_timer(0.6).timeout.connect(publish_state)
@@ -948,11 +961,11 @@ func _on_board_cleared() -> void:
 		await get_tree().create_timer(2.4).timeout
 		if session != _session_id:
 			return
-		for i in 2:
+		for i in (3 if grand else 2):
 			board.celebrate()
-		ui.show_perfect_stamp("MASTER!", 1.2)
+		_show_stamp("GRAND MASTER!" if grand else "MASTER!", 1.6 if grand else 1.2)
 		AudioManager.play_perfect()
-		await get_tree().create_timer(1.4).timeout
+		await get_tree().create_timer(1.8 if grand else 1.4).timeout
 	elif String(r["celebration"]).begins_with("lab_milestone"):
 		# Experience Lab 25 / 50 / 75: "N / LEVELS ESCAPED!", short; 50 is
 		# richer, 75 a little more than 25. Presentation only.
@@ -977,7 +990,7 @@ func _on_board_cleared() -> void:
 		var grand := current_level > Chapters.master_level()
 		for i in (5 if grand else 3):
 			board.celebrate()
-		ui.show_perfect_stamp("GRAND MASTER!" if grand else "MASTER!", 1.6 if grand else 1.2)
+		_show_stamp("GRAND MASTER!" if grand else "MASTER!", 1.6 if grand else 1.2)
 		AudioManager.play_master()
 		Haptics.medium()
 		await get_tree().create_timer(2.0 if grand else 1.6).timeout
@@ -996,20 +1009,20 @@ func _on_board_cleared() -> void:
 		# v0.8 stronger milestone (250): more bursts, a longer stamp.
 		for i in 3:
 			board.celebrate()
-		ui.show_perfect_stamp(STRONG_MILESTONE_STAMP % current_level, 1.2)
+		_show_stamp(STRONG_MILESTONE_STAMP % current_level, 1.2)
 		AudioManager.play_milestone()
 		Haptics.medium()
 		await get_tree().create_timer(1.7).timeout
 	elif r["milestone"] or r["celebration"] == "short":
 		for i in 2:
 			board.celebrate()
-		ui.show_perfect_stamp("MILESTONE!", 0.9)
+		_show_stamp("MILESTONE!", 0.9)
 		AudioManager.play_milestone()
 		Haptics.medium()
 		await get_tree().create_timer(1.3).timeout
 	elif r["perfect"]:
 		board.celebrate()
-		ui.show_perfect_stamp()
+		_show_stamp()
 		AudioManager.play_perfect()
 		Haptics.medium()
 		await get_tree().create_timer(0.85).timeout
@@ -1531,7 +1544,7 @@ func publish_state() -> void:
 		"lab_complete_button": center.call(get_node("ExperienceLabComplete").find_children("*", "Button", true, false)[0]) if ExperienceLab.complete_open and has_node("ExperienceLabComplete") else [],
 		"level_count": level_manager.level_count, "level_name": level.name if level else "", "max_hearts": max_hearts, "blocks_left": model.block_count(),
 		"coin_notes": last_result.get("coin_notes", "") if completed else "", "chapter_complete": last_result.get("chapter_complete", 0) if completed else 0,
-		"card_title": ui._card_title.text, "next_text": ui._next_button.text,
+		"card_title": ui._card_title.text, "next_text": ui._next_button.text, "stamp": ui.stamp_state(),
 		"major_rect": [ui.major_milestone_rect().position.x / vis.x, ui.major_milestone_rect().position.y / vis.y, ui.major_milestone_rect().end.x / vis.x, ui.major_milestone_rect().end.y / vis.y],
 		"crates": model.blocks.values().filter(func(b): return b.is_crate()).size() if model else 0,
 		"seq_blocks": model.blocks.values().filter(func(b): return b.seq_stage != 0).size() if model else 0,
@@ -1619,6 +1632,15 @@ func _show_start_hint() -> void:
 func _lesson_blocks(kind: String) -> Array:
 	var out := []
 	var groups := {}
+	if kind in ["portal", "sequence", "movable"]:
+		# Third Era lessons: the blocks whose lane runs through a portal, the
+		# Sequence blocks, or the Movable blocks and every block that would
+		# push one now.
+		for b in model.blocks.values():
+			if (kind == "portal" and not b.is_crate() and not _portal_via(b.id).is_empty()) or (kind == "sequence" and b.seq_stage != 0) \
+					or (kind == "movable" and (b.is_crate() or model.move_state(b.id) == "push")):
+				out.append(b.id)
+		return out
 	if kind == "twins":
 		# Experience Lab Twins lesson: every bonded block.
 		for b in model.blocks.values():
@@ -1643,6 +1665,27 @@ func _lesson_blocks(kind: String) -> Array:
 		if (kind == "switch" and groups.has(b.flip_link)) or (kind == "gate" and groups.has(b.gate_link)):
 			out.append(b.id)
 	return out
+
+
+## Third Era lessons: a move that performs the mechanic's key action
+## (`is_key`) and keeps the level solvable - the finger never points at a
+## trap. -1 when no such move exists right now (then the solver's pick
+## clears the way).
+func _lesson_key_move(is_key: Callable) -> int:
+	for id in model.blocks.keys():
+		var state := model.move_state(id)
+		if not (state in ["ok", "advance", "push"]) or not is_key.call(id):
+			continue
+		var snap := model.snapshot()
+		match state:
+			"ok": model.remove(id)
+			"advance": model.advance(id)
+			"push": model.push(id)
+		var ok := model.is_empty() or Solver.from_model(model).is_solvable()
+		model.restore(snap)
+		if ok:
+			return id
+	return -1
 
 
 ## One lesson beat: brackets on the mechanic's blocks, a finger on the next
@@ -1674,6 +1717,31 @@ func _lesson_step(twin_wait := false) -> void:
 				text = "Hit the armored block to break its shell"
 			else:
 				text = "Armored: can't escape. Clear a path for the marked block to hit it"
+		"portal":
+			var key := _lesson_key_move(func(id): return model.move_state(id) == "ok" and not _portal_via(id).is_empty())
+			is_key = key != -1
+			if is_key:
+				next = key
+				var letter := String(model.portal_groups.get(_portal_via(key)[0][0], "A"))
+				text = "Tap it: in through PORTAL %s, out of the other %s - same direction" % [letter, letter]
+			else:
+				text = "PORTALS: in one, out of the other with the same letter - clear a way in"
+		"sequence":
+			var key := _lesson_key_move(func(id): return model.blocks[id].seq_stage != 0)
+			is_key = key != -1
+			if is_key:
+				next = key
+				text = "SEQUENCE: the first tap only TURNS it - tap it" if model.blocks[key].seq_stage == 1 else "Now tap it again - it escapes"
+			else:
+				text = "SEQUENCE: clear its path first - then tap it to turn it"
+		"movable":
+			var key := _lesson_key_move(func(id): return model.move_state(id) == "push")
+			is_key = key != -1
+			if is_key:
+				next = key
+				text = "Launch it into the MOVABLE block - it moves one cell"
+			else:
+				text = "MOVABLE blocks never leave - clear a path to hit one"
 		"twins":
 			# Experience Lab: a twin tapped while its partner's path was blocked
 			# (free) gets the rule itself; otherwise the next correct move.
@@ -1744,10 +1812,20 @@ func _finish_lesson() -> void:
 		"gate": "The gate is open - its lane is free!",
 		"armor": "Shell cracked! Now it moves like any other block",
 		"twins": "Both twins escaped together - one move, both lanes!",
-		"lock": "Every %s block is gone - the lock is open!" % _lock_lesson_color}[kind]
+		"lock": "Every %s block is gone - the lock is open!" % _lock_lesson_color,
+		"portal": "Through the portal - same direction, other side!",
+		"sequence": "Turn, then escape - that's a SEQUENCE block!",
+		"movable": "Pushed one cell - Movable blocks never leave on their own"}[kind]
 	_show_message(done, 2.8)
 	if ExperienceLab.active:
 		publish_state.call_deferred()
+
+
+## The golden stamp (fitted to the screen, UIManager.show_perfect_stamp);
+## the state is published once it rests (tests check it is fully visible).
+func _show_stamp(text: String = "PERFECT!", hold: float = 0.45) -> void:
+	ui.show_perfect_stamp(text, hold)
+	get_tree().create_timer(0.4).timeout.connect(publish_state)
 
 
 ## One line of text under the board that fades out by itself. Kept above

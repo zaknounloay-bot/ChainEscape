@@ -408,10 +408,12 @@ func show_chain(chain: int) -> void:
 func show_complete(r: Dictionary) -> void:
 	var perfect: bool = r["perfect"]
 	_card_title.text = "PERFECT!" if perfect else "LEVEL COMPLETE"
-	if r.get("master", false):
-		_card_title.text = "GRAND MASTER!" if r.get("level", 0) > Chapters.master_level() else "MASTER CLEARED!"
-	elif r.get("celebration", "") == "major" or String(r.get("celebration", "")).begins_with("lab_milestone"):
+	# Every milestone (each 25th level, the Master Levels 100 / 200 too):
+	# "N LEVELS ESCAPED!" - the MASTER identity is the stamp before the card.
+	if r.get("celebration", "") == "major" or String(r.get("celebration", "")).begins_with("lab_"):
 		_card_title.text = MAJOR_MILESTONE_TITLE % r.get("level", 0)
+	elif r.get("master", false):
+		_card_title.text = "GRAND MASTER!" if r.get("level", 0) > Chapters.master_level() else "MASTER CLEARED!"
 	elif r.get("milestone", false) or r.get("celebration", "") in ["short", "strong"]:
 		_card_title.text = "MILESTONE CLEARED!"
 	_fit_label(_card_title, 50, _card.size.x - 80.0 if _card.size.x > 200.0 else get_viewport().get_visible_rect().size.x - 120.0)
@@ -477,11 +479,15 @@ func show_complete(r: Dictionary) -> void:
 
 
 ## Big golden stamp over the board before the card appears
-## ("PERFECT!", or "MASTER!" for Level 100).
+## ("PERFECT!", "MASTER!" / "GRAND MASTER!" after the 100 / 200 milestone).
+## The font is FITTED (fit_stamp_size) so the whole stamp - glyphs, outline
+## and its resting tilt - stays inside the safe side margins on every phone.
 func show_perfect_stamp(text: String = "PERFECT!", hold: float = 0.45) -> void:
 	var vis := get_viewport().get_visible_rect()
 	_stamp.text = text
+	_stamp.add_theme_font_size_override("font_size", fit_stamp_size(_stamp.get_theme_font("font"), text, vis.size.x))
 	_stamp.visible = true
+	_stamp.size = Vector2.ZERO  # shrink to this text (a longer one may have been shown before)
 	_stamp.reset_size()
 	_stamp.position = vis.size * 0.5 - _stamp.size * 0.5
 	_stamp.pivot_offset = _stamp.size * 0.5
@@ -490,11 +496,37 @@ func show_perfect_stamp(text: String = "PERFECT!", hold: float = 0.45) -> void:
 	_stamp.modulate.a = 0.0
 	var t := create_tween().set_parallel()
 	t.tween_property(_stamp, "scale", Vector2.ONE, 0.28).set_trans(Tween.TRANS_BACK).set_ease(Tween.EASE_OUT)
-	t.tween_property(_stamp, "rotation", -0.08, 0.28)
+	t.tween_property(_stamp, "rotation", STAMP_TILT, 0.28)
 	t.tween_property(_stamp, "modulate:a", 1.0, 0.12)
 	t.chain().tween_interval(hold)
 	t.chain().tween_property(_stamp, "modulate:a", 0.0, 0.2)
 	t.chain().tween_callback(func(): _stamp.visible = false)
+
+
+const STAMP_SIZE := 110
+const STAMP_OUTLINE := 18
+## The stamp's resting tilt (radians).
+const STAMP_TILT := -0.08
+
+
+## The stamp's font size for `text` (STAMP_SIZE, or smaller - never larger)
+## so that its rotated ink box fits `screen_w` minus the safe margins:
+## text width plus the outline on BOTH sides (counted in full, generous)
+## and the extra width the resting tilt adds (w·cos t + h·sin t).
+static func fit_stamp_size(font: Font, text: String, screen_w: float) -> int:
+	var avail := screen_w - 2.0 * MAJOR_MARGIN
+	var size := STAMP_SIZE
+	while size > 24 and stamp_extent(font, text, size).x > avail:
+		size -= 2
+	return size
+
+
+## Width / height the stamp covers at rest (ink + full outline, tilted).
+static func stamp_extent(font: Font, text: String, size: int) -> Vector2:
+	var w := font.get_string_size(text, HORIZONTAL_ALIGNMENT_LEFT, -1, size).x + 2.0 * STAMP_OUTLINE
+	var h := font.get_height(size) + 2.0 * STAMP_OUTLINE
+	var t := absf(STAMP_TILT)
+	return Vector2(w * cos(t) + h * sin(t), w * sin(t) + h * cos(t))
 
 
 ## v0.8 card / overlay strings (translatable in one place).
@@ -550,6 +582,18 @@ func show_major_milestone(big: String, line: String, hold: float = 1.8, reduced:
 	t.chain().tween_interval(hold)
 	t.chain().tween_property(_major, "modulate:a", 0.0, 0.3)
 	t.chain().tween_callback(func(): _major.visible = false)
+
+
+## The stamp as tests see it: text, font size, its resting ink extent
+## (stamp_extent) centred where it rests, and the live transform.
+func stamp_state() -> Dictionary:
+	if _stamp == null or not _stamp.visible:
+		return {}
+	var fs := _stamp.get_theme_font_size("font_size")
+	var ext := stamp_extent(_stamp.get_theme_font("font"), _stamp.text, fs)
+	var c := _stamp.position + _stamp.size * 0.5
+	return {"text": _stamp.text, "font_size": fs, "rest": [c.x - ext.x * 0.5, c.y - ext.y * 0.5, c.x + ext.x * 0.5, c.y + ext.y * 0.5],
+		"scale": snappedf(_stamp.scale.x, 0.001), "rotation": snappedf(_stamp.rotation, 0.001), "alpha": snappedf(_stamp.modulate.a, 0.01)}
 
 
 ## Is the major-milestone overlay on screen (tests / diagnostics)?
@@ -737,10 +781,10 @@ func _build() -> void:
 	_next_button.pressed.connect(func(): next_pressed.emit())
 	_card_buttons.add_child(_next_button)
 
-	_stamp = _make_label(110, Palette.GOLD, 900)
+	_stamp = _make_label(STAMP_SIZE, Palette.GOLD, 900)
 	_stamp.text = "PERFECT!"
 	_stamp.add_theme_color_override("font_outline_color", Palette.WHITE)
-	_stamp.add_theme_constant_override("outline_size", 18)
+	_stamp.add_theme_constant_override("outline_size", STAMP_OUTLINE)
 	_stamp.visible = false
 	_root.add_child(_stamp)
 

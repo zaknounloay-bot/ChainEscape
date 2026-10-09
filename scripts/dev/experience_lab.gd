@@ -62,7 +62,9 @@ const COMPLETE_LINE := "LAB LEVELS 1–200 · MORE LEVELS COME LATER"
 ## where Armor starts in the lab (the lab's lessons replace
 ## GameManager.LESSONS while the lab is active). Lab 176 introduces TWINS
 ## (the approved prototype mechanic; lab-only) with its own lesson.
-const LESSONS := {13: "lock", 101: "switch", 121: "gate", 151: "armor", 176: "twins"}
+## (201 / 226 / 251: production's Third Era lessons, kept in step with
+## GameManager.LESSONS - the lab ends at 200, QA sessions use production's.)
+const LESSONS := {13: "lock", 101: "switch", 121: "gate", 151: "armor", 176: "twins", 201: "portal", 226: "sequence", 251: "movable"}
 ## Where the lab introduces ARMOR (production: 161). The Chapter card's
 ## "NEW: Armored Blocks" line follows it (GameManager._chapter_news).
 const ARMOR_INTRO := 151
@@ -71,7 +73,9 @@ const ARMOR_INTRO := 151
 const TWINS_INTRO := 176
 ## Lab-only, presentation-only milestones: "N / LEVELS ESCAPED!" (no coins,
 ## no rewards, nothing about the game ending; the game goes on after 100).
-const CELEBRATIONS := {25: "lab_milestone", 50: "lab_milestone_strong", 75: "lab_milestone_plus", 100: "lab_major"}
+## (Since the milestone polish: the same tiers as production, chapters.json.)
+const CELEBRATIONS := {25: "lab_milestone", 50: "lab_milestone_strong", 75: "lab_milestone_plus", 100: "lab_major",
+	125: "lab_milestone", 150: "lab_milestone_strong", 175: "lab_milestone_plus", 200: "lab_major"}
 
 static var active := false
 ## QA session (a jump, or the QA build): production Levels 1-300, QA save.

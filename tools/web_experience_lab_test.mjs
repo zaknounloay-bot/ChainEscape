@@ -184,7 +184,7 @@ try {
   await sleep(1200);
   s = await state(page);
   await page.screenshot({ path: path.join(shots, 'xlab_L200_card.png') });
-  check(s.card_title === 'GRAND MASTER!' && /GRAND MASTER/.test(s.coin_notes || ''), `C: Lab ${LAST} clears with the GRAND MASTER! card and its bonus ("${s.card_title}", "${s.coin_notes}")`);
+  check(s.card_title === '200 LEVELS ESCAPED!' && /GRAND MASTER/.test(s.coin_notes || ''), `C: Lab ${LAST} clears with the 200 LEVELS ESCAPED! card and its GRAND MASTER bonus ("${s.card_title}", "${s.coin_notes}")`);
   await tapAt(page, s.next);
   await sleep(900);
   s = await state(page);
@@ -240,7 +240,7 @@ try {
     s = await waitFor(page, (x) => x.card_open && x.level === n, `card ${n}`, 20000);
     await sleep(500);
     s = await state(page);
-    const want = n === 100 ? 'MASTER CLEARED!' : `${n} LEVELS ESCAPED!`;
+    const want = `${n} LEVELS ESCAPED!`;
     check(s.card_title === want && s.celebration.startsWith('lab_'), `E: Lab ${n} card "${s.card_title}" (${s.celebration})`);
     check(!/FINAL|GRAND|GAME COMPLETE|THE END|HALFWAY/i.test(s.card_title), `E: Lab ${n} no finale wording`);
   }
@@ -291,7 +291,7 @@ try {
     s = await waitFor(page, (x) => x.card_open && x.level === n, `QA card ${n}`, 20000);
     await sleep(500);
     s = await state(page);
-    check(s.card_title === (n === 100 ? 'MASTER CLEARED!' : `${n} LEVELS ESCAPED!`), `F: Lab ${n} card "${s.card_title}"`);
+    check(s.card_title === `${n} LEVELS ESCAPED!`, `F: Lab ${n} card "${s.card_title}"`);
     if (n === 100) {
       await tapAt(page, s.next);
       await sleep(900);

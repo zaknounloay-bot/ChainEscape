@@ -174,7 +174,7 @@ try {
     s = await solve(g, 225);
     await sleep(2500);
     s = await state(g);
-    check(s.celebration === 'short' && s.card_title === 'MILESTONE CLEARED!', `D: 225 shows the short MILESTONE (${s.card_title})`);
+    check(s.celebration === 'lab_milestone' && s.card_title === '225 LEVELS ESCAPED!', `D: 225 shows the standard milestone (${s.celebration}, ${s.card_title})`);
     check(s.coins - coins0 < 120, `D: no milestone bonus paid (+${s.coins - coins0} coins, normal level reward only)`);
     await g.page.keyboard.press('F1');
     await sleep(300);

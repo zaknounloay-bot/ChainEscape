@@ -141,7 +141,7 @@ try {
     s = await solve(g, 250);
     await sleep(2500);
     s = await state(g);
-    check(s.celebration === 'strong' && s.card_title === 'MILESTONE CLEARED!', `B: 250 strong milestone (${s.celebration}, ${s.card_title})`);
+    check(s.celebration === 'lab_milestone_strong' && s.card_title === '250 LEVELS ESCAPED!', `B: 250 milestone (${s.celebration}, ${s.card_title})`);
     check(!/MILESTONE/.test(s.coin_notes || '') && s.coins - coins0 < 120 + (s.chapter_complete ? 150 : 0), `B: no milestone bonus (+${s.coins - coins0} coins: ${s.coin_notes})`);
     s = await next(g, 251);
     check(s.intro_open && s.intro_mechanic === 'movable' && s.crates > 0, `B: 250 -> 251 opens the MOVABLE card (${s.intro_mechanic}, ${s.crates} Movable)`);
@@ -166,7 +166,7 @@ try {
     s = await solve(g, 275);
     await sleep(2200);
     s = await state(g);
-    check(s.celebration === 'short' && s.card_title === 'MILESTONE CLEARED!', `C: 275 short milestone (${s.card_title})`);
+    check(s.celebration === 'lab_milestone_plus' && s.card_title === '275 LEVELS ESCAPED!', `C: 275 milestone (${s.celebration}, ${s.card_title})`);
     s = await next(g, 276);
     check(!s.intro_open, 'C: 276 (integration) has no card');
     for (const n of [276, 277, 278]) {

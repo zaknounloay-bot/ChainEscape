@@ -824,7 +824,7 @@ func _game() -> void:
 			var line: String = game.ui._major.get_child(1).text
 			_check(big == str(n) and line == "LEVELS ESCAPED!", "L%d overlay reads '%s / %s'" % [n, big, line])
 			var title: String = game.ui._card_title.text
-			_check(title == ("MASTER CLEARED!" if n == 100 else "%d LEVELS ESCAPED!" % n), "L%d card title '%s'" % [n, title])
+			_check(title == "%d LEVELS ESCAPED!" % n, "L%d card title '%s'" % [n, title])
 			for word in ["FINAL", "GRAND", "GAME COMPLETE", "FINISHED", "THE END", "HALFWAY"]:
 				_check(not (big + " " + line + " " + title).to_upper().contains(word), "L%d milestone text has no '%s'" % [n, word])
 		if n % 10 == 0:
@@ -1043,14 +1043,17 @@ func _production_era() -> void:
 	# Lessons: the lab keeps production's Switch (101) and Gate (121) lessons,
 	# runs production's Armor lesson at 151 (never again at 161) and adds none
 	# elsewhere (125 especially).
-	_check(ExperienceLab.LESSONS == {13: "lock", 101: "switch", 121: "gate", 151: "armor", 176: "twins"}, "lab lessons are 13 lock, 101 switch, 121 gate, 151 armor, 176 twins (%s)" % [ExperienceLab.LESSONS])
+	_check(ExperienceLab.LESSONS == {13: "lock", 101: "switch", 121: "gate", 151: "armor", 176: "twins", 201: "portal", 226: "sequence", 251: "movable"},
+		"lessons are 13 lock, 101 switch, 121 gate, 151 armor, 176 twins, 201 portal, 226 sequence, 251 movable (%s)" % [ExperienceLab.LESSONS])
 	_check(GameManager.LESSONS == ExperienceLab.LESSONS, "since the freeze the game's lessons are the lab's (%s)" % [GameManager.LESSONS])
 	_check(ExperienceLab.ARMOR_INTRO == 151 and not ExperienceLab.LESSONS.has(161), "the lab introduces Armor at 151, no lesson at Lab 161")
-	# Milestone 125: production's milestone level, no lab celebration on top.
-	_check(Chapters.is_milestone(125) and not ExperienceLab.CELEBRATIONS.has(125) and ExperienceLab.CELEBRATIONS.keys().all(func(k): return k <= 100),
-		"125 keeps production's milestone; lab celebrations stay at 25/50/75/100")
-	_check(Chapters.is_milestone(150) and Chapters.is_milestone(175) and Chapters.celebration_tier(175) == "",
-		"150 and 175 keep production's milestone levels; no lab celebration added")
+	# Every 25th level: the same LEVELS ESCAPED presentation in the lab and
+	# in production; 125 / 150 / 175 stay paying milestone levels.
+	for k in range(25, 201, 25):
+		_check(ExperienceLab.CELEBRATIONS.get(k, "") == String(Chapters.config()["celebration_levels"].get(str(k), "")) and ExperienceLab.CELEBRATIONS[k].begins_with("lab_"),
+			"Lab %d celebrates as production (%s)" % [k, ExperienceLab.CELEBRATIONS.get(k, "")])
+	_check(ExperienceLab.CELEBRATIONS.size() == 8, "lab celebrations: every 25th level of 1-200")
+	_check(Chapters.is_milestone(125) and Chapters.is_milestone(150) and Chapters.is_milestone(175), "125 / 150 / 175 keep their paying milestone")
 
 
 # --- TWINS at 176-199 (docs/twins_176_199_lab.md) ---------------------------------
@@ -1397,7 +1400,7 @@ func _armor_lesson() -> void:
 ## Lab 200: production's Grand Master, unchanged: board, theme, music,
 ## celebration, card, and the one-time 600-coin bonus (paid once per save).
 func _grand_master() -> void:
-	_check(Chapters.is_master(200) and Chapters.celebration_tier(200) == "", "Lab 200 is production's Grand Master (no lab celebration on top)")
+	_check(Chapters.is_master(200) and Chapters.celebration_tier(200) == "lab_major", "Lab 200 is production's Grand Master (the standard 200 LEVELS ESCAPED presentation, then GRAND MASTER)")
 	var t: Dictionary = Chapters.theme_for_level(200)
 	_check(t.get("name") == "Grand Master" and t.get("music") == "master2", "Lab 200 keeps the Grand Master theme and music (%s / %s)" % [t.get("name"), t.get("music")])
 	_check(int(Economy.config()["rewards"].get("master_clear_200", 0)) == 600, "the Grand Master bonus is 600 coins")
@@ -1421,7 +1424,7 @@ func _grand_master() -> void:
 			t2 += 1
 		var gained: int = game.progress.coins - coins_before
 		var notes: String = str(game.last_result.get("coin_notes", ""))
-		_check(game.completed and game.last_result.get("master", false) and game.ui._card_title.text == "GRAND MASTER!", "L200 clear %d: Master result and GRAND MASTER! card ('%s')" % [pass_i + 1, game.ui._card_title.text])
+		_check(game.completed and game.last_result.get("master", false) and game.ui._card_title.text == "200 LEVELS ESCAPED!", "L200 clear %d: Master result and the 200 LEVELS ESCAPED! card ('%s')" % [pass_i + 1, game.ui._card_title.text])
 		if pass_i == 0:
 			_check(game.progress.achievements.has("master_200") and gained >= 600 and notes.contains("GRAND MASTER"), "L200 first clear pays the 600-coin Grand Master bonus once (+%d, '%s')" % [gained, notes])
 		else:

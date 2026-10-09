@@ -87,7 +87,21 @@ func _run() -> void:
 		_finish()
 		return
 	# First-visit onboarding.
-	if n == 13:
+	const THIRD_ERA := {201: "portal", 226: "sequence", 251: "movable"}
+	if THIRD_ERA.has(n):
+		# The NEW MECHANIC card first (input off, nothing of the lesson under
+		# it), then the guided finger lesson.
+		_check(game.mechanic_intro != null and not game.board.input_enabled and not game.tutorial.is_showing() and _finger(game) == -1,
+			"L%d: the NEW MECHANIC card opens first, the lesson waits under nothing" % n)
+		var w := 0
+		while game.mechanic_intro != null and w < 600:
+			await _frames(2)
+			w += 1
+		await _frames(4)
+		var f := _finger(game)
+		_check(game._lesson == THIRD_ERA[n] and game.tutorial.is_showing() and game.board.input_enabled and f >= 0 and game.model.move_state(f) in ["ok", "advance", "push"],
+			"L%d: after the card the %s lesson starts, finger on a legal move ('%s', finger %d)" % [n, THIRD_ERA[n], game.tutorial._text, f])
+	elif n == 13:
 		_check(game._lesson == "lock" and game.tutorial.is_showing() and game.tutorial._text.contains("left)"), "L13: the lock lesson starts from the beginning ('%s')" % game.tutorial._text)
 	elif n == 101:
 		_check(game._lesson == "switch" and game.tutorial.is_showing(), "L101: production's Switch lesson starts ('%s')" % game.tutorial._text)
@@ -122,8 +136,22 @@ func _run() -> void:
 	# Opening alone never celebrates.
 	await _frames(20)
 	_check(game.ui.major_milestone_rect().size.x == 0.0 and not game.completed, "L%d: no milestone just by opening" % n)
-	# Clear it by taps (the lesson path for 13).
+	# Clear it by taps (the lesson path for 13). A Third Era lesson is
+	# followed FINGER by finger until it ends (never a trap).
 	var t := 0
+	if THIRD_ERA.has(n):
+		var kind: String = THIRD_ERA[n]
+		while game._lesson != "" and not game.completed and t < 60:
+			var f := _finger(game)
+			if f < 0:
+				break
+			_check(Solver.from_model(game.model).is_solvable(), "L%d: the level is still solvable where the finger points (step %d)" % [n, t])
+			game._on_block_tapped(f)
+			await _frames(3)
+			t += 1
+		_check(game._lesson == "" and game.progress.tips_seen.has("lesson_" + kind) and (game.completed or Solver.from_model(game.model).is_solvable()),
+			"L%d: following the finger ends the %s lesson after its key action (%d taps), level cleared or still solvable ('%s')" % [n, kind, t, game.tutorial._text])
+	t = 0
 	while not game.completed and t < 200:
 		var id := Solver.from_model(game.model).recommend_move()
 		if id == -1:
@@ -132,12 +160,23 @@ func _run() -> void:
 		await _frames(2)
 		t += 1
 	var overlay := false
+	var stamps := {}
+	var vw := game.get_viewport().get_visible_rect().size.x
 	t = 0
 	while not (game.completed and game.ui.is_complete_visible()) and t < 600:
 		await _frames(2)
 		if game.ui.major_milestone_rect().size.x > 0.0:
 			overlay = true
+			var r := game.ui.major_milestone_rect()
+			_check(r.position.x >= 0.0 and r.end.x <= vw, "L%d: the milestone overlay stays on screen" % n)
+		var st: Dictionary = game.ui.stamp_state()
+		if not st.is_empty() and absf(st["scale"] - 1.0) < 0.02 and st["alpha"] > 0.99:
+			stamps[st["text"]] = st
 		t += 1
+	for text in stamps:
+		var rest: Array = stamps[text]["rest"]
+		_check(rest[0] >= UIManager.MAJOR_MARGIN - 0.5 and rest[2] <= vw - UIManager.MAJOR_MARGIN + 0.5,
+			"L%d: the '%s' stamp rests fully on screen (%.0f..%.0f of %.0f, font %d)" % [n, text, rest[0], rest[2], vw, stamps[text]["font_size"]])
 	_check(game.completed and game.last_result.get("level", 0) == n, "L%d clears by taps" % n)
 	if n == 13:
 		_check(game.progress.tips_seen.has("lesson_lock"), "L13: the lesson completed during the clear")
@@ -151,15 +190,23 @@ func _run() -> void:
 		_check(game.progress.tips_seen.has("lesson_twins"), "L176: the Twins lesson completed during the clear")
 	_check(game.mistakes == 0, "L%d: SHOW A MOVE's line costs no heart" % n)
 	if n == 200:
-		_check(game.last_result.get("master", false) and game.ui._card_title.text == "GRAND MASTER!" and str(game.last_result.get("coin_notes", "")).contains("GRAND MASTER")
-			and game.progress.achievements.has("master_200"), "L200: Grand Master card and its one-time bonus (in the QA save) ('%s')" % game.last_result.get("coin_notes", ""))
+		_check(game.last_result.get("master", false) and stamps.has("GRAND MASTER!") and str(game.last_result.get("coin_notes", "")).contains("GRAND MASTER")
+			and game.progress.achievements.has("master_200") and game.last_result.get("coins", 0) >= int(Economy.config()["rewards"]["master_clear_200"]),
+			"L200: the GRAND MASTER stamp and its one-time bonus (in the QA save) ('%s', stamps %s)" % [game.last_result.get("coin_notes", ""), stamps.keys()])
+	if n == 100:
+		_check(stamps.has("MASTER!") and game.progress.achievements.has("master"), "L100: the MASTER stamp and its one-time bonus (stamps %s)" % [stamps.keys()])
+	if n in [125, 150, 175]:
+		_check(game.progress.achievements.has("milestone_%d" % n) and str(game.last_result.get("coin_notes", "")).contains("MILESTONE"),
+			"L%d: the milestone bonus is still paid once ('%s')" % [n, game.last_result.get("coin_notes", "")])
+	if n % 25 == 0:
+		_check(not stamps.has("MILESTONE!") and not stamps.keys().any(func(k): return String(k).ends_with(" LEVELS!")), "L%d: no extra MILESTONE stamp (%s)" % [n, stamps.keys()])
 	var want := String(Chapters.config().get("celebration_levels", {}).get(str(n), ""))  # production's tiers
 	var big := want.begins_with("lab_") or want == "major"  # the "N / LEVELS ESCAPED!" overlay
 	_check(String(game.last_result.get("celebration", "")) == want and overlay == big,
 		"L%d: milestone '%s' after the clear (want '%s', overlay %s)" % [n, game.last_result.get("celebration", ""), want, overlay])
 	if big:
 		_check(game.ui._major.get_child(0).text == str(n) and game.ui._major.get_child(1).text == "LEVELS ESCAPED!", "L%d overlay reads %d / LEVELS ESCAPED!" % [n, n])
-		_check(game.ui._card_title.text == ("MASTER CLEARED!" if n == 100 else "%d LEVELS ESCAPED!" % n), "L%d card title '%s'" % [n, game.ui._card_title.text])
+		_check(game.ui._card_title.text == "%d LEVELS ESCAPED!" % n, "L%d card title '%s'" % [n, game.ui._card_title.text])
 	_check(int(game.last_result.get("chapter_complete", 0)) == (n / 10 if n % 10 == 0 else 0), "L%d Chapter Complete as in normal progression (%s)" % [n, game.last_result.get("chapter_complete", 0)])
 	game.next_level()
 	await _frames(3)
@@ -167,9 +214,12 @@ func _run() -> void:
 		_check(game.ui.is_chapter_card_open(), "L%d: the Chapter %d card after NEXT" % [n, n / 10])
 		game._after_chapter_card()
 		await _frames(3)
-	_check(game.current_level == n + 1 and not ExperienceLab.complete_open and game.level.name == _prod_level(n + 1).name,
-		"NEXT goes on to Level %d ('%s')" % [n + 1, game.level.name])
-	_check(game.progress.current_level == n + 1 and game.progress.best_scores.has(n), "the QA save holds the progress (Level %d next, %d cleared)" % [n + 1, n])
+	if n == game.level_manager.level_count:
+		_check(game.ui.is_level_select_open() and game.progress.best_scores.has(n), "after Level %d (the last): Level Select, %d cleared in the QA save" % [n, n])
+	else:
+		_check(game.current_level == n + 1 and not ExperienceLab.complete_open and game.level.name == _prod_level(n + 1).name,
+			"NEXT goes on to Level %d ('%s')" % [n + 1, game.level.name])
+		_check(game.progress.current_level == n + 1 and game.progress.best_scores.has(n), "the QA save holds the progress (Level %d next, %d cleared)" % [n + 1, n])
 	for path in before:
 		_check(_read_all(path) == before[path], "%s is byte-identical after the QA session" % path)
 	_finish()
@@ -182,6 +232,14 @@ func _finish() -> void:
 		print("  FAIL: " + f)
 	print("EXPERIENCE LAB QA CHECKS PASSED" if failures.is_empty() else "EXPERIENCE LAB QA CHECKS FAILED")
 	get_tree().quit(0 if failures.is_empty() else 1)
+
+
+## The block the lesson finger points at (-1: none).
+static func _finger(g: GameManager) -> int:
+	for id in g.board._views:
+		if g.board._views[id].hinted:
+			return id
+	return -1
 
 
 static func _prod_level(n: int) -> LevelData:

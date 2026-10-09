@@ -181,7 +181,8 @@ func _data() -> void:
 		if not mm.is_empty():
 			wander.append(n)
 	_check(wander.is_empty(), "following SHOW A MOVE clears every level 226-%d %s" % [upto, str(wander)])
-	_check(Chapters.celebration_tier(250) == "strong" and Chapters.celebration_tier(275) == "short" and Chapters.celebration_tier(300) == "major", "celebration tiers 250 / 275 / 300")
+	_check(Chapters.celebration_tier(250) == "lab_milestone_strong" and Chapters.celebration_tier(275) == "lab_milestone_plus" and Chapters.celebration_tier(300) == "major",
+		"celebration tiers 250 / 275 / 300 (the standard LEVELS ESCAPED presentation)")
 	_check(not Chapters.is_master(300) and not Chapters.is_milestone(250) and not Chapters.is_milestone(275) and not Chapters.is_milestone(300), "250 / 275 / 300 are not paying milestones or Master Levels")
 	_check(Chapters.chapter_count(300) == 30 and Chapters.chapter_of(300) == 30 and Chapters.era_of(300)["name"] == "Third Era", "Chapters 21-30, Third Era to 300")
 
@@ -630,10 +631,7 @@ func _milestones() -> void:
 		var tier := Chapters.celebration_tier(n)
 		_check(r2.get("level", 0) == n and r2.get("celebration", "") == tier and not r2.get("milestone", true) and not r2.get("master", true), "L%d: celebration '%s', no paying milestone / Master" % [n, tier])
 		_check(not String(r2.get("coin_notes", "")).contains("MILESTONE") and p.coins - coins0 == r2["coins"], "L%d: coins paid = the card (+%d), no milestone bonus" % [n, r2["coins"]])
-		if n == 300:
-			_check(game.ui._card_title.text == "300 LEVELS ESCAPED!" and not game.ui._card_title.text.contains("GRAND") and not game.ui._card_title.text.contains("FINAL"), "300 card: '%s'" % game.ui._card_title.text)
-		else:
-			_check(game.ui._card_title.text == "MILESTONE CLEARED!", "L%d card: '%s'" % [n, game.ui._card_title.text])
+		_check(game.ui._card_title.text == "%d LEVELS ESCAPED!" % n and not game.ui._card_title.text.contains("GRAND") and not game.ui._card_title.text.contains("FINAL"), "L%d card: '%s'" % [n, game.ui._card_title.text])
 		await _wait(0.5)
 
 

@@ -92,7 +92,7 @@ func _data() -> void:
 		_check(LevelManager.parse_level(JSON.parse_string(LevelManager.to_json_text(level)), n).portals == level.portals, "L%d: portals survive the JSON round trip" % n)
 	_check(Chapters.era_of(201)["name"] == "Third Era" and Chapters.era_of(225)["from"] == 201, "201-225 are the Third Era")
 	_check(Chapters.chapter_of(201) == 21 and Chapters.chapter_of(225) == 23, "Chapters 21-23")
-	_check(Chapters.celebration_tier(225) == "short" and Chapters.celebration_tier(200) == "" and Chapters.celebration_tier(125) == "", "Level 225 (only) has the short celebration")
+	_check(Chapters.celebration_tier(225) == "lab_milestone" and Chapters.celebration_tier(201) == "" and Chapters.celebration_tier(224) == "", "Level 225 has the standard milestone celebration, its neighbours none")
 	_check(not Chapters.is_milestone(225) and not Chapters.is_master(225), "225 is neither a paying milestone nor a Master Level")
 	_check(Chapters.theme_for_level(201).has("name") and Chapters.theme_for_level(225).has("name"), "Chapters 21-23 have themes")
 
@@ -255,7 +255,8 @@ func _milestone_225() -> void:
 		t += 0.2
 	var r := game.last_result
 	_check(game.ui.is_complete_visible() and r.get("level", 0) == 225, "225 completes")
-	_check(r.get("celebration", "") == "short" and not r.get("milestone", true) and not r.get("master", true), "225: short celebration, not a paying milestone / Master")
+	_check(r.get("celebration", "") == "lab_milestone" and game.ui._card_title.text == "225 LEVELS ESCAPED!" and not r.get("milestone", true) and not r.get("master", true),
+		"225: the standard milestone celebration ('%s'), not a paying milestone / Master" % game.ui._card_title.text)
 	_check(not String(r.get("coin_notes", "")).contains("MILESTONE") and not p.completed_chapters.has(23), "225 pays no milestone bonus and no Chapter 23 bonus")
 	_check(p.coins - coins_before == r["coins"], "coins paid = the card's normal level reward (%d)" % r["coins"])
 	_check(r.get("is_last", false) == (game.level_manager.level_count == 225), "225 is the last level only while no level follows it")
