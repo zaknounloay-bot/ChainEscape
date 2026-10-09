@@ -76,6 +76,11 @@ var seq_next: int = -1
 ## arrows bonded together; both carry the same group letter. Tapping either
 ## one releases both at once, or neither. "" = not a twin.
 var twin: String = ""
+## MAGNET (prototype, ?mechlab=magnet only - never in the campaign, Social or
+## Friend Challenge): when this block escapes, the first block straight
+## BEHIND it (opposite its arrow) slides into the cell it left
+## (BoardModel.pull_target).
+var magnet: bool = false
 
 const LINK_GROUPS := ["A", "B", "C", "D"]
 ## Switches use A / B, Chain Gates C / D (their own letters and colors, so a
@@ -173,4 +178,5 @@ func duplicate_data() -> BlockData:
 	b.seq_stage = seq_stage
 	b.seq_next = seq_next
 	b.twin = twin
+	b.magnet = magnet
 	return b

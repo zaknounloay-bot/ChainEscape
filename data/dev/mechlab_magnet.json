@@ -1,0 +1,123 @@
+{
+	"format": "ce-mechlab",
+	"v": 1,
+	"mechanic": "magnet",
+	"assist": {
+		"undo": 3,
+		"show_a_move": 1,
+		"hammer": 0
+	},
+	"boards": [
+		{
+			"id": "A1",
+			"variant": "magnet",
+			"stage": "A",
+			"pair": "A1",
+			"title": "First Pull",
+			"puzzle": {
+				"format": "ce-puzzle",
+				"v": 1,
+				"rules": 1,
+				"rows": 5,
+				"cols": 5,
+				"map": [
+					". . . . .",
+					". . . . .",
+					"G< . R^* . .",
+					". . . . .",
+					"Pv . B> Y< ."
+				]
+			},
+			"metrics": {
+				"blocks": 5,
+				"magnets": 1,
+				"spinners": 0,
+				"min_moves": 5,
+				"pulls": 1,
+				"states": 16,
+				"dead_states": 0,
+				"random_win": 1,
+				"first_moves": [
+					"G<(0,2)",
+					"R^*(2,2)",
+					"Pv(0,4)"
+				]
+			}
+		},
+		{
+			"id": "B1",
+			"variant": "magnet",
+			"stage": "B",
+			"pair": "B1",
+			"title": "Turn and Pull",
+			"puzzle": {
+				"format": "ce-puzzle",
+				"v": 1,
+				"rules": 1,
+				"rows": 5,
+				"cols": 5,
+				"map": [
+					". . . . .",
+					"B^ . . . .",
+					"Gv . R^* Y<@ .",
+					". . P> . .",
+					". . B> Y< ."
+				]
+			},
+			"metrics": {
+				"blocks": 7,
+				"magnets": 1,
+				"spinners": 1,
+				"min_moves": 7,
+				"pulls": 1,
+				"states": 44,
+				"dead_states": 12,
+				"random_win": 0.484,
+				"first_moves": [
+					"B^(0,1)",
+					"Gv(0,2)",
+					"R^*(2,2) LOSES",
+					"P>(2,3)"
+				]
+			}
+		},
+		{
+			"id": "C1",
+			"variant": "magnet",
+			"stage": "C",
+			"pair": "C1",
+			"title": "Two Magnets",
+			"puzzle": {
+				"format": "ce-puzzle",
+				"v": 1,
+				"rules": 1,
+				"rows": 6,
+				"cols": 6,
+				"map": [
+					". . . . . .",
+					"B> . . . . Gv",
+					". R^* . Pv@ Yv .",
+					". G> . Bv* . .",
+					". . . . . .",
+					". Y> P< . . ."
+				]
+			},
+			"metrics": {
+				"blocks": 9,
+				"magnets": 2,
+				"spinners": 1,
+				"min_moves": 9,
+				"pulls": 2,
+				"states": 63,
+				"dead_states": 36,
+				"random_win": 0.047,
+				"first_moves": [
+					"Gv(5,1)",
+					"R^*(1,2) LOSES",
+					"Yv(4,2)",
+					"Bv*(3,3) LOSES"
+				]
+			}
+		}
+	]
+}

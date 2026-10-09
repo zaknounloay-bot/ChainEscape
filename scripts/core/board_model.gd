@@ -55,6 +55,9 @@ var _crates: int = 0
 ## Filled by push(): {"crate", "from", "to", "dir", "via", "advanced",
 ## "turned"} of the last successful push.
 var last_push: Dictionary = {}
+## MAGNET (prototype): filled by remove() when a magnet escaped and pulled a
+## block: {"block", "from", "to"}; {} otherwise.
+var last_pull: Dictionary = {}
 
 
 func setup(p_rows: int, p_columns: int, p_blocks: Array) -> void:
@@ -296,7 +299,46 @@ func remove(id: int) -> Array:
 				_occupancy.erase(g.cell)
 				blocks.erase(g.id)
 				_color_count[g.color] = _color_count.get(g.color, 1) - 1
+	# MAGNET: last of all (after the spinners it turned), the first block
+	# straight behind it slides into the cell it left.
+	last_pull = {}
+	if b.magnet:
+		var t := _first_behind(b.cell, b.direction)
+		if not t.is_empty():
+			var o: BlockData = blocks[t["block"]]
+			_occupancy.erase(o.cell)
+			o.cell = b.cell
+			_occupancy[o.cell] = o.id
+			last_pull = {"block": o.id, "from": t["from"], "to": b.cell}
 	return turned
+
+
+## MAGNET: what `id` would pull if it escaped now - {"block", "from", "to"},
+## or {} (not a magnet, nothing behind it, or the first block behind can't
+## move: a gate, a Movable block or a twin stops the pull). The magnet's own
+## escape never changes this (it opens no gate and moves nothing), so the
+## preview is exactly what happens.
+func pull_target(id: int) -> Dictionary:
+	var b: BlockData = blocks.get(id)
+	if b == null or not b.magnet:
+		return {}
+	var t := _first_behind(b.cell, b.direction)
+	if not t.is_empty():
+		t["to"] = b.cell
+	return t
+
+
+func _first_behind(cell: Vector2i, dir: int) -> Dictionary:
+	var back: Vector2i = Direction.STEPS[Direction.opposite(dir)]
+	var c: Vector2i = cell + back
+	while is_inside(c):
+		var o := block_at(c)
+		if o != null:
+			if o.kind == BlockData.Kind.GATE or o.kind == BlockData.Kind.CRATE or o.twin != "":
+				return {}
+			return {"block": o.id, "from": c}
+		c += back
+	return {}
 
 
 ## Twins: `id` and its partner leave together as ONE move (caller checks

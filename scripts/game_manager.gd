@@ -113,6 +113,14 @@ func _ready() -> void:
 	# loaded. Off unless asked for.
 	# ?twinsprototype=1..3: the three-level Twins Prototype (its own levels,
 	# temporary save and the Twins token); it excludes the other labs.
+	if BuildFlags.magnet_lab():
+		# The Magnet lab build: the game under the lab keeps its own save,
+		# diagnostics and Web keys - never the normal save, even on the
+		# Friend Test build's browser origin.
+		PlayerProgress.default_path = "user://magnet_lab_progress.cfg"
+		PlayerProgress.mirror_key = "chain_escape_magnetlab_save"
+		PlayerProgress.beacon_key = "chain_escape_magnetlab_beacon"
+		Diagnostics.key_prefix = "chain_escape_magnetlab_"
 	var twins := TwinsPrototype.requested()
 	var xlab := ExperienceLab.requested() if twins == "" else ""
 	var lab := OpeningLab.requested() if xlab == "" and twins == "" else ""
@@ -130,7 +138,7 @@ func _ready() -> void:
 		progress = ExperienceLab.qa_session(progress, level_manager)  # QA save only: resume or a fresh session
 	if TwinsPrototype.active:
 		TwinsPrototype.seed_save(progress)  # its own temporary save only
-	if not OpeningLab.active and not ExperienceLab.active and not TwinsPrototype.active:
+	if not OpeningLab.active and not ExperienceLab.active and not TwinsPrototype.active and not BuildFlags.magnet_lab():
 		_take_web_transfer()
 	background = ChapterBackground.new()
 	add_child(background)
@@ -1539,7 +1547,7 @@ func publish_state() -> void:
 		"twins_complete_button": center.call(get_node("TwinsPrototypeComplete").find_children("*", "Button", true, false)[0]) if TwinsPrototype.complete_open and has_node("TwinsPrototypeComplete") else [], "bonds": board.bond_count(), "hearts": hearts, "chain": chain,
 		"undo_steps": history.size(), "undos_used": undos_used, "twin_msg": twin_wait_explained, "hint_block": hint_block,
 		"twin_ids": model.blocks.values().filter(func(b): return b.twin != "").map(func(b): return b.id) if model else [],
-		"debug_open": debug_panel.visible, "player_build": BuildFlags.player_build(), "level_label": center.call(ui._level_label),
+		"debug_open": debug_panel.visible, "player_build": BuildFlags.player_build(), "magnet_lab": BuildFlags.magnet_lab(), "level_label": center.call(ui._level_label),
 		"opening_lab": OpeningLab.active, "experience_lab": ExperienceLab.active, "lab_qa_level": ExperienceLab.qa_level, "lab_qa": ExperienceLab.qa, "qa_build": BuildFlags.qa_build(), "tip_text": (tutorial._text if tutorial.is_showing() else "") if ExperienceLab.active else "", "lab_complete_open": ExperienceLab.complete_open, "lesson": _lesson, "lesson_target": _lesson_target_pos(vis),
 		"lab_complete_button": center.call(get_node("ExperienceLabComplete").find_children("*", "Button", true, false)[0]) if ExperienceLab.complete_open and has_node("ExperienceLabComplete") else [],
 		"level_count": level_manager.level_count, "level_name": level.name if level else "", "max_hearts": max_hearts, "blocks_left": model.block_count(),

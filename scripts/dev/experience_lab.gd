@@ -117,8 +117,8 @@ static func parse_mode(search: String, fragment: String = "") -> String:
 ## "" (not asked for), "1", "reset", a QA jump level "2".."300", or (QA
 ## build only) "qa" = resume the stored QA session.
 static func requested() -> String:
-	if BuildFlags.player_build():
-		return ""  # player build: developer pages off
+	if BuildFlags.player_build() or BuildFlags.magnet_lab():
+		return ""  # player / Magnet lab build: developer pages off
 	var m := _requested_mode()
 	if BuildFlags.qa_build() and not (m.is_valid_int() and int(m) >= 2):
 		return "qa"  # QA build: always a QA session, never the normal save

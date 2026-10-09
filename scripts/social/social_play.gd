@@ -82,6 +82,9 @@ var seq_events: Array = []
 var total_pushes := 0
 var total_push_blocked := 0
 var push_events: Array = []
+## MAGNET lab: escapes of a magnet that pulled a block / pulled nothing.
+var total_pulls := 0
+var total_empty_pulls := 0
 ## The next board tap smashes a block (Social Hammer).
 var hammer_armed := false
 ## Reveal's last button text ("" = the default for the mode).
@@ -148,6 +151,8 @@ func start(c: SharedChallenge, p_mode: int, theme: Dictionary) -> void:
 	total_pushes = 0
 	total_push_blocked = 0
 	push_events = []
+	total_pulls = 0
+	total_empty_pulls = 0
 	_backdrop.set_colors(theme["bg_top"], theme["bg_bottom"])
 	_title.add_theme_color_override("font_color", theme["text"])
 	_chip.add_theme_color_override("font_color", theme["text_soft"])
@@ -271,13 +276,23 @@ func _escape(id: int) -> void:
 	var via := _portal_via(id)
 	if model.blocks[id].seq_stage == 2:
 		total_seq_escapes += 1
+	var magnet: bool = model.blocks[id].magnet
 	var turned := model.remove(id)
 	var revealed := model.last_revealed.duplicate()
 	var unlocked := model.last_unlocked.duplicate()
+	var pull := model.last_pull.duplicate()
 	_play_mechanic_effects()
 	chain += 1
 	total_moves += 1
 	board.play_escape(id, chain, turned, via)
+	if magnet:
+		# MAGNET: the block behind slides into the cell it left.
+		if pull.is_empty():
+			total_empty_pulls += 1
+		else:
+			total_pulls += 1
+			board.play_pull(pull, SocialScreen.reduced_motion())
+			AudioManager.play_push()
 	AudioManager.play_escape(chain)
 	if not via.is_empty():
 		total_portal_uses += 1
@@ -429,6 +444,7 @@ func undo() -> void:
 	_progress.set_progress(1.0 - float(model.block_count()) / maxf(_total_blocks, 1.0))
 	_show_message("")
 	_refresh_buttons()
+	_publish.call_deferred()  # tests read the board after an Undo too
 
 
 func hint() -> void:
@@ -780,6 +796,8 @@ func _publish() -> void:
 		"fingerprint": loaded_fingerprint, "plays": plays, "hammers_left": max_hammers - hammers_used, "hammer_armed": hammer_armed, "confirm": _confirm.visible, "buttons": buttons,
 		"has_photo": reveal._photo_frame.visible and reveal.visible, "photo_state": reveal.photo_state if reveal.visible else "",
 		"cta_pulses": reveal.cta_pulses if reveal.visible else 0, "mode": "recipient" if mode == Mode.RECIPIENT else "creator",
+		"magnets": board.magnet_links(), "pulls": total_pulls,
+		"magnet_at": board.magnet_links().map(func(l): return norm.call(board.get_global_transform_with_canvas() * board.get_view(l[0]).home)) if visible else [],
 		# The revealed text only for automated tests (never otherwise exposed).
 		"message": reveal._message.text if reveal.visible and _test_hooks() else ""})
 

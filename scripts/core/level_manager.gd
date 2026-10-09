@@ -152,6 +152,10 @@ static var dev_movable: bool = false
 ## Social / Friend parsing (campaign = false). This flag is kept for the
 ## developer pages and their tools.
 static var dev_twins: bool = false
+## Magnet (prototype): the "*" suffix is parsed ONLY while this is true (the
+## Magnet lab and its dev tools). Never in campaign level files, Social or
+## Friend Challenge parsing: there a magnet cell stays a bad token.
+static var dev_magnet: bool = false
 ## True only while a campaign level is being parsed (parse_level).
 static var _campaign: bool = false
 const CRATE_COLOR := "crate"
@@ -159,7 +163,7 @@ const CRATE_COLOR := "crate"
 
 static func _parse_map(map: Array, level: LevelData) -> void:
 	if _token_re == null:
-		_token_re = RegEx.create_from_string("^([RBGYPrbgyp])([\\^v<>])(@[-~*]?)?(\\?)?(#[RBGYPrbgyp])?(\\$[SGD])?(%[ABCD])?(&[ABCD])?(\\+[ABCD])?(=)?(:[\\^v<>])?(![TUVW])?$")
+		_token_re = RegEx.create_from_string("^([RBGYPrbgyp])([\\^v<>])(@[-~*]?)?(\\?)?(#[RBGYPrbgyp])?(\\$[SGD])?(%[ABCD])?(&[ABCD])?(\\+[ABCD])?(=)?(:[\\^v<>])?(![TUVW])?(\\*)?$")
 	level.rows = map.size()
 	level.columns = 0
 	var next_id := 0
@@ -188,6 +192,8 @@ static func _parse_map(map: Array, level: LevelData) -> void:
 				m = null  # a Sequence token outside the campaign / lab: unknown, as before
 			if m != null and m.get_string(12) != "" and not _campaign:
 				m = null  # a Twins token outside campaign / lab level files (Social, Friend): unknown
+			if m != null and m.get_string(13) != "" and not dev_magnet:
+				m = null  # a Magnet token outside the Magnet lab (campaign too): unknown
 			if m == null:
 				push_error("Level %d: bad map token '%s' at row %d col %d" % [level.number, t, r, c])
 				continue
@@ -210,12 +216,29 @@ static func _parse_map(map: Array, level: LevelData) -> void:
 				b.seq_stage = 1
 				b.seq_next = Direction.MAP_CHARS[m.get_string(11).substr(1)]
 			b.twin = m.get_string(12).substr(1)
+			b.magnet = m.get_string(13) != ""
 			_validate_block(b, level)
 			level.blocks.append(b)
 			next_id += 1
 	_validate_links(level)
 	_validate_portals(level)
 	_validate_twins(level)
+	_validate_magnets(level)
+
+
+## Magnet (prototype): a magnet is a plain arrow (no spinner, hidden, lock,
+## switch, gate link, armor, Sequence or Twins role), and its board has no
+## portals, Movable blocks or hidden arrows (pulled blocks would change
+## who reveals whom). Anything else is reported and the magnet dropped.
+static func _validate_magnets(level: LevelData) -> void:
+	var board_ok := level.portals.is_empty() and not level.blocks.any(func(b): return b.is_crate() or b.hidden)
+	for b in level.blocks:
+		if not b.magnet:
+			continue
+		if not board_ok or b.kind != BlockData.Kind.NORMAL or b.lock_color != "" or b.switch_group != "" or b.gate_link != "" \
+				or b.armored or b.seq_stage != 0 or b.twin != "":
+			push_error("Level %d: magnet at %s must be a plain arrow on a board without portals, Movable or hidden blocks" % [level.number, b.cell])
+			b.magnet = false
 
 
 ## Twins: every group is exactly two orthogonally adjacent plain arrows
@@ -389,7 +412,7 @@ static func to_json_text(level: LevelData) -> String:
 				+ ("%" + b.switch_group if b.switch_group != "" else "") + ("&" + b.flip_link if b.flip_link != "" else "")
 				+ ("+" + b.gate_link if b.gate_link != "" else "") + ("=" if b.armored else "")
 				+ (":" + arrows[b.seq_next] if b.seq_stage == 1 else "")
-				+ ("!" + b.twin if b.twin != "" else ""))
+				+ ("!" + b.twin if b.twin != "" else "") + ("*" if b.magnet else ""))
 	var rows := []
 	for row in grid:
 		rows.append(" ".join(PackedStringArray(row)))

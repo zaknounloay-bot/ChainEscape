@@ -11,6 +11,11 @@ class_name BuildFlags
 ## its own QA save - see ExperienceLab): the normal save, Friend Challenge
 ## and every other developer page are never opened, with or without URL
 ## parameters.
+##
+## MAGNET LAB BUILD: the "Web Magnet Lab" export preset sets "magnet_lab".
+## That build only ever opens the Magnet mechanic lab (?mechlab=magnet,
+## prototype) over a game that uses its own save keys - never the normal
+## save, Friend Challenge or any other developer page; no debug panel.
 
 
 static func player_build() -> bool:
@@ -21,7 +26,17 @@ static func qa_build() -> bool:
 	return OS.has_feature("qa_build")
 
 
+static func magnet_lab() -> bool:
+	return OS.has_feature("magnet_lab")
+
+
+## No debug panel (F1, title taps, --debug): the player build and the
+## Magnet lab build.
+static func debug_off() -> bool:
+	return player_build() or magnet_lab()
+
+
 ## The other developer pages (?openinglab, ?twinsprototype, ?mechlab,
 ## ?friendbench, ?vhtest): off in the player build and in the QA build.
 static func dev_pages_off() -> bool:
-	return player_build() or qa_build()
+	return player_build() or qa_build() or magnet_lab()

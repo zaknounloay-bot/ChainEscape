@@ -61,12 +61,14 @@ var _pulse_tween: Tween
 @onready var _blocks_root := Node2D.new()
 @onready var _fx_root := Node2D.new()
 @onready var _bonds := TwinBonds.new()  # TWINS bond bars, drawn above the blocks
+@onready var _magnets := MagnetLinks.new()  # MAGNET badges + pull previews (Magnet lab only)
 @onready var _coords_layer := Node2D.new()  # debug labels, drawn above blocks
 
 
 func _ready() -> void:
 	add_child(_blocks_root)
 	add_child(_bonds)
+	add_child(_magnets)
 	add_child(_fx_root)
 	add_child(_coords_layer)
 	_coords_layer.draw.connect(_draw_coords)
@@ -90,6 +92,9 @@ func build(p_rows: int, p_columns: int, blocks: Array, animate: bool) -> void:
 	_views.clear()
 	_bonds.board = self
 	_bonds.pairs = []
+	_magnets.board = self
+	_magnets.links = []
+	_magnets.queue_redraw()
 	for b in blocks:
 		var view := _create_view(b)
 		if animate:
@@ -400,6 +405,12 @@ func sync_to(blocks: Array) -> void:
 	for id in wanted:
 		if _views.has(id):
 			var existing: BlockView = _views[id]
+			if not existing.data.is_crate() and existing.data.cell != wanted[id].cell:
+				# MAGNET: a pulled block moved back by Undo - straight to
+				# its cell (any slide still running is stopped first).
+				existing.data.cell = wanted[id].cell
+				existing.home = cell_to_local(wanted[id].cell)
+				existing.stop_motion()
 			if existing.data.is_crate():
 				# Movable: a crate moved back by Undo - straight to
 				# its cell (any slide still running is stopped first).
@@ -503,10 +514,51 @@ func play_smash(id: int) -> void:
 ## (v0.6) every Chain Gate's counter.
 func refresh_locks(model: BoardModel) -> void:
 	refresh_bonds(model)
+	refresh_magnets(model)
 	for id in _views:
 		_views[id].set_locked(model.is_locked(id), false)
 		if _views[id].data.is_gate():
 			_views[id].gate_count = model.gate_remaining(_views[id].data.gate_group)
+
+
+## MAGNET (prototype): a badge on every magnet and, when it has one, a
+## dotted pull line from the block it would pull to the magnet - exactly
+## BoardModel.pull_target, so what is shown is what happens. Nothing is
+## drawn (and nothing runs per frame) on boards without magnets.
+func refresh_magnets(model: BoardModel) -> void:
+	var links := []
+	for id in model.blocks:
+		var b: BlockData = model.blocks[id]
+		if not b.magnet or not _views.has(id):
+			continue
+		var t := model.pull_target(id)
+		links.append({"magnet": _views[id], "target": _views.get(t["block"]) if not t.is_empty() else null, "dir": b.direction})
+	_magnets.board = self
+	_magnets.links = links
+	_magnets.queue_redraw()
+
+
+## Magnet lines on screen (tests): [[magnet id, target id or -1], ...].
+func magnet_links() -> Array:
+	var out := []
+	for l in _magnets.links:
+		if is_instance_valid(l["magnet"]):
+			out.append([l["magnet"].data.id, l["target"].data.id if l["target"] != null and is_instance_valid(l["target"]) else -1])
+	return out
+
+
+## MAGNET: the pulled block slides into the cell the magnet left
+## (BoardModel.last_pull), with a small pink spark where it lands.
+func play_pull(info: Dictionary, reduced: bool) -> void:
+	var v: BlockView = _views.get(info["block"])
+	if v == null:
+		return
+	var from := v.home
+	v.data.cell = info["to"]
+	v.home = cell_to_local(info["to"])
+	v.play_slide(from, [], reduced)
+	if not reduced:
+		_burst(v.home, (v.home - from).normalized(), MagnetLinks.MAG, 8, 0.6, 90.0)
 
 
 ## TWINS: one bond bar per bonded pair still on the board (a pair the Hammer
@@ -903,6 +955,56 @@ class TwinBonds extends Node2D:
 
 
 ## TWINS: a blocked lane, briefly highlighted in red (fades out).
+class MagnetLinks extends Node2D:
+	const MAG := Color("#E0457B")
+	const RIM := Color.WHITE
+	var board  # the Board (untyped: inner class)
+	var links: Array = []
+
+	func _process(_delta: float) -> void:
+		if not links.is_empty():
+			queue_redraw()  # follows the views while they animate
+
+	func _draw() -> void:
+		if board == null:
+			return
+		var cs: float = board.cell_size
+		for l in links:
+			var m = l["magnet"]
+			if not is_instance_valid(m) or not m.visible:
+				continue
+			var back: Vector2 = -Direction.vector(l["dir"])
+			var side := Vector2(-back.y, back.x)
+			# Horseshoe on the magnet's back edge, opening backwards.
+			var c: Vector2 = m.position + back * cs * 0.30
+			var r := cs * 0.15
+			var a0 := back.angle() - PI * 0.5
+			draw_arc(c - back * r * 0.2, r, a0 + PI, a0 + TAU, 14, RIM, cs * 0.11, true)
+			draw_arc(c - back * r * 0.2, r, a0 + PI, a0 + TAU, 14, MAG, cs * 0.07, true)
+			for s in [-1.0, 1.0]:
+				var tip: Vector2 = c - back * r * 0.2 + side * r * s
+				draw_line(tip, tip + back * r * 0.75, RIM, cs * 0.11, true)
+				draw_line(tip, tip + back * r * 0.75, MAG, cs * 0.07, true)
+			var t = l["target"]
+			if t == null or not is_instance_valid(t):
+				continue
+			# Dotted pull line from the target to the magnet's back edge,
+			# chevrons pointing the way it will slide; a ring on the target.
+			var from: Vector2 = t.position + back * -cs * 0.42
+			var to: Vector2 = m.position + back * cs * 0.50
+			var length := from.distance_to(to)
+			if length > cs * 0.1:
+				var dir := (to - from) / length
+				var d := cs * 0.06
+				while d < length:
+					draw_circle(from + dir * d, cs * 0.035, MAG)
+					d += cs * 0.16
+				var tip2: Vector2 = from + dir * minf(cs * 0.30, length)
+				var n2 := Vector2(-dir.y, dir.x)
+				draw_polyline([tip2 - dir * cs * 0.10 + n2 * cs * 0.09, tip2, tip2 - dir * cs * 0.10 - n2 * cs * 0.09], MAG, cs * 0.045, true)
+			draw_arc(t.position, cs * 0.50, 0.0, TAU, 32, Color(MAG, 0.85), cs * 0.04, true)
+
+
 class LaneFlash extends Node2D:
 	var from: Vector2
 	var to: Vector2

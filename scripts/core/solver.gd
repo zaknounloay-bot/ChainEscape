@@ -106,6 +106,11 @@ var _twin := PackedInt32Array()
 ## v0.8 analysis only: false = pushes are not legal moves (the Movable block
 ## is a fixed obstacle) - "can this level be won without pushing?".
 var allow_push := true
+# MAGNET (prototype, Magnet lab only): 1 = magnet; per escape of a magnet
+# the pull it made ([block, from cell] or [-1, -1]), LIFO for undo.
+var _magnet := PackedByteArray()
+var _mag_n := 0
+var _pull_stack: Array = []
 var _on_path: Dictionary = {}
 var _last_low := 0
 
@@ -166,6 +171,12 @@ func _init(p_rows: int, p_columns: int, blocks: Array, portals: Dictionary = {})
 			_seq_stage[b.id] = b.seq_stage
 			_seq_next[b.id] = b.seq_next
 			_seq_first[b.id] = b.direction
+	for b in blocks:
+		if b.magnet:
+			if _magnet.is_empty():
+				_magnet.resize(n)
+			_magnet[b.id] = 1
+			_mag_n += 1
 	var twins := {}
 	for b in blocks:
 		if b.twin != "":
@@ -710,6 +721,8 @@ func _solve_keep_state() -> Array[int]:
 func _dfs() -> bool:
 	if _crate_n > 0:
 		return _dfs_crates(_path.size())
+	if _mag_n > 0:
+		return _dfs_magnet()
 	nodes += 1
 	if nodes > node_limit:
 		aborted = true
@@ -786,6 +799,13 @@ func _key() -> String:
 		for cid in _crate_ids:
 			cells.append(str(_cell[cid]))
 		parts.append("m" + ",".join(cells))
+	if _mag_n > 0:
+		# Magnets move blocks: every live block's cell is part of the state.
+		var at := PackedStringArray()
+		for id in _alive.size():
+			if _alive[id] == 1:
+				at.append(str(_cell[id]))
+		parts.append("p" + ",".join(at))
 	if not _armored_ids.is_empty():
 		var shells := 0
 		for i in _armored_ids.size():
@@ -1032,7 +1052,60 @@ func _apply_one(id: int) -> Array:
 				_grid[_cell[gid]] = -1
 				_alive[gid] = 0
 				_alive_count -= 1
+	if _mag_n > 0 and _magnet[id] == 1:
+		_pull(id, idx)
 	return turned
+
+
+## MAGNET: after its escape (spinners turned, switch fired) the first block
+## straight behind `id` slides into `idx`, the cell it left - unless that
+## block is a gate or a twin (BoardModel.pull_target, the same rule).
+func _pull(id: int, idx: int) -> void:
+	var back: Vector2i = Direction.STEPS[Direction.opposite(_dir[id])]
+	var c := idx % columns + back.x
+	var r := idx / columns + back.y
+	while c >= 0 and r >= 0 and c < columns and r < rows:
+		var o := _grid[r * columns + c]
+		if o != -1:
+			if _gate[o] == 0 and _partner(o) < 0 and (_crate_n == 0 or _crate[o] == 0):
+				_grid[r * columns + c] = -1
+				_grid[idx] = o
+				_cell[o] = idx
+				_pull_stack.append([o, r * columns + c])
+				return
+			break
+		c += back.x
+		r += back.y
+	_pull_stack.append([-1, -1])
+
+
+## MAGNET search: every escape removes a block, so there are no cycles; the
+## greedy "safe moves" of _dfs do not apply (any escape can change what a
+## magnet will pull later). Plain DFS, lost states remembered.
+func _dfs_magnet() -> bool:
+	nodes += 1
+	if nodes > node_limit:
+		aborted = true
+		return false
+	if _alive_count == _crate_n:
+		return true
+	var key := _key()
+	if _failed.has(key):
+		return false
+	for mv in legal_moves():
+		var id := mv & ID_MASK
+		if (mv & (RAM | PUSH)) == 0 and _partner(id) >= 0 and _partner(id) < id:
+			continue
+		_do(mv)
+		_path.append(mv)
+		if _dfs_magnet():
+			return true
+		_path.pop_back()
+		_undo_move(mv)
+		if aborted:
+			return false
+	_failed[key] = true
+	return false
 
 
 ## Sequence: the first stage. Neighbour event around its cell
@@ -1255,6 +1328,14 @@ func _undo_one(id: int) -> void:
 	if _alive[id] == 1 and not _seq_ids.is_empty() and _seq_stage[id] == 2:
 		_unadvance(id)  # the move was the advance (the block never left)
 		return
+	if _mag_n > 0 and _magnet[id] == 1:
+		# The pull came last: it is undone first (the pulled block back where
+		# it was, so the spinner undo below sees the same neighbours).
+		var e: Array = _pull_stack.pop_back()
+		if e[0] >= 0:
+			_grid[_cell[e[0]]] = -1
+			_grid[e[1]] = e[0]
+			_cell[e[0]] = e[1]
 	if _link[id] >= 0:
 		var g := _link[id]
 		if _links_alive[g] == 0:

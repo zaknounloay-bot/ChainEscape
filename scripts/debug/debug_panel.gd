@@ -23,11 +23,11 @@ var info_source: Callable
 func _ready() -> void:
 	layer = 20
 	_build()
-	visible = "--debug" in OS.get_cmdline_user_args() and not BuildFlags.player_build()
+	visible = "--debug" in OS.get_cmdline_user_args() and not BuildFlags.debug_off()
 
 
 func toggle() -> void:
-	if BuildFlags.player_build():
+	if BuildFlags.debug_off():
 		visible = false  # player build: the panel never opens
 		return
 	visible = not visible
@@ -60,7 +60,7 @@ func register_title_tap() -> void:
 
 
 func _unhandled_key_input(event: InputEvent) -> void:
-	if BuildFlags.player_build():
+	if BuildFlags.debug_off():
 		return
 	if event.is_action_pressed("debug_toggle"):
 		toggle()

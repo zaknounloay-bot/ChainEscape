@@ -3,6 +3,8 @@ extends CanvasLayer
 ## DEVELOPMENT ONLY: the mechanic lab - human tests of prototype mechanics.
 ##   ?mechlab=1 (or #mechlab=1; desktop "-- --mechlab")   PORTAL lab
 ##   ?mechlab=sequence (desktop "-- --mechlab=sequence")    SEQUENCE lab
+##   ?mechlab=magnet   (desktop "-- --mechlab=magnet")      MAGNET lab (prototype;
+##                     the "Web Magnet Lab" export always opens it)
 ## Without one of these nothing here runs or loads. Each mechanic has its
 ## own board file, state file, demo, questions and result fields (see
 ## MECHANICS); the PORTAL lab is exactly as it was before the SEQUENCE
@@ -129,6 +131,39 @@ const MOV_DEMO_STEPS := [
 	[5.9, "B", "Something is right behind this crate:\nit CAN'T move. Nothing happens."],
 	[8.4, "", "Crates never need to leave:\nclear every ARROW block.\nNow you try!"],
 ]
+## MAGNET lab (?mechlab=magnet): three fixed boards - A introduction, B
+## combination (with a spinner), C challenge - no controls.
+const MAG_QUESTIONS := {
+	"rating": ["How difficult was this puzzle?", RATINGS],
+	"clarity": ["Was it clear WHICH block the MAGNET\nwould pull, and WHERE it would land?", ["CLEAR", "NOT CLEAR"]],
+	"interest": ["Compared with a normal puzzle,\nthe MAGNET made it...", ["MORE INTERESTING", "NO DIFFERENCE", "LESS INTERESTING"]],
+	"planning": ["Did you plan WHICH block the\nmagnet would pull before tapping it?", ["NOT REALLY", "A LITTLE", "A LOT"]],
+	"focus": ["What were you thinking\nabout most?", ["WHICH BLOCK THE MAGNET WOULD PULL", "WHERE THE PULLED BLOCK WOULD LAND",
+		"THE ORDER OF MY MOVES", "THE SPINNER", "JUST TAPPING WHAT COULD MOVE", "NOTHING MUCH"]],
+	"fairness": ["If you got stuck: did it feel\nfair or surprising?", ["NEVER GOT STUCK", "FAIR - I SAW WHY", "SURPRISING"]],
+}
+const MAG_ASK := {
+	"A": ["rating", "clarity"],
+	"magnet": ["rating", "focus", "planning", "clarity", "interest", "fairness"],
+}
+## Red (a MAGNET) flies up: blue, behind it on the dotted line, slides into
+## red's cell and is free. Purple's magnet has nothing behind it: nothing
+## moves. Yellow was stuck facing blue: now free.
+const MAG_DEMO_MAP := [
+	".    .  .    .  .",
+	".    .  R^*  .  .",
+	".    .  .    .  .",
+	".    .  B>   .  Y<",
+	"P^*  .  .    .  .",
+]
+const MAG_DEMO_STEPS := [
+	[0.5, "", "MAGNET: the horseshoe on its back.\nWhen it escapes, the block BEHIND it\nslides into its place."],
+	[3.4, "R", "Red flies out - blue, at the end\nof the dotted line, slides into\nred's cell."],
+	[6.4, "B", "From there blue's way is clear."],
+	[8.4, "P", "Nothing behind purple's magnet:\nnothing moves."],
+	[10.6, "Y", "And yellow is free too."],
+	[12.6, "", "The dotted line shows WHICH block\nwill move and WHERE.\nNow you try!"],
+]
 ## Per-mechanic settings. "portal" is the original lab, unchanged.
 const MECHANICS := {
 	"portal": {"data": DATA_PATH, "state": STATE_PATH, "ls": LS_KEY, "variant": "portal", "title": "PORTAL LAB",
@@ -144,6 +179,10 @@ const MECHANICS := {
 		"ls": "chain_escape_mechlab_movable_state", "variant": "movable", "title": "MOVABLE LAB",
 		"demo_title": "HOW MOVABLE CRATES WORK", "groups": [["B", "C", "D"], ["E"], ["F"]],
 		"names": {"movable_A": "Basic movable", "movable": "Movable", "control": "Without movable", "integration": "Portal / Sequence checks"}},
+	"magnet": {"data": "res://data/dev/mechlab_magnet.json", "state": "user://mechlab_magnet_state.json",
+		"ls": "chain_escape_mechlab_magnet_state", "variant": "magnet", "title": "MAGNET LAB",
+		"demo_title": "HOW MAGNETS WORK", "groups": [["B"], ["C"]],
+		"names": {"magnet_A": "Introduction", "magnet": "Magnet"}},
 }
 
 enum Screen { INTRO, DEMO, PLAYING, QUESTION, RESULTS }
@@ -190,9 +229,13 @@ static func requested() -> bool:
 ## "sequence" (?mechlab=sequence), "portal" (?mechlab=1 / =true / =portal)
 ## or "" (not asked for).
 static func requested_mechanic() -> String:
+	if BuildFlags.magnet_lab():
+		return "magnet"  # the Magnet lab build: always (and only) this lab
 	if BuildFlags.dev_pages_off():
 		return ""  # player / QA build: developer pages off
 	var args := OS.get_cmdline_user_args()
+	if "--" + PARAM + "=magnet" in args:
+		return "magnet"
 	if "--" + PARAM + "=sequence" in args:
 		return "sequence"
 	if "--" + PARAM + "=movable" in args:
@@ -209,6 +252,8 @@ static func requested_mechanic() -> String:
 		return "sequence"
 	if where.contains(PARAM + "=movable"):
 		return "movable"
+	if where.contains(PARAM + "=magnet"):
+		return "magnet"
 	if where.contains(PARAM + "=1") or where.contains(PARAM + "=true") or where.contains(PARAM + "=portal"):
 		return "portal"
 	return ""
@@ -234,6 +279,13 @@ func _init(p_mechanic: String = "portal") -> void:
 		_ask = MOV_ASK
 		_demo_map = MOV_DEMO_MAP
 		_demo_steps = MOV_DEMO_STEPS
+	elif mechanic == "magnet":
+		# Lab-only parsing of the Magnet token (never in the game or Social).
+		LevelManager.dev_magnet = true
+		_questions = MAG_QUESTIONS
+		_ask = MAG_ASK
+		_demo_map = MAG_DEMO_MAP
+		_demo_steps = MAG_DEMO_STEPS
 
 
 func _ready() -> void:
@@ -262,6 +314,8 @@ func _process(_delta: float) -> void:
 			_track_sequence()
 		if mechanic == "movable" and _current.get("first_push_ms", -1) < 0 and play.total_pushes > 0:
 			_current["first_push_ms"] = Time.get_ticks_msec() - _t0
+		if mechanic == "magnet" and _current.get("first_pull_ms", -1) < 0 and play.total_pulls + play.total_empty_pulls > 0:
+			_current["first_pull_ms"] = Time.get_ticks_msec() - _t0
 	if screen == Screen.RESULTS:
 		var r := SocialWeb.take_share_result()
 		if r == "copied":
@@ -305,6 +359,8 @@ func start_next() -> void:
 		_current["seq_first_advance_ms"] = -1
 	if mechanic == "movable":
 		_current["first_push_ms"] = -1
+	if mechanic == "magnet":
+		_current["first_pull_ms"] = -1
 	_show(Screen.PLAYING)
 	_start_board(rec["puzzle"])
 	play._title.text = "PUZZLE %d / %d" % [i + 1, total()]
@@ -382,6 +438,13 @@ func _finish_attempt(solved: bool) -> void:
 	if mechanic == "movable":
 		_current.erase("portal_blocked_taps")
 		_movable_metrics()
+	if mechanic == "magnet":
+		# Magnet lab: escapes of a magnet that pulled a block / nothing (all
+		# attempts of this board).
+		_current.erase("portal_blocked_taps")
+		_current.erase("portal_uses")
+		_current["pulls"] = play.total_pulls
+		_current["empty_pulls"] = play.total_empty_pulls
 
 
 ## Movable lab: pushes (all attempts of this board), blocked pushes, pushes
@@ -590,6 +653,8 @@ func summary() -> Dictionary:
 		counters = ["restarts", "undos", "show_a_move", "blocked_taps", "seq_advances", "seq_blocked_taps", "seq_escapes", "seq_spinner_turns"]
 	elif mechanic == "movable":
 		counters = ["restarts", "undos", "show_a_move", "blocked_taps", "pushes", "push_blocked", "push_reversals", "push_revisits", "portal_pushes", "sequence_pushes"]
+	elif mechanic == "magnet":
+		counters = ["restarts", "undos", "show_a_move", "blocked_taps", "pulls", "empty_pulls"]
 	for r in state["results"]:
 		var g: String = r["variant"] + "_A" if r["variant"] != "control" and r["stage"] == "A" else r["variant"]
 		if not out.has(g):
@@ -609,7 +674,7 @@ func summary() -> Dictionary:
 		for k in counters:
 			s[k] += int(r.get(k, 0))
 		s["long_pauses"] += r.get("long_pauses", []).size()
-		for k in ["focus", "planning", "clarity", "interest", "focus_control"]:
+		for k in ["focus", "planning", "clarity", "interest", "focus_control", "fairness"]:
 			if r.has(k) and r[k] != "":
 				if not s["answers"].has(k):
 					s["answers"][k] = {}
@@ -686,12 +751,14 @@ func _show(s: int) -> void:
 	match s:
 		Screen.INTRO:
 			var i: int = state["index"]
-			_intro_text.text = ((("PORTAL LAB: %d puzzles. Some have PORTALS, some don't.\n\n" % total()
+			_intro_text.text = ((("MAGNET LAB (prototype): %d puzzles.\n\n" % total()
+				+ "A MAGNET (the horseshoe on its back) escapes like any arrow. Then the first block straight BEHIND it slides into the cell it left - the dotted line shows which block and where. Nothing behind it: nothing moves.\n\n")
+				if mechanic == "magnet" else (("PORTAL LAB: %d puzzles. Some have PORTALS, some don't.\n\n" % total()
 				+ "A path that enters a portal continues from the other portal with the same letter, in the same direction.\n\n")
 				if mechanic == "portal" else (("SEQUENCE LAB: %d puzzles. Some have SEQUENCE blocks, some don't.\n\n" % total()
 				+ "A Sequence block shows its arrow NOW (big) and its NEXT arrow (small, in the corner). The first tap with a clear path launches it and brings it back with its next arrow - spinners next to it turn. The second tap lets it leave.\n\n")
 				if mechanic == "sequence" else ("MOVABLE LAB: %d puzzles. Some have MOVABLE crates, some don't.\n\n" % total()
-				+ "A crate has no arrow and never has to leave. An arrow launched into it pushes it exactly ONE cell (the arrow stays). If something is right behind the crate, or the edge, it can't move.\n\n")))
+				+ "A crate has no arrow and never has to leave. An arrow launched into it pushes it exactly ONE cell (the arrow stays). If something is right behind the crate, or the edge, it can't move.\n\n"))))
 				+ "You have UNDO x%d and SHOW A MOVE x%d per attempt (no HAMMER); RESTART gives them back.\n\n" % [int(_assist["undo"]), int(_assist["show_a_move"])]
 				+ "To give up on a puzzle, tap EXIT and LEAVE. After each puzzle: a few quick questions.")
 			_start.text = "WATCH THE DEMO" if i == 0 and not state.get("demo_seen", false) else ("START" if i == 0 else ("CONTINUE  %d / %d" % [i + 1, total()] if i < total() else "SEE RESULTS"))
