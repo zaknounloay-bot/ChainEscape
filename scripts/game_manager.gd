@@ -124,6 +124,10 @@ func _ready() -> void:
 		PlayerProgress.mirror_key = "chain_escape_magnetlab_save"
 		PlayerProgress.beacon_key = "chain_escape_magnetlab_beacon"
 		Diagnostics.key_prefix = "chain_escape_magnetlab_"
+	elif BuildFlags.player_build():
+		# The production release saves in its own fixed namespace: the
+		# pre-launch Friend Test saves are never read (one-time fresh start).
+		PlayerProgress.use_release_namespace()
 	var twins := TwinsPrototype.requested()
 	var xlab := ExperienceLab.requested() if twins == "" else ""
 	var lab := OpeningLab.requested() if xlab == "" and twins == "" else ""

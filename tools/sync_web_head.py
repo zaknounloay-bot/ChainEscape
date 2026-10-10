@@ -25,6 +25,11 @@ tag += '\n<script>\n' + sharetest + '</script>'
 # developer share test page.
 player_tag = tag.replace('\n<script>\n' + sharetest + '</script>', '')
 assert player_tag != tag
+# The production release (preset 1) saves under the release namespace
+# (PlayerProgress.RELEASE_MIRROR_KEY): the embed -> own-tab progress transfer
+# must carry THAT save, never an earlier Friend Test one.
+release_tag = player_tag.replace("var SAVE_KEY = 'chain_escape_save';", "var SAVE_KEY = 'chain_escape_save_r2';")
+assert release_tag.count("var SAVE_KEY = 'chain_escape_save_r2';") == 1
 # The QA build keeps its page crash-forensics log apart from the normal
 # game's (the QA and Friend Test builds may share one browser origin).
 qa_tag = player_tag.replace("'chain_escape_page_events'", "'chain_escape_qa_page_events'")
@@ -46,7 +51,7 @@ done = 0
 for part in parts:
     m = re.match(r'\[preset\.(\d+)\.options\]', part)
     if m:
-        value = esc({'0': tag, '1': player_tag, '2': qa_tag, '3': magnet_tag}[m.group(1)])
+        value = esc({'0': tag, '1': release_tag, '2': qa_tag, '3': magnet_tag}[m.group(1)])
         part, n = re.subn(r'html/head_include=".*?(?<!\\)"', lambda _m: 'html/head_include="' + value + '"', part, flags=re.S)
         assert n == 1, 'html/head_include not found in preset %s' % m.group(1)
         done += 1

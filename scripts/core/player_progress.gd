@@ -36,6 +36,24 @@ static var default_path := "user://progress.cfg"
 ## e.g. ?openinglab, points them elsewhere; the defaults never change).
 static var mirror_key := MIRROR_KEY
 static var beacon_key := BEACON_KEY
+## RELEASE SAVE NAMESPACE (the player build, "Web Friend Test" export):
+## the production release of the frozen 300-level campaign started every
+## player fresh at Level 1 - a ONE-TIME pre-launch decision. That build
+## saves under these names (file + .bak/.tmp/.beacon, localStorage mirror,
+## beacon); the earlier Friend Test saves stay in the browser untouched and
+## are never read. These names are FIXED from now on: every later update
+## keeps them, so saved progress carries over. Do not change them.
+const RELEASE_SAVE_PATH := "user://progress_r2.cfg"
+const RELEASE_MIRROR_KEY := "chain_escape_save_r2"
+const RELEASE_BEACON_KEY := "chain_escape_beacon_r2"
+
+
+static func use_release_namespace() -> void:
+	default_path = RELEASE_SAVE_PATH
+	mirror_key = RELEASE_MIRROR_KEY
+	beacon_key = RELEASE_BEACON_KEY
+
+
 ## Print "[Save] ..." lines for every load and write (diagnostics).
 static var log_enabled: bool = true
 
