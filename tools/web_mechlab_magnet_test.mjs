@@ -12,7 +12,8 @@
 //    questions; puzzle 2: the magnet tapped first pulls (the preview was its
 //    target), UNDO puts both back with the same preview; solved by touches.
 // D: reload resumes; COPY RESULTS gives the Magnet results JSON (pulls).
-// E: isolation: the owner's real save (Friend Test build, same origin) and
+// E: isolation: the owner's real save (Friend Test build, same origin; the
+//    production release namespace, chain_escape_save_r2) and
 //    every other non-lab copy are byte-identical afterwards; the Friend Test
 //    build still continues at Level 26 and ignores ?mechlab=magnet.
 // F: iPhone SE: the challenge board lays out; no page errors, no requests
@@ -66,7 +67,7 @@ const external = [];
 try {
   const context = await browser.newContext({ viewport: { width: W, height: H }, deviceScaleFactor: 1, isMobile: true, hasTouch: true });
   await context.grantPermissions(['clipboard-read', 'clipboard-write'], { origin: ORIGIN });
-  await context.addInitScript((t) => { window.ceTestHooks = true; try { if (!localStorage.getItem('chain_escape_save')) localStorage.setItem('chain_escape_save', t); } catch (e) {} }, REAL);
+  await context.addInitScript((t) => { window.ceTestHooks = true; try { if (!localStorage.getItem('chain_escape_save_r2')) localStorage.setItem('chain_escape_save_r2', t); } catch (e) {} }, REAL);
   const page = await context.newPage();
   page.on('pageerror', (e) => errors.push(e.message));
   page.on('request', (r) => { if (!r.url().startsWith(ORIGIN + '/')) external.push(r.url()); });
@@ -113,7 +114,7 @@ try {
   let s = await waitFor(game, (x) => x.title_open, 'friend title', 120000);
   await tap(s.title_continue, 3500);
   const before = await snapshot();
-  check(Object.keys(before).some((k) => k.endsWith('progress.cfg')) && before['ls:chain_escape_save'], `E: the owner's real save is stored (${Object.keys(before).length} copies)`);
+  check(Object.keys(before).some((k) => k.endsWith('progress_r2.cfg')) && before['ls:chain_escape_save_r2'], `E: the owner's real save is stored (${Object.keys(before).length} copies)`);
   // ===== A =====
   for (const q of ['?mechlab=1', '?experiencelab=50', '?openinglab=1']) {
     await page.goto(MAG + q);

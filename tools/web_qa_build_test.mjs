@@ -6,8 +6,9 @@
 //   godot --headless --path . --export-release "Web Friend Test" build/web_friend/index.html
 //   SHOTS=<dir> node tools/web_qa_build_test.mjs build/web_qa build/web_friend
 //
-// A: the owner's real save (Level 26 reached, 777 coins) is in the shared
-//    storage; the Friend Test build continues it.
+// A: the owner's real save (Level 26 reached, 777 coins; the production
+//    release namespace) is in the shared storage; the Friend Test build
+//    continues it.
 // B: every checkpoint 50 ... 275: ?experiencelab=N opens Level N directly
 //    in a fresh QA session (the first with &qareset=1, which is then removed
 //    from the address; every later one is a new checkpoint without it): no
@@ -141,7 +142,9 @@ const watch = (page, label) => {
 const dir = fs.mkdtempSync(path.join(os.tmpdir(), 'ce-qa-'));
 const ctx = await chromium.launchPersistentContext(dir, { ...LAUNCH, viewport: { width: W, height: H }, deviceScaleFactor: 1, isMobile: true, hasTouch: true });
 try {
-  await ctx.addInitScript((t) => { try { if (!localStorage.getItem('chain_escape_save')) localStorage.setItem('chain_escape_save', t); } catch (e) {} }, REAL);
+  // The production (Friend Test) build saves under the release namespace
+  // (PlayerProgress.RELEASE_*: progress_r2.cfg, chain_escape_save_r2).
+  await ctx.addInitScript((t) => { try { if (!localStorage.getItem('chain_escape_save_r2')) localStorage.setItem('chain_escape_save_r2', t); } catch (e) {} }, REAL);
   let page = ctx.pages()[0] || await ctx.newPage();
   watch(page, 'iphone14');
   // ===== A =====
@@ -153,7 +156,7 @@ try {
   s = await waitFor(page, (x) => !x.title_open && x.level === 26, 'friend level 26');
   await sleep(3000);  // its IndexedDB sync lands
   const real0 = await snapshotNonQa(page);
-  check(Object.keys(real0).some((k) => k.endsWith('progress.cfg')) && real0['ls:chain_escape_save'],
+  check(Object.keys(real0).some((k) => k.endsWith('progress_r2.cfg')) && real0['ls:chain_escape_save_r2'],
     `A: the real save is stored in IndexedDB and localStorage (${Object.keys(real0).filter((k) => /progress|chain_escape_save|beacon/.test(k)).join(', ')})`);
   // ===== B =====
   let audioChecked = false;
