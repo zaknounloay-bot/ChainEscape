@@ -65,6 +65,8 @@ extends SceneTree
 ##         by difficulty AND by structural difficulty
 ##   * MAGNET arc 76-99 (80 and 90 unchanged): magnets only there, every
 ##     arc level pulls, the Magnet is necessary outside the breathers 85 / 97,
+##     EVERY magnet can pull on at least one winning line (no inert magnets;
+##     tools/magnet_pull_rule.gd - optional magnets are fine),
 ##     lessons 76-79 may be small, Level 98 is the arc's hardest; Chapter 8
 ##     starts its own curve (ARC_STARTS) and Chapter 9 is compared with
 ##     Chapter 8 on Magnet levels only (MAGNET_ARC_CHAPTER_CHECK)
@@ -118,6 +120,7 @@ const ARC_STARTS := [76, 151, 176, 201, 226, 251]
 ## pulls; outside the breathers the Magnet is NECESSARY (no win with every
 ## magnet a plain arrow); the lessons 76-79 may be small (<= 3 start moves,
 ## depth >= 3); Level 98 is the arc's hardest level.
+const MagnetPullRule := preload("res://tools/magnet_pull_rule.gd")
 const MAGNET_FROM := 76
 const MAGNET_TO := 99
 const MAGNET_UNCHANGED := [80, 90]
@@ -200,6 +203,8 @@ func _initialize() -> void:
 			problems.append("L%d %s" % [n, _armor_issue(level)])
 		elif campaign:
 			var issue := _rule_issue(n, m)
+			if issue == "" and m.get("magnets", 0) > 0:
+				issue = _magnet_pull_issue(level)
 			if issue == "":
 				issue = _reward_issue(n, level)
 			if issue != "":
@@ -440,6 +445,15 @@ static func _rule_issue(n: int, m: Dictionary) -> String:
 
 ## MAGNET arc 76-99. "-" = keep checking (the usual late-game rules
 ## follow); "" = fine (a lesson: the late-game shape rules are skipped).
+## Per magnet: each one must be able to pull on at least one winning line
+## (tools/magnet_pull_rule.gd; it need not pull in every solution).
+static func _magnet_pull_issue(level: LevelData) -> String:
+	var dead := MagnetPullRule.inert(level)
+	if dead.is_empty():
+		return ""
+	return "MAGNET AT %s NEVER PULLS ON A WINNING LINE" % ", ".join(dead.map(func(d): return "(%d,%d)" % [d["cell"].x, d["cell"].y]))
+
+
 static func _magnet_issue(n: int, m: Dictionary) -> String:
 	var in_arc := n >= MAGNET_FROM and n <= MAGNET_TO and not MAGNET_UNCHANGED.has(n)
 	if m.get("magnets", 0) > 0 and not in_arc:

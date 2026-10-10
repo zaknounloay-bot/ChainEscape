@@ -34,7 +34,7 @@ How to read the table:
 |---|---|---|---|---|---|---|---|---|---|---|---|
 | 76 | Dynamo | 6×6 | 7 / 1 | LESSON: two blocks face each other; the magnet pulls one free | 5.0 | 4.3 | 5 | 0 | 0 | 2 | 1 |
 | 77 | Feedback | 6×6 | 9 / 1 | lesson: the pull travels several cells | 5.9 | 4.5 | 6 | 0 | 0 | 3 | 1 |
-| 78 | Wavelength | 6×6 | 10 / 2 | lesson: one magnet pulls, the other has nothing behind it | 9.9 | 8.4 | 6 | 2 | 2 | 3 | 1 |
+| 78 | Wavelength | 6×6 | 10 / 1 | lesson: the pulled block leaves from the magnet's cell | 8.0 | 6.5 | 6 | 1 | 1 | 3 | 1 |
 | 79 | Hyperloop | 7×6 | 12 / 1 | lesson: first choice, clear the nearer block to retarget the line | 15.4 | 13.2 | 9 | 3 | 3 | 3 | 1 |
 | *80* | *Dark Matter* | | | ***unchanged*** (no Magnet) | *50.7* | | | | | | |
 | 81 | Summit Path | 7×6 | 15 / 1 | the magnet's escape turns the spinner beside it | 19.4 | 16.4 | 11 | 4 | 4 | 1 | 1 |
@@ -49,10 +49,10 @@ How to read the table:
 | *90* | *Eclipse Peak* | | | ***unchanged*** (no Magnet) | *54.2* | | | | | | |
 | 91 | Grandmaster | 7×7 | 18 / 2 | two magnets in one line | 31.7 | 27.9 | 14 | 9 | 9 | 1 | 2 |
 | 92 | Checkmate | 7×7 | 19 / 2 | the magnet is free early but must wait | 34.2 | 30.3 | 14 | 10 | 10 | 2 | 2 |
-| 93 | Gordian Knot | 7×7 | 20 / 3 | chain pulls and spinner timing together | 35.0 | 31.0 | 15 | 10 | 10 | 2 | 2 |
-| 94 | Clockwork Crown | 7×7 | 19 / 3 | a patterned spinner meets a pulled block | 36.9 | 32.2 | 14 | 11 | 11 | 2 | 1 |
+| 93 | Gordian Knot | 7×7 | 20 / 2 | chain pulls and spinner timing together | 35.6 | 31.6 | 16 | 10 | 10 | 2 | 2 |
+| 94 | Clockwork Crown | 7×7 | 19 / 1 | a patterned spinner meets a pulled block | 36.9 | 32.2 | 14 | 11 | 11 | 2 | 1 |
 | 95 | Paradox | 7×7 | 19 / 2 | two magnets, each the other's decoy | 36.0 | 32.0 | 14 | 11 | 13 | 2 | 2 |
-| 96 | Endgame | 7×7 | 20 / 2 | challenge: two visible traps | 41.9 | 37.4 | 13 | 14 | 14 | 2 | 1 |
+| 96 | Endgame | 7×7 | 20 / 1 | challenge: two visible traps | 41.9 | 37.4 | 13 | 14 | 14 | 2 | 1 |
 | 97 | Apex | 7×7 | 18 / 2 | BREATHER: a satisfying chain of pulls | 24.7 | 20.9 | 15 | 5 | 5 | 1 | 2 |
 | 98 | Zenith | 7×6 | 20 / 3 | **the hardest Magnet level**: a full plan from the first tap | **48.9** | **44.4** | 15 | 16 | 21 | 2 | 3 |
 | 99 | Last Light | 7×6 | 18 / 2 | finale: every Magnet idea once more | 34.4 | 30.6 | 13 | 11 | 11 | 2 | 2 |
@@ -76,11 +76,11 @@ The lesson levels 76–79 use their own lesson shape instead.
 
 | | Chapter 8 (71–80) | Chapter 9 (81–90) | Chapter 10 (91–100) |
 |---|---|---|---|
-| Full chapter average | 33.3 | 28.2 | 39.1 |
-| Magnet levels only | 9.1 (76–79) | 25.3 (81–89) | 36.0 (91–99) |
+| Full chapter average | 33.1 | 28.2 | 39.2 |
+| Magnet levels only | 8.6 (76–79) | 25.3 (81–89) | 36.0 (91–99) |
 
 - On full-chapter averages, Chapter 9 sits below Chapter 8. That is because Chapter 8 now ends with four lesson levels plus the unchanged dense Level 80.
-- The approved exception is one named check, `MAGNET_ARC_CHAPTER_CHECK`, in `tools/verify_levels.gd`. It compares Magnet levels only (25.3 > 9.1: pass).
+- The approved exception is one named check, `MAGNET_ARC_CHAPTER_CHECK`, in `tools/verify_levels.gd`. It compares Magnet levels only (25.3 > 8.6: pass).
 - Every other chapter check runs unchanged, and both averages are printed.
 
 ## Gameplay indicators (human-solvability audit)
@@ -200,3 +200,29 @@ Browser tests only (no effect on the Friend Test build, where `player_build` is 
 
 - The Soak timeout is **not related to Magnets**: Soak fails the same way on `beca155`.
 - All three suites pass after their fixes.
+
+## Final cleanup: four inert Magnets (after the real-iPhone QA)
+
+On a real iPhone, the tester noticed that two Magnets seemed to do nothing. `tools/magnet_pull_audit.gd` walks the complete reachable state graph of every Magnet level. It found four Magnets that could **never pull**, in any reachable state. Each one became a plain arrow, by removing one `*` and nothing else:
+
+| Level | Cell (col,row) | Before | After | Why it never pulled |
+|---|---|---|---|---|
+| 78 | (5,0) top row | `Yv*` | `Yv` | faces down from the top edge: nothing can ever be behind it |
+| 93 | (3,6) bottom row | `R^*` | `R^` | faces up from the bottom edge: nothing can ever be behind it |
+| 94 | (3,2) | `B>*` | `B>` | the blocks behind it always have to leave before it can |
+| 96 | (0,4) | `Y^*` | `Y^` | the blocks behind it always have to leave before it can |
+
+**The puzzles are unchanged.** For each of the four levels, the version with that Magnet as a plain arrow has exactly the same reachable states, moves and winnable states. The simulated players' win rates are identical too. Some difficulty scores move slightly, because the scorer had counted the dead Magnet as a possible decision:
+
+| Level | Difficulty | Decisions |
+|---|---|---|
+| 78 | 9.9 → 8.0 | 2 → 1 |
+| 93 | 35.0 → 35.6 | unchanged |
+
+The Chapter 8 Magnet-only average moves from 9.1 to 8.6, and the Chapter 8–9 check still passes. Names, Silver/Gold rewards and every other block stay where they were. `tools/magnet_campaign_build.gd` now keeps each reward on its own cell when it rewrites a level.
+
+**New rule.** Every Magnet must be able to pull on at least one winning line: from a winnable state, the Magnet escapes, pulls a block, and the board is still winnable.
+- It does not have to pull in every solution, so optional but working Magnets pass.
+- The rule lives in `tools/magnet_pull_rule.gd`.
+- Three places enforce it: `tools/verify_levels.gd` ("MAGNET AT (c,r) NEVER PULLS ON A WINNING LINE"), `tools/magnet_campaign_build.gd`, and `tools/MagnetCheck.tscn`. MagnetCheck also checks that the rule still flags exactly the four former inert Magnets.
+- All 33 remaining Magnets pass.

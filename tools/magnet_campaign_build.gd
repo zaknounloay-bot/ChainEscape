@@ -18,14 +18,17 @@ extends SceneTree
 ##   - the level's IDEA (FEATURE) happens in the solver's solution;
 ##   - difficulty inside the level's planned band;
 ##   - not more than 60% alike any other campaign board of its size;
-##   - the hint (Solver.recommend_move) at the start never gives up.
+##   - the hint (Solver.recommend_move) at the start never gives up;
+##   - every magnet can pull on at least one winning line (no inert magnets).
 ## Rewards are put on plain arrows afterwards (they never change solving).
+
+const MagnetPullRule := preload("res://tools/magnet_pull_rule.gd")
 
 const SPECS := {
 	# n: [cols, rows, blocks, magnets, spinners, lesson/breather, [diff lo, hi], feature, idea]
 	76: [6, 6, 7, 1, 0, "lesson", [2.0, 7.0], "essential", "LESSON: two blocks face each other and can never leave; the magnet pulls one free"],
 	77: [6, 6, 9, 1, 1, "lesson", [5.0, 11.0], "far_pull", "the pull can travel far: the block behind slides several cells"],
-	78: [6, 6, 10, 2, 1, "lesson", [7.0, 13.0], "empty_magnet", "one magnet pulls; the other has nothing behind it"],
+	78: [6, 6, 10, 1, 1, "lesson", [7.0, 13.0], "pull", "the pulled block leaves from the magnet's cell"],
 	79: [7, 6, 12, 1, 2, "lesson", [10.0, 18.0], "retarget", "first choice: clear the nearer block so the line moves to the right one"],
 	81: [7, 6, 15, 1, 3, "", [16.0, 25.0], "spin_adjacent", "the magnet's escape turns the spinner beside it"],
 	82: [7, 7, 16, 1, 3, "", [18.0, 27.0], "pulled_spinner", "the pulled block is a spinner"],
@@ -38,10 +41,10 @@ const SPECS := {
 	89: [7, 7, 18, 2, 4, "", [29.0, 39.0], "crossing", "two magnets whose pull lines cross"],
 	91: [7, 7, 18, 2, 4, "", [31.0, 41.0], "shared_line", "two magnets in one line"],
 	92: [7, 7, 19, 2, 4, "", [33.0, 43.0], "wait", "the magnet is free early but must wait"],
-	93: [7, 7, 20, 3, 4, "", [35.0, 46.0], "chain_or_spinner", "chain pulls and spinner timing together"],
-	94: [7, 7, 19, 2, 4, "", [36.0, 47.0], "patterned", "a patterned spinner meets a pulled block"],
+	93: [7, 7, 20, 2, 4, "", [35.0, 46.0], "chain_or_spinner", "chain pulls and spinner timing together"],
+	94: [7, 7, 19, 1, 4, "", [36.0, 47.0], "patterned", "a patterned spinner meets a pulled block"],
 	95: [7, 7, 19, 2, 4, "", [35.0, 46.0], "double_retarget", "two magnets, each the other's decoy"],
-	96: [7, 7, 20, 2, 5, "", [38.0, 49.0], "magnet_too_early", "challenge: two visible traps"],
+	96: [7, 7, 20, 1, 5, "", [38.0, 49.0], "magnet_too_early", "challenge: two visible traps"],
 	97: [7, 7, 18, 2, 4, "breather", [24.0, 35.0], "two_pulls", "BREATHER: a satisfying chain of pulls"],
 	98: [7, 6, 20, 3, 5, "", [44.0, 56.0], "hardest", "the hardest Magnet level: a full plan from the first tap"],
 	99: [7, 6, 18, 2, 4, "", [32.0, 43.0], "retarget_spinner", "finale: every Magnet idea once more"],
@@ -69,7 +72,7 @@ const BOARDS := {
 		"G^@ . . . P< .",
 	],
 	78: [
-		". . . B> . Yv*",
+		". . . B> . Yv",
 		". . Y^ B< Y>@ .",
 		". . . B^ . .",
 		". . . . R< .",
@@ -185,12 +188,12 @@ const BOARDS := {
 		"P^* Bv . . . . .",
 		". Gv . . . . .",
 		". . . . . . R<",
-		"Y>@ G< G^ R^* . . .",
+		"Y>@ G< G^ R^ . . .",
 	],
 	94: [
 		"Rv . . . . . Y<",
 		". . B>@* . . P< .",
-		". B^ Y< B>* P> B^ .",
+		". B^ Y< B> P> B^ .",
 		"Yv . . . . . P<@",
 		"Yv@ G^@ . G< R^ . .",
 		"Y<* . . . . . Gv",
@@ -210,7 +213,7 @@ const BOARDS := {
 		". P> . G^ . Y^ .",
 		"B> . B> . . P^ .",
 		"G>@ . . . B>@ B^ .",
-		"Y^* . . Yv . . .",
+		"Y^ . . Yv . . .",
 		". . P> B<@ . . G<@",
 		". . Y^ . . . P<",
 	],
@@ -288,6 +291,11 @@ func evaluate(map: Array, n: int, full := true) -> Dictionary:
 	var sol := s.solve()
 	if sol.is_empty():
 		return _fail(out, "unsolvable" if not s.aborted else "solver gave up", 1000.0)
+	# Every magnet can pull on at least one winning line (no inert magnets).
+	if full:
+		var dead := MagnetPullRule.inert(level)
+		if not dead.is_empty():
+			return _fail(out, "inert magnet at %s" % str(dead.map(func(d): return d["cell"])), 900.0)
 	var lesson: bool = spec[5] == "lesson"
 	var start := Solver.from_model(model)._distinct_legal().size()
 	var max_start := 3 if lesson else 2
@@ -375,7 +383,6 @@ static func _feature(kind: String, level: LevelData, start: BoardModel, sol: Arr
 			var t := r.pull_target(b.id)
 			first_target[b.id] = t.get("block", -1)
 	var pulls := []  # {"magnet", "block", "dist", "spinner", "magnet_pulled", "retarget", "index", "turned"}
-	var escaped_empty := 0
 	for i in sol.size():
 		var id: int = sol[i] & Solver.ID_MASK
 		var was: BlockData = r.blocks[id]
@@ -385,9 +392,7 @@ static func _feature(kind: String, level: LevelData, start: BoardModel, sol: Arr
 			dir_before[b.id] = b.direction
 		r.remove(id)
 		if mag:
-			if r.last_pull.is_empty():
-				escaped_empty += 1
-			else:
+			if not r.last_pull.is_empty():
 				var p := r.last_pull
 				var pb: BlockData = r.blocks[p["block"]]
 				pulls.append({"magnet": id, "block": p["block"], "dist": (p["from"] - p["to"]).abs().x + (p["from"] - p["to"]).abs().y,
@@ -406,8 +411,6 @@ static func _feature(kind: String, level: LevelData, start: BoardModel, sol: Arr
 			return "" if not pulls.is_empty() else "no pull"
 		"far_pull":
 			return "" if pulls.any(func(p): return p["dist"] >= 3) else "no pull of 3+ cells"
-		"empty_magnet":
-			return "" if escaped_empty >= 1 and not pulls.is_empty() else "needs one pull and one empty magnet"
 		"retarget":
 			return "" if pulls.any(func(p): return p["retarget"]) else "no retargeted pull"
 		"double_retarget":
@@ -603,18 +606,35 @@ func _write(n: int, map: Array) -> void:
 		for t in String(row).split(" ", false):
 			silver += int(t.contains("$S"))
 			gold += int(t.contains("$G"))
+	# A reward stays on its cell while that cell keeps the same plain arrow
+	# (a board edit elsewhere never moves a reward); the rest go on the first
+	# plain arrows, as when the board was first written.
+	var grid := []
+	for r in map.size():
+		var cells := Array(String(map[r]).split(" ", false))
+		var old_cells := Array(String(old["map"][r]).split(" ", false))
+		for c in cells.size():
+			var o: String = old_cells[c] if c < old_cells.size() else "."
+			var t: String = cells[c]
+			if t != "." and t.length() == 2 and o.length() == 4 and o.substr(0, 2) == t:
+				if o.ends_with("$G") and gold > 0:
+					cells[c] = o
+					gold -= 1
+				elif o.ends_with("$S") and silver > 0:
+					cells[c] = o
+					silver -= 1
+		grid.append(cells)
 	var rows := []
-	for row in map:
-		var cells := []
-		for t in String(row).split(" ", false):
+	for cells in grid:
+		for c in cells.size():
+			var t: String = cells[c]
 			var plain: bool = t != "." and t.length() == 2
 			if plain and gold > 0:
-				t += "$G"
+				cells[c] = t + "$G"
 				gold -= 1
 			elif plain and silver > 0:
-				t += "$S"
+				cells[c] = t + "$S"
 				silver -= 1
-			cells.append(t)
 		rows.append(" ".join(cells))
 	# The Experience Lab build's format (tools/experience_lab_build.py: key
 	# order, aligned columns), so the lab mirror stays byte-identical.

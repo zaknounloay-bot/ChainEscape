@@ -18,6 +18,18 @@ extends Node
 var failures: Array[String] = []
 var passed := 0
 ## Sections that ran to their end (a script error would stop one silently).
+const MagnetPullRule := preload("res://tools/magnet_pull_rule.gd")
+## Levels 78, 93, 94 and 96 before the cleanup (one inert magnet each).
+const INERT_BEFORE := {
+	78: [[". . . B> . Yv*", ". . Y^ B< Y>@ .", ". . . B^ . .", ". . . . R< .", ". . . . . .", ". . Y^ . R<* Y^"], Vector2i(5, 0)],
+	93: [["B> . . Y> G>@ . Yv", "Y^* R^ P< Y^ R^@ . Gv", ". Y>@ . B< . . .", "P^* Bv . . . . .", ". Gv . . . . .", ". . . . . . R<",
+		"Y>@ G< G^ R^* . . ."], Vector2i(3, 6)],
+	94: [["Rv . . . . . Y<", ". . B>@* . . P< .", ". B^ Y< B>* P> B^ .", "Yv . . . . . P<@", "Yv@ G^@ . G< R^ . .", "Y<* . . . . . Gv",
+		". . . . . B^ Y^"], Vector2i(3, 2)],
+	96: [["Y> . R^* P<@ . B> .", ". P> . G^ . Y^ .", "B> . B> . . P^ .", "G>@ . . . B>@ B^ .", "Y^* . . Yv . . .", ". . P> B<@ . . G<@",
+		". . Y^ . . . P<"], Vector2i(0, 4)],
+}
+
 var _done: Array[String] = []
 
 
@@ -307,6 +319,18 @@ func _campaign_levels() -> void:
 	_check(smashes >= 30 and nopull == smashes, "a smashed magnet pulls nothing (%d / %d smashes on the 22 levels)" % [nopull, smashes])
 	_check(agree == smashes, "hammer_safe judges the no-pull smash (%d / %d)" % [agree, smashes])
 	_check(undo_ok == smashes, "Undo puts the magnet back with the same preview (%d / %d)" % [undo_ok, smashes])
+	# Per-magnet rule: every campaign magnet can pull on a winning line...
+	var inert := []
+	for n in CAMPAIGN:
+		for d in MagnetPullRule.inert(_campaign_level(n)):
+			inert.append("L%d %s" % [n, d["cell"]])
+	_check(inert.is_empty(), "every magnet of the 22 levels can pull on a winning line (%s)" % [inert])
+	# ...and the rule catches the four inert magnets removed in the cleanup
+	# (Levels 78, 93, 94, 96 as they were): exactly those cells.
+	for n in INERT_BEFORE:
+		var lv := LevelManager.parse_level({"name": "L%d" % n, "map": INERT_BEFORE[n][0]}, n, true)
+		var cells := MagnetPullRule.inert(lv).map(func(d): return d["cell"])
+		_check(cells == [INERT_BEFORE[n][1]], "the rule flags L%d's former inert magnet at %s (%s)" % [n, INERT_BEFORE[n][1], cells])
 	_done.append("campaign")
 
 
