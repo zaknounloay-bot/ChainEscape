@@ -53,3 +53,31 @@ This is done with a **versioned save namespace**, not by clearing storage:
 3. A release save at Level 75: Level 76 opens the Magnet card, then the Magnet lesson.
 
 The full regression and the other release checks are listed in the release report and the tag message.
+
+## Release record
+
+| | |
+|---|---|
+| Freeze tag | `chain-escape-1-300-freeze`, annotated, on commit `af7dc72387b8a9926e83b122054b2a01f581268d` |
+| Production ZIP | `ChainEscape_Web_1_300_RELEASE.zip`, built from a clean checkout of `af7dc72` |
+| ZIP SHA-256 | `849626cb192a5edab8e51a19e6901ff02a7d3d0c54f7fd7c9d8340ab287a285e` |
+| ZIP contents | `index.html`, `index.js`, `index.wasm`, `index.pck`, `index.audio.worklet.js`, `index.png`, `index.icon.png`, `index.apple-touch-icon.png` |
+| Later commits | `ff18fa5` changes test files only, with no game or export change |
+
+**Exports are not byte-reproducible.** Re-exporting the same commit gives the same engine files, but `index.pck` differs by a few bytes, so the shipped ZIP is identified by its SHA-256.
+
+## Replacing the files on the existing itch.io page
+
+The page and its URL stay the same; only the uploaded file changes.
+
+1. Open the existing Chain Escape project on itch.io and choose **Edit game**.
+2. Under **Uploads**, **delete** the current HTML5 file (`ChainEscape_Web_1_300_FRIEND_TEST.zip`), or untick its **This file will be played in the browser** box. Only one upload may be the playable one.
+3. **Upload** `ChainEscape_Web_1_300_RELEASE.zip` and tick **This file will be played in the browser**.
+4. Keep the existing embed settings unchanged, including the viewport size, **Mobile friendly** and orientation, and **Fullscreen button**. If **SharedArrayBuffer support** was ticked before, keep it ticked.
+5. **Save**. The project URL, title, description and visibility are not affected.
+6. Check on an iPhone in Safari:
+   - The page opens to the title screen with **PLAY**: a fresh start, even on a phone that played the old build.
+   - Level 1 plays.
+   - After clearing a level and reopening the page, the button reads **CONTINUE - LEVEL 2**.
+
+Players don't need to clear any data. Their old Friend Test saves stay in the browser, but the release never reads them.
