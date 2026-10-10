@@ -627,6 +627,28 @@ func _milestones() -> void:
 					_check(r.position.x >= 0.0 and r.end.x <= vis.size.x and r.position.y >= 0.0 and r.end.y <= vis.size.y, "the 300 overlay fits the screen (%s in %s)" % [str(r), str(vis.size)])
 					break
 			_check(saw_major, "300: the major milestone overlay shows")
+			# Then (as 100 / 200) the identity stamp LEGEND!, fitted, after
+			# the overlay has gone - never both on screen at once.
+			var overlap := false
+			var stamp_text := ""
+			var stamp_fits := false
+			var stamp_after := false
+			for i in 80:
+				await _wait(0.05)
+				var mr := game.ui.major_milestone_rect()
+				var st := game.ui.stamp_state()
+				if mr.size.x > 0 and not st.is_empty() and st["alpha"] > 0.0:
+					overlap = true
+				if not st.is_empty() and stamp_text == "":
+					stamp_text = st["text"]
+					stamp_after = mr.size.x == 0
+				if not st.is_empty() and st["alpha"] > 0.98:
+					var rest: Array = st["rest"]
+					stamp_fits = rest[0] >= 0.0 and rest[2] <= vis.size.x and rest[1] >= 0.0 and rest[3] <= vis.size.y
+					break
+			_check(stamp_text == "LEGEND!" and stamp_after, "300: then the LEGEND! stamp, after the overlay ('%s')" % stamp_text)
+			_check(stamp_fits, "300: LEGEND! fits the screen")
+			_check(not overlap, "300: '300 LEVELS ESCAPED!' and LEGEND! never on screen together")
 		var r2: Dictionary = await _play_out()
 		var tier := Chapters.celebration_tier(n)
 		_check(r2.get("level", 0) == n and r2.get("celebration", "") == tier and not r2.get("milestone", true) and not r2.get("master", true), "L%d: celebration '%s', no paying milestone / Master" % [n, tier])

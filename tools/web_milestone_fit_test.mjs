@@ -1,6 +1,6 @@
 // MILESTONE TEXT FIT in real Chromium at iPhone sizes: the golden stamp
 // ("MASTER!" after 100, "GRAND MASTER!" after 200) and the "N / LEVELS
-// ESCAPED!" overlay must be FULLY visible - checked on the rendered pixels,
+// ESCAPED!" overlay must be FULLY visible ("LEGEND!" after 300, too) - checked on the rendered pixels,
 // not only on the label's box: when the stamp rests (scale 1, fully
 // opaque) a screenshot is taken and the screen-edge columns inside the
 // stamp's band must hold no stamp-gold pixels, while the text itself must.
@@ -24,7 +24,9 @@ const { chromium } = pw;
 const root = path.resolve(process.argv[2] || 'build/web');
 const shots = process.env.SHOTS || os.tmpdir();
 const NEGATIVE = !!process.env.NEGATIVE;
-const LEVELS = (process.env.LEVELS || '200,100,250').split(',').map(Number);
+// The identity stamp after "N LEVELS ESCAPED!" (same sequence for all three).
+const STAMPS = { 100: 'MASTER!', 200: 'GRAND MASTER!', 300: 'LEGEND!' };
+const LEVELS = (process.env.LEVELS || '200,100,250,300').split(',').map(Number);
 const types = { '.html': 'text/html', '.js': 'text/javascript', '.wasm': 'application/wasm', '.pck': 'application/octet-stream', '.png': 'image/png' };
 const server = http.createServer((req, res) => {
   const file = path.join(root, req.url === '/' ? 'index.html' : decodeURIComponent(req.url.split('?')[0]));
@@ -84,7 +86,7 @@ for (const [W, H, label] of [[390, 844, 'iphone14'], [375, 667, 'iphoneSE'], [43
   await page.bringToFront();
   page.on('pageerror', (e) => errors.push(`${label}: ${e.message}`));
   try {
-    for (const n of (label === 'iphone14' ? LEVELS : [200])) {
+    for (const n of (label === 'iphone14' ? LEVELS : [200, 300])) {
       await page.goto(`${BASE}?experiencelab=${n}&qareset=1`);
       await waitFor(page, (x) => x.level === n && x.lab_qa && !x.title_open, `QA ${n}`);
       await sleep(1500);
@@ -116,8 +118,12 @@ for (const [W, H, label] of [[390, 844, 'iphone14'], [375, 667, 'iphoneSE'], [43
         for (let i = 0; i < 3; i++) frames.push(await page.screenshot());
       }
       let stamp = null, stampBuf = null;
-      if (n === 100 || n === 200) {
+      if (STAMPS[n]) {
+        // Never both on screen: while the stamp shows, the overlay is gone.
+        const first = await waitFor(page, (x) => x.stamp && x.stamp.text, `stamp ${n} starts`, 20000);
+        check(!(first.major_rect && first.major_rect[2] > 0), `[${label}] L${n}: the overlay is gone when the "${first.stamp.text}" stamp starts`);
         stamp = await waitFor(page, (x) => x.stamp && x.stamp.text && x.stamp.scale > 0.98 && x.stamp.scale < 1.02 && x.stamp.alpha > 0.98, `stamp ${n}`, 20000);
+        check(!(stamp.major_rect && stamp.major_rect[2] > 0), `[${label}] L${n}: no overlay while the stamp rests`);
         stampBuf = await page.screenshot();
       }
       if (s) {
@@ -137,7 +143,7 @@ for (const [W, H, label] of [[390, 844, 'iphone14'], [375, 667, 'iphoneSE'], [43
         const rest = s.stamp.rest;
         const g = await edgeGold(stampBuf, Math.floor(rest[1] * scale) - 4, Math.ceil(rest[3] * scale) + 4, 2);
         const vw = g.width;
-        const want = n === 200 ? 'GRAND MASTER!' : 'MASTER!';
+        const want = STAMPS[n];
         const fits = rest[0] >= 0 && rest[2] <= 720;
         check(s.stamp.text === want && g.inner > 50 && g.edge === 0 && fits,
           `[${label}] L${n}: the "${s.stamp.text}" stamp is fully visible (font ${s.stamp.font_size}, ink ${Math.round(rest[0])}..${Math.round(rest[2])} of 720, gold at the edges ${g.edge}, inside ${g.inner}, ${vw}px wide)`);

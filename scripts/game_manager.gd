@@ -91,6 +91,8 @@ const PORTAL_BLOCKED_TEXT := "Blocked after portal %s"
 ## can't move it (translatable strings).
 ## Milestone presentation copy (v0.8; never "final" - the game continues).
 const MAJOR_MILESTONE_LINE := "LEVELS ESCAPED!"
+## The Level 300 milestone's stamp (after "300 LEVELS ESCAPED!").
+const MILESTONE_300_STAMP := "LEGEND!"
 const STRONG_MILESTONE_STAMP := "%d LEVELS!"
 const CRATE_TAP_TEXT := "Movable - launch an arrow into it to push it one cell"
 const CRATE_STUCK_TEXT := "The Movable block can't move there"
@@ -972,10 +974,12 @@ func _on_board_cleared() -> void:
 	if session != _session_id:
 		return
 	board.celebrate()
-	if r["celebration"] == "lab_major":
-		# Master Levels 100 and 200: "N LEVELS ESCAPED!" first (the standard
-		# milestone presentation), then the MASTER / GRAND MASTER identity
-		# as a second, fitted stamp. Not a finale: the game goes on.
+	if r["celebration"] == "lab_major" or r["celebration"] == "major":
+		# Master Levels 100 and 200 and the Level 300 milestone: "N LEVELS
+		# ESCAPED!" first (the standard milestone presentation; it has faded
+		# out before the stamp starts - never both at once), then the
+		# identity as a second, fitted stamp: MASTER! / GRAND MASTER! /
+		# LEGEND! (300, with Level 200's presentation). Not a finale.
 		var grand := current_level > Chapters.master_level()
 		for i in (8 if grand else 6):
 			board.celebrate()
@@ -988,7 +992,7 @@ func _on_board_cleared() -> void:
 			return
 		for i in (3 if grand else 2):
 			board.celebrate()
-		_show_stamp("GRAND MASTER!" if grand else "MASTER!", 1.6 if grand else 1.2)
+		_show_stamp(milestone_stamp(current_level), 1.6 if grand else 1.2)
 		AudioManager.play_perfect()
 		await get_tree().create_timer(1.8 if grand else 1.4).timeout
 	elif String(r["celebration"]).begins_with("lab_milestone"):
@@ -1019,17 +1023,6 @@ func _on_board_cleared() -> void:
 		AudioManager.play_master()
 		Haptics.medium()
 		await get_tree().create_timer(2.0 if grand else 1.6).timeout
-	elif r["celebration"] == "major":
-		# v0.8 MAJOR milestone (300): the biggest moment of the Third Era -
-		# NOT a finale and not GRAND MASTER: "300 LEVELS ESCAPED!", fitted
-		# to the screen.
-		for i in 5:
-			board.celebrate()
-		ui.show_major_milestone(str(current_level), MAJOR_MILESTONE_LINE, 2.0, SocialScreen.reduced_motion())
-		get_tree().create_timer(0.6).timeout.connect(publish_state)  # diagnostics: the overlay's rect
-		AudioManager.play_master()
-		Haptics.medium()
-		await get_tree().create_timer(2.8).timeout
 	elif r["celebration"] == "strong":
 		# v0.8 stronger milestone (250): more bursts, a longer stamp.
 		for i in 3:
@@ -1873,6 +1866,14 @@ func _finish_lesson() -> void:
 	_show_message(done, 2.8)
 	if ExperienceLab.active:
 		publish_state.call_deferred()
+
+
+## The identity stamp after "N LEVELS ESCAPED!": MASTER! (100),
+## GRAND MASTER! (200), LEGEND! (300).
+static func milestone_stamp(level_number: int) -> String:
+	if Chapters.celebration_tier(level_number) == "major":
+		return MILESTONE_300_STAMP
+	return "GRAND MASTER!" if level_number > Chapters.master_level() else "MASTER!"
 
 
 ## The golden stamp (fitted to the screen, UIManager.show_perfect_stamp);

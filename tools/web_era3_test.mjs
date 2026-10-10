@@ -12,6 +12,7 @@
 //    251 clears with its Movable block left on the board.
 // C: 275 short milestone; representative 276-299 levels clear.
 // D: 300 major milestone: "300 LEVELS ESCAPED!" fitted on screen, then the
+//    LEGEND! stamp (as MASTER! / GRAND MASTER! at 100 / 200), then the
 //    card (CONTINUE -> Chapter 30 card) offers LEVEL SELECT, which opens Level Select (no loop to Level 1);
 //    after a reload: CONTINUE - LEVEL 300, all 300 levels in Level Select.
 // E: not retroactive, intros remembered after a reload. No page errors.
@@ -209,6 +210,8 @@ try {
     await g.page.screenshot({ path: path.join(shots, 'ce_300_overlay.png') });
     const r = s.major_rect;
     check(r[0] >= 0 && r[1] >= 0 && r[2] <= 1 && r[3] <= 1 && r[2] - r[0] > 0.5, `D: the 300 overlay fits the screen (${r.map((x) => x.toFixed(3)).join(', ')})`);
+    s = await waitFor(g, (x) => x.stamp && x.stamp.text, 'stamp 300', 20000);
+    check(s.stamp.text === 'LEGEND!' && !(s.major_rect && s.major_rect[2] > 0), `D: then the "${s.stamp.text}" stamp, with the overlay gone`);
     s = await waitFor(g, (x) => x.card_open && x.level === 300, 'card 300', 20000);
     await sleep(800);
     s = await state(g);
