@@ -51,7 +51,19 @@ var _settings: Dictionary = {"music": true, "sfx": true, "haptics": true}
 ##   LEVEL SCORE = this attempt on this level (a smaller, labelled line).
 ##   LEVEL BEST  = this level's personal best.
 var _card_reward: Label  # "NEW BEST!" / "LEVEL BEST  1,234"
-var _card_time: Label  # "TIME 0:42  ·  BEST 0:38" / "... NEW BEST TIME!" (active play)
+# TIMING + PERSONAL BEST block of the level card: TIME | PERSONAL BEST in
+# two columns on a soft panel; a faster record turns it into the accent
+# "NEW PERSONAL BEST!" state (TIME | PREVIOUS BEST). Further rows (e.g. a
+# later comparison) can go under the columns in the same panel.
+var _time_panel: PanelContainer
+var _time_style: StyleBoxFlat
+var _time_banner: Label  # "NEW PERSONAL BEST!" (only on a faster record)
+var _time_value: Label  # this attempt's active-play time
+var _best_caption: Label  # "PERSONAL BEST" / "PREVIOUS BEST"
+var _best_value: Label
+## The block as one line ("TIME 0:42   ·   BEST 0:38", time_line) - for
+## diagnostics / tests; "" when there is no time.
+var time_summary := ""
 var _card_score: Label  # the big number: TOTAL SCORE
 var _card_score_caption: Label  # "TOTAL SCORE"
 var _card_gain: Label  # "+800" (how much this run added to the total)
@@ -440,9 +452,7 @@ func show_complete(r: Dictionary) -> void:
 		_card_reward.add_theme_color_override("font_color", Palette.TEXT_SOFT)
 	# TIMING + PERSONAL BEST: this attempt's active-play time, and the best
 	# before it (a first time is simply shown; a faster one is a record).
-	_card_time.text = time_line(int(r.get("time_ms", 0)), int(r.get("best_time_before", 0)), bool(r.get("new_best_time", false)))
-	_card_time.add_theme_color_override("font_color", Palette.ACCENT if r.get("new_best_time", false) and int(r.get("best_time_before", 0)) > 0 else Palette.TEXT_SOFT)
-	_card_time.visible = _card_time.text != ""
+	_show_time(int(r.get("time_ms", 0)), int(r.get("best_time_before", 0)), bool(r.get("new_best_time", false)))
 	# TOTAL SCORE only ever grows: it rises by the improvement over this
 	# level's previous best, and stays put on a worse run or a replay.
 	var total_after: int = r.get("total_after", 0)
@@ -465,7 +475,8 @@ func show_complete(r: Dictionary) -> void:
 	_card.modulate.a = 0.0
 	var t := create_tween().set_parallel()
 	t.tween_property(_overlay, "color:a", 0.72, 0.25)
-	t.tween_property(_card, "scale", Vector2.ONE, 0.32).set_trans(Tween.TRANS_BACK).set_ease(Tween.EASE_OUT)
+	var fit := _card_fit_scale()
+	t.tween_property(_card, "scale", Vector2(fit, fit), 0.32).set_trans(Tween.TRANS_BACK).set_ease(Tween.EASE_OUT)
 	t.tween_property(_card, "modulate:a", 1.0, 0.18)
 	# TOTAL SCORE counts up from the previous total by this run's gain -
 	# never from 0, so the big number can only ever rise. NEW BEST pulses
@@ -481,7 +492,40 @@ func show_complete(r: Dictionary) -> void:
 		c.tween_callback(func(): AudioManager.play_new_best())
 		c.tween_property(_card_reward, "scale", Vector2(1.25, 1.25), 0.12)
 		c.tween_property(_card_reward, "scale", Vector2.ONE, 0.2).set_trans(Tween.TRANS_BACK)
+	if _time_banner.visible:
+		# A faster record: one light pulse of the banner and the time (no
+		# sound, nothing waits for it - the buttons work throughout).
+		c.tween_callback(func():
+			_time_banner.pivot_offset = _time_banner.size * 0.5
+			_time_value.pivot_offset = _time_value.size * 0.5)
+		c.tween_property(_time_banner, "scale", Vector2(1.18, 1.18), 0.12)
+		c.parallel().tween_property(_time_value, "scale", Vector2(1.12, 1.12), 0.12)
+		c.tween_property(_time_banner, "scale", Vector2.ONE, 0.22).set_trans(Tween.TRANS_BACK)
+		c.parallel().tween_property(_time_value, "scale", Vector2.ONE, 0.22).set_trans(Tween.TRANS_BACK)
 	_bottom.modulate.a = 0.0
+
+
+## Where the level card rests: centred, unless it would reach under the
+## top HUD (coins, Levels / Settings buttons - a long card on a short
+## screen). Then it moves down just enough into the free space below (the
+## bottom bar is hidden under the card), keeping its full size and touch
+## targets; only if the screen has no room left either is it scaled down
+## the missing amount. Returns the resting scale.
+func _card_fit_scale() -> float:
+	var center := _card.get_parent() as Control
+	center.offset_top = 0.0
+	var vis := get_viewport().get_visible_rect().size
+	var h := _card.get_combined_minimum_size().y
+	var top := _hud_bottom() + 8.0
+	var free_top := (vis.y - h) * 0.5
+	if h <= 0.0 or free_top >= top:
+		return 1.0
+	var shift := minf(top - free_top, maxf(0.0, vis.y - 12.0 - (free_top + h)))
+	center.offset_top = shift * 2.0  # a CenterContainer moves its child by half
+	var still := top - (free_top + shift)
+	if still <= 0.0:
+		return 1.0
+	return clampf(1.0 - 2.0 * still / h, 0.85, 1.0)
 
 
 ## Big golden stamp over the board before the card appears
@@ -619,6 +663,29 @@ static func fmt_time(ms: int) -> String:
 	return "%d:%02d" % [s / 60, s % 60]
 
 
+## Fills the timing block. First time on the level: TIME and PERSONAL BEST
+## (the same value - it is the record now). Not faster: TIME and the stored
+## PERSONAL BEST, neutral. Faster than the record: "NEW PERSONAL BEST!",
+## TIME in the accent colour and the PREVIOUS BEST beside it.
+func _show_time(time_ms: int, best_before_ms: int, new_best: bool) -> void:
+	time_summary = time_line(time_ms, best_before_ms, new_best)
+	_time_panel.visible = time_summary != ""
+	if time_summary == "":
+		return
+	var record := new_best and best_before_ms > 0
+	_time_banner.visible = record
+	_time_banner.scale = Vector2.ONE
+	_time_value.scale = Vector2.ONE
+	_time_value.text = fmt_time(time_ms)
+	_time_value.add_theme_color_override("font_color", Palette.ACCENT if record else Palette.TEXT)
+	_best_caption.text = "PREVIOUS BEST" if record else "PERSONAL BEST"
+	_best_value.text = fmt_time(best_before_ms if best_before_ms > 0 else time_ms)
+	_best_value.add_theme_color_override("font_color", Palette.TEXT_SOFT if record else Palette.TEXT)
+	_time_style.bg_color = Color(Palette.ACCENT, 0.09) if record else Color(Palette.TEXT, 0.045)
+	_time_style.border_color = Color(Palette.ACCENT, 0.85)
+	_time_style.set_border_width_all(3 if record else 0)
+
+
 ## The level card's time line: "" (no time), "TIME 0:42" (the first time on
 ## this level), "TIME 0:42  ·  BEST 0:38", or "TIME 0:36  ·  NEW BEST TIME!".
 static func time_line(time_ms: int, best_before_ms: int, new_best: bool) -> String:
@@ -641,6 +708,8 @@ static func _fmt(n: int) -> String:
 
 
 func _set_card_mode(complete: bool) -> void:
+	if not complete:
+		(_card.get_parent() as Control).offset_top = 0.0  # other cards: centred as always
 	_card_coins.visible = complete and _card_coins.text != ""
 	_card_stars.visible = complete
 	_card_score.visible = complete
@@ -648,7 +717,7 @@ func _set_card_mode(complete: bool) -> void:
 	_card_gain.visible = complete and _card_gain.text != ""
 	_card_total.visible = complete
 	_card_reward.visible = complete
-	_card_time.visible = complete and _card_time.text != ""
+	_time_panel.visible = complete and time_summary != ""
 	_card_buttons.visible = complete
 
 
@@ -766,6 +835,7 @@ func _build() -> void:
 	_card_style = card_style
 	_card.add_theme_stylebox_override("panel", card_style)
 	_card.custom_minimum_size = Vector2(600, 0)
+	_card.resized.connect(func(): _card.pivot_offset = _card.size * 0.5)  # scales about its centre (see _card_fit_scale)
 	center.add_child(_card)
 	var card_box := VBoxContainer.new()
 	card_box.add_theme_constant_override("separation", 18)
@@ -786,8 +856,7 @@ func _build() -> void:
 	card_box.add_child(_card_total)
 	_card_reward = _make_label(24, Palette.ACCENT, 900)
 	card_box.add_child(_card_reward)
-	_card_time = _make_label(22, Palette.TEXT_SOFT, 800)
-	card_box.add_child(_card_time)
+	_build_time_panel(card_box)
 	_card_stats = _make_label(22, Palette.TEXT_SOFT, 800)
 	_card_coins = _make_label(26, Color("#D98A00"), 900)
 	_card_coins.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
@@ -1041,6 +1110,84 @@ func _close_settings() -> void:
 
 func is_settings_open() -> bool:
 	return _settings_overlay.visible
+
+
+## The level card's TIMING block (see _show_time): a soft rounded panel,
+## an optional banner, then TIME | PERSONAL BEST as two columns.
+func _build_time_panel(parent: Control) -> void:
+	_time_panel = PanelContainer.new()
+	_time_style = StyleBoxFlat.new()
+	_time_style.set_corner_radius_all(28)
+	_time_style.anti_aliasing = true
+	_time_style.content_margin_left = 20
+	_time_style.content_margin_right = 20
+	_time_style.content_margin_top = 6
+	_time_style.content_margin_bottom = 6
+	_time_panel.add_theme_stylebox_override("panel", _time_style)
+	_time_panel.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	parent.add_child(_time_panel)
+	var box := VBoxContainer.new()
+	box.add_theme_constant_override("separation", 0)
+	box.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	_time_panel.add_child(box)
+	_time_banner = _make_label(27, Palette.ACCENT, 900)
+	_time_banner.text = "NEW PERSONAL BEST!"
+	_time_banner.visible = false
+	box.add_child(_time_banner)
+	var cols := HBoxContainer.new()
+	cols.add_theme_constant_override("separation", 8)
+	cols.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	box.add_child(cols)
+	var c1 := _time_column("TIME")
+	_time_value = c1[1]
+	cols.add_child(c1[2])
+	var divider := ColorRect.new()
+	divider.color = Color(Palette.TEXT_SOFT, 0.28)
+	divider.custom_minimum_size = Vector2(2, 0)
+	divider.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	cols.add_child(divider)
+	var c2 := _time_column("PERSONAL BEST")
+	_best_caption = c2[0]
+	_best_value = c2[1]
+	cols.add_child(c2[2])
+	_time_panel.visible = false
+
+
+## The timing block as shown (diagnostics / tests): visibility, the
+## banner, both columns and the panel's on-screen rect (fractions).
+func time_panel_state() -> Dictionary:
+	var vis := get_viewport().get_visible_rect().size
+	var rect := _time_panel.get_global_rect()
+	return {"visible": _time_panel.is_visible_in_tree(), "banner": _time_banner.visible, "time": _time_value.text,
+		"best_caption": _best_caption.text, "best": _best_value.text, "record": _time_style.border_width_top > 0,
+		"rect": [rect.position.x / vis.x, rect.position.y / vis.y, rect.end.x / vis.x, rect.end.y / vis.y],
+		"card_scale": snappedf(_card.scale.x, 0.001), "card_shift": (_card.get_parent() as Control).offset_top * 0.5 / vis.y, "hud_bottom": _hud_bottom() / vis.y}
+
+
+## The lowest edge of the top HUD at rest (the coin pill pulses when coins
+## fly in - its resting size counts).
+func _hud_bottom() -> float:
+	var top := 0.0
+	for c in [_coin_pill, _levels_button, _settings_button]:
+		if c and c.is_visible_in_tree():
+			top = maxf(top, c.global_position.y + c.size.y)
+	return top
+
+
+## [caption, value, column] - one half of the timing block: the caption
+## beside its value on one line (compact: the card keeps its height).
+func _time_column(caption_text: String) -> Array:
+	var col := HBoxContainer.new()
+	col.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	col.alignment = BoxContainer.ALIGNMENT_CENTER
+	col.add_theme_constant_override("separation", 12)
+	col.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	var caption := _make_label(19, Palette.TEXT_SOFT, 900)
+	caption.text = caption_text
+	col.add_child(caption)
+	var value := _make_label(38, Palette.TEXT, 900)
+	col.add_child(value)
+	return [caption, value, col]
 
 
 func _make_label(font_size: int, color: Color, weight: int) -> Label:

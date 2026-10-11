@@ -24,6 +24,7 @@
 // F: the guided finger lesson (dev build, ?experiencelab=76): no clock
 //    under the Magnet card or while the player follows the finger; the
 //    clock starts when the lesson ends, and following it is not assistance.
+// G: Level 10 (Chapter complete), 150, 250 and 300 cards on iPhone SE.
 // E: no page errors.
 import http from 'node:http';
 import fs from 'node:fs';
@@ -151,7 +152,17 @@ async function clearLevel1(g) {
   return last;
 }
 
-const cardFits = (s) => s.card_rect && s.card_rect[0] >= 0 && s.card_rect[1] >= 0 && s.card_rect[2] <= 1 && s.card_rect[3] <= 1;
+// The card is on screen, and its TIMING block is inside the card, above
+// the REPLAY / NEXT row (clear of the buttons: their half height is
+// <= 0.041 of the screen on every iPhone size).
+const cardFits = (s) => {
+  const c = s.card_rect, p = s.time_panel && s.time_panel.rect;
+  return !!c && c[0] >= 0 && c[1] >= 0 && c[2] <= 1 && c[3] <= 1
+    && !!p && s.time_panel.visible && p[0] >= c[0] && p[2] <= c[2] && p[1] >= c[1] && p[3] <= c[3]
+    && p[3] <= s.replay[1] - 0.041 && p[3] <= s.next[1] - 0.041
+    && c[1] >= s.time_panel.hud_bottom;  // below the coins / top buttons
+};
+const panelText = (s) => s.time_panel ? `${s.time_panel.banner ? 'NEW PERSONAL BEST! ' : ''}TIME ${s.time_panel.time} | ${s.time_panel.best_caption} ${s.time_panel.best}${s.time_panel.card_scale < 1 ? ` [card scale ${s.time_panel.card_scale}]` : ''}${s.time_panel.card_shift > 0 ? ` [moved down ${s.time_panel.card_shift.toFixed(3)}]` : ''}` : '-';
 const TIME_RE = /^TIME \d+:\d\d(   ·   (BEST \d+:\d\d|NEW BEST TIME!))?$/;
 
 try {
@@ -176,7 +187,8 @@ try {
   check(t1 <= wall + 150 && t1 >= wall - lossA - 300, `A: active time ${t1} ms within [wall clock ${wall} ms - ${lossA} ms beyond the 0.25 s frame cap, wall clock] (board playable -> winning tap)`);
   check(s.time_result.clean && s.best_time_ms === t1 && s.best_clean_ms === t1, `A: a clean first clear: BEST = BEST CLEAN = ${t1} ms`);
   check(s.card_time === `TIME 0:${String(Math.floor(t1 / 1000)).padStart(2, '0')}`, `A: the card shows "${s.card_time}" (the first time on this level)`);
-  check(cardFits(s), `A: the card fits the screen (${s.card_rect.map((v) => v.toFixed(3)).join(', ')})`);
+  check(cardFits(s), `A: the card and its timing block fit the screen (${s.card_rect.map((v) => v.toFixed(3)).join(', ')})`);
+  check(!s.time_panel.banner && s.time_panel.best_caption === 'PERSONAL BEST' && s.time_panel.time === s.time_panel.best, `A: first time: "${panelText(s)}" (no record banner)`);
   await sleep(900);
   await g.page.screenshot({ path: path.join(shots, 'timing_iphone14_card_first.png') });
   // ===== B: replay with a stalled, a hidden and a put-away page =====
@@ -220,6 +232,8 @@ try {
   check(t2 < rWall - 7500, `B: the 3 s stall (≤ 0.25 s), hidden 3 s and pagehide 2 s are not counted (${t2} ms of ${rWall} ms on the wall clock)`);
   check(t2 <= rWall - 5000 + 150 && t2 >= rActive - 300, `B: active time ${t2} ms within [wall clock ${rWall} - hidden 3000 - pagehide 2000 - ${lossB} ms beyond the frame cap (incl. the stall) = ${rActive} ms, ${rWall - 5000} ms]`);
   check(TIME_RE.test(s.card_time), `B: the card time line "${s.card_time}"`);
+  check(cardFits(s) && (t2 >= t1 ? (!s.time_panel.banner && s.time_panel.best_caption === 'PERSONAL BEST') : s.time_panel.banner),
+    `B: the replay's timing block: "${panelText(s)}"`);
   const best2 = Math.min(t1, t2);
   check(s.best_time_ms === best2 && s.best_clean_ms === best2, `B: BEST / BEST CLEAN = the faster of the two (${best2} ms)`);
   await sleep(900);
@@ -234,7 +248,8 @@ try {
   const best = Math.min(best2, t3);
   check(t3 < best2 && s.time_result.new_best_time && s.time_result.new_clean_time && s.best_time_ms === t3 && s.best_clean_ms === t3,
     `B: a faster clean replay improves BEST and BEST CLEAN (${best2} -> ${t3} ms)`);
-  check(/^TIME \d+:\d\d   ·   NEW BEST TIME!$/.test(s.card_time) && cardFits(s), `B: the card shows "${s.card_time}" and fits`);
+  check(/^TIME \d+:\d\d   ·   NEW BEST TIME!$/.test(s.card_time) && cardFits(s) && s.time_panel.banner && s.time_panel.record && s.time_panel.best_caption === 'PREVIOUS BEST',
+    `B: the card shows "${panelText(s)}" and fits`);
   await sleep(900);
   await g.page.screenshot({ path: path.join(shots, 'timing_iphone14_card_new_best.png') });
   // ===== C: persistence =====
@@ -259,13 +274,22 @@ try {
     s = await waitFor(g, (x) => x.title_open, 'title ' + size);
     await tapAt(g, s.title_continue);
     s = await waitFor(g, (x) => !x.title_open && x.level === 1, 'level 1 ' + size);
-    await sleep(1500);
+    await sleep(3000);
     await clearLevel1(g);
     s = await waitFor(g, (x) => x.card_open && x.level === 1, 'card ' + size, 20000);
-    await sleep(800);
+    await sleep(1500);  // the card's pop-in has settled
     s = await state(g);
-    check(cardFits(s) && TIME_RE.test(s.card_time), `D[${size}]: Level 1 card with "${s.card_time}" fits (${s.card_rect.map((v) => v.toFixed(3)).join(', ')})`);
+    check(cardFits(s) && TIME_RE.test(s.card_time), `D[${size}]: Level 1 card with "${panelText(s)}" fits (${s.card_rect.map((v) => v.toFixed(3)).join(', ')})`);
     await g.page.screenshot({ path: path.join(shots, `timing_${size}_card_level1.png`) });
+    // A quick replay: the NEW PERSONAL BEST state (the taller block).
+    await tapAt(g, s.replay);
+    s = await waitFor(g, (x) => x.level === 1 && !x.card_open && !x.completed, 'replay ' + size);
+    await clearLevel1(g);
+    s = await waitFor(g, (x) => x.card_open && x.level === 1, 'card replay ' + size, 20000);
+    await sleep(1500);  // the card's pop-in has settled
+    s = await state(g);
+    check(cardFits(s) && s.time_panel.banner, `D[${size}]: NEW PERSONAL BEST card "${panelText(s)}" fits (${s.card_rect.map((v) => v.toFixed(3)).join(', ')})`);
+    await g.page.screenshot({ path: path.join(shots, `timing_${size}_card_new_best.png`) });
     await g.ctx.close();
   }
   for (const size of ['iphoneSE', 'iphone14']) {
@@ -278,11 +302,30 @@ try {
     await g.page.keyboard.press('s');
     s = await waitFor(g, (x) => x.card_open && x.level === 100, 'card 100 ' + size, 120000);
     await g.page.keyboard.press('F1');
-    await sleep(900);
+    await sleep(1500);  // the card's pop-in has settled
     s = await state(g);
     check(cardFits(s) && TIME_RE.test(s.card_time) && s.card_title === '100 LEVELS ESCAPED!' && !s.time_result.clean,
       `D[${size}]: the Level 100 milestone card with "${s.card_time}" fits (${s.card_rect.map((v) => v.toFixed(3)).join(', ')}; auto-solve = assisted)`);
     await g.page.screenshot({ path: path.join(shots, `timing_${size}_card_level100.png`) });
+    await g.ctx.close();
+  }
+  // ===== G: other chapters' cards on the smallest screen =====
+  // (Chapter-complete notes on 10, Chapters 15 / 25, the last level 300.)
+  for (const n of [10, 150, 250, 300]) {
+    const dir = fs.mkdtempSync(path.join(os.tmpdir(), 'ce-timing-'));
+    g = await open(DEV + `?experiencelab=${n}&qareset=1`, dir, 'iphoneSE');
+    s = await waitFor(g, (x) => x.level === n && x.lab_qa && !x.title_open, `QA ${n}`);
+    for (let i = 0; i < 100 && s.intro_open; i++) { await sleep(200); s = await state(g); }
+    await sleep(1500);
+    await g.page.focus('canvas').catch(() => {});
+    await g.page.keyboard.press('F1'); await sleep(250);
+    await g.page.keyboard.press('s');
+    s = await waitFor(g, (x) => x.card_open && x.level === n, `card ${n}`, 120000);
+    await g.page.keyboard.press('F1');
+    await sleep(1500);  // the card's pop-in has settled
+    s = await state(g);
+    check(cardFits(s), `G[iphoneSE]: Level ${n} card "${s.card_title}" with "${panelText(s)}" fits (${s.card_rect.map((v) => v.toFixed(3)).join(', ')})`);
+    await g.page.screenshot({ path: path.join(shots, `timing_iphoneSE_card_level${n}.png`) });
     await g.ctx.close();
   }
   // ===== F: guided finger lesson =====

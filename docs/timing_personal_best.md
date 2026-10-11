@@ -98,16 +98,20 @@ The records are stored in the same release save, `user://progress_r2.cfg`, mirro
 
 ## Completion card
 
-One line under LEVEL SCORE / LEVEL BEST. It uses the same 22 pt soft text as that block, and turns to the accent colour on a new best. There is no live stopwatch during play.
+A **timing block** sits under LEVEL SCORE / LEVEL BEST: a soft rounded panel with **TIME | PERSONAL BEST** as two columns, each with its caption beside a large value. The values are 38 pt bold: larger than LEVEL SCORE (28 pt), smaller than the TOTAL SCORE number (64 pt). There is no live stopwatch during play.
 
-| Case | Line |
+| Case | Block |
 |---|---|
-| First finished attempt on the level | `TIME 0:42` |
-| Faster than the previous BEST TIME | `TIME 0:36 · NEW BEST TIME!` |
-| Not faster | `TIME 0:51 · BEST 0:38` |
+| First finished attempt on the level | `TIME 0:42 │ PERSONAL BEST 0:42` (neutral; it is the record now) |
+| Not faster | `TIME 0:51 │ PERSONAL BEST 0:38` (neutral; the stored record) |
+| Faster than the previous record | Banner **NEW PERSONAL BEST!**, then `TIME 0:36 │ PREVIOUS BEST 0:42`. The panel turns accent: light tint and an accent border, with TIME in the accent colour. |
 
+- **Record feedback:** after the score count-up, the banner and the time give one light pulse. There is no sound and no new celebration, and nothing waits for it: REPLAY / NEXT work at once. It stays smaller than the milestone and chapter celebrations.
 - **Format:** `m:ss`; from one hour, `h:mm:ss`. Seconds are rounded down, so the card never shows a time faster than the record.
-- **Fit:** the card fits iPhone SE (375×667), iPhone 14 (390×844) and Pro Max (430×932), including the Level 100 milestone card.
+- **Fit:** checked on iPhone SE (375×667), iPhone 14 (390×844) and Pro Max (430×932), in both the record and non-record states, and on the milestone cards 100 / 150 / 250 / 300, the chapter-complete card on 10, and Level 1.
+  - On a short screen, a long card would otherwise reach under the top HUD (the coin pill is drawn above the card). The card then rests **lower**, into the free space below (the bottom bar is hidden under the card). Its size and touch targets stay unchanged.
+  - Only if there is no room left either would it be scaled down, and at most to 0.85. This has not happened on any tested screen.
+- **Later comparison values** (Phase 3 and later) can be added as further rows inside the same panel. Nothing is shown for them now.
 
 ### BEST CLEAN TIME: placement proposal (not implemented)
 
@@ -122,8 +126,8 @@ Recommendation: option 1. It is quiet, has no effect on the result card's height
 
 | Suite | What it covers |
 |---|---|
-| `tools/TimingCheck.tscn` (headless, 78 checks) | **AttemptTimer:** accumulation, cap, hidden page, dropped frame, finish, reset.<br>**Records:** first, faster, slower, assisted, clean; invalid values; save / reload; old save without times; invalid stored values; merge both ways; backup-code round trip; unrelated fields unchanged.<br>**The real game:** title, menus, hidden page, clean clear and card text, slower and faster replays, Hint, Undo, Hammer, Restart, leaving a level, out of hearts / retry, the NEW MECHANIC card, reload.<br>**Guided lessons:** no clock during the Portal lesson on 201, which ends on its key move; then the clock runs, the attempt is not assisted, and the record contains only the independent play. A replay has no lesson. All 9 campaign lesson levels stop the clock. A lesson ended by the Hammer resumes the clock, and the attempt is assisted because of the Hammer. |
-| `tools/web_timing_test.mjs <player build> <dev build>` (browser, 25 checks) | The production build at iPhone size, Level 1 played by touch:<br>• the time matches the wall clock;<br>• a REPLAY with a 3 s stall, a 3 s hidden page and 2 s of `pagehide` counts none of it;<br>• a faster replay gives "NEW BEST TIME!";<br>• the records are in `chain_escape_save_r2` and survive a reload and a browser restart;<br>• the card fits SE / 14 / Pro Max and the Level 100 milestone card;<br>• dev build `?experiencelab=76`: the Magnet card and the finger lesson add 0 ms, and the recorded time is the independent play after the lesson. |
+| `tools/TimingCheck.tscn` (headless, 81 checks) | **AttemptTimer:** accumulation, cap, hidden page, dropped frame, finish, reset.<br>**Records:** first, faster, slower, assisted, clean; invalid values; save / reload; old save without times; invalid stored values; merge both ways; backup-code round trip; unrelated fields unchanged.<br>**The real game:** title, menus, hidden page, clean clear and card text, slower and faster replays, Hint, Undo, Hammer, Restart, leaving a level, out of hearts / retry, the NEW MECHANIC card, reload.<br>**Guided lessons:** no clock during the Portal lesson on 201, which ends on its key move; then the clock runs, the attempt is not assisted, and the record contains only the independent play. A replay has no lesson. All 9 campaign lesson levels stop the clock. A lesson ended by the Hammer resumes the clock, and the attempt is assisted because of the Hammer. |
+| `tools/web_timing_test.mjs <player build> <dev build>` (browser, 33 checks) | The production build at iPhone size, Level 1 played by touch:<br>• the time matches the wall clock;<br>• a REPLAY with a 3 s stall, a 3 s hidden page and 2 s of `pagehide` counts none of it;<br>• a faster replay gives "NEW BEST TIME!";<br>• the records are in `chain_escape_save_r2` and survive a reload and a browser restart;<br>• the card fits SE / 14 / Pro Max and the Level 100 milestone card;<br>• dev build `?experiencelab=76`: the Magnet card and the finger lesson add 0 ms, and the recorded time is the independent play after the lesson;<br>• the timing block's three states, and on every card that the block sits inside the card, above REPLAY / NEXT, and the card below the top HUD (SE first and record cards, Pro Max, Levels 10 / 100 / 150 / 250 / 300 on SE). |
 | `tools/web_timing_compat_test.mjs <released ZIP> <player build>` (browser, 12 checks) | An existing release save:<br>• the released build plays and saves;<br>• the new build keeps all progress and adds the records;<br>• **rollback** to the released build keeps the records;<br>• forward again shows them. |
 
 **Notes on the browser tests:**

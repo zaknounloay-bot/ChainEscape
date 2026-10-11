@@ -336,8 +336,11 @@ func _game() -> void:
 		if game.ui.is_complete_visible():
 			break
 		await _frames(2)
-	_check(game.ui._card_time.text == "TIME %s" % UIManager.fmt_time(t1) and game.ui._card_time.visible,
-		"the first card shows the time alone: '%s'" % game.ui._card_time.text)
+	_check(game.ui.time_summary == "TIME %s" % UIManager.fmt_time(t1) and game.ui._time_panel.visible,
+		"the first card shows the time alone: '%s'" % game.ui.time_summary)
+	var tp: Dictionary = game.ui.time_panel_state()
+	_check(tp["visible"] and not tp["banner"] and not tp["record"] and tp["time"] == UIManager.fmt_time(t1) and tp["best_caption"] == "PERSONAL BEST" and tp["best"] == UIManager.fmt_time(t1),
+		"timing block, first time: TIME %s | PERSONAL BEST %s, no record banner" % [tp["time"], tp["best"]])
 	_check(game.ui._card_reward.visible and game.ui._card_total.text.begins_with("LEVEL SCORE"), "LEVEL SCORE / LEVEL BEST unchanged on the card")
 	# Replay slower (clean): no record.
 	r = await _clear(1, 9.0)
@@ -346,7 +349,10 @@ func _game() -> void:
 		if game.ui.is_complete_visible():
 			break
 		await _frames(2)
-	_check(game.ui._card_time.text == "TIME %s   ·   BEST %s" % [UIManager.fmt_time(r["time_ms"]), UIManager.fmt_time(t1)], "card: '%s'" % game.ui._card_time.text)
+	_check(game.ui.time_summary == "TIME %s   ·   BEST %s" % [UIManager.fmt_time(r["time_ms"]), UIManager.fmt_time(t1)], "card: '%s'" % game.ui.time_summary)
+	tp = game.ui.time_panel_state()
+	_check(tp["visible"] and not tp["banner"] and not tp["record"] and tp["time"] == UIManager.fmt_time(r["time_ms"]) and tp["best_caption"] == "PERSONAL BEST" and tp["best"] == UIManager.fmt_time(t1),
+		"timing block, slower replay: TIME %s | PERSONAL BEST %s (the stored record), neutral" % [tp["time"], tp["best"]])
 	# Replay faster with a hint: BEST only.
 	r = await _clear(1, 3.0, "hint")
 	_check(not r["clean"] and r["new_best_time"] and not r["new_clean_time"] and game.progress.best_clean_time(1) == t1 and game.progress.best_time(1) == r["time_ms"],
@@ -355,7 +361,11 @@ func _game() -> void:
 		if game.ui.is_complete_visible():
 			break
 		await _frames(2)
-	_check(game.ui._card_time.text.ends_with("NEW BEST TIME!"), "card: '%s'" % game.ui._card_time.text)
+	_check(game.ui.time_summary.ends_with("NEW BEST TIME!"), "card: '%s'" % game.ui.time_summary)
+	tp = game.ui.time_panel_state()
+	_check(tp["visible"] and tp["banner"] and tp["record"] and tp["time"] == UIManager.fmt_time(r["time_ms"]) and tp["best_caption"] == "PREVIOUS BEST" and tp["best"] == UIManager.fmt_time(t1)
+		and game.ui._time_value.get_theme_color("font_color") == Palette.ACCENT,
+		"timing block, faster replay: NEW PERSONAL BEST! - TIME %s (accent) | PREVIOUS BEST %s" % [tp["time"], tp["best"]])
 	var tb: int = r["time_ms"]
 	# Undo and Hammer also make an attempt assisted.
 	r = await _clear(1, 2.0, "undo")
