@@ -73,6 +73,14 @@ var highest_unlocked: int = 1
 ## level number -> best score / best stars (0..3)
 var best_scores: Dictionary = {}
 var best_stars: Dictionary = {}
+## TIMING + PERSONAL BEST (local only): per level, the fastest successful
+## attempt in ms of ACTIVE play (AttemptTimer) - best_times: any attempt;
+## clean_times: attempts with no Hint (free or paid), Undo or Hammer.
+## Saved as [times] / [clean_times]; a missing level means "no recorded
+## time" (never 0). Both only ever improve (replays count); a clean time
+## is also an overall time, so best_times[n] <= clean_times[n] always.
+var best_times: Dictionary = {}
+var clean_times: Dictionary = {}
 ## Levels completed PERFECT at least once (first PERFECT pays coins).
 var perfect_levels: Array = []
 var coins: int = 0
@@ -186,6 +194,9 @@ func _apply_cfg(cfg: ConfigFile) -> void:
 	haptics_on = bool(_cfg.get_value("settings", "haptics", true))
 	best_scores = _int_section("scores")
 	best_stars = _int_section("stars")
+	best_times = _time_section("times")
+	clean_times = _time_section("clean_times")
+	_fix_time_order()
 	coins = int(_cfg.get_value("economy", "coins", 0))
 	inventory = {"hint": 0, "hammer": 0}
 	inventory.merge(_cfg.get_value("economy", "inventory", {}), true)
@@ -430,6 +441,13 @@ func _fill_cfg() -> void:
 		_cfg.set_value("scores", str(n), best_scores[n])
 	for n in best_stars:
 		_cfg.set_value("stars", str(n), best_stars[n])
+	for pair in [["times", best_times], ["clean_times", clean_times]]:
+		# Only valid records exist in memory; an invalid stored value is
+		# replaced (never kept beside a valid one).
+		if _cfg.has_section(pair[0]):
+			_cfg.erase_section(pair[0])
+		for n in pair[1]:
+			_cfg.set_value(pair[0], str(n), pair[1][n])
 
 
 func _write_file(text: String) -> bool:
@@ -584,6 +602,14 @@ func merge_from(o: PlayerProgress) -> Dictionary:
 		best_scores[n] = maxi(int(best_scores.get(n, 0)), int(o.best_scores[n]))
 	for n in o.best_stars:
 		best_stars[n] = maxi(int(best_stars.get(n, 0)), int(o.best_stars[n]))
+	# Times: the smaller valid record of each level wins (never a missing
+	# or invalid one).
+	for pair in [[best_times, o.best_times], [clean_times, o.clean_times]]:
+		for n in pair[1]:
+			var t: int = int(pair[1][n])
+			if valid_time(t) and (not pair[0].has(n) or t < int(pair[0][n])):
+				pair[0][n] = t
+	_fix_time_order()
 	highest_completed = maxi(highest_completed, o.highest_completed)
 	highest_unlocked = maxi(highest_unlocked, o.highest_unlocked)
 	last_completed_level = maxi(last_completed_level, o.last_completed_level)
@@ -643,6 +669,65 @@ func extra(section: String, key: String, default: Variant = null) -> Variant:
 
 func set_extra(section: String, key: String, value: Variant) -> void:
 	_cfg.set_value(section, key, value)
+
+
+## A level time worth keeping: a positive whole number of ms, at most a day.
+const MAX_TIME_MS := 86_400_000
+
+
+static func valid_time(ms: int) -> bool:
+	return ms > 0 and ms <= MAX_TIME_MS
+
+
+func best_time(number: int) -> int:
+	return int(best_times.get(number, 0))
+
+
+func best_clean_time(number: int) -> int:
+	return int(clean_times.get(number, 0))
+
+
+## Records a SUCCESSFUL attempt's active time (ms). `clean`: no Hint, Undo
+## or Hammer was used. Improves best_times (any attempt) and clean_times
+## (clean attempts) independently - replays count, slower or invalid times
+## change nothing. Does not save: the level result (record_result) saves.
+func record_time(number: int, ms: int, clean: bool) -> Dictionary:
+	var out := {"time_ms": ms, "clean": clean, "best_before": best_time(number), "clean_before": best_clean_time(number),
+		"new_best_time": false, "new_clean_time": false}
+	if valid_time(ms) and number > 0:
+		if clean and (not clean_times.has(number) or ms < int(clean_times[number])):
+			clean_times[number] = ms
+			out["new_clean_time"] = true
+		if not best_times.has(number) or ms < int(best_times[number]):
+			best_times[number] = ms
+			out["new_best_time"] = true
+	out["best_after"] = best_time(number)
+	out["clean_after"] = best_clean_time(number)
+	return out
+
+
+## Valid time records of a section: level -> ms. Anything else (0,
+## negative, too large, not a number, not a level) is "no recorded time".
+func _time_section(section: String) -> Dictionary:
+	var out := {}
+	if not _cfg.has_section(section):
+		return out
+	for key in _cfg.get_section_keys(section):
+		var v = _cfg.get_value(section, key)
+		if not String(key).is_valid_int() or int(key) <= 0 or not (typeof(v) == TYPE_INT or typeof(v) == TYPE_FLOAT):
+			continue
+		var ms := int(v)
+		if valid_time(ms):
+			out[int(key)] = ms
+	return out
+
+
+## A clean time is also an overall time: BEST TIME is never slower than
+## BEST CLEAN TIME.
+func _fix_time_order() -> void:
+	for n in clean_times:
+		if not best_times.has(n) or int(best_times[n]) > int(clean_times[n]):
+			best_times[n] = clean_times[n]
 
 
 func _int_section(section: String) -> Dictionary:

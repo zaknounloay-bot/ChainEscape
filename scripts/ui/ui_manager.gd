@@ -51,6 +51,7 @@ var _settings: Dictionary = {"music": true, "sfx": true, "haptics": true}
 ##   LEVEL SCORE = this attempt on this level (a smaller, labelled line).
 ##   LEVEL BEST  = this level's personal best.
 var _card_reward: Label  # "NEW BEST!" / "LEVEL BEST  1,234"
+var _card_time: Label  # "TIME 0:42  ·  BEST 0:38" / "... NEW BEST TIME!" (active play)
 var _card_score: Label  # the big number: TOTAL SCORE
 var _card_score_caption: Label  # "TOTAL SCORE"
 var _card_gain: Label  # "+800" (how much this run added to the total)
@@ -437,6 +438,11 @@ func show_complete(r: Dictionary) -> void:
 	else:
 		_card_reward.text = "LEVEL BEST  %s" % _fmt(r["best"])
 		_card_reward.add_theme_color_override("font_color", Palette.TEXT_SOFT)
+	# TIMING + PERSONAL BEST: this attempt's active-play time, and the best
+	# before it (a first time is simply shown; a faster one is a record).
+	_card_time.text = time_line(int(r.get("time_ms", 0)), int(r.get("best_time_before", 0)), bool(r.get("new_best_time", false)))
+	_card_time.add_theme_color_override("font_color", Palette.ACCENT if r.get("new_best_time", false) and int(r.get("best_time_before", 0)) > 0 else Palette.TEXT_SOFT)
+	_card_time.visible = _card_time.text != ""
 	# TOTAL SCORE only ever grows: it rises by the improvement over this
 	# level's previous best, and stays put on a worse run or a replay.
 	var total_after: int = r.get("total_after", 0)
@@ -605,6 +611,26 @@ const MAJOR_MARGIN := 40.0
 var _major: VBoxContainer
 
 
+## "0:42", "12:05", "1:02:03" - whole seconds (rounded down).
+static func fmt_time(ms: int) -> String:
+	var s := maxi(ms, 0) / 1000
+	if s >= 3600:
+		return "%d:%02d:%02d" % [s / 3600, (s / 60) % 60, s % 60]
+	return "%d:%02d" % [s / 60, s % 60]
+
+
+## The level card's time line: "" (no time), "TIME 0:42" (the first time on
+## this level), "TIME 0:42  ·  BEST 0:38", or "TIME 0:36  ·  NEW BEST TIME!".
+static func time_line(time_ms: int, best_before_ms: int, new_best: bool) -> String:
+	if time_ms <= 0:
+		return ""
+	if best_before_ms <= 0:
+		return "TIME %s" % fmt_time(time_ms)
+	if new_best:
+		return "TIME %s   ·   NEW BEST TIME!" % fmt_time(time_ms)
+	return "TIME %s   ·   BEST %s" % [fmt_time(time_ms), fmt_time(best_before_ms)]
+
+
 static func _fmt(n: int) -> String:
 	var s := str(n)
 	var out := ""
@@ -622,6 +648,7 @@ func _set_card_mode(complete: bool) -> void:
 	_card_gain.visible = complete and _card_gain.text != ""
 	_card_total.visible = complete
 	_card_reward.visible = complete
+	_card_time.visible = complete and _card_time.text != ""
 	_card_buttons.visible = complete
 
 
@@ -759,6 +786,8 @@ func _build() -> void:
 	card_box.add_child(_card_total)
 	_card_reward = _make_label(24, Palette.ACCENT, 900)
 	card_box.add_child(_card_reward)
+	_card_time = _make_label(22, Palette.TEXT_SOFT, 800)
+	card_box.add_child(_card_time)
 	_card_stats = _make_label(22, Palette.TEXT_SOFT, 800)
 	_card_coins = _make_label(26, Color("#D98A00"), 900)
 	_card_coins.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART

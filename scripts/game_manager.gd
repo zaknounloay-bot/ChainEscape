@@ -63,6 +63,18 @@ var current_chapter: int = 1
 var chapter_log: bool = OS.is_debug_build()
 ## Coins from Silver/Gold blocks collected during this attempt (level card).
 var reward_coins_attempt: int = 0
+## TIMING + PERSONAL BEST: this attempt's ACTIVE play time (AttemptTimer,
+## ticked in _process) and whether a Hint (free or paid), Undo or Hammer
+## was used in it (an ASSISTED attempt; mistakes and lost hearts are not
+## assistance). Both reset with every new attempt (start_level).
+var attempt_timer := AttemptTimer.new()
+var attempt_assisted: bool = false
+## The finished attempt's time record (PlayerProgress.record_time) for the
+## level card and the browser tests; {} until a level is cleared.
+var last_time_result: Dictionary = {}
+## Web: the page's visibilitychange / pagehide / pageshow listener (kept
+## referenced, or the callback is collected).
+var _visibility_cb: JavaScriptObject
 var reward_notes: Array = []
 ## Chapter whose "Chapter Complete" moment waits for the next NEXT tap
 ## (0 = none). Set once, when the Chapter is completed for the first time.
@@ -141,6 +153,7 @@ func _ready() -> void:
 	elif lab != "":
 		OpeningLab.apply(lab)
 	progress = PlayerProgress.new().load_from_disk()
+	_watch_page_visibility()
 	if ExperienceLab.qa:
 		progress = ExperienceLab.qa_session(progress, level_manager)  # QA save only: resume or a fresh session
 	if TwinsPrototype.active:
@@ -271,9 +284,16 @@ func request_restore() -> void:
 
 
 var _published_panels := ""
+var _frame_usec := Time.get_ticks_usec()
 
 
 func _process(delta: float) -> void:
+	# The attempt clock uses the real monotonic clock between frames, not
+	# `delta`: Godot smooths delta (delta_smoothing), which under-reports
+	# real time when frames are uneven.
+	var now_usec := Time.get_ticks_usec()
+	attempt_timer.tick((now_usec - _frame_usec) / 1_000_000.0, _attempt_active())
+	_frame_usec = now_usec
 	if OS.has_feature("web"):
 		# Re-publish the state snapshot when a panel opens or closes (its
 		# button positions are only laid out while it is visible).
@@ -293,6 +313,48 @@ func _process(delta: float) -> void:
 		apply_restore(text)
 	elif not bool(WebBridge.call_api("dialogOpen")):
 		_awaiting_import = false
+
+
+## TIMING: is this attempt's clock running? Only while the board takes
+## input and nothing blocks play: not before CONTINUE (title), not during
+## the NEW MECHANIC card, a menu (Settings, Shop, Level Select, recovery),
+## the Chapter card, the level card, the out-of-hearts beat or after the
+## winning move. (The page being hidden is AttemptTimer.page_hidden.)
+## A few bool reads per frame - no allocation.
+func _attempt_active() -> bool:
+	return level != null and not completed and not game_over and board.input_enabled and mechanic_intro == null \
+		and not ui.is_title_open() and not ui.is_settings_open() and not ui.is_shop_open() and not ui.is_level_select_open() \
+		and not ui.is_recovery_open() and not ui.is_chapter_card_open() and not ui.is_complete_visible() and not debug_panel.visible
+
+
+## Web: Safari in the background, the phone locked, another tab: the page
+## turns hidden (visibilitychange; pagehide when it is put away) and the
+## attempt's clock stops until it is visible again (the first frame after
+## that is dropped - it spans the hidden time). Browsers also stop drawing
+## frames while hidden; AttemptTimer.MAX_FRAME caps any long frame.
+## Window focus is not used: in the itch.io embed the iframe loses focus
+## while the game is still in plain view.
+func _watch_page_visibility() -> void:
+	if not OS.has_feature("web"):
+		return
+	var doc = JavaScriptBridge.get_interface("document")
+	var win = JavaScriptBridge.get_interface("window")
+	if doc == null or win == null:
+		return
+	_visibility_cb = JavaScriptBridge.create_callback(_on_page_visibility)
+	doc.addEventListener("visibilitychange", _visibility_cb)
+	win.addEventListener("pagehide", _visibility_cb)
+	win.addEventListener("pageshow", _visibility_cb)
+	attempt_timer.set_page_hidden(bool(doc.hidden))
+
+
+func _on_page_visibility(args: Array) -> void:
+	var doc = JavaScriptBridge.get_interface("document")
+	var hidden := bool(doc.hidden) if doc != null else false
+	if not args.is_empty() and args[0] != null and str(args[0].type) == "pagehide":
+		hidden = true
+	attempt_timer.set_page_hidden(hidden)
+	publish_state.call_deferred()  # browser tests: page_hidden
 
 
 ## Restores a backup code (or pasted save text). Merges: never loses what
@@ -449,6 +511,9 @@ func start_level(number: int, via: String = "load") -> void:
 	_total_blocks = model.block_count()
 	reward_coins_attempt = 0
 	reward_notes = []
+	attempt_timer.reset()  # every attempt is timed on its own
+	attempt_assisted = false
+	last_time_result = {}
 	if pending_chapter_card != 0 and Chapters.chapter_of(number) != pending_chapter_card:
 		pending_chapter_card = 0  # the player moved on to another Chapter
 	max_hearts = level.hearts if level.hearts >= 0 else (MAX_HEARTS if number >= HEARTS_FROM_LEVEL else 0)
@@ -909,6 +974,9 @@ func _out_of_hearts() -> void:
 
 
 func _on_board_cleared() -> void:
+	# The winning move: the attempt's time stops here, before celebrations.
+	var time_ms := attempt_timer.finish()
+	last_time_result = progress.record_time(current_level, time_ms, not attempt_assisted)  # saved by record_result below
 	completed = true
 	board.input_enabled = false
 	_refresh_buttons()
@@ -920,6 +988,9 @@ func _on_board_cleared() -> void:
 	r["stars"] = ScoreRules.stars(level, r)
 	var rec := progress.record_result(current_level, r["score"], r["stars"], r["perfect"])
 	r.merge(rec, true)
+	r["time_ms"] = last_time_result["time_ms"]
+	r["best_time_before"] = last_time_result["best_before"]
+	r["new_best_time"] = last_time_result["new_best_time"]
 	# Coins: only improvements pay (see Economy.level_reward).
 	var chapter := Chapters.chapter_of(current_level)
 	var reward := Economy.level_reward(current_level, rec["first_clear"], rec["previous_stars"], r["stars"], rec["first_perfect"])
@@ -1078,6 +1149,7 @@ func undo() -> void:
 		_show_message("No undos left - Restart to try again", 2.4)
 		return
 	undos_used += 1
+	attempt_assisted = true
 	var state: Dictionary = history.pop()
 	model.restore(state["blocks"])
 	chain = state["chain"]
@@ -1133,6 +1205,7 @@ func request_hint() -> void:
 			progress.inventory["hint"] = owned - 1
 			progress.save()
 	hint_block = id
+	attempt_assisted = true  # a shown hint (free, paid or unlimited)
 	board.set_hint(id, model.twin_partner(id))
 	AudioManager.play_hint()
 	_refresh_buttons()
@@ -1207,6 +1280,7 @@ func _smash(id: int) -> void:
 	progress.inventory["hammer"] = progress.inventory.get("hammer", 0) - 1
 	progress.save()
 	hammers_used += 1
+	attempt_assisted = true
 	history.push(_capture_state())
 	# Reward rule: a Hammer never collects a Silver/Gold reward (the block is
 	# not marked collected either, so it can still be earned by play later).
@@ -1511,6 +1585,11 @@ func _notification(what: int) -> void:
 		NOTIFICATION_APPLICATION_FOCUS_OUT, NOTIFICATION_APPLICATION_PAUSED, NOTIFICATION_WM_GO_BACK_REQUEST:
 			if progress:
 				progress.save()
+			if not OS.has_feature("web") and what != NOTIFICATION_WM_GO_BACK_REQUEST:
+				attempt_timer.set_page_hidden(true)  # native: in the background
+		NOTIFICATION_APPLICATION_FOCUS_IN, NOTIFICATION_APPLICATION_RESUMED:
+			if not OS.has_feature("web"):
+				attempt_timer.set_page_hidden(false)
 		NOTIFICATION_WM_CLOSE_REQUEST:
 			if progress:
 				progress.save()
@@ -1578,7 +1657,7 @@ func publish_state() -> void:
 		"crates": model.blocks.values().filter(func(b): return b.is_crate()).size() if model else 0,
 		"seq_blocks": model.blocks.values().filter(func(b): return b.seq_stage != 0).size() if model else 0,
 		"chapter_card_open": ui.is_chapter_card_open(), "chapter_continue_text": ui._chapter_card._continue.text, "continue_text": ui._title._continue.text,
-		"next": center.call(ui._next_button), "chapter_continue": center.call(ui._chapter_card._continue),
+		"next": center.call(ui._next_button), "replay": center.call(ui._replay_button), "chapter_continue": center.call(ui._chapter_card._continue),
 		"title_continue": center.call(ui._title._continue), "levels_button": center.call(ui._levels_button),
 		"music": AudioManager.music_theme, "diag": last_diag,
 		"hud_total": ui.hud_total_text(), "card_big": ui._card_score.text, "card_caption": ui._card_score_caption.text,
@@ -1587,6 +1666,10 @@ func publish_state() -> void:
 		"settings_button": center.call(ui._settings_button), "backup_button": center.call(ui._backup_button),
 		"restore_button": center.call(ui._restore_button), "recovery_restore": center.call(ui._recovery_restore),
 		"recovery_new": center.call(ui._recovery_new),
+		"attempt_ms": attempt_timer.elapsed_ms(), "attempt_active": _attempt_active(), "attempt_assisted": attempt_assisted,
+		"page_hidden": attempt_timer.page_hidden, "time_result": last_time_result, "card_time": ui._card_time.text,
+		"best_time_ms": progress.best_time(current_level), "best_clean_ms": progress.best_clean_time(current_level),
+		"card_rect": [ui._card.get_global_rect().position.x / vis.x, ui._card.get_global_rect().position.y / vis.y, ui._card.get_global_rect().end.x / vis.x, ui._card.get_global_rect().end.y / vis.y],
 		"undo_button": center.call(ui._undo_button), "restart_button": center.call(ui._restart_button),
 		"hint_button": center.call(ui._hint_button), "hammer_button": center.call(ui._hammer_button), "hammer_armed": hammer_armed,
 		"magnets": model.blocks.values().filter(func(b): return b.magnet).size() if model else 0,
@@ -1907,6 +1990,7 @@ func play_hint_move() -> bool:
 	var id := Solver.from_model(model).recommend_move()
 	if id == -1:
 		return false
+	attempt_assisted = true  # developer auto-move / auto-solve
 	_on_block_tapped(id)
 	return true
 
