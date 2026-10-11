@@ -24,6 +24,8 @@ var _done: Array[String] = []
 func _check(cond: bool, what: String) -> void:
 	if cond:
 		passed += 1
+		if OS.get_cmdline_user_args().has("--verbose"):
+			print("ok: " + what)
 	else:
 		failures.append(what)
 		print("FAIL: " + what)
@@ -216,6 +218,26 @@ func _solve() -> void:
 		await _frames(1)
 
 
+## Taps the block the lesson's finger points at until the lesson ends.
+func _follow_lesson() -> int:
+	var taps := 0
+	for i in 30:
+		if game._lesson == "" or game.completed:
+			break
+		var id := -1
+		for bid in game.model.blocks:
+			if game.board._views.has(bid) and game.board._views[bid].hinted:
+				id = bid
+				break
+		if id < 0:
+			await _frames(5)
+			continue
+		game._on_block_tapped(id)
+		taps += 1
+		await _frames(2)
+	return taps
+
+
 ## Starts level n as a fresh attempt with no tip / lesson in the way.
 func _start(n: int) -> void:
 	game.start_level(n, "select")
@@ -397,7 +419,86 @@ func _game() -> void:
 			break
 		await _frames(2)
 	await _frames(3)
-	_check(game._attempt_active() and game.attempt_timer.elapsed > m0, "the card gone: the clock runs")
+	# Guided finger lesson (the first time a mechanic is taught): the player
+	# follows the finger - no clock until the lesson's key move ends it.
+	_check(game.mechanic_intro == null and game._lesson == "portal" and not game._attempt_active(), "the card gone, the PORTAL finger lesson runs: the clock does not run")
+	var l0 := game.attempt_timer.elapsed
+	await _frames(20)
+	_check(game.attempt_timer.elapsed == l0, "no time adds up while the guided lesson runs")
+	var steps := await _follow_lesson()
+	_check(game._lesson == "" and game.progress.tips_seen.has("lesson_portal") and steps > 0 and not game.completed, "the lesson's key move ends it (%d guided taps)" % steps)
+	await _frames(1)
+	var l1 := game.attempt_timer.elapsed
+	await _frames(20)
+	_check(game._attempt_active() and game.attempt_timer.elapsed > l1, "independent play: the clock runs again")
+	_check(not game.attempt_assisted, "following the lesson's finger is not assistance")
+	game.attempt_timer.elapsed = 3.0  # independent play after the lesson
+	await _solve()
+	r = game.last_time_result
+	_check(game.completed and r.get("clean", false) and _near(r.get("time_ms", 0), 3.0) and game.progress.best_clean_time(201) == r["time_ms"],
+		"the attempt records only independent play, clean (%d ms)" % r.get("time_ms", 0))
+	# Replay: the lesson was learned - no lesson, the clock runs from the start.
+	game.start_level(201, "replay")
+	await _frames(3)
+	_check(game._lesson == "" and game._attempt_active(), "replay of a lesson level: no lesson, the clock runs from the start")
+	# Every production lesson level: no clock while its lesson runs.
+	var taught: Array = []
+	for n in GameManager.LESSONS:
+		var kind: String = GameManager.LESSONS[n]
+		game.progress.tips_seen.erase("lesson_" + kind)
+		game.progress.highest_completed = maxi(game.progress.highest_completed, n - 1)
+		game.start_level(n, "select")
+		await _frames(2)
+		for i in 400:
+			if game.mechanic_intro == null:
+				break
+			await _frames(2)
+		await _frames(2)
+		if game._lesson != "":
+			var e := game.attempt_timer.elapsed
+			await _frames(10)
+			if game.attempt_timer.elapsed == e and not game._attempt_active():
+				taught.append(n)
+	_check(taught == GameManager.LESSONS.keys(), "every lesson that runs in the campaign stops the clock (lesson levels %s)" % [taught])
+	# A lesson ended early (the Hammer removes every block it is about) also
+	# resumes the clock; the Hammer itself makes the attempt assisted. The
+	# first lesson level where that is possible is used.
+	var ended := -1
+	for n in GameManager.LESSONS:
+		var kind: String = GameManager.LESSONS[n]
+		game.progress.tips_seen.erase("lesson_" + kind)
+		game.start_level(n, "select")
+		await _frames(2)
+		for i in 400:
+			if game.mechanic_intro == null:
+				break
+			await _frames(2)
+		await _frames(2)
+		for i in 8:
+			if game._lesson == "" or game.completed:
+				break
+			var target := -1
+			for bid in game._lesson_blocks(game._lesson):
+				if game.is_hammer_safe(bid) and not game.model.blocks[bid].is_crate():
+					target = bid
+					break
+			if target < 0:
+				break
+			game.progress.inventory["hammer"] = 3
+			if not game.hammer_armed:
+				game.toggle_hammer()
+			game._on_block_tapped(target)
+			await _frames(2)
+		if game._lesson == "" and game.hammers_used > 0 and not game.completed:
+			ended = n
+			break
+		if game.hammer_armed:
+			game.toggle_hammer()
+	await _frames(1)
+	var h1 := game.attempt_timer.elapsed
+	await _frames(10)
+	_check(ended > 0 and game._attempt_active() and game.attempt_timer.elapsed > h1 and game.attempt_assisted and not game.progress.tips_seen.has("lesson_" + GameManager.LESSONS[ended]),
+		"Hammer on the lesson's blocks (Level %d): the lesson ends quietly, the clock runs, the attempt is assisted (Hammer)" % ended)
 	# Records survive a reload from disk.
 	var reload := PlayerProgress.new(SAVE).load_from_disk()
 	_check(reload.best_times == game.progress.best_times and reload.clean_times == game.progress.clean_times and reload.best_time(1) > 0,

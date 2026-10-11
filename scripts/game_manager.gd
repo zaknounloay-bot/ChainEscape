@@ -319,10 +319,13 @@ func _process(delta: float) -> void:
 ## input and nothing blocks play: not before CONTINUE (title), not during
 ## the NEW MECHANIC card, a menu (Settings, Shop, Level Select, recovery),
 ## the Chapter card, the level card, the out-of-hearts beat or after the
-## winning move. (The page being hidden is AttemptTimer.page_hidden.)
+## winning move - and not while a guided finger lesson runs (`_lesson`, the
+## first time a mechanic is taught): it resumes the moment the lesson ends
+## (its key move done, _finish_lesson) and play is independent again.
+## (The page being hidden is AttemptTimer.page_hidden.)
 ## A few bool reads per frame - no allocation.
 func _attempt_active() -> bool:
-	return level != null and not completed and not game_over and board.input_enabled and mechanic_intro == null \
+	return level != null and not completed and not game_over and board.input_enabled and mechanic_intro == null and _lesson == "" \
 		and not ui.is_title_open() and not ui.is_settings_open() and not ui.is_shop_open() and not ui.is_level_select_open() \
 		and not ui.is_recovery_open() and not ui.is_chapter_card_open() and not ui.is_complete_visible() and not debug_panel.visible
 

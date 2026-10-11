@@ -21,6 +21,9 @@
 // D: the level card (with the time line) fits iPhone SE / 14 / Pro Max:
 //    Level 1 first clear (coins line) in the production build and the
 //    Level 100 milestone card (QA jump, dev build).
+// F: the guided finger lesson (dev build, ?experiencelab=76): no clock
+//    under the Magnet card or while the player follows the finger; the
+//    clock starts when the lesson ends, and following it is not assistance.
 // E: no page errors.
 import http from 'node:http';
 import fs from 'node:fs';
@@ -280,6 +283,38 @@ try {
     check(cardFits(s) && TIME_RE.test(s.card_time) && s.card_title === '100 LEVELS ESCAPED!' && !s.time_result.clean,
       `D[${size}]: the Level 100 milestone card with "${s.card_time}" fits (${s.card_rect.map((v) => v.toFixed(3)).join(', ')}; auto-solve = assisted)`);
     await g.page.screenshot({ path: path.join(shots, `timing_${size}_card_level100.png`) });
+    await g.ctx.close();
+  }
+  // ===== F: guided finger lesson =====
+  {
+    const dir = fs.mkdtempSync(path.join(os.tmpdir(), 'ce-timing-'));
+    g = await open(DEV + '?experiencelab=76&qareset=1', dir, 'iphone14');
+    s = await waitFor(g, (x) => x.level === 76 && x.lab_qa && !x.title_open, 'QA 76');
+    s = await waitFor(g, (x) => !x.intro_open && x.lesson === 'magnet' && x.lesson_target.length === 2, 'magnet lesson', 20000);
+    const a0 = s.attempt_ms;
+    check(!s.attempt_active && a0 < 300, `F: the Magnet card and the finger lesson: the clock does not run (${a0} ms, active ${s.attempt_active})`);
+    await sleep(3000);  // reading the lesson
+    let taps = 0, lastTap = Date.now();
+    for (; taps < 8; taps++) {
+      s = await state(g);
+      if (s.lesson !== 'magnet') break;
+      lastTap = Date.now();
+      await tapAt(g, s.lesson_target);
+      await sleep(1200);  // following the finger
+    }
+    s = await waitFor(g, (x) => x.lesson === '', 'lesson ends', 8000);
+    const tFree = lastTap;  // the lesson ends on its key move (the last guided tap)
+    check(s.attempt_ms - a0 < 400 && s.attempt_active && !s.attempt_assisted,
+      `F: ${taps} guided taps over ${taps * 1.2 + 3} s added ${s.attempt_ms - a0} ms; the lesson over, the clock runs; not assisted`);
+    await sleep(2000);  // independent play
+    await g.page.focus('canvas').catch(() => {});
+    const tPanel = Date.now();
+    await g.page.keyboard.press('F1'); await sleep(250);
+    await g.page.keyboard.press('s');
+    s = await waitFor(g, (x) => x.card_open && x.level === 76, 'card 76', 120000);
+    await g.page.keyboard.press('F1');
+    const t = s.time_result.time_ms;
+    check(t <= tPanel - tFree + 300 && t >= 1500, `F: the recorded time is the independent play only (${t} ms of ${tPanel - tFree} ms since the lesson ended)`);
     await g.ctx.close();
   }
 } catch (e) {
