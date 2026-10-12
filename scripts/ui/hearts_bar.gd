@@ -5,6 +5,10 @@ extends Control
 
 const HEART_SIZE := 34.0
 const GAP := 12.0
+## This bar's heart size / gap (HEART_SIZE / GAP unless the HUD sets them
+## before the bar enters the tree).
+var heart_size: float = HEART_SIZE
+var gap: float = GAP
 
 var max_hearts: int = 3
 ## Color of lost-heart outlines (lighter on dark Chapters).
@@ -18,7 +22,7 @@ var _shake: float = 0.0
 
 
 func _ready() -> void:
-	custom_minimum_size = Vector2(3 * HEART_SIZE + 2 * GAP, HEART_SIZE + 8)
+	custom_minimum_size = Vector2(3 * heart_size + 2 * gap, heart_size + 8)
 	mouse_filter = Control.MOUSE_FILTER_IGNORE
 
 
@@ -31,7 +35,7 @@ func set_hearts(p_max: int, current: int) -> void:
 	_fall.fill(0.0)
 	_fall_alpha.resize(max_hearts)
 	_fall_alpha.fill(0.0)
-	custom_minimum_size.x = max_hearts * HEART_SIZE + (max_hearts - 1) * GAP
+	custom_minimum_size.x = max_hearts * heart_size + (max_hearts - 1) * gap
 	queue_redraw()
 
 
@@ -52,14 +56,14 @@ func lose_heart() -> void:
 
 
 func _draw() -> void:
-	var total := max_hearts * HEART_SIZE + (max_hearts - 1) * GAP
-	var x0 := (size.x - total) * 0.5 + HEART_SIZE * 0.5
+	var total := max_hearts * heart_size + (max_hearts - 1) * gap
+	var x0 := (size.x - total) * 0.5 + heart_size * 0.5
 	for i in max_hearts:
-		var c := Vector2(x0 + i * (HEART_SIZE + GAP), size.y * 0.5)
+		var c := Vector2(x0 + i * (heart_size + gap), size.y * 0.5)
 		if i == hearts:
 			c.x += sin(_shake * 40.0) * 5.0 * _shake
 		var full := i < hearts
-		var s: float = HEART_SIZE * _pop[i]
+		var s: float = heart_size * _pop[i]
 		if full:
 			_draw_heart(c + Vector2(0, 2), s, Color(0.5, 0.0, 0.1, 0.18))  # tiny shadow
 			_draw_heart(c, s, Palette.HEART)

@@ -135,22 +135,28 @@ Recommendation: option 1. It is quiet, has no effect on the result card's height
 - Chromium's CDP page-freeze does not stop frames in the headless setup, so real suspension is a real-iPhone QA item.
 - Under headless SwiftShader every screenshot stalls the page for 0.3–0.45 s, and the 0.25 s cap takes that off by design. The test reads the page's own frame times and allows for exactly that.
 
-## Live timer HUD (QA builds only)
+## Gameplay HUD, layout C (QA builds only)
 
-A visible clock during play. It appears in **QA, dev and lab builds only**: `BuildFlags.live_timer_hud()` is false in the player (production) build, so the production candidate is unchanged until it is approved.
+Approved after real-iPhone feedback that TIME, MY BEST and the hearts were too small. It appears in **QA, dev and lab builds only** (`BuildFlags.live_timer_hud()`). The player (production) build keeps the released HUD until approved: coins top-right, 34-unit hearts, the CHAIN popup.
 
-- **TIME:** the last row of the TOTAL SCORE column, top-left, `TIME 1:04`. It flows directly under the score number whatever the device's font metrics.
-- **MY BEST:** one line under the coin pill, top-right, `MY BEST 0:38`: always this player's own Personal Best, never a global one. It shows an em dash (—) when the level has no record yet.
-- **Style:** the TOTAL SCORE style in the chapter's colours. The captions TIME and MY BEST are 19 pt soft (about 27 % larger than TOTAL SCORE's 15 pt caption, for legibility); the values are 26 pt bold. The values use tabular (fixed-width) digits and a fixed width, so nothing shifts as they tick.
-- **Source of truth:** `AttemptTimer` only. The HUD shows `elapsed_ms()` as M:SS; milliseconds stay internal.
-  - The text changes only when the visible second changes: one update per second, with no animation and no extra render loop.
-  - Every new attempt (start, Restart, Replay, retry, Level Select) shows 0:00 at once.
-  - The final time stays as recorded.
-- **Paused states:** whenever the clock is paused, the TIME value is frozen. That covers menus, the NEW MECHANIC card, guided lessons, a hidden page and the out-of-hearts beat.
-- **Result card:** the HUD steps aside while it is open, because the card shows TIME | PERSONAL BEST itself.
-- **Records:** MY BEST is read from the stored record. The HUD never changes a record.
-- **Layout:** checked on iPhone SE, 14 and Pro Max, including hearts levels, lesson levels and the Master Level. TIME and MY BEST overlap none of: hearts, TOTAL SCORE, coins, level title, chapter line, progress bar, the CHAIN label at its largest resting size, or the board area.
-  - Known minor item: the pop of a x10+ chain starts up to 1.41× larger for 0.22 s and can momentarily brush the end of the TIME row. The chain label is drawn underneath the HUD.
+| Area | Layout C |
+|---|---|
+| Left | TOTAL SCORE (unchanged); the **coin pill directly under it** (150×56). It keeps the same SHOP action, and coin fly-ins follow it. |
+| Centre | **Hearts 44** units, gap 15 (released: 34 / 12). Same mechanics and life-loss animation. |
+| Right | **TIME** over **MY BEST**, right-aligned under the Settings button. Captions 27, values 34, tabular digits. Captions use the Chapter's text colour blended 35 % toward the soft colour, so they keep strong contrast on light and dark Chapters. MY BEST is always the player's own Personal Best. |
+| CHAIN | The **CHAIN xN popup is hidden**. The chain counter, its escape bonus (`ScoreRules.escape_points`), combo sounds, rising pitch, faster escape animation and haptics are unchanged. |
+
+- **Positions** (logical units on a 720-wide screen, plus the safe-area top):
+  - the column starts at +190 and ends around +276, above the board area (+290), so even the tallest board never meets it;
+  - the coins sit at TOTAL SCORE's measured bottom + 6, re-placed whenever TOTAL SCORE changes size.
+- **The live timer:** `AttemptTimer` is the only source. M:SS updates once per visible second; 0:00 on every new attempt; frozen whenever the clock is paused; hidden under the result card, which shows the times. MY BEST shows the stored record, or a dash.
+- **Checked** on iPhone SE, 14 and Pro Max:
+  - light and dark Chapters, long headings (Levels 30, 255) and the Master Level;
+  - hearts at 3, 2 and 1;
+  - a TOTAL SCORE of 1,350,000;
+  - a streak up to x24 (no popup).
+  
+  No top-HUD element overlaps another or the board. The one exception is the TOTAL SCORE box and the chapter-line box, which have always touched, with the text apart.
 
 ### Fairness note for a future competition decision (not changed here)
 

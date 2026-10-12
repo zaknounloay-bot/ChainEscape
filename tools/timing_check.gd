@@ -226,9 +226,34 @@ func _live_hud() -> void:
 	var records := [game.progress.best_times.duplicate(), game.progress.clean_times.duplicate()]
 	await _start(7)
 	var st: Dictionary = ui.live_timer_state()
-	_check(st["time_caption"] == "TIME" and st["best_caption"] == "MY BEST" and st["caption_size"] == 19 and st["value_size"] == 26
-		and game.ui._hud_time_caption.get_theme_font_size("font_size") == 19 and game.ui._hud_time_value.get_theme_font_size("font_size") == 26,
-		"captions TIME / MY BEST at 19 pt (was 15), values still 26 pt")
+	_check(st["time_caption"] == "TIME" and st["best_caption"] == "MY BEST" and st["caption_size"] == 27 and st["value_size"] == 34
+		and ui._hud_time_caption.get_theme_font_size("font_size") == 27 and ui._hud_time_value.get_theme_font_size("font_size") == 34,
+		"layout C: captions TIME / MY BEST 27, values 34")
+	_check(ui._hearts.heart_size == 44.0 and ui._hearts.gap == 15.0, "layout C: hearts 44, gap 15")
+	_check(ui._coin_pill.get_global_rect().get_center().x < ui.get_viewport().get_visible_rect().size.x * 0.5
+		and ui._coin_pill.get_global_rect().position.y >= ui._hud_total.get_global_rect().end.y,
+		"layout C: the coin pill sits under TOTAL SCORE (left)")
+	# Layout C: no CHAIN popup - but the chain, its escape bonus and the score
+	# work exactly as before.
+	var pts0: int = game.escape_points
+	var esc := 0
+	for i in 3:
+		var mv := Solver.from_model(game.model).recommend_move()
+		if mv < 0 or game.model.move_state(mv) != "ok":
+			break
+		var c_before: int = game.chain
+		game._on_block_tapped(mv)
+		await _frames(1)
+		if game.chain == c_before + 1:
+			esc += 1
+	var want := 0
+	for c in range(1, esc + 1):
+		want += ScoreRules.escape_points(c)
+	st = ui.live_timer_state()
+	_check(esc >= 2 and game.chain == esc and game.escape_points - pts0 == want and not st["chain_visible"] and ui._chain_label.modulate.a == 0.0,
+		"layout C: a %d-escape chain scores %d (ScoreRules), the CHAIN popup stays hidden" % [esc, game.escape_points - pts0])
+	await _start(7)
+	st = ui.live_timer_state()
 	_check(st["visible"] and st["time"] == "0:00" and st["best"] == UIManager.NO_BEST_TEXT and game.progress.best_time(7) == 0,
 		"new attempt: TIME 0:00, BEST shows a dash (no record yet): %s / %s" % [st["time"], st["best"]])
 	# The text follows AttemptTimer; only whole seconds change it.
@@ -317,14 +342,15 @@ func _live_hud() -> void:
 	var tr_r := Rect2(Vector2(st["time_rect"][0], st["time_rect"][1]), Vector2(st["time_rect"][2] - st["time_rect"][0], st["time_rect"][3] - st["time_rect"][1]))
 	var br_r := Rect2(Vector2(st["best_rect"][0], st["best_rect"][1]), Vector2(st["best_rect"][2] - st["best_rect"][0], st["best_rect"][3] - st["best_rect"][1]))
 	var others := {"hearts": ui._hearts.get_global_rect(), "total score": ui._hud_total_value.get_global_rect(), "coins": ui._coin_pill.get_global_rect(),
-		"level title": ui._level_label.get_global_rect(), "chapter line": ui._name_label.get_global_rect(), "board area": ui.get_board_area()}
+		"level title": ui._level_label.get_global_rect(), "chapter line": ui._name_label.get_global_rect(), "board": Rect2(game.board.global_position - Vector2.ONE * game.board.cell_size * Board.PADDING_CELLS,
+			Vector2(game.board.columns + 2 * Board.PADDING_CELLS, game.board.rows + 2 * Board.PADDING_CELLS) * game.board.cell_size)}
 	var hits := []
 	for k in others:
 		var o: Rect2 = frac.call(others[k])
 		if o.size.x > 0 and (o.intersects(tr_r) or o.intersects(br_r)):
 			hits.append(k)
 	_check(game.max_hearts > 0 and st["visible"] and hits.is_empty() and tr_r.position.x >= 0 and br_r.end.x <= 1.0,
-		"hearts level 6: TIME / BEST overlap nothing (%s)" % [hits])
+		"hearts level 6: TIME / MY BEST overlap nothing, the board included (%s)" % [hits])
 	# NEW MECHANIC card: the HUD is at 0:00 and frozen until the card is gone.
 	game.progress.tips_seen.erase("intro_sequence")
 	game.progress.tips_seen.append("lesson_sequence")

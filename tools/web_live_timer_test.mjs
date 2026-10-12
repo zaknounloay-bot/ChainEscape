@@ -1,23 +1,32 @@
-// LIVE TIMER HUD (QA builds): TIME under TOTAL SCORE, MY BEST under the coins,
-// in real Chromium at iPhone sizes.
+// LIVE TIMER HUD + LAYOUT C (QA / dev builds): coins under TOTAL SCORE,
+// 44-unit hearts in the centre, TIME / MY BEST stacked on the right, no
+// CHAIN xN popup - in real Chromium at iPhone sizes.
 //
 //   godot --headless --path . --export-release "Web QA" build/web_qa/index.html
 //   godot --headless --path . --export-release "Web Friend Test" build/web_friend/index.html
-//   SHOTS=<dir> node tools/web_live_timer_test.mjs build/web_qa build/web_friend
+//   godot --headless --path . --export-release "Web" build/web/index.html
+//   SHOTS=<dir> node tools/web_live_timer_test.mjs build/web_qa build/web_friend build/web
 //
-// Q: the QA build (?experiencelab=N, its own QA save):
-//    - Level 6 (hearts) on iPhone SE: captions TIME / MY BEST (19 pt), TIME
-//      0:00 / MY BEST dash at the start,
-//      overlapping nothing; ~3 s later TIME = AttemptTimer as M:SS; after
-//      the clear the HUD's TIME = the card's TIME and BEST = the record.
-//    - Level 13 (Lock finger lesson): TIME stays 0:00 while the lesson runs.
-//    - Level 76 (Magnet NEW MECHANIC card): TIME stays 0:00 under the card.
-//    - Level 251 (hearts + Movable lesson) on iPhone 14, Level 100 on Pro
-//      Max: overlapping nothing.
-// I: storage isolation: a release save (chain_escape_save_r2) and an old
-//    save (chain_escape_save) in the same browser stay byte-identical; the
-//    QA build writes only chain_escape_experiencelab_qa_save.
-// P: the player (production) build shows no live timer HUD.
+// Q: the QA build (?experiencelab=N, its own QA save), iPhone SE first:
+//    - sizes: captions TIME / MY BEST 27, values 34, hearts 44 (gap 15);
+//    - no overlaps between any top-HUD elements (TOTAL SCORE, coins,
+//      hearts, title, chapter line, progress, buttons, TIME / MY BEST) and
+//      none of them over the board;
+//    - TIME follows AttemptTimer; the result card hides the HUD; HUD TIME =
+//      card TIME, MY BEST = the stored record; coins earned;
+//    - hearts 3 -> 2 -> 1 after blocked taps, still centred, nothing overlaps;
+//    - the coin pill (left) opens the SHOP;
+//    - a long auto-solve streak: the chain grows, the CHAIN popup never shows;
+//    - lesson (13) and NEW MECHANIC (76) levels: TIME stays 0:00;
+//    - light / dark Chapters, long headings, the Master Level on SE / 14 /
+//      Pro Max.
+// T: the dev build with a save worth 1,350,000 points: TOTAL SCORE fits, the
+//    coins sit under it, nothing overlaps.
+// I: storage isolation: the release save (chain_escape_save_r2) and the old
+//    save (chain_escape_save) stay byte-identical; the QA build writes only
+//    chain_escape_experiencelab_qa_save.
+// P: the player (production) build: no live HUD, coins top-right, released
+//    hearts (34), the CHAIN popup still shows.
 // E: no page errors.
 import http from 'node:http';
 import fs from 'node:fs';
@@ -33,11 +42,12 @@ try { pw = await import('playwright'); } catch {
 const { chromium } = pw;
 const qaRoot = path.resolve(process.argv[2] || 'build/web_qa');
 const prodRoot = path.resolve(process.argv[3] || 'build/web_friend');
+const devRoot = path.resolve(process.argv[4] || 'build/web');
 const types = { '.html': 'text/html', '.js': 'text/javascript', '.wasm': 'application/wasm', '.pck': 'application/octet-stream', '.png': 'image/png' };
 const server = http.createServer((req, res) => {
-  const m = req.url.split('?')[0].match(/^\/(qa|prod)\/(.*)$/);
+  const m = req.url.split('?')[0].match(/^\/(qa|prod|dev)\/(.*)$/);
   if (!m) { res.writeHead(404); res.end(); return; }
-  const file = path.join(m[1] === 'qa' ? qaRoot : prodRoot, decodeURIComponent(m[2] || 'index.html'));
+  const file = path.join({ qa: qaRoot, prod: prodRoot, dev: devRoot }[m[1]], decodeURIComponent(m[2] || 'index.html'));
   fs.readFile(file, (err, data) => {
     if (err) { res.writeHead(404); res.end(); return; }
     res.writeHead(200, { 'Content-Type': types[path.extname(file)] || 'application/octet-stream' });
@@ -46,6 +56,7 @@ const server = http.createServer((req, res) => {
 }).listen(8792, '127.0.0.1');
 const QA = 'http://127.0.0.1:8792/qa/index.html';
 const PROD = 'http://127.0.0.1:8792/prod/index.html';
+const DEV = 'http://127.0.0.1:8792/dev/index.html';
 
 const results = [];
 const check = (ok, msg) => { results.push([ok, msg]); console.log((ok ? 'PASS ' : 'FAIL ') + msg); };
@@ -90,6 +101,21 @@ async function sample(g) {
   return s;
 }
 const lt = (s) => s.live_timer;
+// Layout C: nothing in the top HUD overlaps, and nothing reaches the board.
+const layoutOk = (s) => lt(s).overlaps.length === 0
+  && ['r_col', 'r_coins', 'r_total', 'r_hearts'].every((k) => lt(s)[k][3] <= s.board_panel[1])
+  && lt(s).r_col[3] <= lt(s).board_area_top;  // above the board AREA: clear of the tallest possible board
+const layoutDesc = (s) => `overlaps: ${lt(s).overlaps.join(', ') || 'none'}; TIME/MY BEST column ends ${lt(s).r_col[3].toFixed(3)}, board area ${lt(s).board_area_top.toFixed(3)}, board ${s.board_panel[1].toFixed(3)}`;
+const coinsLeft = (s) => (lt(s).r_coins[0] + lt(s).r_coins[2]) / 2 < 0.5 && lt(s).r_coins[1] >= lt(s).r_total[3] - 0.001;
+const tapFrac = (g, x, y) => g.page.touchscreen.tap(x * g.W, y * g.H);
+function saveText(cleared, current, coins) {
+  const lines = ['[meta]', '', 'version=5', 'seq=7', '', '[progress]', '', `current_level=${current}`, `highest_completed=${cleared}`,
+    `highest_unlocked=${cleared + 1}`, '', '[economy]', '', `coins=${coins}`, '', '[chapters]', '', 'tips_seen=["intro_portal", "intro_magnet", "lesson_lock", "lesson_magnet", "lesson_switch", "lesson_gate", "lesson_armor", "lesson_twins"]', '', '[scores]', ''];
+  for (let n = 1; n <= cleared; n++) lines.push(`${n}=9000`);
+  lines.push('', '[stars]', '');
+  for (let n = 1; n <= cleared; n++) lines.push(`${n}=3`);
+  return lines.join('\n') + '\n';
+}
 const desc = (s) => `${lt(s).time_caption} ${lt(s).time} | ${lt(s).best_caption} ${lt(s).best}`;
 
 try {
@@ -98,12 +124,15 @@ try {
   // ===== Q: Level 6 (hearts) on iPhone SE =====
   let g = await open(QA + '?experiencelab=6&qareset=1', profile, 'iphoneSE', seed);
   let s = await waitFor(g, (x) => x.level === 6 && x.lab_qa && !x.title_open && !x.intro_open, 'QA 6');
-  check(lt(s).time_caption === 'TIME' && lt(s).best_caption === 'MY BEST' && lt(s).caption_size === 19 && lt(s).value_size === 26,
-    `Q[SE] captions "${lt(s).time_caption}" / "${lt(s).best_caption}" at ${lt(s).caption_size} pt, values ${lt(s).value_size} pt`);
-  check(s.qa_build && lt(s).visible && lt(s).time === '0:00' && lt(s).best === '—' && s.max_hearts > 0,
+  check(lt(s).time_caption === 'TIME' && lt(s).best_caption === 'MY BEST' && lt(s).caption_size === 27 && lt(s).value_size === 34
+    && lt(s).heart_size === 44 && lt(s).heart_gap === 15,
+    `Q[SE] layout C sizes: captions "${lt(s).time_caption}" / "${lt(s).best_caption}" ${lt(s).caption_size}, values ${lt(s).value_size}, hearts ${lt(s).heart_size} (gap ${lt(s).heart_gap})`);
+  check(s.qa_build && lt(s).visible && lt(s).time === '0:00' && lt(s).best === '\u2014' && s.max_hearts > 0,
     `Q[SE] L6 (hearts ${s.max_hearts}): the HUD at the start: ${desc(s)}`);
   if (process.env.DEBUG) console.log(JSON.stringify(lt(s)));
-  check(lt(s).overlaps.length === 0, `Q[SE] L6: TIME / MY BEST overlap nothing (${lt(s).overlaps.join(', ') || 'none'}; TIME ${lt(s).time_rect.map((v) => v.toFixed(3))}, BEST ${lt(s).best_rect.map((v) => v.toFixed(3))})`);
+  const s6 = await sample(g);  // once laid out (the first state is published as the level starts)
+  check(layoutOk(s6) && coinsLeft(s6), `Q[SE] L6: coins under TOTAL SCORE, nothing overlaps (${layoutDesc(s6)})`);
+  const coins0 = s.coins;
   await sleep(3300);
   s = await sample(g);
   check(lt(s).time === fmt(s.attempt_ms) && s.attempt_ms >= 2500 && s.attempt_ms <= 4500,
@@ -119,17 +148,63 @@ try {
   check(lt(s).time === s.time_panel.time && lt(s).best === fmt(s.best_time_ms) && s.best_time_ms === s.time_result.time_ms,
     `Q[SE] L6 cleared: HUD ${desc(s)} = card TIME ${s.time_panel.time}, stored BEST ${s.best_time_ms} ms`);
   check(!lt(s).visible && s.time_panel.visible, 'Q[SE] L6: the result card open, the live HUD steps aside');
+  check(s.coins > coins0 && coinsLeft(s), `Q[SE] L6: the clear's coins arrive in the pill (coins ${coins0} -> ${s.coins}, pill under TOTAL SCORE)`);
   await g.page.screenshot({ path: path.join(shots, 'live_iphoneSE_level6_card.png') });
   const qaSave = await g.page.evaluate((k) => localStorage.getItem(k) || '', QAKEY);
   check(qaSave.includes('[times]') && qaSave.includes(`6=${s.best_time_ms}`), `I: the clear's record went to the QA save (${QAKEY}: [times] 6=${s.best_time_ms})`);
+  await g.ctx.close();
+  // ===== Q: hearts 3 -> 2 -> 1, the SHOP from the coin pill =====
+  g = await open(QA + '?experiencelab=6&qareset=1', profile, 'iphoneSE');
+  s = await waitFor(g, (x) => x.level === 6 && x.lab_qa && !x.title_open && !x.intro_open, 'QA 6 hearts');
+  await sleep(800);
+  for (const want of [2, 1]) {
+    s = await state(g);
+    const b = s.tw_blocks.find((x) => x.st === 'blocked');
+    if (!b) break;
+    await tapFrac(g, b.x, b.y);
+    s = await waitFor(g, (x) => x.hearts === want, `hearts ${want}`, 8000);
+    await sleep(900);
+    s = await sample(g);
+    check(s.hearts === want && layoutOk(s) && Math.abs((lt(s).r_hearts[0] + lt(s).r_hearts[2]) / 2 - 0.5) < 0.01,
+      `Q[SE] L6 ${want} heart${want > 1 ? 's' : ''} left: centred, ${layoutDesc(s)}`);
+    await g.page.screenshot({ path: path.join(shots, `live_iphoneSE_level6_hearts${want}.png`) });
+  }
+  s = await state(g);
+  await tapFrac(g, (lt(s).r_coins[0] + lt(s).r_coins[2]) / 2, (lt(s).r_coins[1] + lt(s).r_coins[3]) / 2);
+  await sleep(900);
+  s = await sample(g);
+  check(lt(s).shop_open, 'Q[SE] the coin pill (under TOTAL SCORE) opens the SHOP');
+  await g.page.screenshot({ path: path.join(shots, 'live_iphoneSE_shop.png') });
+  await g.ctx.close();
+  // ===== Q: a long streak - the chain grows, no CHAIN popup =====
+  g = await open(QA + '?experiencelab=100&qareset=1', profile, 'iphoneSE');
+  s = await waitFor(g, (x) => x.level === 100 && x.lab_qa && !x.title_open && !x.intro_open, 'QA 100 streak', 60000);
+  await sleep(1000);
+  await g.page.focus('canvas').catch(() => {});
+  await g.page.keyboard.press('F1'); await sleep(250);
+  await g.page.keyboard.press('s');
+  let maxChain = 0, popupSeen = false, shotTaken = false;
+  const endT = Date.now() + 120000;
+  while (Date.now() < endT) {
+    const x = await state(g);
+    if (x) {
+      maxChain = Math.max(maxChain, x.chain || 0);
+      popupSeen = popupSeen || x.live_timer.chain_visible;
+      if (!shotTaken && x.chain >= 8) { await g.page.screenshot({ path: path.join(shots, 'live_iphoneSE_level100_streak.png') }); shotTaken = true; }
+      if (x.card_open || x.completed) break;
+    }
+    await sleep(80);
+  }
+  await g.page.keyboard.press('F1');
+  check(maxChain >= 10 && !popupSeen, `Q[SE] L100 auto-solve streak up to x${maxChain}: the CHAIN popup never shows`);
   await g.ctx.close();
   // ===== Q: Level 13, Lock finger lesson =====
   g = await open(QA + '?experiencelab=13&qareset=1', profile, 'iphoneSE');
   s = await waitFor(g, (x) => x.level === 13 && x.lab_qa && !x.title_open && x.lesson === 'lock', 'QA 13 lesson');
   await sleep(3000);
   s = await sample(g);
-  check(s.lesson === 'lock' && lt(s).time === '0:00' && s.attempt_ms === 0 && lt(s).overlaps.length === 0,
-    `Q[SE] L13 Lock lesson running 3 s: ${desc(s)} (no clock during the lesson; overlaps: ${lt(s).overlaps.join(', ') || 'none'})`);
+  check(s.lesson === 'lock' && lt(s).time === '0:00' && s.attempt_ms === 0 && layoutOk(s),
+    `Q[SE] L13 Lock lesson running 3 s: ${desc(s)} (no clock during the lesson; ${layoutDesc(s)})`);
   await g.page.screenshot({ path: path.join(shots, 'live_iphoneSE_level13_lesson.png') });
   await g.ctx.close();
   // ===== Q: Level 76, NEW MECHANIC card =====
@@ -141,14 +216,30 @@ try {
   check(s.intro_open && lt(s).time === '0:00', `Q[SE] L76 NEW MECHANIC card: ${desc(s)}`);
   await g.ctx.close();
   // ===== Q: Level 251 on iPhone 14, Level 100 on Pro Max =====
-  for (const [n, size] of [[251, 'iphone14'], [100, 'promax'], [226, 'iphoneSE']]) {
+  for (const [n, size] of [[251, 'iphoneSE'], [251, 'iphone14'], [251, 'promax'], [100, 'iphoneSE'], [100, 'iphone14'], [100, 'promax'],
+    [30, 'iphoneSE'], [30, 'iphone14'], [30, 'promax'], [255, 'iphoneSE'], [226, 'iphoneSE'], [6, 'iphone14'], [6, 'promax']]) {
     g = await open(QA + `?experiencelab=${n}&qareset=1`, profile, size);
     s = await waitFor(g, (x) => x.level === n && x.lab_qa && !x.title_open && !x.intro_open, `QA ${n}`, 60000);
     await sleep(1200);
     s = await sample(g);
-    check(lt(s).visible && lt(s).overlaps.length === 0, `Q[${size}] L${n}${s.max_hearts > 0 ? ' (hearts)' : ''}${s.lesson ? ` (${s.lesson} lesson)` : ''}: ${desc(s)}, overlaps: ${lt(s).overlaps.join(', ') || 'none'}`);
+    check(lt(s).visible && layoutOk(s) && coinsLeft(s) && !lt(s).chain_visible,
+      `Q[${size}] L${n} "${s.level_name || ''}"${s.max_hearts > 0 ? ' (hearts)' : ''}${s.lesson ? ` (${s.lesson} lesson)` : ''}: ${desc(s)}, ${layoutDesc(s)}`);
     if (process.env.DEBUG) console.log(JSON.stringify(lt(s)));
     await g.page.screenshot({ path: path.join(shots, `live_${size}_level${n}.png`) });
+    await g.ctx.close();
+  }
+  // ===== T: TOTAL SCORE 1,350,000 (dev build, a seeded save) =====
+  for (const size of ['iphoneSE', 'promax']) {
+    const dir = fs.mkdtempSync(path.join(os.tmpdir(), 'ce-live-'));
+    g = await open(DEV, dir, size, ['chain_escape_save', saveText(150, 151, 4321), 'chain_escape_unused', 'x']);
+    s = await waitFor(g, (x) => x.title_open, 'dev title');
+    await tapFrac(g, s.title_continue[0], s.title_continue[1]);
+    s = await waitFor(g, (x) => !x.title_open && x.level === 151 && !x.intro_open, 'dev 151', 60000);
+    await sleep(1500);
+    s = await sample(g);
+    check(s.total_score >= 1000000 && layoutOk(s) && coinsLeft(s),
+      `T[${size}] TOTAL SCORE ${s.total_score.toLocaleString('en-US')} fits; coins ${s.coins} under it; ${layoutDesc(s)}`);
+    await g.page.screenshot({ path: path.join(shots, `live_${size}_score_1M.png`) });
     await g.ctx.close();
   }
   // ===== I: storage isolation =====
@@ -166,7 +257,8 @@ try {
   s = await waitFor(g, (x) => !x.title_open && x.level === 1, 'prod level 1');
   await sleep(800);
   s = await state(g);
-  check(s.player_build && !lt(s).visible, 'P: the player (production) build shows no live timer HUD');
+  check(s.player_build && !lt(s).visible && !lt(s).qa_hud && lt(s).heart_size === 34 && (lt(s).r_coins[0] + lt(s).r_coins[2]) / 2 > 0.5,
+    'P: the player (production) build: no live HUD, released hearts (34), coins top-right');
   await g.page.screenshot({ path: path.join(shots, 'live_player_build_level1.png') });
   await g.ctx.close();
 } catch (e) {

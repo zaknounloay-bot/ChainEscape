@@ -73,11 +73,16 @@ var _card_count: Tween
 var _hud_total: VBoxContainer
 # LIVE TIMER HUD (BuildFlags.live_timer_hud): this attempt's TIME under
 # TOTAL SCORE (top-left), the level's BEST under the coins (top-right).
-var _hud_time: HBoxContainer
-var _hud_time_wrap: MarginContainer  # the TIME row's place in the TOTAL SCORE column
+## QA / dev / lab builds: the larger, re-arranged gameplay HUD (approved
+## layout "C"): coins under TOTAL SCORE, 44-unit hearts in the centre, TIME
+## and MY BEST stacked on the right, no CHAIN xN popup. The player build keeps
+## the released HUD.
+var _qa_hud := BuildFlags.live_timer_hud()
+var _hud_col: VBoxContainer  # TIME / MY BEST, top-right
+var _hud_time: HBoxContainer  # the TIME row
 var _hud_time_caption: Label
 var _hud_time_value: Label
-var _hud_best: HBoxContainer
+var _hud_best: HBoxContainer  # the MY BEST row
 var _hud_best_caption: Label
 var _hud_best_value: Label
 var _hud_time_second := -1  # the second shown (text changes only when it does)
@@ -307,7 +312,9 @@ func apply_theme(t: Dictionary) -> void:
 	_hud_total_caption.add_theme_color_override("font_color", t["text_soft"])
 	_hud_total_value.add_theme_color_override("font_color", t["text"])
 	for l in [_hud_time_caption, _hud_best_caption]:
-		l.add_theme_color_override("font_color", t["text_soft"])
+		# Stronger than the soft TOTAL SCORE caption: readable at a glance,
+		# on light and dark Chapters alike.
+		l.add_theme_color_override("font_color", Color(t["text"]).lerp(t["text_soft"], 0.35))
 	for l in [_hud_time_value, _hud_best_value]:
 		l.add_theme_color_override("font_color", t["text"])
 	_chain_label.add_theme_color_override("font_color", t["accent"])
@@ -412,6 +419,12 @@ func set_undo_enabled(enabled: bool) -> void:
 
 ## Shows "CHAIN xN" from x2 upward. Bigger and warmer as the chain grows.
 func show_chain(chain: int) -> void:
+	if _qa_hud:
+		# Layout C: no CHAIN xN popup. The chain itself, its escape bonus,
+		# combo sounds, pitch, animation speed and haptics are untouched
+		# (GameManager); only this label stays hidden.
+		_chain_label.modulate.a = 0.0
+		return
 	if _chain_tween:
 		_chain_tween.kill()
 	if chain < 2:
@@ -452,7 +465,7 @@ func show_complete(r: Dictionary) -> void:
 	_set_card_mode(true)
 	# The card shows TIME | PERSONAL BEST itself: the live HUD steps aside
 	# (start_level shows it again for the next attempt).
-	if _hud_time_wrap:
+	if _hud_col:
 		set_live_timer_visible(false)
 	_card_stars.set_stars(r["stars"], true)
 	var hearts_txt := "HEARTS %d/%d" % [r["hearts_left"], r["max_hearts"]] if r["max_hearts"] > 0 else "NO HEARTS"
@@ -802,6 +815,11 @@ func _build() -> void:
 	_hearts_holder = CenterContainer.new()
 	_hearts_holder.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	_hearts = HeartsBar.new()
+	if BuildFlags.live_timer_hud():
+		# QA / dev / lab builds: 44-unit hearts (released: 34), gap 15
+		# (released: 12) - real-iPhone feedback; same mechanics.
+		_hearts.heart_size = QA_HEART_SIZE
+		_hearts.gap = QA_HEART_GAP
 	_hearts_holder.add_child(_hearts)
 	_top.add_child(_hearts_holder)
 
@@ -938,6 +956,8 @@ func _build() -> void:
 	_hud_total_value.horizontal_alignment = HORIZONTAL_ALIGNMENT_LEFT
 	_hud_total.add_child(_hud_total_value)
 	_root.add_child(_hud_total)
+	if _qa_hud:
+		_hud_total.minimum_size_changed.connect(_place_coin_pill_left)
 	_build_live_timer_hud()
 	_banner = _make_label(44, Palette.ACCENT, 900)
 	_banner.add_theme_color_override("font_outline_color", Color(0, 0, 0, 0.35))
@@ -1211,65 +1231,60 @@ func _time_column(caption_text: String) -> Array:
 	return [caption, value, col]
 
 
-## LIVE TIMER HUD: one line each, "TIME 1:04" / "MY BEST 0:38", in the
-## TOTAL SCORE style (soft caption, 26 pt value; captions 19 pt). The values use
-## tabular (fixed-width) digits and a fixed width, so nothing shifts as they
-## tick.
+## LIVE TIMER HUD (layout C): one right-hand column under the top-right
+## Settings button - "TIME 1:04" over "MY BEST 0:38", each row a caption and
+## a value, right-aligned. Tabular digits and a fixed value width, so nothing
+## shifts as they tick. MY BEST is always this player's own Personal Best.
 func _build_live_timer_hud() -> void:
 	var digits := FontVariation.new()
 	digits.base_font = Palette.font(900)
 	digits.opentype_features = {TextServerManager.get_primary_interface().name_to_tag("tnum"): 1}
-	_hud_time = HBoxContainer.new()
-	_hud_time.alignment = BoxContainer.ALIGNMENT_BEGIN
-	_hud_time.size_flags_horizontal = Control.SIZE_SHRINK_BEGIN  # hugs "TIME 1:04"
-	_hud_best = HBoxContainer.new()
-	_hud_best.set_anchors_and_offsets_preset(Control.PRESET_TOP_RIGHT)
-	_hud_best.alignment = BoxContainer.ALIGNMENT_END
-	_hud_best.grow_horizontal = Control.GROW_DIRECTION_BEGIN  # a wider row grows leftwards, never past the right margin
+	_hud_col = VBoxContainer.new()
+	_hud_col.set_anchors_and_offsets_preset(Control.PRESET_TOP_RIGHT)
+	_hud_col.grow_horizontal = Control.GROW_DIRECTION_BEGIN  # grows leftwards, never past the right margin
+	_hud_col.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	_hud_col.add_theme_constant_override("separation", -6)
+	_hud_col.visible = false
+	_root.add_child(_hud_col)
 	var parts := []
-	# "MY BEST": always this player's own Personal Best (never a global one).
-	for pair in [[_hud_time, "TIME", HORIZONTAL_ALIGNMENT_LEFT], [_hud_best, "MY BEST", HORIZONTAL_ALIGNMENT_RIGHT]]:
-		var box: HBoxContainer = pair[0]
-		box.mouse_filter = Control.MOUSE_FILTER_IGNORE
-		box.add_theme_constant_override("separation", 8)
+	for caption_text in ["TIME", "MY BEST"]:
+		var row := HBoxContainer.new()
+		row.alignment = BoxContainer.ALIGNMENT_END
+		row.size_flags_horizontal = Control.SIZE_SHRINK_END  # hugs its text
+		row.add_theme_constant_override("separation", 12)
+		row.mouse_filter = Control.MOUSE_FILTER_IGNORE
 		var caption := _make_label(HUD_TIME_CAPTION_SIZE, Palette.TEXT_SOFT, 900)
-		caption.text = pair[1]
-		box.add_child(caption)
-		var value := _make_label(26, Palette.TEXT, 900)
+		caption.text = caption_text
+		caption.horizontal_alignment = HORIZONTAL_ALIGNMENT_RIGHT
+		row.add_child(caption)
+		var value := _make_label(HUD_TIME_VALUE_SIZE, Palette.TEXT, 900)
 		value.add_theme_font_override("font", digits)
-		value.horizontal_alignment = pair[2]
-		value.custom_minimum_size = Vector2(64, 0)  # "9:59" never re-lays the row out
-		value.text = "0:00" if pair[1] == "TIME" else NO_BEST_TEXT
-		box.add_child(value)
-		box.visible = false
-		if box == _hud_time:
-			# Flows right under TOTAL SCORE, whatever the font metrics (the
-			# column's rows overlap by 4 px: a small top margin clears it).
-			_hud_time_wrap = MarginContainer.new()
-			_hud_time_wrap.mouse_filter = Control.MOUSE_FILTER_IGNORE
-			_hud_time_wrap.add_theme_constant_override("margin_top", 8)
-			_hud_time_wrap.visible = false
-			_hud_time_wrap.add_child(box)
-			box.visible = true
-			_hud_total.add_child(_hud_time_wrap)
-		else:
-			_root.add_child(box)
-		parts.append([caption, value])
-	_hud_time_caption = parts[0][0]
-	_hud_time_value = parts[0][1]
-	_hud_best_caption = parts[1][0]
-	_hud_best_value = parts[1][1]
+		value.horizontal_alignment = HORIZONTAL_ALIGNMENT_RIGHT
+		value.custom_minimum_size = Vector2(92, 0)  # "9:59" never re-lays the row out
+		value.text = "0:00" if caption_text == "TIME" else NO_BEST_TEXT
+		row.add_child(value)
+		_hud_col.add_child(row)
+		parts.append([row, caption, value])
+	_hud_time = parts[0][0]
+	_hud_time_caption = parts[0][1]
+	_hud_time_value = parts[0][2]
+	_hud_best = parts[1][0]
+	_hud_best_caption = parts[1][1]
+	_hud_best_value = parts[1][2]
 
 
-## The captions "TIME" / "MY BEST": 19 pt (TOTAL SCORE's caption is 15 pt;
-## about +27 % for legibility on a phone). The values stay 26 pt.
-const HUD_TIME_CAPTION_SIZE := 19
+## Layout C sizes (QA builds, real-iPhone feedback): captions 27 (TOTAL
+## SCORE's caption is 15), values 34 (TOTAL SCORE's value is 26), hearts 44
+## with a gap of 15 (released: 34 / 12).
+const HUD_TIME_CAPTION_SIZE := 27
+const HUD_TIME_VALUE_SIZE := 34
+const QA_HEART_SIZE := 44.0
+const QA_HEART_GAP := 15.0
 const NO_BEST_TEXT := "\u2014"  # em dash: no Personal Best on this level yet
 
 
 func set_live_timer_visible(on: bool) -> void:
-	_hud_time_wrap.visible = on
-	_hud_best.visible = on
+	_hud_col.visible = on
 
 
 ## This attempt's time (ms, AttemptTimer). The text changes only when the
@@ -1289,41 +1304,56 @@ func set_live_best(ms: int) -> void:
 	_hud_best_value.text = fmt_time(ms) if ms > 0 else NO_BEST_TEXT
 
 
-## The live timer HUD as shown (diagnostics / tests).
+static func frac_rect(r: Rect2, vis: Vector2) -> Array:
+	return [r.position.x / vis.x, r.position.y / vis.y, r.end.x / vis.x, r.end.y / vis.y]
+
+
+## The live timer HUD as shown (diagnostics / tests): texts, sizes, the
+## on-screen rectangles (fractions of the screen) of every top-HUD element
+## and which of them overlap (must stay empty).
 func live_timer_state() -> Dictionary:
 	var vis := get_viewport().get_visible_rect().size
-	var out := {"visible": _hud_time.is_visible_in_tree(), "time": _hud_time_value.text, "best": _hud_best_value.text, "updates": live_time_updates,
+	var out := {"visible": _hud_col.is_visible_in_tree(), "time": _hud_time_value.text, "best": _hud_best_value.text, "updates": live_time_updates,
 		"time_caption": _hud_time_caption.text, "best_caption": _hud_best_caption.text,
-		"caption_size": _hud_best_caption.get_theme_font_size("font_size"), "value_size": _hud_best_value.get_theme_font_size("font_size")}
-	for pair in [["time_rect", _hud_time], ["best_rect", _hud_best]]:
-		var r: Rect2 = pair[1].get_global_rect()
-		out[pair[0]] = [r.position.x / vis.x, r.position.y / vis.y, r.end.x / vis.x, r.end.y / vis.y]
-	# What the two rows overlap on screen (tests: must stay empty).
+		"caption_size": _hud_best_caption.get_theme_font_size("font_size"), "value_size": _hud_best_value.get_theme_font_size("font_size"),
+		"heart_size": _hearts.heart_size, "heart_gap": _hearts.gap, "qa_hud": _qa_hud,
+		"chain_visible": _chain_label.modulate.a > 0.01, "shop_open": is_shop_open(), "board_area_top": get_board_area().position.y / vis.y}
+	var name_r := _name_label.get_global_rect()
+	var name_w := _name_label.get_minimum_size().x
+	var title_r := _level_label.get_global_rect()
+	var title_w := _level_label.get_minimum_size().x
+	# The coin pill at rest (it pulses when coins arrive).
+	var els := {"time_row": _hud_time.get_global_rect(), "best_row": _hud_best.get_global_rect(), "coins": Rect2(_coin_pill.get_parent_control().global_position + _coin_pill.position, _coin_pill.size), "total": _hud_total.get_global_rect(),
+		"hearts": _hearts.get_global_rect(), "progress": _progress.get_global_rect(),
+		"title": Rect2(Vector2(title_r.get_center().x - title_w * 0.5, title_r.position.y), Vector2(title_w, title_r.size.y)),
+		"name": Rect2(Vector2(name_r.get_center().x - name_w * 0.5, name_r.position.y), Vector2(name_w, name_r.size.y)),
+		"levels_button": _levels_button.get_global_rect(), "settings_button": _settings_button.get_global_rect()}
+	if out["chain_visible"]:
+		els["chain"] = _chain_label.get_global_rect()
+	for k in els:
+		var r: Rect2 = els[k]
+		out["r_" + k] = [r.position.x / vis.x, r.position.y / vis.y, r.end.x / vis.x, r.end.y / vis.y]
+	out["time_rect"] = out["r_time_row"]
+	out["best_rect"] = out["r_best_row"]
 	var hits := []
-	var others := {"hearts": _hearts, "total_score": _hud_total_value, "coins": _coin_pill, "level_title": _level_label,
-		"chapter_line": _name_label, "progress": _progress, "chain": _chain_label}
-	for k in others:
-		var c: Control = others[k]
-		if not c.is_visible_in_tree():
-			continue
-		var o := c.get_global_rect()
-		if k == "chain":
-			# "CHAIN x12" at its largest resting size (show_chain: font
-			# 40 + 3 x tier, tier <= 8). Its pop starts 1.25-1.41x larger for
-			# 0.22 s - drawn under this HUD, it can brush it at x10+ chains.
-			var cw := (c as Label).get_theme_font("font").get_string_size("CHAIN x12", HORIZONTAL_ALIGNMENT_LEFT, -1, 64).x
-			o = Rect2(Vector2(o.get_center().x - cw * 0.5, o.position.y), Vector2(cw, o.size.y))
-		elif k in ["level_title", "chapter_line"]:
-			var w := (c as Label).get_minimum_size().x
-			o = Rect2(Vector2(o.get_center().x - w * 0.5, o.position.y), Vector2(w, o.size.y))  # the text, not the full-width row
-		out["r_" + k] = [o.position.x / vis.x, o.position.y / vis.y, o.end.x / vis.x, o.end.y / vis.y]
-		if o.intersects(_hud_time.get_global_rect()) or o.intersects(_hud_best.get_global_rect()):
-			hits.append(k)
-	var board_top := get_board_area().position.y
-	if _hud_time.get_global_rect().end.y > board_top or _hud_best.get_global_rect().end.y > board_top:
-		hits.append("board_area")
-	if _hud_time.get_global_rect().position.x < 0.0 or _hud_best.get_global_rect().end.x > vis.x:
-		hits.append("screen_edge")
+	var keys := els.keys()
+	for i in keys.size():
+		for j in range(i + 1, keys.size()):
+			# TOTAL SCORE / the chapter line: their boxes have always touched
+			# (released layout, text apart) - not a new overlap.
+			if [keys[i], keys[j]] in [["total", "name"], ["name", "total"]]:
+				continue
+			# TIME over MY BEST: their line boxes overlap by design (column
+			# separation -6); the glyphs do not.
+			if [keys[i], keys[j]] in [["time_row", "best_row"], ["best_row", "time_row"]]:
+				continue
+			if (els[keys[i]] as Rect2).intersects(els[keys[j]]):
+				hits.append("%s/%s" % [keys[i], keys[j]])
+	out["r_col"] = frac_rect(_hud_col.get_global_rect(), vis)
+	for k in ["time_row", "best_row", "coins", "total", "hearts"]:
+		var r: Rect2 = els[k]
+		if r.position.x < 0.0 or r.end.x > vis.x:
+			hits.append(k + "/screen_edge")
 	out["overlaps"] = hits
 	return out
 
@@ -1362,22 +1392,44 @@ func _apply_safe_area() -> void:
 		_hud_total.offset_left = 30.0
 		_hud_total.offset_right = 30.0 + 190.0
 		_hud_total.offset_top = _safe_top + 148.0
-		_hud_total.offset_bottom = _safe_top + 148.0 + 60.0  # grows by the TIME row when shown
-	if _hud_time:
-		# TIME is the last row of the TOTAL SCORE column; BEST one line
-		# under the coin pill (which ends at +206), clear of the hearts /
-		# chain row in the middle and of the board area (TOP_HEIGHT 290).
-		_hud_best.offset_left = -30.0  # hugs "MY BEST 0:38", growing leftwards (grow_horizontal)
-		_hud_best.offset_right = -30.0
-		_hud_best.offset_top = _safe_top + 212.0
-		_hud_best.offset_bottom = _safe_top + 212.0 + 36.0
-	if _coin_pill:
+		_hud_total.offset_bottom = _safe_top + 148.0 + 60.0
+	if _hud_col:
+		_layout_live_timer_hud()
+	if _coin_pill and _qa_hud:
+		_place_coin_pill_left()
+	elif _coin_pill:
 		_coin_pill.offset_left = -150.0 - 24.0
 		_coin_pill.offset_right = -24.0
 		_coin_pill.offset_top = _safe_top + 150.0
 		_coin_pill.offset_bottom = _safe_top + 150.0 + 56.0
 	_bottom.offset_top = -BOTTOM_HEIGHT - _safe_bottom + 30.0
 	_bottom.offset_bottom = -_safe_bottom - 60.0
+
+
+## Layout C: the coins under TOTAL SCORE (same pill, same SHOP action; coin
+## fly-ins follow the pill wherever it is). Re-placed whenever TOTAL SCORE
+## changes size, so it is right from the first frame on every device.
+func _place_coin_pill_left() -> void:
+	_coin_pill.anchor_left = 0.0
+	_coin_pill.anchor_right = 0.0
+	var cy := _safe_top + 148.0 + _hud_total.get_combined_minimum_size().y + 6.0
+	_coin_pill.offset_left = 24.0
+	_coin_pill.offset_right = 24.0 + 150.0
+	_coin_pill.offset_top = cy
+	_coin_pill.offset_bottom = cy + 56.0
+
+
+## TIME / MY BEST column: right-aligned with the Settings button, starting
+## at +190 - under the chapter line; the narrow TIME row sits right of the
+## progress bar (which ends at x 490 of 720), the wider MY BEST row below
+## it. The column ends near +276, above the board area (TOP_HEIGHT 290) so
+## even the tallest board never meets it.
+func _layout_live_timer_hud() -> void:
+	var top := _safe_top + 190.0
+	_hud_col.offset_left = -30.0
+	_hud_col.offset_right = -30.0
+	_hud_col.offset_top = top
+	_hud_col.offset_bottom = top + _hud_col.get_combined_minimum_size().y
 
 
 func _on_title_input(event: InputEvent) -> void:
