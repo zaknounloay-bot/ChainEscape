@@ -226,6 +226,9 @@ func _live_hud() -> void:
 	var records := [game.progress.best_times.duplicate(), game.progress.clean_times.duplicate()]
 	await _start(7)
 	var st: Dictionary = ui.live_timer_state()
+	_check(st["time_caption"] == "TIME" and st["best_caption"] == "MY BEST" and st["caption_size"] == 19 and st["value_size"] == 26
+		and game.ui._hud_time_caption.get_theme_font_size("font_size") == 19 and game.ui._hud_time_value.get_theme_font_size("font_size") == 26,
+		"captions TIME / MY BEST at 19 pt (was 15), values still 26 pt")
 	_check(st["visible"] and st["time"] == "0:00" and st["best"] == UIManager.NO_BEST_TEXT and game.progress.best_time(7) == 0,
 		"new attempt: TIME 0:00, BEST shows a dash (no record yet): %s / %s" % [st["time"], st["best"]])
 	# The text follows AttemptTimer; only whole seconds change it.

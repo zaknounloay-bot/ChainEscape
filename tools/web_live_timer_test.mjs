@@ -1,4 +1,4 @@
-// LIVE TIMER HUD (QA builds): TIME under TOTAL SCORE, BEST under the coins,
+// LIVE TIMER HUD (QA builds): TIME under TOTAL SCORE, MY BEST under the coins,
 // in real Chromium at iPhone sizes.
 //
 //   godot --headless --path . --export-release "Web QA" build/web_qa/index.html
@@ -6,7 +6,8 @@
 //   SHOTS=<dir> node tools/web_live_timer_test.mjs build/web_qa build/web_friend
 //
 // Q: the QA build (?experiencelab=N, its own QA save):
-//    - Level 6 (hearts) on iPhone SE: TIME 0:00 / BEST dash at the start,
+//    - Level 6 (hearts) on iPhone SE: captions TIME / MY BEST (19 pt), TIME
+//      0:00 / MY BEST dash at the start,
 //      overlapping nothing; ~3 s later TIME = AttemptTimer as M:SS; after
 //      the clear the HUD's TIME = the card's TIME and BEST = the record.
 //    - Level 13 (Lock finger lesson): TIME stays 0:00 while the lesson runs.
@@ -89,7 +90,7 @@ async function sample(g) {
   return s;
 }
 const lt = (s) => s.live_timer;
-const desc = (s) => `TIME ${lt(s).time} | BEST ${lt(s).best}`;
+const desc = (s) => `${lt(s).time_caption} ${lt(s).time} | ${lt(s).best_caption} ${lt(s).best}`;
 
 try {
   const profile = fs.mkdtempSync(path.join(os.tmpdir(), 'ce-live-'));
@@ -97,10 +98,12 @@ try {
   // ===== Q: Level 6 (hearts) on iPhone SE =====
   let g = await open(QA + '?experiencelab=6&qareset=1', profile, 'iphoneSE', seed);
   let s = await waitFor(g, (x) => x.level === 6 && x.lab_qa && !x.title_open && !x.intro_open, 'QA 6');
+  check(lt(s).time_caption === 'TIME' && lt(s).best_caption === 'MY BEST' && lt(s).caption_size === 19 && lt(s).value_size === 26,
+    `Q[SE] captions "${lt(s).time_caption}" / "${lt(s).best_caption}" at ${lt(s).caption_size} pt, values ${lt(s).value_size} pt`);
   check(s.qa_build && lt(s).visible && lt(s).time === '0:00' && lt(s).best === '—' && s.max_hearts > 0,
     `Q[SE] L6 (hearts ${s.max_hearts}): the HUD at the start: ${desc(s)}`);
   if (process.env.DEBUG) console.log(JSON.stringify(lt(s)));
-  check(lt(s).overlaps.length === 0, `Q[SE] L6: TIME / BEST overlap nothing (${lt(s).overlaps.join(', ') || 'none'}; TIME ${lt(s).time_rect.map((v) => v.toFixed(3))}, BEST ${lt(s).best_rect.map((v) => v.toFixed(3))})`);
+  check(lt(s).overlaps.length === 0, `Q[SE] L6: TIME / MY BEST overlap nothing (${lt(s).overlaps.join(', ') || 'none'}; TIME ${lt(s).time_rect.map((v) => v.toFixed(3))}, BEST ${lt(s).best_rect.map((v) => v.toFixed(3))})`);
   await sleep(3300);
   s = await sample(g);
   check(lt(s).time === fmt(s.attempt_ms) && s.attempt_ms >= 2500 && s.attempt_ms <= 4500,

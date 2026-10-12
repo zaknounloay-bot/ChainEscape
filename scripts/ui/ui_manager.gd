@@ -1211,8 +1211,8 @@ func _time_column(caption_text: String) -> Array:
 	return [caption, value, col]
 
 
-## LIVE TIMER HUD: one line each, "TIME 1:04" / "BEST 0:38", in the TOTAL
-## SCORE typography (15 pt soft caption, 26 pt value). The values use
+## LIVE TIMER HUD: one line each, "TIME 1:04" / "MY BEST 0:38", in the
+## TOTAL SCORE style (soft caption, 26 pt value; captions 19 pt). The values use
 ## tabular (fixed-width) digits and a fixed width, so nothing shifts as they
 ## tick.
 func _build_live_timer_hud() -> void:
@@ -1225,18 +1225,20 @@ func _build_live_timer_hud() -> void:
 	_hud_best = HBoxContainer.new()
 	_hud_best.set_anchors_and_offsets_preset(Control.PRESET_TOP_RIGHT)
 	_hud_best.alignment = BoxContainer.ALIGNMENT_END
+	_hud_best.grow_horizontal = Control.GROW_DIRECTION_BEGIN  # a wider row grows leftwards, never past the right margin
 	var parts := []
-	for pair in [[_hud_time, "TIME", HORIZONTAL_ALIGNMENT_LEFT], [_hud_best, "BEST", HORIZONTAL_ALIGNMENT_RIGHT]]:
+	# "MY BEST": always this player's own Personal Best (never a global one).
+	for pair in [[_hud_time, "TIME", HORIZONTAL_ALIGNMENT_LEFT], [_hud_best, "MY BEST", HORIZONTAL_ALIGNMENT_RIGHT]]:
 		var box: HBoxContainer = pair[0]
 		box.mouse_filter = Control.MOUSE_FILTER_IGNORE
-		box.add_theme_constant_override("separation", 10)
-		var caption := _make_label(15, Palette.TEXT_SOFT, 900)
+		box.add_theme_constant_override("separation", 8)
+		var caption := _make_label(HUD_TIME_CAPTION_SIZE, Palette.TEXT_SOFT, 900)
 		caption.text = pair[1]
 		box.add_child(caption)
 		var value := _make_label(26, Palette.TEXT, 900)
 		value.add_theme_font_override("font", digits)
 		value.horizontal_alignment = pair[2]
-		value.custom_minimum_size = Vector2(76, 0)  # "59:59" never re-lays the row out
+		value.custom_minimum_size = Vector2(64, 0)  # "9:59" never re-lays the row out
 		value.text = "0:00" if pair[1] == "TIME" else NO_BEST_TEXT
 		box.add_child(value)
 		box.visible = false
@@ -1259,6 +1261,9 @@ func _build_live_timer_hud() -> void:
 	_hud_best_value = parts[1][1]
 
 
+## The captions "TIME" / "MY BEST": 19 pt (TOTAL SCORE's caption is 15 pt;
+## about +27 % for legibility on a phone). The values stay 26 pt.
+const HUD_TIME_CAPTION_SIZE := 19
 const NO_BEST_TEXT := "\u2014"  # em dash: no Personal Best on this level yet
 
 
@@ -1287,7 +1292,9 @@ func set_live_best(ms: int) -> void:
 ## The live timer HUD as shown (diagnostics / tests).
 func live_timer_state() -> Dictionary:
 	var vis := get_viewport().get_visible_rect().size
-	var out := {"visible": _hud_time.is_visible_in_tree(), "time": _hud_time_value.text, "best": _hud_best_value.text, "updates": live_time_updates}
+	var out := {"visible": _hud_time.is_visible_in_tree(), "time": _hud_time_value.text, "best": _hud_best_value.text, "updates": live_time_updates,
+		"time_caption": _hud_time_caption.text, "best_caption": _hud_best_caption.text,
+		"caption_size": _hud_best_caption.get_theme_font_size("font_size"), "value_size": _hud_best_value.get_theme_font_size("font_size")}
 	for pair in [["time_rect", _hud_time], ["best_rect", _hud_best]]:
 		var r: Rect2 = pair[1].get_global_rect()
 		out[pair[0]] = [r.position.x / vis.x, r.position.y / vis.y, r.end.x / vis.x, r.end.y / vis.y]
@@ -1360,7 +1367,7 @@ func _apply_safe_area() -> void:
 		# TIME is the last row of the TOTAL SCORE column; BEST one line
 		# under the coin pill (which ends at +206), clear of the hearts /
 		# chain row in the middle and of the board area (TOP_HEIGHT 290).
-		_hud_best.offset_left = -140.0 - 30.0
+		_hud_best.offset_left = -30.0  # hugs "MY BEST 0:38", growing leftwards (grow_horizontal)
 		_hud_best.offset_right = -30.0
 		_hud_best.offset_top = _safe_top + 212.0
 		_hud_best.offset_bottom = _safe_top + 212.0 + 36.0
