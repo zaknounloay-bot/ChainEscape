@@ -36,6 +36,13 @@ static func debug_off() -> bool:
 	return player_build() or magnet_lab()
 
 
+## LIVE TIMER HUD (TIME under TOTAL SCORE, BEST under the coins): QA, dev
+## and lab builds only, for real-iPhone QA - never the player build until
+## it is approved for Production.
+static func live_timer_hud() -> bool:
+	return not player_build()
+
+
 ## The other developer pages (?openinglab, ?twinsprototype, ?mechlab,
 ## ?friendbench, ?vhtest): off in the player build and in the QA build.
 static func dev_pages_off() -> bool:

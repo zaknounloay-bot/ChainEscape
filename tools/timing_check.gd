@@ -218,6 +218,129 @@ func _solve() -> void:
 		await _frames(1)
 
 
+## LIVE TIMER HUD (QA / dev builds): TIME under TOTAL SCORE, BEST under the
+## coins - fed by AttemptTimer only, text only when the second changes.
+func _live_hud() -> void:
+	var ui: UIManager = game.ui
+	_check(BuildFlags.live_timer_hud() and game._live_timer, "live timer HUD is on outside the player build")
+	var records := [game.progress.best_times.duplicate(), game.progress.clean_times.duplicate()]
+	await _start(7)
+	var st: Dictionary = ui.live_timer_state()
+	_check(st["visible"] and st["time"] == "0:00" and st["best"] == UIManager.NO_BEST_TEXT and game.progress.best_time(7) == 0,
+		"new attempt: TIME 0:00, BEST shows a dash (no record yet): %s / %s" % [st["time"], st["best"]])
+	# The text follows AttemptTimer; only whole seconds change it.
+	game.attempt_timer.elapsed = 64.4
+	await _frames(2)
+	_check(ui._hud_time_value.text == UIManager.fmt_time(game.attempt_timer.elapsed_ms()) and ui._hud_time_value.text == "1:04",
+		"TIME shows AttemptTimer as M:SS (%s at %d ms)" % [ui._hud_time_value.text, game.attempt_timer.elapsed_ms()])
+	var u0 := ui.live_time_updates
+	var s0 := game.attempt_timer.elapsed_ms() / 1000
+	var w0 := Time.get_ticks_msec()
+	while Time.get_ticks_msec() - w0 < 2300:
+		await _frames(1)
+	var s1 := game.attempt_timer.elapsed_ms() / 1000
+	var frames_ok := ui.live_time_updates - u0 == s1 - s0 and s1 - s0 >= 2
+	_check(frames_ok, "the text changed once per visible second (%d updates over %d seconds, every frame ticked)" % [ui.live_time_updates - u0, s1 - s0])
+	# Frozen while the clock is paused (Settings open).
+	ui._open_settings()
+	await _frames(2)
+	var frozen := ui._hud_time_value.text
+	var u1 := ui.live_time_updates
+	await _frames(30)
+	_check(ui._hud_time_value.text == frozen and ui.live_time_updates == u1 and not game._attempt_active(), "Settings open: TIME frozen at %s" % frozen)
+	ui._close_settings()
+	await _frames(2)
+	# Hint, Undo, Hammer: the clock and the HUD keep running, nothing else changes.
+	game.progress.inventory["hint"] = 5
+	game.request_hint()
+	var e_h := game.attempt_timer.elapsed
+	await _frames(10)
+	_check(game.attempt_timer.elapsed > e_h and ui._hud_time_value.text == UIManager.fmt_time(game.attempt_timer.elapsed_ms()) and ui.live_timer_state()["visible"],
+		"after Show a Move the HUD keeps running (%s)" % ui._hud_time_value.text)
+	game._clear_hint()
+	var id := Solver.from_model(game.model).recommend_move()
+	game._on_block_tapped(id)
+	await _frames(2)
+	game.undo()
+	var e_u := game.attempt_timer.elapsed
+	await _frames(10)
+	_check(game.attempt_timer.elapsed > e_u and ui._hud_time_value.text == UIManager.fmt_time(game.attempt_timer.elapsed_ms()), "after Undo the HUD keeps running")
+	game.progress.inventory["hammer"] = 3
+	game.toggle_hammer()
+	var target := -1
+	for bid in game.model.blocks:
+		if game.is_hammer_safe(bid) and not game.model.blocks[bid].is_crate():
+			target = bid
+			break
+	game._on_block_tapped(target)
+	var e_m := game.attempt_timer.elapsed
+	await _frames(10)
+	_check(target >= 0 and game.hammers_used == 1 and game.attempt_timer.elapsed > e_m and ui._hud_time_value.text == UIManager.fmt_time(game.attempt_timer.elapsed_ms()),
+		"after the Hammer the HUD keeps running")
+	_check(game.progress.best_times == records[0] and game.progress.clean_times == records[1], "the HUD never touches the stored records")
+	# Restart: a fresh attempt at 0:00; BEST unchanged.
+	game.restart()
+	await _frames(1)
+	st = ui.live_timer_state()
+	_check(st["time"] == "0:00" and st["best"] == UIManager.NO_BEST_TEXT, "Restart: TIME back to 0:00 at once, BEST still a dash")
+	# A clear: the HUD shows the final time = the card's TIME; BEST = the record.
+	game.tutorial.hide_hint(true)
+	game.attempt_timer.elapsed = 12.3
+	await _solve()
+	for i in 120:
+		if ui.is_complete_visible():
+			break
+		await _frames(2)
+	await _frames(20)
+	var tr: Dictionary = game.last_time_result
+	st = ui.live_timer_state()
+	var tp: Dictionary = ui.time_panel_state()
+	_check(game.completed and st["time"] == UIManager.fmt_time(tr["time_ms"]) and st["time"] == tp["time"] and st["best"] == UIManager.fmt_time(game.progress.best_time(7)),
+		"after the clear: HUD TIME %s = card TIME %s, BEST %s = the stored record" % [st["time"], tp["time"], st["best"]])
+	_check(not st["visible"] and tp["visible"], "the result card open: the live HUD steps aside (the card shows the times)")
+	# Replay: 0:00, BEST shows the record.
+	game.start_level(7, "replay")
+	await _frames(2)
+	st = ui.live_timer_state()
+	_check(st["visible"] and st["time"] == "0:00" and st["best"] == UIManager.fmt_time(game.progress.best_time(7)) and game.progress.best_time(7) > 0,
+		"Replay: the HUD is back - TIME 0:00, BEST %s" % st["best"])
+	# A hearts level: the HUD sits in the empty corners - no overlap with the
+	# hearts, TOTAL SCORE, the coins, the title / chapter line or the board.
+	await _start(6)
+	await _frames(3)
+	st = ui.live_timer_state()
+	var vis := ui.get_viewport().get_visible_rect().size
+	var frac := func(r: Rect2) -> Rect2: return Rect2(r.position / vis, r.size / vis)
+	var tr_r := Rect2(Vector2(st["time_rect"][0], st["time_rect"][1]), Vector2(st["time_rect"][2] - st["time_rect"][0], st["time_rect"][3] - st["time_rect"][1]))
+	var br_r := Rect2(Vector2(st["best_rect"][0], st["best_rect"][1]), Vector2(st["best_rect"][2] - st["best_rect"][0], st["best_rect"][3] - st["best_rect"][1]))
+	var others := {"hearts": ui._hearts.get_global_rect(), "total score": ui._hud_total_value.get_global_rect(), "coins": ui._coin_pill.get_global_rect(),
+		"level title": ui._level_label.get_global_rect(), "chapter line": ui._name_label.get_global_rect(), "board area": ui.get_board_area()}
+	var hits := []
+	for k in others:
+		var o: Rect2 = frac.call(others[k])
+		if o.size.x > 0 and (o.intersects(tr_r) or o.intersects(br_r)):
+			hits.append(k)
+	_check(game.max_hearts > 0 and st["visible"] and hits.is_empty() and tr_r.position.x >= 0 and br_r.end.x <= 1.0,
+		"hearts level 6: TIME / BEST overlap nothing (%s)" % [hits])
+	# NEW MECHANIC card: the HUD is at 0:00 and frozen until the card is gone.
+	game.progress.tips_seen.erase("intro_sequence")
+	game.progress.tips_seen.append("lesson_sequence")
+	game.progress.highest_completed = 225  # the card is for players arriving at 226
+	game.start_level(226, "select")
+	await _frames(2)
+	var m := ui._hud_time_value.text
+	await _frames(20)
+	_check(game.mechanic_intro != null and m == "0:00" and ui._hud_time_value.text == "0:00", "NEW MECHANIC card: TIME stays 0:00")
+	for i in 300:
+		if game.mechanic_intro == null:
+			break
+		await _frames(2)
+	var w2 := Time.get_ticks_msec()
+	while Time.get_ticks_msec() - w2 < 1300:
+		await _frames(1)
+	_check(game._attempt_active() and ui._hud_time_value.text != "0:00", "the card gone: TIME runs (%s)" % ui._hud_time_value.text)
+
+
 ## Taps the block the lesson's finger points at until the lesson ends.
 func _follow_lesson() -> int:
 	var taps := 0
@@ -509,6 +632,7 @@ func _game() -> void:
 	await _frames(10)
 	_check(ended > 0 and game._attempt_active() and game.attempt_timer.elapsed > h1 and game.attempt_assisted and not game.progress.tips_seen.has("lesson_" + GameManager.LESSONS[ended]),
 		"Hammer on the lesson's blocks (Level %d): the lesson ends quietly, the clock runs, the attempt is assisted (Hammer)" % ended)
+	await _live_hud()
 	# Records survive a reload from disk.
 	var reload := PlayerProgress.new(SAVE).load_from_disk()
 	_check(reload.best_times == game.progress.best_times and reload.clean_times == game.progress.clean_times and reload.best_time(1) > 0,

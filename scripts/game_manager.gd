@@ -285,6 +285,8 @@ func request_restore() -> void:
 
 var _published_panels := ""
 var _frame_usec := Time.get_ticks_usec()
+## LIVE TIMER HUD on (QA / dev / lab builds - BuildFlags.live_timer_hud).
+var _live_timer := BuildFlags.live_timer_hud()
 
 
 func _process(delta: float) -> void:
@@ -294,6 +296,8 @@ func _process(delta: float) -> void:
 	var now_usec := Time.get_ticks_usec()
 	attempt_timer.tick((now_usec - _frame_usec) / 1_000_000.0, _attempt_active())
 	_frame_usec = now_usec
+	if _live_timer:
+		ui.set_live_time(attempt_timer.elapsed_ms())  # text only when the second changes
 	if OS.has_feature("web"):
 		# Re-publish the state snapshot when a panel opens or closes (its
 		# button positions are only laid out while it is visible).
@@ -515,6 +519,10 @@ func start_level(number: int, via: String = "load") -> void:
 	reward_coins_attempt = 0
 	reward_notes = []
 	attempt_timer.reset()  # every attempt is timed on its own
+	if _live_timer:
+		ui.set_live_timer_visible(true)
+		ui.set_live_time(0, true)
+		ui.set_live_best(progress.best_time(number))
 	attempt_assisted = false
 	last_time_result = {}
 	if pending_chapter_card != 0 and Chapters.chapter_of(number) != pending_chapter_card:
@@ -980,6 +988,9 @@ func _on_board_cleared() -> void:
 	# The winning move: the attempt's time stops here, before celebrations.
 	var time_ms := attempt_timer.finish()
 	last_time_result = progress.record_time(current_level, time_ms, not attempt_assisted)  # saved by record_result below
+	if _live_timer:
+		ui.set_live_time(time_ms, true)  # the final time stays shown
+		ui.set_live_best(progress.best_time(current_level))
 	completed = true
 	board.input_enabled = false
 	_refresh_buttons()
@@ -1670,7 +1681,7 @@ func publish_state() -> void:
 		"restore_button": center.call(ui._restore_button), "recovery_restore": center.call(ui._recovery_restore),
 		"recovery_new": center.call(ui._recovery_new),
 		"attempt_ms": attempt_timer.elapsed_ms(), "attempt_active": _attempt_active(), "attempt_assisted": attempt_assisted,
-		"page_hidden": attempt_timer.page_hidden, "time_result": last_time_result, "card_time": ui.time_summary, "time_panel": ui.time_panel_state(),
+		"page_hidden": attempt_timer.page_hidden, "time_result": last_time_result, "card_time": ui.time_summary, "time_panel": ui.time_panel_state(), "live_timer": ui.live_timer_state(),
 		"best_time_ms": progress.best_time(current_level), "best_clean_ms": progress.best_clean_time(current_level),
 		"card_rect": [ui._card.get_global_rect().position.x / vis.x, ui._card.get_global_rect().position.y / vis.y, ui._card.get_global_rect().end.x / vis.x, ui._card.get_global_rect().end.y / vis.y],
 		"undo_button": center.call(ui._undo_button), "restart_button": center.call(ui._restart_button),

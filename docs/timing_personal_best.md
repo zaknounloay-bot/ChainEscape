@@ -135,6 +135,37 @@ Recommendation: option 1. It is quiet, has no effect on the result card's height
 - Chromium's CDP page-freeze does not stop frames in the headless setup, so real suspension is a real-iPhone QA item.
 - Under headless SwiftShader every screenshot stalls the page for 0.3–0.45 s, and the 0.25 s cap takes that off by design. The test reads the page's own frame times and allows for exactly that.
 
+## Live timer HUD (QA builds only)
+
+A visible clock during play. It appears in **QA, dev and lab builds only**: `BuildFlags.live_timer_hud()` is false in the player (production) build, so the production candidate is unchanged until it is approved.
+
+- **TIME:** the last row of the TOTAL SCORE column, top-left, `TIME 1:04`. It flows directly under the score number whatever the device's font metrics.
+- **BEST:** one line under the coin pill, top-right, `BEST 0:38`. It shows an em dash (—) when the level has no record yet.
+- **Style:** the TOTAL SCORE typography (15 pt soft caption, 26 pt bold value) in the chapter's colours. The values use tabular (fixed-width) digits and a fixed width, so nothing shifts as they tick.
+- **Source of truth:** `AttemptTimer` only. The HUD shows `elapsed_ms()` as M:SS; milliseconds stay internal.
+  - The text changes only when the visible second changes: one update per second, with no animation and no extra render loop.
+  - Every new attempt (start, Restart, Replay, retry, Level Select) shows 0:00 at once.
+  - The final time stays as recorded.
+- **Paused states:** whenever the clock is paused, the TIME value is frozen. That covers menus, the NEW MECHANIC card, guided lessons, a hidden page and the out-of-hearts beat.
+- **Result card:** the HUD steps aside while it is open, because the card shows TIME | PERSONAL BEST itself.
+- **Records:** BEST is read from the stored record. The HUD never changes a record.
+- **Layout:** checked on iPhone SE, 14 and Pro Max, including hearts levels, lesson levels and the Master Level. TIME and BEST overlap none of: hearts, TOTAL SCORE, coins, level title, chapter line, progress bar, the CHAIN label at its largest resting size, or the board area.
+  - Known minor item: the pop of a x10+ chain starts up to 1.41× larger for 0.22 s and can momentarily brush the end of the TIME row. The chain label is drawn underneath the HUD.
+
+### Fairness note for a future competition decision (not changed here)
+
+The clock deliberately pauses for Settings, Shop, Level Select, the recovery panel and a hidden page. That is right for relaxed Classic play, but it is an exploit for a fastest-time competition:
+
+- **Settings dims the board only to 35 %,** so the board stays readable while the clock is stopped.
+- **The board can be studied off-clock:** screenshot it, leave the app, solve it elsewhere, and come back.
+- **Restart and retry discard the attempt,** so runs can be rehearsed before a fast one.
+
+Options for that decision:
+- keep counting during menus and backgrounding in competition;
+- hide the board while the clock is paused;
+- cap the excluded time per attempt;
+- record the attempt count.
+
 ## Real-iPhone QA (mandatory before any Production release)
 
 ### Builds
