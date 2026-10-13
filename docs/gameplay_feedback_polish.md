@@ -100,3 +100,44 @@ SHOTS=<dir> node tools/web_feedback_test.mjs build/web_qa build/web_friend
    - Use all 3 Undos (replaying the last move each time): the text becomes "tap Restart" and Restart pulses.
 5. **Rapid taps:** tap one blocked block quickly 8–10 times. Nothing piles up and every block settles.
 6. **Themes:** check a dark Chapter (for example Level 41) and a light one on SE, 14 and Pro Max. Lost hearts should be readable, and nothing should cover the HUD or the TIME / MY BEST column.
+
+## Production release candidate
+
+| | File | SHA-256 |
+|---|---|---|
+| **Candidate** (Phase 2A on, commit `cc9ea94`) | `build/release_candidate/ChainEscape_Web_1_300_FEEDBACK_RC_cc9ea94.zip` | `303b2759f52b4ed5beb212473183ced3f7ee7b3bf5b05341a865a439b49f7a6c` |
+| **Current Production = first rollback** (Timing + PB, layout C, `4432661`) | `build/release_candidate/ChainEscape_Web_1_300_TIMING_RC_4432661.zip` | `9981fe1821f7da5f56ce2345a7d11dd632155bfefc0e1f2023cb4702661a05cc` |
+| Deeper rollback (1-300 release, no timing) | `build/release_candidate/ROLLBACK_ChainEscape_Web_1_300_RELEASE.zip` | `849626cb192a5edab8e51a19e6901ff02a7d3d0c54f7fd7c9d8340ab287a285e` |
+
+**How it was built:** from a clean checkout of `cc9ea94`, with the "Web Friend Test" preset (`player_build`). The `.import` files are excluded, leaving 8 files.
+
+**Same as current Production:** the save format (version 5), the release save namespace (`chain_escape_save_r2`, `chain_escape_beacon_r2`, `progress_r2.cfg`), the QA save (`chain_escape_experiencelab_qa_save`), layout C, Timing / PB, scoring, prices and levels.
+
+**Save continuity:** `tools/web_upgrade_test.mjs` serves both ZIPs from the same URL in one browser profile. It confirms that current Production → candidate → current Production keeps progress, coins, boosters and the BEST / BEST CLEAN times, and that both builds use the same storage keys.
+
+### Manual itch.io upload (by the owner)
+
+1. **Check the file.** Its SHA-256 must be `303b2759…7a6c`:
+   - macOS: `shasum -a 256 <file>`
+   - Windows: `certutil -hashfile <file> SHA256`
+2. **Keep the rollback ZIP at hand:** `ChainEscape_Web_1_300_TIMING_RC_4432661.zip`.
+3. **On the Chain Escape itch.io page,** go to Edit game → Uploads.
+   - Upload the candidate ZIP and tick "This file will be played in the browser".
+   - Remove the old HTML upload or untick its browser-play box, so exactly one upload is playable in the browser.
+   - Keep the embed options unchanged: viewport size, mobile-friendly and fullscreen button.
+4. **Save, then open the page in a private window** to confirm the new build loads.
+5. **Smoke test on the iPhone,** in your normal Safari profile, so your real save is used (see "Rollback" below if anything is off):
+   - CONTINUE shows your level, coins and stars.
+   - TIME and MY BEST are visible, with the records as before.
+   - A blocked tap on a hearts level shows the rising "−♥" and the red ring on the blocker.
+   - A locked block's padlock jumps and its short rule appears.
+   - With no hints left on a solvable board, SHOW A MOVE opens the SHOP; close it without buying.
+   - With no Hammer owned, HAMMER opens the SHOP.
+6. **If you buy anything during the smoke test,** it's a real purchase with your coins. Skip buying if you don't want that.
+
+### Rollback
+
+1. **Fastest, no rebuild:** re-upload `ChainEscape_Web_1_300_TIMING_RC_4432661.zip` (`9981fe18…05cc`) the same way.
+   - The saves stay compatible both ways (tested), and nothing written by the candidate is lost.
+2. **Phase 2A only (code):** set `BuildFlags.feedback_polish()` back to `return not player_build()` and re-export.
+3. **Before Timing:** re-upload `ROLLBACK_ChainEscape_Web_1_300_RELEASE.zip`.
