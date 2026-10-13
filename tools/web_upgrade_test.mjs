@@ -99,7 +99,7 @@ try {
   check((b.store[R2] || '').includes('[times]') && (b.store[R2] || '').includes('14=50000'), 'B: the time records are kept in chain_escape_save_r2');
   serving = 'cur';
   const c = await session('rollback');
-  check(c.s.level === 14 && c.s.highest_completed === 13 && c.s.coins === 200 && c.s.inventory.hint === 2 && c.s.best_time_ms === 50000 && c.s.feedback_polish !== true,
+  check(c.s.level === 14 && c.s.highest_completed === 13 && c.s.coins === 200 && c.s.inventory.hint === 2 && c.s.best_time_ms === 50000 && c.s.feedback_polish === a.s.feedback_polish,
     `C: ROLLBACK - the current build reads what the candidate wrote: ${summary(c.s)}`);
 } catch (e) {
   check(false, 'exception: ' + e.message);
