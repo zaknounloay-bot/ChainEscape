@@ -1,10 +1,10 @@
 # Player Identity: Phase 3A (QA only)
 
-**Status:** in the QA and dev builds. 3A tested on a real iPhone; the 3A polish (Settings layering, 20 characters, mixed scripts) and the final refinements (NAME: label, 5 emoji) are waiting for real-iPhone QA.
+**Status:** approved after real-iPhone QA (QA build `db46f1a`). The production candidate turns it on in the player build too.
 
-**Production is unchanged.** The player build ("Web Friend Test") has no identity: no id, no name row, and no `[profile]` written.
+**Production candidate:** the player build ("Web Friend Test") has identity on: an id in the release save's `[profile]` and the optional name row. To roll back without touching saves, make `player_identity()` return `not player_build()`: that build then writes no new id and shows no name row, and a `[profile]` already in a save is kept untouched.
 
-The switch is `BuildFlags.player_identity()` (`scripts/core/build_flags.gd`), which returns `not player_build()`.
+The switch is `BuildFlags.player_identity()` (`scripts/core/build_flags.gd`), which returns `true` in every build.
 
 ## What it is
 
@@ -136,3 +136,11 @@ SHOTS=<dir> node tools/web_profile_test.mjs build/web_qa build/web_friend <previ
 5. Tap the row and SAVE with the field empty: the name is removed.
 6. Set a name, close Safari completely, reopen `?experiencelab=6` **without** `qareset`: the name should still be there.
 7. Check that normal play, audio and the TIME / MY BEST display are unchanged.
+
+## Release: upgrade and rollback (production)
+
+`tools/web_identity_release_test.mjs <current production ZIP> <candidate ZIP> <QA ZIP>` replaces the files at the same URL in the same browser profile, as on itch.io:
+
+- **Upgrade:** progress, scores, stars, coins, both boosters and Personal Bests are unchanged (every section but `[profile]` / `[meta]` is byte-identical). A `[profile]` with a new id is added to the same key `chain_escape_save_r2`; no new storage key. A reload keeps the id.
+- **Rollback to `cc9ea94`:** the old build reads the same progress. When it saves (tested with a Settings toggle), it keeps `[profile]`, including an emoji name, exactly as it was: it rewrites only the keys it knows. Forward again, the same id and name are back.
+- **Emoji names and older builds:** only identity-aware QA builds older than `db46f1a` (`2bd078d`, `256e9bb`) validate names, and they clear one they do not accept. No production build has ever validated names, so a production rollback never clears a name. Nothing to avoid here.

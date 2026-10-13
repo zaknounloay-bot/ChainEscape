@@ -1793,7 +1793,7 @@ func publish_state() -> void:
 		"best_time_ms": progress.best_time(current_level), "best_clean_ms": progress.best_clean_time(current_level),
 		"card_rect": [ui._card.get_global_rect().position.x / vis.x, ui._card.get_global_rect().position.y / vis.y, ui._card.get_global_rect().end.x / vis.x, ui._card.get_global_rect().end.y / vis.y],
 		"feedback": _feedback_state(vis) if not BuildFlags.player_build() else {}, "feedback_polish": BuildFlags.feedback_polish(),
-		"profile": _profile_state() if not BuildFlags.player_build() else {}, "player_identity": BuildFlags.player_identity(),
+		"profile": _profile_state() if BuildFlags.player_identity() else {}, "player_identity": BuildFlags.player_identity(),
 		"undo_button": center.call(ui._undo_button), "restart_button": center.call(ui._restart_button),
 		"hint_button": center.call(ui._hint_button), "hammer_button": center.call(ui._hammer_button), "hammer_armed": hammer_armed,
 		"magnets": model.blocks.values().filter(func(b): return b.magnet).size() if model else 0,
@@ -1805,8 +1805,8 @@ func publish_state() -> void:
 	WebBridge.publish("chainEscapeState", st)
 
 
-## Browser tests (never the player build): the id only as a short hash
-## (equality checks), never the id itself.
+## Browser tests: the id only as a short hash (equality checks), never the
+## id itself (it is in the save, which the page can read anyway).
 func _profile_state() -> Dictionary:
 	return {"id_hash": progress.player_id.sha256_text().substr(0, 12) if progress.player_id != "" else "",
 		"id_valid": PlayerProfile.is_valid_id(progress.player_id), "name": progress.display_name,

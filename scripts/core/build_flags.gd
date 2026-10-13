@@ -59,13 +59,15 @@ static func feedback_polish() -> bool:
 	return true
 
 
-## PLAYER IDENTITY (Phase 3A, QA): an anonymous random player id in the
-## save's [profile] section and an optional display name in Settings.
-## Local only - nothing is sent anywhere. On in every build except the
-## player (production) build, which neither creates an id nor shows the
-## name row (a [profile] already in a save is kept untouched there).
+## PLAYER IDENTITY (Phase 3A): an anonymous random player id in the save's
+## [profile] section and an optional display name in Settings ("NAME: ...",
+## up to 20 characters, the five approved emoji). Local only - nothing is
+## sent anywhere. Approved after real-iPhone QA: on in EVERY build, the
+## player (production) build included. To roll Production back, return
+## `not player_build()` here: that build then neither creates an id nor
+## shows the name row, and a [profile] already in a save is kept untouched.
 static func player_identity() -> bool:
-	return not player_build()
+	return true
 
 
 ## The other developer pages (?openinglab, ?twinsprototype, ?mechlab,

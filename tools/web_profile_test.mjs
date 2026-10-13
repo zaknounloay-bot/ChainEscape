@@ -19,8 +19,9 @@
 //    build again finds the same id and name.
 // I: isolation - the release save (chain_escape_save_r2) and the old save
 //    stay byte-identical; only the QA key holds a [profile].
-// P: the player (production) build: no identity - no name row, no id, no
-//    [profile] in the release save.
+// P: the player (production) build: identity on (approved for release) -
+//    an id in the release save's [profile], the optional name row in
+//    Settings, and the QA save's player is a different one.
 // E: no page errors.
 import http from 'node:http';
 import fs from 'node:fs';
@@ -291,7 +292,7 @@ try {
   check(st.qa.includes('[profile]'), `I: only the QA save (${QAKEY}) holds the profile`);
   await g.ctx.close();
 
-  // ===== P: the player build - identity off =====
+  // ===== P: the player build - identity on =====
   g = await open(PROD, fs.mkdtempSync(path.join(os.tmpdir(), 'ce-prof-')), 'iphoneSE');
   s = await waitFor(g, (x) => x.title_open, 'prod title');
   await tapFrac(g, s.title_continue[0], s.title_continue[1]);
@@ -302,9 +303,10 @@ try {
   await sleep(300);
   await g.page.screenshot({ path: path.join(shots, 'profile_player_build_settings.png') });
   const prodSave = await g.page.evaluate((k) => localStorage.getItem(k) || '', R2);
-  check(s.player_build && s.player_identity === false && Object.keys(s.profile || {}).length === 0,
-    'P: the player build has no identity (no id, no name row in the state)');
-  check(prodSave.includes('[meta]') && !prodSave.includes('[profile]'), 'P: the release save gets no [profile] section');
+  check(s.player_build && s.player_identity === true && prof(s).id_valid && row(s).visible && row(s).text === 'ADD YOUR NAME (OPTIONAL)' && (s.settings_over || []).length === 0,
+    `P: the player build has identity: a valid id, the optional name row ("${row(s).text}"), Settings above the HUD`);
+  check(prodSave.includes('[meta]') && prodSave.includes('[profile]') && prof(s).id_hash !== H,
+    'P: the release save holds its own [profile]; a different player from the QA save');
   await g.ctx.close();
 } catch (e) {
   check(false, 'test run: ' + e.message);
