@@ -1,10 +1,11 @@
-# Gameplay Feedback Polish: Phase 2A (QA only)
+# Gameplay Feedback Polish: Phase 2A
 
-**Status:** the change is in the QA and dev builds and waits for real-iPhone testing.
+**Status:** real-iPhone QA passed; this is the **Production release candidate.**
 
-**Production (the player build, "Web Friend Test") is unchanged.** Every change sits behind
-`BuildFlags.feedback_polish()` (`scripts/core/build_flags.gd`), which returns
-`not player_build()`. To ship it, make it return `true`. Nothing else needs to change.
+- QA commits `c442dad` and `09cae1f` were pushed. The release candidate commit then turns the flag on for the player build.
+- Every change sits behind `BuildFlags.feedback_polish()` (`scripts/core/build_flags.gd`), which now returns `true` in every build, the player ("Web Friend Test") build included.
+- **Rollback (code):** make it return `not player_build()`. Production then has the released feedback again and nothing else changes.
+- **Rollback (upload):** re-upload the previous Production ZIP (see `docs/timing_personal_best.md`, release candidate `4432661`).
 
 **What did not change:** rules, hearts, scoring, stars, coins, assists, the CHAIN system, Timing / Personal Best, the 300 levels, saves and save namespaces, and the Game Over timing and auto-restart.
 
@@ -12,7 +13,7 @@ All of this is visual. No audio or haptics were changed, so everything below sti
 
 ## What the player sees
 
-| Situation | Response (QA build) | Before (and still in Production) |
+| Situation | Phase 2A (QA and the release candidate) | Before (released Production `4432661`) |
 |---|---|---|
 | **Heart lost** (Level 6+) | A small "−♥" rises from the tapped block and fades (0.65 s). The lost heart in the bar pops to 1.6×, shows a red halo, shakes and falls (about 0.6 s). | Pop to 1.45× for 0.08 s, a 0.35 s shake, a 40 px fall |
 | **Lost-heart slot** | A faint fill with a clear outline: dark Chapters use white at 62%, light Chapters use the text colour at 42% | A flat fill only (white at 22% on dark Chapters) |
@@ -37,7 +38,7 @@ All of this is visual. No audio or haptics were changed, so everything below sti
 
 A grey assist opens the Shop only when the one thing missing is inventory.
 
-| Button | Situation | QA build | Production (unchanged) |
+| Button | Situation | Phase 2A | Before (`4432661`) |
 |---|---|---|---|
 | **SHOW A MOVE** | No free hints and no boosters, and the board can still be cleared | "No SHOW A MOVE left - get more in the Shop", and the **Shop opens** | Same message; the coin pill pulses |
 | **SHOW A MOVE** | No free hints and no boosters, and the board can't be cleared | The free dead-end pointer ("No moves left - tap Undo/Restart" or "This board can't be cleared from here - tap Undo/Restart"). **No Shop.** | "get more in the Shop" |
@@ -66,7 +67,7 @@ Other details:
 | `scripts/core/block_view.gd` | `play_lock_pop()` (padlock swell and wobble); the key hop doesn't stack |
 | `scripts/game_manager.gd` | `_mistake(id)` shows the heart chip; `_note_feedback` and `last_feedback` (published for tests only, never read by the rules); `_locked_explain` with its cooldown; `_point_at_no_moves()` and `_undo_available()`; `feedback` in the published state outside the player build |
 | `tools/feedback_check.gd`, `tools/FeedbackCheck.tscn` | Headless checks (A–I) |
-| `tools/web_feedback_test.mjs` | Browser checks: QA build at iPhone sizes, storage isolation, player build unchanged |
+| `tools/web_feedback_test.mjs` | Browser checks: the QA build at iPhone sizes, storage isolation, and the production candidate (player build) by touch |
 
 ## Tests
 

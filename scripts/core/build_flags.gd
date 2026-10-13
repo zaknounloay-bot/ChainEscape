@@ -49,11 +49,14 @@ static func live_timer_hud() -> bool:
 ## small heart rising from the tapped block, the blocker of a blocked tap
 ## ringed (only when it is unambiguous), a lock-icon response with a
 ## repeating explanation, and "No moves left" naming only a button that
-## works. Visual only - rules, hearts, scoring and saves are unchanged.
-## On in every build except the player (production) build; to ship it,
-## return true here.
+## works; a grey SHOW A MOVE / HAMMER opens the Shop only when inventory
+## is the one thing missing. Visual / guidance only - rules, hearts,
+## scoring, prices, limits and saves are unchanged. Approved after
+## real-iPhone QA: on in EVERY build, the player (production) build
+## included. To roll Production back to the released feedback, return
+## `not player_build()` here - nothing else changes.
 static func feedback_polish() -> bool:
-	return not player_build()
+	return true
 
 
 ## The other developer pages (?openinglab, ?twinsprototype, ?mechlab,

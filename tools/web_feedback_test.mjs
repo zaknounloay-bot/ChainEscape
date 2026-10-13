@@ -27,7 +27,16 @@
 // I: storage isolation: the release save (chain_escape_save_r2) and the old
 //    save stay byte-identical; the QA build writes only its own key
 //    (ExperienceLab.QA_MIRROR_KEY).
-// P: the player (production) build: feedback polish OFF (unchanged).
+// P: the PRODUCTION CANDIDATE (player build, release save namespace r2) by
+//    touch, with block / Shop positions taken from the identical layout C
+//    of the QA build (the player build publishes no per-tap state; a
+//    'visible' visibilitychange - a no-op for the clock - republishes it):
+//    Phase 2A on, layout C; a heart lost (L6, SE / 14 / Pro Max); grey SHOW
+//    A MOVE -> SHOP, nothing bought until BUY is tapped, the clock paused
+//    in the SHOP and resumed after; buying is not an assist, using is; a
+//    second booster in the same level (no per-level cap); grey HAMMER ->
+//    SHOP, one Hammer per level (no SHOP after the smash); the release save
+//    keeps its progress.
 // E: no page errors.
 import http from 'node:http';
 import fs from 'node:fs';
@@ -107,12 +116,39 @@ async function tapBlock(g, b) {
   return waitFor(g, (x) => (fb(x).seq || 0) > before, `feedback after tapping #${b.id}`, 8000);
 }
 const inView = (r) => r[0] >= 0 && r[1] >= 0 && r[2] <= 1 && r[3] <= 1;
+const posQA = {};  // `${level}_${size}` -> the board's blocks at the start (QA build)
 async function startQA(n, profile, size, seed) {
   const g = await open(QA + `?experiencelab=${n}&qareset=1`, profile, size, seed);
   await waitFor(g, (x) => x.level === n && x.lab_qa && !x.title_open && !x.intro_open, `QA ${n}`, 90000);
   await sleep(900);
+  const s0 = await state(g);
+  if (s0 && !posQA[`${n}_${size}`]) posQA[`${n}_${size}`] = s0.tw_blocks;
   return g;
 }
+// Player build: republish the state (a 'visible' visibilitychange).
+async function pub(g) {
+  await g.page.evaluate(() => document.dispatchEvent(new Event('visibilitychange')));
+  await sleep(250);
+  return state(g);
+}
+function prodSave(cleared, current, coins) {
+  const lines = ['[meta]', '', 'version=5', 'seq=7', '', '[progress]', '', `current_level=${current}`, `highest_completed=${cleared}`,
+    `highest_unlocked=${cleared + 1}`, '', '[economy]', '', `coins=${coins}`, 'inventory={"hammer": 0, "hint": 0}', '', '[chapters]', '',
+    'tips_seen=["intro_portal", "intro_magnet", "lesson_lock", "lesson_magnet", "lesson_switch", "lesson_gate", "lesson_armor", "lesson_twins"]', '', '[scores]', ''];
+  for (let n = 1; n <= cleared; n++) lines.push(`${n}=9000`);
+  lines.push('', '[stars]', '');
+  for (let n = 1; n <= cleared; n++) lines.push(`${n}=3`);
+  return lines.join('\n') + '\n';
+}
+async function startProd(cleared, current, coins, size) {
+  const g = await open(PROD, fs.mkdtempSync(path.join(os.tmpdir(), 'ce-fbp-')), size, [R2, prodSave(cleared, current, coins), 'chain_escape_unused', 'x']);
+  let s = await waitFor(g, (x) => x.title_open, 'prod title', 90000);
+  await tapFrac(g, s.title_continue[0], s.title_continue[1]);
+  s = await waitFor(g, (x) => !x.title_open && x.level === current && !x.intro_open, `prod ${current}`, 90000);
+  await sleep(1200);
+  return g;
+}
+let shopBtns = null;
 
 try {
   const profile = fs.mkdtempSync(path.join(os.tmpdir(), 'ce-fb-'));
@@ -278,6 +314,7 @@ try {
   await sleep(1200);
   s = await sample(g);
   check(!s.attempt_active && s.attempt_ms === t1, `A: SHOP open - the attempt's clock is paused (${t1} -> ${s.attempt_ms} ms)`);
+  shopBtns = fb(s).shop_buttons;
   const buy = fb(s).shop_buttons.buy_hint;
   await tapFrac(g, buy[0], buy[1]);
   await sleep(500);
@@ -332,11 +369,106 @@ try {
   check(!!st.qa && st.qa.includes('[meta]'), `I: the QA build keeps its own save under ${QAKEY} (keys: ${st.keys.join(', ')})`);
   await g.ctx.close();
 
-  // ===== P: the player build - unchanged =====
-  g = await open(PROD, fs.mkdtempSync(path.join(os.tmpdir(), 'ce-fb-')), 'iphoneSE');
-  s = await waitFor(g, (x) => x.title_open, 'prod title');
-  check(s.player_build && s.feedback_polish === false && Object.keys(s.feedback || {}).length === 0,
-    'P: the player (production) build keeps the released feedback (polish off)');
+  // ===== P: the production candidate (player build) =====
+  // P1: Level 6 - Phase 2A on, layout C, a heart lost by touch, rapid taps.
+  for (const size of ['iphoneSE', 'iphone14', 'promax']) {
+    g = await startProd(5, 6, 200, size);
+    s = await pub(g);
+    check(s.player_build && s.feedback_polish === true && s.live_timer.qa_hud && s.live_timer.heart_size === 44 && s.live_timer.overlaps.length === 0,
+      `P[${size}] player build L6: Phase 2A ON, layout C (hearts 44, no overlaps), hearts ${s.hearts}`);
+    const pb = (posQA[`6_${size}`] || []).find((x) => x.st === 'blocked' && x.partner < 0);
+    await tapFrac(g, pb.x, pb.y);
+    await sleep(110);
+    await g.page.screenshot({ path: path.join(shots, `prod_${size}_L6_heart_moment.png`) });
+    await sleep(900);
+    s = await pub(g);
+    check(s.hearts === 2 && s.level === 6, `P[${size}] L6: a blocked tap by touch costs one heart (${s.hearts} left), as before`);
+    await g.page.screenshot({ path: path.join(shots, `prod_${size}_L6_heart_rest.png`) });
+    if (size === 'iphoneSE') {
+      await tapFrac(g, pb.x, pb.y); await sleep(30); await tapFrac(g, pb.x, pb.y);
+      await sleep(2600);
+      s = await pub(g);
+      check(s.level === 6 && s.hearts === 3, `P[SE] two rapid taps: out of hearts -> the unchanged retry (hearts ${s.hearts})`);
+    }
+    await g.ctx.close();
+  }
+  // P2: Level 14 - SHOW A MOVE: SHOP, buy, pause / resume, use, buy again.
+  g = await startProd(13, 14, 200, 'iphoneSE');
+  const pos14 = posQA['14_iphoneSE'];
+  s = await pub(g);
+  check(s.inventory.hint === 0 && s.coins === 200 && s.level === 14, `P L14: no free hints, 0 boosters, ${s.coins} coins`);
+  await tapFrac(g, s.hint_button[0], s.hint_button[1]);
+  await sleep(600);
+  s = await pub(g);
+  await g.page.screenshot({ path: path.join(shots, 'prod_iphoneSE_L14_hint_shop.png') });
+  check(s.live_timer.shop_open && s.hint_block === -1 && s.coins === 200 && s.inventory.hint === 0 && !s.attempt_assisted,
+    'P L14: grey SHOW A MOVE opens the SHOP - nothing bought, not assisted');
+  const tp0 = s.attempt_ms;
+  await sleep(1200);
+  s = await pub(g);
+  check(s.attempt_ms === tp0, `P L14: SHOP open - the clock is paused (${tp0} -> ${s.attempt_ms} ms)`);
+  await tapFrac(g, shopBtns.buy_hint[0], shopBtns.buy_hint[1]);
+  await sleep(500);
+  s = await pub(g);
+  check(s.coins === 170 && s.inventory.hint === 1 && s.hint_block === -1 && !s.attempt_assisted, `P L14: BUY tapped: 200 -> ${s.coins} coins (price 30), 1 booster, not assisted`);
+  await tapFrac(g, shopBtns.close[0], shopBtns.close[1]);
+  await sleep(1300);
+  s = await pub(g);
+  check(!s.live_timer.shop_open && s.attempt_ms > tp0 && s.level === 14, `P L14: SHOP closed - the same attempt's clock runs again (${tp0} -> ${s.attempt_ms} ms)`);
+  await tapFrac(g, s.hint_button[0], s.hint_button[1]);
+  await sleep(700);
+  s = await pub(g);
+  check(s.hint_block >= 0 && s.inventory.hint === 0 && s.attempt_assisted, `P L14: the next tap uses the booster (block #${s.hint_block}), assisted as before`);
+  const tAssist = s.attempt_ms;
+  await sleep(1000);
+  s = await pub(g);
+  check(s.attempt_ms > tAssist, 'P L14: the clock keeps running while the hint is used');
+  const hb = pos14.find((x) => x.id === s.hint_block);
+  await tapFrac(g, hb.x, hb.y);
+  await sleep(700);
+  s = await state(g);
+  await tapFrac(g, s.hint_button[0], s.hint_button[1]);
+  await sleep(600);
+  s = await pub(g);
+  check(s.live_timer.shop_open && s.coins === 170, 'P L14: out again on a solvable board - the SHOP again, nothing bought');
+  await tapFrac(g, shopBtns.buy_hint[0], shopBtns.buy_hint[1]);
+  await sleep(400);
+  await tapFrac(g, shopBtns.close[0], shopBtns.close[1]);
+  await sleep(600);
+  s = await state(g);
+  await tapFrac(g, s.hint_button[0], s.hint_button[1]);
+  await sleep(700);
+  s = await pub(g);
+  check(s.hint_block >= 0 && s.inventory.hint === 0 && s.coins === 140, `P L14: a second bought booster works in the same level (no per-level cap; ${s.coins} coins)`);
+  // P3: HAMMER - none owned -> SHOP; buy; one per level.
+  s = await state(g);
+  await tapFrac(g, s.hammer_button[0], s.hammer_button[1]);
+  await sleep(600);
+  s = await pub(g);
+  check(s.live_timer.shop_open && !s.hammer_armed && s.coins === 140, 'P L14: grey HAMMER opens the SHOP - nothing bought, not armed');
+  await tapFrac(g, shopBtns.buy_hammer[0], shopBtns.buy_hammer[1]);
+  await sleep(400);
+  await tapFrac(g, shopBtns.close[0], shopBtns.close[1]);
+  await sleep(600);
+  s = await pub(g);
+  check(s.coins === 80 && s.inventory.hammer === 1 && !s.hammer_armed, `P L14: Hammer bought (price 60, ${s.coins} coins), waiting for a tap`);
+  await tapFrac(g, s.hammer_button[0], s.hammer_button[1]);
+  await sleep(500);
+  for (const blk of pos14) {
+    s = await pub(g);
+    if (s.hammers_used >= 1 || !s.hammer_armed) break;
+    await tapFrac(g, blk.x, blk.y);
+    await sleep(700);
+  }
+  s = await pub(g);
+  check(s.hammers_used === 1 && s.inventory.hammer === 0, 'P L14: the Hammer smashes one block (1 used, 0 owned)');
+  await tapFrac(g, s.hammer_button[0], s.hammer_button[1]);
+  await sleep(600);
+  s = await pub(g);
+  await g.page.screenshot({ path: path.join(shots, 'prod_iphoneSE_L14_hammer_limit.png') });
+  check(!s.live_timer.shop_open && !s.hammer_armed, 'P L14: HAMMER again: one per level - no SHOP');
+  const prodSaveNow = await g.page.evaluate((k) => localStorage.getItem(k) || '', R2);
+  check(prodSaveNow.includes('highest_completed=13') && prodSaveNow.includes('coins=80'), 'P: the release save (r2) keeps its progress and records the purchases');
   await g.ctx.close();
 } catch (e) {
   check(false, 'test run: ' + e.message);
