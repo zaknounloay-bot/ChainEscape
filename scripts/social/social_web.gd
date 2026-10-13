@@ -70,6 +70,13 @@ static func take_name() -> Dictionary:
 	return _take("takeName")
 
 
+## The game's answer to the name dialog's SAVE: accepted closes it; refused
+## keeps it open, as typed, with `message` (nothing was saved).
+static func name_verdict(ok: bool, message: String) -> void:
+	if api():
+		_api.nameVerdict(ok, message)
+
+
 ## 0.2C: the link SHARE CHALLENGE / COPY LINK hand over (zones "share",
 ## "copy" open the share sheet / copy inside the tap).
 static func set_share(url: String, text: String, title: String) -> void:

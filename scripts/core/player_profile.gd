@@ -60,7 +60,8 @@ static func is_valid_id(id: String) -> bool:
 
 ## Checks a typed name. {"ok": true, "name": cleaned} ("" = no name: the
 ## player cleared it) or {"ok": false, "error": code}. Codes:
-## "unsupported" (a character outside the allowed set), "mark" (an accent /
+## "unsupported" (a character outside the allowed set), "emoji" (an emoji
+## other than the five, or a skin tone / joiner / flag), "mark" (an accent /
 ## vowel mark with no letter, or too many on one letter), "too_short",
 ## "too_long", "no_letters".
 static func clean_name(raw: String) -> Dictionary:
@@ -101,7 +102,10 @@ static func clean_name(raw: String) -> Dictionary:
 			out.append(String.chr(c))
 			continue
 		if not is_base(c):
-			return {"ok": false, "error": "unsupported"}
+			# An emoji the name cannot use gets its own, clearer reason.
+			var emoji_like := (c >= 0x1F000 and c <= 0x1FAFF) or (c >= 0x2600 and c <= 0x27BF) or (c >= 0x2B00 and c <= 0x2BFF) \
+				or c == 0x20E3 or (c >= 0xE0020 and c <= 0xE007F) or (c == 0x200D and prev_emoji_raw(raw, i))
+			return {"ok": false, "error": "emoji" if emoji_like else "unsupported"}
 		out.append(String.chr(c))
 		prev_space = false
 		marks = 0
@@ -138,6 +142,11 @@ static func grapheme_count(name: String) -> int:
 	return n
 
 
+## A ZWJ right after an emoji (an allowed one or its U+FE0F) joins emoji.
+static func prev_emoji_raw(raw: String, i: int) -> bool:
+	return i > 0 and (is_emoji(raw.unicode_at(i - 1)) or raw.unicode_at(i - 1) == VS16)
+
+
 static func is_emoji(c: int) -> bool:
 	return EMOJI.has(c)
 
@@ -157,6 +166,7 @@ static func error_text(code: String) -> String:
 		"too_long": return "Use at most %d characters" % NAME_MAX
 		"no_letters": return "Use at least one letter or number"
 		"too_many_emoji": return "Use at most %d emoji" % MAX_EMOJI
+		"emoji": return "Unsupported emoji. Use only 🏆 ❤️ 🔥 ⭐ 🧩 (maximum %d)." % MAX_EMOJI
 		_: return "Use letters, numbers, spaces, - _ . ' and 🏆 ❤️ 🔥 ⭐ 🧩 only"
 
 

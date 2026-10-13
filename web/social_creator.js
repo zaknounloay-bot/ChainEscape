@@ -50,6 +50,7 @@
   var NAME_INPUT_MAX = 80;      // raw typing room in UTF-16 units (20 letters with marks)
   var nameResult = '';
   var nameDraft = '';
+  var nameVerdict = null;       // the open name dialog's handler for the game's answer
   var dialogOpen = false;
   var lastFire = 0;
   var start = null;             // where the current touch / press began
@@ -306,7 +307,7 @@
     title.textContent = 'YOUR NAME';
     var help = document.createElement('div');
     help.style.cssText = 'font-size:14px;line-height:1.4;margin-bottom:10px;color:#5C5475';
-    help.textContent = 'Optional. Letters, numbers, spaces, - _ . \' and up to 2 of \u{1F3C6} \u2764\uFE0F \u{1F525} \u2B50 \u{1F9E9} (2-' + NAME_MAX + '). Leave empty to remove it.';
+    help.textContent = 'Optional, 2-' + NAME_MAX + ' characters: letters, numbers, spaces, - _ . \'. Emoji: only \u{1F3C6} \u2764\uFE0F \u{1F525} \u2B50 \u{1F9E9} (max 2). Leave empty to remove it.';
     var inp = document.createElement('input');
     inp.id = 'ce-name-text';
     inp.type = 'text';
@@ -335,31 +336,63 @@
     var count = document.createElement('div');
     count.id = 'ce-name-count';
     count.style.cssText = 'font-size:13px;font-weight:700;text-align:right;margin-top:6px;color:#5C5475';
+    // The game's reason when it refuses the name (the dialog stays open).
+    var err = document.createElement('div');
+    err.id = 'ce-name-error';
+    err.setAttribute('role', 'alert');
+    err.style.cssText = 'display:none;font-size:15px;font-weight:800;line-height:1.35;margin-top:6px;color:#D0353F';
     var cancel = btn('ce-name-cancel', 'CANCEL', '#F1EDF9', '#2B2440');
     var done = btn('ce-name-done', 'SAVE', '#C645E6', '#fff');
-    function close(result) {
-      if (Date.now() - opened < 400) return;  // the opening tap's own click
-      nameResult = JSON.stringify(result);
+    var waiting = null;  // SAVE sent, the game's answer pending
+    function remove() {
       dialogOpen = false;
+      nameVerdict = null;
+      clearTimeout(waiting); waiting = null;
       if (vv) vv.removeEventListener('resize', fit);
       inp.blur();
       d.remove();
     }
+    function close(result) {
+      if (Date.now() - opened < 400) return;  // the opening tap's own click
+      nameResult = JSON.stringify(result);
+      remove();
+    }
+    // SAVE does not close: the game checks the name and answers. Accepted
+    // -> the dialog closes; refused -> it stays open with the text as typed
+    // and the reason, ready to correct (nothing is saved).
+    nameVerdict = function (ok, message) {
+      if (ok) { remove(); return; }
+      clearTimeout(waiting); waiting = null;
+      err.textContent = String(message || '');
+      err.style.display = 'block';
+      inp.style.borderColor = '#D0353F';
+      recount();
+    };
     function over() { return nameLength(clean(inp.value)) > NAME_MAX; }
     function recount() {
       var n = nameLength(clean(inp.value));
       count.textContent = n + ' / ' + NAME_MAX;
       count.style.color = n > NAME_MAX ? '#D0353F' : '#5C5475';
-      done.disabled = n > NAME_MAX;
-      done.style.opacity = n > NAME_MAX ? '0.45' : '1';
+      done.disabled = n > NAME_MAX || waiting !== null;
+      done.style.opacity = done.disabled ? '0.45' : '1';
     }
-    function save() { if (!over()) close({ done: true, text: clean(inp.value) }); }
+    function save() {
+      if (over() || waiting !== null || Date.now() - opened < 400) return;
+      nameResult = JSON.stringify({ done: true, text: clean(inp.value) });
+      // No answer within 4 s (should not happen): SAVE can be tapped again.
+      waiting = setTimeout(function () { waiting = null; recount(); }, 4000);
+      recount();
+    }
     cancel.addEventListener('click', function () { close({ done: false }); });
     done.addEventListener('click', save);
-    inp.addEventListener('input', recount);
+    inp.addEventListener('input', function () {
+      err.style.display = 'none';
+      inp.style.borderColor = '#E4DEF2';
+      recount();
+    });
     inp.addEventListener('keydown', function (e) { if (e.key === 'Enter') { e.preventDefault(); save(); } });
     row.appendChild(cancel); row.appendChild(done);
-    c.appendChild(title); c.appendChild(help); c.appendChild(inp); c.appendChild(count); c.appendChild(row);
+    c.appendChild(title); c.appendChild(help); c.appendChild(inp); c.appendChild(err); c.appendChild(count); c.appendChild(row);
     recount();
     d.appendChild(c);
     document.body.appendChild(d);
@@ -456,6 +489,8 @@
     setNameDraft: function (text) { nameDraft = String(text || ''); },
     /** '' while the name dialog is open / unused; else JSON {done, text} (text NFC-normalized, trimmed). */
     takeName: function () { var r = nameResult; nameResult = ''; return r; },
+    /** Name dialog: the game's answer to SAVE (ok closes it; else the reason is shown). */
+    nameVerdict: function (ok, message) { if (nameVerdict) nameVerdict(!!ok, message); },
     dialogOpen: function () { return dialogOpen; },
     /** The link SHARE / COPY LINK will hand over (set before showing them). */
     setShare: function (url, text, title) { share = { url: String(url || ''), text: String(text || ''), title: String(title || '') }; },

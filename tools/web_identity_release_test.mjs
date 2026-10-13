@@ -132,6 +132,15 @@ async function enterName(g, text) {
   facts.saveDisabled = await g.page.$eval('#ce-name-done', (b) => b.disabled);
   await sleep(450);
   await g.page.click(facts.saveDisabled ? '#ce-name-cancel' : '#ce-name-done');
+  await g.page.waitForFunction(() => !document.getElementById('ce-name') || getComputedStyle(document.getElementById('ce-name-error')).display !== 'none', null, { timeout: 5000 });
+  facts.refused = await g.page.evaluate(() => {
+    const e = document.getElementById('ce-name-error');
+    return e && getComputedStyle(e).display !== 'none' ? { error: e.textContent, value: document.getElementById('ce-name-text').value } : null;
+  });
+  if (facts.refused) {
+    await g.page.screenshot({ path: path.join(shots, 'release_SE_dialog_refused.png') });
+    await g.page.click('#ce-name-cancel');
+  }
   await g.page.waitForSelector('#ce-name', { state: 'detached', timeout: 5000 });
   await sleep(700);
   return { facts, s: await state(g) };
@@ -172,7 +181,10 @@ try {
   s = await openSettings(g);
   await g.page.screenshot({ path: path.join(shots, 'release_SE_settings_empty.png') });
   check((s.settings_over || []).length === 0 && row(s).visible && row(s).text === 'ADD YOUR NAME (OPTIONAL)', `N: Settings above the whole HUD, optional name row ("${row(s).text}")`);
-  let r = await enterName(g, 'Loay ❤️ לואי \u{1F3C6}');
+  let r = await enterName(g, '\u{1F451}');
+  check(r.facts.refused && r.facts.refused.value === '\u{1F451}' && /Unsupported emoji\. Use only/.test(r.facts.refused.error) && prof(r.s).name === '' && row(r.s).text === 'ADD YOUR NAME (OPTIONAL)'
+    && profId((await store(g))[R2]) === id, `N: 👑 with no name: the dialog stayed open with "${r.facts.refused && r.facts.refused.error}"; no name saved, the id unchanged`);
+  r = await enterName(g, 'Loay ❤️ לואי \u{1F3C6}');
   check(r.facts.focused && r.facts.fontPx >= 16 && r.facts.top < H * 0.35 && r.facts.title === 'YOUR NAME', `N: native field focused, ${r.facts.fontPx}px, near the top, title "${r.facts.title}"`);
   const NAME = 'Loay ❤️ לואי \u{1F3C6}';
   check(prof(r.s).name === NAME && row(r.s).text.startsWith('NAME:') && row(r.s).text.includes(NAME), `N: English + Hebrew + 2 emoji saved, shown as "${row(r.s).text}"`);
@@ -180,8 +192,9 @@ try {
   await g.page.screenshot({ path: path.join(shots, 'release_SE_settings_name.png') });
   r = await enterName(g, 'Loay \u{1F3C6}\u{1F525}⭐');
   check(prof(r.s).name === NAME && /at most 2 emoji/.test(row(r.s).note), `N: a 3rd emoji refused ("${row(r.s).note}")`);
-  r = await enterName(g, 'Loay \u{1F600}');
-  check(prof(r.s).name === NAME && /letters, numbers/.test(row(r.s).note), 'N: another emoji refused');
+  r = await enterName(g, 'Loay \u{1F451}');
+  check(prof(r.s).name === NAME && r.facts.refused && r.facts.refused.value === 'Loay \u{1F451}' && /Unsupported emoji/.test(r.facts.refused.error),
+    `N: 👑 refused in the open dialog, text kept ("${r.facts.refused && r.facts.refused.error}"), the name unchanged`);
   r = await enterName(g, 'Alexandra Konstantine');
   check(prof(r.s).name === NAME && r.facts.count === '21 / 20' && r.facts.saveDisabled, `N: 21 characters held (${r.facts.count})`);
   for (const nm of ['محمد', 'Loay لؤي לואי']) {

@@ -407,6 +407,7 @@ func set_display_name(text: String) -> void:
 		ui.set_profile_name(progress.display_name, "Name saved" if progress.display_name != "" else "Name removed")
 	else:
 		ui.set_profile_name(progress.display_name, PlayerProfile.error_text(r["error"]))
+	SocialWeb.name_verdict(r["ok"], "" if r["ok"] else PlayerProfile.error_text(r["error"]))
 	publish_state.call_deferred()
 
 

@@ -63,7 +63,7 @@ These live in `scripts/core/player_profile.gd` and are kept simple and predictab
   - zero-width characters, joiners and BOM;
   - variation selectors (except U+FE0F right after an allowed emoji), other emoji and symbols;
   - scripts without a bundled font (CJK, Armenian, Devanagari, …), and the replacement character.
-- **A refused name** keeps the current one, and the row shows the reason. **An empty name** removes it. **Duplicate names** are allowed.
+- **A refused name** keeps the current one, and the row shows the reason. The native dialog stays open with the text as typed and the reason in red (an unsupported emoji: "Unsupported emoji. Use only 🏆 ❤️ 🔥 ⭐ 🧩 (maximum 2)."), so it can be corrected and saved again. SAVE sends the name to the game, and only an accepted name closes the dialog (`SocialWeb.name_verdict`). Nothing is written for a refused name, and the id never changes. **An empty name** removes it. **Duplicate names** are allowed.
 - **Display:** names use `MessageText` fonts (the last fallback is the 11.8 KB `NotoColorEmoji-Subset5.ttf`, which has only the 5 emoji) and are isolated with FSI…PDI, so an RTL name keeps its direction after "NAME:". Adjacent RTL words read right to left, as in any Unicode text: "Loay لؤي לואי" shows as "Loay לואי لؤي".
 
 ## Settings layering (3A polish)

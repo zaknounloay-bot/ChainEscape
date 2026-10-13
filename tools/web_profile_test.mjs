@@ -129,6 +129,16 @@ async function enterName(g, text, shotName, cancel = false) {
   await sleep(450);  // the dialog ignores clicks in its first 400 ms (the opening tap)
   const seq = prof(s).name_set_unix;
   await g.page.click(cancel || facts.saveDisabled ? '#ce-name-cancel' : '#ce-name-done');
+  // A refused name keeps the dialog open with the reason: note it, then CANCEL.
+  await g.page.waitForFunction(() => !document.getElementById('ce-name') || getComputedStyle(document.getElementById('ce-name-error')).display !== 'none', null, { timeout: 5000 });
+  facts.refused = await g.page.evaluate(() => {
+    const e = document.getElementById('ce-name-error');
+    return e && getComputedStyle(e).display !== 'none' ? { error: e.textContent, value: document.getElementById('ce-name-text').value } : null;
+  });
+  if (facts.refused) {
+    if (shotName) await g.page.screenshot({ path: path.join(shots, shotName.replace('.png', '_refused.png')) });
+    await g.page.click('#ce-name-cancel');
+  }
   await g.page.waitForSelector('#ce-name', { state: 'detached', timeout: 5000 });
   await sleep(700);
   s = await state(g);
@@ -156,7 +166,7 @@ try {
   check(prof(r.s).name === 'דנה כהן' && row(r.s).text.includes('דנה כהן') && row(r.s).note === 'Name saved', `Q[SE] a Hebrew name is saved and shown ("${row(r.s).text}")`);
   await g.page.screenshot({ path: path.join(shots, 'profile_iphoneSE_settings_hebrew.png') });
   r = await enterName(g, 'Dana😀', 'profile_iphoneSE_dialog_emoji.png');
-  check(prof(r.s).name === 'דנה כהן' && /letters, numbers/.test(row(r.s).note), `Q[SE] an emoji name is refused with a reason ("${row(r.s).note}"), the old name kept`);
+  check(prof(r.s).name === 'דנה כהן' && /Unsupported emoji/.test(row(r.s).note), `Q[SE] an emoji name is refused with a reason ("${row(r.s).note}"), the old name kept`);
   await g.page.screenshot({ path: path.join(shots, 'profile_iphoneSE_settings_refused.png') });
   check(r.facts.draft === 'דנה כהן', 'Q[SE] the field opens with the current name');
   r = await enterName(g, 'José', null);
@@ -196,11 +206,63 @@ try {
   await sleep(300);
   await g.page.screenshot({ path: path.join(shots, 'final_iphoneSE_settings_emoji.png') });
   const keep = prof(r.s).name;
-  for (const [nm, why, re] of [['Loay \u{1F3C6}\u{1F525}\u2B50', 'a 3rd emoji', /at most 2 emoji/], ['Loay \u{1F600}', 'another emoji', /letters, numbers/],
-    ['Loay \u{1F44D}\u{1F3FD}', 'a skin tone', /letters, numbers/], ['Loay \u2764\uFE0F\u200D\u{1F525}', 'a joined emoji', /letters, numbers/], ['Loay \u{1F1EE}\u{1F1F1}', 'a flag', /letters, numbers/]]) {
+  for (const [nm, why, re] of [['Loay \u{1F3C6}\u{1F525}\u2B50', 'a 3rd emoji', /at most 2 emoji/], ['Loay \u{1F600}', 'another emoji', /Unsupported emoji/],
+    ['Loay \u{1F44D}\u{1F3FD}', 'a skin tone', /Unsupported emoji/], ['Loay \u2764\uFE0F\u200D\u{1F525}', 'a joined emoji', /Unsupported emoji/], ['Loay \u{1F1EE}\u{1F1F1}', 'a flag', /Unsupported emoji/]]) {
     r = await enterName(g, nm, null);
     if (nm.includes('\u2B50')) await g.page.screenshot({ path: path.join(shots, 'final_iphoneSE_settings_3emoji_refused.png') });
     check(prof(r.s).name === keep && re.test(row(r.s).note), `J[SE] ${why} is refused ("${row(r.s).note}"), the name kept`);
+  }
+  // ----- Release blocker: a refused name keeps the dialog open, as typed -----
+  {
+    const NAMED = prof((await state(g))).name;
+    const typed = 'Loay \u{1F451}';
+    let s0 = await state(g);
+    const rr = row(s0).rect;
+    await tapFrac(g, (rr[0] + rr[2]) / 2, (rr[1] + rr[3]) / 2);
+    await g.page.waitForSelector('#ce-name-text', { timeout: 5000 });
+    const help = await g.page.evaluate(() => document.querySelector('#ce-name > div > div:nth-child(2)').textContent);
+    check(/only \u{1F3C6} \u2764\uFE0F \u{1F525} \u2B50 \u{1F9E9} \(max 2\)/u.test(help), `B1: the dialog lists the five emoji and the 2 limit ("${help}")`);
+    await g.page.fill('#ce-name-text', typed);
+    await sleep(450);
+    await g.page.click('#ce-name-done');
+    await g.page.waitForFunction(() => getComputedStyle(document.getElementById('ce-name-error')).display !== 'none', null, { timeout: 5000 });
+    await sleep(300);
+    const f = await g.page.evaluate(() => ({ open: !!document.getElementById('ce-name'), value: document.getElementById('ce-name-text').value,
+      error: document.getElementById('ce-name-error').textContent, save: !document.getElementById('ce-name-done').disabled }));
+    await g.page.screenshot({ path: path.join(shots, 'blocker_iphoneSE_crown_refused.png') });
+    s0 = await state(g);
+    check(f.open && f.value === typed && /Unsupported emoji\. Use only \u{1F3C6} \u2764\uFE0F \u{1F525} \u2B50 \u{1F9E9} \(maximum 2\)\./u.test(f.error) && f.save,
+      `B2: 👑 + SAVE: the dialog stays open, the text kept ("${f.value}"), the reason shown ("${f.error}"), SAVE ready again`);
+    check(prof(s0).name === NAMED && prof(s0).id_hash === H, 'B3: the saved name and the player id are unchanged');
+    // correct it in place and SAVE
+    await g.page.fill('#ce-name-text', 'Loay \u{1F3C6}');
+    const errGone = await g.page.evaluate(() => getComputedStyle(document.getElementById('ce-name-error')).display === 'none');
+    await g.page.click('#ce-name-done');
+    await g.page.waitForSelector('#ce-name', { state: 'detached', timeout: 5000 });
+    await sleep(700);
+    s0 = await state(g);
+    check(errGone && prof(s0).name === 'Loay \u{1F3C6}' && row(s0).text.includes('NAME:') && prof(s0).id_hash === H, `B4: corrected in the same dialog, SAVE closes it ("${row(s0).text}")`);
+    // a refusal, then CANCEL: the previous name stays
+    s0 = await state(g);
+    await tapFrac(g, (row(s0).rect[0] + row(s0).rect[2]) / 2, (row(s0).rect[1] + row(s0).rect[3]) / 2);
+    await g.page.waitForSelector('#ce-name-text', { timeout: 5000 });
+    await g.page.fill('#ce-name-text', '\u{1F600}\u{1F600}');
+    await sleep(450);
+    await g.page.click('#ce-name-done');
+    await g.page.waitForFunction(() => getComputedStyle(document.getElementById('ce-name-error')).display !== 'none', null, { timeout: 5000 });
+    await g.page.click('#ce-name-cancel');
+    await g.page.waitForSelector('#ce-name', { state: 'detached', timeout: 5000 });
+    await sleep(700);
+    s0 = await state(g);
+    check(prof(s0).name === 'Loay \u{1F3C6}' && prof(s0).id_hash === H && (s0.settings_over || []).length === 0, 'B5: refused, then CANCEL: the previous name stays; Settings still above the HUD');
+    const cr = row(s0).card;
+    check(cr[0] >= 0 && cr[2] <= 1, `B6: with the refusal note, the Settings card still fits the screen (${cr.map((v) => v.toFixed(3))})`);
+    for (const [bad, re, why] of [['Loay \u{1F3C6}\u{1F525}\u2B50', /at most 2 emoji/, 'a 3rd emoji'], ['Lo\u{1F451}ay', /Unsupported emoji/, 'letters mixed with 👑'],
+      ['Loay \u2764\uFE0F\u200D\u{1F525}', /Unsupported emoji/, 'a joined emoji'], ['Loay \u00A9', /letters, numbers/, 'a symbol'], ['Loay #1', /letters, numbers/, '#']]) {
+      r = await enterName(g, bad, null);
+      check(r.facts.refused && r.facts.refused.value === bad && re.test(r.facts.refused.error) && prof(r.s).name === 'Loay \u{1F3C6}',
+        `B7: ${why}: kept open as typed with "${r.facts.refused && r.facts.refused.error}"; the name unchanged`);
+    }
   }
   r = await enterName(g, "O'Neil", null);
   for (const [nm, shot] of [['WWWWWWWWWW WWWWWWWWW', 'polish_iphoneSE_settings_long_latin.png'], ['עמנואל בן אברהם כהן', 'polish_iphoneSE_settings_long_hebrew.png']]) {

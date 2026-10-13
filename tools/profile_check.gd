@@ -142,16 +142,18 @@ func _names() -> void:
 		_check(r["ok"] and r["name"] == ok_cases[raw], "name accepted: '%s' -> '%s' (%s)" % [raw, ok_cases[raw], r])
 	var bad_cases := {
 		"D": "too_short", "ABCDEFGHIJKLMNOPQRSTU": "too_long", "דנהדנהדנהדנהדנהדנהדנה": "too_long", "Alexandra Konstantine": "too_long",
-		"Dana\U01F600": "unsupported", "Dana\u202E": "unsupported", "\u202Edana": "unsupported", "Da\u200Bna": "unsupported",
+		"Dana\U01F600": "emoji", "Dana\u202E": "unsupported", "\u202Edana": "unsupported", "Da\u200Bna": "unsupported",
 		"Da\u200Dna": "unsupported", "\u2066Dana\u2069": "unsupported", "\u200FDana": "unsupported", "\u061CDana": "unsupported",
 		"Da\nna": "unsupported", "Da\tna": "unsupported", "Da\u0001na": "unsupported", "Da\u007Fna": "unsupported", "Da\uFFFDna": "unsupported", "Da\u00A0na": "unsupported",
 		"<b>Dana": "unsupported", "Dana!": "unsupported", "Da\"na": "unsupported", "Da\\na": "unsupported", "Dana#1": "unsupported",
 		"王芳": "unsupported", "Dana\uFE0F": "unsupported", "\u0600Dana": "unsupported",
 		"\u01C5ana": "unsupported", "Да\u0483на": "unsupported", "Ab\u037E": "unsupported", "Ab\u03D1": "unsupported", "\u0531bc": "unsupported",
 		"Loay \U01F3C6\U01F525\u2B50": "too_many_emoji", "\U01F3C6 Loay \U01F3C6 \U01F3C6": "too_many_emoji",
-		"Loay \U01F600": "unsupported", "Loay \U01F44D\U01F3FD": "unsupported", "Loay \U01F44D": "unsupported", "Loay \U01F3C6\U01F3FD": "unsupported",
-		"Loay \u2764\uFE0F\u200D\U01F525": "unsupported", "Loay \u2764\uFE0F\uFE0F": "unsupported", "Loay \uFE0F": "unsupported", "Loay \u2764\uFE0E": "unsupported",
-		"Loay \U01F1EE\U01F1F1": "unsupported", "Loay 1\uFE0F\u20E3": "unsupported", "Loay \u2665": "unsupported", "Loay \u2606": "unsupported",
+		"Loay \U01F600": "emoji", "Loay \U01F44D\U01F3FD": "emoji", "Loay \U01F44D": "emoji", "Loay \U01F3C6\U01F3FD": "emoji",
+		"Loay \u2764\uFE0F\u200D\U01F525": "emoji", "Loay \u2764\uFE0F\uFE0F": "unsupported", "Loay \uFE0F": "unsupported", "Loay \u2764\uFE0E": "unsupported",
+		"Loay \U01F1EE\U01F1F1": "emoji", "Loay 1\uFE0F\u20E3": "unsupported", "Loay \u2665": "emoji", "Loay \u2606": "emoji",
+		"\U01F451": "emoji", "Loay \U01F451": "emoji", "\U01F451Loay": "emoji", "Lo\U01F451ay": "emoji", "Loay \U01F60A\U01F3C6": "emoji",
+		"Loay \u00A9": "unsupported", "Loay \u2122": "unsupported", "Loay #1": "unsupported",
 		"Loay \U01F3C6\u0301": "mark", "Loay \u2764\uFE0F\u0301": "mark", "\U01F3C6\U01F525": "no_letters", "\U01F3C6 ...": "no_letters",
 		"Lo\u200Day": "unsupported", "Loay\u2019\u202E": "unsupported",
 		"́ab": "mark", "á́́́b": "mark", "Dana ́x": "mark",
@@ -475,6 +477,25 @@ func _game() -> void:
 	_check(game.ui._name_button != null and game.ui.name_row_state()["text"] == "ADD YOUR NAME (OPTIONAL)", "Settings has the optional name row")
 	game.set_display_name("Loay \U01F3C6")
 	_check(game.ui.name_row_state()["text"] == "NAME:  " + MessageText.FSI + "Loay \U01F3C6" + MessageText.PDI, "a saved name shows as \"NAME: <name>\" (%s)" % game.ui.name_row_state()["text"])
+	# Release blocker (unsupported emoji): a refused name never changes or
+	# removes the saved one, never touches the id, never writes the save.
+	game.set_display_name("")
+	var id_before: String = game.progress.player_id
+	var file_before := FileAccess.get_file_as_string(save_path)
+	game.set_display_name("\U01F451")
+	_check(game.progress.display_name == "" and game.ui.name_row_state()["text"] == "ADD YOUR NAME (OPTIONAL)"
+		and game.ui.name_row_state()["note"] == PlayerProfile.error_text("emoji") and PlayerProfile.error_text("emoji").contains("\U01F9E9"),
+		"👑 with no name: refused with the emoji reason, still no name (%s)" % game.ui.name_row_state()["note"])
+	game.set_display_name("Loay \U01F3C6")
+	var file_named := FileAccess.get_file_as_string(save_path)
+	for bad in ["Loay \U01F451", "\U01F600", "Loay \U01F3C6\U01F525\u2B50", "Loay \u00A9", "Lo\U01F451ay"]:
+		game.set_display_name(bad)
+		_check(game.progress.display_name == "Loay \U01F3C6" and game.progress.player_id == id_before and FileAccess.get_file_as_string(save_path) == file_named,
+			"refused '%s': the valid name, the id and the save file are unchanged" % _codes(bad))
+	_check(file_before != file_named and game.progress.player_id == id_before, "a valid name is saved; the id never changes")
+	game.set_display_name("")
+	_check(game.progress.display_name == "" and game.ui.name_row_state()["note"] == "Name removed", "an intentionally empty field removes the name")
+	game.set_display_name("Loay \U01F3C6")
 	game.set_display_name("Loay \U01F3C6\U01F525\u2B50")
 	_check(game.progress.display_name == "Loay \U01F3C6" and game.ui.name_row_state()["note"] == PlayerProfile.error_text("too_many_emoji"), "a 3rd emoji is refused with its reason, the name kept")
 	game.set_display_name("")
