@@ -182,11 +182,26 @@ try {
   }
   r = await enterName(g, 'O\u2019Neil', null);
   check(prof(r.s).name === "O'Neil", `M[SE] iPhone Smart Punctuation O’Neil is saved as O'Neil ("${prof(r.s).name}")`);
+  // ----- Phase 3A final: the five approved emoji, at most 2 -----
   for (const e of ['\u{1F3C6}', '\u2764\uFE0F', '\u{1F525}', '\u2B50', '\u{1F9E9}']) {
     r = await enterName(g, 'Loay ' + e, null);
-    check(prof(r.s).name === "O'Neil" && /letters, numbers/.test(row(r.s).note) && r.facts.count === '6 / 20',
-      `M[SE] emoji still refused: "Loay ${e}" (counted ${r.facts.count}, one character)`);
+    check(prof(r.s).name === 'Loay ' + e && row(r.s).text.startsWith('NAME:') && row(r.s).text.includes('Loay ' + e) && r.facts.count === '6 / 20',
+      `J[SE] emoji accepted and shown: "${row(r.s).text}" (counted ${r.facts.count}, one character)`);
   }
+  r = await enterName(g, 'Loay \u2764', null);
+  check(prof(r.s).name === 'Loay \u2764\uFE0F', 'J[SE] a plain ❤ is saved as ❤️ (emoji style)');
+  r = await enterName(g, 'Loay \u2764\uFE0F \u05DC\u05D5\u05D0\u05D9 \u{1F3C6}', 'polish_iphoneSE_dialog_emoji_ok.png');
+  check(prof(r.s).name === 'Loay \u2764\uFE0F \u05DC\u05D5\u05D0\u05D9 \u{1F3C6}' && row(r.s).note === 'Name saved', `J[SE] English + Hebrew + 2 emoji saved ("${row(r.s).text}")`);
+  await sleep(300);
+  await g.page.screenshot({ path: path.join(shots, 'final_iphoneSE_settings_emoji.png') });
+  const keep = prof(r.s).name;
+  for (const [nm, why, re] of [['Loay \u{1F3C6}\u{1F525}\u2B50', 'a 3rd emoji', /at most 2 emoji/], ['Loay \u{1F600}', 'another emoji', /letters, numbers/],
+    ['Loay \u{1F44D}\u{1F3FD}', 'a skin tone', /letters, numbers/], ['Loay \u2764\uFE0F\u200D\u{1F525}', 'a joined emoji', /letters, numbers/], ['Loay \u{1F1EE}\u{1F1F1}', 'a flag', /letters, numbers/]]) {
+    r = await enterName(g, nm, null);
+    if (nm.includes('\u2B50')) await g.page.screenshot({ path: path.join(shots, 'final_iphoneSE_settings_3emoji_refused.png') });
+    check(prof(r.s).name === keep && re.test(row(r.s).note), `J[SE] ${why} is refused ("${row(r.s).note}"), the name kept`);
+  }
+  r = await enterName(g, "O'Neil", null);
   for (const [nm, shot] of [['WWWWWWWWWW WWWWWWWWW', 'polish_iphoneSE_settings_long_latin.png'], ['עמנואל בן אברהם כהן', 'polish_iphoneSE_settings_long_hebrew.png']]) {
     r = await enterName(g, nm, null);
     await sleep(300);
@@ -216,13 +231,21 @@ try {
       `Q[${size}] the native field opens focused near the top; "${name}" is saved and shown`);
     await g.page.screenshot({ path: path.join(shots, `profile_${size}_settings_name.png`) });
     check((r.s.settings_over || []).length === 0, `O[${size}] Settings draws above every HUD control`);
-    for (const nm of ['Loay لؤي לואי', 'Alexandra Konstantin']) {
+    for (const nm of ['Loay لؤي לואי', 'Alexandra Konstantin', 'Loay \u{1F3C6} \u05DC\u05D5\u05D0\u05D9 \u{1F525}']) {
       r = await enterName(g, nm, null);
       await sleep(300);
       const rr = row(r.s).rect, cr = row(r.s).card;
       check(prof(r.s).name === nm && rr[0] >= cr[0] && rr[2] <= cr[2], `L[${size}] "${nm}" saved, row inside the card (font ${row(r.s).font_size})`);
-      await g.page.screenshot({ path: path.join(shots, `polish_${size}_settings_${nm === 'Alexandra Konstantin' ? 'long' : 'mixed'}.png`) });
+      await g.page.screenshot({ path: path.join(shots, `polish_${size}_settings_${nm === 'Alexandra Konstantin' ? 'long' : nm.includes('\u{1F3C6}') ? 'emoji' : 'mixed'}.png`) });
     }
+    // An emoji name survives a reload (localStorage holds it as UTF-16).
+    await closeSettings(g);
+    await g.ctx.close();
+    g = await startQA(6, dir, size, false);
+    s = await state(g);
+    check(prof(s).name === 'Loay \u{1F3C6} \u05DC\u05D5\u05D0\u05D9 \u{1F525}', `J[${size}] the emoji name survives a reload ("${prof(s).name}")`);
+    s = await openSettings(g);
+    r = { s };
     await closeSettings(g);
     s = await state(g);
     check(!s.settings_open && s.live_timer && s.live_timer.visible !== false, `O[${size}] closing Settings restores the normal HUD`);

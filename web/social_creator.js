@@ -306,7 +306,7 @@
     title.textContent = 'YOUR NAME';
     var help = document.createElement('div');
     help.style.cssText = 'font-size:14px;line-height:1.4;margin-bottom:10px;color:#5C5475';
-    help.textContent = 'Optional. Letters, numbers, spaces and - _ . \' (2-' + NAME_MAX + '). Leave empty to remove it.';
+    help.textContent = 'Optional. Letters, numbers, spaces, - _ . \' and up to 2 of \u{1F3C6} \u2764\uFE0F \u{1F525} \u2B50 \u{1F9E9} (2-' + NAME_MAX + '). Leave empty to remove it.';
     var inp = document.createElement('input');
     inp.id = 'ce-name-text';
     inp.type = 'text';

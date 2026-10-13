@@ -12,7 +12,7 @@ class_name PlayerProfile
 ##
 ## Display names: optional, duplicates allowed, kept simple and
 ## predictable - letters with their accents / vowel marks, digits, single
-## spaces and - _ . ' only; 2-20 user-perceived characters (grapheme
+## spaces, - _ . ' and at most MAX_EMOJI of the five EMOJI; 2-20 user-perceived characters (grapheme
 ## clusters: a letter plus its marks counts once) after trimming. Scripts
 ## may be mixed in one name ("Loay לואי"). The letters allowed are exactly
 ## those the Web build can draw: Latin (incl. Vietnamese), Greek and
@@ -22,7 +22,8 @@ class_name PlayerProfile
 ## formatting, emoji, symbols, scripts without a font) is refused, never
 ## silently stripped, so what the player typed is what is kept. The only
 ## folding: typographic apostrophes (iPhone Smart Punctuation types ’) become
-## '. Unicode NFC normalization is done by the native text field
+## ', and an emoji's variation selector is made canonical (❤ always gets
+## U+FE0F, the others never need it). Unicode NFC normalization is done by the native text field
 ## (web/social_creator.js) before the name gets here; GDScript has no
 ## normalizer, so this only validates.
 
@@ -31,6 +32,13 @@ const NAME_MAX := 20
 ## Combining marks allowed on one letter (Hebrew points: dagesh + vowel +
 ## shin dot; Arabic: shadda + haraka) - stops "zalgo" stacks.
 const MAX_MARKS := 3
+## The only emoji a name may use (Phase 3A, approved): the bundled
+## NotoColorEmoji-Subset5.ttf draws exactly these. Each counts as one
+## character; a name may hold at most MAX_EMOJI of them. Anything else
+## (other emoji, skin tones, joiners, flags, keycaps) is refused.
+const EMOJI := [0x1F3C6, 0x2764, 0x1F525, 0x2B50, 0x1F9E9]  # 🏆 ❤️ 🔥 ⭐ 🧩
+const MAX_EMOJI := 2
+const VS16 := 0xFE0F
 
 static var _id_re: RegEx
 
@@ -59,10 +67,27 @@ static func clean_name(raw: String) -> Dictionary:
 	var out := PackedStringArray()
 	var marks := 0
 	var prev_space := true  # collapses runs and drops leading spaces
+	var prev_emoji := false
+	var emojis := 0
 	for i in raw.length():
 		var c := raw.unicode_at(i)
 		if c == 0x2018 or c == 0x2019 or c == 0x2BC:
 			c = 0x27
+		if c == VS16:
+			# Only right after an allowed emoji (where it is already canonical).
+			if not prev_emoji or (i > 0 and raw.unicode_at(i - 1) == VS16):
+				return {"ok": false, "error": "unsupported"}
+			continue
+		if is_emoji(c):
+			emojis += 1
+			if emojis > MAX_EMOJI:
+				return {"ok": false, "error": "too_many_emoji"}
+			out.append(String.chr(c) + (String.chr(VS16) if c == 0x2764 else ""))
+			prev_space = false
+			prev_emoji = true
+			marks = 0
+			continue
+		prev_emoji = false
 		if c == 0x20:
 			if not prev_space:
 				out.append(" ")
@@ -71,7 +96,7 @@ static func clean_name(raw: String) -> Dictionary:
 			continue
 		if is_mark(c):
 			marks += 1
-			if prev_space or marks > MAX_MARKS:
+			if prev_space or marks > MAX_MARKS or (i > 0 and (is_emoji(raw.unicode_at(i - 1)) or raw.unicode_at(i - 1) == VS16)):
 				return {"ok": false, "error": "mark"}
 			out.append(String.chr(c))
 			continue
@@ -100,14 +125,27 @@ static func clean_name(raw: String) -> Dictionary:
 
 
 ## User-perceived characters of a cleaned name: every character that is not
-## a combining mark starts a new cluster (a mark always follows its letter
-## here - clean_name refuses a leading one - and the allowed set has no
-## joiners, so this is exact; web/social_creator.js counts the same with
+## a combining mark or U+FE0F starts a new cluster (a mark always follows
+## its letter here, U+FE0F its emoji - clean_name refuses anything else - and
+## the allowed set has no joiners, so this is exact; web/social_creator.js counts the same with
 ## Intl.Segmenter).
 static func grapheme_count(name: String) -> int:
 	var n := 0
 	for i in name.length():
-		if not is_mark(name.unicode_at(i)):
+		var c := name.unicode_at(i)
+		if not is_mark(c) and c != VS16:
+			n += 1
+	return n
+
+
+static func is_emoji(c: int) -> bool:
+	return EMOJI.has(c)
+
+
+static func emoji_count(name: String) -> int:
+	var n := 0
+	for i in name.length():
+		if is_emoji(name.unicode_at(i)):
 			n += 1
 	return n
 
@@ -118,7 +156,8 @@ static func error_text(code: String) -> String:
 		"too_short": return "Use at least %d characters" % NAME_MIN
 		"too_long": return "Use at most %d characters" % NAME_MAX
 		"no_letters": return "Use at least one letter or number"
-		_: return "Use letters, numbers, spaces and - _ . ' only"
+		"too_many_emoji": return "Use at most %d emoji" % MAX_EMOJI
+		_: return "Use letters, numbers, spaces, - _ . ' and 🏆 ❤️ 🔥 ⭐ 🧩 only"
 
 
 ## Letters, digits and the four punctuation marks a name may use.

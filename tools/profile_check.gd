@@ -131,6 +131,11 @@ func _names() -> void:
 		"Loay 23 לואי": "Loay 23 לואי", "לואי-Alex": "לואי-Alex", "Дана": "Дана", "Ελένη": "Ελένη", "Nguyễn Văn Ánh": "Nguyễn Văn Ánh",
 		"Ștefan": "Ștefan", "Ŵyn": "Ŵyn", "O’Neil": "O'Neil", "O‘Neil": "O'Neil", "Alexandra Konstantin": "Alexandra Konstantin",
 		"עמנואל בן אברהם כהן": "עמנואל בן אברהם כהן",
+		# Phase 3A final: the five approved emoji, at most 2, canonical ❤️.
+		"Loay \U01F3C6": "Loay \U01F3C6", "Loay \u2764\uFE0F": "Loay \u2764\uFE0F", "Loay \u2764": "Loay \u2764\uFE0F",
+		"Loay \U01F525": "Loay \U01F525", "Loay \u2B50": "Loay \u2B50", "Loay \u2B50\uFE0F": "Loay \u2B50", "Loay \U01F9E9": "Loay \U01F9E9",
+		"\U01F3C6Loay\U01F525": "\U01F3C6Loay\U01F525", "לואי \u2764\uFE0F": "לואי \u2764\uFE0F", "Loay لؤي \u2B50": "Loay لؤي \u2B50",
+		"A\U01F9E9": "A\U01F9E9", "Loay \U01F3C6 לואי \U01F525": "Loay \U01F3C6 לואי \U01F525",
 	}
 	for raw in ok_cases:
 		var r := PlayerProfile.clean_name(raw)
@@ -143,7 +148,11 @@ func _names() -> void:
 		"<b>Dana": "unsupported", "Dana!": "unsupported", "Da\"na": "unsupported", "Da\\na": "unsupported", "Dana#1": "unsupported",
 		"王芳": "unsupported", "Dana\uFE0F": "unsupported", "\u0600Dana": "unsupported",
 		"\u01C5ana": "unsupported", "Да\u0483на": "unsupported", "Ab\u037E": "unsupported", "Ab\u03D1": "unsupported", "\u0531bc": "unsupported",
-		"Loay \U01F3C6": "unsupported", "Loay \u2764\uFE0F": "unsupported", "Loay \U01F525": "unsupported", "Loay \u2B50": "unsupported", "Loay \U01F9E9": "unsupported",
+		"Loay \U01F3C6\U01F525\u2B50": "too_many_emoji", "\U01F3C6 Loay \U01F3C6 \U01F3C6": "too_many_emoji",
+		"Loay \U01F600": "unsupported", "Loay \U01F44D\U01F3FD": "unsupported", "Loay \U01F44D": "unsupported", "Loay \U01F3C6\U01F3FD": "unsupported",
+		"Loay \u2764\uFE0F\u200D\U01F525": "unsupported", "Loay \u2764\uFE0F\uFE0F": "unsupported", "Loay \uFE0F": "unsupported", "Loay \u2764\uFE0E": "unsupported",
+		"Loay \U01F1EE\U01F1F1": "unsupported", "Loay 1\uFE0F\u20E3": "unsupported", "Loay \u2665": "unsupported", "Loay \u2606": "unsupported",
+		"Loay \U01F3C6\u0301": "mark", "Loay \u2764\uFE0F\u0301": "mark", "\U01F3C6\U01F525": "no_letters", "\U01F3C6 ...": "no_letters",
 		"Lo\u200Day": "unsupported", "Loay\u2019\u202E": "unsupported",
 		"́ab": "mark", "á́́́b": "mark", "Dana ́x": "mark",
 		"---": "no_letters", "..": "no_letters", "'_'": "no_letters",
@@ -159,6 +168,12 @@ func _names() -> void:
 		pointed += "שָׁ"  # shin + qamats + shin dot: 3 code points, 1 character
 	_check(pointed.length() == 60 and PlayerProfile.clean_name(pointed)["ok"] and PlayerProfile.clean_name(pointed)["name"] == pointed, "20 pointed Hebrew letters (60 code points) fit, unsplit")
 	_check(PlayerProfile.clean_name(pointed + "ש")["error"] == "too_long", "... a 21st letter does not")
+	_check(PlayerProfile.grapheme_count("Loay \u2764\uFE0F") == 6 and PlayerProfile.grapheme_count("\U01F3C6Loay\U01F525") == 6, "an emoji (with its U+FE0F) counts as one character")
+	_check(PlayerProfile.clean_name("ABCDEFGHIJKLMNOPQR\U01F3C6\u2764")["name"] == "ABCDEFGHIJKLMNOPQR\U01F3C6\u2764\uFE0F", "18 letters + 2 emoji = 20 fit")
+	_check(PlayerProfile.clean_name("ABCDEFGHIJKLMNOPQRS\U01F3C6\U01F525")["error"] == "too_long", "19 letters + 2 emoji = 21 do not")
+	var canon: String = PlayerProfile.clean_name("Loay \u2764")["name"]
+	_check(PlayerProfile.clean_name(canon)["name"] == canon, "the canonical emoji form is stable (a stored name stays valid)")
+	_check(PlayerProfile.error_text("too_many_emoji").contains("2") and PlayerProfile.error_text("unsupported").contains("\U01F9E9"), "emoji error texts")
 	_check(PlayerProfile.error_text("too_long").contains("20") and PlayerProfile.error_text("unsupported") != "", "every error has a friendly text")
 	_fonts()
 	_done.append("names")
@@ -174,7 +189,7 @@ func _fonts() -> void:
 	var allowed := 0
 	var missing := PackedStringArray()
 	for c in range(0x20, 0x30000):
-		if not (PlayerProfile.is_base(c) or PlayerProfile.is_mark(c)):
+		if not (PlayerProfile.is_base(c) or PlayerProfile.is_mark(c) or PlayerProfile.is_emoji(c)):
 			continue
 		allowed += 1
 		var drawn := false
@@ -184,6 +199,12 @@ func _fonts() -> void:
 				break
 		if not drawn:
 			missing.append("U+%04X" % c)
+	var emoji_font: Font = load(MessageText.FALLBACKS[-1])
+	var emoji_ok := true
+	for c in PlayerProfile.EMOJI:
+		emoji_ok = emoji_ok and emoji_font.has_char(c) and not ThemeDB.fallback_font.has_char(c)
+	_check(emoji_ok and PlayerProfile.EMOJI.size() == 5, "the 5 emoji come from the bundled colour subset font (Open Sans has none of them)")
+	_check(FileAccess.get_file_as_bytes(MessageText.FALLBACKS[-1]).size() < 16000, "the emoji font stays tiny (< 16 KB)")
 	_check(missing.is_empty() and allowed > 900, "every allowed name character (%d) has a glyph in the Web fonts (missing: %s)" % [allowed, " ".join(missing.slice(0, 20))])
 
 
@@ -378,6 +399,12 @@ func _backup() -> void:
 	var q := PlayerProgress.from_text(PlayerProgress.decode_backup(code))
 	_check(q != null and q.player_id == p.player_id and q.display_name == "مُحَمَّد" and q.name_set_unix == 123,
 		"a backup code carries the id and the (Arabic) name")
+	var pe := _source("b_emoji", "Loay \u2764\uFE0F לואי \U01F3C6", 124)
+	var qe := PlayerProgress.from_text(PlayerProgress.decode_backup(pe.backup_code()))
+	pe.save()
+	var pe_back := PlayerProgress.new(pe.path).load_from_disk()
+	_check(qe != null and qe.display_name == "Loay \u2764\uFE0F לואי \U01F3C6" and pe_back.display_name == qe.display_name,
+		"an emoji name survives the save file and a backup code unchanged")
 	var fresh := _fresh("b_dst")
 	fresh.ensure_identity()
 	fresh.merge_from(q)
@@ -446,6 +473,11 @@ func _game() -> void:
 	_check(PlayerProgress.identity_enabled and PlayerProfile.is_valid_id(id), "the game makes an id at its first start")
 	_check(FileAccess.get_file_as_string(save_path).contains(id), "... and saves it at once")
 	_check(game.ui._name_button != null and game.ui.name_row_state()["text"] == "ADD YOUR NAME (OPTIONAL)", "Settings has the optional name row")
+	game.set_display_name("Loay \U01F3C6")
+	_check(game.ui.name_row_state()["text"] == "NAME:  " + MessageText.FSI + "Loay \U01F3C6" + MessageText.PDI, "a saved name shows as \"NAME: <name>\" (%s)" % game.ui.name_row_state()["text"])
+	game.set_display_name("Loay \U01F3C6\U01F525\u2B50")
+	_check(game.progress.display_name == "Loay \U01F3C6" and game.ui.name_row_state()["note"] == PlayerProfile.error_text("too_many_emoji"), "a 3rd emoji is refused with its reason, the name kept")
+	game.set_display_name("")
 	game.ui._open_settings()
 	await _frames(2)
 	game.set_display_name("דנה")

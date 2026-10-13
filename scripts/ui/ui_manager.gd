@@ -1094,7 +1094,7 @@ var _name_zone_set := false
 const NAME_NOTE := "Optional - kept on this device only"
 
 
-## Settings row: "YOUR NAME: <name>" / "ADD YOUR NAME (OPTIONAL)" and a
+## Settings row: "NAME: <name>" / "ADD YOUR NAME (OPTIONAL)" and a
 ## small note under it. On the Web a tap opens the native name dialog
 ## (web/social_creator.js, zone "name") from inside the tap, so the iPhone
 ## keyboard comes up; the result is polled while Settings is open.
@@ -1120,7 +1120,7 @@ func set_profile_name(name: String, note: String = "") -> void:
 	_profile_name = name
 	if _name_button == null:
 		return
-	_name_button.text = ("YOUR NAME:  " + MessageText.FSI + name + MessageText.PDI) if name != "" else "ADD YOUR NAME (OPTIONAL)"
+	_name_button.text = ("NAME:  " + MessageText.FSI + name + MessageText.PDI) if name != "" else "ADD YOUR NAME (OPTIONAL)"
 	_name_note.text = note if note != "" else NAME_NOTE
 	_name_note.add_theme_color_override("font_color", Palette.ACCENT if note != "" else Palette.TEXT_SOFT)
 	_fit_name_button()

@@ -20,6 +20,8 @@ class_name MessageText
 const FALLBACKS := [
 	"res://assets/fonts/NotoSansArabic-SemiBold.woff2",
 	"res://assets/fonts/NotoSansHebrew-SemiBold.woff2",
+	# Colour emoji, ONLY 🏆 ❤️ 🔥 ⭐ 🧩 (a 12 KB subset; names allow exactly these).
+	"res://assets/fonts/NotoColorEmoji-Subset5.ttf",
 ]
 ## Unicode isolates: the message keeps its own direction inside the
 ## quotes (U+2068 FIRST STRONG ISOLATE ... U+2069 POP DIRECTIONAL ISOLATE).

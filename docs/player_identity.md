@@ -1,6 +1,6 @@
 # Player Identity: Phase 3A (QA only)
 
-**Status:** in the QA and dev builds. 3A tested on a real iPhone; the 3A polish (Settings layering, 20 characters, mixed scripts) is waiting for real-iPhone QA.
+**Status:** in the QA and dev builds. 3A tested on a real iPhone; the 3A polish (Settings layering, 20 characters, mixed scripts) and the final refinements (NAME: label, 5 emoji) are waiting for real-iPhone QA.
 
 **Production is unchanged.** The player build ("Web Friend Test") has no identity: no id, no name row, and no `[profile]` written.
 
@@ -11,7 +11,7 @@ The switch is `BuildFlags.player_identity()` (`scripts/core/build_flags.gd`), wh
 - **An anonymous player id.** A random UUID v4 is made on this device the first time the game starts, then kept in the save.
   - It comes from Godot's `Crypto` (mbedTLS CTR-DRBG, seeded from the OS entropy source; on the Web, `crypto.getRandomValues` through Emscripten).
   - It is **never shown** in the game. Test builds publish only a 12-character hash of it.
-- **An optional display name in Settings.** The row reads "ADD YOUR NAME (OPTIONAL)" or "YOUR NAME: …", with "Optional - kept on this device only" under it.
+- **An optional display name in Settings.** The row reads "ADD YOUR NAME (OPTIONAL)" or, once a name is saved, "NAME: …", with "Optional - kept on this device only" under it.
   - Tapping the row opens the native name field: the same iPhone-safe approach as the challenge message, with the keyboard coming up from the tap and the field pinned above the keyboard.
   - The field normalizes text to Unicode NFC and trims it. The game then validates it.
 
@@ -53,6 +53,7 @@ These live in `scripts/core/player_profile.gd` and are kept simple and predictab
   - Hebrew letters, with points, maqaf, geresh and gershayim (Noto Sans Hebrew).
   - Arabic letters, with harakat and Arabic-Indic digits (Noto Sans Arabic).
   - Digits, spaces, and `- _ . '`.
+  - **Up to 2 of these 5 emoji: 🏆 ❤️ 🔥 ⭐ 🧩.** Each counts as one character toward the 20. A plain ❤ is saved as ❤️ (with U+FE0F, so it is emoji-style everywhere); the others are saved without it. Any other emoji, skin tones, joined emoji (ZWJ), flags, keycaps and a stray U+FE0F are refused. A name still needs a letter or digit.
   - ProfileCheck checks every allowed code point against those fonts. Unrenderable Latin Extended-B letters that 3A allowed are now refused.
 - **Folding:** the typographic apostrophes `‘ ’ ʼ` become `'` (iPhone Smart Punctuation types `’` for `'`). Nothing else is changed.
 - **At least one letter or digit.** At most 3 combining marks on one letter, and never a mark with no letter.
@@ -60,10 +61,10 @@ These live in `scripts/core/player_profile.gd` and are kept simple and predictab
   - control characters;
   - bidi controls (LRM/RLM, embeddings and overrides, isolates, ALM);
   - zero-width characters, joiners and BOM;
-  - variation selectors, emoji and other symbols;
+  - variation selectors (except U+FE0F right after an allowed emoji), other emoji and symbols;
   - scripts without a bundled font (CJK, Armenian, Devanagari, …), and the replacement character.
 - **A refused name** keeps the current one, and the row shows the reason. **An empty name** removes it. **Duplicate names** are allowed.
-- **Display:** names use `MessageText` fonts and are isolated with FSI…PDI, so an RTL name keeps its direction after "YOUR NAME:". Adjacent RTL words read right to left, as in any Unicode text: "Loay لؤي לואי" shows as "Loay לואי لؤي".
+- **Display:** names use `MessageText` fonts (the last fallback is the 11.8 KB `NotoColorEmoji-Subset5.ttf`, which has only the 5 emoji) and are isolated with FSI…PDI, so an RTL name keeps its direction after "NAME:". Adjacent RTL words read right to left, as in any Unicode text: "Loay لؤي לואי" shows as "Loay לואי لؤي".
 
 ## Settings layering (3A polish)
 
@@ -71,16 +72,13 @@ Every control of the UI CanvasLayer draws, and receives taps, in tree order. `_b
 
 The level-complete / try-again card keeps the coin pill above its dimmer on purpose: it is the coin fly-in target, and the card is placed below the top HUD (`_card_fit_scale`).
 
-## Emoji (investigated, not enabled)
+## Emoji (enabled: 5 only)
 
-- A subset of Noto Color Emoji (OFL, CBDT bitmaps) with only 🏆 ❤️ 🔥 ⭐ 🧩 is 11.8 KB (about 2.4 KB per emoji). Godot 4.3 on the Web draws it in colour as a fallback after Open Sans and Noto Hebrew, at 26 and 40 px, with or without the U+FE0F variation selector.
-- Any emoji outside the subset draws as a box, and the Web build has no system emoji font. So emoji could only ever be a fixed whitelist. The full font is 10.8 MB, too large to bundle.
-- The smallest safe implementation, if approved:
-  1. Bundle the subset font as the last `MessageText` fallback.
-  2. Accept only whitelisted emoji, each optionally followed by U+FE0F, and count each as one character (`Intl.Segmenter` already does).
-  3. Keep refusing joiners, skin tones and flags.
-  4. Optionally allow at most 2 emoji per name.
-- Native entry on iPhone and Android uses the system emoji font and needs no change. A future leaderboard drawn in Godot would show the same subset glyphs on every platform.
+- `assets/fonts/NotoColorEmoji-Subset5.ttf` is Noto Color Emoji (OFL) cut to 🏆 ❤️ 🔥 ⭐ 🧩: 11.8 KB of colour bitmaps, imported with embedded bitmaps on. It is the last `MessageText` fallback, so Godot draws the emoji itself, the same on iPhone Safari, Android and desktop.
+- The web build has no system emoji font, so any other emoji would draw as a box. That is why only the five are allowed.
+- The native field (iPhone keyboard) shows the system emoji. It counts each emoji as one character, as the game does.
+- Saves and backup codes store the name as UTF-8 text. Emoji names survive the save file, a backup code and a reload (localStorage) unchanged (tested).
+- Older builds that do not know an emoji (`256e9bb` and earlier) clear such a name when they load it. Progress is not affected.
 
 ## Restore and transfer: whose identity is kept
 
@@ -113,7 +111,7 @@ A non-empty local id is never replaced while the save has progress.
 | `scripts/core/player_progress.gd` | `[profile]` read and write, `ensure_identity()` (with recovery from other copies), `set_display_name()`, merge rules |
 | `scripts/core/build_flags.gd` | `player_identity()` |
 | `scripts/game_manager.gd` | Enables identity, ensures it after load / transfer / restore, Settings name handler, test state (id hash only) |
-| `scripts/ui/ui_manager.gd` | Settings YOUR NAME row and note, the native-field zone and polling |
+| `scripts/ui/ui_manager.gd` | Settings NAME row and note, the native-field zone and polling |
 | `scripts/social/social_web.gd` | `set_name_draft()`, `take_name()` |
 | `web/social_creator.js` and `export_presets.cfg` (regenerated with `tools/sync_web_head.py`) | Native name dialog (zone `name`, NFC, `dir=auto`, 18 px, SAVE / CANCEL) |
 | `tools/profile_check.gd`, `tools/ProfileCheck.tscn` (new) | Headless checks |
@@ -130,10 +128,11 @@ SHOTS=<dir> node tools/web_profile_test.mjs build/web_qa build/web_friend <previ
 
 1. Open `…/index.html?experiencelab=6&qareset=1` and open Settings (gear). The **ADD YOUR NAME (OPTIONAL)** row should be there.
 2. Tap it. The name field should open with the keyboard up and stay visible above the keyboard.
-3. Type a Hebrew name, for example דנה כהן, and tap SAVE. It should show as "YOUR NAME: דנה כהן", reading right to left.
-4. Try an emoji name: it is refused with a reason and the old name stays. Then try an Arabic name (محمد) and an English one (Alex O'Neil, typed with the iPhone apostrophe).
+3. Type a Hebrew name, for example דנה כהן, and tap SAVE. It should show as "NAME: דנה כהן", reading right to left.
+4. Try an emoji outside the five (😀): it is refused with a reason and the old name stays. Then try an Arabic name (محمد) and an English one (Alex O'Neil, typed with the iPhone apostrophe).
 4a. Mixed names: Loay לואי, Loay محمد, לואי Alex, Loay لؤي לואי. A 20-character name saves (the counter shows 20 / 20); at 21, SAVE waits.
 4b. With Settings open in a level, the coins and TIME / MY BEST are dimmed under the card, and tapping them closes Settings without opening the shop.
+4c. Emoji: Loay 🏆, Loay ❤️ לואי 🏆 (saved, shown in colour as "NAME: …"). A third emoji is refused ("Use at most 2 emoji"), as is 😀, 👍🏽 or a flag.
 5. Tap the row and SAVE with the field empty: the name is removed.
 6. Set a name, close Safari completely, reopen `?experiencelab=6` **without** `qareset`: the name should still be there.
 7. Check that normal play, audio and the TIME / MY BEST display are unchanged.
