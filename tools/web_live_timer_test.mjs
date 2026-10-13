@@ -25,8 +25,9 @@
 // I: storage isolation: the release save (chain_escape_save_r2) and the old
 //    save (chain_escape_save) stay byte-identical; the QA build writes only
 //    chain_escape_experiencelab_qa_save.
-// P: the player (production) build: no live HUD, coins top-right, released
-//    hearts (34), the CHAIN popup still shows.
+// P: the player (production) build has the same approved layout C: live
+//    TIME / MY BEST (AttemptTimer), 44-unit hearts, coins under TOTAL SCORE,
+//    no overlaps, no CHAIN popup, release save namespace (r2).
 // E: no page errors.
 import http from 'node:http';
 import fs from 'node:fs';
@@ -257,8 +258,14 @@ try {
   s = await waitFor(g, (x) => !x.title_open && x.level === 1, 'prod level 1');
   await sleep(800);
   s = await state(g);
-  check(s.player_build && !lt(s).visible && !lt(s).qa_hud && lt(s).heart_size === 34 && (lt(s).r_coins[0] + lt(s).r_coins[2]) / 2 > 0.5,
-    'P: the player (production) build: no live HUD, released hearts (34), coins top-right');
+  check(s.player_build && lt(s).visible && lt(s).qa_hud && lt(s).heart_size === 44 && lt(s).caption_size === 27 && lt(s).value_size === 34
+    && lt(s).time_caption === 'TIME' && lt(s).best_caption === 'MY BEST' && coinsLeft(s) && !lt(s).chain_visible,
+    `P: the player (production) build shows layout C: ${desc(s)}, hearts ${lt(s).heart_size}, coins under TOTAL SCORE, no CHAIN popup`);
+  await sleep(2300);
+  await g.page.touchscreen.tap(s.settings_button[0] * g.W, s.settings_button[1] * g.H);  // Settings: the clock pauses, the state is republished
+  s = await waitFor(g, (x) => x.settings_open && x.attempt_ms > 0, 'prod settings', 8000);
+  check(lt(s).time === fmt(s.attempt_ms) && s.attempt_ms >= 1500 && layoutOk(s),
+    `P: production TIME ${lt(s).time} = AttemptTimer ${s.attempt_ms} ms; ${layoutDesc(s)}`);
   await g.page.screenshot({ path: path.join(shots, 'live_player_build_level1.png') });
   await g.ctx.close();
 } catch (e) {

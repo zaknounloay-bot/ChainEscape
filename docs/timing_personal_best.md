@@ -135,9 +135,9 @@ Recommendation: option 1. It is quiet, has no effect on the result card's height
 - Chromium's CDP page-freeze does not stop frames in the headless setup, so real suspension is a real-iPhone QA item.
 - Under headless SwiftShader every screenshot stalls the page for 0.3–0.45 s, and the 0.25 s cap takes that off by design. The test reads the page's own frame times and allows for exactly that.
 
-## Gameplay HUD, layout C (QA builds only)
+## Gameplay HUD, layout C (all builds)
 
-Approved after real-iPhone feedback that TIME, MY BEST and the hearts were too small. It appears in **QA, dev and lab builds only** (`BuildFlags.live_timer_hud()`). The player (production) build keeps the released HUD until approved: coins top-right, 34-unit hearts, the CHAIN popup.
+Approved after real-iPhone feedback that TIME, MY BEST and the hearts were too small, and then approved for Production after real-iPhone QA. It is on in **every build**, the player (production) build included. The switch is `BuildFlags.live_timer_hud()`, which returns `true`.
 
 | Area | Layout C |
 |---|---|
@@ -220,3 +220,23 @@ Use an external stopwatch for item 2. "Card" means the result card after the cle
 | 14 | Stability | Play 10–15 minutes across levels with sound on | Audio, touch response, animations and performance are the same as the released build |
 
 Report any item that fails, with the level number, what the card showed, and the stopwatch reading.
+
+## Production release candidate (Timing + Personal Best + layout C)
+
+- **Contents:** active-play timing, BEST / BEST CLEAN records, the result-card timing panel, the live TIME / MY BEST HUD and layout C (coins under TOTAL SCORE, 44-unit hearts, no CHAIN popup).
+- **What stays the same:**
+  - the 300 levels (`af7dc72`, tag `chain-escape-1-300-freeze`);
+  - scoring, coins, rewards, assists and gameplay;
+  - the save format (version 5);
+  - the release save namespace (`progress_r2.cfg`, `chain_escape_save_r2`, `chain_escape_beacon_r2`): existing progress carries over, nothing is reset or migrated;
+  - the QA build's separate save (`chain_escape_experiencelab_qa_save`).
+- **Built from** the "Web Friend Test" preset (`player_build`), exactly like the 1-300 release.
+
+### Rollback
+
+1. **Fastest, no rebuild:** re-upload the 1-300 release ZIP `ChainEscape_Web_1_300_RELEASE.zip` (SHA-256 `849626cb…a285e`) on itch.io.
+   - The saves stay compatible. That build keeps the `[times]` / `[clean_times]` sections it doesn't know (tested: `tools/web_timing_compat_test.mjs`), so nothing is lost if the candidate is re-released later.
+2. **HUD only:** set `BuildFlags.live_timer_hud()` back to `return not player_build()` and re-export.
+   - Production goes back to the 1-300 HUD: coins top-right, 34-unit hearts, CHAIN popup, no live timer.
+   - Timing, the records and the result-card panel stay.
+3. **Everything:** re-export from tag `chain-escape-1-300-freeze` (`af7dc72`).

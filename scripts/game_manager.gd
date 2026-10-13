@@ -285,7 +285,7 @@ func request_restore() -> void:
 
 var _published_panels := ""
 var _frame_usec := Time.get_ticks_usec()
-## LIVE TIMER HUD on (QA / dev / lab builds - BuildFlags.live_timer_hud).
+## LIVE TIMER HUD on (every build - BuildFlags.live_timer_hud).
 var _live_timer := BuildFlags.live_timer_hud()
 
 

@@ -73,10 +73,9 @@ var _card_count: Tween
 var _hud_total: VBoxContainer
 # LIVE TIMER HUD (BuildFlags.live_timer_hud): this attempt's TIME under
 # TOTAL SCORE (top-left), the level's BEST under the coins (top-right).
-## QA / dev / lab builds: the larger, re-arranged gameplay HUD (approved
-## layout "C"): coins under TOTAL SCORE, 44-unit hearts in the centre, TIME
-## and MY BEST stacked on the right, no CHAIN xN popup. The player build keeps
-## the released HUD.
+## The larger, re-arranged gameplay HUD (approved layout "C"): coins under
+## TOTAL SCORE, 44-unit hearts in the centre, TIME and MY BEST stacked on the
+## right, no CHAIN xN popup. On in every build (BuildFlags.live_timer_hud).
 var _qa_hud := BuildFlags.live_timer_hud()
 var _hud_col: VBoxContainer  # TIME / MY BEST, top-right
 var _hud_time: HBoxContainer  # the TIME row
@@ -816,7 +815,7 @@ func _build() -> void:
 	_hearts_holder.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	_hearts = HeartsBar.new()
 	if BuildFlags.live_timer_hud():
-		# QA / dev / lab builds: 44-unit hearts (released: 34), gap 15
+		# Layout C: 44-unit hearts (1-300 release: 34), gap 15
 		# (released: 12) - real-iPhone feedback; same mechanics.
 		_hearts.heart_size = QA_HEART_SIZE
 		_hearts.gap = QA_HEART_GAP
@@ -1273,7 +1272,7 @@ func _build_live_timer_hud() -> void:
 	_hud_best_value = parts[1][2]
 
 
-## Layout C sizes (QA builds, real-iPhone feedback): captions 27 (TOTAL
+## Layout C sizes (real-iPhone feedback): captions 27 (TOTAL
 ## SCORE's caption is 15), values 34 (TOTAL SCORE's value is 26), hearts 44
 ## with a gap of 15 (released: 34 / 12).
 const HUD_TIME_CAPTION_SIZE := 27

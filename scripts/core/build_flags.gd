@@ -36,11 +36,13 @@ static func debug_off() -> bool:
 	return player_build() or magnet_lab()
 
 
-## LIVE TIMER HUD (TIME under TOTAL SCORE, BEST under the coins): QA, dev
-## and lab builds only, for real-iPhone QA - never the player build until
-## it is approved for Production.
+## GAMEPLAY HUD, layout C, with the live TIME / MY BEST timer (approved
+## after real-iPhone QA): on in EVERY build, the player (production) build
+## included. To roll the Production HUD back to the 1-300 release layout
+## (coins top-right, 34-unit hearts, CHAIN popup, no live timer), return
+## `not player_build()` here - nothing else changes.
 static func live_timer_hud() -> bool:
-	return not player_build()
+	return true
 
 
 ## The other developer pages (?openinglab, ?twinsprototype, ?mechlab,
