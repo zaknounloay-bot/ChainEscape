@@ -9,6 +9,7 @@ signal closed
 var _balance: Label
 var _rows: Dictionary = {}  # item -> {"owned": Label, "buy": PillButton}
 var _note: Label
+var _done: PillButton  # CLOSE (tests read its position)
 
 const ITEMS := {
 	"hint": {"title": "SHOW A MOVE", "desc": "Shows one good move", "icon": PillButton.Icon.HINT},
@@ -78,6 +79,7 @@ func _ready() -> void:
 	var done := PillButton.new("CLOSE", PillButton.Icon.NONE, Palette.BACKGROUND, Palette.TEXT, 28)
 	done.custom_minimum_size = Vector2(0, 84)
 	done.pressed.connect(close)
+	_done = done
 	box.add_child(done)
 
 
@@ -95,6 +97,16 @@ func refresh(coins: int, inventory: Dictionary) -> void:
 		_rows[item]["owned"].text = "Owned: %d" % inventory.get(item, 0)
 		_rows[item]["buy"].text = str(price)
 		_rows[item]["buy"].disabled = coins < price
+
+
+## Browser tests: centers of the CLOSE and BUY buttons (global coordinates).
+func button_centers() -> Dictionary:
+	var out := {}
+	if _done:
+		out["close"] = _done.get_global_rect().get_center()
+	for item in _rows:
+		out["buy_" + item] = _rows[item]["buy"].get_global_rect().get_center()
+	return out
 
 
 func close() -> void:

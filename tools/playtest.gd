@@ -594,8 +594,15 @@ func _test_hint_booster() -> void:
 	_check(game.hint_block != -1 and game.progress.inventory["hint"] == 0 and game.booster_hints_used == 1, "hint booster used when no free hints are left")
 	_check(game.model.can_escape(game.hint_block), "booster hint is a legal move")
 	await _tap(game.hint_block)
+	var coins_before: int = game.progress.coins
 	game.request_hint()
 	_check(game.hint_block == -1, "no hint without free hints or boosters")
+	if BuildFlags.feedback_polish():
+		# Phase 2A: nothing left on a board that can still be cleared -> the
+		# Shop opens; nothing is bought or used.
+		_check(game.ui.is_shop_open() and game.progress.coins == coins_before and game.progress.inventory["hint"] == 0,
+			"out of SHOW A MOVE on a solvable board: the Shop opens, nothing bought")
+		game.ui._shop.close()
 	print("Hint booster OK")
 
 
@@ -1009,6 +1016,8 @@ func _test_hint_limits() -> void:
 		for i in 3:
 			game.request_hint()
 			await _frames(1)
+			if game.ui.is_shop_open():
+				game.ui._shop.close()  # Phase 2A: out of hints -> Shop (closed again here)
 			if game.hint_block != -1:
 				await _tap(game.hint_block)  # follow it so the next can show
 				await _wait(0.05)

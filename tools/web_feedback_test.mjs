@@ -19,6 +19,11 @@
 //    - light (L6) and dark (L41) Chapters on iPhone SE / 14 / Pro Max: the
 //      lost heart, the heart chip and the HUD stay on screen, nothing
 //      overlaps.
+// A: assist buttons (QA): grey SHOW A MOVE / HAMMER open the Shop when
+//    buying would help; nothing is bought without a tap; the Shop pauses
+//    the clock and closing it resumes the same attempt; a bought hint is
+//    used only on the next tap (then assisted); the Hammer limit and a
+//    lost board never lead to the Shop.
 // I: storage isolation: the release save (chain_escape_save_r2) and the old
 //    save stay byte-identical; the QA build writes only its own key
 //    (ExperienceLab.QA_MIRROR_KEY).
@@ -249,6 +254,74 @@ try {
       await g.ctx.close();
     }
   }
+
+  // ===== A: assist buttons =====
+  g = await startQA(14, profile, 'iphoneSE');
+  s = await state(g);
+  check(fb(s).hint_owned === 1 && s.coins === 60, `A: L14 (no free hints) starts with 1 SHOW A MOVE booster, ${s.coins} coins`);
+  await tapFrac(g, s.hint_button[0], s.hint_button[1]);
+  s = await waitFor(g, (x) => x.hint_block >= 0, 'booster hint', 8000);
+  const hinted = blockOf(s, (x) => x.id === s.hint_block);
+  await tapFrac(g, hinted.x, hinted.y);
+  await waitFor(g, (x) => !blockOf(x, (k) => k.id === hinted.id), 'hinted block escaped', 8000);
+  await sleep(500);
+  s = await sample(g);
+  const coinsA = s.coins;
+  check(fb(s).hint_owned === 0 && s.attempt_assisted, 'A: the booster was used (assisted, as before); none left - SHOW A MOVE is grey');
+  await tapFrac(g, s.hint_button[0], s.hint_button[1]);
+  await sleep(600);
+  s = await sample(g);
+  await g.page.screenshot({ path: path.join(shots, 'fb_iphoneSE_L14_hint_shop.png') });
+  check(fb(s).shop_open && s.hint_block === -1 && s.coins === coinsA && fb(s).hint_owned === 0,
+    `A: grey SHOW A MOVE on a solvable board opens the SHOP; nothing bought (${s.coins} coins)`);
+  const t1 = s.attempt_ms;
+  await sleep(1200);
+  s = await sample(g);
+  check(!s.attempt_active && s.attempt_ms === t1, `A: SHOP open - the attempt's clock is paused (${t1} -> ${s.attempt_ms} ms)`);
+  const buy = fb(s).shop_buttons.buy_hint;
+  await tapFrac(g, buy[0], buy[1]);
+  await sleep(500);
+  s = await sample(g);
+  check(s.coins === coinsA - 30 && fb(s).hint_owned === 1 && s.hint_block === -1, `A: buying by tap: ${coinsA} -> ${s.coins} coins, 1 booster, no hint shown`);
+  const close = fb(s).shop_buttons.close;
+  await tapFrac(g, close[0], close[1]);
+  await sleep(1300);
+  s = await sample(g);
+  check(!fb(s).shop_open && s.attempt_ms > t1 && s.level === 14 && !s.completed && !s.title_open,  // (sampled with the debug panel up, which itself pauses)
+    `A: SHOP closed - the same attempt goes on (${t1} -> ${s.attempt_ms} ms)`);
+  await tapFrac(g, s.hint_button[0], s.hint_button[1]);
+  s = await waitFor(g, (x) => x.hint_block >= 0, 'bought hint', 8000);
+  check(fb(s).hint_owned === 0, 'A: the next SHOW A MOVE tap uses the bought booster');
+  // HAMMER: none owned -> SHOP
+  s = await state(g);
+  await tapFrac(g, s.hammer_button[0], s.hammer_button[1]);
+  await sleep(600);
+  s = await sample(g);
+  await g.page.screenshot({ path: path.join(shots, 'fb_iphoneSE_L14_hammer_shop.png') });
+  check(fb(s).shop_open && !s.hammer_armed && fb(s).hammer_owned === 0, 'A: grey HAMMER (none owned) opens the SHOP; nothing bought, not armed');
+  await tapFrac(g, fb(s).shop_buttons.close[0], fb(s).shop_buttons.close[1]);
+  await sleep(500);
+  await g.ctx.close();
+  // A lost board with nothing left: the dead-end pointer, never the SHOP.
+  g = await startQA(7, profile, 'iphoneSE');
+  s = await state(g);
+  await tapFrac(g, s.hint_button[0], s.hint_button[1]);  // spends the only booster (L7 has no free hints)
+  s = await waitFor(g, (x) => x.hint_block >= 0, 'L7 booster hint', 8000);
+  for (const id of [0, 3, 4]) {
+    const x = await state(g);
+    const blk = blockOf(x, (k) => k.id === id);
+    await tapFrac(g, blk.x, blk.y);
+    await waitFor(g, (y) => !blockOf(y, (k) => k.id === id), `#${id} gone`, 6000);
+    await sleep(350);
+  }
+  s = await sample(g);
+  check(fb(s).hint_owned === 0, 'A: L7 dead end reached with no SHOW A MOVE left');
+  const seqA = fb(s).seq;
+  await tapFrac(g, s.hint_button[0], s.hint_button[1]);
+  await sleep(500);
+  s = await sample(g);
+  check(!fb(s).shop_open && fb(s).seq > seqA && /^No moves left - tap Undo$/.test(fb(s).tip), `A: SHOW A MOVE on a dead end: "${fb(s).tip}", no SHOP`);
+  await g.ctx.close();
 
   // ===== I: storage isolation =====
   g = await open(QA + '?experiencelab=6', profile, 'iphoneSE');

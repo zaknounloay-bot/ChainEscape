@@ -19,6 +19,11 @@ extends Node
 ## H. Rapid repeated taps never stack rings, hearts or padlock beats.
 ## I. Rules untouched: mistakes / chain / hearts / score settle as before,
 ##    nothing new in the save, no per-frame loop added.
+## J. Assist buttons: SHOW A MOVE with nothing left opens the Shop only
+##    when the board can still be cleared (else the dead-end pointer);
+##    HAMMER checks the per-level limit before the inventory; nothing is
+##    bought or used without a tap; the Shop pauses the attempt's clock and
+##    closing it resumes the same attempt; buying is not an assist, using is.
 
 const SAVE := "user://feedback_check_progress.cfg"
 var passed := 0
@@ -59,7 +64,8 @@ func _run() -> void:
 	await _no_moves()
 	await _rapid()
 	await _rules_and_save()
-	_check(_done == ["no_hearts", "hearts", "themes", "locked", "free", "ambiguous", "no_moves", "rapid", "rules"],
+	await _assists()
+	_check(_done == ["no_hearts", "hearts", "themes", "locked", "free", "ambiguous", "no_moves", "rapid", "rules", "assists"],
 		"every section ran to its end (%s)" % [_done])
 	game.queue_free()
 	await _wait(3.5)  # pending message timers and tweens finish before quitting
@@ -501,3 +507,115 @@ func _rules_and_save() -> void:
 	var raw := FileAccess.get_file_as_string(SAVE)
 	_check(raw != "" and not raw.contains("feedback") and not raw.contains("heart_chip"), "nothing new is written to the save")
 	_done.append("rules")
+
+
+# --- J. Assist buttons ----------------------------------------------------------
+
+func _no_hints_left() -> void:
+	game.free_hints_used = game.hints_allowed()
+	game.progress.inventory["hint"] = 0
+	game._refresh_buttons()
+
+
+func _assists() -> void:
+	game.progress.coins = 500
+	game.progress.inventory["hammer"] = 0
+	await _start(31)
+	_check(game.hints_allowed() == 2 and game._attempt_active(), "L31: 2 free hints, a running attempt")
+	_no_hints_left()
+	await _frames(10)
+	var e0: float = game.attempt_timer.elapsed
+	var coins: int = game.progress.coins
+	game.request_hint()
+	await _frames(1)
+	_check(game.ui.is_shop_open() and game.hint_block == -1, "grey SHOW A MOVE on a solvable board opens the Shop (no hint shown)")
+	_check(game.progress.coins == coins and game.progress.inventory["hint"] == 0 and game.hints_used == 0 and game.booster_hints_used == 0,
+		"... nothing is bought or used")
+	_check(not game.attempt_assisted, "... and the attempt is not marked assisted")
+	# The Shop pauses the clock; closing it resumes the same attempt.
+	var p0: float = game.attempt_timer.elapsed
+	await _frames(20)
+	_check(not game._attempt_active() and game.attempt_timer.elapsed == p0, "Shop open: the attempt's clock is paused (as before)")
+	game.ui.buy_requested.emit("hint")
+	await _frames(1)
+	_check(game.progress.coins == coins - Economy.price("hint") and game.progress.inventory["hint"] == 1, "buying in the Shop spends the usual price (%d)" % Economy.price("hint"))
+	_check(not game.attempt_assisted and game.hint_block == -1 and game.hints_used == 0, "buying without using: not assisted, no hint shown")
+	game.ui._shop.close()
+	await _frames(20)
+	_check(game._attempt_active() and game.attempt_timer.elapsed > p0 and game.attempt_timer.elapsed >= e0 and game.current_level == 31 and not game.completed,
+		"Shop closed: the SAME attempt goes on (%.2f s -> %.2f s)" % [p0, game.attempt_timer.elapsed])
+	game.request_hint()
+	await _frames(1)
+	_check(game.hint_block != -1 and game.progress.inventory["hint"] == 0 and game.booster_hints_used == 1 and game.attempt_assisted,
+		"the next tap uses the bought hint, counted as before (assisted)")
+	# Out of hints on a board that can't be cleared: no Shop.
+	await _start(7)
+	for id in [0, 3, 4]:
+		game._on_block_tapped(id)
+		await _frames(1)
+	await _frames(4)
+	_check(game.model.playable_ids().is_empty() and not game.model.is_empty(), "L7: a dead end (no moves left)")
+	_no_hints_left()
+	game.tutorial.hide_hint(true)
+	game.request_hint()
+	await _frames(1)
+	_check(not game.ui.is_shop_open() and game.tutorial._text == "No moves left - tap Undo", "grey SHOW A MOVE on a dead end: no Shop, '%s'" % game.tutorial._text)
+	var lost := -1
+	for n in range(8, 100):
+		await _start(n)
+		var m: BoardModel = game.model
+		for id in m.playable_ids():
+			if m.move_state(id) != "ok":
+				continue
+			var snap := m.snapshot()
+			m.remove(id)
+			var bad: bool = not m.is_empty() and not m.playable_ids().is_empty() and not Solver.from_model(m).is_solvable()
+			m.restore(snap)
+			if bad:
+				lost = id
+				break
+		if lost >= 0:
+			game._on_block_tapped(lost)
+			await _frames(2)
+			_no_hints_left()
+			game.tutorial.hide_hint(true)
+			game.request_hint()
+			await _frames(1)
+			_check(not game.ui.is_shop_open() and game.tutorial._text == "This board can't be cleared from here - tap Undo",
+				"L%d grey SHOW A MOVE on a lost board with moves left: no Shop, '%s'" % [n, game.tutorial._text])
+			break
+	_check(lost >= 0, "found a lost board that still has moves")
+	# HAMMER: none owned, limit not reached -> Shop.
+	await _start(31)
+	game.progress.inventory["hammer"] = 0
+	coins = game.progress.coins
+	game.toggle_hammer()
+	await _frames(1)
+	_check(game.ui.is_shop_open() and not game.hammer_armed and game.progress.coins == coins and game.progress.inventory["hammer"] == 0,
+		"grey HAMMER (none owned) opens the Shop; nothing bought, not armed")
+	game.ui.buy_requested.emit("hammer")
+	game.ui._shop.close()
+	await _frames(1)
+	_check(game.progress.inventory["hammer"] == 1 and not game.hammer_armed and not game.attempt_assisted, "a bought Hammer waits for a tap (not armed, not assisted)")
+	game.toggle_hammer()
+	var safe := -1
+	for bid in game.model.blocks:
+		if game.is_hammer_safe(bid) and not game.model.blocks[bid].is_crate():
+			safe = bid
+			break
+	game._on_block_tapped(safe)
+	await _frames(2)
+	_check(game.hammers_used == 1 and game.progress.inventory["hammer"] == 0 and game.attempt_assisted, "using it smashes, counts and marks assisted as before")
+	# Limit reached and none owned: the limit is the reason, no Shop.
+	game.tutorial.hide_hint(true)
+	game.toggle_hammer()
+	await _frames(1)
+	_check(not game.ui.is_shop_open() and not game.hammer_armed and game.tutorial._text == "One Hammer per level",
+		"HAMMER limit reached, none owned: 'One Hammer per level', no Shop")
+	game.progress.inventory["hammer"] = 2
+	game.tutorial.hide_hint(true)
+	game.toggle_hammer()
+	await _frames(1)
+	_check(not game.ui.is_shop_open() and not game.hammer_armed and game.tutorial._text == "One Hammer per level", "HAMMER limit reached with Hammers owned: same, as before")
+	_check(Economy.price("hint") == 30 and Economy.price("hammer") == 60 and game._hammer_limit() == 1, "prices and the per-level limit unchanged")
+	_done.append("assists")

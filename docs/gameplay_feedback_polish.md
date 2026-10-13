@@ -33,6 +33,28 @@ All of this is visual. No audio or haptics were changed, so everything below sti
   - The hearts bar redraws only during its loss animation, as it did before.
 - **No new pop-ups.** The only text is the existing hint line under the board.
 
+## Assist buttons (Phase 2A follow-up, same flag)
+
+A grey assist opens the Shop only when the one thing missing is inventory.
+
+| Button | Situation | QA build | Production (unchanged) |
+|---|---|---|---|
+| **SHOW A MOVE** | No free hints and no boosters, and the board can still be cleared | "No SHOW A MOVE left - get more in the Shop", and the **Shop opens** | Same message; the coin pill pulses |
+| **SHOW A MOVE** | No free hints and no boosters, and the board can't be cleared | The free dead-end pointer ("No moves left - tap Undo/Restart" or "This board can't be cleared from here - tap Undo/Restart"). **No Shop.** | "get more in the Shop" |
+| **HAMMER** | This level's Hammer is already used, whether or not any are owned | "One Hammer per level". **No Shop.** | With none owned, the Shop opened |
+| **HAMMER** | None owned, and this level's Hammer not yet used | The Shop opens, as before | Same |
+
+Other details:
+
+- **One Solver call.** It answers both questions: is there a move to show, and would buying a hint help? A board with no playable block skips the Solver.
+- **Nothing is automatic.** Nothing is bought or used automatically. After a purchase, the next tap on the button uses the booster.
+- **Unchanged:** prices (hint 30, hammer 60), the free hints per level, the one Hammer per level, and assist accounting (only *using* a hint or Hammer marks the attempt assisted).
+- **Timer:** the Shop pauses the attempt's clock exactly as before, and closing it continues the same attempt. Timing fairness and pause rules are left for the later Player Identity / Competition phase.
+- **Files:**
+  - `scripts/game_manager.gd`: `request_hint()` and `toggle_hammer()`.
+  - `scripts/ui/shop_panel.gd`: `button_centers()`, used by the tests only.
+  - Tests: `tools/feedback_check.gd` (section J), `tools/web_feedback_test.mjs` (section A) and `tools/playtest.gd`.
+
 ## Files
 
 | File | Change |
@@ -56,6 +78,12 @@ SHOTS=<dir> node tools/web_feedback_test.mjs build/web_qa build/web_friend
 ```
 
 ## Real-iPhone QA checklist (Safari, ringer muted)
+
+0. **Assists:**
+   - On Level 14, use the starting SHOW A MOVE, follow it, then tap the grey SHOW A MOVE. The Shop should open with no coins spent. Buy one, close the Shop (the time continues), and tap SHOW A MOVE: the hint should appear.
+   - Tap the grey HAMMER: the Shop should open.
+   - After smashing one block, tap HAMMER again: "One Hammer per level", and no Shop.
+   - On a dead end with no hints left, tap SHOW A MOVE: you should see the Undo/Restart pointer, not the Shop.
 
 1. **Level 3:** tap a blocked block. The block in the way gets a red ring, and no heart appears.
 2. **Level 6:** lose hearts 3 → 2 → 1 → 0.

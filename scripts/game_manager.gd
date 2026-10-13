@@ -1261,12 +1261,21 @@ func request_hint() -> void:
 	var unlimited := unlimited_hints()
 	var free_left := hints_allowed() - free_hints_used
 	var owned: int = progress.inventory.get("hint", 0)
-	if not unlimited and free_left <= 0 and owned <= 0:
+	var out_of_hints := not unlimited and free_left <= 0 and owned <= 0
+	if out_of_hints and not BuildFlags.feedback_polish():
 		# Explain gently; the coin pill pulses to point at the Shop.
 		_show_message("No SHOW A MOVE left - get more in the Shop", 2.6)
 		ui.pulse_coins()
 		return
-	var id := Solver.from_model(model).recommend_move()
+	# One Solver call answers both "is there a move to show?" and, when no
+	# hint is left (feedback polish), "would buying one help?".
+	var id := -1 if model.playable_ids().is_empty() else Solver.from_model(model).recommend_move()
+	if out_of_hints and id != -1:
+		# Feedback polish: the board can still be cleared - the only thing
+		# missing is a hint, so the Shop opens (nothing is bought or used).
+		_show_message("No SHOW A MOVE left - get more in the Shop", 2.6)
+		open_shop()
+		return
 	if id == -1:
 		if BuildFlags.feedback_polish():
 			if model.playable_ids().is_empty():
@@ -1327,6 +1336,11 @@ func toggle_hammer() -> void:
 		board.hammer_mode = false
 		tutorial.hide_hint()
 		_refresh_buttons()
+		return
+	if BuildFlags.feedback_polish() and hammers_used >= _hammer_limit():
+		# Feedback polish: the per-level limit first - a Hammer bought now
+		# could not be used on this level, so no Shop.
+		_show_message("One Hammer per level", 2.2)
 		return
 	if progress.inventory.get("hammer", 0) <= 0:
 		_show_message("No Hammers yet - buy one in the Shop", 2.4)
@@ -1780,6 +1794,16 @@ func _feedback_state(vis: Vector2) -> Dictionary:
 	var v: BlockView = board.get_view(int(f.get("id", -1))) if int(f.get("id", -1)) >= 0 else null
 	f["lock_pop"] = v.lock_pop_active() if v else false
 	f["tip"] = tutorial._text if tutorial.visible else ""  # visible from the first frame of its fade-in
+	f["shop_open"] = ui.is_shop_open()
+	var shop := {}
+	if ui.is_shop_open():
+		var bc: Dictionary = ui._shop.button_centers()
+		for k in bc:
+			shop[k] = [snappedf(bc[k].x / vis.x, 0.0001), snappedf(bc[k].y / vis.y, 0.0001)]
+	f["shop_buttons"] = shop
+	f["hint_owned"] = progress.inventory.get("hint", 0)
+	f["hammer_owned"] = progress.inventory.get("hammer", 0)
+	f["hints_used"] = hints_used
 	return f
 
 
