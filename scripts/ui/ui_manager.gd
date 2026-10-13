@@ -24,6 +24,7 @@ signal backup_requested  # Settings: BACKUP CODE
 signal restore_requested  # Settings / recovery: RESTORE FROM CODE
 signal recovery_new_game  # recovery: START NEW GAME (confirmed)
 signal main_menu_requested  # Settings: MAIN MENU (back to the title screen)
+signal display_name_submitted(text: String)  # Settings: YOUR NAME (Player Identity 3A, QA)
 
 const TOP_HEIGHT := 290.0
 const BOTTOM_HEIGHT := 190.0
@@ -1032,6 +1033,8 @@ func _build_settings() -> void:
 	card.add_child(box)
 	box.add_child(_make_label(40, Palette.TEXT, 900))
 	box.get_child(0).text = "SETTINGS"
+	if BuildFlags.player_identity():
+		_build_name_row(box)
 	for key in ["music", "sfx", "haptics"]:
 		var b := PillButton.new("", PillButton.Icon.NONE, Palette.BACKGROUND, Palette.TEXT, 28)
 		b.custom_minimum_size = Vector2(0, 84)
@@ -1075,6 +1078,76 @@ func _build_settings() -> void:
 	done.pressed.connect(_close_settings)
 	box.add_child(done)
 	_refresh_setting_buttons()
+
+
+# --- Player identity: YOUR NAME (Phase 3A, QA) ------------------------------------
+
+var _name_button: PillButton
+var _name_note: Label
+var _profile_name := ""
+var _name_zone_set := false
+const NAME_NOTE := "Optional - kept on this device only"
+
+
+## Settings row: "YOUR NAME: <name>" / "ADD YOUR NAME (OPTIONAL)" and a
+## small note under it. On the Web a tap opens the native name dialog
+## (web/social_creator.js, zone "name") from inside the tap, so the iPhone
+## keyboard comes up; the result is polled while Settings is open.
+func _build_name_row(box: VBoxContainer) -> void:
+	_name_button = PillButton.new("", PillButton.Icon.NONE, Palette.BACKGROUND, Palette.TEXT, 26)
+	_name_button.add_theme_font_override("font", MessageText.font(800))
+	_name_button.text_direction = Control.TEXT_DIRECTION_LTR
+	_name_button.text_overrun_behavior = TextServer.OVERRUN_TRIM_ELLIPSIS
+	_name_button.clip_text = true
+	_name_button.custom_minimum_size = Vector2(0, 84)
+	box.add_child(_name_button)
+	_name_note = _make_label(20, Palette.TEXT_SOFT, 700)
+	_name_note.add_theme_font_override("font", MessageText.font(700))
+	_name_note.text = NAME_NOTE
+	box.add_child(_name_note)
+	set_profile_name(_profile_name)
+
+
+## The name the row shows ("" = none yet). The name is isolated (FSI ...
+## PDI) so a Hebrew / Arabic name keeps its own direction after the label.
+func set_profile_name(name: String, note: String = "") -> void:
+	_profile_name = name
+	if _name_button == null:
+		return
+	_name_button.text = ("YOUR NAME:  " + MessageText.FSI + name + MessageText.PDI) if name != "" else "ADD YOUR NAME (OPTIONAL)"
+	_name_note.text = note if note != "" else NAME_NOTE
+	_name_note.add_theme_color_override("font_color", Palette.ACCENT if note != "" else Palette.TEXT_SOFT)
+	if is_settings_open():
+		_register_name_zone.call_deferred()
+
+
+func _register_name_zone() -> void:
+	if _name_button == null or not is_settings_open() or not SocialWeb.available():
+		return
+	var vis := get_viewport().get_visible_rect().size
+	var r := _name_button.get_global_rect()
+	SocialWeb.set_name_draft(_profile_name)
+	SocialWeb.set_zones([{"id": "name", "x": r.position.x / vis.x, "y": r.position.y / vis.y, "w": r.size.x / vis.x, "h": r.size.y / vis.y}])
+	_name_zone_set = true
+
+
+func _process(_delta: float) -> void:
+	if not _name_zone_set:
+		set_process(false)
+		return
+	var res := SocialWeb.take_name()
+	if not res.is_empty() and res.get("done", false):
+		display_name_submitted.emit(str(res.get("text", "")))
+
+
+## Tests: where the name row is (screen fraction), and its texts.
+func name_row_state() -> Dictionary:
+	if _name_button == null:
+		return {}
+	var vis := get_viewport().get_visible_rect().size
+	var r := _name_button.get_global_rect()
+	return {"text": _name_button.text, "note": _name_note.text, "visible": is_settings_open(),
+		"rect": [r.position.x / vis.x, r.position.y / vis.y, r.end.x / vis.x, r.end.y / vis.y], "zone": _name_zone_set}
 
 
 # --- Recovery (v0.5.2) ---------------------------------------------------------
@@ -1166,10 +1239,18 @@ func _refresh_setting_buttons() -> void:
 
 func _open_settings() -> void:
 	_settings_overlay.visible = true
+	if _name_button != null:
+		_name_note.text = NAME_NOTE
+		_name_note.add_theme_color_override("font_color", Palette.TEXT_SOFT)
+		_register_name_zone.call_deferred()
+		set_process(true)
 
 
 func _close_settings() -> void:
 	_settings_overlay.visible = false
+	if _name_zone_set:
+		_name_zone_set = false
+		SocialWeb.clear_zones()
 
 
 func is_settings_open() -> bool:

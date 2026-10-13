@@ -140,6 +140,7 @@ func _ready() -> void:
 		# The production release saves in its own fixed namespace: the
 		# pre-launch Friend Test saves are never read (one-time fresh start).
 		PlayerProgress.use_release_namespace()
+	PlayerProgress.identity_enabled = BuildFlags.player_identity()
 	var twins := TwinsPrototype.requested()
 	var xlab := ExperienceLab.requested() if twins == "" else ""
 	var lab := OpeningLab.requested() if xlab == "" and twins == "" else ""
@@ -160,6 +161,10 @@ func _ready() -> void:
 		TwinsPrototype.seed_save(progress)  # its own temporary save only
 	if not OpeningLab.active and not ExperienceLab.active and not TwinsPrototype.active and not BuildFlags.magnet_lab():
 		_take_web_transfer()
+	# Player identity (QA): after any transfer, so a fresh tab adopts the
+	# transferred player instead of making its own id first.
+	if progress.ensure_identity():
+		progress.save()
 	background = ChapterBackground.new()
 	add_child(background)
 	_apply_settings()
@@ -186,6 +191,8 @@ func _ready() -> void:
 	ui.restore_requested.connect(request_restore)
 	ui.recovery_new_game.connect(_recovery_start_new)
 	ui.main_menu_requested.connect(return_to_main_menu)
+	ui.display_name_submitted.connect(set_display_name)
+	ui.set_profile_name(progress.display_name)
 	debug_panel.level_count = level_manager.level_count
 	debug_panel.level_requested.connect(func(n): start_level(wrapi(n, 1, level_manager.level_count + 1), "debug"))
 	debug_panel.restart_requested.connect(restart)
@@ -382,9 +389,25 @@ func apply_restore(code: String) -> bool:
 		start_level(target, "restore")
 		_show_title()
 	print("[Save] restored: +%d levels, total %d -> %d" % [r["levels_added"], r["total_before"], r["total_after"]])
-	_show_message("Progress restored - TOTAL SCORE %s" % UIManager._fmt(progress.total_score()), 3.0)
+	_show_message("Progress restored - TOTAL SCORE %s%s" % [UIManager._fmt(progress.total_score()),
+		" - name and player restored" if r.get("profile", "") == "adopted" else ""], 3.0)
+	if progress.ensure_identity():
+		progress.save()
+	ui.set_profile_name(progress.display_name)
 	publish_state.call_deferred()
 	return true
+
+
+## Player Identity (QA): the name typed in Settings ("" removes it).
+## Invalid input keeps the current name and says why.
+func set_display_name(text: String) -> void:
+	var r := progress.set_display_name(text)
+	if r["ok"]:
+		progress.save()
+		ui.set_profile_name(progress.display_name, "Name saved" if progress.display_name != "" else "Name removed")
+	else:
+		ui.set_profile_name(progress.display_name, PlayerProfile.error_text(r["error"]))
+	publish_state.call_deferred()
 
 
 ## Recovery screen: the player confirmed START NEW GAME.
@@ -1769,6 +1792,7 @@ func publish_state() -> void:
 		"best_time_ms": progress.best_time(current_level), "best_clean_ms": progress.best_clean_time(current_level),
 		"card_rect": [ui._card.get_global_rect().position.x / vis.x, ui._card.get_global_rect().position.y / vis.y, ui._card.get_global_rect().end.x / vis.x, ui._card.get_global_rect().end.y / vis.y],
 		"feedback": _feedback_state(vis) if not BuildFlags.player_build() else {}, "feedback_polish": BuildFlags.feedback_polish(),
+		"profile": _profile_state() if not BuildFlags.player_build() else {}, "player_identity": BuildFlags.player_identity(),
 		"undo_button": center.call(ui._undo_button), "restart_button": center.call(ui._restart_button),
 		"hint_button": center.call(ui._hint_button), "hammer_button": center.call(ui._hammer_button), "hammer_armed": hammer_armed,
 		"magnets": model.blocks.values().filter(func(b): return b.magnet).size() if model else 0,
@@ -1778,6 +1802,14 @@ func publish_state() -> void:
 		"select_locked_first": (select_shown.get("locked", []) as Array).min() if not select_shown.get("locked", []).is_empty() else 0,
 	}
 	WebBridge.publish("chainEscapeState", st)
+
+
+## Browser tests (never the player build): the id only as a short hash
+## (equality checks), never the id itself.
+func _profile_state() -> Dictionary:
+	return {"id_hash": progress.player_id.sha256_text().substr(0, 12) if progress.player_id != "" else "",
+		"id_valid": PlayerProfile.is_valid_id(progress.player_id), "name": progress.display_name,
+		"name_set_unix": progress.name_set_unix, "row": ui.name_row_state()}
 
 
 ## Browser tests: the last failure feedback and what is animating now.

@@ -25,6 +25,9 @@ extends RefCounted
 ## v5 (v0.6): 200 levels. Nothing is renamed or reset. A player who had
 ##            finished Level 100 (the old end) and not yet played past it
 ##            continues at Level 101, the start of the Second Era.
+## (still v5) Player Identity, Phase 3A: an optional, additive [profile]
+##            section (id, name, name_set_unix, created_unix). Older builds
+##            keep it untouched (unknown sections survive _fill_cfg).
 
 const SAVE_VERSION := 5
 ## localStorage key of the Web mirror (a full copy of the save file).
@@ -101,6 +104,16 @@ var achievements: Array = []
 var music_on: bool = true
 var sfx_on: bool = true
 var haptics_on: bool = true
+## PLAYER IDENTITY (Phase 3A) - the [profile] section, rules in
+## PlayerProfile. identity_enabled = BuildFlags.player_identity(), set by
+## the game at start (tests set it directly): only then is an id created,
+## a name accepted or a profile merged. Elsewhere a [profile] already in
+## the file is read and written back unchanged.
+static var identity_enabled := false
+var player_id: String = ""
+var display_name: String = ""
+var name_set_unix: int = 0
+var profile_created_unix: int = 0
 ## True if a save existed when loaded (drives CONTINUE on the title).
 var existed: bool = false
 ## Unix time of the last write that reached at least one durable copy.
@@ -211,6 +224,10 @@ func _apply_cfg(cfg: ConfigFile) -> void:
 	var cc: Dictionary = _cfg.get_value("chapters", "coins", {})
 	for k in cc:
 		chapter_coins[int(k)] = int(cc[k])
+	player_id = str(_cfg.get_value("profile", "id", ""))
+	display_name = str(_cfg.get_value("profile", "name", ""))
+	name_set_unix = int(_cfg.get_value("profile", "name_set_unix", 0))
+	profile_created_unix = int(_cfg.get_value("profile", "created_unix", 0))
 	var stored_total := int(_cfg.get_value("progress", "total_score", -1))
 	_migrate()
 	_check_integrity(stored_total)
@@ -437,6 +454,11 @@ func _fill_cfg() -> void:
 	_cfg.set_value("chapters", "reward_blocks", reward_blocks)
 	_cfg.set_value("chapters", "tips_seen", tips_seen)
 	_cfg.set_value("chapters", "coins", chapter_coins)
+	if player_id != "":
+		_cfg.set_value("profile", "id", player_id)
+		_cfg.set_value("profile", "name", display_name)
+		_cfg.set_value("profile", "name_set_unix", name_set_unix)
+		_cfg.set_value("profile", "created_unix", profile_created_unix)
 	for n in best_scores:
 		_cfg.set_value("scores", str(n), best_scores[n])
 	for n in best_stars:
@@ -598,6 +620,7 @@ static func from_text(text: String) -> PlayerProgress:
 ## Returns a summary for the message and the log.
 func merge_from(o: PlayerProgress) -> Dictionary:
 	var before := {"total": total_score(), "highest_completed": highest_completed, "levels": best_scores.size()}
+	var dest_meaningful := has_meaningful_progress()
 	for n in o.best_scores:
 		best_scores[n] = maxi(int(best_scores.get(n, 0)), int(o.best_scores[n]))
 	for n in o.best_stars:
@@ -628,11 +651,125 @@ func merge_from(o: PlayerProgress) -> Dictionary:
 				pair[0].append(v)
 	existed = true
 	_check_integrity(-1)
+	var prof := _merge_profile(o, dest_meaningful)
 	var out := {"total_before": before["total"], "total_after": total_score(),
-		"levels_added": best_scores.size() - before["levels"], "highest_completed": highest_completed}
+		"levels_added": best_scores.size() - before["levels"], "highest_completed": highest_completed, "profile": prof}
+	if prof != "off" and prof != "none":
+		_log("merge: profile %s" % prof)
 	_log("merge: +%d levels, highest_completed %d -> %d, total %d -> %d, coins %d" % [
 		out["levels_added"], before["highest_completed"], highest_completed, before["total"], out["total_after"], coins])
 	return out
+
+
+# --- Player identity (Phase 3A) -------------------------------------------------
+
+## Real progress worth keeping an identity for: a cleared level, a score or
+## a recorded time (starting coins / boosters alone are not).
+func has_meaningful_progress() -> bool:
+	return highest_completed > 0 or not best_scores.is_empty() or not best_times.is_empty()
+
+
+## Makes sure this save has a valid player id (and a valid name, or none).
+## A missing id is first looked for in the other copies of this save (a
+## damaged newest copy must not change who the player is); only if no copy
+## has one is a new random id made. An invalid stored id or name is
+## replaced / cleared and noted in load_issues. Returns true if anything
+## changed (the caller saves). No-op unless identity_enabled.
+func ensure_identity() -> bool:
+	if not identity_enabled:
+		return false
+	var changed := false
+	if display_name != "":
+		var r := PlayerProfile.clean_name(display_name)
+		var cleaned: String = r.get("name", "") if r["ok"] else ""
+		if cleaned != display_name:
+			load_issues.append("profile: stored name not valid - %s" % ("cleaned" if cleaned != "" else "cleared"))
+			display_name = cleaned
+			changed = true
+	if PlayerProfile.is_valid_id(player_id):
+		return changed
+	if player_id != "":
+		load_issues.append("profile: stored id not valid - replaced")
+	var found := _identity_from_copies()
+	if not found.is_empty():
+		player_id = found["id"]
+		display_name = found["name"]
+		name_set_unix = found["name_set_unix"]
+		profile_created_unix = found["created_unix"]
+		load_issues.append("profile: id recovered from %s" % found["source"])
+		_log("profile: id recovered from %s" % found["source"])
+	else:
+		player_id = PlayerProfile.new_id()
+		profile_created_unix = int(Time.get_unix_time_from_system())
+		_log("profile: new player id")
+	return true
+
+
+## The newest valid [profile] among this save's copies (file, .bak, .tmp,
+## Web mirror), or {}.
+func _identity_from_copies() -> Dictionary:
+	var best := {}
+	var best_seq := -1
+	for c in _candidates():
+		var cfg := ConfigFile.new()
+		if cfg.parse(c["text"]) != OK:
+			cfg = _salvage(c["text"])
+			if cfg == null:
+				continue
+		var id := str(cfg.get_value("profile", "id", ""))
+		var s := int(cfg.get_value("meta", "seq", 0))
+		if PlayerProfile.is_valid_id(id) and s > best_seq:
+			var r := PlayerProfile.clean_name(str(cfg.get_value("profile", "name", "")))
+			best = {"id": id, "name": r.get("name", "") if r["ok"] else "", "source": c["source"],
+				"name_set_unix": int(cfg.get_value("profile", "name_set_unix", 0)),
+				"created_unix": int(cfg.get_value("profile", "created_unix", 0))}
+			best_seq = s
+	return best
+
+
+## Sets (or, with "", clears) the display name. Returns PlayerProfile's
+## {"ok", "name"} / {"ok": false, "error"}; the caller saves.
+func set_display_name(raw: String) -> Dictionary:
+	if not identity_enabled:
+		return {"ok": false, "error": "off"}
+	var r := PlayerProfile.clean_name(raw)
+	if r["ok"]:
+		display_name = r["name"]
+		name_set_unix = int(Time.get_unix_time_from_system())
+	return r
+
+
+## Restore / transfer: whose identity this save keeps. Returns
+##   "adopted"      this save had no meaningful progress (or no id): it
+##                  takes the source's id and name (a new device / a fresh
+##                  tab restoring its player);
+##   "kept_local"   this save has progress and its own id: it keeps both;
+##                  the source's id and name are NOT taken (two different
+##                  players' progress is still merged, as before);
+##   "same" / "same_name_updated"  the same player: the newer name wins;
+##   "none"         the source has no (valid) id - nothing changes;
+##   "off"          identity disabled in this build.
+## A non-empty local id is never replaced while this save has progress.
+func _merge_profile(o: PlayerProgress, dest_meaningful: bool) -> String:
+	if not identity_enabled:
+		return "off"
+	if not PlayerProfile.is_valid_id(o.player_id):
+		return "none"
+	var r := PlayerProfile.clean_name(o.display_name)
+	var src_name: String = r.get("name", "") if r["ok"] else ""
+	if o.player_id == player_id:
+		if o.name_set_unix > name_set_unix:
+			display_name = src_name
+			name_set_unix = o.name_set_unix
+			return "same_name_updated"
+		return "same"
+	if PlayerProfile.is_valid_id(player_id) and dest_meaningful:
+		return "kept_local"
+	player_id = o.player_id
+	display_name = src_name
+	name_set_unix = o.name_set_unix
+	profile_created_unix = o.profile_created_unix
+	return "adopted"
 
 
 ## The current state as save text (without writing it).

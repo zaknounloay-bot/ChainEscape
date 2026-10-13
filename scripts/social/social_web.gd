@@ -57,6 +57,19 @@ static func dialog_open() -> bool:
 	return api() != null and bool(_api.dialogOpen())
 
 
+## Player Identity 3A: the name shown when the name dialog (zone "name")
+## opens.
+static func set_name_draft(text: String) -> void:
+	if api():
+		_api.setNameDraft(text)
+
+
+## {} while the name dialog is open / unused, else {done, text} (text
+## NFC-normalized and trimmed by the page).
+static func take_name() -> Dictionary:
+	return _take("takeName")
+
+
 ## 0.2C: the link SHARE CHALLENGE / COPY LINK hand over (zones "share",
 ## "copy" open the share sheet / copy inside the tap).
 static func set_share(url: String, text: String, title: String) -> void:

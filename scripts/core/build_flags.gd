@@ -59,6 +59,15 @@ static func feedback_polish() -> bool:
 	return true
 
 
+## PLAYER IDENTITY (Phase 3A, QA): an anonymous random player id in the
+## save's [profile] section and an optional display name in Settings.
+## Local only - nothing is sent anywhere. On in every build except the
+## player (production) build, which neither creates an id nor shows the
+## name row (a [profile] already in a save is kept untouched there).
+static func player_identity() -> bool:
+	return not player_build()
+
+
 ## The other developer pages (?openinglab, ?twinsprototype, ?mechlab,
 ## ?friendbench, ?vhtest): off in the player build and in the QA build.
 static func dev_pages_off() -> bool:
