@@ -1784,6 +1784,7 @@ func publish_state() -> void:
 		"hud_total": ui.hud_total_text(), "card_big": ui._card_score.text, "card_caption": ui._card_score_caption.text,
 		"card_level": ui._card_total.text, "recovery_open": ui.is_recovery_open(), "writes_held": progress.hold_writes,
 		"save_diag": save_diagnostic(), "settings_open": ui.is_settings_open(),
+		"settings_over": ui.settings_layer_state()["over"] if ui.is_settings_open() else [],
 		"settings_button": center.call(ui._settings_button), "backup_button": center.call(ui._backup_button),
 		"restore_button": center.call(ui._restore_button), "recovery_restore": center.call(ui._recovery_restore),
 		"recovery_new": center.call(ui._recovery_new),

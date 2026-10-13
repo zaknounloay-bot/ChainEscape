@@ -1,6 +1,6 @@
 # Player Identity: Phase 3A (QA only)
 
-**Status:** in the QA and dev builds, waiting for real-iPhone QA.
+**Status:** in the QA and dev builds. 3A tested on a real iPhone; the 3A polish (Settings layering, 20 characters, mixed scripts) is waiting for real-iPhone QA.
 
 **Production is unchanged.** The player build ("Web Friend Test") has no identity: no id, no name row, and no `[profile]` written.
 
@@ -43,21 +43,44 @@ created_unix=<when the id was made>
 
 These live in `scripts/core/player_profile.gd` and are kept simple and predictable.
 
-- **Length:** 2 to 16 characters after trimming. Runs of spaces become one space.
-- **Allowed:**
-  - Latin letters, including accented ones (Latin-1, Extended-A and Extended-B).
-  - Hebrew letters, with points, maqaf, geresh and gershayim.
-  - Arabic letters, with harakat and Arabic-Indic digits.
+- **Length:** 2 to 20 **user-perceived characters** (grapheme clusters) after trimming. A letter with its accents or vowel points counts once, so 20 pointed Hebrew letters (60 code points) fit. Runs of spaces become one space.
+  - GDScript counts with `PlayerProfile.grapheme_count` (every non-mark starts a cluster; exact for the allowed set, which has no joiners).
+  - The native field counts with `Intl.Segmenter` (fallback: code points minus marks), shows a live "n / 20" and holds SAVE while over the limit. Both counts agree on every test name.
+  - The saved name is never cut. Only the Settings row shrinks its font (26 → 19 px) and, past that, ends with an ellipsis on whole glyph clusters.
+- **Allowed letters are exactly those the Web build can draw**, and scripts may be mixed in one name ("Loay לואי", "Loay لؤي לואי"):
+  - Latin: Latin-1, Extended-A, the Extended-B letters Open Sans has (Vietnamese horn letters, Romanian comma-below, …), Welsh ŵ-accents and the Vietnamese block.
+  - Greek (monotonic) and Cyrillic: from the engine's built-in Open Sans.
+  - Hebrew letters, with points, maqaf, geresh and gershayim (Noto Sans Hebrew).
+  - Arabic letters, with harakat and Arabic-Indic digits (Noto Sans Arabic).
   - Digits, spaces, and `- _ . '`.
+  - ProfileCheck checks every allowed code point against those fonts. Unrenderable Latin Extended-B letters that 3A allowed are now refused.
+- **Folding:** the typographic apostrophes `‘ ’ ʼ` become `'` (iPhone Smart Punctuation types `’` for `'`). Nothing else is changed.
 - **At least one letter or digit.** At most 3 combining marks on one letter, and never a mark with no letter.
 - **Refused, never silently stripped:**
   - control characters;
   - bidi controls (LRM/RLM, embeddings and overrides, isolates, ALM);
-  - zero-width characters and BOM;
+  - zero-width characters, joiners and BOM;
   - variation selectors, emoji and other symbols;
-  - other scripts, and the replacement character.
+  - scripts without a bundled font (CJK, Armenian, Devanagari, …), and the replacement character.
 - **A refused name** keeps the current one, and the row shows the reason. **An empty name** removes it. **Duplicate names** are allowed.
-- **Display:** names use `MessageText` fonts (Arabic and Hebrew fallbacks) and are isolated with FSI…PDI, so an RTL name keeps its direction after "YOUR NAME:".
+- **Display:** names use `MessageText` fonts and are isolated with FSI…PDI, so an RTL name keeps its direction after "YOUR NAME:". Adjacent RTL words read right to left, as in any Unicode text: "Loay لؤي לואי" shows as "Loay לואי لؤي".
+
+## Settings layering (3A polish)
+
+Every control of the UI CanvasLayer draws, and receives taps, in tree order. `_build_settings()` used to run before the coin pill, TOTAL SCORE, TIME / MY BEST and the banner were added, so those drew over the Settings dimmer and card. A tap on the coins through the open Settings card opened the shop. Settings is now built after every HUD control. `settings_layer_state()` and the page state field `settings_over` report any HUD control that would draw above it, and ProfileCheck and the browser test require that list to be empty.
+
+The level-complete / try-again card keeps the coin pill above its dimmer on purpose: it is the coin fly-in target, and the card is placed below the top HUD (`_card_fit_scale`).
+
+## Emoji (investigated, not enabled)
+
+- A subset of Noto Color Emoji (OFL, CBDT bitmaps) with only 🏆 ❤️ 🔥 ⭐ 🧩 is 11.8 KB (about 2.4 KB per emoji). Godot 4.3 on the Web draws it in colour as a fallback after Open Sans and Noto Hebrew, at 26 and 40 px, with or without the U+FE0F variation selector.
+- Any emoji outside the subset draws as a box, and the Web build has no system emoji font. So emoji could only ever be a fixed whitelist. The full font is 10.8 MB, too large to bundle.
+- The smallest safe implementation, if approved:
+  1. Bundle the subset font as the last `MessageText` fallback.
+  2. Accept only whitelisted emoji, each optionally followed by U+FE0F, and count each as one character (`Intl.Segmenter` already does).
+  3. Keep refusing joiners, skin tones and flags.
+  4. Optionally allow at most 2 emoji per name.
+- Native entry on iPhone and Android uses the system emoji font and needs no change. A future leaderboard drawn in Godot would show the same subset glyphs on every platform.
 
 ## Restore and transfer: whose identity is kept
 
@@ -108,7 +131,9 @@ SHOTS=<dir> node tools/web_profile_test.mjs build/web_qa build/web_friend <previ
 1. Open `…/index.html?experiencelab=6&qareset=1` and open Settings (gear). The **ADD YOUR NAME (OPTIONAL)** row should be there.
 2. Tap it. The name field should open with the keyboard up and stay visible above the keyboard.
 3. Type a Hebrew name, for example דנה כהן, and tap SAVE. It should show as "YOUR NAME: דנה כהן", reading right to left.
-4. Try an emoji name: it is refused with a reason and the old name stays. Then try an Arabic name (محمد) and an English one (Alex O'Neil).
+4. Try an emoji name: it is refused with a reason and the old name stays. Then try an Arabic name (محمد) and an English one (Alex O'Neil, typed with the iPhone apostrophe).
+4a. Mixed names: Loay לואי, Loay محمد, לואי Alex, Loay لؤي לואי. A 20-character name saves (the counter shows 20 / 20); at 21, SAVE waits.
+4b. With Settings open in a level, the coins and TIME / MY BEST are dimmed under the card, and tapping them closes Settings without opening the shop.
 5. Tap the row and SAVE with the field empty: the name is removed.
 6. Set a name, close Safari completely, reopen `?experiencelab=6` **without** `qareset`: the name should still be there.
 7. Check that normal play, audio and the TIME / MY BEST display are unchanged.

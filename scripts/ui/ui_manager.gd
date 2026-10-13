@@ -43,6 +43,7 @@ var _hearts: HeartsBar
 var _hearts_holder: CenterContainer
 var _settings_button: PillButton
 var _settings_overlay: ColorRect
+var _settings_card: PanelContainer
 var _setting_buttons: Dictionary = {}  # key -> PillButton
 var _settings: Dictionary = {"music": true, "sfx": true, "haptics": true}
 ## Score model (v0.5.2) - every number says what it is:
@@ -959,7 +960,6 @@ func _build() -> void:
 	_levels_button.set_anchors_and_offsets_preset(Control.PRESET_TOP_LEFT)
 	_levels_button.pressed.connect(func(): levels_opened.emit())
 	_root.add_child(_levels_button)
-	_build_settings()
 	_level_select = LevelSelect.new()
 	_level_select.level_chosen.connect(func(n): level_chosen.emit(n))
 	_level_select.chest_claim.connect(func(c, t): chest_claim.emit(c, t))
@@ -988,6 +988,10 @@ func _build() -> void:
 	_banner.add_theme_constant_override("outline_size", 10)
 	_banner.visible = false
 	_root.add_child(_banner)
+	# Settings is a modal: built after every gameplay HUD element (coins,
+	# TOTAL SCORE, TIME / MY BEST, banner) so its dimmer and card draw - and
+	# take taps - above them. Controls in one layer draw in child order.
+	_build_settings()
 	_title = TitleScreen.new()
 	_title.continue_pressed.connect(func(): continue_pressed.emit())
 	_title.level_select_pressed.connect(func(): title_level_select.emit())
@@ -1028,6 +1032,7 @@ func _build_settings() -> void:
 	card.add_theme_stylebox_override("panel", st)
 	card.custom_minimum_size = Vector2(480, 0)
 	center.add_child(card)
+	_settings_card = card
 	var box := VBoxContainer.new()
 	box.add_theme_constant_override("separation", 18)
 	card.add_child(box)
@@ -1100,6 +1105,7 @@ func _build_name_row(box: VBoxContainer) -> void:
 	_name_button.text_overrun_behavior = TextServer.OVERRUN_TRIM_ELLIPSIS
 	_name_button.clip_text = true
 	_name_button.custom_minimum_size = Vector2(0, 84)
+	_name_button.resized.connect(_fit_name_button)
 	box.add_child(_name_button)
 	_name_note = _make_label(20, Palette.TEXT_SOFT, 700)
 	_name_note.add_theme_font_override("font", MessageText.font(700))
@@ -1117,8 +1123,30 @@ func set_profile_name(name: String, note: String = "") -> void:
 	_name_button.text = ("YOUR NAME:  " + MessageText.FSI + name + MessageText.PDI) if name != "" else "ADD YOUR NAME (OPTIONAL)"
 	_name_note.text = note if note != "" else NAME_NOTE
 	_name_note.add_theme_color_override("font_color", Palette.ACCENT if note != "" else Palette.TEXT_SOFT)
+	_fit_name_button()
 	if is_settings_open():
 		_register_name_zone.call_deferred()
+
+
+## A long name (up to 20 wide letters) first steps the row's font down from
+## 26 to 19; only past that does the button's ellipsis cut the shown text
+## (whole glyph clusters - a letter keeps its marks). The saved name is
+## never shortened.
+const NAME_FONT := 26
+const NAME_FONT_MIN := 19
+
+func _fit_name_button() -> void:
+	if _name_button == null:
+		return
+	var font := _name_button.get_theme_font("font")
+	var sb := _name_button.get_theme_stylebox("normal")
+	var avail := _name_button.size.x - (sb.get_minimum_size().x if sb else 0.0) - 8.0
+	var fs := NAME_FONT
+	if avail > 0.0:
+		while fs > NAME_FONT_MIN and font.get_string_size(_name_button.text, HORIZONTAL_ALIGNMENT_LEFT, -1, fs).x > avail:
+			fs -= 1
+	if _name_button.get_theme_font_size("font_size") != fs:
+		_name_button.add_theme_font_size_override("font_size", fs)
 
 
 func _register_name_zone() -> void:
@@ -1147,7 +1175,8 @@ func name_row_state() -> Dictionary:
 	var vis := get_viewport().get_visible_rect().size
 	var r := _name_button.get_global_rect()
 	return {"text": _name_button.text, "note": _name_note.text, "visible": is_settings_open(),
-		"rect": [r.position.x / vis.x, r.position.y / vis.y, r.end.x / vis.x, r.end.y / vis.y], "zone": _name_zone_set}
+		"rect": [r.position.x / vis.x, r.position.y / vis.y, r.end.x / vis.x, r.end.y / vis.y], "zone": _name_zone_set,
+		"font_size": _name_button.get_theme_font_size("font_size"), "card": _settings_card_rect()}
 
 
 # --- Recovery (v0.5.2) ---------------------------------------------------------
@@ -1255,6 +1284,30 @@ func _close_settings() -> void:
 
 func is_settings_open() -> bool:
 	return _settings_overlay.visible
+
+
+func _settings_card_rect() -> Array:
+	var vis := get_viewport().get_visible_rect().size
+	var r := _settings_card.get_global_rect()
+	return [r.position.x / vis.x, r.position.y / vis.y, r.end.x / vis.x, r.end.y / vis.y]
+
+
+## Tests: the Settings modal must draw above every gameplay HUD control.
+## Controls of one CanvasLayer draw (and take input) in tree order, so each
+## HUD node must come before the overlay. Returns the names of HUD nodes that
+## would draw over it (empty = correct), plus the card rect.
+func settings_layer_state() -> Dictionary:
+	var over := []
+	var idx := _settings_overlay.get_index()
+	var hud := {"coins": _coin_pill, "total": _hud_total, "time_best": _hud_col, "banner": _banner,
+		"top": _top, "bottom": _bottom, "levels": _levels_button, "gear": _settings_button, "stamp": _stamp, "card_overlay": _overlay}
+	for k in hud:
+		var n: CanvasItem = hud[k]
+		if n == null:
+			continue
+		if n.get_parent() != _root or n.get_index() > idx or n.z_index > _settings_overlay.z_index or n.top_level:
+			over.append(k)
+	return {"over": over, "overlay_index": idx, "open": is_settings_open(), "card": _settings_card_rect()}
 
 
 ## The level card's TIMING block (see _show_time): a soft rounded panel,

@@ -11,16 +11,23 @@ class_name PlayerProfile
 ## player" stable across saves, reloads and a restore.
 ##
 ## Display names: optional, duplicates allowed, kept simple and
-## predictable - letters (Latin, Hebrew, Arabic) with their accents / vowel
-## marks, digits, single spaces and - _ . ' only; 2-16 characters after
-## trimming. Everything else (controls, bidi / zero-width formatting,
-## emoji, symbols, other scripts) is refused, never silently stripped, so
-## what the player typed is what is kept. Unicode NFC normalization is done
-## by the native text field (web/social_creator.js) before the name gets
-## here; GDScript has no normalizer, so this only validates.
+## predictable - letters with their accents / vowel marks, digits, single
+## spaces and - _ . ' only; 2-20 user-perceived characters (grapheme
+## clusters: a letter plus its marks counts once) after trimming. Scripts
+## may be mixed in one name ("Loay לואי"). The letters allowed are exactly
+## those the Web build can draw: Latin (incl. Vietnamese), Greek and
+## Cyrillic from the engine's built-in Open Sans, Hebrew and Arabic from the
+## bundled Noto fallbacks (ProfileCheck checks every allowed code point
+## against those fonts). Everything else (controls, bidi / zero-width
+## formatting, emoji, symbols, scripts without a font) is refused, never
+## silently stripped, so what the player typed is what is kept. The only
+## folding: typographic apostrophes (iPhone Smart Punctuation types ’) become
+## '. Unicode NFC normalization is done by the native text field
+## (web/social_creator.js) before the name gets here; GDScript has no
+## normalizer, so this only validates.
 
 const NAME_MIN := 2
-const NAME_MAX := 16
+const NAME_MAX := 20
 ## Combining marks allowed on one letter (Hebrew points: dagesh + vowel +
 ## shin dot; Arabic: shadda + haraka) - stops "zalgo" stacks.
 const MAX_MARKS := 3
@@ -54,6 +61,8 @@ static func clean_name(raw: String) -> Dictionary:
 	var prev_space := true  # collapses runs and drops leading spaces
 	for i in raw.length():
 		var c := raw.unicode_at(i)
+		if c == 0x2018 or c == 0x2019 or c == 0x2BC:
+			c = 0x27
 		if c == 0x20:
 			if not prev_space:
 				out.append(" ")
@@ -74,9 +83,10 @@ static func clean_name(raw: String) -> Dictionary:
 	var name := "".join(out).strip_edges()
 	if name == "":
 		return {"ok": true, "name": ""}
-	if name.length() < NAME_MIN:
+	var n := grapheme_count(name)
+	if n < NAME_MIN:
 		return {"ok": false, "error": "too_short"}
-	if name.length() > NAME_MAX:
+	if n > NAME_MAX:
 		return {"ok": false, "error": "too_long"}
 	var has_letter := false
 	for i in name.length():
@@ -87,6 +97,19 @@ static func clean_name(raw: String) -> Dictionary:
 	if not has_letter:
 		return {"ok": false, "error": "no_letters"}
 	return {"ok": true, "name": name}
+
+
+## User-perceived characters of a cleaned name: every character that is not
+## a combining mark starts a new cluster (a mark always follows its letter
+## here - clean_name refuses a leading one - and the allowed set has no
+## joiners, so this is exact; web/social_creator.js counts the same with
+## Intl.Segmenter).
+static func grapheme_count(name: String) -> int:
+	var n := 0
+	for i in name.length():
+		if not is_mark(name.unicode_at(i)):
+			n += 1
+	return n
 
 
 ## A short, friendly explanation for an error code.
@@ -102,8 +125,17 @@ static func error_text(code: String) -> String:
 static func is_base(c: int) -> bool:
 	if (c >= 0x30 and c <= 0x39) or (c >= 0x41 and c <= 0x5A) or (c >= 0x61 and c <= 0x7A) or _is_punct(c):
 		return true
-	if c >= 0xC0 and c <= 0x24F:  # Latin-1 letters, Latin Extended-A / B
-		return c != 0xD7 and c != 0xF7
+	# Latin: Latin-1 letters, Latin Extended-A, the Extended-B letters Open
+	# Sans has (Vietnamese horn letters, Romanian comma-below, ...), Welsh
+	# w-accents and the Vietnamese block.
+	if (c >= 0xC0 and c <= 0x17F and c != 0xD7 and c != 0xF7) or c == 0x192 or (c >= 0x1A0 and c <= 0x1A1) \
+			or (c >= 0x1AF and c <= 0x1B0) or c == 0x1F0 or (c >= 0x1FA and c <= 0x1FF) or (c >= 0x218 and c <= 0x21B) \
+			or (c >= 0x1E80 and c <= 0x1E85) or (c >= 0x1EA0 and c <= 0x1EF9):
+		return true
+	# Greek (monotonic, with tonos / dialytika) and Cyrillic letters.
+	if c == 0x386 or (c >= 0x388 and c <= 0x38A) or c == 0x38C or (c >= 0x38E and c <= 0x3A1) or (c >= 0x3A3 and c <= 0x3CE) \
+			or (c >= 0x400 and c <= 0x481) or (c >= 0x48A and c <= 0x513):
+		return true
 	# Hebrew: letters, Yiddish ligatures, maqaf, geresh / gershayim.
 	if (c >= 0x5D0 and c <= 0x5EA) or (c >= 0x5EF and c <= 0x5F4) or c == 0x5BE:
 		return true
@@ -117,10 +149,10 @@ static func is_base(c: int) -> bool:
 	return false
 
 
-## Combining marks of the allowed scripts (Latin accents, Hebrew points,
-## Arabic harakat).
+## Combining marks of the allowed scripts that the fonts draw (the Latin
+## accents left after NFC, Hebrew points, Arabic harakat).
 static func is_mark(c: int) -> bool:
-	return (c >= 0x300 and c <= 0x36F) \
+	return c == 0x300 or c == 0x301 or c == 0x303 or c == 0x309 or c == 0x30F or c == 0x323 \
 		or (c >= 0x591 and c <= 0x5BD) or c == 0x5BF or (c >= 0x5C1 and c <= 0x5C2) or (c >= 0x5C4 and c <= 0x5C5) or c == 0x5C7 \
 		or (c >= 0x64B and c <= 0x65F) or c == 0x670 or (c >= 0x6D6 and c <= 0x6DC) or (c >= 0x6DF and c <= 0x6E4) \
 		or (c >= 0x6E7 and c <= 0x6E8) or (c >= 0x6EA and c <= 0x6ED)

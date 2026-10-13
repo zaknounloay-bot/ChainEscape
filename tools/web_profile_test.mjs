@@ -122,10 +122,12 @@ async function enterName(g, text, shotName, cancel = false) {
       fontPx: parseFloat(getComputedStyle(i).fontSize), draft: i.value };
   });
   await g.page.fill('#ce-name-text', text);
+  facts.count = await g.page.textContent('#ce-name-count');
+  facts.saveDisabled = await g.page.$eval('#ce-name-done', (b) => b.disabled);
   if (shotName) await g.page.screenshot({ path: path.join(shots, shotName) });
   await sleep(450);  // the dialog ignores clicks in its first 400 ms (the opening tap)
   const seq = prof(s).name_set_unix;
-  await g.page.click(cancel ? '#ce-name-cancel' : '#ce-name-done');
+  await g.page.click(cancel || facts.saveDisabled ? '#ce-name-cancel' : '#ce-name-done');
   await g.page.waitForSelector('#ce-name', { state: 'detached', timeout: 5000 });
   await sleep(700);
   s = await state(g);
@@ -162,6 +164,38 @@ try {
   check(prof(r.s).name === 'José', 'Q[SE] CANCEL changes nothing');
   r = await enterName(g, '   ', null);
   check(prof(r.s).name === '' && row(r.s).text === 'ADD YOUR NAME (OPTIONAL)' && row(r.s).note === 'Name removed', 'Q[SE] an empty name removes it');
+  // ----- Phase 3A polish: 20 characters, mixed scripts, emoji still refused -----
+  r = await enterName(g, 'Alexandra Konstantin', null);
+  check(prof(r.s).name === 'Alexandra Konstantin' && r.facts.count === '20 / 20' && !r.facts.saveDisabled && r.facts.max >= 80,
+    `L[SE] 20 characters are saved; the dialog counts "${r.facts.count}"`);
+  r = await enterName(g, 'Alexandra Konstantine', 'polish_iphoneSE_dialog_21.png');
+  check(prof(r.s).name === 'Alexandra Konstantin' && r.facts.count === '21 / 20' && r.facts.saveDisabled,
+    `L[SE] 21 characters: the counter says "${r.facts.count}", SAVE waits, nothing changes`);
+  const pointed = 'שָׁ'.repeat(20);
+  r = await enterName(g, pointed, null);
+  check(prof(r.s).name === pointed && r.facts.count === '20 / 20', `L[SE] 20 pointed Hebrew letters (60 code points) count as 20 and are saved unsplit`);
+  for (const [nm, shot] of [['Loay לואי', null], ['Loay محمد', null], ['לואי Alex', null], ['Loay لؤي לואי', 'polish_iphoneSE_settings_mixed.png'],
+    ['Loay 23 לואי', null], ['Дана Ελένη', null], ['Nguyễn Văn Ánh', null]]) {
+    r = await enterName(g, nm, null);
+    check(prof(r.s).name === nm && row(r.s).text.includes(nm) && row(r.s).font_size === 26, `M[SE] mixed / other script name saved and shown: "${nm}" (font ${row(r.s).font_size})`);
+    if (shot) await g.page.screenshot({ path: path.join(shots, shot) });
+  }
+  r = await enterName(g, 'O\u2019Neil', null);
+  check(prof(r.s).name === "O'Neil", `M[SE] iPhone Smart Punctuation O’Neil is saved as O'Neil ("${prof(r.s).name}")`);
+  for (const e of ['\u{1F3C6}', '\u2764\uFE0F', '\u{1F525}', '\u2B50', '\u{1F9E9}']) {
+    r = await enterName(g, 'Loay ' + e, null);
+    check(prof(r.s).name === "O'Neil" && /letters, numbers/.test(row(r.s).note) && r.facts.count === '6 / 20',
+      `M[SE] emoji still refused: "Loay ${e}" (counted ${r.facts.count}, one character)`);
+  }
+  for (const [nm, shot] of [['WWWWWWWWWW WWWWWWWWW', 'polish_iphoneSE_settings_long_latin.png'], ['עמנואל בן אברהם כהן', 'polish_iphoneSE_settings_long_hebrew.png']]) {
+    r = await enterName(g, nm, null);
+    await sleep(300);
+    const rr = row(r.s).rect, cr = row(r.s).card;
+    check(prof(r.s).name === nm && rr[0] >= cr[0] && rr[2] <= cr[2] && cr[0] >= 0 && cr[2] <= 1 && row(r.s).font_size >= 19,
+      `L[SE] a long name is saved whole and its row stays in the card (font ${row(r.s).font_size}, row ${rr.map((v) => v.toFixed(3))})`);
+    await g.page.screenshot({ path: path.join(shots, shot) });
+  }
+  check((r.s.settings_over || []).length === 0, `O[SE] Settings draws above every HUD control (${JSON.stringify(r.s.settings_over)})`);
   r = await enterName(g, 'דנה כהן', null);
   await closeSettings(g);
   await g.ctx.close();
@@ -181,6 +215,18 @@ try {
     check(r.facts.focused && r.facts.top < r.facts.h * 0.35 && prof(r.s).name === name && row(r.s).text.includes(name),
       `Q[${size}] the native field opens focused near the top; "${name}" is saved and shown`);
     await g.page.screenshot({ path: path.join(shots, `profile_${size}_settings_name.png`) });
+    check((r.s.settings_over || []).length === 0, `O[${size}] Settings draws above every HUD control`);
+    for (const nm of ['Loay لؤي לואי', 'Alexandra Konstantin']) {
+      r = await enterName(g, nm, null);
+      await sleep(300);
+      const rr = row(r.s).rect, cr = row(r.s).card;
+      check(prof(r.s).name === nm && rr[0] >= cr[0] && rr[2] <= cr[2], `L[${size}] "${nm}" saved, row inside the card (font ${row(r.s).font_size})`);
+      await g.page.screenshot({ path: path.join(shots, `polish_${size}_settings_${nm === 'Alexandra Konstantin' ? 'long' : 'mixed'}.png`) });
+    }
+    await closeSettings(g);
+    s = await state(g);
+    check(!s.settings_open && s.live_timer && s.live_timer.visible !== false, `O[${size}] closing Settings restores the normal HUD`);
+    await g.page.screenshot({ path: path.join(shots, `polish_${size}_hud_after_close.png`) });
     const rr = row(r.s).rect;
     check(rr[0] >= 0 && rr[2] <= 1 && rr[1] >= 0 && rr[3] <= 1, `Q[${size}] the name row fits the screen (${rr.map((v) => v.toFixed(3))})`);
     await g.ctx.close();
@@ -192,7 +238,7 @@ try {
     g = await open(QA + '?experiencelab=6', profile, 'iphoneSE');
     s = await waitFor(g, (x) => x.level === 6 && x.lab_qa && !x.title_open && !x.intro_open, 'old QA 6');
     await sleep(900);
-    check(s.player_identity === undefined, 'R: the previous QA build (no identity) opens the same QA save');
+    check(s.level === 6 && s.lab_qa, `R: the previous QA build (identity ${s.player_identity === undefined ? 'absent' : 'present'}) opens the same QA save`);
     const before = await g.page.evaluate((k) => localStorage.getItem(k) || '', QAKEY);
     // clear the level (debug auto-solve, QA builds only): the old build saves the result
     await g.page.focus('canvas').catch(() => {});

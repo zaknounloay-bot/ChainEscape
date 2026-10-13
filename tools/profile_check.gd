@@ -126,26 +126,65 @@ func _names() -> void:
 		"דנה": "דנה", "דנה כהן": "דנה כהן", "שָׁלוֹם": "שָׁלוֹם", "בן־חיים": "בן־חיים", "ז״ל": "ז״ל",
 		"محمد": "محمد", "مُحَمَّد": "مُحَمَّد", "ليلى ٢٣": "ليلى ٢٣", "Dana דנה": "Dana דנה", "R2D2": "R2D2", "123": "123",
 		"": "", "   ": "",
+		# Phase 3A polish: mixed scripts, more scripts the fonts draw, iPhone apostrophe.
+		"Loay לואי": "Loay לואי", "Loay محمد": "Loay محمد", "לואי Alex": "לואי Alex", "Loay لؤي לואי": "Loay لؤي לואי",
+		"Loay 23 לואי": "Loay 23 לואי", "לואי-Alex": "לואי-Alex", "Дана": "Дана", "Ελένη": "Ελένη", "Nguyễn Văn Ánh": "Nguyễn Văn Ánh",
+		"Ștefan": "Ștefan", "Ŵyn": "Ŵyn", "O’Neil": "O'Neil", "O‘Neil": "O'Neil", "Alexandra Konstantin": "Alexandra Konstantin",
+		"עמנואל בן אברהם כהן": "עמנואל בן אברהם כהן",
 	}
 	for raw in ok_cases:
 		var r := PlayerProfile.clean_name(raw)
 		_check(r["ok"] and r["name"] == ok_cases[raw], "name accepted: '%s' -> '%s' (%s)" % [raw, ok_cases[raw], r])
 	var bad_cases := {
-		"D": "too_short", "ABCDEFGHIJKLMNOPQ": "too_long", "דנהדנהדנהדנהדנהדנה": "too_long",
+		"D": "too_short", "ABCDEFGHIJKLMNOPQRSTU": "too_long", "דנהדנהדנהדנהדנהדנהדנה": "too_long", "Alexandra Konstantine": "too_long",
 		"Dana\U01F600": "unsupported", "Dana\u202E": "unsupported", "\u202Edana": "unsupported", "Da\u200Bna": "unsupported",
 		"Da\u200Dna": "unsupported", "\u2066Dana\u2069": "unsupported", "\u200FDana": "unsupported", "\u061CDana": "unsupported",
 		"Da\nna": "unsupported", "Da\tna": "unsupported", "Da\u0001na": "unsupported", "Da\u007Fna": "unsupported", "Da\uFFFDna": "unsupported", "Da\u00A0na": "unsupported",
 		"<b>Dana": "unsupported", "Dana!": "unsupported", "Da\"na": "unsupported", "Da\\na": "unsupported", "Dana#1": "unsupported",
-		"Дана": "unsupported", "王芳": "unsupported", "Dana\uFE0F": "unsupported", "\u0600Dana": "unsupported",
+		"王芳": "unsupported", "Dana\uFE0F": "unsupported", "\u0600Dana": "unsupported",
+		"\u01C5ana": "unsupported", "Да\u0483на": "unsupported", "Ab\u037E": "unsupported", "Ab\u03D1": "unsupported", "\u0531bc": "unsupported",
+		"Loay \U01F3C6": "unsupported", "Loay \u2764\uFE0F": "unsupported", "Loay \U01F525": "unsupported", "Loay \u2B50": "unsupported", "Loay \U01F9E9": "unsupported",
+		"Lo\u200Day": "unsupported", "Loay\u2019\u202E": "unsupported",
 		"́ab": "mark", "á́́́b": "mark", "Dana ́x": "mark",
 		"---": "no_letters", "..": "no_letters", "'_'": "no_letters",
 	}
 	for raw in bad_cases:
 		var r := PlayerProfile.clean_name(raw)
 		_check(not r["ok"] and r["error"] == bad_cases[raw], "name refused (%s): %s -> %s" % [bad_cases[raw], _codes(raw), r])
-	_check(PlayerProfile.clean_name("ABCDEFGHIJKLMNOP")["ok"] and PlayerProfile.clean_name("Di")["ok"], "16 and 2 characters are the limits")
-	_check(PlayerProfile.error_text("too_long").contains("16") and PlayerProfile.error_text("unsupported") != "", "every error has a friendly text")
+	_check(PlayerProfile.NAME_MAX == 20 and PlayerProfile.clean_name("ABCDEFGHIJKLMNOPQRST")["ok"] and PlayerProfile.clean_name("Di")["ok"], "20 and 2 characters are the limits")
+	# Length = user-perceived characters: a letter with its marks counts once.
+	_check(PlayerProfile.grapheme_count("שָׁלוֹם") == 4 and PlayerProfile.grapheme_count("مُحَمَّد") == 4 and PlayerProfile.grapheme_count("Loay لؤي לואי") == 13, "length counts grapheme clusters")
+	var pointed := ""
+	for i in 20:
+		pointed += "שָׁ"  # shin + qamats + shin dot: 3 code points, 1 character
+	_check(pointed.length() == 60 and PlayerProfile.clean_name(pointed)["ok"] and PlayerProfile.clean_name(pointed)["name"] == pointed, "20 pointed Hebrew letters (60 code points) fit, unsplit")
+	_check(PlayerProfile.clean_name(pointed + "ש")["error"] == "too_long", "... a 21st letter does not")
+	_check(PlayerProfile.error_text("too_long").contains("20") and PlayerProfile.error_text("unsupported") != "", "every error has a friendly text")
+	_fonts()
 	_done.append("names")
+
+
+## Every code point a name may hold must be drawable on the Web build: the
+## engine's built-in Open Sans (ThemeDB.fallback_font - the Web has no
+## system fonts) or the bundled Noto Hebrew / Arabic fallbacks.
+func _fonts() -> void:
+	var fonts: Array[Font] = [ThemeDB.fallback_font]
+	for path in MessageText.FALLBACKS:
+		fonts.append(load(path))
+	var allowed := 0
+	var missing := PackedStringArray()
+	for c in range(0x20, 0x30000):
+		if not (PlayerProfile.is_base(c) or PlayerProfile.is_mark(c)):
+			continue
+		allowed += 1
+		var drawn := false
+		for f in fonts:
+			if f.has_char(c):
+				drawn = true
+				break
+		if not drawn:
+			missing.append("U+%04X" % c)
+	_check(missing.is_empty() and allowed > 900, "every allowed name character (%d) has a glyph in the Web fonts (missing: %s)" % [allowed, " ".join(missing.slice(0, 20))])
 
 
 static func _codes(t: String) -> String:
@@ -412,12 +451,46 @@ func _game() -> void:
 	game.set_display_name("דנה")
 	_check(game.progress.display_name == "דנה" and game.ui.name_row_state()["text"].contains("דנה") and game.ui.name_row_state()["note"] == "Name saved",
 		"a Hebrew name from Settings is saved and shown ('%s')" % game.ui.name_row_state()["text"])
+	# Phase 3A polish: the Settings modal draws, and takes taps, above the HUD.
+	var ls: Dictionary = game.ui.settings_layer_state()
+	_check(ls["open"] and ls["over"].is_empty(), "Settings is above every HUD control (drawing over it: %s)" % [ls["over"]])
+	game.set_display_name("WWWWWWWWWW WWWWWWWWW")
+	await _frames(2)
+	var st: Dictionary = game.ui.name_row_state()
+	_check(game.progress.display_name == "WWWWWWWWWW WWWWWWWWW" and st["font_size"] >= 19 and st["font_size"] < 26,
+		"a wide 20-character name is saved whole; the row font steps down (%d)" % st["font_size"])
+	_check(st["rect"][0] >= st["card"][0] and st["rect"][2] <= st["card"][2] and st["card"][0] >= 0.0 and st["card"][2] <= 1.0,
+		"... and the row stays inside the card, the card inside the screen (%s / %s)" % [st["rect"], st["card"]])
+	game.set_display_name("Loay لؤي לואי")
+	await _frames(2)
+	_check(game.progress.display_name == "Loay لؤي לואי" and game.ui.name_row_state()["font_size"] == 26, "a mixed-script name is saved; normal font again")
+	game.set_display_name("דנה")
 	game.set_display_name("x")
 	_check(game.progress.display_name == "דנה" and game.ui.name_row_state()["note"] == PlayerProfile.error_text("too_short"), "a refused name keeps the old one and says why")
 	game.ui._close_settings()
 	game._hide_title()
 	game.start_level(1, "select")
 	await _frames(2)
+	# A tap on the coin counter while Settings is open reaches the dimmer
+	# (closes Settings), never the coin pill under it (the shop).
+	game.ui._open_settings()
+	await _frames(2)
+	_check(game.ui.settings_layer_state()["over"].is_empty(), "in a level: Settings still above the HUD")
+	var at: Vector2 = game.ui._coin_pill.get_global_rect().get_center()
+	var outside: bool = not game.ui._settings_card.get_global_rect().has_point(at)
+	for pressed in [true, false]:
+		var ev := InputEventMouseButton.new()
+		ev.button_index = MOUSE_BUTTON_LEFT
+		ev.pressed = pressed
+		ev.position = at
+		ev.global_position = at
+		get_viewport().push_input(ev, true)
+		await _frames(1)
+	await _frames(2)
+	_check(not game.ui.is_shop_open() and (not outside or not game.ui.is_settings_open()),
+		"a tap on the coins with Settings open does not open the shop (shop %s, settings %s)" % [game.ui.is_shop_open(), game.ui.is_settings_open()])
+	game.ui._close_settings()
+	await _frames(1)
 	var coins: int = game.progress.coins
 	var scores: Dictionary = game.progress.best_scores.duplicate()
 	game.queue_free()
