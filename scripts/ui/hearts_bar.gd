@@ -14,6 +14,14 @@ var max_hearts: int = 3
 ## Color of lost-heart outlines (lighter on dark Chapters).
 var empty_color: Color = Palette.SLOT
 var hearts: int = 3
+## Feedback polish (BuildFlags.feedback_polish, set by the HUD): a bigger
+## heart-loss beat (pop, red halo, longer shake and fall) and lost hearts
+## drawn as a clear outline (`empty_outline`) so full and empty read apart
+## on light and dark Chapters.
+var strong: bool = false
+var empty_outline: Color = Color(0, 0, 0, 0)
+var _halo: float = 0.0
+var _tween: Tween
 ## Per-heart animation state: scale, y offset, alpha of the "falling" copy.
 var _pop := [1.0, 1.0, 1.0]
 var _fall := [0.0, 0.0, 0.0]
@@ -45,6 +53,9 @@ func lose_heart() -> void:
 		return
 	hearts -= 1
 	var i := hearts
+	if strong:
+		_lose_heart_strong(i)
+		return
 	var t := create_tween()
 	t.tween_method(func(v): _pop[i] = v; queue_redraw(), 1.0, 1.45, 0.08).set_trans(Tween.TRANS_QUAD).set_ease(Tween.EASE_OUT)
 	t.tween_method(func(v): _pop[i] = v; queue_redraw(), 1.45, 1.0, 0.12)
@@ -55,13 +66,42 @@ func lose_heart() -> void:
 	t.parallel().tween_method(func(v): _fall_alpha[i] = v; queue_redraw(), 1.0, 0.0, 0.45)
 
 
+## Feedback polish: one tween at a time (a second loss mid-animation
+## finishes the first at once, so rapid mistakes never stack). The slot
+## pops to 1.6x inside a red halo, shakes for 0.5 s and the broken heart
+## falls 1.2 heart-heights while fading (about 0.6 s in all).
+func _lose_heart_strong(i: int) -> void:
+	if _tween and _tween.is_valid():
+		_tween.kill()
+	_pop.fill(1.0)
+	_fall_alpha.fill(0.0)
+	_shake = 0.0
+	_halo = 0.0
+	var t := create_tween()
+	_tween = t
+	t.tween_method(func(v): _pop[i] = v; queue_redraw(), 1.0, 1.6, 0.09).set_trans(Tween.TRANS_BACK).set_ease(Tween.EASE_OUT)
+	t.tween_method(func(v): _pop[i] = v; queue_redraw(), 1.6, 1.0, 0.16).set_trans(Tween.TRANS_SINE)
+	t.parallel().tween_method(func(v): _halo = v; queue_redraw(), 1.0, 0.0, 0.4).set_trans(Tween.TRANS_SINE).set_ease(Tween.EASE_OUT)
+	t.parallel().tween_method(func(v): _shake = v; queue_redraw(), 1.0, 0.0, 0.5)
+	_fall_alpha[i] = 1.0
+	t.parallel().tween_method(func(v): _fall[i] = v; queue_redraw(), 0.0, heart_size * 1.2, 0.6).set_trans(Tween.TRANS_QUAD).set_ease(Tween.EASE_IN)
+	t.parallel().tween_method(func(v): _fall_alpha[i] = v; queue_redraw(), 1.0, 0.0, 0.6)
+
+
+## True while a heart-loss animation is playing (tests).
+func is_animating() -> bool:
+	return _tween != null and _tween.is_valid() and _tween.is_running()
+
+
 func _draw() -> void:
 	var total := max_hearts * heart_size + (max_hearts - 1) * gap
 	var x0 := (size.x - total) * 0.5 + heart_size * 0.5
 	for i in max_hearts:
 		var c := Vector2(x0 + i * (heart_size + gap), size.y * 0.5)
 		if i == hearts:
-			c.x += sin(_shake * 40.0) * 5.0 * _shake
+			c.x += sin(_shake * 40.0) * (7.0 * heart_size / HEART_SIZE if strong else 5.0) * _shake
+			if _halo > 0.0:
+				draw_circle(c, heart_size * (0.55 + 0.35 * (1.0 - _halo)), Color(Palette.HEART, 0.32 * _halo))
 		var full := i < hearts
 		var s: float = heart_size * _pop[i]
 		if full:
@@ -70,6 +110,10 @@ func _draw() -> void:
 			_draw_heart(c + Vector2(-s * 0.14, -s * 0.12), s * 0.28, Color(1, 1, 1, 0.45))  # shine
 		else:
 			_draw_heart(c, s, empty_color)
+			if strong and empty_outline.a > 0.0:
+				var pts := heart_points(c, s)
+				pts.append(pts[0])
+				draw_polyline(pts, empty_outline, maxf(2.0, heart_size * 0.06), true)
 			if _fall_alpha[i] > 0.0:
 				_draw_heart(c + Vector2(0, _fall[i]), s, Color(Palette.HEART, _fall_alpha[i]))
 

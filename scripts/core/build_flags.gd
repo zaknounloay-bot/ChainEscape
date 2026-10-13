@@ -45,6 +45,17 @@ static func live_timer_hud() -> bool:
 	return true
 
 
+## GAMEPLAY FEEDBACK POLISH (Phase 2A, QA): a stronger heart loss with a
+## small heart rising from the tapped block, the blocker of a blocked tap
+## ringed (only when it is unambiguous), a lock-icon response with a
+## repeating explanation, and "No moves left" naming only a button that
+## works. Visual only - rules, hearts, scoring and saves are unchanged.
+## On in every build except the player (production) build; to ship it,
+## return true here.
+static func feedback_polish() -> bool:
+	return not player_build()
+
+
 ## The other developer pages (?openinglab, ?twinsprototype, ?mechlab,
 ## ?friendbench, ?vhtest): off in the player build and in the QA build.
 static func dev_pages_off() -> bool:

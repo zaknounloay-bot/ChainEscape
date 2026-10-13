@@ -514,6 +514,9 @@ func start_level(number: int, via: String = "load") -> void:
 	hint_block = -1
 	_blocked_hint_shown = false
 	_locked_hint_shown = false
+	_locked_msg_at = -100.0
+	_locked_msg_until = -100.0
+	last_feedback = {}
 	_hidden_hint_shown = false
 	_total_blocks = model.block_count()
 	reward_coins_attempt = 0
@@ -761,11 +764,7 @@ func _escape(id: int) -> void:
 		_on_board_cleared()
 	elif model.playable_ids().is_empty():
 		# Spinners can lock the board. Never punish: point at Undo/Restart.
-		if undos_used < MAX_UNDOS:
-			_show_message("No moves left - tap Undo", 3.0)
-			ui.pulse_undo_button()
-		else:
-			_show_message("No moves left - tap Restart", 3.0)
+		_point_at_no_moves()
 
 
 func _blocked(id: int) -> void:
@@ -776,12 +775,14 @@ func _blocked(id: int) -> void:
 		var tb := model.twin_blockers(id)
 		board.play_twin_blocked([id, partner], [tb["own"], tb["partner"]])
 		TwinsPrototype.event("twin_blocked", {"id": id})
-		_mistake()
+		_note_feedback("blocked", id, -1)
+		_mistake(id)
 		return
 	var blocker := model.find_blocker(id)
 	var via := _portal_via(id)
-	board.play_bump(id, blocker.id if blocker else -1, via)
-	if _mistake():
+	var ringed := board.play_bump(id, blocker.id if blocker else -1, via)
+	_note_feedback("blocked", id, ringed)
+	if _mistake(id):
 		return
 	if not via.is_empty():
 		# PORTAL: the reason may be on the far side of the board - say where.
@@ -815,11 +816,35 @@ func _twin_wait_tap(id: int) -> void:
 ## which blocks hold the key (they hop).
 func _locked_tap(id: int) -> void:
 	board.play_locked_tap(id, model.key_blocks(id))
-	if _mistake():
+	_note_feedback("locked", id, -1)
+	if _mistake(id):
+		return
+	if BuildFlags.feedback_polish():
+		_locked_explain(id)
 		return
 	if not _locked_hint_shown:
 		_locked_hint_shown = true
 		_show_message("Locked until every %s block escapes" % model.blocks[id].lock_color, 2.8)
+
+
+## Feedback polish: the short lock rule comes back on a later locked tap
+## once LOCKED_HINT_COOLDOWN has passed since it was last put up; a tap
+## while it is still on screen keeps it there (a tap hides the hint first).
+const LOCKED_HINT_COOLDOWN := 6.0
+const LOCKED_TEXT := "Locked - clear every %s block first"
+var _locked_msg_at := -100.0
+var _locked_msg_until := -100.0
+func _locked_explain(id: int) -> void:
+	var now := Time.get_ticks_msec() / 1000.0
+	var on_screen := now < _locked_msg_until
+	if not on_screen and now - _locked_msg_at < LOCKED_HINT_COOLDOWN:
+		return
+	if not on_screen:
+		_locked_msg_at = now
+	_locked_hint_shown = true
+	_locked_msg_until = now + 2.2
+	_show_message(LOCKED_TEXT % String(model.blocks[id].lock_color).to_upper(), 2.2)
+	last_feedback["message"] = tutorial._text
 
 
 ## Hidden arrows are never a guess: tapping one is free and just explains.
@@ -859,8 +884,11 @@ func _ram(id: int) -> void:
 	Haptics.medium()
 	_refresh_buttons()
 	if model.playable_ids().is_empty():
-		_show_message("No moves left - tap Undo", 3.0)
-		ui.pulse_undo_button()
+		if BuildFlags.feedback_polish():
+			_point_at_no_moves()
+		else:
+			_show_message("No moves left - tap Undo", 3.0)
+			ui.pulse_undo_button()
 
 
 ## v0.8 SEQUENCE (levels 226+): a first-stage block with a clear lane
@@ -923,11 +951,33 @@ func _push(id: int) -> void:
 ## same "no moves left" pointer as after an escape.
 func _after_stay_move() -> void:
 	if model.playable_ids().is_empty():
+		_point_at_no_moves()
+
+
+## "No moves left": names Undo only when Undo can actually be used, else
+## Restart (feedback polish: and that button pulses).
+func _point_at_no_moves(seconds: float = 3.0, lead: String = "No moves left") -> void:
+	if not BuildFlags.feedback_polish():
 		if undos_used < MAX_UNDOS:
-			_show_message("No moves left - tap Undo", 3.0)
+			_show_message("No moves left - tap Undo", seconds)
 			ui.pulse_undo_button()
 		else:
-			_show_message("No moves left - tap Restart", 3.0)
+			_show_message("No moves left - tap Restart", seconds)
+		return
+	var undo_ok := _undo_available()
+	_show_message("%s - tap %s" % [lead, "Undo" if undo_ok else "Restart"], seconds)
+	if undo_ok:
+		ui.pulse_undo_button()
+	else:
+		ui.pulse_restart_button()
+	_note_feedback("no_moves", -1, -1)
+	last_feedback["message"] = tutorial._text
+	last_feedback["points_at"] = "undo" if undo_ok else "restart"
+
+
+## Undo would work right now: a move to take back and a use left.
+func _undo_available() -> bool:
+	return history.can_undo() and undos_used < MAX_UNDOS and not completed
 
 
 ## A Movable block never moves by itself: tapping it is free and explains.
@@ -950,8 +1000,19 @@ func _armored_tap(id: int) -> void:
 	_show_message("Armored - launch another block into it to crack the shell", 2.8)
 
 
+## Feedback polish (tests and QA): what the last failed tap / dead end
+## showed. Visual record only - never read by the rules.
+var last_feedback := {}
+var _feedback_seq := 0
+func _note_feedback(kind: String, id: int, ringed: int) -> void:
+	_feedback_seq += 1
+	last_feedback = {"seq": _feedback_seq, "kind": kind, "id": id, "ringed": ringed,
+		"heart_chip": false, "message": "", "points_at": ""}
+
+
 ## Shared mistake handling. Returns true if the attempt just ended.
-func _mistake() -> bool:
+## `id`: the tapped block (feedback polish: a heart rises from it).
+func _mistake(id: int = -1) -> bool:
 	AudioManager.play_invalid()
 	Haptics.medium()
 	mistakes += 1
@@ -961,6 +1022,9 @@ func _mistake() -> bool:
 		hearts -= 1
 		ui.lose_heart()
 		AudioManager.play_heart_lost()
+		if BuildFlags.feedback_polish() and id >= 0:
+			board.play_heart_loss(id)
+			last_feedback["heart_chip"] = true
 		if hearts <= 0:
 			_out_of_hearts()
 			return true
@@ -1204,6 +1268,12 @@ func request_hint() -> void:
 		return
 	var id := Solver.from_model(model).recommend_move()
 	if id == -1:
+		if BuildFlags.feedback_polish():
+			if model.playable_ids().is_empty():
+				_point_at_no_moves(2.6)
+			else:
+				_point_at_no_moves(3.0, "This board can't be cleared from here")
+			return
 		if model.playable_ids().is_empty():
 			_show_message("No moves left - tap Undo", 2.6)
 		else:
@@ -1684,6 +1754,7 @@ func publish_state() -> void:
 		"page_hidden": attempt_timer.page_hidden, "time_result": last_time_result, "card_time": ui.time_summary, "time_panel": ui.time_panel_state(), "live_timer": ui.live_timer_state(), "board_panel": UIManager.frac_rect(Rect2(board.global_position - Vector2.ONE * board.cell_size * Board.PADDING_CELLS, Vector2(board.columns + 2 * Board.PADDING_CELLS, board.rows + 2 * Board.PADDING_CELLS) * board.cell_size), vis),
 		"best_time_ms": progress.best_time(current_level), "best_clean_ms": progress.best_clean_time(current_level),
 		"card_rect": [ui._card.get_global_rect().position.x / vis.x, ui._card.get_global_rect().position.y / vis.y, ui._card.get_global_rect().end.x / vis.x, ui._card.get_global_rect().end.y / vis.y],
+		"feedback": _feedback_state(vis) if not BuildFlags.player_build() else {}, "feedback_polish": BuildFlags.feedback_polish(),
 		"undo_button": center.call(ui._undo_button), "restart_button": center.call(ui._restart_button),
 		"hint_button": center.call(ui._hint_button), "hammer_button": center.call(ui._hammer_button), "hammer_armed": hammer_armed,
 		"magnets": model.blocks.values().filter(func(b): return b.magnet).size() if model else 0,
@@ -1693,6 +1764,23 @@ func publish_state() -> void:
 		"select_locked_first": (select_shown.get("locked", []) as Array).min() if not select_shown.get("locked", []).is_empty() else 0,
 	}
 	WebBridge.publish("chainEscapeState", st)
+
+
+## Browser tests: the last failure feedback and what is animating now.
+func _feedback_state(vis: Vector2) -> Dictionary:
+	var f := last_feedback.duplicate()
+	f["heart_anim"] = ui._hearts.is_animating()
+	f["chip_active"] = board.heart_chip_active()
+	f["chips_shown"] = board.heart_chips_shown
+	f["rings_live"] = board.live_ring_count()
+	f["hearts_rect"] = UIManager.frac_rect(ui._hearts.get_global_rect(), vis)
+	f["undo_scale"] = ui._undo_button.scale.x
+	f["restart_scale"] = ui._restart_button.scale.x
+	f["undo_available"] = _undo_available()
+	var v: BlockView = board.get_view(int(f.get("id", -1))) if int(f.get("id", -1)) >= 0 else null
+	f["lock_pop"] = v.lock_pop_active() if v else false
+	f["tip"] = tutorial._text if tutorial.visible else ""  # visible from the first frame of its fade-in
+	return f
 
 
 ## TWINS PROTOTYPE browser tests: every block's cell, screen position
@@ -1923,6 +2011,10 @@ func _lesson_step(twin_wait := false) -> void:
 	board.set_marks(marks)
 	if next == -1:
 		board.set_hint(-1)
+		if BuildFlags.feedback_polish() and not _undo_available():
+			tutorial.show_hint("No correct move here - tap Restart", _message_position())
+			ui.pulse_restart_button()
+			return
 		tutorial.show_hint("No correct move here - tap Undo", _message_position())
 		ui.pulse_undo_button()
 		return

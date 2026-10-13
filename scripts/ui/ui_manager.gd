@@ -178,8 +178,26 @@ func pulse_undo_button() -> void:
 	_pulse(_undo_button)
 
 
+## Feedback polish: "No moves left" with no Undo left points here instead.
+func pulse_restart_button() -> void:
+	_pulse(_restart_button)
+
+
 func _pulse(b: Control) -> void:
 	b.pivot_offset = b.size * 0.5
+	if BuildFlags.feedback_polish():
+		# One pulse per button at a time (repeated taps never stack), a
+		# little larger and one beat longer.
+		var prev: Tween = b.get_meta("pulse_tween") if b.has_meta("pulse_tween") else null
+		if prev and prev.is_valid():
+			prev.kill()
+		b.scale = Vector2.ONE
+		var pt := create_tween()
+		b.set_meta("pulse_tween", pt)
+		for i in 3:
+			pt.tween_property(b, "scale", Vector2(1.14, 1.14), 0.12).set_trans(Tween.TRANS_SINE)
+			pt.tween_property(b, "scale", Vector2.ONE, 0.16).set_trans(Tween.TRANS_SINE)
+		return
 	var t := create_tween()
 	for i in 2:
 		t.tween_property(b, "scale", Vector2(1.1, 1.1), 0.12).set_trans(Tween.TRANS_SINE)
@@ -299,6 +317,11 @@ func apply_theme(t: Dictionary) -> void:
 	_level_label.add_theme_color_override("font_color", t["text"])
 	_name_label.add_theme_color_override("font_color", t["text_soft"])
 	_hearts.empty_color = Color(1, 1, 1, 0.22) if t["dark"] else Palette.SLOT
+	if _hearts.strong:
+		# Feedback polish: a lost heart is a faint fill with a clear outline,
+		# never mistaken for a full one (contrast on both kinds of Chapter).
+		_hearts.empty_color = Color(1, 1, 1, 0.10) if t["dark"] else Color(Palette.SLOT, 0.55)
+		_hearts.empty_outline = Color(1, 1, 1, 0.62) if t["dark"] else Color(Palette.TEXT, 0.42)
 	_hearts.queue_redraw()
 	_progress.track_color = Color(1, 1, 1, 0.16) if t["dark"] else t["slot"]
 	_progress.fill_color = t["accent"]
@@ -814,6 +837,7 @@ func _build() -> void:
 	_hearts_holder = CenterContainer.new()
 	_hearts_holder.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	_hearts = HeartsBar.new()
+	_hearts.strong = BuildFlags.feedback_polish()
 	if BuildFlags.live_timer_hud():
 		# Layout C: 44-unit hearts (1-300 release: 34), gap 15
 		# (released: 12) - real-iPhone feedback; same mechanics.

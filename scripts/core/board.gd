@@ -313,11 +313,17 @@ func _play_portal_escape(view: BlockView, via: Array, duration: float) -> Tween:
 ## Portal: when the lane runs through portals (`via`), the portals
 ## flash and the far blocker shakes clearly (a red ring), so a remote block
 ## is never a mystery.
-func play_bump(id: int, blocker_id: int, via: Array = []) -> void:
+##
+## Feedback polish: a longer nudge (0.2 cell) and, on a straight lane, the
+## blocker gets the same red ring as a portal blocker - only when the block
+## in the way IS the reason (never a Movable block that can't be pushed:
+## what holds it is further on). Returns the ringed blocker id, or -1.
+func play_bump(id: int, blocker_id: int, via: Array = []) -> int:
 	var view: BlockView = _views.get(id)
 	if view == null:
-		return
-	view.play_bump(cell_size * 0.12)
+		return -1
+	var polish := BuildFlags.feedback_polish()
+	view.play_bump(cell_size * (0.2 if polish else 0.12))
 	var blocker: BlockView = _views.get(blocker_id)
 	if not via.is_empty():
 		for i in via.size():
@@ -326,15 +332,78 @@ func play_bump(id: int, blocker_id: int, via: Array = []) -> void:
 			_portal_flash(via[i][1], color, 0.09 + 0.1 * i)
 		if blocker:
 			blocker.play_rattle()
-			var ring := RewardRing.new()
-			ring.color = Color("#FF4D4D")
-			ring.max_radius = cell_size * 0.7
-			ring.position = blocker.home
-			_fx_root.add_child(ring)
-		return
+			if polish:
+				if blocker.data.is_crate():
+					return -1  # a stuck Movable block: the cause is beyond it
+				_blocker_ring(blocker_id, 0.0)
+			else:
+				var ring := RewardRing.new()
+				ring.color = Color("#FF4D4D")
+				ring.max_radius = cell_size * 0.7
+				ring.position = blocker.home
+				_fx_root.add_child(ring)
+			return blocker_id
+		return -1
 	if blocker:
 		var dist := (blocker.home - view.home).length() / cell_size
 		blocker.play_hit(view.data.direction, cell_size * 0.05, 0.05 + 0.015 * dist)
+		if polish and not blocker.data.is_crate():
+			_blocker_ring(blocker_id, 0.05 + 0.015 * dist)
+			return blocker_id
+	return -1
+
+
+## Feedback polish: one red ring per blocker at a time (a repeated tap
+## replaces it, never stacks). Same ring as the portal blocker.
+var _rings := {}
+var last_ring_id := -1
+func _blocker_ring(blocker_id: int, delay: float) -> void:
+	var v: BlockView = _views.get(blocker_id)
+	if v == null:
+		return
+	var prev = _rings.get(blocker_id)
+	if is_instance_valid(prev):
+		prev.queue_free()
+	var ring := RewardRing.new()
+	ring.color = Color("#FF4D4D")
+	ring.max_radius = cell_size * 0.7
+	ring.position = v.home
+	ring.delay = delay
+	ring.hold = true
+	_fx_root.add_child(ring)
+	_rings[blocker_id] = ring
+	ring.tree_exiting.connect(func():
+		if _rings.get(blocker_id) == ring:
+			_rings.erase(blocker_id))
+	last_ring_id = blocker_id
+
+
+## Feedback polish: a heart was lost on a tap of `id` - a small heart
+## with a minus sign rises from the block and fades (0.65 s), so the
+## loss is seen where the player is looking. One at a time.
+var _heart_chip: Node2D
+var heart_chips_shown := 0
+func play_heart_loss(id: int) -> void:
+	var v: BlockView = _views.get(id)
+	if v == null:
+		return
+	if is_instance_valid(_heart_chip):
+		_heart_chip.queue_free()
+	var chip := HeartChip.new()
+	chip.size = clampf(cell_size * 0.36, 22.0, 44.0)
+	chip.position = v.home + Vector2(0, -cell_size * 0.25)
+	chip.rise = cell_size * 0.6
+	_fx_root.add_child(chip)
+	_heart_chip = chip
+	heart_chips_shown += 1
+
+
+func live_ring_count() -> int:
+	return _rings.values().filter(func(r): return is_instance_valid(r) and not r.is_queued_for_deletion()).size()
+
+
+func heart_chip_active() -> bool:
+	return is_instance_valid(_heart_chip)
 
 
 ## SEQUENCE: `id` advanced - a short launch along its lane and
@@ -480,11 +549,25 @@ class RewardRing extends Node2D:
 	## per-frame redraw would create new GPU buffers every frame on Web).
 	var color := Color.WHITE
 	var max_radius := 60.0
+	var delay := 0.0
+	## Feedback polish (blocker ring): starts near full size and holds
+	## before fading, so it reads as "this one" rather than a burst.
+	var hold := false
 
 	func _ready() -> void:
 		z_index = 30
-		scale = Vector2.ONE * 0.3
+		scale = Vector2.ONE * (0.75 if hold else 0.3)
 		var t := create_tween()
+		if delay > 0.0:
+			modulate.a = 0.0
+			t.tween_interval(delay)
+			t.tween_property(self, "modulate:a", 1.0, 0.0)
+		if hold:
+			t.tween_property(self, "scale", Vector2.ONE, 0.12).set_trans(Tween.TRANS_BACK).set_ease(Tween.EASE_OUT)
+			t.tween_interval(0.18)
+			t.tween_property(self, "modulate:a", 0.0, 0.28).set_trans(Tween.TRANS_SINE).set_ease(Tween.EASE_IN)
+			t.tween_callback(queue_free)
+			return
 		t.tween_property(self, "scale", Vector2.ONE, 0.42).set_trans(Tween.TRANS_CUBIC).set_ease(Tween.EASE_OUT)
 		t.parallel().tween_property(self, "modulate:a", 0.0, 0.42).set_trans(Tween.TRANS_CUBIC).set_ease(Tween.EASE_OUT)
 		t.tween_callback(queue_free)
@@ -752,10 +835,13 @@ func play_reveals(ids: Array) -> void:
 
 
 ## Locked block tapped: rattle it and make its key blocks hop.
+## Feedback polish: the padlock itself swells and wobbles.
 func play_locked_tap(id: int, key_ids: Array) -> void:
 	var v: BlockView = _views.get(id)
 	if v:
 		v.play_rattle()
+		if BuildFlags.feedback_polish():
+			v.play_lock_pop()
 	for i in key_ids.size():
 		var k: BlockView = _views.get(key_ids[i])
 		if k:
@@ -1021,3 +1107,28 @@ class LaneFlash extends Node2D:
 	func _draw() -> void:
 		var a := 0.45 * (1.0 - _t / 0.6)
 		draw_line(from, to, Color(1.0, 0.3, 0.3, a), width, true)
+
+
+## Feedback polish: "-" and a heart, drawn once; the tween only moves,
+## scales and fades it (no per-frame redraw).
+class HeartChip extends Node2D:
+	var size := 30.0
+	var rise := 50.0
+
+	func _ready() -> void:
+		z_index = 40
+		scale = Vector2.ONE * 0.5
+		var t := create_tween()
+		t.tween_property(self, "scale", Vector2.ONE * 1.1, 0.12).set_trans(Tween.TRANS_BACK).set_ease(Tween.EASE_OUT)
+		t.parallel().tween_property(self, "position:y", position.y - rise, 0.65).set_trans(Tween.TRANS_CUBIC).set_ease(Tween.EASE_OUT)
+		t.parallel().tween_property(self, "modulate:a", 0.0, 0.3).set_delay(0.35)
+		t.tween_callback(queue_free)
+
+	func _draw() -> void:
+		var c := Vector2(size * 0.32, 0)
+		var outline := HeartsBar.heart_points(c, size + 6.0)
+		draw_colored_polygon(outline, Color.WHITE)
+		draw_colored_polygon(HeartsBar.heart_points(c, size), Palette.HEART)
+		var bar := Rect2(Vector2(-size * 0.95, -size * 0.09), Vector2(size * 0.5, size * 0.18))
+		draw_rect(bar.grow(3.0), Color.WHITE)
+		draw_rect(bar, Palette.HEART)

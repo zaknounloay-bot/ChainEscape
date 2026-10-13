@@ -62,6 +62,12 @@ var _lock_open: float = 0.0:
 		_lock_open = v
 		if _over:
 			_over.queue_redraw()
+## Feedback polish: the padlock's "still locked" response (0 = at rest).
+## Only animated by a short tween; the overlay is redrawn while it runs.
+var _lock_pop: float = 0.0
+var _lock_tilt: float = 0.0
+var _lock_tween: Tween
+var _key_tween: Tween
 ## Reward block (Silver/Gold) already collected on an earlier run: shown
 ## with a faint frame only, no shine or gem - it pays nothing again.
 var reward_spent: bool = false:
@@ -633,6 +639,11 @@ func _draw_lock(c: CanvasItem, face_rect: Rect2, size: float) -> void:
 	var s := size * 0.36 * (1.0 + 0.5 * t)
 	var a := 1.0 - t
 	var cc := face_rect.position + Vector2(face_rect.size.x - size * 0.16, size * 0.18)
+	if _lock_pop > 0.0:
+		# Feedback polish: the padlock swells and wobbles around its center.
+		var k := 1.0 + 0.55 * _lock_pop
+		c.draw_set_transform(cc, _lock_tilt, Vector2(k, k))
+		cc = Vector2.ZERO
 	var body := Rect2(cc + Vector2(-s * 0.5, -s * 0.1), Vector2(s, s * 0.72))
 	var lift := s * 0.35 * t
 	c.draw_arc(cc + Vector2(0, -s * 0.1 - lift), s * 0.3, PI, TAU, 16, Color(1, 1, 1, a), maxf(3.0, s * 0.16), true)
@@ -646,6 +657,8 @@ func _draw_lock(c: CanvasItem, face_rect: Rect2, size: float) -> void:
 	st.shadow_size = 3
 	st.draw(c.get_canvas_item(), body)
 	c.draw_circle(body.get_center() + Vector2(0, -s * 0.04), s * 0.09, Color(1, 1, 1, a))
+	if _lock_pop > 0.0:
+		c.draw_set_transform(Vector2.ZERO, 0.0, Vector2.ONE)
 
 
 ## v0.6 CHAIN GATE: a dark steel slab (no arrow) with a big chain icon, the
@@ -950,8 +963,46 @@ func play_rattle() -> void:
 	t.tween_property(self, "position", home, 0.04)
 
 
+## Feedback polish, locked block tapped: the padlock swells to about 1.55x
+## and wobbles (0.42 s). A new tap restarts it - never stacks.
+func play_lock_pop() -> void:
+	if not locked_visual:
+		return
+	if _lock_tween and _lock_tween.is_valid():
+		_lock_tween.kill()
+	_lock_tween = create_tween()
+	_lock_tween.tween_method(_set_lock_pop, 0.0, 1.0, 0.42)
+	_lock_tween.tween_callback(func(): _set_lock_pop(1.0))
+
+
+func _set_lock_pop(t: float) -> void:
+	if t >= 1.0:
+		_lock_pop = 0.0
+		_lock_tilt = 0.0
+	else:
+		_lock_pop = sin(minf(t / 0.3, 1.0) * PI * 0.5) * (1.0 - t)
+		_lock_tilt = sin(t * TAU * 2.0) * 0.35 * (1.0 - t)
+	if _over:
+		_over.queue_redraw()
+
+
+## True while the padlock response is playing (tests).
+func lock_pop_active() -> bool:
+	return _lock_tween != null and _lock_tween.is_valid() and _lock_tween.is_running()
+
+
 ## "I am one of the keys": a small hop.
 func play_key_pulse(delay: float = 0.0) -> void:
+	if BuildFlags.feedback_polish():
+		# One hop at a time: rapid taps restart it instead of stacking.
+		if _key_tween and _key_tween.is_valid():
+			_key_tween.kill()
+		scale = Vector2.ONE
+		_key_tween = create_tween()
+		_key_tween.tween_interval(delay)
+		_key_tween.tween_property(self, "scale", Vector2(1.12, 1.12), 0.1).set_trans(Tween.TRANS_SINE)
+		_key_tween.tween_property(self, "scale", Vector2.ONE, 0.18).set_trans(Tween.TRANS_BACK).set_ease(Tween.EASE_OUT)
+		return
 	var t := create_tween()
 	t.tween_interval(delay)
 	t.tween_property(self, "scale", Vector2(1.12, 1.12), 0.1).set_trans(Tween.TRANS_SINE)
