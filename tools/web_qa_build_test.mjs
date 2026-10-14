@@ -116,12 +116,21 @@ async function snapshotNonQa(page) {
 }
 const qaKeys = (page) => page.evaluate(() => ({ save: localStorage.getItem('chain_escape_experiencelab_qa_save') || '', }));
 
+let compChecked = false;
 async function solveAndNext(page, n) {
   await page.focus('canvas').catch(() => {});
   await page.keyboard.press('F1');
   await sleep(250);
   await page.keyboard.press('s');
   let s = await waitFor(page, (x) => x.card_open && x.level === n, `level ${n} cleared`);
+  if (!compChecked && s.lab_qa) {
+    // Real-player results (3B-B): the QA build queues the cleared level for
+    // its "qa" pool (the API is off in this test: kept queued, no request).
+    compChecked = true;
+    const c = s.competition || {};
+    check(c.enabled && c.pool === 'qa' && c.has_secret && (c.pending || []).includes(n) && !JSON.stringify(c).match(/[0-9a-f]{64}/),
+      `QA build: the cleared Level ${n} is queued for the qa results pool (${JSON.stringify(c.pending)}), no secret in the state`);
+  }
   await page.keyboard.press('F1');
   await sleep(900);
   s = await state(page);
@@ -145,6 +154,8 @@ try {
   // The production (Friend Test) build saves under the release namespace
   // (PlayerProgress.RELEASE_*: progress_r2.cfg, chain_escape_save_r2).
   await ctx.addInitScript((t) => { try { if (!localStorage.getItem('chain_escape_save_r2')) localStorage.setItem('chain_escape_save_r2', t); } catch (e) {} }, REAL);
+  // Never the real API from a test (the QA build sends real-player results).
+  await ctx.addInitScript(() => { window.ceTestHooks = true; window.ceApiUrl = 'off'; });
   let page = ctx.pages()[0] || await ctx.newPage();
   watch(page, 'iphone14');
   // ===== A =====
@@ -244,6 +255,7 @@ for (const [w, h, label, n] of [[375, 667, 'iphoneSE', 250], [430, 932, 'promax'
   W = w; H = h;
   const d = fs.mkdtempSync(path.join(os.tmpdir(), 'ce-qa-'));
   const c = await chromium.launchPersistentContext(d, { ...LAUNCH, viewport: { width: W, height: H }, deviceScaleFactor: 1, isMobile: true, hasTouch: true });
+  await c.addInitScript(() => { window.ceTestHooks = true; window.ceApiUrl = 'off'; });
   try {
     const page = c.pages()[0] || await c.newPage();
     watch(page, label);
