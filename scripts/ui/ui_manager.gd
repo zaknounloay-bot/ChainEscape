@@ -70,6 +70,9 @@ var _best_value: Label
 var _comp_row: HBoxContainer
 var _comp_caption: Label  # "YOUR BEST" / the pending text
 var _comp_value: Label  # "TOP 40%"
+var _comp_badge: PanelContainer  # trophy + TOP X% on a faint purple pill (only with a real percentile)
+var _comp_badge_style: StyleBoxFlat
+var _comp_icon: Control  # the small drawn trophy
 var comp_summary := ""  # the row as one line (tests / diagnostics); "" = no row
 ## The block as one line ("TIME 0:42   ·   BEST 0:38", time_line) - for
 ## diagnostics / tests; "" when there is no time.
@@ -1372,15 +1375,59 @@ func _build_time_panel(parent: Control) -> void:
 	box.add_child(_comp_row)
 	_comp_caption = _make_label(19, Palette.TEXT_SOFT, 900)
 	_comp_row.add_child(_comp_caption)
-	# The value label always stays in the row (empty in the quiet states):
-	# it is the taller of the two, so the row - and the card - keep one
-	# height whatever the answer.
-	_comp_value = _make_label(30, COMP_COLOR, 900)
-	_comp_row.add_child(_comp_value)
+	# The badge (trophy + value) always stays in the row - empty and
+	# transparent in the quiet states: the value label is the tallest thing
+	# in the row, so the row - and the card - keep one height whatever the
+	# answer. No vertical padding on the pill for the same reason.
+	_comp_badge = PanelContainer.new()
+	_comp_badge.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	_comp_badge_style = StyleBoxFlat.new()
+	_comp_badge_style.set_corner_radius_all(22)
+	_comp_badge_style.anti_aliasing = true
+	_comp_badge_style.content_margin_left = 16
+	_comp_badge_style.content_margin_right = 18
+	_comp_badge_style.bg_color = Color(COMP_COLOR, 0.0)
+	_comp_badge.add_theme_stylebox_override("panel", _comp_badge_style)
+	_comp_row.add_child(_comp_badge)
+	var badge_box := HBoxContainer.new()
+	badge_box.alignment = BoxContainer.ALIGNMENT_CENTER
+	badge_box.add_theme_constant_override("separation", 10)
+	badge_box.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	_comp_badge.add_child(badge_box)
+	_comp_icon = TrophyIcon.new()
+	_comp_icon.custom_minimum_size = Vector2(30, 32)
+	_comp_icon.size_flags_vertical = Control.SIZE_SHRINK_CENTER
+	_comp_icon.visible = false
+	badge_box.add_child(_comp_icon)
+	_comp_value = _make_label(COMP_VALUE_SIZE, COMP_COLOR, 900)
+	badge_box.add_child(_comp_value)
 	_time_panel.visible = false
 
 
+## A small trophy, drawn flat in the percentile colour (no image asset,
+## no emoji font): cup, two handles, stem and a two-step base.
+class TrophyIcon extends Control:
+	func _init() -> void:
+		mouse_filter = Control.MOUSE_FILTER_IGNORE
+
+	func _draw() -> void:
+		var w := size.x
+		var h := size.y
+		var c := COMP_COLOR
+		var cup := PackedVector2Array([Vector2(0.18 * w, 0.06 * h), Vector2(0.82 * w, 0.06 * h), Vector2(0.78 * w, 0.30 * h),
+			Vector2(0.64 * w, 0.48 * h), Vector2(0.36 * w, 0.48 * h), Vector2(0.22 * w, 0.30 * h)])
+		draw_colored_polygon(cup, c)
+		var r := 0.15 * w
+		draw_arc(Vector2(0.18 * w, 0.21 * h), r, PI * 0.5, PI * 1.5, 12, c, maxf(2.0, 0.09 * w), true)
+		draw_arc(Vector2(0.82 * w, 0.21 * h), r, -PI * 0.5, PI * 0.5, 12, c, maxf(2.0, 0.09 * w), true)
+		draw_rect(Rect2(0.44 * w, 0.47 * h, 0.12 * w, 0.24 * h), c)
+		draw_rect(Rect2(0.30 * w, 0.70 * h, 0.40 * w, 0.11 * h), c)
+		draw_rect(Rect2(0.22 * w, 0.82 * h, 0.56 * w, 0.12 * h), c)
+
+
 const COMP_COLOR := Palette.PURPLE_BADGE
+## TOP X% (Phase 3B-C polish: 30 -> 36, +20%); TIME stays 38.
+const COMP_VALUE_SIZE := 36
 ## The quiet states of the standing row: no number at all (never a
 ## percentile placeholder, never a number of players).
 const COMP_TEXT := {"checking": "STANDING   ·   CHECKING...", "offline": "STANDING   ·   SAVED, WILL SEND LATER",
@@ -1402,12 +1449,16 @@ func show_comp_status(status: Dictionary, time_ms: int) -> void:
 		_comp_caption.text = "" if own else "YOUR BEST"
 		_comp_caption.visible = not own
 		_comp_value.text = "TOP %d%%" % int(status["percentile"])
+		_comp_icon.visible = true
+		_comp_badge_style.bg_color = Color(COMP_COLOR, 0.10)
 		_comp_row.add_theme_constant_override("separation", 12)
 		comp_summary = _comp_value.text if own else "YOUR BEST " + _comp_value.text
 	else:
 		_comp_caption.text = COMP_TEXT.get(state, "")
 		_comp_caption.visible = true
 		_comp_value.text = ""  # stays in the row: it holds the row's height
+		_comp_icon.visible = false
+		_comp_badge_style.bg_color = Color(COMP_COLOR, 0.0)
 		_comp_row.add_theme_constant_override("separation", 0)
 		comp_summary = _comp_caption.text
 
@@ -1421,6 +1472,8 @@ func time_panel_state() -> Dictionary:
 		"best_caption": _best_caption.text, "best": _best_value.text, "record": _time_style.border_width_top > 0,
 		"comp": comp_summary if _comp_row.is_visible_in_tree() and _comp_row.modulate.a > 0.0 else "",
 		"comp_row": _comp_row.is_visible_in_tree(), "comp_rect": frac_rect(_comp_row.get_global_rect(), vis),
+		"comp_badge": _comp_icon.is_visible_in_tree(), "comp_value_rect": frac_rect(_comp_badge.get_global_rect(), vis),
+		"time_value_rect": frac_rect(_time_value.get_global_rect(), vis),
 		"rect": [rect.position.x / vis.x, rect.position.y / vis.y, rect.end.x / vis.x, rect.end.y / vis.y],
 		"card_scale": snappedf(_card.scale.x, 0.001), "card_shift": (_card.get_parent() as Control).offset_top * 0.5 / vis.y, "hud_bottom": _hud_bottom() / vis.y}
 

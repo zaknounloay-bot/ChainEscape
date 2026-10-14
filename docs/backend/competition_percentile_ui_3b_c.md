@@ -27,6 +27,19 @@ The level card's timing panel gets one more row, under TIME | PERSONAL BEST:
 - **Quiet states never show "TOP %"** without a number: they read `STANDING · …`.
 - A row with nothing to show at card open is left out entirely, and does not appear later.
 
+## Visual polish (after real-iPhone QA)
+
+The real percentile was too subtle. Changed in `scripts/ui/ui_manager.gd` only:
+
+- **Size:** `TOP X%` grows from 30 to **36 px** (+20%). TIME stays 38 px; PERSONAL BEST is unchanged.
+- **Trophy:** a small flat trophy (30×32, drawn, no asset or emoji) sits beside the value, in the same purple.
+- **Pill:** a faint purple pill (10% tint, no vertical padding) sits behind trophy + value. It appears only with a real percentile.
+- **`YOUR BEST`:** stays as the small soft caption in front, with `TOP X%` at full size.
+- **Quiet states:** unchanged (one 19 px soft line, no trophy, no pill).
+- **Fixed height:** the row height doesn't depend on the state, because the value label always stays in the row. A late answer moves nothing (browser test, SE and Pro Max).
+- **No animation.**
+- **Effect on card size:** on iPhone SE the milestone cards (100 / 300) now rest at 0.913 scale (before: 0.928; the floor is 0.85). Ordinary cards stay at 1.0.
+
 ## Rules (unchanged backend contract)
 
 - **Server values only.** `TOP X%` is the `percentile` field of `submit_result` or `level_standing`.
@@ -60,7 +73,7 @@ The level card's timing panel gets one more row, under TIME | PERSONAL BEST:
 | Test | Result |
 |---|---|
 | `tools/CompetitionCheck.tscn` (A–G) | **75/75** |
-| `tools/web_competition_card_test.mjs build/web_qa` (exported QA build, Chromium at SE / 14 / Pro Max; fake API, Supabase blocked) | **23/23**. Levels 100 / 300 / 10 on SE, 12 on 14, 250 on Pro Max: row text, card and row inside the screen, above REPLAY / NEXT, below the HUD, no horizontal overflow, qa pool only, 0 requests to Supabase, no page errors |
+| `tools/web_competition_card_test.mjs build/web_qa` (exported QA build, Chromium at SE / 14 / Pro Max; fake API, Supabase blocked) | **39/39** (after the visual polish). Regular/PERFECT and milestone 100 / 300 cards; TOP 14%, TOP 100%, not enough players, will send later; two late answers (checking first): row text, card and row inside the screen, above REPLAY / NEXT, below the HUD, no horizontal overflow, qa pool only, 0 requests to Supabase, no page errors |
 | `run_tests.gd`, TimingCheck, ProfileCheck, FeedbackCheck, FriendChallengeApiTest (58), FriendFlowTest (150), SocialApiTest, SocialPlayTest | Pass |
 | ExperienceLabQaCheck `--experiencelab=13 / 100 / 12 --qareset` | Pass |
 | RecipientTest (3 "TOTAL SCORE left, coins right"), SocialSmoke ("message font carries the Arabic + Hebrew fallbacks") | Fail, **identically on `67519c0` (before 3B-C)**: pre-existing, not touched here |

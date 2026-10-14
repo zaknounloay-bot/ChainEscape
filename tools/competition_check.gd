@@ -598,7 +598,7 @@ func _card() -> void:
 	await _clear(game, 2, 12.0, "hint")
 	var t1: int = game.last_time_result["time_ms"]
 	_check(game.attempt_assisted and int(game.progress.comp_sent.get(2, 0)) == t1, "an attempt with Show a Move is sent like any other (%d ms)" % t1)
-	_check(_comp_text(game) == "TOP 60%", "5 players: the card shows '%s'" % _comp_text(game))
+	_check(_comp_text(game) == "TOP 60%" and game.ui.time_panel_state()["comp_badge"], "5 players: the card shows '%s' with the trophy badge" % _comp_text(game))
 	tp = game.ui.time_panel_state()
 	var card_rect: Rect2 = game.ui._card.get_global_rect()
 	var row_rect: Rect2 = game.ui._comp_row.get_global_rect()
@@ -625,7 +625,9 @@ func _card() -> void:
 		if b["action"] == "submit_result":
 			submits += 1
 	_check(submits == 0 and bodies.size() == n0 + 1 and bodies[-1]["action"] == "level_standing", "slower replay: one read-only lookup, no submission")
-	_check(_comp_text(game) == "YOUR BEST TOP 60%", "slower replay card: '%s' (the standing belongs to the earlier best)" % _comp_text(game))
+	_check(_comp_text(game) == "YOUR BEST TOP 60%" and game.ui.time_panel_state()["comp_badge"]
+		and game.ui._comp_value.get_theme_font_size("font_size") == game.ui.COMP_VALUE_SIZE,
+		"slower replay card: '%s' (the standing belongs to the earlier best; TOP X%% at full size, with the trophy)" % _comp_text(game))
 	var rect_slow: Rect2 = game.ui._comp_row.get_global_rect()
 	var row_h_slow: float = game.ui._comp_row.size.y
 	# A faster replay with Undo and Hammer: 3 s -> TOP 20%.
@@ -639,7 +641,8 @@ func _card() -> void:
 	game.replay()
 	await _frames(2)
 	await _clear(game, 2, 2.0)
-	_check(_comp_text(game) == "STANDING   ·   SAVED, WILL SEND LATER" and game.progress.comp_pending.has(2), "offline: '%s', the result kept" % _comp_text(game))
+	_check(_comp_text(game) == "STANDING   ·   SAVED, WILL SEND LATER" and game.progress.comp_pending.has(2) and not game.ui.time_panel_state()["comp_badge"],
+		"offline: '%s', the result kept, no trophy" % _comp_text(game))
 	var rect_off: Rect2 = game.ui._comp_row.get_global_rect()
 	_check(is_equal_approx(rect_off.size.y, rect_slow.size.y) and is_equal_approx(game.ui._comp_row.size.y, row_h_slow),
 		"the row keeps one height in every state (%.0f; slow %s, offline %s)" % [game.ui._comp_row.size.y, str(rect_slow), str(rect_off)])
