@@ -37,9 +37,11 @@ func _ready() -> void:
 
 func _run() -> void:
 	_timer_unit()
+	_cap_unit()
 	_records()
 	await _game()
-	_check(_done == ["timer", "records", "game"], "every section ran to its end (%s)" % [_done])
+	await _cap_game()
+	_check(_done == ["timer", "cap", "records", "game", "cap_game"], "every section ran to its end (%s)" % [_done])
 	_wipe(SAVE)
 	_wipe("user://timing_check_a.cfg")
 	_wipe("user://timing_check_b.cfg")
@@ -94,6 +96,71 @@ func _timer_unit() -> void:
 	t.tick(0.0004, true)
 	_check(t.elapsed_ms() == 0, "under half a millisecond rounds to 0 ms (never recorded)")
 	_done.append("timer")
+
+
+# --- A2. Frame-cap accounting (Phase 3B-A) ---------------------------------------
+
+## Plays `frames` frames of `delta` seconds; returns [shown ms, discarded ms].
+static func _run_frames(t: AttemptTimer, delta: float, frames: int, active := true) -> Array:
+	for i in frames:
+		t.tick(delta, active)
+	return [t.elapsed_ms(), t.discarded_ms()]
+
+
+func _cap_unit() -> void:
+	var t := AttemptTimer.new()
+	_check(t.cap_info() == {"discarded_ms": 0, "capped_frames": 0, "longest_frame_ms": 0, "start_frame_ms": 0}, "a new timer has no cap metadata")
+	# The attempt's first active frame (level build / first render) is kept
+	# apart: never discarded time, shown time as before (at most MAX_FRAME).
+	t.tick(2.0, true)
+	t.tick(1.0 / 60.0, true)
+	_check(t.elapsed_ms() == 267 and t.discarded_ms() == 0 and t.capped_frames == 0 and t.cap_info()["start_frame_ms"] == 2000,
+		"a 2 s first frame (level load): start_frame 2000 ms, nothing discarded, %d ms shown (as before)" % t.elapsed_ms())
+	t.tick(2.0, true)
+	_check(t.discarded_ms() == 1750 and t.capped_frames == 1, "a later 2 s frame is discarded time")
+	# Normal frame rates: 60 / 30 fps (and 4 fps = exactly the cap) lose nothing.
+	for fps in [60.0, 30.0, 4.0]:
+		t.reset()
+		var r := _run_frames(t, 1.0 / fps, int(fps * 10.0))
+		_check(r[1] == 0 and t.capped_frames == 0 and absi(r[0] - 10000) <= 2, "%d fps for 10 s: %d ms shown, nothing discarded" % [int(fps), r[0]])
+	# Low frame rates: everything above 250 ms per frame is discarded, and only that.
+	t.reset()
+	t.tick(1.0 / 60.0, true)  # the start frame
+	var r3 := _run_frames(t, 1.0 / 3.0, 30)
+	_check(r3[0] == 7517 and absi(r3[1] - 2500) <= 1 and t.capped_frames == 30 and t.cap_info()["longest_frame_ms"] == 333,
+		"3 fps for 10 s: %d ms shown (unchanged rule), %d ms discarded, 30 capped frames" % [r3[0], r3[1]])
+	_check(absi(r3[0] + r3[1] - 10017) <= 1, "shown + discarded = the real active time")
+	# One stall in otherwise smooth play.
+	t.reset()
+	_run_frames(t, 1.0 / 60.0, 300)
+	t.tick(2.0, true)
+	_run_frames(t, 1.0 / 60.0, 300)
+	_check(t.elapsed_ms() == 10250 and t.discarded_ms() == 1750 and t.capped_frames == 1 and t.cap_info()["longest_frame_ms"] == 2000,
+		"a 2 s stall: shown %d ms (was and stays capped), discarded %d ms" % [t.elapsed_ms(), t.discarded_ms()])
+	# Pauses (inactive frames) never count as lost time, however long.
+	t.reset()
+	t.tick(30.0, false)
+	t.tick(5.0, false)
+	_check(t.elapsed_ms() == 0 and t.discarded_ms() == 0 and t.capped_frames == 0 and t.cap_info()["start_frame_ms"] == 0, "Shop / Settings / card pauses: no time and no discarded time (nor a start frame)")
+	# Background / resume (Safari-style): the hidden span and the first frame back add nothing.
+	t.reset()
+	_run_frames(t, 1.0 / 60.0, 60)
+	t.set_page_hidden(true)
+	t.tick(0.016, true)
+	t.set_page_hidden(false)
+	t.tick(45.0, true)  # Safari's first frame after resuming spans the whole background time
+	t.tick(1.0 / 60.0, true)
+	_check(t.discarded_ms() == 0 and t.capped_frames == 0 and t.elapsed_ms() == 1017, "background + resume: the 45 s resume frame is dropped, not discarded (%d ms)" % t.elapsed_ms())
+	# A long frame right after resuming (the second frame) does count.
+	t.tick(0.5, true)
+	_check(t.discarded_ms() == 250 and t.capped_frames == 1, "a long frame after the resume frame is discarded time (%d ms)" % t.discarded_ms())
+	# Finished: nothing more; reset: a fresh attempt starts at zero.
+	t.finish()
+	t.tick(3.0, true)
+	_check(t.discarded_ms() == 250 and t.capped_frames == 1, "after finish() nothing more is counted")
+	t.reset()
+	_check(t.cap_info() == {"discarded_ms": 0, "capped_frames": 0, "longest_frame_ms": 0, "start_frame_ms": 0} and t.elapsed_ms() == 0, "reset() clears the cap metadata (restart / replay / NEXT)")
+	_done.append("cap")
 
 
 # --- B. Records and saves --------------------------------------------------------
@@ -669,3 +736,73 @@ func _game() -> void:
 	game.queue_free()
 	await _frames(2)
 	_done.append("game")
+
+
+## The real game (real frame clock): a blocked main thread during play is
+## discarded time; during menus / a hidden page it is not; restart and
+## replay start at zero; the shown time, the record and the save are as
+## before.
+func _cap_game() -> void:
+	PlayerProgress.default_path = SAVE
+	_wipe(SAVE)
+	game = load("res://scenes/Main.tscn").instantiate()
+	get_tree().root.add_child(game)
+	await _frames(6)
+	AudioManager.set_music_enabled(false)
+	game._hide_title()
+	await _start(2)
+	await _frames(10)
+	_check(game._attempt_active() and game.attempt_timer.discarded_ms() == 0, "smooth play: nothing discarded (%d ms)" % game.attempt_timer.discarded_ms())
+	var e0 := game.attempt_timer.elapsed
+	OS.delay_msec(700)  # a real 0.7 s stall on the main thread
+	await _frames(2)
+	var d1 := game.attempt_timer.discarded_ms()
+	_check(game.attempt_timer.capped_frames == 1 and d1 >= 400 and d1 <= 520 and game.attempt_timer.elapsed - e0 <= 0.30,
+		"a 0.7 s stall while playing: %d ms discarded, at most %.2f s shown (as before)" % [d1, AttemptTimer.MAX_FRAME])
+	for menu in ["settings", "shop"]:
+		if menu == "settings":
+			game.ui._open_settings()
+		else:
+			game.open_shop()
+		await _frames(2)
+		OS.delay_msec(700)
+		await _frames(2)
+		_check(game.attempt_timer.discarded_ms() == d1 and game.attempt_timer.capped_frames == 1, "%s open + a 0.7 s stall: nothing discarded (a pause)" % menu)
+		if menu == "settings":
+			game.ui._close_settings()
+		else:
+			game.ui._shop.close()
+		await _frames(2)
+	# Hidden page (Safari in the background): hidden span + resume frame add nothing.
+	game.attempt_timer.set_page_hidden(true)
+	await _frames(2)
+	OS.delay_msec(700)
+	await _frames(2)
+	game.attempt_timer.set_page_hidden(false)
+	OS.delay_msec(700)  # the resume frame is long too
+	await _frames(3)
+	_check(game.attempt_timer.discarded_ms() == d1 and game.attempt_timer.capped_frames == 1, "hidden page + long resume frame: nothing discarded")
+	# The state publishes the metadata; the finished attempt carries it; the save does not.
+	_check(game.attempt_timer.cap_info()["discarded_ms"] == d1, "cap metadata readable during the attempt")
+	await _solve()
+	var r: Dictionary = game.last_time_result
+	_check(game.completed and r.get("discarded_ms", -1) == d1 and r.get("capped_frames", -1) == 1 and r["time_ms"] == game.attempt_timer.elapsed_ms()
+		and r["new_best_time"] and game.progress.best_time(2) == r["time_ms"],
+		"the finished attempt carries the metadata; the record is the shown time (%d ms, discarded %d)" % [r["time_ms"], d1])
+	var saved := FileAccess.get_file_as_string(SAVE)
+	_check(saved.contains("[times]") and not saved.contains("discard") and not saved.contains("capped"), "nothing of it is saved")
+	# Replay and restart: a fresh attempt, zero metadata.
+	game.replay()
+	await _frames(3)
+	_check(game.attempt_timer.cap_info()["discarded_ms"] == 0 and game.attempt_timer.capped_frames == 0, "REPLAY starts with nothing discarded")
+	OS.delay_msec(600)
+	await _frames(2)
+	_check(game.attempt_timer.capped_frames == 1, "a stall in the replay counts in the replay")
+	game.restart()
+	await _frames(3)
+	_check(game.attempt_timer.discarded_ms() == 0 and game.attempt_timer.capped_frames == 0 and game.attempt_timer.cap_info()["start_frame_ms"] < 250,
+		"RESTART starts with nothing discarded (a fresh start frame: %d ms)" % game.attempt_timer.cap_info()["start_frame_ms"])
+	game.queue_free()
+	await _frames(2)
+	_wipe(SAVE)
+	_done.append("cap_game")

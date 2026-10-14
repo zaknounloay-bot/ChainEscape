@@ -1076,6 +1076,7 @@ func _on_board_cleared() -> void:
 	# The winning move: the attempt's time stops here, before celebrations.
 	var time_ms := attempt_timer.finish()
 	last_time_result = progress.record_time(current_level, time_ms, not attempt_assisted)  # saved by record_result below
+	last_time_result.merge(attempt_timer.cap_info())  # 3B-A metadata only (never saved, never shown)
 	if _live_timer:
 		ui.set_live_time(time_ms, true)  # the final time stays shown
 		ui.set_live_best(progress.best_time(current_level))
@@ -1789,7 +1790,7 @@ func publish_state() -> void:
 		"settings_button": center.call(ui._settings_button), "backup_button": center.call(ui._backup_button),
 		"restore_button": center.call(ui._restore_button), "recovery_restore": center.call(ui._recovery_restore),
 		"recovery_new": center.call(ui._recovery_new),
-		"attempt_ms": attempt_timer.elapsed_ms(), "attempt_active": _attempt_active(), "attempt_assisted": attempt_assisted,
+		"attempt_ms": attempt_timer.elapsed_ms(), "attempt_cap": attempt_timer.cap_info(), "attempt_active": _attempt_active(), "attempt_assisted": attempt_assisted,
 		"page_hidden": attempt_timer.page_hidden, "time_result": last_time_result, "card_time": ui.time_summary, "time_panel": ui.time_panel_state(), "live_timer": ui.live_timer_state(), "board_panel": UIManager.frac_rect(Rect2(board.global_position - Vector2.ONE * board.cell_size * Board.PADDING_CELLS, Vector2(board.columns + 2 * Board.PADDING_CELLS, board.rows + 2 * Board.PADDING_CELLS) * board.cell_size), vis),
 		"best_time_ms": progress.best_time(current_level), "best_clean_ms": progress.best_clean_time(current_level),
 		"card_rect": [ui._card.get_global_rect().position.x / vis.x, ui._card.get_global_rect().position.y / vis.y, ui._card.get_global_rect().end.x / vis.x, ui._card.get_global_rect().end.y / vis.y],

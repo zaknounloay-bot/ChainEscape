@@ -52,6 +52,7 @@ func _initialize() -> void:
 	test_reward_vs_armor_look()
 	test_second_era_tokens()
 	test_save_migration_v4_to_v6()
+	test_level_fingerprints()
 	print("%d checks, %d failures" % [_checks, _fails])
 	print("UNIT TESTS PASSED" if _fails == 0 else "UNIT TESTS FAILED")
 	quit(0 if _fails == 0 else 1)
@@ -1317,3 +1318,31 @@ func test_save_migration_v4_to_v6() -> void:
 	var r := PlayerProgress.new(path).load_from_disk()
 	check(r.current_level == 104 and r.is_unlocked(102), "Second Era progress continues where it was")
 	wipe_save(path)
+
+
+## Phase 3B-A: data/level_fingerprints.json matches the 300 campaign level
+## files; a fingerprint follows the gameplay definition only.
+func test_level_fingerprints() -> void:
+	var tool = load("res://tools/level_fingerprints.gd")
+	var bad: Array = tool.problems()
+	check(bad.is_empty(), "level fingerprint manifest in sync with the level files (%s)" % [bad.slice(0, 5)])
+	var prints := LevelFingerprint.compute_all()
+	check(prints.size() == 300, "a fingerprint for every campaign level (%d)" % prints.size())
+	check(LevelFingerprint.expected(1) == prints[0] and LevelFingerprint.expected(300) == prints[299] and LevelFingerprint.expected(301) == "",
+		"manifest lookup by level number")
+	var base := {"name": "A", "map": ["R> .", ". B^"], "hint": "tap", "hint_finger": true}
+	var renamed := base.duplicate(true)
+	renamed["name"] = "B"
+	renamed["hint"] = "other text"
+	renamed.erase("hint_finger")
+	var moved := base.duplicate(true)
+	moved["map"] = ["R> .", "B^ ."]
+	var mystery := base.duplicate(true)
+	mystery["mystery"] = true
+	var hearts := base.duplicate(true)
+	hearts["hearts"] = 2
+	var c := LevelFingerprint.canonical(base)
+	check(c == LevelFingerprint.canonical(renamed), "name / tutorial text do not change the fingerprint input")
+	check(c != LevelFingerprint.canonical(moved) and c != LevelFingerprint.canonical(mystery) and c != LevelFingerprint.canonical(hearts),
+		"board, mystery and any rule key do")
+	check(LevelFingerprint.canonical(null) == "" and LevelFingerprint.compute(0) == "" and LevelFingerprint.compute(301) == "", "no fingerprint for a non-level")
