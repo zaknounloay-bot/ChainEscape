@@ -70,6 +70,20 @@ static func player_identity() -> bool:
 	return true
 
 
+## REAL-PLAYER RESULTS (Phase 3B-B): finished attempts are sent to the
+## chain-escape-api results backend (Competition). QA build only for now:
+## its results go to the server's "qa" pool, with timing diagnostics.
+## Off in the player (production) build - no secret, no queue, no request.
+## Tests: competition_override (-1 = the build's rule, 0 = off, 1 = on).
+static var competition_override := -1
+
+
+static func competition() -> bool:
+	if competition_override != -1:
+		return competition_override == 1
+	return qa_build()
+
+
 ## The other developer pages (?openinglab, ?twinsprototype, ?mechlab,
 ## ?friendbench, ?vhtest): off in the player build and in the QA build.
 static func dev_pages_off() -> bool:

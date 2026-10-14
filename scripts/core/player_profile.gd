@@ -52,6 +52,22 @@ static func new_id() -> String:
 	return "%s-%s-%s-%s-%s" % [h.substr(0, 8), h.substr(8, 4), h.substr(12, 4), h.substr(16, 4), h.substr(20, 12)]
 
 
+## Real-player results (Phase 3B-B): 32 random bytes as 64 lowercase hex
+## chars, made on this device; the server stores only its SHA-256.
+static func new_secret() -> String:
+	return Crypto.new().generate_random_bytes(32).hex_encode()
+
+
+static func is_valid_secret(s: String) -> bool:
+	if s.length() != 64:
+		return false
+	for i in 64:
+		var c := s.unicode_at(i)
+		if not ((c >= 0x30 and c <= 0x39) or (c >= 0x61 and c <= 0x66)):
+			return false
+	return true
+
+
 static func is_valid_id(id: String) -> bool:
 	if _id_re == null:
 		_id_re = RegEx.create_from_string("^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$")

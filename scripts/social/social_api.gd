@@ -142,6 +142,15 @@ static func _is_past(iso: String) -> bool:
 	return unix > 0 and unix < Time.get_unix_time_from_system()
 
 
+## Real-player results (Competition): one JSON action POSTed to the API.
+## {ok: false, error} (not_configured / network / timeout) or {ok: true,
+## code, data}.
+func post_action(body: Dictionary) -> Dictionary:
+	if SocialConfig.api_url() == "":
+		return {"ok": false, "error": "not_configured"}
+	return await _request(HTTPClient.METHOD_POST, SocialConfig.api_url(), JSON.stringify(body))
+
+
 func _request(method: int, url: String, body: String) -> Dictionary:
 	var req := HTTPRequest.new()
 	req.timeout = SocialConfig.timeout_override if SocialConfig.timeout_override > 0.0 else SocialConfig.TIMEOUT_SEC

@@ -72,6 +72,8 @@ var attempt_assisted: bool = false
 ## The finished attempt's time record (PlayerProgress.record_time) for the
 ## level card and the browser tests; {} until a level is cleared.
 var last_time_result: Dictionary = {}
+## Real-player results (Phase 3B-B, QA build only): null where off.
+var competition: Competition
 ## Web: the page's visibilitychange / pagehide / pageshow listener (kept
 ## referenced, or the callback is collected).
 var _visibility_cb: JavaScriptObject
@@ -165,6 +167,11 @@ func _ready() -> void:
 	# transferred player instead of making its own id first.
 	if progress.ensure_identity():
 		progress.save()
+	if BuildFlags.competition() and BuildFlags.player_identity():
+		competition = Competition.new(progress)
+		add_child(competition)
+		if competition.start():
+			progress.save()
 	background = ChapterBackground.new()
 	add_child(background)
 	_apply_settings()
@@ -392,6 +399,8 @@ func apply_restore(code: String) -> bool:
 	_show_message("Progress restored - TOTAL SCORE %s%s" % [UIManager._fmt(progress.total_score()),
 		" - name and player restored" if r.get("profile", "") == "adopted" else ""], 3.0)
 	if progress.ensure_identity():
+		progress.save()
+	if competition != null and competition.start():
 		progress.save()
 	ui.set_profile_name(progress.display_name)
 	publish_state.call_deferred()
@@ -1077,6 +1086,9 @@ func _on_board_cleared() -> void:
 	var time_ms := attempt_timer.finish()
 	last_time_result = progress.record_time(current_level, time_ms, not attempt_assisted)  # saved by record_result below
 	last_time_result.merge(attempt_timer.cap_info())  # 3B-A metadata only (never saved, never shown)
+	if competition != null:
+		competition.note_clear(current_level, time_ms, attempt_timer.cap_info())  # saved by record_result below
+		competition.flush.call_deferred()  # in the background, after the clear
 	if _live_timer:
 		ui.set_live_time(time_ms, true)  # the final time stays shown
 		ui.set_live_best(progress.best_time(current_level))
@@ -1795,7 +1807,7 @@ func publish_state() -> void:
 		"best_time_ms": progress.best_time(current_level), "best_clean_ms": progress.best_clean_time(current_level),
 		"card_rect": [ui._card.get_global_rect().position.x / vis.x, ui._card.get_global_rect().position.y / vis.y, ui._card.get_global_rect().end.x / vis.x, ui._card.get_global_rect().end.y / vis.y],
 		"feedback": _feedback_state(vis) if not BuildFlags.player_build() else {}, "feedback_polish": BuildFlags.feedback_polish(),
-		"profile": _profile_state() if BuildFlags.player_identity() else {}, "player_identity": BuildFlags.player_identity(),
+		"profile": _profile_state() if BuildFlags.player_identity() else {}, "competition": competition.state() if competition != null else {"enabled": false}, "player_identity": BuildFlags.player_identity(),
 		"undo_button": center.call(ui._undo_button), "restart_button": center.call(ui._restart_button),
 		"hint_button": center.call(ui._hint_button), "hammer_button": center.call(ui._hammer_button), "hammer_armed": hammer_armed,
 		"magnets": model.blocks.values().filter(func(b): return b.magnet).size() if model else 0,

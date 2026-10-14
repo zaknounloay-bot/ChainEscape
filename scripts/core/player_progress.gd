@@ -114,6 +114,16 @@ var player_id: String = ""
 var display_name: String = ""
 var name_set_unix: int = 0
 var profile_created_unix: int = 0
+## REAL-PLAYER RESULTS (Phase 3B-B; only where BuildFlags.competition()):
+## comp_secret - 64 hex chars, made once on this device ([profile] secret,
+## claimed by the server on the first submission; sent, never shown);
+## comp_pending - level -> {"t": ms, "fp": fingerprint, "diag": {...}}, the
+## best NEW result not yet acknowledged; comp_sent - level -> the best ms
+## the server acknowledged. Saved as [competition] only while not empty, so
+## a save with competition off is byte-for-byte unchanged.
+var comp_secret: String = ""
+var comp_pending: Dictionary = {}
+var comp_sent: Dictionary = {}
 ## True if a save existed when loaded (drives CONTINUE on the title).
 var existed: bool = false
 ## Unix time of the last write that reached at least one durable copy.
@@ -228,6 +238,20 @@ func _apply_cfg(cfg: ConfigFile) -> void:
 	display_name = str(_cfg.get_value("profile", "name", ""))
 	name_set_unix = int(_cfg.get_value("profile", "name_set_unix", 0))
 	profile_created_unix = int(_cfg.get_value("profile", "created_unix", 0))
+	comp_secret = str(_cfg.get_value("profile", "secret", ""))
+	comp_pending = {}
+	comp_sent = {}
+	var cp = _cfg.get_value("competition", "pending", {})
+	if cp is Dictionary:
+		for k in cp:
+			var e = cp[k]
+			if int(k) >= 1 and e is Dictionary and valid_time(int(e.get("t", 0))) and str(e.get("fp", "")).length() == 64:
+				comp_pending[int(k)] = {"t": int(e["t"]), "fp": str(e["fp"]), "diag": e.get("diag", {}) if e.get("diag", {}) is Dictionary else {}}
+	var cs = _cfg.get_value("competition", "sent", {})
+	if cs is Dictionary:
+		for k in cs:
+			if int(k) >= 1 and valid_time(int(cs[k])):
+				comp_sent[int(k)] = int(cs[k])
 	var stored_total := int(_cfg.get_value("progress", "total_score", -1))
 	_migrate()
 	_check_integrity(stored_total)
@@ -459,6 +483,14 @@ func _fill_cfg() -> void:
 		_cfg.set_value("profile", "name", display_name)
 		_cfg.set_value("profile", "name_set_unix", name_set_unix)
 		_cfg.set_value("profile", "created_unix", profile_created_unix)
+		if comp_secret != "":
+			_cfg.set_value("profile", "secret", comp_secret)
+	if comp_pending.is_empty() and comp_sent.is_empty():
+		if _cfg.has_section("competition"):
+			_cfg.erase_section("competition")
+	else:
+		_cfg.set_value("competition", "pending", comp_pending)
+		_cfg.set_value("competition", "sent", comp_sent)
 	for n in best_scores:
 		_cfg.set_value("scores", str(n), best_scores[n])
 	for n in best_stars:
@@ -696,6 +728,8 @@ func ensure_identity() -> bool:
 		display_name = found["name"]
 		name_set_unix = found["name_set_unix"]
 		profile_created_unix = found["created_unix"]
+		if comp_secret == "":
+			comp_secret = found["secret"]
 		load_issues.append("profile: id recovered from %s" % found["source"])
 		_log("profile: id recovered from %s" % found["source"])
 	else:
@@ -722,7 +756,8 @@ func _identity_from_copies() -> Dictionary:
 			var r := PlayerProfile.clean_name(str(cfg.get_value("profile", "name", "")))
 			best = {"id": id, "name": r.get("name", "") if r["ok"] else "", "source": c["source"],
 				"name_set_unix": int(cfg.get_value("profile", "name_set_unix", 0)),
-				"created_unix": int(cfg.get_value("profile", "created_unix", 0))}
+				"created_unix": int(cfg.get_value("profile", "created_unix", 0)),
+				"secret": str(cfg.get_value("profile", "secret", ""))}
 			best_seq = s
 	return best
 
@@ -758,18 +793,47 @@ func _merge_profile(o: PlayerProgress, dest_meaningful: bool) -> String:
 	var r := PlayerProfile.clean_name(o.display_name)
 	var src_name: String = r.get("name", "") if r["ok"] else ""
 	if o.player_id == player_id:
+		_merge_competition(o)
 		if o.name_set_unix > name_set_unix:
 			display_name = src_name
 			name_set_unix = o.name_set_unix
 			return "same_name_updated"
 		return "same"
 	if PlayerProfile.is_valid_id(player_id) and dest_meaningful:
-		return "kept_local"
+		return "kept_local"  # another player's competition data never comes along
 	player_id = o.player_id
 	display_name = src_name
 	name_set_unix = o.name_set_unix
 	profile_created_unix = o.profile_created_unix
+	comp_secret = ""
+	comp_pending = {}
+	comp_sent = {}
+	_merge_competition(o)
 	return "adopted"
+
+
+## Competition data of the SAME player (same id, or just adopted): the
+## secret is kept if there is one (else taken), the acknowledged and the
+## pending bests merge to the faster of each.
+func _merge_competition(o: PlayerProgress) -> void:
+	if comp_secret == "" and PlayerProfile.is_valid_secret(o.comp_secret):
+		comp_secret = o.comp_secret
+	for n in o.comp_sent:
+		if not comp_sent.has(n) or int(o.comp_sent[n]) < int(comp_sent[n]):
+			comp_sent[n] = int(o.comp_sent[n])
+	for n in o.comp_pending:
+		if not comp_pending.has(n) or int(o.comp_pending[n]["t"]) < int(comp_pending[n]["t"]):
+			comp_pending[n] = o.comp_pending[n].duplicate(true)
+
+
+## Real-player results: makes the competition secret once (true = made,
+## the caller saves). Only called where BuildFlags.competition().
+func ensure_comp_secret() -> bool:
+	if PlayerProfile.is_valid_secret(comp_secret):
+		return false
+	comp_secret = PlayerProfile.new_secret()
+	_log("profile: new competition secret")
+	return true
 
 
 ## The current state as save text (without writing it).
