@@ -75,14 +75,26 @@ errors: 400 invalid_level / invalid_fingerprint / invalid_time / invalid_player 
 
 ## QA / Production separation
 
-A client's `pool: "prod"` alone is **not** trusted. The server decides:
+What actually keeps the two apart, strongest first:
 
-- **`prod`** only when `CE_PROD_POOL=open` (Edge Function secret; default **closed**) **and**, when `CE_PROD_ORIGINS` is set, the browser `Origin` is one of the production hosts (e.g. `*.itch.zone`).
-- **Everything else** is `qa` (or refused).
-- **Each pool** has its own players, secrets and results, which never mix.
-- **The QA build** always asks for `qa`; the player build has competition off.
-- **Before release:** prod stays closed, so even a misbuilt client cannot write production results.
-- **Limit:** a non-browser script can forge an `Origin`. That's accepted for a casual game, and the per-player rules still apply.
+1. **Production is closed on the server by default.** `CE_PROD_POOL` is unset, so every "prod" request is refused (`403 prod_closed`).
+2. **Opening Production takes two settings.** `CE_PROD_POOL=open` alone keeps it closed, and the server logs a warning. `CE_PROD_ORIGINS` must also be set (e.g. `*.itch.zone`, or `*` for any origin, which is an explicit choice). One forgotten setting can never leave Production wide open.
+3. **The builds are hard-wired.**
+   - The QA build always asks for `qa`, compiled in, whatever site serves it.
+   - Dev builds have competition off.
+   - The player build has competition off until a separate approved release.
+4. **The data is separate in the database.** Every player, secret and result row carries its pool in the primary key. A QA id, secret or time can never appear in, overwrite, or be counted in Production. The new-player cap is per pool, so QA traffic cannot use up Production's.
+
+**What the Origin check is not:**
+- It is **not authentication.** Browsers set the Origin header honestly, so it stops other web pages from writing Production results. Any script outside a browser can send any Origin.
+- Player ownership is the per-player secret, not the Origin.
+- For this casual MVP that is enough: someone determined can submit their own scripted times (as in any client-timed game), but cannot touch another player's results, and QA traffic cannot reach Production by accident.
+
+**Opening Production later (after approval):**
+1. Ship a player build with competition on, so it asks for `prod`.
+2. Edge Function secrets: set `CE_PROD_ORIGINS` to the real itch.io origin(s), then set `CE_PROD_POOL=open`. A refused origin is logged as `prod pool: origin not allowed: "<host>"`, which shows the exact host to add.
+3. Verify one real Production clear lands in `pool = 'prod'`.
+4. **To close Production again:** unset `CE_PROD_POOL`. Results stop, nothing is deleted, and clients keep their unsent results queued.
 
 ## Identity
 
@@ -135,7 +147,12 @@ A client's `pool: "prod"` alone is **not** trusted. The server decides:
 ## Risks and limitations
 
 - **Not cheat-proof.** A determined person can script submissions with their own id and secret: plausible fast times within the 300 ms floor, or many ids (capped per hour).
-- **Rate limits:** the new-player cap is global per pool, so a flood could briefly turn new competitors away (429; their clears stay queued and retry).
+- **New-player cap:** an emergency circuit breaker, not a growth limit.
+  - **Default 10,000 new competitors per hour per pool** (`CE_MAX_NEW_PLAYERS_PER_HOUR`; `0` = off), far above organic traffic for a casual web game.
+  - A refused player loses nothing: the client keeps the result queued and retries (30 s up to 10 min), so it is accepted once the hour's count drops.
+  - Every refusal is logged as a warning (`new-player cap reached`), so it is never silent.
+  - **If it triggers in organic growth:** raise the value or set `0`. No redeploy is needed (secrets apply on the next call).
+  - **If it triggers under a flood:** lower it, or close the pool.
 - **Timing threshold:** no dropped-time rule yet. Collect QA diagnostics on real iPhones first.
 - **Origin check:** stops browsers on other sites, not forged requests.
 - **Lost secret:** a lost secret with a kept id is locked out (see Identity).
@@ -143,7 +160,7 @@ A client's `pool: "prod"` alone is **not** trusted. The server decides:
 ## Deployment steps (when approved; nothing done yet)
 
 1. **Migration:** Supabase dashboard → SQL Editor → run `supabase/migrations/20261014120000_ce_competition_results.sql` (or `supabase db push`). It is additive and idempotent. Check: `select count(*) from ce_level_fingerprints` = 300.
-2. **Edge Function secrets** (Dashboard → Edge Functions → Secrets): leave `CE_PROD_POOL` unset (closed). Optionally `CE_MAX_NEW_PLAYERS_PER_HOUR`.
+2. **Edge Function secrets** (Dashboard → Edge Functions → Secrets): leave `CE_PROD_POOL` and `CE_PROD_ORIGINS` **unset** (Production closed). `CE_MAX_NEW_PLAYERS_PER_HOUR` can stay unset (10,000).
 3. **Deploy:** `supabase functions deploy chain-escape-api --project-ref ydsippgwwdzwupbyrpfw --no-verify-jwt` ("Verify JWT" OFF, as before).
 4. **Verify:**
    - `node tools/backend_contract_test.mjs <API_URL>` (Friend Challenge, 43/43).

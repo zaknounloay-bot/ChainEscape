@@ -11,10 +11,17 @@
 //   the number of players is never returned.
 //   Server settings (Edge Function secrets):
 //     CE_PROD_POOL=open        the "prod" pool takes results (default: closed)
-//     CE_PROD_ORIGINS=a,b      ... and only from these browser origins
-//                              ("*.itch.zone" = any subdomain; empty = any)
+//     CE_PROD_ORIGINS=a,b      REQUIRED to open prod: the browser origins
+//                              that may write it ("*.itch.zone" = any
+//                              subdomain; "*" = any origin, explicitly).
+//                              Unset/empty keeps prod closed. NOT
+//                              authentication: it stops other web pages
+//                              only - any script can send any Origin.
 //     CE_QA_POOL=closed        stop the "qa" pool (default: open)
-//     CE_MAX_NEW_PLAYERS_PER_HOUR (default 1000 per pool)
+//     CE_MAX_NEW_PLAYERS_PER_HOUR  circuit breaker per pool (default
+//                              10000; 0 = off). Refused players keep their
+//                              results queued and retry; every refusal is
+//                              logged (warning) so it is never silent.
 //   Writes go through the SQL functions ce_submit_result /
 //   ce_level_standing (supabase/migrations/20261014120000_*.sql).
 //
@@ -83,18 +90,25 @@ export function topPercent(n: number, faster: number): number | null {
 }
 
 // The pool is the server's decision. "qa" unless the client asks for
-// "prod" AND the prod pool is open AND (when CE_PROD_ORIGINS is set) the
-// browser Origin is one of the production hosts.
+// "prod" AND the prod pool is open AND CE_PROD_ORIGINS is set AND the
+// browser Origin matches it. (Origin only filters other web pages; it is
+// not authentication - player ownership is the secret.)
 export function resolvePool(asked: unknown, origin: string, env: (k: string) => string | undefined):
   { pool: string } | { error: string } {
   if (asked === "prod") {
     if ((env("CE_PROD_POOL") || "closed") !== "open") return { error: "prod_closed" };
     const allowed = (env("CE_PROD_ORIGINS") || "").split(",").map((s) => s.trim().toLowerCase()).filter(Boolean);
-    if (allowed.length > 0) {
-      let host = "";
-      try { host = new URL(origin).host.toLowerCase(); } catch { host = ""; }
-      const ok = allowed.some((a) => a.startsWith("*.") ? host.endsWith(a.slice(1)) : (host === a || origin.toLowerCase() === a));
-      if (!ok) return { error: "origin_not_allowed" };
+    if (allowed.length === 0) {
+      console.warn("prod pool: CE_PROD_POOL=open but CE_PROD_ORIGINS is empty - kept closed");
+      return { error: "prod_closed" };
+    }
+    if (allowed.includes("*")) return { pool: "prod" };
+    let host = "";
+    try { host = new URL(origin).host.toLowerCase(); } catch { host = ""; }
+    const ok = allowed.some((a) => a.startsWith("*.") ? host.endsWith(a.slice(1)) : (host === a || origin.toLowerCase() === a));
+    if (!ok) {
+      console.warn(`prod pool: origin not allowed: "${host || "(none)"}"`);
+      return { error: "origin_not_allowed" };
     }
     return { pool: "prod" };
   }
@@ -150,18 +164,21 @@ async function resultAction(supabase: any, req: Request, body: any): Promise<Res
     if (!Number.isInteger(body.time_ms) || body.time_ms < MIN_TIME_MS || body.time_ms > MAX_TIME_MS) {
       return fail("invalid_time", 400);
     }
-    const maxNew = parseInt(Deno.env.get("CE_MAX_NEW_PLAYERS_PER_HOUR") || "1000", 10);
+    const maxNew = parseInt(Deno.env.get("CE_MAX_NEW_PLAYERS_PER_HOUR") || "10000", 10);
     const { data, error } = await supabase.rpc("ce_submit_result", {
       p_pool: pool.pool, p_level: body.level, p_fingerprint: body.fingerprint, p_player: body.player_id,
       p_secret_hash: secretHash, p_time_ms: body.time_ms,
       p_diag: pool.pool === "qa" ? cleanDiag(body.diag) : null,
-      p_max_new_players: Number.isFinite(maxNew) ? maxNew : 1000,
+      p_max_new_players: Number.isFinite(maxNew) && maxNew >= 0 ? maxNew : 10000,
     });
     if (error || !data) {
       console.error("submit_result failed:", error?.message);
       return fail("database_error", 500);
     }
     if (data.status !== "ok") {
+      if (data.status === "busy") {
+        console.warn(`${pool.pool} pool: new-player cap reached (CE_MAX_NEW_PLAYERS_PER_HOUR=${maxNew}); refused a new player (queued client-side, retried)`);
+      }
       const [code, status] = RPC_FAILURES[data.status] || ["database_error", 500];
       return fail(code, status);
     }

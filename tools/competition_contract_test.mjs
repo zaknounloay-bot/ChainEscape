@@ -171,6 +171,10 @@ try {
   check(r.status === 403 && r.data.error === 'prod_closed', 'prod pool closed by default: a client asking for "prod" is refused');
   r = await call({ action: 'submit_result', player_id: player().id, secret: hex64(), level: 10, fingerprint: FP[9], time_ms: 5000 });
   check(r.status === 200, 'no pool given -> the QA pool');
+  await start({ CE_PROD_POOL: 'open' });
+  r = await call({ action: 'submit_result', pool: 'prod', player_id: A.id, secret: A.secret, level: 10, fingerprint: FP[9], time_ms: 5000 },
+    { Origin: 'https://html-classic.itch.zone' });
+  check(r.status === 403 && r.data.error === 'prod_closed', 'CE_PROD_POOL=open WITHOUT CE_PROD_ORIGINS: prod stays closed (no accidental wide-open prod)');
   await start({ CE_PROD_POOL: 'open', CE_PROD_ORIGINS: '*.itch.zone, https://example-prod.test' });
   r = await call({ action: 'submit_result', pool: 'prod', player_id: A.id, secret: A.secret, level: 10, fingerprint: FP[9], time_ms: 5000 });
   check(r.status === 403 && r.data.error === 'origin_not_allowed', 'prod open, but no allowed Origin -> refused');
@@ -187,6 +191,20 @@ try {
   r = await call({ action: 'level_standing', pool: 'prod', player_id: five[0].p.id, secret: five[0].p.secret, level: L, fingerprint: FP[L - 1] },
     { Origin: 'https://html-classic.itch.zone' });
   check(r.status === 200 && r.data.none === true, 'QA players and results are invisible in prod');
+  r = await call({ action: 'submit_result', pool: 'prod', player_id: A.id, secret: prodSecret, level: 10, fingerprint: FP[9], time_ms: 6000 },
+    { Origin: 'https://evil.itch.zone.example' });
+  check(r.status === 403 && r.data.error === 'origin_not_allowed', 'a look-alike host (evil.itch.zone.example) does not match *.itch.zone');
+  await start({ CE_PROD_POOL: 'open', CE_PROD_ORIGINS: '*' });
+  r = await call({ action: 'submit_result', pool: 'prod', player_id: A.id, secret: prodSecret, level: 10, fingerprint: FP[9], time_ms: 4900 });
+  check(r.status === 200 && r.data.best_ms === 4900, 'CE_PROD_ORIGINS=* explicitly allows any origin');
+  check(psql(`select count(*) from ce_level_results where pool = 'prod'`) === '1' && psql(`select count(*) from ce_comp_players where pool = 'prod'`) === '1',
+    'prod holds only the one prod result / competitor - nothing from the QA traffic');
+  await start({});
+  r = await submit(player(), 10, 6000);
+  check(r.status === 200, 'default new-player cap (10000/hour) does not refuse ordinary traffic');
+  await start({ CE_MAX_NEW_PLAYERS_PER_HOUR: '0' });
+  r = await submit(player(), 10, 6000);
+  check(r.status === 200, 'CE_MAX_NEW_PLAYERS_PER_HOUR=0 turns the cap off');
   await start({ CE_QA_POOL: 'closed' });
   r = await submit(A, 10, 4000);
   check(r.status === 403 && r.data.error === 'qa_closed', 'the QA pool can be closed (CE_QA_POOL=closed)');
@@ -194,7 +212,7 @@ try {
   // ---- 8. bounded growth ----
   await start({ CE_MAX_NEW_PLAYERS_PER_HOUR: '3' });
   r = await submit(player(), 10, 6000);
-  check(r.status === 429 && r.data.error === 'busy', 'more than CE_MAX_NEW_PLAYERS_PER_HOUR new players -> 429 busy');
+  check(r.status === 429 && r.data.error === 'busy', 'more than CE_MAX_NEW_PLAYERS_PER_HOUR new players -> 429 busy (the client keeps the result and retries)');
   r = await submit(A, 11, 7000);
   check(r.status === 200, '... existing players keep submitting');
   check(Number(psql(`select max(c) from (select count(*) c from ce_level_results group by pool, player_id) x`)) <= 300,
