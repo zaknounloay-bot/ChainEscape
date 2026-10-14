@@ -47,8 +47,32 @@ function pick(r: any, cols: string) {
   for (const c of cols.split(",").map((s) => s.trim())) o[c] = structuredClone(r[c]);
   return o;
 }
+// rpc(): the REAL SQL function in a local PostgreSQL (Phase 3B-B results).
+//   CE_FAKE_PG=<psql connection string>  - run as role service_role, like
+//   the Edge Function's service-role client. Without it, rpc fails.
+async function rpc(fn: string, args: Record<string, any>) {
+  const pg = Deno.env.get("CE_FAKE_PG");
+  if (!pg) return { data: null, error: { message: "no database (CE_FAKE_PG)" } };
+  if (!/^[a-z_]+$/.test(fn)) return { data: null, error: { message: "bad function name" } };
+  const names = Object.keys(args);
+  const sets = names.map((k, i) => args[k] === null || args[k] === undefined ? "" :
+    `\\set a${i} '${String(typeof args[k] === "object" ? JSON.stringify(args[k]) : args[k]).replaceAll("'", "''")}'`);
+  const params = names.map((k, i) => `${k} => ${args[k] === null || args[k] === undefined ? "NULL" : `:'a${i}'`}`).join(", ");
+  const sql = `${sets.filter(Boolean).join("\n")}\nset role service_role;\nselect public.${fn}(${params});\n`;
+  const p = new Deno.Command("psql", { args: ["-X", "-At", "-q", "-v", "ON_ERROR_STOP=1", pg],
+    stdin: "piped", stdout: "piped", stderr: "piped" }).spawn();
+  const w = p.stdin.getWriter();
+  await w.write(new TextEncoder().encode(sql));
+  await w.close();
+  const out = await p.output();
+  if (!out.success) return { data: null, error: { message: new TextDecoder().decode(out.stderr).trim() } };
+  const text = new TextDecoder().decode(out.stdout).trim();
+  return { data: text ? JSON.parse(text) : null, error: null };
+}
+
 export function createClient(_url: string, _key: string, _opts?: unknown) {
   return {
+    rpc,
     from(_table: string) {
       return {
         select: (cols: string) => new Query(cols),
