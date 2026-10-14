@@ -63,6 +63,14 @@ var _time_banner: Label  # "NEW PERSONAL BEST!" (only on a faster record)
 var _time_value: Label  # this attempt's active-play time
 var _best_caption: Label  # "PERSONAL BEST" / "PREVIOUS BEST"
 var _best_value: Label
+# COMPETITION STANDING row (Phase 3B-C, QA build only - BuildFlags.
+# competition()): one line under TIME | PERSONAL BEST, "TOP X%" from the
+# server or a quiet pending state. Reserved at its full height while the
+# card is up, so an answer arriving later never moves the card.
+var _comp_row: HBoxContainer
+var _comp_caption: Label  # "YOUR BEST" / the pending text
+var _comp_value: Label  # "TOP 40%"
+var comp_summary := ""  # the row as one line (tests / diagnostics); "" = no row
 ## The block as one line ("TIME 0:42   ·   BEST 0:38", time_line) - for
 ## diagnostics / tests; "" when there is no time.
 var time_summary := ""
@@ -510,6 +518,14 @@ func show_complete(r: Dictionary) -> void:
 	# TIMING + PERSONAL BEST: this attempt's active-play time, and the best
 	# before it (a first time is simply shown; a faster one is a record).
 	_show_time(int(r.get("time_ms", 0)), int(r.get("best_time_before", 0)), bool(r.get("new_best_time", false)))
+	# Competition standing (QA build only): set before the card is fitted.
+	# A row that has nothing to show when the card opens is left out (it
+	# never appears later: the card keeps its height).
+	_comp_row.visible = r.has("competition") and time_summary != "" and str(r["competition"].get("state", "hidden")) != "hidden"
+	if _comp_row.visible:
+		show_comp_status(r["competition"], int(r.get("time_ms", 0)))
+	else:
+		comp_summary = ""
 	# TOTAL SCORE only ever grows: it rises by the improvement over this
 	# level's previous best, and stays put on a worse run or a replay.
 	var total_after: int = r.get("total_after", 0)
@@ -1348,7 +1364,50 @@ func _build_time_panel(parent: Control) -> void:
 	_best_caption = c2[0]
 	_best_value = c2[1]
 	cols.add_child(c2[2])
+	_comp_row = HBoxContainer.new()
+	_comp_row.alignment = BoxContainer.ALIGNMENT_CENTER
+	_comp_row.add_theme_constant_override("separation", 12)
+	_comp_row.custom_minimum_size = Vector2(0, COMP_ROW_HEIGHT)
+	_comp_row.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	_comp_row.visible = false
+	box.add_child(_comp_row)
+	_comp_caption = _make_label(19, Palette.TEXT_SOFT, 900)
+	_comp_row.add_child(_comp_caption)
+	_comp_value = _make_label(30, COMP_COLOR, 900)
+	_comp_row.add_child(_comp_value)
 	_time_panel.visible = false
+
+
+const COMP_ROW_HEIGHT := 44.0
+const COMP_COLOR := Palette.PURPLE_BADGE
+## The quiet states of the standing row (never a number of players).
+const COMP_TEXT := {"checking": "TOP %   ·   CHECKING...", "offline": "TOP %   ·   SAVED, WILL SEND LATER",
+	"unavailable": "TOP %   ·   NOT AVAILABLE RIGHT NOW", "needs_players": "TOP %   ·   NOT ENOUGH PLAYERS YET"}
+
+
+## The standing row: `status` is Competition.card_status(). "top" shows the
+## server's TOP X% - plain when it is this attempt's time, "YOUR BEST" in
+## front when the standing belongs to an earlier, faster result. The quiet
+## states are one soft line; "hidden" keeps the row's space but shows
+## nothing (the card never changes height).
+func show_comp_status(status: Dictionary, time_ms: int) -> void:
+	if not _comp_row.visible:
+		return
+	var state := str(status.get("state", "hidden"))
+	_comp_row.modulate.a = 0.0 if state == "hidden" else 1.0
+	if state == "top":
+		var own := int(status.get("best_ms", 0)) == time_ms
+		_comp_caption.text = "" if own else "YOUR BEST"
+		_comp_caption.visible = not own
+		_comp_value.text = "TOP %d%%" % int(status["percentile"])
+		_comp_value.visible = true
+		comp_summary = _comp_value.text if own else "YOUR BEST " + _comp_value.text
+	else:
+		_comp_caption.text = COMP_TEXT.get(state, "")
+		_comp_caption.visible = true
+		_comp_value.text = ""
+		_comp_value.visible = false
+		comp_summary = _comp_caption.text
 
 
 ## The timing block as shown (diagnostics / tests): visibility, the
@@ -1358,6 +1417,8 @@ func time_panel_state() -> Dictionary:
 	var rect := _time_panel.get_global_rect()
 	return {"visible": _time_panel.is_visible_in_tree(), "banner": _time_banner.visible, "time": _time_value.text,
 		"best_caption": _best_caption.text, "best": _best_value.text, "record": _time_style.border_width_top > 0,
+		"comp": comp_summary if _comp_row.is_visible_in_tree() and _comp_row.modulate.a > 0.0 else "",
+		"comp_row": _comp_row.is_visible_in_tree(), "comp_rect": frac_rect(_comp_row.get_global_rect(), vis),
 		"rect": [rect.position.x / vis.x, rect.position.y / vis.y, rect.end.x / vis.x, rect.end.y / vis.y],
 		"card_scale": snappedf(_card.scale.x, 0.001), "card_shift": (_card.get_parent() as Control).offset_top * 0.5 / vis.y, "hud_bottom": _hud_bottom() / vis.y}
 

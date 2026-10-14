@@ -74,6 +74,10 @@ var attempt_assisted: bool = false
 var last_time_result: Dictionary = {}
 ## Real-player results (Phase 3B-B, QA build only): null where off.
 var competition: Competition
+## The level card's competition standing (Phase 3B-C): {"level", "since",
+## "time_ms"} of the clear on the card - only answers newer than "since"
+## reach it. {} when no card is up.
+var _comp_card: Dictionary = {}
 ## Web: the page's visibilitychange / pagehide / pageshow listener (kept
 ## referenced, or the callback is collected).
 var _visibility_cb: JavaScriptObject
@@ -170,6 +174,7 @@ func _ready() -> void:
 	if BuildFlags.competition() and BuildFlags.player_identity():
 		competition = Competition.new(progress)
 		add_child(competition)
+		competition.standing_changed.connect(_on_standing_changed)
 		if competition.start():
 			progress.save()
 	background = ChapterBackground.new()
@@ -561,6 +566,7 @@ func start_level(number: int, via: String = "load") -> void:
 		ui.set_live_best(progress.best_time(number))
 	attempt_assisted = false
 	last_time_result = {}
+	_comp_card = {}
 	if pending_chapter_card != 0 and Chapters.chapter_of(number) != pending_chapter_card:
 		pending_chapter_card = 0  # the player moved on to another Chapter
 	max_hearts = level.hearts if level.hearts >= 0 else (MAX_HEARTS if number >= HEARTS_FROM_LEVEL else 0)
@@ -1087,8 +1093,12 @@ func _on_board_cleared() -> void:
 	last_time_result = progress.record_time(current_level, time_ms, not attempt_assisted)  # saved by record_result below
 	last_time_result.merge(attempt_timer.cap_info())  # 3B-A metadata only (never saved, never shown)
 	if competition != null:
+		_comp_card = {"level": current_level, "since": competition.mark(), "time_ms": time_ms}
 		competition.note_clear(current_level, time_ms, attempt_timer.cap_info())  # saved by record_result below
 		competition.flush.call_deferred()  # in the background, after the clear
+		# Not a new competition best (nothing queued): the card asks for the
+		# current standing instead (read-only; does nothing if not sent before).
+		competition.lookup.call_deferred(current_level)
 	if _live_timer:
 		ui.set_live_time(time_ms, true)  # the final time stays shown
 		ui.set_live_best(progress.best_time(current_level))
@@ -1240,11 +1250,22 @@ func _on_board_cleared() -> void:
 		await get_tree().create_timer(0.3).timeout
 	if session != _session_id:
 		return
+	if competition != null and not _comp_card.is_empty():
+		r["competition"] = competition.card_status(_comp_card["level"], _comp_card["since"])
 	ui.show_complete(r)
 	if coins > reward_coins_attempt:
 		AudioManager.play_coin()
 	publish_state.call_deferred()
 	_refresh_buttons()
+
+
+## A competition answer (or failure) arrived: refresh the card's standing
+## row if the card for that clear is still up. Nothing else waits on it.
+func _on_standing_changed(n: int) -> void:
+	if _comp_card.is_empty() or n != int(_comp_card["level"]) or not completed or not ui.is_complete_visible():
+		return
+	ui.show_comp_status(competition.card_status(n, _comp_card["since"]), int(_comp_card["time_ms"]))
+	publish_state.call_deferred()
 
 
 # --- Undo ------------------------------------------------------------------
