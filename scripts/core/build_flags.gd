@@ -70,10 +70,15 @@ static func player_identity() -> bool:
 	return true
 
 
-## REAL-PLAYER RESULTS (Phase 3B-B): finished attempts are sent to the
-## chain-escape-api results backend (Competition). QA build only for now:
-## its results go to the server's "qa" pool, with timing diagnostics.
-## Off in the player (production) build - no secret, no queue, no request.
+## REAL-PLAYER RESULTS (Phase 3B-B/C): finished attempts are sent to the
+## chain-escape-api results backend (Competition) and the level card shows
+## the server's TOP X%. On in the QA build (the server's "qa" pool, with
+## timing diagnostics) and in the player (production) build (the "prod"
+## pool, no diagnostics - Competition picks the pool from the build). Off
+## in the developer and Magnet lab builds. The prod pool stays closed on
+## the server until CE_PROD_POOL / CE_PROD_ORIGINS are set; until then the
+## player build keeps its results queued (SAVED, WILL SEND LATER). To roll
+## the production build back to no competition, return qa_build() here.
 ## Tests: competition_override (-1 = the build's rule, 0 = off, 1 = on).
 static var competition_override := -1
 
@@ -81,7 +86,7 @@ static var competition_override := -1
 static func competition() -> bool:
 	if competition_override != -1:
 		return competition_override == 1
-	return qa_build()
+	return qa_build() or player_build()
 
 
 ## The other developer pages (?openinglab, ?twinsprototype, ?mechlab,

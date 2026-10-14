@@ -1,7 +1,7 @@
 class_name Competition
 extends Node
-## REAL-PLAYER RESULTS (Phase 3B-B), client side - QA build only for now
-## (BuildFlags.competition()). It records, sends and remembers; Phase 3B-C
+## REAL-PLAYER RESULTS (Phase 3B-B), client side - the QA build ("qa" pool)
+## and the player build ("prod" pool) (BuildFlags.competition()). It records, sends and remembers; Phase 3B-C
 ## adds the standing shown on the level card (card_status, lookup).
 ##
 ## When a level is cleared, the attempt's time is queued if it beats what
