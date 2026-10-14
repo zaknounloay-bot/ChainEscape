@@ -1,6 +1,6 @@
 # Competition percentile on the level card: Phase 3B-C (QA build only)
 
-**Status:** local changes, not committed. QA build only (`BuildFlags.competition()`). The player (production) build is unchanged: no Competition object, no request, no row on the card. Nothing is deployed and the backend contract is unchanged.
+**Status:** QA candidate (committed `3ec232e`, validation fixes on top). Validated under Godot 4.3. QA build only (`BuildFlags.competition()`). The player (production) build is unchanged: no Competition object, no request, no row on the card. Nothing is deployed and the backend contract is unchanged.
 
 ## What the player sees
 
@@ -10,10 +10,10 @@ The level card's timing panel gets one more row, under TIME | PERSONAL BEST:
 |---|---|
 | This attempt is the player's best; the server has at least 5 players on the level | `TOP 40%` |
 | The standing belongs to an earlier, faster result (a slower or equal replay) | `YOUR BEST  TOP 40%` |
-| Fewer than 5 players on the level | `TOP %  ·  NOT ENOUGH PLAYERS YET` |
-| The result is on its way, or the standing is being fetched | `TOP %  ·  CHECKING...` |
-| The result is queued: offline, timeout, 5xx or busy | `TOP %  ·  SAVED, WILL SEND LATER` |
-| The standing of an earlier best couldn't be fetched | `TOP %  ·  NOT AVAILABLE RIGHT NOW` |
+| Fewer than 5 players on the level | `STANDING  ·  NOT ENOUGH PLAYERS YET` |
+| The result is on its way, or the standing is being fetched | `STANDING  ·  CHECKING...` |
+| The result is queued: offline, timeout, 5xx or busy | `STANDING  ·  SAVED, WILL SEND LATER` |
+| The standing of an earlier best couldn't be fetched | `STANDING  ·  NOT AVAILABLE RIGHT NOW` |
 | Locked (`wrong_secret`), a result dropped as invalid, or nothing ever sent for the level | No row |
 
 **Not shown, ever:** a rank, a number of players, or a locally computed value.
@@ -22,8 +22,9 @@ The level card's timing panel gets one more row, under TIME | PERSONAL BEST:
 - TIME is 38 px. `TOP X%` is 30 px in the purple badge colour; the quiet states are 19 px in the soft text colour.
 - There is no animation and no sound.
 
-**Fixed height:** the row is 44 px.
-- It is reserved when the card opens, so an answer arriving later changes only the text, never the card's size or position.
+**Fixed height:** the `TOP X%` label always stays in the row (empty in the quiet states) and is the taller of the two, so the row is one height in every state.
+- The row is reserved when the card opens, so an answer arriving later changes only the text, never the card's size or position.
+- **Quiet states never show "TOP %"** without a number: they read `STANDING · …`.
 - A row with nothing to show at card open is left out entirely, and does not appear later.
 
 ## Rules (unchanged backend contract)
@@ -52,17 +53,25 @@ The level card's timing panel gets one more row, under TIME | PERSONAL BEST:
 | `scripts/ui/ui_manager.gd` | The standing row in the timing panel; `show_comp_status()`; `time_panel_state()` reports the row |
 | `scripts/game_manager.gd` | Ties the card to the clear (`_comp_card`), starts the lookup, refreshes the row on `standing_changed` |
 | `tools/competition_check.gd` | Sections F (standing rules, fake server) and G (the real level card); the "off" section checks for no row |
+| `tools/web_competition_card_test.mjs` | The exported QA build at iPhone sizes, with a local fake API and Supabase blocked |
 
-## Tests
+## Tests (Godot 4.3.stable.official.77dcf97d8)
 
 | Test | Result |
 |---|---|
-| `tools/CompetitionCheck.tscn` (A–G, with the new F and G) | **Not run.** No Godot 4.3 binary is reachable from the build environment. All four changed `.gd` files parse with `gdtoolkit` 4.x, but types and runtime are unverified. |
-| `tools/competition_migration.mjs --check` | OK (300 levels) |
-| `tools/backend_contract_test.mjs` (local mock) | 40/40 |
-| `tools/backend_contract_test.mjs --edge=…index.ts` | 43/43 |
-| `tools/competition_contract_test.mjs` | 61/61 |
-| QA web export and the browser layout tests at SE / 14 / Pro Max | **Not run.** They need Godot and its export templates. |
+| `tools/CompetitionCheck.tscn` (A–G) | **75/75** |
+| `tools/web_competition_card_test.mjs build/web_qa` (exported QA build, Chromium at SE / 14 / Pro Max; fake API, Supabase blocked) | **23/23**. Levels 100 / 300 / 10 on SE, 12 on 14, 250 on Pro Max: row text, card and row inside the screen, above REPLAY / NEXT, below the HUD, no horizontal overflow, qa pool only, 0 requests to Supabase, no page errors |
+| `run_tests.gd`, TimingCheck, ProfileCheck, FeedbackCheck, FriendChallengeApiTest (58), FriendFlowTest (150), SocialApiTest, SocialPlayTest | Pass |
+| ExperienceLabQaCheck `--experiencelab=13 / 100 / 12 --qareset` | Pass |
+| RecipientTest (3 "TOTAL SCORE left, coins right"), SocialSmoke ("message font carries the Arabic + Hebrew fallbacks") | Fail, **identically on `67519c0` (before 3B-C)**: pre-existing, not touched here |
+| Backend: migration `--check`, contract mock 40/40, edge 43/43, competition contract 61/61 | Pass |
+
+**Validation fixes:**
+- The row was 44 px while waiting and 60 px with a percentile, so the card grew when an answer arrived. It is now one height.
+- The waiting states read `STANDING · …` instead of `TOP % · …`.
+- Test-only fixes in `competition_check.gd`.
+
+**Layout note:** on iPhone SE the milestone cards (Levels 100 / 300) now rest at about 0.94 scale to fit (the floor is 0.85). Ordinary level cards are not scaled.
 
 ## Real-iPhone QA (QA build, `qa` pool)
 

@@ -507,8 +507,9 @@ func _standing() -> void:
 	for b in bodies:
 		if b.get("level", 0) == 26 and b.get("action", "") == "submit_result" and b["player_id"] == p4.player_id:
 			sends += 1
-	_check(sends == 2 and int(p4.comp_sent[26]) == 8000 and c4.card_status(26, m).get("best_ms", 0) == 8000 and seen4 == [26],
-		"faster time queued mid-request: sent right after, and only the newer answer reaches the card")
+	_check(sends == 2 and int(p4.comp_sent[26]) == 8000 and c4.standings[26]["best_ms"] == 8000 and c4.card_status(26, m)["state"] == "needs_players" and seen4 == [26],
+		"faster time queued mid-request: sent right after, and only the newer answer reaches the card (sends %d, sent %s, status %s, seen %s)"
+		% [sends, str(p4.comp_sent.get(26)), str(c4.card_status(26, m)), str(seen4)])
 	c4.queue_free()
 	# wrong_secret: locked, nothing shown.
 	mode = "wrong_secret"
@@ -553,7 +554,20 @@ func _clear(game, level: int, seconds: float, assist: String = "") -> void:
 		if game.ui.is_complete_visible():
 			break
 		await _frames(1)
-	await _frames(6)
+	await _settle(game)
+
+
+## Waits until the card's open animation is over (scale and alpha steady).
+func _settle(game) -> void:
+	var last := -1.0
+	var still := 0
+	for i in 600:
+		await _frames(1)
+		var sc: float = game.ui._card.scale.x
+		still = still + 1 if is_equal_approx(sc, last) and game.ui._card.modulate.a >= 1.0 else 0
+		last = sc
+		if still >= 10:
+			break
 
 
 func _comp_text(game) -> String:
@@ -577,8 +591,8 @@ func _card() -> void:
 	# Level 3, no one else: the quiet state - no number at all.
 	await _clear(game, 3, 15.0)
 	var tp: Dictionary = game.ui.time_panel_state()
-	_check(tp["comp_row"] and _comp_text(game) == "TOP %   ·   NOT ENOUGH PLAYERS YET" and RegEx.create_from_string("[0-9]").search(_comp_text(game)) == null,
-		"fewer than 5 players: '%s' (no percentile, no count)" % _comp_text(game))
+	_check(tp["comp_row"] and _comp_text(game) == "STANDING   ·   NOT ENOUGH PLAYERS YET" and RegEx.create_from_string("[0-9%]").search(_comp_text(game)) == null,
+		"fewer than 5 players: '%s' (no number, no %% placeholder, no count)" % _comp_text(game))
 	# Level 2 with 4 others (5, 8, 20, 30 s): an assisted clear (Show a Move) at ~12 s -> TOP 60%.
 	_others(2, [5000, 8000, 20000, 30000])
 	await _clear(game, 2, 12.0, "hint")
@@ -613,6 +627,7 @@ func _card() -> void:
 	_check(submits == 0 and bodies.size() == n0 + 1 and bodies[-1]["action"] == "level_standing", "slower replay: one read-only lookup, no submission")
 	_check(_comp_text(game) == "YOUR BEST TOP 60%", "slower replay card: '%s' (the standing belongs to the earlier best)" % _comp_text(game))
 	var rect_slow: Rect2 = game.ui._comp_row.get_global_rect()
+	var row_h_slow: float = game.ui._comp_row.size.y
 	# A faster replay with Undo and Hammer: 3 s -> TOP 20%.
 	game.replay()
 	await _frames(2)
@@ -624,15 +639,17 @@ func _card() -> void:
 	game.replay()
 	await _frames(2)
 	await _clear(game, 2, 2.0)
-	_check(_comp_text(game) == "TOP %   ·   SAVED, WILL SEND LATER" and game.progress.comp_pending.has(2), "offline: '%s', the result kept" % _comp_text(game))
+	_check(_comp_text(game) == "STANDING   ·   SAVED, WILL SEND LATER" and game.progress.comp_pending.has(2), "offline: '%s', the result kept" % _comp_text(game))
 	var rect_off: Rect2 = game.ui._comp_row.get_global_rect()
-	_check(is_equal_approx(rect_off.size.y, rect_slow.size.y) and is_equal_approx(game.ui._comp_row.size.y, game.ui.COMP_ROW_HEIGHT),
-		"the row keeps one height in every state (%.0f)" % game.ui._comp_row.size.y)
+	_check(is_equal_approx(rect_off.size.y, rect_slow.size.y) and is_equal_approx(game.ui._comp_row.size.y, row_h_slow),
+		"the row keeps one height in every state (%.0f; slow %s, offline %s)" % [game.ui._comp_row.size.y, str(rect_slow), str(rect_off)])
+	var card_off: Rect2 = game.ui._card.get_global_rect()
 	mode = "ok"
 	await game.competition.flush()
 	await _frames(2)
-	_check(_comp_text(game) == "TOP 20%" and game.progress.comp_pending.is_empty() and game.ui._comp_row.get_global_rect() == rect_off,
-		"back online with the card up: '%s', the card did not move" % _comp_text(game))
+	_check(_comp_text(game) == "TOP 20%" and game.progress.comp_pending.is_empty() and game.ui._comp_row.get_global_rect() == rect_off
+		and game.ui._card.get_global_rect() == card_off,
+		"back online with the card up: '%s', the card did not move (%s -> %s)" % [_comp_text(game), str(rect_off), str(game.ui._comp_row.get_global_rect())])
 	# Leave before the answer: it never shows on a later card as new.
 	mode = "network"
 	game.replay()
@@ -648,7 +665,7 @@ func _card() -> void:
 	await _clear(game, 2, 30.0)
 	_check(_comp_text(game) == "YOUR BEST TOP 20%" and bodies[-1]["action"] == "level_standing", "re-entered, slower: a fresh lookup ('%s')" % _comp_text(game))
 	# Reload: standings live in memory only; the next card asks again.
-	var sent := game.progress.comp_sent.duplicate()
+	var sent: Dictionary = game.progress.comp_sent.duplicate()
 	game.queue_free()
 	await _frames(2)
 	game = load("res://scenes/Main.tscn").instantiate()
@@ -665,7 +682,7 @@ func _card() -> void:
 	game.replay()
 	await _frames(2)
 	await _clear(game, 2, 46.0)
-	_check(_comp_text(game) == "TOP %   ·   NOT AVAILABLE RIGHT NOW", "lookup answered 500: '%s' (nothing queued)" % _comp_text(game))
+	_check(_comp_text(game) == "STANDING   ·   NOT AVAILABLE RIGHT NOW", "lookup answered 500: '%s' (nothing queued)" % _comp_text(game))
 	mode = "ok"
 	game.queue_free()
 	await _frames(2)

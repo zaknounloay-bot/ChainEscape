@@ -1367,22 +1367,24 @@ func _build_time_panel(parent: Control) -> void:
 	_comp_row = HBoxContainer.new()
 	_comp_row.alignment = BoxContainer.ALIGNMENT_CENTER
 	_comp_row.add_theme_constant_override("separation", 12)
-	_comp_row.custom_minimum_size = Vector2(0, COMP_ROW_HEIGHT)
 	_comp_row.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	_comp_row.visible = false
 	box.add_child(_comp_row)
 	_comp_caption = _make_label(19, Palette.TEXT_SOFT, 900)
 	_comp_row.add_child(_comp_caption)
+	# The value label always stays in the row (empty in the quiet states):
+	# it is the taller of the two, so the row - and the card - keep one
+	# height whatever the answer.
 	_comp_value = _make_label(30, COMP_COLOR, 900)
 	_comp_row.add_child(_comp_value)
 	_time_panel.visible = false
 
 
-const COMP_ROW_HEIGHT := 44.0
 const COMP_COLOR := Palette.PURPLE_BADGE
-## The quiet states of the standing row (never a number of players).
-const COMP_TEXT := {"checking": "TOP %   ·   CHECKING...", "offline": "TOP %   ·   SAVED, WILL SEND LATER",
-	"unavailable": "TOP %   ·   NOT AVAILABLE RIGHT NOW", "needs_players": "TOP %   ·   NOT ENOUGH PLAYERS YET"}
+## The quiet states of the standing row: no number at all (never a
+## percentile placeholder, never a number of players).
+const COMP_TEXT := {"checking": "STANDING   ·   CHECKING...", "offline": "STANDING   ·   SAVED, WILL SEND LATER",
+	"unavailable": "STANDING   ·   NOT AVAILABLE RIGHT NOW", "needs_players": "STANDING   ·   NOT ENOUGH PLAYERS YET"}
 
 
 ## The standing row: `status` is Competition.card_status(). "top" shows the
@@ -1400,13 +1402,13 @@ func show_comp_status(status: Dictionary, time_ms: int) -> void:
 		_comp_caption.text = "" if own else "YOUR BEST"
 		_comp_caption.visible = not own
 		_comp_value.text = "TOP %d%%" % int(status["percentile"])
-		_comp_value.visible = true
+		_comp_row.add_theme_constant_override("separation", 12)
 		comp_summary = _comp_value.text if own else "YOUR BEST " + _comp_value.text
 	else:
 		_comp_caption.text = COMP_TEXT.get(state, "")
 		_comp_caption.visible = true
-		_comp_value.text = ""
-		_comp_value.visible = false
+		_comp_value.text = ""  # stays in the row: it holds the row's height
+		_comp_row.add_theme_constant_override("separation", 0)
 		comp_summary = _comp_caption.text
 
 
