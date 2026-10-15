@@ -151,25 +151,29 @@ try {
   await b.tap(r.buttons.Play, 1200);
   pv = await b.waitFor(b.play, (v) => v.active && v.mode === 'recipient', 'recipient play');
   check(pv.fingerprint === fp && pv.difficulty === 'hard', 'phone B plays the exact board');
-  // Tools: UNDO / SHOW A MOVE / HAMMER / RESTART; the free Hammer x2.
-  check(pv.buttons.Undo && pv.buttons.Hint && pv.buttons.Hammer && pv.buttons.Restart && pv.hammers_left === 2 && !pv.hammer_armed,
-    'friend play: UNDO, SHOW A MOVE, HAMMER x2, RESTART');
+  // Tools: UNDO / SHOW A MOVE / HAMMER / RESTART; HARD (phase 4): x3 / x1 / x1.
+  check(pv.buttons.Undo && pv.buttons.Hint && pv.buttons.Hammer && pv.buttons.Restart && pv.hammers_left === 1 && pv.hints_left === 1 && pv.undos_left === 3 && !pv.hammer_armed,
+    'friend play (HARD): UNDO x3, SHOW A MOVE x1, HAMMER x1, RESTART');
+  check(pv.timed && pv.time_visible && /^TIME  \d+:\d\d$/.test(pv.time_text), 'friend play: the live TIME is shown (' + pv.time_text + ')');
   await b.tap(pv.buttons.Hammer, 600);
   pv = await b.play();
   check(pv.hammer_armed, 'HAMMER arms on a real tap');
   await b.tap(pv.buttons.Hammer, 600);
   pv = await b.play();
-  check(!pv.hammer_armed && pv.hammers_left === 2, 'CANCEL: nothing spent');
+  check(!pv.hammer_armed && pv.hammers_left === 1, 'CANCEL: nothing spent');
   await b.tap(pv.buttons.Hammer, 600);
   const blocks = pv.blocks;
   pv = await b.waitFor(b.play, (v) => v.hammer_armed && v.next && v.next.length === 2, 'armed + next');
   await b.tap(pv.next, 900);  // smashing the Solver's next block is always allowed
   pv = await b.play();
-  check(pv.hammers_left === 1 && pv.blocks === blocks - 1 && !pv.hammer_armed, 'smash: one block gone, Hammer x1 left');
+  check(pv.hammers_left === 0 && pv.blocks === blocks - 1 && !pv.hammer_armed, 'smash: one block gone, Hammer x0 left');
+  const tBefore = pv.time_ms;
   await b.tap(pv.buttons.Restart, 900);
   pv = await b.play();
-  check(pv.hammers_left === 2 && pv.blocks === blocks && pv.fingerprint === fp, 'RESTART: same board, Hammer x2 again');
+  check(pv.hammers_left === 1 && pv.blocks === blocks && pv.fingerprint === fp, 'RESTART: same board, Hammer x1 again');
+  check(pv.time_ms >= tBefore && pv.final_time_ms === -1, `RESTART keeps the clock running (${tBefore} -> ${pv.time_ms} ms)`);
   pv = await b.solve();
+  check(pv.final_time_ms > 0 && pv.reveal_time !== '' && pv.time_ms === pv.final_time_ms, `YOU ESCAPED! shows the time (${pv.reveal_time}, ${pv.final_time_ms} ms)`);
   check(pv.buttons.ChallengeAFriend && pv.buttons.PlayAgain && pv.buttons.BackToCreate && b.onScreen(pv.buttons), 'YOU ESCAPED! + CHALLENGE A FRIEND + PLAY AGAIN + MAIN MENU');
   await b.shot('W4_escaped');
   await b.tap(pv.buttons.PlayAgain, 1200);

@@ -59,6 +59,10 @@ var cta_pulses := 0
 var _shown := 0  # reveal counter: stale timers do nothing
 var _text := ""
 var _mode := 0
+## Challenge a Friend only (phase 4): the completion time under the
+## heading. Never shown for a Photo / Message Reveal.
+var _time_box: VBoxContainer
+var _time_value: Label
 
 
 func _init() -> void:
@@ -101,6 +105,23 @@ func _ready() -> void:
 	_heading = _label("YOU ESCAPED!", 40, ACCENT, 900)
 	_heading.name = "RevealHeading"
 	_column.add_child(_heading)
+	_time_box = VBoxContainer.new()
+	_time_box.name = "RevealTime"
+	_time_box.alignment = BoxContainer.ALIGNMENT_CENTER
+	_time_box.add_theme_constant_override("separation", -8)
+	_time_box.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	_time_box.visible = false
+	_column.add_child(_time_box)
+	var caption := _label("YOUR TIME", 24, Palette.TEXT_SOFT, 900)
+	caption.name = "RevealTimeCaption"
+	_time_box.add_child(caption)
+	_time_value = _label("", 76, Palette.TEXT, 900)
+	_time_value.name = "RevealTimeValue"
+	var digits := FontVariation.new()
+	digits.base_font = Palette.font(900)
+	digits.opentype_features = {TextServerManager.get_primary_interface().name_to_tag("tnum"): 1}
+	_time_value.add_theme_font_override("font", digits)
+	_time_box.add_child(_time_value)
 	_photo_frame = PanelContainer.new()
 	_photo_frame.name = "RevealPhotoFrame"
 	_photo_frame.add_theme_stylebox_override("panel", _card(12))
@@ -207,7 +228,8 @@ func _ready() -> void:
 ## Shows the reveal for `c`. Buttons depend on who is playing.
 ## `photo` (recipient): "loading" / "failed" while the challenge's photo is
 ## not here yet; "" = use c.local_photo as is.
-func show_reveal(c: SharedChallenge, theme: Dictionary, mode: int, photo: String = "") -> void:
+## `time_ms` (Challenge a Friend only): the completion time, -1 = none.
+func show_reveal(c: SharedChallenge, theme: Dictionary, mode: int, photo: String = "", time_ms: int = -1) -> void:
 	_shown += 1
 	_mode = mode
 	_backdrop.set_colors(theme["bg_top"], theme["bg_bottom"])
@@ -233,6 +255,10 @@ func show_reveal(c: SharedChallenge, theme: Dictionary, mode: int, photo: String
 	# A friend challenge has nothing to reveal: its invitation is to make
 	# one in return (no supporting line).
 	var friend := c.type == SharedChallenge.TYPE_FRIEND_CHALLENGE
+	_time_box.visible = friend and time_ms >= 0
+	_time_value.text = UIManager.fmt_time(time_ms) if _time_box.visible else ""
+	_time_value.add_theme_color_override("font_color", theme.get("text", Palette.TEXT))
+	_time_box.get_child(0).add_theme_color_override("font_color", theme.get("text_soft", Palette.TEXT_SOFT))
 	_cta.text = (FRIEND_CTA_TEXT if friend else CTA_TEXT) + "    "
 	_cta.name = "ChallengeAFriend" if friend else "CreateYourOwn"
 	_cta_line.visible = recipient and not friend

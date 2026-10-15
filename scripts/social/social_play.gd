@@ -9,9 +9,16 @@ extends CanvasLayer
 ## history, never touches GameManager, PlayerProgress or the save, and the
 ## Classic level stays loaded (untouched) underneath - so Classic CONTINUE
 ## is exactly as it was. No hearts, coins, stars, score, boosters or level
-## numbers. Its tools are free and per attempt, the same for every Social
-## challenge: UNDO x3, SHOW A MOVE x2, HAMMER x2 (Restart / PLAY AGAIN start
-## them over).
+## numbers. Its tools are free and per attempt (Restart / PLAY AGAIN start
+## them over): UNDO x3, SHOW A MOVE x2, HAMMER x2 in a Photo / Message
+## Reveal; in Challenge a Friend they depend on the difficulty
+## (FRIEND_TOOLS, phase 4).
+##
+## Challenge a Friend only (phase 4): a TIME counter. One AttemptTimer runs
+## for the whole challenge session - RESTART keeps it going, PLAY AGAIN
+## (after solving) starts a fresh timed run. It pauses while the page is
+## hidden or the EXIT dialog is open, and the final time is shown on the
+## solved screen. Never saved or sent anywhere.
 ##
 ## Mode: CREATOR_PREVIEW (the creator plays their own challenge, 0.2B) or
 ## RECIPIENT (the person it was sent to, 0.2C phase 2). Both play the same
@@ -35,6 +42,15 @@ const MAX_HINTS := 2
 ## (Solver.hammer_safe + BoardModel.remove); no coins, inventory, shop or
 ## save are involved.
 const MAX_HAMMERS := 2
+## Challenge a Friend (phase 4): [UNDO, SHOW A MOVE, HAMMER] per attempt by
+## difficulty. Restart stays unlimited. An unknown difficulty gets the
+## strictest set.
+const FRIEND_TOOLS := {
+	"easy": [3, 2, 2],
+	"medium": [3, 2, 1],
+	"hard": [3, 1, 1],
+	"very_hard": [3, 1, 0],
+}
 const TOP_HEIGHT := 250.0
 const BOTTOM_HEIGHT := 190.0
 const ACCENT := Color("#C645E6")
@@ -50,10 +66,20 @@ var chain := 0
 var undos_used := 0
 var hints_used := 0
 var hammers_used := 0
-## Per-attempt allowances. The game always uses the defaults; only the
-## development VERY HARD human test (?vhtest=1) sets its own (x1 / x1).
+## Per-attempt allowances, set by start(): the defaults for a Photo /
+## Message Reveal, FRIEND_TOOLS for Challenge a Friend. Development pages
+## (?vhtest / ?mechlab) set their own and turn on `dev_assist`, so start()
+## keeps them (and shows no timer).
+var max_undos := MAX_UNDOS
 var max_hints := MAX_HINTS
 var max_hammers := MAX_HAMMERS
+var dev_assist := false
+## Challenge a Friend: the session clock (see the class comment) and the
+## final time of the last solve (ms, -1 = none yet).
+var timer := AttemptTimer.new()
+var final_time_ms := -1
+## Times the TIME text changed (tests: once per visible second, no more).
+var time_updates := 0
 ## Totals for the current challenge across every attempt (start() resets
 ## them; RESTART / PLAY AGAIN do not). Read by the development human test.
 var total_moves := 0
@@ -116,6 +142,10 @@ var _confirm: Control
 var reveal: SocialReveal
 var _safe_top := 0.0
 var _safe_bottom := 0.0
+var _time: Label
+var _time_second := -1
+var _frame_usec := 0
+var _visibility_cb: JavaScriptObject
 
 
 func _init() -> void:
@@ -126,6 +156,7 @@ func _init() -> void:
 func _ready() -> void:
 	_build()
 	get_viewport().size_changed.connect(_layout)
+	_watch_page_visibility()
 
 
 ## Plays `c` from its PuzzleDefinition (rebuilt from the serialized data,
@@ -134,6 +165,12 @@ func start(c: SharedChallenge, p_mode: int, theme: Dictionary) -> void:
 	challenge = c
 	mode = p_mode
 	_theme = theme
+	if not dev_assist:
+		var tools: Array = FRIEND_TOOLS.get(c.difficulty, FRIEND_TOOLS["very_hard"]) if is_timed() else [MAX_UNDOS, MAX_HINTS, MAX_HAMMERS]
+		max_undos = tools[0]
+		max_hints = tools[1]
+		max_hammers = tools[2]
+	_reset_timer()
 	plays = 0
 	total_moves = 0
 	total_undos = 0
@@ -166,6 +203,7 @@ func start(c: SharedChallenge, p_mode: int, theme: Dictionary) -> void:
 	else:
 		_title.text = "SOLVE TO UNLOCK" if mode == Mode.RECIPIENT else "REVEAL CHALLENGE"
 	_chip.text = DIFFICULTY_NAMES.get(c.difficulty, "")
+	_time.add_theme_color_override("font_color", theme["text"])
 	visible = true
 	_load_puzzle()
 
@@ -314,7 +352,7 @@ func _escape(id: int) -> void:
 	if model.is_empty():
 		_on_solved()
 	elif model.playable_ids().is_empty():
-		_show_message("No moves left - tap Undo" if undos_used < MAX_UNDOS else "No moves left - tap Restart")
+		_show_message("No moves left - tap Undo" if undos_used < max_undos else "No moves left - tap Restart")
 
 
 func _blocked(id: int) -> void:
@@ -355,7 +393,7 @@ func _advance(id: int) -> void:
 	_show_message("")
 	_refresh_buttons()
 	if model.playable_ids().is_empty():
-		_show_message("No moves left - tap Undo" if undos_used < MAX_UNDOS else "No moves left - tap Restart")
+		_show_message("No moves left - tap Undo" if undos_used < max_undos else "No moves left - tap Restart")
 
 
 ## MOVABLE PROTOTYPE: `id` is launched into the crate in its lane; the crate
@@ -390,7 +428,7 @@ func _push(id: int) -> void:
 	_show_message("")
 	_refresh_buttons()
 	if model.playable_ids().is_empty():
-		_show_message("No moves left - tap Undo" if undos_used < MAX_UNDOS else "No moves left - tap Restart")
+		_show_message("No moves left - tap Undo" if undos_used < max_undos else "No moves left - tap Restart")
 
 
 ## Portal prototype: portals `id`'s lane runs through ([] on every real board).
@@ -429,7 +467,7 @@ func _play_mechanic_effects() -> void:
 
 
 func undo() -> void:
-	if completed or not history.can_undo() or undos_used >= MAX_UNDOS:
+	if completed or not history.can_undo() or undos_used >= max_undos:
 		return
 	_disarm()
 	undos_used += 1
@@ -452,6 +490,7 @@ func hint() -> void:
 		return
 	if hints_used >= max_hints:
 		_show_message("No SHOW A MOVE left - Undo or Restart can help")
+		_publish.call_deferred()
 		return
 	var id := Solver.from_model(model).recommend_move()
 	if id == -1:
@@ -462,6 +501,7 @@ func hint() -> void:
 	board.set_hint(id)
 	AudioManager.play_hint()
 	_refresh_buttons()
+	_publish.call_deferred()
 
 
 # --- Hammer (every Social challenge) -------------------------------------------
@@ -481,7 +521,9 @@ func toggle_hammer() -> void:
 		_publish.call_deferred()
 		return
 	if hammers_used >= max_hammers:
-		_show_message("No Hammers left - Undo or Restart can help")
+		_show_message("No Hammer in %s challenges" % DIFFICULTY_NAMES.get(challenge.difficulty, "these") if max_hammers == 0
+			else "No Hammers left - Undo or Restart can help")
+		_publish.call_deferred()
 		return
 	hammer_armed = true
 	board.hammer_mode = true
@@ -504,6 +546,9 @@ func _disarm() -> void:
 ## Hammer is not refunded, as in Classic).
 func _smash(id: int) -> void:
 	if not model.blocks.has(id):
+		return
+	if hammers_used >= max_hammers:  # never spend a Hammer that isn't there
+		_disarm()
 		return
 	if not Solver.hammer_safe(model, id):
 		AudioManager.play_invalid()
@@ -535,7 +580,7 @@ func _smash(id: int) -> void:
 	if model.is_empty():
 		_on_solved()
 	elif model.playable_ids().is_empty():
-		_show_message("No moves left - tap Undo" if undos_used < MAX_UNDOS else "No moves left - tap Restart")
+		_show_message("No moves left - tap Undo" if undos_used < max_undos else "No moves left - tap Restart")
 
 
 func restart() -> void:
@@ -558,6 +603,9 @@ func play_solver_move() -> bool:
 
 func _on_solved() -> void:
 	completed = true
+	if is_timed():
+		final_time_ms = timer.finish()
+		_set_time_text(final_time_ms, true)
 	_refresh_buttons()
 	solved.emit()
 	var session := _session
@@ -571,7 +619,7 @@ func _on_solved() -> void:
 	if session != _session:
 		return
 	_set_hud_visible(false)
-	reveal.show_reveal(challenge, _theme, mode, photo_pending if mode == Mode.RECIPIENT else "")
+	reveal.show_reveal(challenge, _theme, mode, photo_pending if mode == Mode.RECIPIENT else "", final_time_ms if is_timed() else -1)
 	if back_label != "":
 		reveal._back.text = back_label
 	get_tree().create_timer(1.6).timeout.connect(_publish)
@@ -579,12 +627,93 @@ func _on_solved() -> void:
 
 func _play_again() -> void:
 	AudioManager.play_ui_tap()
+	_reset_timer()  # a fresh timed run (RESTART keeps the clock going)
 	_load_puzzle()
 
 
 func _leave() -> void:
 	end()
 	exited.emit()
+
+
+# --- Challenge a Friend timer (phase 4) ---------------------------------------------
+
+## A Challenge a Friend in the game (development pages excluded).
+func is_timed() -> bool:
+	return challenge != null and challenge.type == SharedChallenge.TYPE_FRIEND_CHALLENGE and not dev_assist
+
+
+## Is the clock running this frame? Only while the board is in play: shown,
+## not solved, no EXIT dialog. (A hidden page: AttemptTimer.page_hidden.)
+func clock_active() -> bool:
+	return visible and not completed and not _confirm.visible
+
+
+func _reset_timer() -> void:
+	timer.reset()
+	final_time_ms = -1
+	_frame_usec = Time.get_ticks_usec()
+	_set_time_text(0, true)
+
+
+func _process(_delta: float) -> void:
+	# The real monotonic clock between frames (as GameManager's attempt
+	# clock): Godot smooths `delta`. Text changes once per visible second.
+	var now := Time.get_ticks_usec()
+	var dt := (now - _frame_usec) / 1_000_000.0
+	_frame_usec = now
+	if not is_timed() or completed:
+		return
+	timer.tick(dt, clock_active())
+	_set_time_text(timer.elapsed_ms())
+
+
+func _set_time_text(ms: int, force: bool = false) -> void:
+	var sec := maxi(ms, 0) / 1000
+	if sec == _time_second and not force:
+		return
+	_time_second = sec
+	_time.text = "TIME  " + UIManager.fmt_time(ms)
+	time_updates += 1
+	if OS.has_feature("web") and _test_hooks():
+		_publish.call_deferred()  # browser tests only: the snapshot follows the clock
+
+
+## Tests (and native pause): the page went hidden / visible.
+func set_page_hidden(hidden: bool) -> void:
+	timer.set_page_hidden(hidden)
+	_publish.call_deferred()
+
+
+## Web: Safari in the background, the phone locked, another tab - the clock
+## stops until the page is visible again (as GameManager does for Classic).
+func _watch_page_visibility() -> void:
+	if not OS.has_feature("web"):
+		return
+	var doc = JavaScriptBridge.get_interface("document")
+	var win = JavaScriptBridge.get_interface("window")
+	if doc == null or win == null:
+		return
+	_visibility_cb = JavaScriptBridge.create_callback(_on_page_visibility)
+	doc.addEventListener("visibilitychange", _visibility_cb)
+	win.addEventListener("pagehide", _visibility_cb)
+	win.addEventListener("pageshow", _visibility_cb)
+	timer.set_page_hidden(bool(doc.hidden))
+
+
+func _on_page_visibility(args: Array) -> void:
+	var doc = JavaScriptBridge.get_interface("document")
+	var hidden := bool(doc.hidden) if doc != null else false
+	if not args.is_empty() and args[0] != null and str(args[0].type) == "pagehide":
+		hidden = true
+	set_page_hidden(hidden)
+
+
+func _notification(what: int) -> void:
+	if what == NOTIFICATION_APPLICATION_PAUSED:
+		timer.set_page_hidden(true)
+	elif what == NOTIFICATION_APPLICATION_RESUMED:
+		timer.set_page_hidden(false)
 
 
 # --- HUD ---------------------------------------------------------------------------
@@ -630,6 +759,16 @@ func _build() -> void:
 	_chip = _label("", 24, Palette.TEXT_SOFT, 900)
 	_chip.name = "DifficultyChip"
 	top.add_child(_chip)
+	# Challenge a Friend: the live TIME (tabular digits: the width never
+	# jumps as the seconds change).
+	_time = _label("", 34, Palette.TEXT, 900)
+	_time.name = "FriendTime"
+	var digits := FontVariation.new()
+	digits.base_font = Palette.font(900)
+	digits.opentype_features = {TextServerManager.get_primary_interface().name_to_tag("tnum"): 1}
+	_time.add_theme_font_override("font", digits)
+	_time.visible = false
+	top.add_child(_time)
 	var bar_holder := CenterContainer.new()
 	bar_holder.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	_progress = BoardProgress.new()
@@ -744,17 +883,21 @@ func _build_confirm() -> Control:
 func _set_hud_visible(on: bool) -> void:
 	for n in [_title, _chip, _progress.get_parent(), _exit, _message, _bottom]:
 		n.visible = on
+	_time.visible = on and is_timed()
 	_input.mouse_filter = Control.MOUSE_FILTER_STOP if on else Control.MOUSE_FILTER_IGNORE
 	board.visible = on
 
 
 func _refresh_buttons() -> void:
-	_undo.badge_text = str(MAX_UNDOS - undos_used)
-	_undo.disabled = completed or not history.can_undo() or undos_used >= MAX_UNDOS
+	_undo.badge_text = str(max_undos - undos_used)
+	_undo.disabled = completed or not history.can_undo() or undos_used >= max_undos
 	_hint.badge_text = str(max_hints - hints_used)
 	_hint.modulate.a = 1.0 if hints_used < max_hints else 0.5
 	_hint.disabled = completed
-	_hammer.visible = hammer_available() and max_hammers > 0
+	# Challenge a Friend shows a Hammer it doesn't have (VERY HARD) dimmed at
+	# 0, so the player sees it is not part of this difficulty; a tap only
+	# explains. Development pages keep hiding it.
+	_hammer.visible = hammer_available() and (max_hammers > 0 or (is_timed() and not dev_assist))
 	_hammer.text = "CANCEL" if hammer_armed else "HAMMER"
 	_hammer.badge_text = str(max_hammers - hammers_used)
 	_hammer.modulate.a = 1.0 if hammer_armed or hammers_used < max_hammers else 0.5
@@ -774,6 +917,9 @@ func _publish() -> void:
 		return
 	var vis := get_viewport().get_visible_rect().size
 	var norm := func(p: Vector2) -> Array: return [snappedf(p.x / vis.x, 0.0001), snappedf(p.y / vis.y, 0.0001)]
+	var norm_rect := func(r: Rect2) -> Array: return [snappedf(r.position.x / vis.x, 0.0001), snappedf(r.position.y / vis.y, 0.0001),
+		snappedf(r.end.x / vis.x, 0.0001), snappedf(r.end.y / vis.y, 0.0001)]
+	var rect := func(c: Control) -> Array: return norm_rect.call(c.get_global_rect()) if c.is_visible_in_tree() else []
 	var free := []
 	var next := []
 	if visible and not completed:
@@ -793,7 +939,15 @@ func _publish() -> void:
 			buttons[String(b.name)] = norm.call(b.get_global_rect().get_center())
 	WebBridge.publish("chainEscapeSocialPlay", {"active": visible, "completed": completed, "revealed": reveal.visible,
 		"difficulty": challenge.difficulty if challenge else "", "blocks": model.block_count(), "free": free, "next": next,
-		"fingerprint": loaded_fingerprint, "plays": plays, "hammers_left": max_hammers - hammers_used, "hammer_armed": hammer_armed, "confirm": _confirm.visible, "buttons": buttons,
+		"fingerprint": loaded_fingerprint, "plays": plays, "hammers_left": max_hammers - hammers_used,
+		"hints_left": max_hints - hints_used, "undos_left": max_undos - undos_used,
+		"tools": [max_undos, max_hints, max_hammers], "timed": is_timed(), "time_ms": timer.elapsed_ms(), "time_text": _time.text,
+		"time_visible": _time.is_visible_in_tree(), "final_time_ms": final_time_ms, "time_updates": time_updates,
+		"page_hidden": timer.page_hidden, "message_text": _message.text,
+		"reveal_time": reveal._time_value.text if reveal._time_box.visible else "",
+		"rects": {"time": rect.call(_time), "chip": rect.call(_chip), "title": rect.call(_title), "exit": rect.call(_exit),
+			"progress": rect.call(_progress), "bottom": rect.call(_bottom), "board": norm_rect.call(board_area()),
+			"reveal_time": rect.call(reveal._time_box), "reveal_heading": rect.call(reveal._heading)}, "hammer_armed": hammer_armed, "confirm": _confirm.visible, "buttons": buttons,
 		"has_photo": reveal._photo_frame.visible and reveal.visible, "photo_state": reveal.photo_state if reveal.visible else "",
 		"cta_pulses": reveal.cta_pulses if reveal.visible else 0, "mode": "recipient" if mode == Mode.RECIPIENT else "creator",
 		"magnets": board.magnet_links(), "pulls": total_pulls,

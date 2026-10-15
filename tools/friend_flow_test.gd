@@ -382,8 +382,8 @@ func _test_recipient(info: Dictionary) -> void:
 	_check(play.hammers_used == 1, "a Hammer used on the replay")
 	await _solve()
 	await _tap(play.reveal._again)
-	_check(play.hammers_used == 0 and not play.hammer_armed and play._hammer.badge_text == "2" and play.loaded_fingerprint == info["fp"],
-		"PLAY AGAIN: Hammer x2 again, same board")
+	_check(play.hammers_used == 0 and not play.hammer_armed and play._hammer.badge_text == "1" and play.loaded_fingerprint == info["fp"],
+		"PLAY AGAIN: the HARD Hammer x1 again, same board")
 	await _solve()
 	await _solve()
 	_check(FriendGenerator.created == gens, "the recipient never generates a board")
@@ -396,7 +396,9 @@ func _test_recipient(info: Dictionary) -> void:
 	_check(fc.current != null and ShareLink.parse(fc.share_url) != info["id"], "phone B made its own challenge: a new link")
 
 
-# --- Tools: UNDO x3, SHOW A MOVE x2, HAMMER x2 (free, per attempt) ----------------
+# --- Tools (free, per attempt). The recipient plays a HARD link: UNDO x3,
+# SHOW A MOVE x1, HAMMER x1 (phase 4, SocialPlay.FRIEND_TOOLS; every
+# difficulty: tools/friend_timer_tools_test.gd) ------------------------------------
 
 func _test_tools(fp: String) -> void:
 	var prog := game.progress
@@ -409,9 +411,9 @@ func _test_tools(fp: String) -> void:
 		if i > 0:
 			ok_row = ok_row and row[i].get_global_rect().position.x >= row[i - 1].get_global_rect().end.x
 	_check(ok_row, "tool row: UNDO, SHOW A MOVE, HAMMER, RESTART on screen, side by side")
-	_check(play._undo.badge_text == "3" and play._hint.text == "SHOW A MOVE" and play._hint.badge_text == "2", "UNDO x3, SHOW A MOVE x2")
-	_check(play._hammer.text == "HAMMER" and play._hammer.badge_text == "2" and play._hammer.modulate.a == 1.0 and not play._hammer.disabled,
-		"HAMMER x2, active from the start (not greyed out)")
+	_check(play.challenge.difficulty == "hard" and play._undo.badge_text == "3" and play._hint.text == "SHOW A MOVE" and play._hint.badge_text == "1", "HARD: UNDO x3, SHOW A MOVE x1")
+	_check(play._hammer.text == "HAMMER" and play._hammer.badge_text == "1" and play._hammer.modulate.a == 1.0 and not play._hammer.disabled,
+		"HARD: HAMMER x1, active from the start (not greyed out)")
 	await _shot("F8b_tools")
 	# SHOW A MOVE: highlights the Solver's move, never plays it.
 	var before := var_to_str(play.model.snapshot())
@@ -421,14 +423,14 @@ func _test_tools(fp: String) -> void:
 	for id in play.model.blocks.keys():
 		if play.board.get_view(id).hinted:
 			hinted.append(id)
-	_check(hinted == [expect] and var_to_str(play.model.snapshot()) == before and play.hints_used == 1 and play._hint.badge_text == "1",
+	_check(hinted == [expect] and var_to_str(play.model.snapshot()) == before and play.hints_used == 1 and play._hint.badge_text == "0",
 		"SHOW A MOVE highlights one valid move (the Solver's) and plays nothing")
 	# Arm, then CANCEL: nothing spent.
 	await _tap(play._hammer)
 	_check(play.hammer_armed and play.board.hammer_mode and play._hammer.text == "CANCEL", "HAMMER arms (button reads CANCEL)")
 	await _shot("F8c_hammer_armed")
 	await _tap(play._hammer)
-	_check(not play.hammer_armed and not play.board.hammer_mode and play.hammers_used == 0 and play._hammer.badge_text == "2", "CANCEL: nothing spent")
+	_check(not play.hammer_armed and not play.board.hammer_mode and play.hammers_used == 0 and play._hammer.badge_text == "1", "CANCEL: nothing spent")
 	# A rejected smash (one that would make the board unsolvable), if any.
 	var unsafe := -1
 	for id in play.model.blocks.keys():
@@ -457,25 +459,21 @@ func _test_tools(fp: String) -> void:
 	await _wait(0.5)
 	_check(not play.model.blocks.has(sid) and play.model.block_count() == count - 1 and var_to_str(play.model.snapshot()) == var_to_str(expected.snapshot()),
 		"smash removes the block; the board changes exactly as the Classic Hammer rule says")
-	_check(play.hammers_used == 1 and play._hammer.badge_text == "1" and not play.hammer_armed and play._hammer.text == "HAMMER", "Hammer x1 left")
+	_check(play.hammers_used == 1 and play._hammer.badge_text == "0" and not play.hammer_armed and play._hammer.text == "HAMMER" and play._hammer.modulate.a < 1.0, "Hammer x0 left")
 	_check(Solver.from_model(play.model).is_solvable(), "the board is still solvable after the smash")
 	# Undo brings the block back; the Hammer is not refunded (as in Classic).
 	await _tap(play._undo)
 	_check(play.model.blocks.has(sid) and play.hammers_used == 1 and play.undos_used == 1, "UNDO brings the smashed block back (Hammer not refunded)")
-	# Smash 2, then none left.
+	# None left: a second Hammer is refused.
 	await _tap(play._hammer)
-	play.tap_block(_safe_block())
-	await _wait(0.5)
-	_check(play.hammers_used == 2 and play._hammer.badge_text == "0" and play._hammer.modulate.a < 1.0, "Hammer x0 left")
-	await _tap(play._hammer)
-	_check(not play.hammer_armed and play._message.text.begins_with("No Hammers left"), "no third Hammer")
-	_check(Solver.from_model(play.model).is_solvable(), "still solvable after two smashes")
+	_check(not play.hammer_armed and play.hammers_used == 1 and play._message.text.begins_with("No Hammers left"), "no second Hammer")
+	_check(Solver.from_model(play.model).is_solvable(), "still solvable after the smash")
 	_check(play.challenge.puzzle.fingerprint() == fp and play.loaded_fingerprint == fp, "the shared PuzzleDefinition is untouched by smashes")
 	# RESTART: the exact board, every tool back.
 	await _tap(play._restart)
 	_check(play.loaded_fingerprint == fp and play.hammers_used == 0 and play.hints_used == 0 and play.undos_used == 0
-		and play._hammer.badge_text == "2" and play._hint.badge_text == "2" and play._undo.badge_text == "3" and play.model.block_count() == play._total_blocks,
-		"RESTART: same exact board, UNDO x3 / SHOW A MOVE x2 / HAMMER x2 again")
+		and play._hammer.badge_text == "1" and play._hint.badge_text == "1" and play._undo.badge_text == "3" and play.model.block_count() == play._total_blocks,
+		"RESTART: same exact board, UNDO x3 / SHOW A MOVE x1 / HAMMER x1 again")
 	_check(var_to_str([prog.coins, prog.inventory, prog.best_scores, prog.current_level]) == econ,
 		"Classic coins, Hammer / boosters and progress untouched by the tools")
 

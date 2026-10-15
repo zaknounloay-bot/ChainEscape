@@ -116,6 +116,7 @@ func _ready() -> void:
 			boards[str(b["id"])] = b
 	_load_state()
 	play = SocialPlay.new()
+	play.dev_assist = true  # its own tools, no Friend timer
 	play.max_hints = int(_assist.get("show_a_move", 1))
 	play.max_hammers = int(_assist.get("hammer", 1))
 	play.solved.connect(_on_solved)
