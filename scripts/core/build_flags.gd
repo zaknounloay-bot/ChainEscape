@@ -89,6 +89,23 @@ static func competition() -> bool:
 	return qa_build() or player_build()
 
 
+## STABLE CHALLENGE LINKS (Phase 4): share links point at the "go" Edge
+## Function (SocialConfig.STABLE_LINK_BASE), which redirects to the current
+## itch.io upload - so a link keeps working after a new upload. On in every
+## build EXCEPT the player (production) build: Social QA runs in the
+## developer "Web" build (the QA build never opens Social), and those links
+## carry to=qa (the QA destination). Off in the player build: its links are
+## byte-for-byte as before (the page's own address).
+## Tests: stable_links_override (-1 = the build's rule, 0 = off, 1 = on).
+static var stable_links_override := -1
+
+
+static func stable_links() -> bool:
+	if stable_links_override != -1:
+		return stable_links_override == 1
+	return not player_build()
+
+
 ## The other developer pages (?openinglab, ?twinsprototype, ?mechlab,
 ## ?friendbench, ?vhtest): off in the player build and in the QA build.
 static func dev_pages_off() -> bool:

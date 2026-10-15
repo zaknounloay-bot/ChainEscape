@@ -17,6 +17,11 @@ const API_PUBLIC_KEY := ""
 ## so the current itch.io / Web deployment works without changes. Set it
 ## when Chain Escape gets its own domain, e.g. "https://chainescape.app/".
 const SHARE_BASE_URL := ""
+## STABLE CHALLENGE LINKS (Phase 4, BuildFlags.stable_links()): the "go"
+## Edge Function redirects <this>?challenge=<id> to the current itch.io
+## upload (its secret CE_GAME_URL; with to=qa, CE_QA_GAME_URL). Only the id
+## (and the route) are in the link.
+const STABLE_LINK_BASE := "https://ydsippgwwdzwupbyrpfw.supabase.co/functions/v1/go"
 ## Query parameter that carries the challenge id (only the id).
 const LINK_PARAM := "challenge"
 const SHARE_TITLE := "Chain Escape"

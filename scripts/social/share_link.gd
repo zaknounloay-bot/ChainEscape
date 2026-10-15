@@ -24,14 +24,31 @@ static func is_valid_id(id: String) -> bool:
 
 
 ## "<base>?challenge=<id>" (base's own query / fragment are dropped).
-## Empty string if the id is not valid.
+## Empty string if the id is not valid. A stable link (base = the "go"
+## function, Phase 4) also carries its route: "&to=qa" outside the player
+## build (route()).
 static func build(base: String, id: String) -> String:
 	if not is_valid_id(id):
 		return ""
 	var clean := base.get_slice("#", 0).get_slice("?", 0)
 	if clean == "":
 		return ""
-	return "%s?%s=%s" % [clean, SocialConfig.LINK_PARAM, id.to_lower()]
+	var url := "%s?%s=%s" % [clean, SocialConfig.LINK_PARAM, id.to_lower()]
+	if clean == SocialConfig.STABLE_LINK_BASE and route() != "":
+		url += "&to=" + route()
+	return url
+
+
+## Stable links: which destination the "go" function sends the link to -
+## "qa" outside the player build, "" (production) in it. Routing only, not
+## a security boundary. Tests: route_override ("-" = the build's rule).
+static var route_override := "-"
+
+
+static func route() -> String:
+	if route_override != "-":
+		return route_override
+	return "" if BuildFlags.player_build() else "qa"
 
 
 ## The challenge id in a URL (query or fragment), lower case; "" if there
@@ -46,11 +63,15 @@ static func parse(url: String) -> String:
 	return ""
 
 
-## Base for links made on this device: SocialConfig.SHARE_BASE_URL, else
-## the page the game runs on (Web), else "" (desktop without a base).
+## Base for links made on this device: the test override; the "go"
+## function where BuildFlags.stable_links() (Phase 4); SocialConfig.
+## SHARE_BASE_URL; else the page the game runs on (Web), else "" (desktop
+## without a base).
 static func default_base() -> String:
 	if SocialConfig.share_base_override != "":
 		return SocialConfig.share_base_override
+	if BuildFlags.stable_links():
+		return SocialConfig.STABLE_LINK_BASE
 	if SocialConfig.SHARE_BASE_URL != "":
 		return SocialConfig.SHARE_BASE_URL
 	return SocialWeb.page_base()

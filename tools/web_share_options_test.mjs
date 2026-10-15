@@ -71,7 +71,10 @@ try {
   await tapButton('Create', 'REVIEW', 300);
   let v = await waitFor(soc, (v) => v.step === 'SHARE', 'share screen', 60000);
   const url = v.share_url;
-  check(/^http:\/\/127\.0\.0\.1:\d+\/index\.html\?challenge=[0-9a-f-]{36}$/.test(url), 'challenge link (only the id): ' + url);
+  const playerBuild = (await state()).player_build;
+  const linkRe = playerBuild ? /^http:\/\/127\.0\.0\.1:\d+\/index\.html\?challenge=[0-9a-f-]{36}$/
+    : /^https:\/\/ydsippgwwdzwupbyrpfw\.supabase\.co\/functions\/v1\/go\?challenge=[0-9a-f-]{36}&to=qa$/;  // Phase 4 stable link
+  check(linkRe.test(url), `challenge link (only the id; ${playerBuild ? 'player build: the page address' : 'stable go link, to=qa'}): ` + url);
   check(v.buttons.SendWhatsApp && v.buttons.ShareChallenge && v.buttons.CopyLink && v.buttons.PreviewChallenge && v.buttons.Done,
     'CHALLENGE READY: SEND ON WHATSAPP, MORE WAYS TO SHARE, COPY LINK, PLAY / PREVIEW, DONE');
   check(v.buttons.SendWhatsApp[1] < v.buttons.ShareChallenge[1] && v.buttons.ShareChallenge[1] < v.buttons.CopyLink[1]

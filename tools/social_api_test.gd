@@ -106,6 +106,33 @@ func _test_links() -> void:
 			"https://a.b/?challenge=../../etc", "https://a.b/?challenge=" + id.replace("-", "")]:
 		_check(ShareLink.parse(bad) == "", "H: malformed link refused (%s)" % bad)
 	_check(ShareLink.build("https://a.b/", "nope") == "", "H: no link for an invalid id")
+	# Phase 4 stable links (the "go" function) and the production rule.
+	var legacy_page := "https://html-classic.itch.zone/html/19500310/index.html?v=1700000000#x"
+	var legacy := "https://html-classic.itch.zone/html/19500310/index.html?challenge=" + id
+	var go := SocialConfig.STABLE_LINK_BASE
+	var keep_override := SocialConfig.share_base_override
+	SocialConfig.share_base_override = ""
+	BuildFlags.stable_links_override = 0  # the player (production) build's rule
+	ShareLink.route_override = ""
+	_check(ShareLink.default_base() == SocialWeb.page_base() and ShareLink.build(legacy_page, id) == legacy,
+		"S: stable links off (production): the page's own address, byte-for-byte as before (%s)" % ShareLink.build(legacy_page, id))
+	BuildFlags.stable_links_override = 1
+	ShareLink.route_override = "qa"
+	var qa_link := ShareLink.build(ShareLink.default_base(), id)
+	_check(ShareLink.default_base() == go and qa_link == go + "?challenge=" + id + "&to=qa", "S: stable links on (QA): %s" % qa_link)
+	_check(ShareLink.parse(qa_link) == id, "S: a stable QA link parses to the same id")
+	_check(ShareLink.build(go, id.to_upper()) == go + "?challenge=" + id + "&to=qa", "S: the id is stored lower case, as before")
+	_check(ShareLink.build(legacy_page, id) == legacy, "S: a non-stable base never gets a route, even with stable links on")
+	ShareLink.route_override = ""
+	var prod_link := ShareLink.build(ShareLink.default_base(), id)
+	_check(prod_link == go + "?challenge=" + id and ShareLink.parse(prod_link) == id, "S: stable production route: %s (no to=)" % prod_link)
+	_check(SocialConfig.STABLE_LINK_BASE.begins_with("https://") and not SocialConfig.STABLE_LINK_BASE.contains("?"), "S: the stable base is a plain https address")
+	_check(ShareLink.parse(legacy) == id and ShareLink.parse("https://x.example/index.html#challenge=" + id) == id, "S: legacy ?challenge= / #challenge= links still parse")
+	ShareLink.route_override = "-"
+	BuildFlags.stable_links_override = -1
+	SocialConfig.share_base_override = keep_override
+	_check(BuildFlags.stable_links() == (not BuildFlags.player_build()) and ShareLink.route() == ("" if BuildFlags.player_build() else "qa"),
+		"S: build rule: stable links and to=qa everywhere except the player build (here: player build %s)" % BuildFlags.player_build())
 
 
 # --- F / G: response parsing (no network) ------------------------------------------
