@@ -142,6 +142,13 @@ func _ready() -> void:
 		PlayerProgress.mirror_key = "chain_escape_magnetlab_save"
 		PlayerProgress.beacon_key = "chain_escape_magnetlab_beacon"
 		Diagnostics.key_prefix = "chain_escape_magnetlab_"
+	elif BuildFlags.social_qa():
+		# The Social QA build: its own save, diagnostics and Web keys - never
+		# the release save (r2), even on the production build's origin.
+		PlayerProgress.default_path = "user://social_qa_progress.cfg"
+		PlayerProgress.mirror_key = "chain_escape_socialqa_save"
+		PlayerProgress.beacon_key = "chain_escape_socialqa_beacon"
+		Diagnostics.key_prefix = "chain_escape_socialqa_"
 	elif BuildFlags.player_build():
 		# The production release saves in its own fixed namespace: the
 		# pre-launch Friend Test saves are never read (one-time fresh start).
@@ -1803,7 +1810,7 @@ func publish_state() -> void:
 		"twins_complete_button": center.call(get_node("TwinsPrototypeComplete").find_children("*", "Button", true, false)[0]) if TwinsPrototype.complete_open and has_node("TwinsPrototypeComplete") else [], "bonds": board.bond_count(), "hearts": hearts, "chain": chain,
 		"undo_steps": history.size(), "undos_used": undos_used, "twin_msg": twin_wait_explained, "hint_block": hint_block,
 		"twin_ids": model.blocks.values().filter(func(b): return b.twin != "").map(func(b): return b.id) if model else [],
-		"debug_open": debug_panel.visible, "player_build": BuildFlags.player_build(), "magnet_lab": BuildFlags.magnet_lab(), "level_label": center.call(ui._level_label),
+		"debug_open": debug_panel.visible, "player_build": BuildFlags.player_build(), "magnet_lab": BuildFlags.magnet_lab(), "social_qa": BuildFlags.social_qa(), "stable_links": BuildFlags.stable_links(), "level_label": center.call(ui._level_label),
 		"opening_lab": OpeningLab.active, "experience_lab": ExperienceLab.active, "lab_qa_level": ExperienceLab.qa_level, "lab_qa": ExperienceLab.qa, "qa_build": BuildFlags.qa_build(), "tip_text": (tutorial._text if tutorial.is_showing() else "") if ExperienceLab.active or not BuildFlags.player_build() else "", "lab_complete_open": ExperienceLab.complete_open, "lesson": _lesson, "lesson_target": _lesson_target_pos(vis),
 		"lab_complete_button": center.call(get_node("ExperienceLabComplete").find_children("*", "Button", true, false)[0]) if ExperienceLab.complete_open and has_node("ExperienceLabComplete") else [],
 		"level_count": level_manager.level_count, "level_name": level.name if level else "", "max_hearts": max_hearts, "blocks_left": model.block_count(),

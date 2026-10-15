@@ -37,8 +37,8 @@ const check = (ok, msg) => { results.push(!!ok); console.log((ok ? 'PASS ' : 'FA
 const TEXT = 'I made a HARD Chain Escape for you 🔗\nCan you escape it?';
 const browser = await pw.chromium.launch({ args: ['--use-gl=angle', '--use-angle=swiftshader', '--enable-unsafe-swiftshader'] });
 
-const STABLE_LINK = /^https:\/\/ydsippgwwdzwupbyrpfw\.supabase\.co\/functions\/v1\/go\?challenge=[0-9a-f-]{36}&to=qa$/;  // Phase 4: every build but the player build
-const LEGACY_LINK = /^http:\/\/127\.0\.0\.1:\d+\/index\.html\?challenge=[0-9a-f-]{36}$/;  // the player build: the page's own address
+const STABLE_LINK = /^https:\/\/ydsippgwwdzwupbyrpfw\.supabase\.co\/functions\/v1\/go\?challenge=[0-9a-f-]{36}&to=qa$/;  // Phase 4: the Social QA build only
+const LEGACY_LINK = /^http:\/\/127\.0\.0\.1:\d+\/index\.html\?challenge=[0-9a-f-]{36}$/;  // every other build: the page's own address
 async function open(W, H, suffix) {
   const context = await browser.newContext({ viewport: { width: W, height: H }, deviceScaleFactor: 1, isMobile: true, hasTouch: true });
   await context.grantPermissions(['clipboard-read', 'clipboard-write'], { origin: `http://127.0.0.1:${PORT}` });
@@ -97,8 +97,8 @@ try {
   check(f.step === 'READY' && f.difficulty === 'hard' && !f.surprise && f.subtitle === 'HARD CHALLENGE', 'one tap -> CHALLENGE READY (HARD)');
   link = f.share_url; fp = f.fingerprint;
   const id = (link.match(/challenge=([0-9a-f-]{36})(&to=qa)?$/) || [])[1];
-  const playerBuild = (await a.state()).player_build;
-  check((playerBuild ? LEGACY_LINK : STABLE_LINK).test(link), `link carries only the id (${playerBuild ? 'player build: the page address' : 'stable go link, to=qa'}): ` + link);
+  const stable = (await a.state()).stable_links === true;
+  check((stable ? STABLE_LINK : LEGACY_LINK).test(link), `link carries only the id (${stable ? 'Social QA build: stable go link, to=qa' : 'the page address'}): ` + link);
   const stored = await (await fetch(`${API}?action=read&id=${id}`)).json();
   check(stored.challenge.challenge_type === 'friend_challenge' && stored.challenge.difficulty === 'hard', 'stored as a HARD friend_challenge');
   await sleep(600);

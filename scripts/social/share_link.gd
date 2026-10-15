@@ -25,7 +25,7 @@ static func is_valid_id(id: String) -> bool:
 
 ## "<base>?challenge=<id>" (base's own query / fragment are dropped).
 ## Empty string if the id is not valid. A stable link (base = the "go"
-## function, Phase 4) also carries its route: "&to=qa" outside the player
+## function, Phase 4) also carries its route: "&to=qa" in the Social QA
 ## build (route()).
 static func build(base: String, id: String) -> String:
 	if not is_valid_id(id):
@@ -40,15 +40,15 @@ static func build(base: String, id: String) -> String:
 
 
 ## Stable links: which destination the "go" function sends the link to -
-## "qa" outside the player build, "" (production) in it. Routing only, not
-## a security boundary. Tests: route_override ("-" = the build's rule).
+## "qa" in the Social QA build, "" (production) otherwise. Routing only,
+## not a security boundary. Tests: route_override ("-" = the build's rule).
 static var route_override := "-"
 
 
 static func route() -> String:
 	if route_override != "-":
 		return route_override
-	return "" if BuildFlags.player_build() else "qa"
+	return "qa" if BuildFlags.social_qa() else ""
 
 
 ## The challenge id in a URL (query or fragment), lower case; "" if there

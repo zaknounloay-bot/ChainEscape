@@ -131,8 +131,10 @@ func _test_links() -> void:
 	ShareLink.route_override = "-"
 	BuildFlags.stable_links_override = -1
 	SocialConfig.share_base_override = keep_override
-	_check(BuildFlags.stable_links() == (not BuildFlags.player_build()) and ShareLink.route() == ("" if BuildFlags.player_build() else "qa"),
-		"S: build rule: stable links and to=qa everywhere except the player build (here: player build %s)" % BuildFlags.player_build())
+	_check(BuildFlags.stable_links() == BuildFlags.social_qa() and ShareLink.route() == ("qa" if BuildFlags.social_qa() else ""),
+		"S: build rule: stable links and to=qa only in the Social QA build (here: social_qa %s, stable %s)" % [BuildFlags.social_qa(), BuildFlags.stable_links()])
+	_check(not BuildFlags.social_qa() and not BuildFlags.stable_links() and ShareLink.route() == "",
+		"S: this test run is not the Social QA build: no stable links, no route (page-address links)")
 
 
 # --- F / G: response parsing (no network) ------------------------------------------

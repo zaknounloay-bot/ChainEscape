@@ -12,6 +12,13 @@ class_name BuildFlags
 ## and every other developer page are never opened, with or without URL
 ## parameters.
 ##
+## SOCIAL QA BUILD (Phase 4): the "Web Social QA" export preset sets
+## "social_qa". The normal game with Social (CREATE CHALLENGE, both tracks,
+## shared links) for testing Social changes - stable challenge links first -
+## in its own save (file + Web keys, never the release save r2), with no
+## debug panel, no developer pages and no competition (nothing is sent to
+## the results pools).
+##
 ## MAGNET LAB BUILD: the "Web Magnet Lab" export preset sets "magnet_lab".
 ## That build only ever opens the Magnet mechanic lab (?mechlab=magnet,
 ## prototype) over a game that uses its own save keys - never the normal
@@ -30,10 +37,14 @@ static func magnet_lab() -> bool:
 	return OS.has_feature("magnet_lab")
 
 
-## No debug panel (F1, title taps, --debug): the player build and the
-## Magnet lab build.
+static func social_qa() -> bool:
+	return OS.has_feature("social_qa")
+
+
+## No debug panel (F1, title taps, --debug): the player build, the Magnet
+## lab build and the Social QA build.
 static func debug_off() -> bool:
-	return player_build() or magnet_lab()
+	return player_build() or magnet_lab() or social_qa()
 
 
 ## GAMEPLAY HUD, layout C, with the live TIME / MY BEST timer (approved
@@ -91,11 +102,11 @@ static func competition() -> bool:
 
 ## STABLE CHALLENGE LINKS (Phase 4): share links point at the "go" Edge
 ## Function (SocialConfig.STABLE_LINK_BASE), which redirects to the current
-## itch.io upload - so a link keeps working after a new upload. On in every
-## build EXCEPT the player (production) build: Social QA runs in the
-## developer "Web" build (the QA build never opens Social), and those links
-## carry to=qa (the QA destination). Off in the player build: its links are
-## byte-for-byte as before (the page's own address).
+## itch.io upload - so a link keeps working after a new upload. ONLY in the
+## Social QA build (explicit eligibility), whose links carry to=qa (the QA
+## destination). Every other build - the player (production) build, the
+## developer, QA and Magnet lab builds, tests - keeps the page's own
+## address, byte-for-byte as before.
 ## Tests: stable_links_override (-1 = the build's rule, 0 = off, 1 = on).
 static var stable_links_override := -1
 
@@ -103,10 +114,11 @@ static var stable_links_override := -1
 static func stable_links() -> bool:
 	if stable_links_override != -1:
 		return stable_links_override == 1
-	return not player_build()
+	return social_qa()
 
 
 ## The other developer pages (?openinglab, ?twinsprototype, ?mechlab,
-## ?friendbench, ?vhtest): off in the player build and in the QA build.
+## ?friendbench, ?vhtest): off in the player build, the QA build, the
+## Magnet lab build and the Social QA build.
 static func dev_pages_off() -> bool:
-	return player_build() or qa_build() or magnet_lab()
+	return player_build() or qa_build() or magnet_lab() or social_qa()
