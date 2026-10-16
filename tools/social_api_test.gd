@@ -19,6 +19,9 @@ var _wide: PackedByteArray
 
 
 func _ready() -> void:
+	# Plain reveal boards here (the Armor first encounter, which takes the
+	# first tap for its card, is covered by tools/reveal_mvp_test.gd).
+	SocialGenerator.force_special = "none"
 	for arg in OS.get_cmdline_user_args():
 		if arg.begins_with("--shots="):
 			shots_dir = arg.get_slice("=", 1)
@@ -182,7 +185,9 @@ func _test_create(name: String, message: String, photo: bool, difficulty: String
 	var sent_def := PuzzleDefinition.from_dict(body.get("puzzle", {}))
 	_check(sent_def != null and sent_def.fingerprint() == p.puzzle.fingerprint() and Array(sent_def.map) == Array(p.puzzle.map),
 			"D %s: the exact PuzzleDefinition was sent" % name)
-	_check(body.get("challenge_type") == "photo_message_reveal" and body.get("difficulty") == difficulty, "%s: type and difficulty sent" % name)
+	# Phase 4 MVP: no difficulty choice - every reveal is sent as "easy" (4x4, 4-6 blocks).
+	_check(body.get("challenge_type") == "photo_message_reveal" and body.get("difficulty") == "easy" and sent_def != null and sent_def.rows == 4
+			and sent_def.block_count() <= 6, "%s: type sent, difficulty always easy (a %d-block 4x4 reveal)" % [name, sent_def.block_count() if sent_def else 0])
 	_check(body.get("message", "") == message, "%s: message sent as plain text (or omitted)" % name)
 	if photo:
 		var sent := Marshalls.base64_to_raw(str(body.get("image_base64", "")))
@@ -224,7 +229,7 @@ func _test_retry_and_failures() -> void:
 	_check(not cr._gen_status.text.contains("stack") and cr._gen_title.text.begins_with("COULDN'T CREATE"), "E: friendly message, no server text")
 	await _shot("s_error")
 	var fp := cr.prepared.puzzle.fingerprint()
-	_check(cr.session.message == "Retry me" and cr.session.has_photo() and cr.session.difficulty == "medium", "L: photo, message and difficulty kept after the failure")
+	_check(cr.session.message == "Retry me" and cr.session.has_photo() and cr.session.difficulty == "easy", "L: photo and message kept after the failure")
 	# Network down: same puzzle again.
 	SocialConfig.api_url_override = "http://127.0.0.1:9/"
 	await _tap(cr._gen_retry)
@@ -277,7 +282,7 @@ func _test_read() -> void:
 	if r["ok"]:
 		var c: SharedChallenge = r["challenge"]
 		_check(c.puzzle.fingerprint() == creator_fp and _blocks(c.puzzle) == creator_blocks, "READ: identical puzzle, block by block (no regeneration)")
-		_check(c.message() == "Read me back" and c.media_url.begins_with("https://") and c.difficulty == "hard", "READ: payload + signed media URL")
+		_check(c.message() == "Read me back" and c.media_url.begins_with("https://") and c.difficulty == "easy", "READ: payload + signed media URL")
 	_check((await cr.api.read_challenge("not-an-id"))["error"] == "invalid_id", "G: malformed id refused before any request")
 	_check((await cr.api.read_challenge("3f2b8c1e-9a4d-4e7b-8c21-5d6e7f809a1b"))["error"] == "not_found", "G: unknown id -> not_found")
 	await _post("__expire", {"id": id})
@@ -303,8 +308,7 @@ func _fill(message: String, photo: bool, difficulty: String, seed_value: int) ->
 		await _tap(_cnode("Continue"))
 	else:
 		await _tap(_cnode("SkipMessage"))
-	await _tap(_cnode("Difficulty_" + difficulty))
-	await _tap(_cnode("Continue"))
+	# (`difficulty` is no longer chosen: MESSAGE goes straight to REVIEW.)
 	cr.debug_seed = seed_value
 
 

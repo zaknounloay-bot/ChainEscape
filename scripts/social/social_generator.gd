@@ -33,6 +33,36 @@ const SPECS := {
 ## sooner, after 1-15 attempts).
 const TIME_BUDGET_MS := 30000
 
+## Photo / Message Reveal (phase 4 MVP): the ONLY kind the creator makes now.
+## A short, easy puzzle: 4x4, 4-6 plain arrows, no spinners. Stored with
+## difficulty "easy" (the API contract is unchanged). SPECS above stay for
+## tests / tools that need the older, larger boards (shared before this).
+##
+## At most ONE special mechanic, for discovery, never difficulty:
+##   ARMOR - one armored block, a block already aimed at it with a clear
+##           lane (the ram is available from the first move), and the
+##           armored block's own lane clear (hit it, then it escapes).
+## PORTAL and TWINS stay off: the puzzle format / recipient parser cannot
+## carry them yet (see REVEAL_MECHANICS).
+##
+## Every reveal board is checked over EVERY reachable position: no sequence
+## of taps can ever get stuck (no dead ends, no traps).
+const REVEAL := "reveal"
+## Stored difficulty of every new reveal (the API accepts easy/medium/hard).
+const REVEAL_DIFFICULTY := "easy"
+const REVEAL_SIZE := Vector2i(4, 4)
+const REVEAL_BLOCKS := Vector2i(4, 6)
+## Special mechanics a reveal may use. Portal: its cells are not blocks, so
+## PuzzleDefinition.verify() (in every shipped build) rejects the board, and
+## the Solver it builds has no portals. Twins: the "!" suffix is parsed in
+## campaign level files only, so Social parsing rejects it. Enabling either
+## changes the puzzle format older builds read - a separate, approved step.
+const REVEAL_MECHANICS := ["armor"]
+## Share of reveals with a special mechanic (deterministic per seed).
+const SPECIAL_CHANCE := 0.4
+## Tests: "" = random by seed, "none" = never, "armor" = always.
+static var force_special := ""
+
 var difficulty := ""
 var rng_seed := 0
 var done := false
@@ -50,6 +80,8 @@ var _best: LevelData
 var _best_metrics: Dictionary = {}
 var _best_gap := INF
 var _started_ms := 0
+var _special := ""  # REVEAL: the mechanic this board must have ("" = none)
+var _rng := RandomNumberGenerator.new()
 
 
 static func profile_for(d: String) -> Dictionary:
@@ -67,6 +99,16 @@ func _init(p_difficulty: String, p_seed: int) -> void:
 	created += 1
 	difficulty = p_difficulty
 	rng_seed = p_seed
+	if difficulty == REVEAL:
+		_gen = LevelGenerator.new(rng_seed)
+		_profile = reveal_profile()
+		_max_attempts = 60
+		_rng.seed = rng_seed
+		_special = force_special if force_special != "" else ("armor" if _rng.randf() < SPECIAL_CHANCE else "none")
+		if _special == "none":
+			_special = ""
+		_started_ms = Time.get_ticks_msec()
+		return
 	if not SPECS.has(difficulty):
 		done = true
 		error = "difficulty"
@@ -86,6 +128,8 @@ func step() -> bool:
 		_finish()
 		return true
 	attempts += 1
+	if difficulty == REVEAL:
+		return _reveal_step()
 	var cand := _gen.build_candidate(_profile)
 	if cand != null:
 		var m := _gen.evaluate(cand)
@@ -113,6 +157,105 @@ func run() -> PuzzleDefinition:
 	return puzzle
 
 
+static func reveal_profile() -> Dictionary:
+	var p := LevelGenerator.profile("easy")
+	p.merge({"sizes": [REVEAL_SIZE], "blocks": REVEAL_BLOCKS, "spinners": Vector2i(0, 0), "min_depth": 2,
+		"min_start_moves": 1, "max_start_moves": 3, "max_direction_share": 0.67, "refine_steps": 0}, true)
+	return p
+
+
+## REVEAL: one candidate. True when finished.
+func _reveal_step() -> bool:
+	var cand := _gen.build_candidate(_profile)
+	if cand == null or cand.blocks.size() < REVEAL_BLOCKS.x or cand.blocks.size() > REVEAL_BLOCKS.y:
+		return false
+	if _special != "" and attempts > _max_attempts / 2:
+		_special = ""  # no board for the mechanic so far: a plain one is fine
+	if _special == "armor" and not _add_armor(cand):
+		return false
+	var m := _gen.evaluate(cand)
+	if not m["solvable"] or m["aborted"] or not trap_free(cand):
+		return false
+	var def := PuzzleDefinition.from_level(cand)
+	if FriendGenerator.is_classic_board(def):
+		return false  # never one of the campaign's boards
+	_best = cand
+	_best_metrics = m
+	_best_gap = 0.0
+	_finish()
+	return true
+
+
+## ARMOR for discovery: picks an arrow B and an arrow A aimed straight at it
+## (A's first blocker is B), so the ram is there from the first move, with
+## B's own lane clear (after the hit, B escapes at once). False if this
+## board has no such pair.
+func _add_armor(level: LevelData) -> bool:
+	var model := BoardModel.new()
+	model.setup(level.rows, level.columns, level.blocks)
+	var pairs := []
+	for a in model.blocks.values():
+		var b := model.find_blocker(a.id)
+		if b != null and model.find_blocker(b.id) == null:
+			pairs.append([a.id, b.id])
+	if pairs.is_empty():
+		return false
+	var pick: Array = pairs[_rng.randi() % pairs.size()]
+	for blk in level.blocks:
+		if blk.id == pick[1]:
+			blk.armored = true
+	return true
+
+
+## True if no sequence of taps can get stuck: every position reachable from
+## the start (escapes and rams) still has a move, until the board is empty.
+## Exhaustive - reveal boards have at most 6 blocks (a few hundred positions).
+static func trap_free(level: LevelData, limit: int = 5000) -> bool:
+	var model := BoardModel.new()
+	model.setup(level.rows, level.columns, level.blocks)
+	var seen := {}
+	var stack := [model.snapshot()]
+	while not stack.is_empty():
+		var snap: Array = stack.pop_back()
+		var parts := []
+		for b in snap:
+			parts.append("%d@%d,%d%s" % [b.id, b.cell.x, b.cell.y, "=" if b.armored else ""])
+		parts.sort()
+		var key := " ".join(parts)
+		if seen.has(key):
+			continue
+		seen[key] = true
+		if seen.size() > limit:
+			return false
+		model.restore(snap)
+		if model.is_empty():
+			continue
+		var moved := false
+		for id in model.blocks.keys():
+			var state := model.move_state(id)
+			if state != "ok" and state != "ram":
+				continue
+			moved = true
+			model.restore(snap)
+			if state == "ok":
+				model.remove(id)
+			else:
+				model.ram(id)
+			stack.append(model.snapshot())
+		if not moved:
+			return false
+	return true
+
+
+## The special mechanic a puzzle uses ("armor", or "" for none).
+static func special_of(def: PuzzleDefinition) -> String:
+	for row in def.map:
+		for tok in String(row).split(" ", false):
+			if tok.ends_with("="):
+				return "armor"
+	return ""
+
+
 func _finish() -> void:
 	done = true
 	if _best == null:
@@ -127,5 +270,5 @@ func _finish() -> void:
 	puzzle = rebuilt
 	metrics = {"difficulty": snappedf(_best_metrics["difficulty"], 0.1), "in_band": _best_gap == 0.0,
 		"blocks": _best_metrics["blocks"], "spinners": _best_metrics["spinners"], "depth": _best_metrics["depth"],
-		"decision_points": _best_metrics["decision_points"], "attempts": attempts,
+		"decision_points": _best_metrics["decision_points"], "attempts": attempts, "special": special_of(rebuilt),
 		"ms": Time.get_ticks_msec() - _started_ms}

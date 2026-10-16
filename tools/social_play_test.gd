@@ -20,6 +20,9 @@ var _tall: PackedByteArray
 
 
 func _ready() -> void:
+	# Plain reveal boards here (the Armor first encounter, which takes the
+	# first tap for its card, is covered by tools/reveal_mvp_test.gd).
+	SocialGenerator.force_special = "none"
 	for arg in OS.get_cmdline_user_args():
 		if arg.begins_with("--shots="):
 			shots_dir = arg.get_slice("=", 1)
@@ -155,8 +158,8 @@ func _with(d: Dictionary, k: String, v) -> Dictionary:
 func _test_play_matrix() -> void:
 	var cases := [
 		["A photo+message easy", "Happy Birthday!", "wide", "easy"],
-		["B photo+message medium", "Joyeux anniversaire! Très belle journée.", "tall", "medium"],
-		["C photo+message hard", "Happy Birthday أحمد", "wide", "hard"],
+		["B photo+message French", "Joyeux anniversaire! Très belle journée.", "tall", "easy"],
+		["C photo+message mixed", "Happy Birthday أحمد", "wide", "easy"],
 		["D photo only", "", "tall", "easy"],
 		["E message only", "Happy Birthday!", "", "easy"],
 		["G Hebrew", "מזל טוב! יום הולדת שמח", "", "easy"],
@@ -170,7 +173,7 @@ func _test_play_matrix() -> void:
 		await _create_and_play(cs[1], cs[2], cs[3], 100 + k)
 		var name: String = cs[0]
 		_check(play.is_active() and play.challenge.difficulty == cs[3], "%s: challenge playing" % name)
-		_check(play._title.text == "REVEAL CHALLENGE" and play._chip.text == cs[3].to_upper(), "%s: labelled REVEAL CHALLENGE / %s (no level number)" % [name, cs[3].to_upper()])
+		_check(play._title.text == "REVEAL CHALLENGE" and play._chip.text == "" and not play._chip.is_visible_in_tree(), "%s: labelled REVEAL CHALLENGE (no difficulty, no level number)" % name)
 		_check(play.model.block_count() == play.challenge.puzzle.block_count(), "%s: the board is the challenge's puzzle" % name)
 		# Phase 3b: the same free Social tools as Challenge a Friend.
 		_check(play._undo.is_visible_in_tree() and play._undo.badge_text == "3" and play._hint.is_visible_in_tree() and play._hint.text == "SHOW A MOVE"
@@ -196,7 +199,7 @@ func _test_play_matrix() -> void:
 			var sz := rv._photo.custom_minimum_size
 			_check(absf(sz.x / sz.y - img.x / img.y) < 0.02, "%s: photo aspect kept (%s)" % [name, sz])
 		if msg:
-			_check(rv._message.text == cs[1] and rv._message.get_theme_font("font") == MessageText.font(), "%s: message shown with the multilingual font" % name)
+			_check(rv._message.text == cs[1] and rv._message.get_theme_font("font") == MessageText.reveal_font(), "%s: message shown with the multilingual font (+ the larger emoji set)" % name)
 			_check(rv._message.get_visible_line_count() == rv._message.get_line_count(), "%s: the whole message is visible" % name)
 		var vis := get_viewport().get_visible_rect()
 		for n: Control in [rv._again, rv._back, rv._photo_frame, rv._message_card, rv._heading]:
@@ -229,7 +232,7 @@ func _test_real_taps() -> void:
 # --- S: leaving before the end ---------------------------------------------------------
 
 func _test_exit_before_completion() -> void:
-	await _create_and_play("Secret message", "wide", "medium", 300)
+	await _create_and_play("Secret message", "wide", "easy", 300)
 	play.play_solver_move()
 	await _wait(0.4)
 	await _tap(play._exit)
@@ -241,7 +244,7 @@ func _test_exit_before_completion() -> void:
 	await _tap(play._confirm.find_child("Leave", true, false))
 	_check(not play.is_active() and not play.reveal.visible, "LEAVE ends the challenge without revealing anything")
 	_check(cr.visible and cr.step == RevealCreator.Step.REVIEW and cr.session.message == "Secret message" and cr.session.has_photo()
-			and cr.session.difficulty == "medium", "back on the review with photo, message and difficulty kept")
+			and cr.session.difficulty == "easy", "back on the review with photo and message kept")
 	# Without a backend (local mode), CREATE again plays again, as in 0.2B.
 	await _tap(_cnode("Create"))
 	var t0 := Time.get_ticks_msec()
@@ -252,7 +255,7 @@ func _test_exit_before_completion() -> void:
 	await _tap(play._exit)
 	await _tap(play._confirm.find_child("Leave", true, false))
 	_check(cr.step == RevealCreator.Step.REVIEW, "and leaving it returns to the review again")
-	await _tap(_cnode("Back"))
+	# REVIEW -> MESSAGE -> PREVIEW -> CHOOSE -> out (no difficulty step).
 	await _tap(_cnode("Back"))
 	await _tap(_cnode("Back"))
 	await _tap(_cnode("Back"))
@@ -263,7 +266,7 @@ func _test_exit_before_completion() -> void:
 # --- R: PLAY AGAIN = the exact same puzzle ------------------------------------------
 
 func _test_play_again() -> void:
-	await _create_and_play("Again!", "", "hard", 400)
+	await _create_and_play("Again!", "", "easy", 400)
 	var fp := play.loaded_fingerprint
 	var first := _blocks(play.model)
 	await _test_hammer(fp)
@@ -402,8 +405,7 @@ func _create_and_play(message: String, photo: String, difficulty: String, seed_v
 		await _tap(_cnode("Continue"))
 	else:
 		await _tap(_cnode("SkipMessage"))
-	await _tap(_cnode("Difficulty_" + difficulty))
-	await _tap(_cnode("Continue"))
+	# Phase 4 MVP: no difficulty step (every reveal is "easy", 4x4).
 	cr.debug_seed = seed_value
 	await _tap(_cnode("Create"))
 	var t0 := Time.get_ticks_msec()
@@ -428,6 +430,11 @@ func _solve() -> void:
 		guard += 1
 		await _wait(0.1)
 	_check(play.completed, "the Solver's moves clear the board")
+	if play.challenge and play.challenge.type == SharedChallenge.TYPE_PHOTO_MESSAGE_REVEAL:
+		# Phase 4: the reveal moment (gift opening, ~1.6 s; buttons take taps once it ends).
+		var t0 := Time.get_ticks_msec()
+		while not (play.reveal.visible and play.reveal.phase == "done") and Time.get_ticks_msec() - t0 < 6000:
+			await get_tree().process_frame
 
 
 func _blocks(m: BoardModel) -> Array:

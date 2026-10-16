@@ -99,7 +99,8 @@ async function open(suffix, { hooks = true } = {}) {
       if (v.completed) break;
       await s.tap(v.next, 450);
     }
-    return s.waitFor(s.play, (v) => v.revealed, 'reveal');
+    // Phase 4: a Photo / Message reveal has a short moment (~2.4 s) first.
+    return s.waitFor(s.play, (v) => v.revealed && v.reveal_phase !== 'playing', 'reveal');
   };
   return s;
 }
@@ -144,7 +145,7 @@ try {
   await sleep(1200);
   await s.shot('web_reveal');
   pv = await s.play();
-  check(pv.cta_pulses === 1, 'R: CTA pulsed once (~1.2 s)');
+  check(pv.cta_pulses === 1, 'R: CTA pulsed once (right after the reveal moment)');
   await sleep(3000);
   pv = await s.play();
   check(pv.cta_pulses === 1, 'R: and never again');

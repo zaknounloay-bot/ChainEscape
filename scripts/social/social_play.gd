@@ -80,6 +80,15 @@ var timer := AttemptTimer.new()
 var final_time_ms := -1
 ## Times the TIME text changed (tests: once per visible second, no more).
 var time_updates := 0
+## ARMOR in a Photo / Message Reveal (phase 4): taught the first time, in
+## play - a finger on the block aimed at the shell (brackets on both) until
+## the player hits it themselves; nothing is played for them, and there is
+## no separate intro card. RESTART / Undo keep teaching until that hit;
+## after it, later Armor boards in this session play freely. Nothing is
+## saved (a recipient may never have played Chain Escape).
+static var armor_learned := false
+var lesson_armor := false
+var _tutor: TutorialHint
 ## Totals for the current challenge across every attempt (start() resets
 ## them; RESTART / PLAY AGAIN do not). Read by the development human test.
 var total_moves := 0
@@ -202,7 +211,9 @@ func start(c: SharedChallenge, p_mode: int, theme: Dictionary) -> void:
 		_title.text = "FRIEND CHALLENGE"
 	else:
 		_title.text = "SOLVE TO UNLOCK" if mode == Mode.RECIPIENT else "REVEAL CHALLENGE"
-	_chip.text = DIFFICULTY_NAMES.get(c.difficulty, "")
+	# Reveals show no difficulty (phase 4 MVP): the puzzle is the way to the
+	# surprise, not a challenge.
+	_chip.text = DIFFICULTY_NAMES.get(c.difficulty, "") if c.type == SharedChallenge.TYPE_FRIEND_CHALLENGE else ""
 	_time.add_theme_color_override("font_color", theme["text"])
 	visible = true
 	_load_puzzle()
@@ -211,6 +222,7 @@ func start(c: SharedChallenge, p_mode: int, theme: Dictionary) -> void:
 ## Leaves without revealing anything.
 func end() -> void:
 	_session += 1
+	_stop_armor_lesson()
 	visible = false
 	completed = false
 	hammer_armed = false
@@ -270,6 +282,7 @@ func _load_puzzle() -> void:
 	_set_hud_visible(true)
 	_layout()
 	_refresh_buttons()
+	_maybe_teach_armor()
 	_publish.call_deferred()
 
 
@@ -291,6 +304,9 @@ func tap_block(id: int) -> void:
 	if completed or not model.blocks.has(id):
 		return
 	board.clear_hint()
+	if lesson_armor:
+		_tutor.hide_hint()
+		_lesson_step.call_deferred()  # after this tap: point again (or done)
 	if hammer_armed:
 		_smash(id)
 		_publish.call_deferred()
@@ -304,8 +320,11 @@ func tap_block(id: int) -> void:
 		"locked":
 			board.play_locked_tap(id, model.key_blocks(id))
 			_mistake()
+		"armored":
+			board.play_hidden_tap(id)  # free, never a mistake
+			_show_message("ARMOR: another block has to hit it first")
 		_:
-			board.play_hidden_tap(id)  # hidden / gate / armored: free, never a mistake
+			board.play_hidden_tap(id)  # hidden / gate: free, never a mistake
 	_publish.call_deferred()
 
 
@@ -454,6 +473,8 @@ func _ram(id: int) -> void:
 	AudioManager.play_crack()
 	Haptics.medium()
 	_refresh_buttons()
+	if lesson_armor:
+		_finish_armor_lesson()
 
 
 func _play_mechanic_effects() -> void:
@@ -479,6 +500,8 @@ func undo() -> void:
 	board.sync_to(model.snapshot())
 	board.refresh_locks(model)
 	AudioManager.play_undo()
+	if lesson_armor:
+		_lesson_step.call_deferred()
 	_progress.set_progress(1.0 - float(model.block_count()) / maxf(_total_blocks, 1.0))
 	_show_message("")
 	_refresh_buttons()
@@ -622,6 +645,7 @@ func _on_solved() -> void:
 	reveal.show_reveal(challenge, _theme, mode, photo_pending if mode == Mode.RECIPIENT else "", final_time_ms if is_timed() else -1)
 	if back_label != "":
 		reveal._back.text = back_label
+	_publish.call_deferred()  # tests: the reveal (moment) has started
 	get_tree().create_timer(1.6).timeout.connect(_publish)
 
 
@@ -634,6 +658,64 @@ func _play_again() -> void:
 func _leave() -> void:
 	end()
 	exited.emit()
+
+
+# --- ARMOR first encounter (Photo / Message Reveal, phase 4) ---------------------
+
+func has_armor() -> bool:
+	return model.blocks.values().any(func(b): return b.armored)
+
+
+func _maybe_teach_armor() -> void:
+	_stop_armor_lesson()
+	if dev_assist or armor_learned or not has_armor():
+		return
+	lesson_armor = true
+	_lesson_step.call_deferred()
+
+
+## One beat: brackets on the shell and on the block aimed at it, the finger
+## on that block (the hit is always the key move), one short line.
+func _lesson_step() -> void:
+	if not lesson_armor or completed:
+		return
+	if not has_armor():
+		_stop_armor_lesson()  # the shell is gone another way (Hammer)
+		return
+	var marks := []
+	for b in model.blocks.values():
+		if b.armored:
+			marks.append(b.id)
+	var target := -1
+	for id in model.blocks.keys():
+		if model.move_state(id) == "ram":
+			target = id
+			break
+	var text := "Tap the marked block: it hits the ARMOR and cracks the shell"
+	if target == -1:
+		target = Solver.from_model(model).recommend_move()
+		text = "ARMOR can't escape until another block hits it"
+	else:
+		marks.append(target)
+	board.set_marks(marks)
+	if target != -1:
+		_tutor.show_hint("", Vector2.ZERO, board.block_screen_position(target), true)
+	_show_message(text)
+	_publish.call_deferred()
+
+
+func _finish_armor_lesson() -> void:
+	_stop_armor_lesson()
+	armor_learned = true
+	_show_message("Shell cracked! Now it escapes like any block")
+
+
+func _stop_armor_lesson() -> void:
+	lesson_armor = false
+	if _tutor:
+		_tutor.hide_hint(true)
+	if board:
+		board.set_marks([])
 
 
 # --- Challenge a Friend timer (phase 4) ---------------------------------------------
@@ -810,6 +892,9 @@ func _build() -> void:
 	_bottom.add_child(_hammer)
 	_restart = _bottom_button("RESTART", PillButton.Icon.RESTART, restart)
 
+	_tutor = TutorialHint.new()
+	_tutor.name = "ArmorLesson"
+	add_child(_tutor)
 	reveal = SocialReveal.new()
 	reveal.play_again.connect(_play_again)
 	reveal.done.connect(func():
@@ -820,6 +905,9 @@ func _build() -> void:
 		end()
 		create_own.emit(t))
 	reveal.photo_retry.connect(func(): photo_retry.emit())
+	reveal.moment_done.connect(func():
+		_publish.call_deferred()
+		get_tree().create_timer(0.9).timeout.connect(_publish))  # after the CTA's one pulse
 	add_child(reveal)
 	_confirm = _build_confirm()
 	add_child(_confirm)
@@ -884,6 +972,7 @@ func _set_hud_visible(on: bool) -> void:
 	for n in [_title, _chip, _progress.get_parent(), _exit, _message, _bottom]:
 		n.visible = on
 	_time.visible = on and is_timed()
+	_chip.visible = on and _chip.text != ""  # reveals: no difficulty line
 	_input.mouse_filter = Control.MOUSE_FILTER_STOP if on else Control.MOUSE_FILTER_IGNORE
 	board.visible = on
 
@@ -937,17 +1026,22 @@ func _publish() -> void:
 			_confirm.find_child("KeepPlaying", true, false), _confirm.find_child("Leave", true, false)]:
 		if b.is_visible_in_tree():
 			buttons[String(b.name)] = norm.call(b.get_global_rect().get_center())
-	WebBridge.publish("chainEscapeSocialPlay", {"active": visible, "completed": completed, "revealed": reveal.visible,
+	WebBridge.publish("chainEscapeSocialPlay", {"active": visible, "completed": completed, "revealed": reveal.visible, "reveal_phase": reveal.phase if reveal.visible else "", "reveal_skipped": reveal.skipped, "reveal_moment_ms": reveal.moment_ms,
 		"difficulty": challenge.difficulty if challenge else "", "blocks": model.block_count(), "free": free, "next": next,
 		"fingerprint": loaded_fingerprint, "plays": plays, "hammers_left": max_hammers - hammers_used,
 		"hints_left": max_hints - hints_used, "undos_left": max_undos - undos_used,
 		"tools": [max_undos, max_hints, max_hammers], "timed": is_timed(), "time_ms": timer.elapsed_ms(), "time_text": _time.text,
 		"time_visible": _time.is_visible_in_tree(), "final_time_ms": final_time_ms, "time_updates": time_updates,
 		"page_hidden": timer.page_hidden, "message_text": _message.text,
-		"reveal_time": reveal._time_value.text if reveal._time_box.visible else "",
+		"lesson": "armor" if lesson_armor else "", "armor_learned": armor_learned,
+		"lesson_finger": norm.call(_tutor._target) if lesson_armor and _tutor.visible else [],
+		"marked": board._views.keys().filter(func(v): return board._views[v].marked).map(func(v): return norm.call(board.get_global_transform_with_canvas() * board.get_view(v).home)) if visible else [],
+		"armored": model.blocks.values().filter(func(b): return b.armored).map(func(b): return norm.call(board.get_global_transform_with_canvas() * board.get_view(b.id).home)) if visible and not completed else [],
+		"reveal_time": reveal._time_value.text if reveal._time_box.visible else "", "reveal_heading_text": reveal._heading.text if reveal.visible else "",
 		"rects": {"time": rect.call(_time), "chip": rect.call(_chip), "title": rect.call(_title), "exit": rect.call(_exit),
 			"progress": rect.call(_progress), "bottom": rect.call(_bottom), "board": norm_rect.call(board_area()),
-			"reveal_time": rect.call(reveal._time_box), "reveal_heading": rect.call(reveal._heading)}, "hammer_armed": hammer_armed, "confirm": _confirm.visible, "buttons": buttons,
+			"reveal_time": rect.call(reveal._time_box), "reveal_heading": rect.call(reveal._heading),
+			"reveal_column": rect.call(reveal._column), "reveal_photo": rect.call(reveal._photo_frame), "reveal_message": rect.call(reveal._message_card)}, "hammer_armed": hammer_armed, "confirm": _confirm.visible, "buttons": buttons,
 		"has_photo": reveal._photo_frame.visible and reveal.visible, "photo_state": reveal.photo_state if reveal.visible else "",
 		"cta_pulses": reveal.cta_pulses if reveal.visible else 0, "mode": "recipient" if mode == Mode.RECIPIENT else "creator",
 		"magnets": board.magnet_links(), "pulls": total_pulls,
@@ -992,6 +1086,8 @@ func _layout() -> void:
 	_message.offset_left = 30.0
 	_message.offset_right = -30.0
 	board.layout(board_area())
+	if lesson_armor:
+		_lesson_step.call_deferred()  # the finger follows the board
 
 
 func board_area() -> Rect2:

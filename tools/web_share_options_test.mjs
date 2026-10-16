@@ -60,14 +60,13 @@ try {
   await page.goto(`http://127.0.0.1:${PORT}/index.html`);
   await waitFor(state, (v) => v.title_open, 'title', 120000); await sleep(1500);
   check(await page.evaluate(() => !document.getElementById('ce-sharetest')), 'no ?sharetest dev panel in normal play');
-  // CREATE CHALLENGE -> PHOTO / MESSAGE REVEAL -> skip photo -> message -> easy -> create.
+  // CREATE CHALLENGE -> PHOTO / MESSAGE REVEAL -> skip photo -> message -> create (no difficulty step).
   await tapAt([0.5, 0.7182], 1000); await tapAt([0.5, 0.4121], 900);
   await tapButton('SkipPhoto', 'CHOOSE', 900);
   await tapButton('MessageCard', 'MESSAGE', 250); await page.waitForSelector('#ce-message-text', { timeout: 3000 });
   await page.fill('#ce-message-text', 'Share options test'); await sleep(450); await page.click('#ce-message-done');
   await waitFor(soc, (v) => v.draft === 'Share options test', 'draft'); await sleep(400);
   await tapButton('Continue', 'MESSAGE', 900);
-  await tapButton('Difficulty_easy', 'DIFFICULTY', 600); await tapButton('Continue', 'DIFFICULTY', 900);
   await tapButton('Create', 'REVIEW', 300);
   let v = await waitFor(soc, (v) => v.step === 'SHARE', 'share screen', 60000);
   const url = v.share_url;

@@ -175,6 +175,7 @@ try {
   pv = await b.solve();
   check(pv.final_time_ms > 0 && pv.reveal_time !== '' && pv.time_ms === pv.final_time_ms, `YOU ESCAPED! shows the time (${pv.reveal_time}, ${pv.final_time_ms} ms)`);
   check(pv.buttons.ChallengeAFriend && pv.buttons.PlayAgain && pv.buttons.BackToCreate && b.onScreen(pv.buttons), 'YOU ESCAPED! + CHALLENGE A FRIEND + PLAY AGAIN + MAIN MENU');
+  check(pv.reveal_heading_text === 'YOU ESCAPED!', `friend heading unchanged: ${pv.reveal_heading_text}`);
   await b.shot('W4_escaped');
   await b.tap(pv.buttons.PlayAgain, 1200);
   pv = await b.waitFor(b.play, (v) => v.active && !v.completed, 'again');

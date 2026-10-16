@@ -198,29 +198,15 @@ func _test_reveal_creator(social: SocialScreen) -> void:
 	await _frames(2)  # TextEdit emits text_changed deferred
 	await _shot("05_reveal_message")
 	await _tap(_cnode(cr, "Continue"))
-	_check(cr.step == RevealCreator.Step.DIFFICULTY and cr.session.message == "Happy birthday!\nSee you soon", "CONTINUE keeps the message and opens CHOOSE DIFFICULTY")
-	# Difficulty.
+	# Phase 4 MVP: no difficulty step - MESSAGE goes straight to REVIEW.
+	_check(cr.step == RevealCreator.Step.REVIEW and cr.session.message == "Happy birthday!\nSee you soon" and cr.session.difficulty == "easy",
+			"CONTINUE keeps the message and opens READY TO CREATE? (no difficulty step)")
 	await _wait(0.3)
-	_check_step(cr, ["Difficulty_easy", "Difficulty_medium", "Difficulty_hard", "Continue", "Back"])
-	_check(cr._difficulty_continue.disabled, "CONTINUE waits for a difficulty")
-	await _tap(_cnode(cr, "Difficulty_medium"))
-	_check(cr.session.difficulty == "medium" and not cr._difficulty_continue.disabled, "MEDIUM selected")
-	await _shot("06_reveal_difficulty")
-	await _tap(_cnode(cr, "Continue"))
-	_check(cr.step == RevealCreator.Step.REVIEW, "CONTINUE opens READY TO CREATE?")
-	await _wait(0.3)
-	_check_step(cr, ["ReviewPhoto", "ReviewMessage", "ReviewDifficulty", "EditPhoto", "EditMessage", "EditDifficulty", "Create", "Back"])
-	_check(cr._review_message.text.contains("Happy birthday!") and cr._review_difficulty.text.ends_with("MEDIUM") and not cr._review_create.disabled,
-			"REVIEW shows the photo, message and difficulty")
+	_check_step(cr, ["ReviewPhoto", "ReviewMessage", "EditPhoto", "EditMessage", "Create", "Back"])
+	_check(cr._review_message.text.contains("Happy birthday!") and not cr._review_create.disabled and cr.find_child("ReviewDifficulty", true, false) == null,
+			"REVIEW shows the photo and message, no difficulty")
 	_check(cr._review_message.size.y >= 50.0, "REVIEW message is actually visible (2 lines, height %d)" % cr._review_message.size.y)
 	await _shot("07_reveal_review")
-	# Edit difficulty: photo and message stay.
-	await _tap(_cnode(cr, "EditDifficulty"))
-	_check(cr.step == RevealCreator.Step.DIFFICULTY, "EDIT DIFFICULTY opens the difficulty step")
-	await _tap(_cnode(cr, "Difficulty_hard"))
-	await _tap(_cnode(cr, "Continue"))
-	_check(cr.step == RevealCreator.Step.REVIEW and cr.session.difficulty == "hard" and cr.session.has_photo()
-			and cr.session.message == "Happy birthday!\nSee you soon", "editing the difficulty keeps photo and message")
 	# Edit message: whitespace only = no message; photo and difficulty stay.
 	await _tap(_cnode(cr, "EditMessage"))
 	_check(cr.step == RevealCreator.Step.MESSAGE and cr._message_edit.text == "Happy birthday!\nSee you soon", "EDIT MESSAGE opens with the current message")
@@ -229,15 +215,15 @@ func _test_reveal_creator(social: SocialScreen) -> void:
 	await _frames(2)  # TextEdit emits text_changed deferred
 	await _tap(_cnode(cr, "Continue"))
 	_check(cr.step == RevealCreator.Step.REVIEW and not cr.session.has_message() and cr._review_message.text == "No message"
-			and cr.session.has_photo() and cr.session.difficulty == "hard", "a whitespace-only message counts as no message; the rest stays")
+			and cr.session.has_photo(), "a whitespace-only message counts as no message; the photo stays")
 	# Edit photo: message and difficulty stay.
 	await _tap(_cnode(cr, "EditPhoto"))
 	_check(cr.step == RevealCreator.Step.PREVIEW and cr._pending.image_size == Vector2i(1600, 900), "EDIT PHOTO shows the current photo")
 	cr.receive_photo(tall)
 	await _wait(0.3)
 	await _tap(_cnode(cr, "UsePhoto"))
-	_check(cr.step == RevealCreator.Step.REVIEW and cr.session.image_size == Vector2i(900, 1600) and cr.session.difficulty == "hard",
-			"choosing another photo from REVIEW keeps the difficulty")
+	_check(cr.step == RevealCreator.Step.REVIEW and cr.session.image_size == Vector2i(900, 1600),
+			"choosing another photo from REVIEW returns to REVIEW")
 	# Worst case on REVIEW: portrait photo + a full 200-character message.
 	await _tap(_cnode(cr, "EditMessage"))
 	cr._message_edit.text = ""
@@ -246,14 +232,12 @@ func _test_reveal_creator(social: SocialScreen) -> void:
 	await _tap(_cnode(cr, "Continue"))
 	await _wait(0.3)
 	_check(cr.step == RevealCreator.Step.REVIEW and cr.session.message.length() == 200, "a 200-character message reaches REVIEW")
-	_check_step(cr, ["ReviewPhoto", "ReviewMessage", "ReviewDifficulty", "EditPhoto", "EditMessage", "EditDifficulty", "Create", "Back"])
+	_check_step(cr, ["ReviewPhoto", "ReviewMessage", "EditPhoto", "EditMessage", "Create", "Back"])
 	_check(cr._review_message.get_visible_line_count() == cr._review_message.get_line_count(), "the whole 200-character message is shown on REVIEW (%d lines)" % cr._review_message.get_line_count())
 	await _shot("07b_reveal_review_full")
 	# Back through the steps, then message only (skip the photo).
 	await _tap(_cnode(cr, "Back"))
-	_check(cr.step == RevealCreator.Step.DIFFICULTY, "BACK: REVIEW -> DIFFICULTY")
-	await _tap(_cnode(cr, "Back"))
-	_check(cr.step == RevealCreator.Step.MESSAGE, "BACK: DIFFICULTY -> MESSAGE")
+	_check(cr.step == RevealCreator.Step.MESSAGE, "BACK: REVIEW -> MESSAGE")
 	await _tap(_cnode(cr, "Back"))
 	_check(cr.step == RevealCreator.Step.PREVIEW, "BACK: MESSAGE -> PREVIEW (a photo is chosen)")
 	await _tap(_cnode(cr, "Back"))
@@ -269,12 +253,10 @@ func _test_reveal_creator(social: SocialScreen) -> void:
 	_check(not cr._message_continue.disabled, "CONTINUE enabled once there is a message")
 	await _shot("08_reveal_message_only")
 	await _tap(_cnode(cr, "Continue"))
-	_check(cr.step == RevealCreator.Step.DIFFICULTY and cr.session.difficulty == "hard", "difficulty kept after changing the photo choice")
-	await _tap(_cnode(cr, "Continue"))
 	_check(cr.step == RevealCreator.Step.REVIEW and cr._review_no_photo.visible and not cr._review_photo.visible, "REVIEW says No photo")
 	await _shot("09_reveal_review_message_only")
 	var d := cr.session.to_dict()
-	_check(d["challenge_type"] == "photo_message_reveal" and d["image"] == null and d["message"] == "Meet me at the park at 5" and d["difficulty"] == "hard"
+	_check(d["challenge_type"] == "photo_message_reveal" and d["image"] == null and d["message"] == "Meet me at the park at 5" and d["difficulty"] == "easy"
 			and not d.has("id") and not d.has("url"), "session data ready for a future SharedChallenge (no id, no url)")
 	# 0.2B: CREATE generates the exact puzzle and plays it; solving reveals.
 	cr.debug_seed = 20260930
@@ -284,17 +266,18 @@ func _test_reveal_creator(social: SocialScreen) -> void:
 	var t0 := Time.get_ticks_msec()
 	while not play.is_active() and Time.get_ticks_msec() - t0 < 20000:
 		await _frames(1)
-	_check(play.is_active() and play.challenge.difficulty == "hard" and play.challenge.puzzle.verify(), "a verified HARD challenge is playing")
+	_check(play.is_active() and play.challenge.difficulty == "easy" and play.challenge.puzzle.verify() and play.challenge.puzzle.rows == 4
+			and play.challenge.puzzle.block_count() <= 6, "a verified short reveal puzzle is playing (4x4, %d blocks)" % play.challenge.puzzle.block_count())
 	await _wait(0.6)
 	await _shot("10_reveal_play")
 	while play.play_solver_move():
 		await _wait(0.12)
-	await _wait(2.2)
+	await _wait(3.6)  # the reveal moment (about 2.4 s) and the CTA pulse
 	_check(play.reveal.visible and not play.reveal._photo_frame.visible and play.reveal._message.text == "Meet me at the park at 5",
 			"solving reveals the message (message only: no photo frame)")
 	await _shot("11_reveal_message_only")
 	await _tap(play.reveal._back)
-	_check(social.page == SocialScreen.Page.CHOICE and not play.is_active() and not cr.visible and not cr.session.has_message() and cr.session.difficulty == "",
+	_check(social.page == SocialScreen.Page.CHOICE and not play.is_active() and not cr.visible and not cr.session.has_message() and cr.session.difficulty == "easy",
 			"BACK TO CREATE CHALLENGE returns to the choice screen and discards the session")
 	# Re-enter: a fresh session; BACK from CHOOSE PHOTO leaves the flow.
 	await _tap(_page_node(social, SocialScreen.Page.CHOICE, "Card_Photo"))
@@ -340,7 +323,8 @@ func _test_multilingual() -> void:
 	plain.allow_system_fallback = false
 	_check(_shape(TextServerManager.get_primary_interface(), plain, "كل عام وأنت بخير")["missing"] > 0,
 			"without the fallbacks, Arabic is missing on the Web font (the reported bug)")
-	_check(web_font.fallbacks.size() == 2, "message font carries the Arabic + Hebrew fallbacks")
+	_check(web_font.fallbacks.size() == MessageText.FALLBACKS.size() and MessageText.FALLBACKS[0].contains("Arabic") and MessageText.FALLBACKS[1].contains("Hebrew"),
+			"message font carries the Arabic + Hebrew fallbacks (then the emoji subset)")
 	_check(Palette.font(800).fallbacks.is_empty(), "the shared UI font is unchanged (no fallbacks added)")
 	for key in MESSAGES:
 		var text: String = MESSAGES[key][0]
@@ -376,7 +360,7 @@ func _shape(ts: TextServer, f: Font, text: String) -> Dictionary:
 
 func _test_session_rules() -> void:
 	var s := CreatorSession.new()
-	_check(s.validate().has("nothing_to_reveal") and s.validate().has("difficulty"), "an empty session cannot be created")
+	_check(s.validate() == ["nothing_to_reveal"] and s.difficulty == "easy", "an empty session cannot be created (nothing to reveal; always \"easy\")")
 	s.set_message("   \n\t  ")
 	_check(not s.has_message(), "whitespace-only message = no message")
 	s.set_message("y".repeat(260))
@@ -384,9 +368,8 @@ func _test_session_rules() -> void:
 	s.set_message("a\n\n\n\nb\nc\nd\ne\nf\ng")
 	_check(s.message == "a\n\nb\nc\nd\ne", "blank runs collapse, at most 6 lines (%s)" % s.message.c_escape())
 	s.set_difficulty("impossible")
-	_check(s.difficulty == "", "unknown difficulty ignored")
-	s.set_difficulty("easy")
-	_check(s.is_valid(), "message + difficulty is a valid reveal")
+	_check(s.difficulty == "easy", "unknown difficulty ignored")
+	_check(s.is_valid(), "a message alone is a valid reveal")
 	_check(not s.set_photo_jpeg(PackedByteArray([0, 1])), "bad JPEG bytes refused")
 
 

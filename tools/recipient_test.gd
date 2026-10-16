@@ -31,6 +31,9 @@ var _first_social := false
 
 
 func _ready() -> void:
+	# Plain reveal boards here (the Armor first encounter, which takes the
+	# first tap for its card, is covered by tools/reveal_mvp_test.gd).
+	SocialGenerator.force_special = "none"
 	for arg in OS.get_cmdline_user_args():
 		if arg.begins_with("--shots="):
 			shots_dir = arg.get_slice("=", 1)
@@ -142,8 +145,8 @@ func _test_launch_valid(info: Dictionary) -> void:
 		"G: exact serialized board reconstructed, block by block")
 	# I: nothing revealed on the landing.
 	var shown := _visible_text(social)
-	_check(shown.contains("SOMEONE SENT YOU") and shown.contains("Solve it to unlock your surprise.") and shown.contains("Difficulty: MEDIUM"),
-		"landing copy + difficulty")
+	_check(shown.contains("SOMEONE SENT YOU") and shown.contains("Solve it to unlock your surprise.") and not shown.contains("Difficulty"),
+		"landing copy, no difficulty (a reveal is a gift, phase 4)")
 	_check(not shown.contains("Happy birthday") and not _any_texture_visible(social) and not play.visible,
 		"I: landing shows no message, no photo, no reveal")
 	await _until(func(): return rf.photo_state == "ready", 10.0)
@@ -175,10 +178,12 @@ func _test_launch_valid(info: Dictionary) -> void:
 		"CREATE YOUR OWN + its line on the reveal")
 	_check(play.reveal._back.text == "MAIN MENU" and play.reveal._again.is_visible_in_tree(), "PLAY AGAIN + MAIN MENU")
 	_check(_above_fold(play.reveal), "everything on the reveal fits on screen (no scrolling)")
-	_check(play.reveal.cta_pulses == 0 and play.reveal._cta.modulate.a < 0.9, "R: CTA quieter while the reveal plays")
+	# Phase 4: CREATE YOUR OWN SURPRISE comes after the reveal moment (buttons
+	# inactive until then), with one gentle pulse.
+	_check(play.reveal.phase == "done" and play.reveal._cta.mouse_filter == Control.MOUSE_FILTER_STOP, "R: CTA active once the reveal moment ends")
 	await _shot("L_reveal_photo_message")
 	await _wait(1.6)
-	_check(play.reveal.cta_pulses == 1, "R: one pulse ~1.2 s in")
+	_check(play.reveal.cta_pulses == 1, "R: one pulse right after the reveal moment")
 	await _wait(3.0)
 	_check(play.reveal.cta_pulses == 1 and is_equal_approx(play.reveal._cta.modulate.a, 1.0) and play.reveal._cta.scale.is_equal_approx(Vector2.ONE),
 		"R: pulsed once only, then still")
@@ -198,7 +203,7 @@ func _test_launch_valid(info: Dictionary) -> void:
 func _test_reveal_photo_only(info: Dictionary) -> void:
 	await _new_game(info["id"], false)
 	await _until(func(): return rf.state == RecipientFlow.State.LANDING and rf.photo_state == "ready", 10.0)
-	_check(_visible_text(social).contains("Difficulty: HARD"), "hard difficulty on the landing")
+	_check(not _visible_text(social).contains("Difficulty"), "an older HARD reveal: no difficulty on the landing")
 	await _tap(_rnode("Play"))
 	await _solve()
 	_check(play.reveal._photo_frame.visible and not play.reveal._message_card.visible and not play.reveal._emblem.visible,
@@ -213,8 +218,10 @@ func _test_reveal_message_only(info: Dictionary) -> void:
 	_check(rf.photo_state == "none", "message-only: no photo download")
 	await _tap(_rnode("Play"))
 	await _solve()
+	# Phase 4 gift opening: a reveal's focal point is the gift (gone once it
+	# opens), no longer the purple emblem (Challenge a Friend keeps that).
 	_check(not play.reveal._photo_frame.visible and not play.reveal._photo_status.visible and play.reveal._message.text == MESSAGE_RTL
-		and play.reveal._emblem.visible, "N: message-only reveal (Arabic text kept as written)")
+		and not play.reveal._emblem.visible, "N: message-only reveal (Arabic text kept as written)")
 	_check(play.reveal._message.text_direction == Control.TEXT_DIRECTION_AUTO, "N: message keeps automatic RTL/LTR direction")
 	await _shot("N_reveal_message_only")
 
@@ -251,7 +258,7 @@ func _test_photo_refresh_and_failure(info: Dictionary) -> void:
 		"O: TRY AGAIN -> photo appears in the reveal")
 	_check(_above_fold(play.reveal), "O: still fits")
 	# Slow: still downloading when solved -> loading placeholder, then the photo.
-	await _post("__media", {"delay": 4.0})
+	await _post("__media", {"delay": 8.0})  # still loading after the reveal moment
 	await _new_game(info["id"], false)
 	await _until(func(): return rf.state == RecipientFlow.State.LANDING, 10.0)
 	await _tap(_rnode("Play"))
@@ -403,9 +410,7 @@ func _test_create_your_own(info: Dictionary) -> void:
 	await _wait(0.3)
 	cr._message_edit.text = "Your turn!"
 	await _frames(2)
-	await _tap(cr._steps[cr.step].find_child("Continue", true, false))
-	await _tap(cr._steps[cr.step].find_child("Difficulty_easy", true, false))
-	await _tap(cr._steps[cr.step].find_child("Continue", true, false))
+	await _tap(cr._steps[cr.step].find_child("Continue", true, false))  # MESSAGE -> REVIEW (no difficulty step)
 	cr.debug_seed = 31
 	await _tap(cr._steps[cr.step].find_child("Create", true, false))
 	await _until(func(): return cr.step == RevealCreator.Step.SHARE, 25.0)
@@ -501,6 +506,9 @@ func _solve() -> void:
 		await _wait(0.12)
 		guard += 1
 	await _until(func(): return play.reveal.visible, 5.0)
+	# Phase 4: the reveal moment (gift opening, ~1.6 s; its buttons take taps once it ends),
+	# then CREATE YOUR OWN SURPRISE's one pulse.
+	await _until(func(): return play.reveal.phase == "done", 5.0)
 	await _wait(0.9)
 
 

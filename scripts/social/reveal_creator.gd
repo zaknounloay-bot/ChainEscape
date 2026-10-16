@@ -2,9 +2,11 @@ class_name RevealCreator
 extends Control
 ## Social MVP 0.2A/0.2B: creator side of PHOTO / MESSAGE REVEAL.
 ##
-##   CHOOSE PHOTO -> PREVIEW -> MESSAGE -> DIFFICULTY -> REVIEW -> GENERATING
+##   CHOOSE PHOTO -> PREVIEW -> MESSAGE -> REVIEW -> GENERATING
 ##
-## Collects a CreatorSession (photo and/or message, difficulty) in memory.
+## Collects a CreatorSession (photo and/or message) in memory. There is no
+## difficulty choice (phase 4 MVP): every reveal is a short, easy 4x4
+## puzzle (SocialGenerator.REVEAL), stored as "easy".
 ## CREATE CHALLENGE (0.2B) generates and verifies the exact puzzle
 ## (SocialGenerator), wraps it in a SharedChallenge and asks SocialScreen to
 ## play it (play_requested). Nothing is saved, uploaded or shared. Hosted
@@ -19,21 +21,17 @@ extends Control
 signal exit_requested  # leave the flow, back to the Social choice screen
 signal play_requested(challenge: SharedChallenge)  # a verified challenge is ready
 
-enum Step { CHOOSE, PREVIEW, MESSAGE, DIFFICULTY, REVIEW, GENERATING, SHARE }
+enum Step { CHOOSE, PREVIEW, MESSAGE, REVIEW, GENERATING, SHARE }
 
 const ACCENT := Color("#C645E6")  # Photo / Message Reveal identity (0.1)
 const TINT := Color("#EBCBF7")
 const SOFT_BG := Color("#F8EEFC")
 const ERROR := Color("#D0344F")
 const WIDTH := 580.0
+## Shown (never blocking) when the message has emoji the game can't draw.
+const EMOJI_NOTE := "Some emoji in your message can't be shown in the game yet - they may appear as empty boxes."
 const MAX_EDGE := 1080  # longest edge of the local working copy (desktop)
 const POLL := 0.2
-const DIFFICULTY_TEXT := {
-	"easy": ["EASY", "A quick challenge."],
-	"medium": ["MEDIUM", "A little more thinking."],
-	"hard": ["HARD", "Make them earn the reveal."],
-}
-
 var session := CreatorSession.new()
 var step: int = Step.CHOOSE
 ## Editing one field from REVIEW: finishing that step returns to REVIEW.
@@ -61,12 +59,9 @@ var _message_count: Label
 var _message_note: Label
 var _message_continue: PillButton
 var _message_skip: PillButton
-var _difficulty_buttons: Dictionary = {}  # id -> PillButton
-var _difficulty_continue: PillButton
 var _review_photo: TextureRect
 var _review_no_photo: Label
 var _review_message: Label
-var _review_difficulty: Label
 var _review_status: Label
 var _review_create: PillButton
 var _gen_blocks: Array[Node2D] = []
@@ -84,7 +79,7 @@ var _gen_preview: PillButton
 
 # 0.2C: the generated challenge is kept until the creator leaves, so a
 # failed upload is retried with the SAME puzzle; it is only rebuilt when
-# the creator changes the photo, message or difficulty.
+# the creator changes the photo or message.
 var prepared: SharedChallenge
 var _prepared_sig := ""
 var api: SocialApi
@@ -109,7 +104,6 @@ func _ready() -> void:
 	_steps[Step.CHOOSE] = _build_choose()
 	_steps[Step.PREVIEW] = _build_preview()
 	_steps[Step.MESSAGE] = _build_message()
-	_steps[Step.DIFFICULTY] = _build_difficulty()
 	_steps[Step.REVIEW] = _build_review()
 	_steps[Step.GENERATING] = _build_generating()
 	_steps[Step.SHARE] = _build_share()
@@ -147,7 +141,7 @@ func resume_after_play() -> void:
 		resume_review()
 
 
-## Leave the flow: the session (photo, message, difficulty) is discarded.
+## Leave the flow: the session (photo, message) is discarded.
 func reset() -> void:
 	session = CreatorSession.new()
 	_pending = null
@@ -183,8 +177,6 @@ func show_step(s: int) -> void:
 			_refresh_preview()
 		Step.MESSAGE:
 			_refresh_message()
-		Step.DIFFICULTY:
-			_refresh_difficulty()
 		Step.REVIEW:
 			_refresh_review()
 		Step.GENERATING:
@@ -227,14 +219,9 @@ func _back() -> void:
 				show_step(Step.PREVIEW)
 			else:
 				show_step(Step.CHOOSE)
-		Step.DIFFICULTY:
-			if editing:
-				_finish_edit()
-			else:
-				_draft = session.message
-				show_step(Step.MESSAGE)
 		Step.REVIEW:
-			show_step(Step.DIFFICULTY)
+			_draft = session.message
+			show_step(Step.MESSAGE)
 		Step.GENERATING:
 			if uploading:
 				return  # wait for the reply (no double submission)
@@ -272,15 +259,13 @@ func _edit(s: int) -> void:
 		Step.MESSAGE:
 			_draft = session.message
 			show_step(Step.MESSAGE)
-		Step.DIFFICULTY:
-			show_step(Step.DIFFICULTY)
 
 
 # --- Step 1: choose photo ----------------------------------------------------------
 
 func _build_choose() -> VBoxContainer:
 	var box := _column()
-	box.add_child(_step_label("STEP 1 OF 4  ·  PHOTO"))
+	box.add_child(_step_label("STEP 1 OF 3  ·  PHOTO"))
 	box.add_child(_heading("PHOTO / MESSAGE\nREVEAL"))
 	box.add_child(_soft("Hide something special behind a\nChain Escape challenge.", 26))
 	var glyph := PhotoGlyph.new()
@@ -369,7 +354,7 @@ func _set_status(text: String) -> void:
 
 func _build_preview() -> VBoxContainer:
 	var box := _column()
-	box.add_child(_step_label("STEP 1 OF 4  ·  PHOTO"))
+	box.add_child(_step_label("STEP 1 OF 3  ·  PHOTO"))
 	box.add_child(_heading("YOUR PHOTO"))
 	box.add_child(_soft("They'll see it when they escape.", 26))
 	_preview_frame = PanelContainer.new()
@@ -439,7 +424,7 @@ func _copy_photo(from: CreatorSession) -> CreatorSession:
 
 func _build_message() -> VBoxContainer:
 	var box := _column()
-	box.add_child(_step_label("STEP 2 OF 4  ·  MESSAGE"))
+	box.add_child(_step_label("STEP 2 OF 3  ·  MESSAGE"))
 	box.add_child(_heading("ADD A MESSAGE"))
 	box.add_child(_soft("Add something they'll see when they escape.", 24))
 	if _web:
@@ -453,7 +438,7 @@ func _build_message() -> VBoxContainer:
 		card.custom_minimum_size = Vector2(WIDTH, 260)
 		card.pressed.connect(func(): AudioManager.play_ui_tap())
 		_message_text = _label("", 28, Palette.TEXT, 800)
-		MessageText.apply(_message_text)  # any language, RTL / LTR
+		MessageText.apply(_message_text, 800, true)  # any language, RTL / LTR
 		_message_text.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 		_message_text.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
 		_message_text.max_lines_visible = CreatorSession.MESSAGE_MAX_LINES
@@ -497,7 +482,7 @@ func _build_message() -> VBoxContainer:
 		if editing:
 			_finish_edit()
 		else:
-			show_step(Step.DIFFICULTY))
+			show_step(Step.REVIEW))
 	box.add_child(_message_continue)
 	_message_skip = _secondary("SKIP", "SkipMessage")
 	_message_skip.pressed.connect(func():
@@ -507,7 +492,7 @@ func _build_message() -> VBoxContainer:
 		if editing:
 			_finish_edit()
 		else:
-			show_step(Step.DIFFICULTY))
+			show_step(Step.REVIEW))
 	box.add_child(_message_skip)
 	_message_note = _status_label()
 	_message_note.add_theme_color_override("font_color", Palette.TEXT_SOFT)
@@ -555,91 +540,23 @@ func _refresh_message_text() -> void:
 
 func _update_message_state() -> void:
 	var clean := CreatorSession.clean_message(_draft)
-	_message_count.text = "%d / %d" % [_draft.length(), CreatorSession.MESSAGE_MAX]
+	_message_count.text = "%d / %d" % [CreatorSession.utf16_length(_draft), CreatorSession.MESSAGE_MAX]
 	var photo := session.has_photo()
 	# Message only (no photo): the message is what gets revealed.
 	_message_skip.visible = photo
 	_message_continue.disabled = not photo and clean == ""
-	_show_status(_message_note, "" if photo else "No photo, so write the message they'll reveal.")
+	var note := "" if photo else "No photo, so write the message they'll reveal."
+	if not MessageText.missing_emoji(clean).is_empty():
+		note = EMOJI_NOTE  # boxes would surprise them more than this note
+	_show_status(_message_note, note)
 
 
-# --- Step 3: difficulty ------------------------------------------------------------
-
-func _build_difficulty() -> VBoxContainer:
-	var box := _column()
-	box.add_child(_step_label("STEP 3 OF 4  ·  DIFFICULTY"))
-	box.add_child(_heading("CHOOSE DIFFICULTY"))
-	box.add_child(_soft("How hard should the escape be?", 26))
-	for i in CreatorSession.DIFFICULTIES.size():
-		var id: String = CreatorSession.DIFFICULTIES[i]
-		var b := PillButton.new("", PillButton.Icon.NONE, Palette.WHITE, Palette.TEXT, 30)
-		b.name = "Difficulty_%s" % id
-		b.custom_minimum_size = Vector2(WIDTH, 132)
-		b.pressed.connect(func():
-			AudioManager.play_ui_tap()
-			session.set_difficulty(id)
-			_refresh_difficulty())
-		var content := VBoxContainer.new()
-		content.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
-		content.alignment = BoxContainer.ALIGNMENT_CENTER
-		content.add_theme_constant_override("separation", 6)
-		content.mouse_filter = Control.MOUSE_FILTER_IGNORE
-		b.add_child(content)
-		var pips := HBoxContainer.new()
-		pips.alignment = BoxContainer.ALIGNMENT_CENTER
-		pips.add_theme_constant_override("separation", 8)
-		pips.mouse_filter = Control.MOUSE_FILTER_IGNORE
-		for k in 3:
-			var slot := Control.new()
-			slot.custom_minimum_size = Vector2(20, 20)
-			slot.mouse_filter = Control.MOUSE_FILTER_IGNORE
-			var pip := SocialScreen.EscapeBlock.new()
-			pip.face = ACCENT if k <= i else TINT
-			pip.half = 10.0
-			pip.dir = Vector2.UP
-			pip.position = Vector2(10, 10)
-			slot.add_child(pip)
-			pips.add_child(slot)
-		content.add_child(pips)
-		content.add_child(_label(DIFFICULTY_TEXT[id][0], 30, Palette.TEXT, 900))
-		content.add_child(_label(DIFFICULTY_TEXT[id][1], 22, Palette.TEXT_SOFT, 700))
-		box.add_child(b)
-		_difficulty_buttons[id] = b
-	_difficulty_continue = _primary("CONTINUE", "Continue")
-	_difficulty_continue.pressed.connect(func():
-		AudioManager.play_ui_tap()
-		if session.difficulty == "":
-			return
-		if editing:
-			_finish_edit()
-		else:
-			show_step(Step.REVIEW))
-	box.add_child(_difficulty_continue)
-	box.add_child(_back_button())
-	return box
-
-
-func _refresh_difficulty() -> void:
-	_update_zones.call_deferred(1)
-	for id in _difficulty_buttons:
-		var b: PillButton = _difficulty_buttons[id]
-		var on: bool = session.difficulty == id
-		var bg := SOFT_BG if on else Palette.WHITE
-		var border := ACCENT if on else TINT
-		var w := 5 if on else 3
-		for state in ["normal", "hover"]:
-			b.add_theme_stylebox_override(state, _card_style(bg, border, 0, w))
-		for state in ["pressed", "hover_pressed"]:
-			b.add_theme_stylebox_override(state, _card_style(bg.darkened(0.03), border, 0, w))
-	_difficulty_continue.disabled = session.difficulty == ""
-
-
-# --- Step 4: review ----------------------------------------------------------------
+# --- Step 3: review ----------------------------------------------------------------
 
 func _build_review() -> VBoxContainer:
 	var box := _column()
 	box.add_theme_constant_override("separation", 20)
-	box.add_child(_step_label("STEP 4 OF 4  ·  REVIEW"))
+	box.add_child(_step_label("STEP 3 OF 3  ·  REVIEW"))
 	box.add_child(_heading("READY TO CREATE?"))
 	box.add_child(_soft("When they escape, they'll see:", 26))
 	var card := PanelContainer.new()
@@ -662,24 +579,16 @@ func _build_review() -> VBoxContainer:
 	inner.add_child(_review_no_photo)
 	# The whole message fits: 200 characters wrap to at most 8 lines here.
 	_review_message = _label("", 24, Palette.TEXT, 800)
-	MessageText.apply(_review_message)  # any language, RTL / LTR
+	MessageText.apply(_review_message, 800, true)  # any language, RTL / LTR
 	_review_message.name = "ReviewMessage"
 	_review_message.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 	_review_message.custom_minimum_size = Vector2(WIDTH - 60.0, 0)
 	_review_message.max_lines_visible = 8
 	inner.add_child(_review_message)
-	var line := ColorRect.new()
-	line.color = TINT
-	line.custom_minimum_size = Vector2(0, 2)
-	line.mouse_filter = Control.MOUSE_FILTER_IGNORE
-	inner.add_child(line)
-	_review_difficulty = _label("", 24, Palette.TEXT, 900)
-	_review_difficulty.name = "ReviewDifficulty"
-	inner.add_child(_review_difficulty)
 	var edits := HBoxContainer.new()
 	edits.add_theme_constant_override("separation", 10)
 	edits.custom_minimum_size = Vector2(WIDTH, 0)
-	for e in [["PHOTO", "EditPhoto", Step.CHOOSE], ["MESSAGE", "EditMessage", Step.MESSAGE], ["DIFFICULTY", "EditDifficulty", Step.DIFFICULTY]]:
+	for e in [["PHOTO", "EditPhoto", Step.CHOOSE], ["MESSAGE", "EditMessage", Step.MESSAGE]]:
 		var b := PillButton.new("EDIT\n" + e[0], PillButton.Icon.NONE, SOFT_BG, Palette.TEXT, 18)
 		b.name = e[1]
 		b.custom_minimum_size = Vector2(0, 84)
@@ -711,17 +620,19 @@ func _refresh_review() -> void:
 		_review_photo.custom_minimum_size = (img * s).floor()
 	_review_message.text = MessageText.quoted(session.message) if session.has_message() else "No message"
 	_review_message.add_theme_color_override("font_color", Palette.TEXT if session.has_message() else Palette.TEXT_SOFT)
-	_review_difficulty.text = "DIFFICULTY  ·  %s" % DIFFICULTY_TEXT.get(session.difficulty, ["NOT CHOSEN"])[0]
 	var errors := session.validate()
 	_review_create.disabled = not errors.is_empty()
-	_show_status(_review_status, "" if errors.is_empty() else _error_text(errors))
+	var note := "" if errors.is_empty() else _error_text(errors)
+	if note == "" and not MessageText.missing_emoji(session.message).is_empty():
+		note = EMOJI_NOTE
+	_show_status(_review_status, note)
 
 
 func _error_text(errors: Array[String]) -> String:
 	if "nothing_to_reveal" in errors:
 		return "Add a photo or a message to reveal."
-	if "difficulty" in errors:
-		return "Choose a difficulty."
+	if "message_too_long" in errors:
+		return "The message is too long - %d characters at most." % CreatorSession.MESSAGE_MAX
 	return "Something is missing. Check your choices."
 
 
@@ -781,7 +692,7 @@ func _start_generating() -> void:
 	_gen_back.visible = false
 	_gen_preview.visible = false
 	_start_gen_anim()
-	# Same photo, message and difficulty as the prepared challenge: keep
+	# Same photo and message as the prepared challenge: keep
 	# its exact puzzle (only the upload is repeated).
 	if SocialConfig.sharing_enabled() and prepared != null and _prepared_sig == _session_sig():
 		_gen_status.text = "Getting your link ready..."
@@ -789,9 +700,9 @@ func _start_generating() -> void:
 		return
 	prepared = null
 	var seed_value := debug_seed if debug_seed != 0 else (randi() | 1)
-	generator = SocialGenerator.new(session.difficulty, seed_value)
+	generator = SocialGenerator.new(SocialGenerator.REVEAL, seed_value)
 	_gen_frames = 0
-	_gen_status.text = "Building a %s puzzle..." % DIFFICULTY_TEXT[session.difficulty][0]
+	_gen_status.text = "Building your puzzle..."
 
 
 func _start_gen_anim() -> void:
@@ -823,7 +734,7 @@ func _generate_step() -> void:
 		_gen_retry.visible = true
 		_gen_back.visible = true
 		return
-	print("[Social] challenge ready: %s %s" % [session.difficulty, JSON.stringify(g.metrics)])
+	print("[Social] challenge ready: reveal %s" % JSON.stringify(g.metrics))
 	prepared = SharedChallenge.photo_message_reveal(session, g.puzzle)
 	_prepared_sig = _session_sig()
 	if not SocialConfig.sharing_enabled():
@@ -875,8 +786,14 @@ func _upload_error_text(code: String) -> String:
 			return "Check your connection and try again.\nYour photo and message are kept."
 		"rate_limited":
 			return "Lots of challenges right now.\nPlease wait a minute and try again."
-		"too_large":
+		"too_large", "invalid_image_size":
 			return "This photo is too large to send.\nTry another photo."
+		"invalid_image_type", "invalid_image_data":
+			return "This photo couldn't be sent.\nTry another photo."
+		"message_too_long":
+			return "The message is too long.\nShorten it and try again."
+		"missing_reveal_content":
+			return "Add a photo or a message to reveal."
 		"not_configured":
 			return "Sharing isn't available in this version.\nYou can still play it here."
 	return "Something went wrong on our side.\nPlease try again."
@@ -894,7 +811,7 @@ func _preview() -> void:
 		play_requested.emit(prepared)
 
 
-## Identity of what the creator chose (photo bytes, message, difficulty).
+## Identity of what the creator chose (photo bytes, message).
 func _session_sig() -> String:
 	var h := HashingContext.new()
 	h.start(HashingContext.HASH_SHA256)

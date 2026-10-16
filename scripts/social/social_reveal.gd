@@ -19,12 +19,47 @@ signal play_again
 signal done
 signal create_own
 signal photo_retry
+signal moment_done  # the Photo / Message reveal moment ended (or was skipped)
 
 const ACCENT := Color("#C645E6")
 const TINT := Color("#EBCBF7")
 const WIDTH := 600.0
 const CHAIN := 7
-const CTA_TEXT := "CREATE YOUR OWN"
+const CTA_TEXT := "CREATE YOUR OWN SURPRISE"
+## Photo / Message Reveal (phase 4): the gift -> envelope -> card moment,
+## seconds from the reveal's start. A soft gift box settles near the lower
+## centre and rests there a moment (anticipation, to BEAT_LID), then opens
+## gently; an envelope rises out of it and settles where the card will be,
+## the box fading only once the envelope is clear of it; its top flap opens;
+## the photo (or, message only, the message card) rises out of the
+## envelope's pocket and grows into its place; the envelope fades away; the
+## message and the buttons settle. About 2.45 s, automatic; a tap skips to
+## the end; reduced motion shows the end at once.
+## Nothing waits for the photo: loading / failed takes its place in the same
+## beat, and the message comes on time.
+const BEAT_LID := 0.9
+const BEAT_RISE := 1.08
+const BEAT_BOX_OUT := 1.4
+const BEAT_FLAP := 1.54
+const BEAT_CARD := 1.72
+const BEAT_ENVELOPE_OUT := 1.8
+const BEAT_HEADING := 1.82
+const BEAT_MESSAGE := 1.96
+const BEAT_BUTTONS := 2.1
+const BEAT_END := 2.45
+## The solved-screen heading: a reveal's, and a friend challenge's.
+const HEADING := "SURPRISE UNLOCKED!"
+const FRIEND_HEADING := "YOU ESCAPED!"
+## The reveal's warm, gentle colours.
+const GIFT_LAVENDER := Color("#CDB9F2")
+const GIFT_LAVENDER_LIGHT := Color("#E4D7F8")
+const GIFT_LAVENDER_DEEP := Color("#B39ADF")
+const GIFT_BLUSH := Color("#F3AFC6")
+const GIFT_BLUSH_SOFT := Color("#F8D3DF")
+const GIFT_IVORY := Color("#FFF8EC")
+const GIFT_CREAM := Color("#FBEEDF")
+const GIFT_FOLD := Color("#E9D6C2")
+const GIFT_GOLD := Color("#E3BC63")
 ## Challenge a Friend (phase 3): the recipient's invitation.
 const FRIEND_CTA_TEXT := "CHALLENGE A FRIEND"
 
@@ -59,6 +94,20 @@ var cta_pulses := 0
 var _shown := 0  # reveal counter: stale timers do nothing
 var _text := ""
 var _mode := 0
+## "playing" while the Photo / Message reveal moment runs, "done" after it
+## (or after a skip). Friend Challenge keeps its own short reveal.
+var phase := "done"
+var skipped := false
+## How long the last reveal moment took (ms; tests).
+var moment_ms := 0
+var _moment_t0 := 0
+var _veil: ColorRect
+## The envelope moment, in two layers: the box, the envelope's back, its
+## inside and its opened flap behind the column; its front pocket and closed
+## flap in front of it - so the card rises out from inside the envelope.
+var _env_back: RevealEnvelope
+var _env_front: RevealEnvelope
+var _buttons_tween: Tween
 ## Challenge a Friend only (phase 4): the completion time under the
 ## heading. Never shown for a Photo / Message Reveal.
 var _time_box: VBoxContainer
@@ -102,7 +151,7 @@ func _ready() -> void:
 	slot.add_child(eb)
 	_emblem_block = eb
 	_column.add_child(_emblem)
-	_heading = _label("YOU ESCAPED!", 40, ACCENT, 900)
+	_heading = _label(FRIEND_HEADING, 40, ACCENT, 900)
 	_heading.name = "RevealHeading"
 	_column.add_child(_heading)
 	_time_box = VBoxContainer.new()
@@ -134,6 +183,13 @@ func _ready() -> void:
 	_photo.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
 	_photo.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	_photo_frame.add_child(_photo)
+	# The soft veil the photo develops from (lifted by the reveal moment).
+	_veil = ColorRect.new()
+	_veil.name = "RevealVeil"
+	_veil.color = Color("#F8EEFC")
+	_veil.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	_veil.modulate.a = 0.0
+	_photo_frame.add_child(_veil)
 	_message_card = PanelContainer.new()
 	_message_card.name = "RevealMessageCard"
 	_message_card.add_theme_stylebox_override("panel", _card(30))
@@ -170,7 +226,7 @@ func _ready() -> void:
 	_message.name = "RevealMessage"
 	_message.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 	_message.custom_minimum_size = Vector2(WIDTH - 60.0, 0)
-	MessageText.apply(_message)  # any language, RTL / LTR
+	MessageText.apply(_message, 800, true)  # any language, RTL / LTR, emoji
 	_message_card.add_child(_message)
 	var gap := Control.new()
 	gap.custom_minimum_size = Vector2(0, 4)
@@ -215,6 +271,17 @@ func _ready() -> void:
 	_chain_root.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
 	_chain_root.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	add_child(_chain_root)
+	# The envelope moment (Photo / Message Reveal): behind and in front of the column.
+	_env_back = RevealEnvelope.new()
+	_env_back.name = "RevealEnvelopeBack"
+	_env_back.visible = false
+	add_child(_env_back)
+	move_child(_env_back, _column.get_index())
+	_env_front = RevealEnvelope.new()
+	_env_front.name = "RevealEnvelopeFront"
+	_env_front.front = true
+	_env_front.visible = false
+	add_child(_env_front)
 	var colors := ["red", "blue", "yellow", "purple", "green", "blue", "red"]
 	for i in CHAIN:
 		var b := SocialScreen.EscapeBlock.new()
@@ -255,6 +322,9 @@ func show_reveal(c: SharedChallenge, theme: Dictionary, mode: int, photo: String
 	# A friend challenge has nothing to reveal: its invitation is to make
 	# one in return (no supporting line).
 	var friend := c.type == SharedChallenge.TYPE_FRIEND_CHALLENGE
+	_heading.text = FRIEND_HEADING if friend else HEADING
+	# A reveal's focal point is the envelope (and then the photo / message).
+	_emblem.visible = friend and not expects_photo
 	_time_box.visible = friend and time_ms >= 0
 	_time_value.text = UIManager.fmt_time(time_ms) if _time_box.visible else ""
 	_time_value.add_theme_color_override("font_color", theme.get("text", Palette.TEXT))
@@ -270,9 +340,18 @@ func show_reveal(c: SharedChallenge, theme: Dictionary, mode: int, photo: String
 		_fit_photo(c.local_photo.get_size(), text)
 	_back.text = "MAIN MENU" if recipient else "BACK TO CREATE CHALLENGE"
 	visible = true
-	_animate()
-	if recipient:
-		_start_cta()
+	if friend:
+		# Challenge a Friend: its own short reveal, exactly as before.
+		phase = "done"
+		_set_parts_alpha(1.0)
+		_set_buttons_active(true)
+		for part in [_photo_frame, _photo_status, _message_card]:
+			part.scale = Vector2.ONE
+		_animate()
+		if recipient:
+			_start_cta()
+	else:
+		_animate_reveal(recipient)
 	if has_photo:
 		_shrink_to_fit.call_deferred(2)
 
@@ -303,6 +382,8 @@ func _set_photo_status_text() -> void:
 
 func hide_now() -> void:
 	_shown += 1
+	phase = "done"
+	_hide_envelope()
 	if _tween:
 		_tween.kill()
 	if _cta_tween:
@@ -335,14 +416,14 @@ func _place_buttons(recipient: bool) -> void:
 ## CREATE YOUR OWN is there from the start but quieter while the reveal
 ## plays; ~1.2 s in it comes up to full strength with ONE gentle pulse.
 ## Never repeated, no flashing, no timer shown.
-func _start_cta() -> void:
+func _start_cta(delay: float = 1.2) -> void:
 	if _cta_tween:
 		_cta_tween.kill()
 	_cta.scale = Vector2.ONE
 	_cta.modulate = Color(1, 1, 1, 0.72)
 	cta_pulses = 0
 	var shown := _shown
-	get_tree().create_timer(1.2).timeout.connect(func():
+	get_tree().create_timer(delay).timeout.connect(func():
 		if shown != _shown or not visible:
 			return
 		cta_pulses += 1
@@ -384,6 +465,171 @@ func _shrink_to_fit(defers_left: int) -> void:
 	var sz := _photo.custom_minimum_size
 	var h := maxf(160.0, sz.y - over)
 	_photo.custom_minimum_size = (sz * (h / sz.y)).floor()
+
+
+## A tap during the reveal moment shows everything at once.
+func _gui_input(event: InputEvent) -> void:
+	if phase != "playing":
+		return
+	if (event is InputEventScreenTouch and event.pressed) or (event is InputEventMouseButton and event.pressed):
+		accept_event()
+		skip()
+
+
+## Photo / Message Reveal: the gift -> envelope -> card moment (see BEAT_*).
+func _animate_reveal(recipient: bool) -> void:
+	if _tween:
+		_tween.kill()
+	skipped = false
+	_moment_t0 = Time.get_ticks_msec()
+	for b in _chain:
+		b.visible = false
+	_veil.modulate.a = 0.0
+	_cta.modulate = Color(1, 1, 1, 1)
+	_cta.scale = Vector2.ONE
+	_hide_envelope()
+	if SocialScreen.reduced_motion():
+		_column.modulate.a = 1.0
+		_set_parts_alpha(1.0)
+		_finish_reveal(recipient)
+		return
+	phase = "playing"
+	_set_buttons_active(false)
+	_column.modulate.a = 1.0
+	_set_parts_alpha(0.0)
+	var photo_part: Control = _photo_frame if _photo_frame.visible else (_photo_status if _photo_status.visible else null)
+	# What comes out of the envelope: the photo (or its loading card), else the message.
+	var card: Control = photo_part if photo_part != null else (_message_card if _message_card.visible else null)
+	var shown := _shown
+	for env in [_env_back, _env_front]:
+		env.reset()
+		env.visible = true
+	_tween = create_tween()
+	# 1. The gift box settles in (once placed: _place_envelope), then opens gently.
+	_tween.tween_interval(0.0)
+	_env_tween("box", 1.0, 0.3, 0.06, Tween.TRANS_SINE)
+	_env_tween("lid", 1.0, 0.42, BEAT_LID, Tween.TRANS_SINE)
+	_tween.parallel().tween_callback(func(): AudioManager.play_perfect()).set_delay(BEAT_LID)
+	# 2. The envelope rises out of the box and settles where the card will be.
+	_env_tween("rise", 1.0, 0.5, BEAT_RISE, Tween.TRANS_CUBIC)
+	_env_tween("box", 0.0, 0.36, BEAT_BOX_OUT, Tween.TRANS_SINE)
+	# 3. Its top flap opens, with a soft glow.
+	_env_tween("flap", 1.0, 0.26, BEAT_FLAP, Tween.TRANS_SINE)
+	_env_tween("glow", 1.0, 0.4, BEAT_FLAP, Tween.TRANS_SINE)
+	# 4. The card rises out of the pocket and grows into its place.
+	if card != null:
+		_tween.parallel().tween_property(card, "modulate:a", 1.0, 0.16).set_delay(BEAT_CARD)
+		_tween.parallel().tween_property(card, "scale", Vector2.ONE, 0.5).set_delay(BEAT_CARD).set_trans(Tween.TRANS_CUBIC).set_ease(Tween.EASE_OUT)
+		if card == _photo_frame:
+			_veil.modulate.a = 0.55
+			_tween.parallel().tween_property(_veil, "modulate:a", 0.0, 0.4).set_delay(BEAT_CARD + 0.1).set_trans(Tween.TRANS_SINE).set_ease(Tween.EASE_IN_OUT)
+	# 5. The envelope fades away behind the card.
+	_env_tween("fade", 1.0, 0.22, BEAT_ENVELOPE_OUT, Tween.TRANS_SINE)
+	# 6. The heading, the message (after a photo) and the buttons settle.
+	_tween.parallel().tween_property(_heading, "modulate:a", 1.0, 0.3).set_delay(BEAT_HEADING)
+	if _message_card.visible and card != _message_card:
+		_tween.parallel().tween_property(_message_card, "modulate:a", 1.0, 0.3).set_delay(BEAT_MESSAGE)
+		_tween.parallel().tween_property(_message_card, "scale", Vector2.ONE, 0.35).set_delay(BEAT_MESSAGE).set_trans(Tween.TRANS_CUBIC).set_ease(Tween.EASE_OUT)
+	for part in _button_parts():
+		_tween.parallel().tween_property(part, "modulate:a", 1.0, 0.3).set_delay(BEAT_BUTTONS)
+	_tween.tween_interval(maxf(0.0, BEAT_END - BEAT_BUTTONS - 0.3))
+	_tween.tween_callback(func():
+		if shown == _shown:
+			_finish_reveal(recipient))
+	# Pivots and the envelope's place once the column is laid out.
+	_set_pivots_later.call_deferred(card, 2)
+
+
+## One envelope property, tweened on both layers in the current beat.
+func _env_tween(prop: String, value: float, seconds: float, delay: float, trans: int) -> void:
+	for env in [_env_back, _env_front]:
+		_tween.parallel().tween_property(env, prop, value, seconds).set_delay(delay).set_trans(trans).set_ease(Tween.EASE_IN_OUT)
+
+
+func _hide_envelope() -> void:
+	for env in [_env_back, _env_front]:
+		if env:
+			env.visible = false
+
+
+func _set_pivots_later(card: Control, defers_left: int) -> void:
+	if defers_left > 0:
+		_set_pivots_later.call_deferred(card, defers_left - 1)
+		return
+	_set_pivots(card)
+
+
+## The card that rises from the gift grows from its bottom edge; the
+## message card (after a photo) from its centre.
+func _set_pivots(card: Control) -> void:
+	# The envelope settles over the card's lower middle (its pocket there),
+	# the gift box below it; the card grows out of the pocket, from that point.
+	var to_local := get_global_transform_with_canvas().affine_inverse()
+	var env_w := 0.0
+	if card != null and phase == "playing":
+		var r := card.get_global_rect()
+		env_w = clampf(r.size.x * 0.74, 300.0, 430.0)
+		var pocket := Vector2(r.get_center().x, r.position.y + r.size.y * 0.62)
+		var vis := get_viewport().get_visible_rect().size
+		var box := Vector2(pocket.x, minf(r.end.y + 70.0, vis.y - 120.0))
+		for env in [_env_back, _env_front]:
+			env.place(to_local * box, to_local * pocket, env_w)
+	for part in [_photo_frame, _photo_status, _message_card]:
+		var rising: bool = part == card
+		# The rising card grows from the pocket point (62% down), so it reads as
+		# coming up out of the envelope; others from their centre.
+		part.pivot_offset = Vector2(part.size.x * 0.5, part.size.y * (0.62 if rising else 0.5))
+		if phase == "playing" and part.visible and part.modulate.a < 0.01:
+			var start := clampf(env_w * 0.8 / maxf(part.size.x, 1.0), 0.3, 0.9) if rising else 0.94
+			part.scale = Vector2(start, start)
+
+
+## Ends the reveal moment now: everything shown, buttons active.
+func skip() -> void:
+	if phase != "playing":
+		return
+	skipped = true
+	if _tween:
+		_tween.kill()
+	for b in _chain:
+		b.visible = false
+	_hide_envelope()
+	_emblem_block.scale = Vector2.ONE
+	_veil.modulate.a = 0.0
+	_set_parts_alpha(1.0)
+	for part in [_photo_frame, _photo_status, _message_card]:
+		part.scale = Vector2.ONE
+	_finish_reveal(_mode == SocialPlay.Mode.RECIPIENT)
+
+
+func _finish_reveal(recipient: bool) -> void:
+	phase = "done"
+	moment_ms = Time.get_ticks_msec() - _moment_t0
+	moment_done.emit()
+	_hide_envelope()
+	for part in [_photo_frame, _photo_status, _message_card]:
+		part.scale = Vector2.ONE  # (a photo that arrives later shows at full size)
+	for b in _chain:
+		b.visible = false
+	_set_buttons_active(true)
+	if recipient:
+		_start_cta(0.25)
+
+
+## The reveal's parts that fade in (the column itself stays opaque).
+func _set_parts_alpha(a: float) -> void:
+	for part in [_emblem, _heading, _photo_frame, _photo_status, _message_card, _time_box] + _button_parts():
+		part.modulate.a = a
+
+
+func _button_parts() -> Array:
+	return [_cta, _cta_line, _row, _again, _back]
+
+
+## Buttons only take taps once they are shown (a tap before that skips).
+func _set_buttons_active(on: bool) -> void:
+	for b in [_cta, _again, _back, _photo_retry]:
+		b.mouse_filter = Control.MOUSE_FILTER_STOP if on else Control.MOUSE_FILTER_IGNORE
 
 
 func _animate() -> void:
@@ -468,3 +714,142 @@ class CtaArrow extends Control:
 		var at := Vector2((size.x - full) * 0.5 + word + (full - word) * 0.55, size.y * 0.5)
 		draw_rect(Rect2(at + Vector2(-13, -3.5), Vector2(16, 7)), Color.WHITE)
 		draw_colored_polygon(PackedVector2Array([at + Vector2(13, 0), at + Vector2(1, -11), at + Vector2(1, 11)]), Color.WHITE)
+
+
+## The Photo / Message Reveal envelope moment, drawn with a few shapes (no
+## assets). Two instances share the same state: `front = false` draws the
+## gift box, the glow, the envelope's back, its inside and its OPENED flap
+## (behind the card); `front = true` draws the pocket and the CLOSED flap with
+## its gold seal (in front of the card). Redrawn only while a value changes.
+class RevealEnvelope extends Node2D:
+	var front := false
+	var box_at := Vector2.ZERO  # where the gift box sits
+	var pocket_at := Vector2.ZERO  # where the envelope settles (its pocket centre)
+	var width := 380.0
+	## 0..1 each (tweened): the box shown, its lid lifted, the envelope risen,
+	## the flap opened, the glow, the envelope faded away.
+	var box := 0.0:
+		set(v):
+			box = v
+			queue_redraw()
+	var lid := 0.0:
+		set(v):
+			lid = v
+			queue_redraw()
+	var rise := 0.0:
+		set(v):
+			rise = v
+			queue_redraw()
+	var flap := 0.0:
+		set(v):
+			flap = v
+			queue_redraw()
+	var glow := 0.0:
+		set(v):
+			glow = v
+			queue_redraw()
+	var fade := 0.0:
+		set(v):
+			fade = v
+			queue_redraw()
+
+	func reset() -> void:
+		box = 0.0
+		lid = 0.0
+		rise = 0.0
+		flap = 0.0
+		glow = 0.0
+		fade = 0.0
+
+	func place(p_box: Vector2, p_pocket: Vector2, p_width: float) -> void:
+		box_at = p_box
+		pocket_at = p_pocket
+		width = p_width
+		queue_redraw()
+
+	func _draw() -> void:
+		if not front:
+			_draw_box()
+		_draw_envelope()
+
+	## A soft lavender box with a blush ribbon and a gold knot; the lid lifts
+	## gently and tips back a little.
+	func _draw_box() -> void:
+		if box <= 0.0:
+			return
+		var a := box
+		var w := 170.0
+		var h := 120.0
+		var c := box_at
+		_rounded(Rect2(c + Vector2(-w * 0.5, -h * 0.5), Vector2(w, h)), Color(SocialReveal.GIFT_LAVENDER, a), 16)
+		_rounded(Rect2(c + Vector2(-w * 0.5, h * 0.12), Vector2(w, h * 0.38)), Color(SocialReveal.GIFT_LAVENDER_DEEP, 0.3 * a), 16)
+		draw_rect(Rect2(c + Vector2(-13, -h * 0.5), Vector2(26, h)), Color(SocialReveal.GIFT_BLUSH, a))
+		var lift := Vector2(16.0, -54.0) * lid
+		draw_set_transform(c + Vector2(-w * 0.5 - 9, -h * 0.5) + lift, -0.22 * lid, Vector2.ONE)
+		_rounded(Rect2(Vector2(0, -30), Vector2(w + 18, 32)), Color(SocialReveal.GIFT_LAVENDER_LIGHT, a), 13)
+		draw_rect(Rect2(Vector2((w + 18) * 0.5 - 14, -30), Vector2(28, 32)), Color(SocialReveal.GIFT_BLUSH, a))
+		var knot := Vector2((w + 18) * 0.5, -30)
+		for s in [-1.0, 1.0]:
+			draw_colored_polygon(PackedVector2Array([knot, knot + Vector2(38 * s, -24), knot + Vector2(42 * s, -4), knot + Vector2(10 * s, 2)]), Color(SocialReveal.GIFT_BLUSH, a))
+		draw_circle(knot, 9.0, Color(SocialReveal.GIFT_GOLD, a))
+		draw_set_transform(Vector2.ZERO, 0.0, Vector2.ONE)
+
+	## The envelope: it rises from inside the box (small) to the pocket point
+	## (full size); then the top flap turns up, and at the end it fades.
+	func _draw_envelope() -> void:
+		if rise <= 0.0:
+			return
+		var e := 1.0 - pow(1.0 - rise, 3.0)
+		var center := (box_at + Vector2(0, -20)).lerp(pocket_at, e)
+		var s := lerpf(0.45, 1.0, e)
+		var a := clampf(rise / 0.22, 0.0, 1.0) * (1.0 - fade)
+		if a <= 0.0:
+			return
+		var w := width * s
+		var h := w * 0.64
+		var top := center.y - h * 0.5
+		var left := center.x - w * 0.5
+		var right := center.x + w * 0.5
+		var bottom := center.y + h * 0.5
+		var flap_h := h * 0.56
+		var open := clampf(flap, 0.0, 1.0)
+		if not front:
+			# A gentle glow behind it as it opens.
+			if glow > 0.0:
+				for i in 4:
+					draw_circle(center + Vector2(0, -h * 0.25), w * (0.42 + i * 0.13), Color(SocialReveal.GIFT_IVORY.lerp(SocialReveal.GIFT_GOLD, i / 5.0), 0.12 * glow * a * (1.0 - i / 4.5)))
+			# The back, and its blush lining (seen once the flap opens).
+			_rounded(Rect2(Vector2(left, top), Vector2(w, h)), Color(SocialReveal.GIFT_IVORY, a), 10)
+			if open > 0.0:
+				draw_colored_polygon(PackedVector2Array([Vector2(left + 8, top + 6), Vector2(right - 8, top + 6), Vector2(center.x, top + flap_h * 0.92)]), Color(SocialReveal.GIFT_BLUSH_SOFT, a * open))
+			# The flap, once more than half open, stands up behind the card.
+			if open >= 0.5:
+				_flap(left, right, top, flap_h * (2.0 * open - 1.0), -1.0, a)
+			return
+		# Front: the pocket (side folds meeting in the middle, the bottom fold).
+		var meet := Vector2(center.x, top + h * 0.58)
+		draw_colored_polygon(PackedVector2Array([Vector2(left, top + h * 0.2), meet, Vector2(right, top + h * 0.2), Vector2(right, bottom), Vector2(left, bottom)]), Color(SocialReveal.GIFT_CREAM, a))
+		for side in [left, right]:
+			draw_line(Vector2(side, bottom), meet, Color(SocialReveal.GIFT_FOLD, a), 2.0, true)
+		draw_line(Vector2(left, top + h * 0.2), meet, Color(SocialReveal.GIFT_FOLD, 0.6 * a), 1.5, true)
+		draw_line(Vector2(right, top + h * 0.2), meet, Color(SocialReveal.GIFT_FOLD, 0.6 * a), 1.5, true)
+		# The closed flap (folding up through its edge in the first half).
+		if open < 0.5:
+			_flap(left, right, top, flap_h * (1.0 - 2.0 * open), 1.0, a)
+
+	## The flap: a soft lavender triangle from the top corners to its tip
+	## (`length` down for dir 1, up for dir -1), with the gold seal at its tip.
+	func _flap(left: float, right: float, top: float, length: float, dir: float, a: float) -> void:
+		var tip := Vector2((left + right) * 0.5, top + dir * length)
+		draw_colored_polygon(PackedVector2Array([Vector2(left, top), Vector2(right, top), tip]), Color(SocialReveal.GIFT_LAVENDER_LIGHT, a))
+		draw_polyline(PackedVector2Array([Vector2(left, top), tip, Vector2(right, top)]), Color(SocialReveal.GIFT_LAVENDER, a), 2.0, true)
+		if length > 14.0:
+			draw_circle(tip - Vector2(0, dir * 10.0), 15.0, Color(SocialReveal.GIFT_GOLD, a))
+			draw_circle(tip - Vector2(0, dir * 10.0), 9.0, Color(SocialReveal.GIFT_IVORY.lerp(SocialReveal.GIFT_GOLD, 0.55), a))
+
+	func _rounded(r: Rect2, col: Color, radius: int) -> void:
+		var st := StyleBoxFlat.new()
+		st.bg_color = col
+		st.set_corner_radius_all(radius)
+		st.anti_aliasing = true
+		st.draw(get_canvas_item(), r)

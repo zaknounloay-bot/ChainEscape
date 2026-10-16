@@ -151,7 +151,9 @@ func _set_landing(c: SharedChallenge) -> void:
 	var friend := c.type == SharedChallenge.TYPE_FRIEND_CHALLENGE
 	_l_gift.visible = not friend
 	_l_block.visible = friend
-	_l_chip.visible = not friend
+	# A Photo / Message Reveal is a gift, not a dare: no difficulty (phase 4
+	# MVP; older links stored one, it stays unshown).
+	_l_chip.visible = false
 	if friend:
 		_l_title.text = "YOUR FRIEND\nCHALLENGED YOU"
 		_l_sub.text = "Can you escape this %s\nChain Escape?" % dname

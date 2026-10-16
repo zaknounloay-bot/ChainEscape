@@ -6,8 +6,12 @@ extends RefCounted
 ## flow. Shaped so it can later become a SharedChallenge (to_dict()).
 
 const TYPE_PHOTO_MESSAGE_REVEAL := "photo_message_reveal"
+## Counted as the server counts it (JavaScript string length: UTF-16 code
+## units, so most emoji count 2) - see utf16_length().
 const MESSAGE_MAX := 200
 const MESSAGE_MAX_LINES := 6
+## Difficulties the API accepts for this type. The creator no longer asks
+## (phase 4 MVP): every new reveal is SocialGenerator.REVEAL, stored "easy".
 const DIFFICULTIES := ["easy", "medium", "hard"]
 
 var challenge_type := TYPE_PHOTO_MESSAGE_REVEAL
@@ -20,7 +24,7 @@ var source_size := Vector2i.ZERO
 ## Display texture of image_jpeg (not part of the challenge data).
 var texture: Texture2D
 var message := ""
-var difficulty := ""  # "" until chosen, else one of DIFFICULTIES
+var difficulty := SocialGenerator.REVEAL_DIFFICULTY  # always "easy" for new reveals
 
 
 func has_photo() -> bool:
@@ -74,7 +78,30 @@ static func clean_message(text: String) -> String:
 		lines.pop_back()
 	while lines.size() > MESSAGE_MAX_LINES:
 		lines.pop_back()
-	return "\n".join(PackedStringArray(lines)).strip_edges().left(MESSAGE_MAX)
+	# The Web text field cuts at 200 UTF-16 units and can split an emoji in
+	# two; that half arrives as U+FFFD (never typed on purpose): drop it.
+	var out := "\n".join(PackedStringArray(lines)).replace(String.chr(0xFFFD), "").strip_edges()
+	return utf16_left(out, MESSAGE_MAX)
+
+
+## Length as JavaScript (and the server) counts it: UTF-16 code units, so a
+## character outside the Basic Multilingual Plane (most emoji) counts 2.
+static func utf16_length(text: String) -> int:
+	var n := 0
+	for i in text.length():
+		n += 2 if text.unicode_at(i) > 0xFFFF else 1
+	return n
+
+
+## The longest start of `text` within `limit` UTF-16 units (never splits a
+## character).
+static func utf16_left(text: String, limit: int) -> String:
+	var n := 0
+	for i in text.length():
+		n += 2 if text.unicode_at(i) > 0xFFFF else 1
+		if n > limit:
+			return text.left(i)
+	return text
 
 
 func set_difficulty(d: String) -> void:
@@ -89,7 +116,7 @@ func validate() -> Array[String]:
 		errors.append("type")
 	if not has_photo() and not has_message():
 		errors.append("nothing_to_reveal")
-	if message.length() > MESSAGE_MAX:
+	if utf16_length(message) > MESSAGE_MAX:
 		errors.append("message_too_long")
 	if not difficulty in DIFFICULTIES:
 		errors.append("difficulty")
