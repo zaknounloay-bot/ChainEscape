@@ -273,6 +273,8 @@ func _test_reveal_moment() -> void:
 		# Anticipation: the closed gift rests on screen before it opens.
 		await _wait(maxf(0.0, 0.75 - (Time.get_ticks_msec() - t0) / 1000.0))
 		_check(eb.box > 0.99 and eb.lid < 0.01 and eb.rise < 0.01, "D. %s: anticipation - the closed gift fully shown at %d ms (box %.2f, lid %.2f)" % [k[0], Time.get_ticks_msec() - t0, eb.box, eb.lid])
+		var tex := eb._textures()
+		_check(tex.size() == 3 and tex.all(func(t): return t != null and t.get_width() > 300), "D. %s: the plum + rose-gold gift layers load (%s)" % [k[0], str(tex.map(func(t): return t.get_size() if t else null))])
 		await _until(func(): return eb.rise > 0.5, 1.2)
 		_check(eb.box > 0.9 and eb.lid > 0.95, "D. %s: the box stays while the envelope lifts out (box %.2f at rise %.2f)" % [k[0], eb.box, eb.rise])
 		await _until(func(): return eb.lid > 0.95, 1.0)

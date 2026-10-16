@@ -571,7 +571,9 @@ func _set_pivots(card: Control) -> void:
 		env_w = clampf(r.size.x * 0.74, 300.0, 430.0)
 		var pocket := Vector2(r.get_center().x, r.position.y + r.size.y * 0.62)
 		var vis := get_viewport().get_visible_rect().size
-		var box := Vector2(pocket.x, minf(r.end.y + 70.0, vis.y - 120.0))
+		# The gift (box_at: the centre of its open top) sits so the whole gift
+		# is centred on screen, and always below the pocket it rises to.
+		var box := Vector2(pocket.x, clampf(vis.y * 0.5 - RevealEnvelope.GIFT_CENTER_Y, pocket.y + 60.0, vis.y - RevealEnvelope.GIFT_BOTTOM - 16.0))
 		for env in [_env_back, _env_front]:
 			env.place(to_local * box, to_local * pocket, env_w)
 	for part in [_photo_frame, _photo_status, _message_card]:
@@ -716,14 +718,31 @@ class CtaArrow extends Control:
 		draw_colored_polygon(PackedVector2Array([at + Vector2(13, 0), at + Vector2(1, -11), at + Vector2(1, 11)]), Color.WHITE)
 
 
-## The Photo / Message Reveal envelope moment, drawn with a few shapes (no
-## assets). Two instances share the same state: `front = false` draws the
-## gift box, the glow, the envelope's back, its inside and its OPENED flap
-## (behind the card); `front = true` draws the pocket and the CLOSED flap with
-## its gold seal (in front of the card). Redrawn only while a value changes.
+## The Photo / Message Reveal envelope moment. The gift box is three
+## pre-rendered layers (assets/reveal, made by tools/gift_box/gen_gift_box.mjs)
+## moved as rigid pieces; the envelope is drawn with a few shapes. Two
+## instances share the same state: `front = false` draws the box's shadow and
+## open inside, the lid once lifted, the glow, the envelope's back, its inside
+## and its OPENED flap (behind the card); `front = true` draws the pocket and
+## the CLOSED flap with its gold seal (in front of the card), then the box's
+## front walls (so the envelope rises out of the box) and the lid while it
+## still sits on them. Redrawn only while a value changes.
 class RevealEnvelope extends Node2D:
+	## Gift layers: rects in gift-local units, origin at the centre of the
+	## box's open top (as rendered by gen_gift_box.mjs).
+	const GIFT_BACK_RECT := Rect2(-212, -102, 424, 204)
+	const GIFT_FRONT_RECT := Rect2(-212, -14, 424, 268)
+	const GIFT_LID_RECT := Rect2(-238, -192, 476, 352)
+	const GIFT_LID_PIVOT := Vector2(0, -5)  # the centre of the lid's top
+	const GIFT_CENTER_Y := 34.0  # the whole gift's visual centre, below box_at
+	const GIFT_BOTTOM := 262.0  # its shadow's lowest point, below box_at
+	## The lifted lid: how far it travels, its turn, and from when it is
+	## clear of the walls (drawn behind the envelope from then on).
+	const LID_TRAVEL := Vector2(190, -120)
+	const LID_TURN := 0.2
+	const LID_CLEAR := 0.36
 	var front := false
-	var box_at := Vector2.ZERO  # where the gift box sits
+	var box_at := Vector2.ZERO  # the centre of the gift box's open top
 	var pocket_at := Vector2.ZERO  # where the envelope settles (its pocket centre)
 	var width := 380.0
 	## 0..1 each (tweened): the box shown, its lid lifted, the envelope risen,
@@ -767,32 +786,63 @@ class RevealEnvelope extends Node2D:
 		width = p_width
 		queue_redraw()
 
+	var _tex: Array[Texture2D] = []
+
 	func _draw() -> void:
 		if not front:
-			_draw_box()
-		_draw_envelope()
+			_draw_box_back()
+			_draw_envelope()
+		else:
+			_draw_envelope()
+			_draw_box_front()
 
-	## A soft lavender box with a blush ribbon and a gold knot; the lid lifts
-	## gently and tips back a little.
-	func _draw_box() -> void:
+	## Plum box, rose-gold ribbon and bow: it settles in (a 5% grow while it
+	## fades in), the lid with its bow lifts straight up off the walls, then
+	## drifts aside, turning a little and fading; the box fades last.
+	func _textures() -> Array[Texture2D]:
+		if _tex.is_empty():
+			_tex = [load("res://assets/reveal/gift_body_back.png"), load("res://assets/reveal/gift_body_front.png"), load("res://assets/reveal/gift_lid.png")]
+		return _tex
+
+	func _box_transform() -> void:
+		var s := lerpf(0.95, 1.0, box)
+		draw_set_transform(box_at, 0.0, Vector2(s, s))
+
+	func _draw_box_back() -> void:
 		if box <= 0.0:
 			return
-		var a := box
-		var w := 170.0
-		var h := 120.0
-		var c := box_at
-		_rounded(Rect2(c + Vector2(-w * 0.5, -h * 0.5), Vector2(w, h)), Color(SocialReveal.GIFT_LAVENDER, a), 16)
-		_rounded(Rect2(c + Vector2(-w * 0.5, h * 0.12), Vector2(w, h * 0.38)), Color(SocialReveal.GIFT_LAVENDER_DEEP, 0.3 * a), 16)
-		draw_rect(Rect2(c + Vector2(-13, -h * 0.5), Vector2(26, h)), Color(SocialReveal.GIFT_BLUSH, a))
-		var lift := Vector2(16.0, -54.0) * lid
-		draw_set_transform(c + Vector2(-w * 0.5 - 9, -h * 0.5) + lift, -0.22 * lid, Vector2.ONE)
-		_rounded(Rect2(Vector2(0, -30), Vector2(w + 18, 32)), Color(SocialReveal.GIFT_LAVENDER_LIGHT, a), 13)
-		draw_rect(Rect2(Vector2((w + 18) * 0.5 - 14, -30), Vector2(28, 32)), Color(SocialReveal.GIFT_BLUSH, a))
-		var knot := Vector2((w + 18) * 0.5, -30)
-		for s in [-1.0, 1.0]:
-			draw_colored_polygon(PackedVector2Array([knot, knot + Vector2(38 * s, -24), knot + Vector2(42 * s, -4), knot + Vector2(10 * s, 2)]), Color(SocialReveal.GIFT_BLUSH, a))
-		draw_circle(knot, 9.0, Color(SocialReveal.GIFT_GOLD, a))
+		_box_transform()
+		# A soft contact shadow on the "table".
+		draw_set_transform(box_at + Vector2(10, 246) * lerpf(0.95, 1.0, box), 0.0, Vector2(1.0, 0.16) * lerpf(0.95, 1.0, box))
+		for i in 12:
+			draw_circle(Vector2.ZERO, 236.0 - i * 16.0, Color(0.16, 0.03, 0.13, 0.022 * box))
+		_box_transform()
+		draw_texture_rect(_textures()[0], GIFT_BACK_RECT, false, Color(1, 1, 1, box))
+		if lid >= LID_CLEAR:
+			_draw_lid()
 		draw_set_transform(Vector2.ZERO, 0.0, Vector2.ONE)
+
+	func _draw_box_front() -> void:
+		if box <= 0.0:
+			return
+		_box_transform()
+		draw_texture_rect(_textures()[1], GIFT_FRONT_RECT, false, Color(1, 1, 1, box))
+		if lid < LID_CLEAR:
+			_draw_lid()
+		draw_set_transform(Vector2.ZERO, 0.0, Vector2.ONE)
+
+	## The lid (with its ribbon and bow, one piece): straight up first, then
+	## aside with a small turn, fading out as it goes.
+	func _draw_lid() -> void:
+		var up := smoothstep(0.0, 0.5, lid)
+		var aside := smoothstep(0.3, 1.0, lid)
+		var a := box * (1.0 - smoothstep(0.55, 1.0, lid))
+		if a <= 0.0:
+			return
+		var s := lerpf(0.95, 1.0, box)
+		var at := box_at + (GIFT_LID_PIVOT + Vector2(LID_TRAVEL.x * aside, LID_TRAVEL.y * 0.5 * (up + aside))) * s
+		draw_set_transform(at, LID_TURN * aside, Vector2(s, s))
+		draw_texture_rect(_textures()[2], Rect2(GIFT_LID_RECT.position - GIFT_LID_PIVOT, GIFT_LID_RECT.size), false, Color(1, 1, 1, a))
 
 	## The envelope: it rises from inside the box (small) to the pocket point
 	## (full size); then the top flap turns up, and at the end it fades.
@@ -800,9 +850,10 @@ class RevealEnvelope extends Node2D:
 		if rise <= 0.0:
 			return
 		var e := 1.0 - pow(1.0 - rise, 3.0)
-		var center := (box_at + Vector2(0, -20)).lerp(pocket_at, e)
+		var center := (box_at + Vector2(0, 130)).lerp(pocket_at, e)
 		var s := lerpf(0.45, 1.0, e)
-		var a := clampf(rise / 0.22, 0.0, 1.0) * (1.0 - fade)
+		# Solid from the start: it begins hidden behind the box's front walls.
+		var a := 1.0 - fade
 		if a <= 0.0:
 			return
 		var w := width * s
