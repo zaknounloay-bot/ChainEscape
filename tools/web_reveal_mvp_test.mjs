@@ -117,7 +117,7 @@ async function moment(s, tag, shotName) {
   await sleep(1000);
   pv = await s.play();
   // The game's own clock (the test's polling and screenshots are slow under software rendering).
-  check(pv.reveal_moment_ms >= 2100 && pv.reveal_moment_ms <= 2900 && !pv.reveal_skipped, `${tag} the envelope moment took ${pv.reveal_moment_ms} ms (about 2.45 s; ${ms} ms as seen by the test)`);
+  check(pv.reveal_moment_ms >= 2100 && pv.reveal_moment_ms <= 2900 && !pv.reveal_skipped, `${tag} the envelope moment took ${pv.reveal_moment_ms} ms (about 2.55 s; ${ms} ms as seen by the test)`);
   check(inside(pv.rects.reveal_column) && onScreen(pv.buttons) && pv.buttons.CreateYourOwn && pv.buttons.PlayAgain && pv.buttons.BackToCreate,
     `${tag} photo / message and CREATE YOUR OWN SURPRISE, PLAY AGAIN, MAIN MENU all on screen`);
   check(!pv.time_visible && pv.reveal_time === '' && !pv.timed, `${tag} no timer, no time on the reveal`);

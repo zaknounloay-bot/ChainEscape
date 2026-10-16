@@ -12,7 +12,7 @@ import { createRequire } from 'node:module';
 const require = createRequire(import.meta.url);
 const { chromium } = require(process.env.PLAYWRIGHT || 'playwright');
 
-const SCALE = 1.5;  // texture pixels per game unit
+const SCALE = 2.25;  // texture pixels per game unit (sharp at 1.3x on 3x iPhones)
 const OUT = path.resolve(path.dirname(new URL(import.meta.url).pathname), '../../assets/reveal');
 
 // ---- Geometry: an oblique 3/4 view, the left wall turned towards the viewer.
@@ -161,9 +161,9 @@ function bow(k) {
 
 // Layer rects (gift-local game units): x, y, w, h. Keep in sync with social_reveal.gd.
 const LAYERS = {
-  gift_body_back: { rect: [-212, -102, 424, 204], svg: bodyBack },
-  gift_body_front: { rect: [-212, -14, 424, 268], svg: bodyFront },
-  gift_lid: { rect: [-238, -192, 476, 352], svg: lidLayer },
+  gift_body_back: { rect: [-203, -95, 406, 188], svg: bodyBack },
+  gift_body_front: { rect: [-203, -7, 406, 252], svg: bodyFront },
+  gift_lid: { rect: [-217, -104, 434, 263], svg: lidLayer },
 };
 
 const browser = await chromium.launch();

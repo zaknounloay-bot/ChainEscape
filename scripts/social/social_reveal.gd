@@ -28,25 +28,27 @@ const CHAIN := 7
 const CTA_TEXT := "CREATE YOUR OWN SURPRISE"
 ## Photo / Message Reveal (phase 4): the gift -> envelope -> card moment,
 ## seconds from the reveal's start. A soft gift box settles near the lower
-## centre and rests there a moment (anticipation, to BEAT_LID), then opens
+## centre and rests there a moment (it arrives over ENTRANCE, then waits for
+## BEAT_LID: anticipation), then opens
 ## gently; an envelope rises out of it and settles where the card will be,
 ## the box fading only once the envelope is clear of it; its top flap opens;
 ## the photo (or, message only, the message card) rises out of the
 ## envelope's pocket and grows into its place; the envelope fades away; the
-## message and the buttons settle. About 2.45 s, automatic; a tap skips to
+## message and the buttons settle. About 2.55 s, automatic; a tap skips to
 ## the end; reduced motion shows the end at once.
 ## Nothing waits for the photo: loading / failed takes its place in the same
 ## beat, and the message comes on time.
-const BEAT_LID := 0.9
-const BEAT_RISE := 1.08
-const BEAT_BOX_OUT := 1.4
-const BEAT_FLAP := 1.54
-const BEAT_CARD := 1.72
-const BEAT_ENVELOPE_OUT := 1.8
-const BEAT_HEADING := 1.82
-const BEAT_MESSAGE := 1.96
-const BEAT_BUTTONS := 2.1
-const BEAT_END := 2.45
+const ENTRANCE := 0.45  # the gift fades in and grows from 92% to full size
+const BEAT_LID := 1.0
+const BEAT_RISE := 1.18
+const BEAT_BOX_OUT := 1.5
+const BEAT_FLAP := 1.64
+const BEAT_CARD := 1.82
+const BEAT_ENVELOPE_OUT := 1.9
+const BEAT_HEADING := 1.92
+const BEAT_MESSAGE := 2.06
+const BEAT_BUTTONS := 2.2
+const BEAT_END := 2.55
 ## The solved-screen heading: a reveal's, and a friend challenge's.
 const HEADING := "SURPRISE UNLOCKED!"
 const FRIEND_HEADING := "YOU ESCAPED!"
@@ -505,9 +507,12 @@ func _animate_reveal(recipient: bool) -> void:
 		env.reset()
 		env.visible = true
 	_tween = create_tween()
-	# 1. The gift box settles in (once placed: _place_envelope), then opens gently.
+	# 1. The gift box arrives (once placed: _place_envelope): it fades in and
+	# grows gently to full size, rests a moment, then opens.
 	_tween.tween_interval(0.0)
-	_env_tween("box", 1.0, 0.3, 0.06, Tween.TRANS_SINE)
+	_env_tween("box", 1.0, ENTRANCE * 0.8, 0.06, Tween.TRANS_SINE)
+	for env in [_env_back, _env_front]:
+		_tween.parallel().tween_property(env, "grow", 1.0, ENTRANCE).set_delay(0.06).set_trans(Tween.TRANS_CUBIC).set_ease(Tween.EASE_OUT)
 	_env_tween("lid", 1.0, 0.42, BEAT_LID, Tween.TRANS_SINE)
 	_tween.parallel().tween_callback(func(): AudioManager.play_perfect()).set_delay(BEAT_LID)
 	# 2. The envelope rises out of the box and settles where the card will be.
@@ -573,7 +578,8 @@ func _set_pivots(card: Control) -> void:
 		var vis := get_viewport().get_visible_rect().size
 		# The gift (box_at: the centre of its open top) sits so the whole gift
 		# is centred on screen, and always below the pocket it rises to.
-		var box := Vector2(pocket.x, clampf(vis.y * 0.5 - RevealEnvelope.GIFT_CENTER_Y, pocket.y + 60.0, vis.y - RevealEnvelope.GIFT_BOTTOM - 16.0))
+		var gs := RevealEnvelope.GIFT_SCALE
+		var box := Vector2(pocket.x, clampf(vis.y * 0.5 - RevealEnvelope.GIFT_CENTER_Y * gs, pocket.y + 60.0, vis.y - RevealEnvelope.GIFT_BOTTOM * gs - 16.0))
 		for env in [_env_back, _env_front]:
 			env.place(to_local * box, to_local * pocket, env_w)
 	for part in [_photo_frame, _photo_status, _message_card]:
@@ -729,17 +735,21 @@ class CtaArrow extends Control:
 ## still sits on them. Redrawn only while a value changes.
 class RevealEnvelope extends Node2D:
 	## Gift layers: rects in gift-local units, origin at the centre of the
-	## box's open top (as rendered by gen_gift_box.mjs).
-	const GIFT_BACK_RECT := Rect2(-212, -102, 424, 204)
-	const GIFT_FRONT_RECT := Rect2(-212, -14, 424, 268)
-	const GIFT_LID_RECT := Rect2(-238, -192, 476, 352)
+	## box's open top (as rendered by gen_gift_box.mjs, 2.25 px per unit).
+	const GIFT_BACK_RECT := Rect2(-203, -95, 406, 188)
+	const GIFT_FRONT_RECT := Rect2(-203, -7, 406, 252)
+	const GIFT_LID_RECT := Rect2(-217, -104, 434, 263)
+	## The gift is drawn at 1.3x its gift-local size (419 x 339 units of
+	## artwork: about 76% of the screen's width).
+	const GIFT_SCALE := 1.3
 	const GIFT_LID_PIVOT := Vector2(0, -5)  # the centre of the lid's top
 	const GIFT_CENTER_Y := 34.0  # the whole gift's visual centre, below box_at
 	const GIFT_BOTTOM := 262.0  # its shadow's lowest point, below box_at
-	## The lifted lid: how far it travels, its turn, and from when it is
-	## clear of the walls (drawn behind the envelope from then on).
-	const LID_TRAVEL := Vector2(190, -120)
-	const LID_TURN := 0.2
+	## The lifted lid: how far it travels (mostly up, a little aside, so it
+	## fades out on screen), its turn, and from when it is clear of the walls
+	## (drawn behind the envelope from then on).
+	const LID_TRAVEL := Vector2(46, -140)
+	const LID_TURN := 0.12
 	const LID_CLEAR := 0.36
 	var front := false
 	var box_at := Vector2.ZERO  # the centre of the gift box's open top
@@ -771,6 +781,11 @@ class RevealEnvelope extends Node2D:
 		set(v):
 			fade = v
 			queue_redraw()
+	## 0..1 (tweened): the gift's entrance growth, 92% -> 100%.
+	var grow := 0.0:
+		set(v):
+			grow = v
+			queue_redraw()
 
 	func reset() -> void:
 		box = 0.0
@@ -779,6 +794,7 @@ class RevealEnvelope extends Node2D:
 		flap = 0.0
 		glow = 0.0
 		fade = 0.0
+		grow = 0.0
 
 	func place(p_box: Vector2, p_pocket: Vector2, p_width: float) -> void:
 		box_at = p_box
@@ -788,6 +804,11 @@ class RevealEnvelope extends Node2D:
 
 	var _tex: Array[Texture2D] = []
 
+	func _init() -> void:
+		# The gift layers are drawn smaller than their pixels on most phones:
+		# sample their mipmaps so the satin grain stays smooth.
+		texture_filter = CanvasItem.TEXTURE_FILTER_LINEAR_WITH_MIPMAPS
+
 	func _draw() -> void:
 		if not front:
 			_draw_box_back()
@@ -796,16 +817,20 @@ class RevealEnvelope extends Node2D:
 			_draw_envelope()
 			_draw_box_front()
 
-	## Plum box, rose-gold ribbon and bow: it settles in (a 5% grow while it
-	## fades in), the lid with its bow lifts straight up off the walls, then
-	## drifts aside, turning a little and fading; the box fades last.
+	## Plum box, rose-gold ribbon and bow: it arrives (fading in, growing from
+	## 92%), the lid with its bow lifts straight up off the walls, then drifts
+	## a little aside, turning slightly and fading; the box fades last.
 	func _textures() -> Array[Texture2D]:
 		if _tex.is_empty():
 			_tex = [load("res://assets/reveal/gift_body_back.png"), load("res://assets/reveal/gift_body_front.png"), load("res://assets/reveal/gift_lid.png")]
 		return _tex
 
+	## The gift's current scale: its entrance growth times GIFT_SCALE.
+	func _gift_scale() -> float:
+		return lerpf(0.92, 1.0, grow) * GIFT_SCALE
+
 	func _box_transform() -> void:
-		var s := lerpf(0.95, 1.0, box)
+		var s := _gift_scale()
 		draw_set_transform(box_at, 0.0, Vector2(s, s))
 
 	func _draw_box_back() -> void:
@@ -813,7 +838,7 @@ class RevealEnvelope extends Node2D:
 			return
 		_box_transform()
 		# A soft contact shadow on the "table".
-		draw_set_transform(box_at + Vector2(10, 246) * lerpf(0.95, 1.0, box), 0.0, Vector2(1.0, 0.16) * lerpf(0.95, 1.0, box))
+		draw_set_transform(box_at + Vector2(10, 246) * _gift_scale(), 0.0, Vector2(1.0, 0.16) * _gift_scale())
 		for i in 12:
 			draw_circle(Vector2.ZERO, 236.0 - i * 16.0, Color(0.16, 0.03, 0.13, 0.022 * box))
 		_box_transform()
@@ -839,7 +864,7 @@ class RevealEnvelope extends Node2D:
 		var a := box * (1.0 - smoothstep(0.55, 1.0, lid))
 		if a <= 0.0:
 			return
-		var s := lerpf(0.95, 1.0, box)
+		var s := _gift_scale()
 		var at := box_at + (GIFT_LID_PIVOT + Vector2(LID_TRAVEL.x * aside, LID_TRAVEL.y * 0.5 * (up + aside))) * s
 		draw_set_transform(at, LID_TURN * aside, Vector2(s, s))
 		draw_texture_rect(_textures()[2], Rect2(GIFT_LID_RECT.position - GIFT_LID_PIVOT, GIFT_LID_RECT.size), false, Color(1, 1, 1, a))
@@ -850,7 +875,7 @@ class RevealEnvelope extends Node2D:
 		if rise <= 0.0:
 			return
 		var e := 1.0 - pow(1.0 - rise, 3.0)
-		var center := (box_at + Vector2(0, 130)).lerp(pocket_at, e)
+		var center := (box_at + Vector2(0, 130) * _gift_scale()).lerp(pocket_at, e)
 		var s := lerpf(0.45, 1.0, e)
 		# Solid from the start: it begins hidden behind the box's front walls.
 		var a := 1.0 - fade

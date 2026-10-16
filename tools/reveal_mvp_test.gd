@@ -11,7 +11,7 @@ extends Node
 ##      brackets on the block aimed at the shell, nothing played for the
 ##      player, kept through RESTART, finished only by the player's hit;
 ##   D. the reveal moment: photo + message, photo only, message only,
-##      a photo still loading: gift box -> envelope -> card (~2.45 s),
+##      a photo still loading: gift box -> envelope -> card (~2.55 s),
 ##      "SURPRISE UNLOCKED!", buttons inactive until done,
 ##      tap-to-skip, reduced motion; Friend Challenge's result unchanged;
 ##   E. messages: Hebrew / Arabic shaping and direction kept, the larger
@@ -272,7 +272,8 @@ func _test_reveal_moment() -> void:
 		_check(eb.visible and r._env_front.visible and r._chain.all(func(b): return not b.visible), "D. %s: the gift box and envelope, no breaking chain" % k[0])
 		# Anticipation: the closed gift rests on screen before it opens.
 		await _wait(maxf(0.0, 0.75 - (Time.get_ticks_msec() - t0) / 1000.0))
-		_check(eb.box > 0.99 and eb.lid < 0.01 and eb.rise < 0.01, "D. %s: anticipation - the closed gift fully shown at %d ms (box %.2f, lid %.2f)" % [k[0], Time.get_ticks_msec() - t0, eb.box, eb.lid])
+		_check(eb.box > 0.99 and eb.grow > 0.99 and eb.lid < 0.01 and eb.rise < 0.01, "D. %s: anticipation - the closed gift fully shown and full size at %d ms (box %.2f, grow %.2f, lid %.2f)" % [k[0], Time.get_ticks_msec() - t0, eb.box, eb.grow, eb.lid])
+		_check(is_equal_approx(eb._gift_scale(), SocialReveal.RevealEnvelope.GIFT_SCALE) and eb.texture_filter == CanvasItem.TEXTURE_FILTER_LINEAR_WITH_MIPMAPS, "D. %s: the gift at its 1.3x size, mipmapped (scale %.2f)" % [k[0], eb._gift_scale()])
 		var tex := eb._textures()
 		_check(tex.size() == 3 and tex.all(func(t): return t != null and t.get_width() > 300), "D. %s: the plum + rose-gold gift layers load (%s)" % [k[0], str(tex.map(func(t): return t.get_size() if t else null))])
 		await _until(func(): return eb.rise > 0.5, 1.2)
@@ -285,7 +286,7 @@ func _test_reveal_moment() -> void:
 		_check(not r._time_box.visible, "D. %s: no time on a reveal" % k[0])
 		await _until(func(): return r.phase == "done", 4.0)
 		var ms := Time.get_ticks_msec() - t0
-		_check(r.phase == "done" and ms >= 2100 and ms <= 2900 and not r.skipped, "D. %s: the moment took %d ms (about 2.45 s)" % [k[0], ms])
+		_check(r.phase == "done" and ms >= 2100 and ms <= 2900 and not r.skipped, "D. %s: the moment took %d ms (about 2.55 s)" % [k[0], ms])
 		_check(r._heading.text == "SURPRISE UNLOCKED!" and not r._env_back.visible and not r._env_front.visible and not r._emblem.visible, "D. %s: SURPRISE UNLOCKED!, the envelope gone, no emblem" % k[0])
 		await _wait(0.8)  # CREATE YOUR OWN SURPRISE: its one gentle pulse
 		var all_shown := [r._heading, r._cta, r._again, r._back].all(func(x): return x.modulate.a > 0.99)
