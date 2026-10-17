@@ -23,6 +23,22 @@ extends CanvasLayer
 ##   ?vhtest2=1  test 2 (B strongest Friend / D pure Classic / E flattened
 ##               late-Classic geometry), second question: "Was it
 ##               immediately obvious which block you could start with?"
+##   ?vhtest4=1  GATE 0 PILOT (data/dev/vh_pilot4.json, tools/vh_pilot4_build.gd):
+##               28 boards in five hidden groups, using existing campaign
+##               mechanics (switch, gate, spinner rules, lock, armor,
+##               portal, Sequence, Movable). Before the first puzzle the
+##               tester says how far they have played the campaign, and
+##               only boards whose mechanics they have met are served, in a
+##               balanced order (one of each group per round). Each puzzle
+##               starts with a neutral one-line reminder of its mechanics.
+##               While playing: a clock and GIVE UP (tap twice). After each
+##               puzzle: difficulty, vs Level 300, enjoyment 1-5,
+##               achievement 1-5, random / unfair. At the end: which was the
+##               hardest, and why. Every action is logged (time, kind,
+##               tapped block) for offline replay. &bench=1 times the
+##               recipient's check and SHOW A MOVE on every board instead.
+##               Campaign tokens (Sequence ":", Movable "M") are parsed
+##               only while this page runs, as the mechanic lab does.
 
 const PARAM := "vhtest"
 const DATA_PATH := "res://data/dev/vh_human_test.json"
@@ -41,14 +57,45 @@ const TESTS := {
 		"q3": "Did a move that looked right turn out\nto be a mistake later?", "q3_key": "late_mistake", "q3_label": "late mistake",
 		"note": "Spinners turn when a block next to them leaves. The arrowheads on a spinner's ring show which way it turns: some turn clockwise, some counter-clockwise.",
 		"ls": "chain_escape_vhtest3_state"},
+	# Gate 0 pilot: advanced campaign mechanics (see the header).
+	"vhtest4": {"data": "res://data/dev/vh_pilot4.json", "state": "user://vh_pilot4_state.json", "title": "VERY HARD PILOT\n(DEVELOPMENT)",
+		"q2": "", "q2_key": "l300", "q2_label": "harder than L300", "pilot": true,
+		"ls": "chain_escape_vhtest4_state"},
 }
+## Pilot follow-up questions: [key, text, label, options].
+const PILOT_QUESTIONS := [
+	["l300", "Compared with Campaign Level 300,\nthis puzzle was...", "vs Level 300", ["EASIER", "SIMILAR", "HARDER", "NOT SURE"]],
+	["enjoy", "How much did you enjoy it?\n(1 = not at all, 5 = a lot)", "enjoyment", ["1", "2", "3", "4", "5"]],
+	["achieve", "How strong was your sense\nof achievement?\n(1 = none, 5 = very strong)", "achievement", ["1", "2", "3", "4", "5"]],
+	["unfair", "Did the puzzle feel\nrandom or unfair?", "random / unfair", ["YES", "NO"]],
+]
+## Pilot: how far the tester has played -> the highest first-level of a
+## mechanic they have met (boards above it are not served).
+const REACHED := [["ALL 300 LEVELS", 300], ["PAST LEVEL 250", 250], ["PAST LEVEL 225", 225], ["PAST LEVEL 200", 200],
+	["PAST LEVEL 150", 150], ["NOT THAT FAR", 100]]
+## Pilot: one neutral line per mechanic (rules only, never a hint).
+const REMINDERS := {
+	"spinner_cw": "Spinners (ring around the arrow) turn when a block next to them leaves.",
+	"spinner_ccw": "The ring shows which way a spinner turns: some turn counter-clockwise.",
+	"spinner_alt": "Alternating spinners change direction every turn.",
+	"spinner_pattern": "Pattern spinners turn clockwise, clockwise, counter-clockwise, and repeat.",
+	"lock": "A locked block can't leave while any block of its key colour is still on the board.",
+	"switch": "When a switch leaves, every block linked to it reverses its arrow.",
+	"gate": "A chain gate opens when every block linked to it has left.",
+	"armor": "An armored block must be hit by another block before it can leave.",
+	"portal": "A lane that reaches a portal continues out of the matching portal.",
+	"sequence": "A Sequence block's first move comes back with its next arrow; the second move escapes.",
+	"crate": "A Movable block never leaves: a block launched into it pushes it one cell.",
+}
+## Pilot: GIVE UP needs a second tap within this time.
+const GIVE_UP_CONFIRM_MS := 3000
 ## A pause between two actions (move, UNDO, SHOW A MOVE, RESTART) at least
 ## this long is recorded as a "long pause" (test 3 analytics).
 const LONG_PAUSE_MS := 10000
 const RATINGS := ["EASY", "MEDIUM", "HARD", "VERY HARD"]
 const ACCENT := Color("#1A9FE6")
 
-enum Screen { INTRO, PLAYING, RATE, THINK, RESULTS }
+enum Screen { INTRO, PLAYING, RATE, THINK, RESULTS, PROFILE, BRIEF, HARDEST }
 
 var test := PARAM
 var _cfg: Dictionary = TESTS[PARAM]
@@ -73,6 +120,22 @@ var _q := 0  # which follow-up question is showing
 var _questions: Array = []
 var _act_sig := []
 var _last_act := 0
+## Pilot only.
+var pilot := false
+var bench := false
+var bench_results: Array = []
+var _think_opts: BoxContainer
+var _think_skip: PillButton
+var _brief_text: Label
+var _hud: Control
+var _clock: Label
+var _give_up: PillButton
+var _give_up_armed := 0
+var _hardest_grid: GridContainer
+var _hardest_why: LineEdit
+var _hardest_pick := -1
+var _hardest_label: Label
+var _prev_snap: Dictionary = {}
 
 
 ## Checked at launch like FriendBench (before a shared-challenge link).
@@ -84,7 +147,7 @@ static func requested() -> bool:
 static func requested_test() -> String:
 	if BuildFlags.dev_pages_off():
 		return ""  # player / QA build: developer pages off
-	for key in ["vhtest3", "vhtest2", "vhtest"]:
+	for key in ["vhtest4", "vhtest3", "vhtest2", "vhtest"]:
 		if "--" + key in OS.get_cmdline_user_args():
 			return key
 	if not OS.has_feature("web"):
@@ -93,7 +156,7 @@ static func requested_test() -> String:
 	if loc == null:
 		return ""
 	var where := (str(loc.search) + str(loc.hash)).to_lower()
-	for key in ["vhtest3", "vhtest2", "vhtest"]:
+	for key in ["vhtest4", "vhtest3", "vhtest2", "vhtest"]:
 		if where.contains(key + "=1") or where.contains(key + "=true"):
 			return key
 	return ""
@@ -103,9 +166,27 @@ func _init(p_test: String = PARAM) -> void:
 	layer = 30  # over everything (SocialPlay is layer 5)
 	test = p_test if TESTS.has(p_test) else PARAM
 	_cfg = TESTS[test]
-	_questions = [[_cfg["q2_key"], _cfg["q2"], _cfg["q2_label"]]]
+	pilot = _cfg.get("pilot", false)
+	if pilot:
+		_questions = PILOT_QUESTIONS.duplicate(true)
+		bench = _bench_requested()
+		# Campaign tokens on this page only (as the mechanic lab does).
+		LevelManager.dev_sequence = true
+		LevelManager.dev_movable = true
+		return
+	_questions = [[_cfg["q2_key"], _cfg["q2"], _cfg["q2_label"], ["YES", "NO"]]]
 	if _cfg.has("q3"):
-		_questions.append([_cfg["q3_key"], _cfg["q3"], _cfg["q3_label"]])
+		_questions.append([_cfg["q3_key"], _cfg["q3"], _cfg["q3_label"], ["YES", "NO"]])
+
+
+## Pilot: "&bench=1" (desktop: "-- --bench").
+static func _bench_requested() -> bool:
+	if "--bench" in OS.get_cmdline_user_args():
+		return true
+	if not OS.has_feature("web"):
+		return false
+	var loc := JavaScriptBridge.get_interface("location")
+	return loc != null and (str(loc.search) + str(loc.hash)).to_lower().contains("bench=1")
 
 
 func _ready() -> void:
@@ -119,12 +200,16 @@ func _ready() -> void:
 	play.dev_assist = true  # its own tools, no Friend timer
 	play.max_hints = int(_assist.get("show_a_move", 1))
 	play.max_hammers = int(_assist.get("hammer", 1))
+	if pilot:
+		play.max_undos = int(_assist.get("undo", 3))
 	play.solved.connect(_on_solved)
 	play.exited.connect(_on_gave_up)
 	add_child(play)
 	_build()
 	_show(Screen.INTRO)
 	set_process(true)
+	if bench:
+		_run_bench.call_deferred()
 
 
 func _process(_delta: float) -> void:
@@ -132,6 +217,12 @@ func _process(_delta: float) -> void:
 		_current["first_move_ms"] = Time.get_ticks_msec() - _t0
 	if screen == Screen.PLAYING:
 		_track_pauses()
+		if pilot:
+			var sec := (Time.get_ticks_msec() - _t0) / 1000
+			_clock.text = "%d:%02d" % [sec / 60, sec % 60]
+			if _give_up_armed > 0 and Time.get_ticks_msec() > _give_up_armed:
+				_give_up_armed = 0
+				_give_up.text = "GIVE UP"
 	if screen == Screen.RESULTS:
 		var r := SocialWeb.take_share_result()
 		if r == "copied":
@@ -149,13 +240,28 @@ func total() -> int:
 func start_next() -> void:
 	var i: int = state["index"]
 	if i >= total():
-		_show(Screen.RESULTS)
+		_show(Screen.HARDEST if pilot and not state.has("hardest") and total() > 0 else Screen.RESULTS)
 		return
+	if pilot:
+		_show(Screen.BRIEF)  # the reminder card; its START begins the puzzle
+		return
+	begin_puzzle()
+
+
+## Starts puzzle `index` (pilot: from the reminder card).
+func begin_puzzle() -> void:
+	var i: int = state["index"]
 	var rec: Dictionary = boards[state["order"][i]]
 	var def := PuzzleDefinition.from_dict(rec["puzzle"])
 	var c := SharedChallenge.friend_challenge(def, FriendGenerator.VERY_HARD)
 	_current = {"id": rec["id"], "variant": rec["variant"], "fingerprint": def.fingerprint(), "order": i + 1, "first_move_ms": -1,
 		"longest_pause_ms": 0, "long_pauses": []}
+	if pilot:
+		_current["mechanics"] = rec.get("mechanics", [])
+		_current["gave_up"] = false
+		_current["log"] = []
+		_give_up_armed = 0
+		_give_up.text = "GIVE UP"
 	_show(Screen.PLAYING)
 	play.back_label = ""
 	_act_sig = []
@@ -163,6 +269,10 @@ func start_next() -> void:
 	play._title.text = "PUZZLE %d / %d" % [i + 1, total()]
 	_t0 = Time.get_ticks_msec()
 	_last_act = _t0
+	if pilot:
+		_prev_snap = _snap()
+		_act_sig_prev = [play.total_moves, play.total_undos, play.total_hints, play.total_hammers, play.plays,
+			play.total_pushes, play.total_rams, play.total_seq_advances]
 
 
 func _on_solved() -> void:
@@ -178,6 +288,9 @@ func _on_solved() -> void:
 func _on_gave_up() -> void:
 	if screen != Screen.PLAYING:
 		return
+	if pilot:
+		_current["gave_up"] = true
+		_current["log"].append([Time.get_ticks_msec() - _t0, "g", -1])
 	_finish_attempt(false)
 	_show(Screen.RATE)
 
@@ -186,7 +299,9 @@ func _on_gave_up() -> void:
 ## Recorded: the longest, and every pause >= LONG_PAUSE_MS with where it
 ## happened (attempt number, blocks already cleared in that attempt / total).
 func _track_pauses() -> void:
-	var sig := [play.total_moves, play.total_undos, play.total_hints, play.total_hammers, play.plays]
+	# Pushes, rams and Sequence advances are moves too (their own counters).
+	var sig := [play.total_moves, play.total_undos, play.total_hints, play.total_hammers, play.plays,
+		play.total_pushes, play.total_rams, play.total_seq_advances]
 	if _act_sig.is_empty():
 		_act_sig = sig
 		return
@@ -196,6 +311,8 @@ func _track_pauses() -> void:
 	var now := Time.get_ticks_msec()
 	var gap := now - _last_act
 	_last_act = now
+	if pilot:
+		_log_action(sig, now)
 	_current["longest_pause_ms"] = maxi(int(_current.get("longest_pause_ms", 0)), gap)
 	if gap >= LONG_PAUSE_MS:
 		var cleared := play._total_blocks - play.model.block_count()
@@ -210,6 +327,12 @@ func _finish_attempt(solved: bool) -> void:
 	_current["undos"] = play.total_undos
 	_current["show_a_move"] = play.total_hints
 	_current["hammer"] = play.total_hammers
+	if pilot:
+		_current["pushes"] = play.total_pushes
+		_current["advances"] = play.total_seq_advances
+		_current["rams"] = play.total_rams
+		_current["portal_uses"] = play.total_portal_uses
+		_current["blocked_taps"] = play.total_blocked
 
 
 func rate(i: int) -> void:
@@ -241,6 +364,174 @@ func reset_test() -> void:
 	_show(Screen.INTRO)
 
 
+# --- Pilot ---------------------------------------------------------------------------------
+
+## GIVE UP (pilot): the first tap arms it, a second tap within
+## GIVE_UP_CONFIRM_MS ends the puzzle as not solved (then the questions).
+func give_up() -> void:
+	if screen != Screen.PLAYING:
+		return
+	var now := Time.get_ticks_msec()
+	if _give_up_armed == 0 or now > _give_up_armed:
+		_give_up_armed = now + GIVE_UP_CONFIRM_MS
+		_give_up.text = "TAP AGAIN TO GIVE UP"
+		return
+	_give_up_armed = 0
+	_current["gave_up"] = true
+	_current["log"].append([now - _t0, "g", -1])
+	_finish_attempt(false)
+	_show(Screen.RATE)
+
+
+## Pilot: the tester's campaign progress; builds the balanced order of the
+## boards they can play.
+func set_reached(level: int) -> void:
+	state = {"reached": level}
+	_new_order()
+	_save_state()
+	_show(Screen.INTRO)
+
+
+## Pilot: the hardest puzzle (its position in this tester's order) and why.
+func set_hardest(order_pos: int, why: String) -> void:
+	var id := ""
+	if order_pos >= 1 and order_pos <= state["results"].size():
+		id = str(state["results"][order_pos - 1]["id"])
+	state["hardest"] = {"order": order_pos, "id": id, "why": why.strip_edges()}
+	_save_state()
+	_show(Screen.RESULTS)
+
+
+## Every block's place and state (to infer the tapped block of a move).
+func _snap() -> Dictionary:
+	var out := {}
+	for id in play.model.blocks:
+		var b: BlockData = play.model.blocks[id]
+		out[id] = [b.cell, b.direction, b.seq_stage, b.armored, b.kind]
+	return out
+
+
+## One action of the pilot log: [ms since the puzzle started, kind, block]:
+## "m" move (tapped block id, or -1 if it can't be told), "u" UNDO,
+## "h" SHOW A MOVE, "x" HAMMER, "r" RESTART.
+func _log_action(sig: Array, now: int) -> void:
+	var prev: Array = _act_sig_prev
+	_act_sig_prev = sig.duplicate()
+	var snap := _snap()
+	var kind := ""
+	if prev.is_empty():
+		kind = "m" if sig[0] + sig[5] + sig[6] + sig[7] > 0 else ""
+	elif sig[4] > prev[4]:
+		kind = "r"
+	elif sig[1] > prev[1]:
+		kind = "u"
+	elif sig[2] > prev[2]:
+		kind = "h"
+	elif sig[3] > prev[3]:
+		kind = "x"
+	elif sig[0] > prev[0] or sig[5] > prev[5] or sig[6] > prev[6] or sig[7] > prev[7]:
+		kind = "m"
+	if kind != "":
+		_current["log"].append([now - _t0, kind, infer_tap(_prev_snap, snap) if kind == "m" else -1])
+	_prev_snap = snap
+
+var _act_sig_prev: Array = []
+
+
+## The block a move was made with, from the board before / after: the
+## block that escaped; else the Sequence block that advanced; else (a push
+## or a ram) the block whose lane runs straight into the crate that moved
+## or the shell that broke. -1 if none can be told.
+static func infer_tap(before: Dictionary, after: Dictionary) -> int:
+	for id in before:
+		var kind: int = before[id][4]
+		if not after.has(id) and kind != BlockData.Kind.CRATE and kind != BlockData.Kind.GATE:
+			return id
+	var target := Vector2i(-1, -1)
+	var push := Vector2i.ZERO  # how the crate moved: the pusher points this way
+	for id in after:
+		if not before.has(id):
+			continue
+		if before[id][2] == 1 and after[id][2] == 2:
+			return id
+		if before[id][4] == BlockData.Kind.CRATE and before[id][0] != after[id][0]:
+			target = before[id][0]
+			push = after[id][0] - before[id][0]
+		if before[id][3] and not after[id][3]:
+			target = before[id][0]
+	if target.x < 0:
+		return -1
+	var at := {}
+	for id in before:
+		at[before[id][0]] = id
+	var found := []
+	for id in before:
+		var kind: int = before[id][4]
+		if kind == BlockData.Kind.CRATE or kind == BlockData.Kind.GATE:
+			continue
+		var step := Direction.step(before[id][1])
+		if push != Vector2i.ZERO and step != push:
+			continue
+		var c: Vector2i = before[id][0] + step
+		for n in 20:
+			if at.has(c):
+				if c == target:
+					found.append(id)
+				break
+			c += step
+	# A ram that two blocks could have made can't be told apart: -1.
+	return found[0] if found.size() == 1 else -1
+
+
+## Pilot &bench=1: the recipient's check (a fresh Solver, the full
+## 60000-node limit) and SHOW A MOVE on every board, timed on this device.
+## Published as window.chainEscapeVhBench (and kept in bench_results).
+func _run_bench() -> void:
+	var ids := boards.keys()
+	ids.sort()
+	bench_results = []
+	for id in ids:
+		await get_tree().process_frame
+		var rec: Dictionary = boards[id]
+		var def := PuzzleDefinition.from_dict(rec["puzzle"])
+		var level := def.to_level()
+		var times := []
+		var nodes := 0
+		for k in 3:
+			var s := _solver(level, [])
+			var t0 := Time.get_ticks_usec()
+			s.solve_moves()
+			times.append((Time.get_ticks_usec() - t0) / 1000.0)
+			nodes = s.nodes
+		times.sort()
+		var row := {"id": id, "verify_ms": snappedf(times[1], 0.01), "verify_nodes": nodes}
+		var hint: Dictionary = rec.get("metrics", {}).get("hint", {})
+		for k in [["hint", "worst_path"], ["dead_hint", "dead_worst_path"]]:
+			var path: Array = hint.get(k[1], [])
+			if k[0] == "dead_hint" and path.is_empty():
+				continue
+			var s := _solver(level, path)
+			s.nodes = 0
+			var t1 := Time.get_ticks_usec()
+			s.recommend_move()
+			row[k[0] + "_ms"] = snappedf((Time.get_ticks_usec() - t1) / 1000.0, 0.01)
+			row[k[0] + "_nodes"] = s.nodes
+		bench_results.append(row)
+	if OS.has_feature("web"):
+		WebBridge.publish("chainEscapeVhBench", {"done": true, "results": bench_results})
+
+
+static func _solver(level: LevelData, path: Array) -> Solver:
+	var m := BoardModel.new()
+	m.setup(level.rows, level.columns, level.blocks.map(func(b): return b.duplicate_data()))
+	m.set_portals(level.portals)
+	var s := Solver.from_model(m)
+	s.node_limit = Solver.DEFAULT_NODE_LIMIT
+	for mv in path:
+		s._do(int(mv))
+	return s
+
+
 # --- State (this file only) -------------------------------------------------------------
 
 func _load_state() -> void:
@@ -254,7 +545,7 @@ func _load_state() -> void:
 	var best = null
 	for t in texts:
 		var parsed = JSON.parse_string(t) if t != "" else null
-		if typeof(parsed) == TYPE_DICTIONARY and parsed.get("order", []).size() == boards.size() \
+		if typeof(parsed) == TYPE_DICTIONARY and (parsed.get("order", []).size() == boards.size() or (pilot and parsed.has("reached"))) \
 				and parsed["order"].all(func(id): return boards.has(str(id))) \
 				and (best == null or parsed.get("results", []).size() > best.get("results", []).size()):
 			best = parsed
@@ -267,7 +558,36 @@ func _load_state() -> void:
 
 
 ## A random order for this device: variants interleaved, never told.
+## Pilot: only the boards whose mechanics the tester has met, one of each
+## group per round in a random group order (balanced), nothing before the
+## tester said how far they have played.
 func _new_order() -> void:
+	if pilot:
+		var reached := int(state.get("reached", 0))
+		var buckets := {}
+		for id in boards:
+			var b: Dictionary = boards[id]
+			if reached > 0 and int(b.get("first_level", 1)) <= reached:
+				var v: String = b["variant"]
+				if not buckets.has(v):
+					buckets[v] = []
+				buckets[v].append(id)
+		var prng := RandomNumberGenerator.new()
+		prng.randomize()
+		for v in buckets:
+			buckets[v].sort()
+			_shuffle(buckets[v], prng)
+		var order := []
+		while not buckets.is_empty():
+			var groups := buckets.keys()
+			groups.sort()
+			_shuffle(groups, prng)
+			for v in groups:
+				order.append(buckets[v].pop_back())
+				if buckets[v].is_empty():
+					buckets.erase(v)
+		state = {"order": order, "index": 0, "results": [], "reached": reached, "started": Time.get_datetime_string_from_system()}
+		return
 	var ids := boards.keys()
 	ids.sort()
 	var rng := RandomNumberGenerator.new()
@@ -278,6 +598,14 @@ func _new_order() -> void:
 		ids[i] = ids[j]
 		ids[j] = t
 	state = {"order": ids, "index": 0, "results": [], "started": Time.get_datetime_string_from_system()}
+
+
+static func _shuffle(a: Array, prng: RandomNumberGenerator) -> void:
+	for i in range(a.size() - 1, 0, -1):
+		var j := prng.randi_range(0, i)
+		var t = a[i]
+		a[i] = a[j]
+		a[j] = t
 
 
 func _save_state() -> void:
@@ -293,8 +621,13 @@ func _save_state() -> void:
 ## Everything recorded, plus a per-variant summary (variants are only
 ## named here, after every puzzle was played).
 func results_json() -> String:
-	return JSON.stringify({"format": "ce-vh-human-results", "v": 1, "test": test, "q2_key": _cfg["q2_key"], "q3_key": _cfg.get("q3_key", ""), "started": state.get("started", ""),
-		"device": OS.get_name(), "assist": _assist, "results": state["results"], "summary": summary()})
+	var out := {"format": "ce-vh-human-results", "v": 1, "test": test, "q2_key": _cfg["q2_key"], "q3_key": _cfg.get("q3_key", ""), "started": state.get("started", ""),
+		"device": OS.get_name(), "assist": _assist, "results": state["results"], "summary": summary()}
+	if pilot:
+		out["reached"] = state.get("reached", 0)
+		out["hardest"] = state.get("hardest", {})
+		out["boards_offered"] = total()
+	return JSON.stringify(out)
 
 
 func summary() -> Dictionary:
@@ -319,6 +652,14 @@ func summary() -> Dictionary:
 		s["restarts"] += r["restarts"]
 		if r.get("first_move_ms", -1) >= 0:
 			s["first_move_s"].append(snappedf(r["first_move_ms"] / 1000.0, 0.1))
+		if pilot:
+			s["gave_up"] = s.get("gave_up", 0) + (1 if r.get("gave_up", false) else 0)
+			s["harder_than_l300"] = s.get("harder_than_l300", 0) + (1 if r.get("l300", "") == "HARDER" else 0)
+			s["similar_l300"] = s.get("similar_l300", 0) + (1 if r.get("l300", "") == "SIMILAR" else 0)
+			s["unfair"] = s.get("unfair", 0) + (1 if r.get("unfair", "") == "YES" else 0)
+			for k in ["enjoy", "achieve"]:
+				if str(r.get(k, "")) != "":
+					s[k] = s.get(k, []) + [int(r[k])]
 	for v in out:
 		var s: Dictionary = out[v]
 		var t: Array = s["time_s"]
@@ -328,6 +669,9 @@ func summary() -> Dictionary:
 		fm.sort()
 		s["median_first_move_s"] = fm[fm.size() / 2] if not fm.is_empty() else -1
 		s["avg_rating_1to4"] = snappedf(s["rating"].reduce(func(a, b): return a + b, 0) / float(maxi(s["n"], 1)), 0.01)
+		for k in ["enjoy", "achieve"]:
+			if s.has(k) and not s[k].is_empty():
+				s["avg_" + k] = snappedf(s[k].reduce(func(a, b): return a + b, 0) / float(s[k].size()), 0.01)
 	return out
 
 
@@ -352,6 +696,11 @@ func _summary_text() -> String:
 	keys.sort()
 	for v in keys:
 		var s: Dictionary = sm[v]
+		if pilot:
+			lines.append("Group %s: %d played, %d solved, %d given up, median %ss, rated %.1f / 4, VERY HARD x%d, harder than L300 x%d, enjoy %s, achieve %s, unfair x%d" % [
+				v, s["n"], s["solved"], s.get("gave_up", 0), str(s["median_time_s"]), s["avg_rating_1to4"], s["very_hard"], s.get("harder_than_l300", 0),
+				str(s.get("avg_enjoy", "-")), str(s.get("avg_achieve", "-")), s.get("unfair", 0)])
+			continue
 		lines.append("Group %s: %d played, %d solved, median %ss, rated %.1f / 4, VERY HARD x%d, %s x%d%s" % [
 			v, s["n"], s["solved"], str(s["median_time_s"]), s["avg_rating_1to4"], s["very_hard"], _cfg["q2_label"], s["q2_yes"],
 			(", %s x%d" % [_cfg["q3_label"], s.get("q3_yes", 0)]) if _cfg.has("q3_key") else ""])
@@ -367,22 +716,54 @@ func _show(s: int) -> void:
 	for k in _pages:
 		_pages[k].visible = k == s
 	_root.visible = s != Screen.PLAYING
+	if _hud:
+		_hud.visible = s == Screen.PLAYING
 	match s:
 		Screen.INTRO:
+			if not pilot:
+				_show_intro()
+				return
 			var i: int = state["index"]
-			_intro_text.text = ("%d puzzles, one after another, in a random order.\n\n" % total()
-				+ _tools_text() + "\n\n"
-				+ (str(_cfg["note"]) + "\n\n" if _cfg.has("note") else "")
-				+ "If you want to give up, tap EXIT and LEAVE.\n\nAfter each puzzle: a few quick questions.")
+			_intro_text.text = ("Up to %d puzzles, one after another, in a random order. You can stop at any time and continue later.\n\n" % boards.size()
+				+ _tools_text() + "\n\nEach puzzle starts with a one-line reminder of its rules.\nIf you want to stop a puzzle, tap GIVE UP twice.\n\nAfter each puzzle: five quick questions.")
 			_start.text = "START" if i == 0 else ("CONTINUE  %d / %d" % [i + 1, total()] if i < total() else "SEE RESULTS")
 		Screen.THINK:
 			_q_label.text = _questions[_q][1]
+			_build_options(_questions[_q][3])
+		Screen.BRIEF:
+			var rec: Dictionary = boards[state["order"][state["index"]]]
+			var lines := ["PUZZLE %d / %d" % [int(state["index"]) + 1, total()], ""]
+			var mech: Array = rec.get("mechanics", [])
+			var has_spinner := mech.any(func(m): return str(m).begins_with("spinner"))
+			if has_spinner:
+				lines.append(REMINDERS["spinner_cw"])
+			for m in mech:
+				if m != "spinner_cw" and REMINDERS.has(m):
+					lines.append(REMINDERS[m])
+			if int(state["index"]) == total() / 2 and int(state["index"]) > 0:
+				lines.append("")
+				lines.append("Halfway: a good moment for a break.")
+			_brief_text.text = "\n\n".join(lines)
+		Screen.HARDEST:
+			_hardest_pick = -1
+			_fill_hardest()
 		Screen.RATE:
 			_rate_title.text = "PUZZLE %d / %d %s\n\nHow difficult was this puzzle?" % [_current.get("order", 0), total(), "SOLVED" if _current.get("completed", false) else "NOT SOLVED"]
 		Screen.RESULTS:
 			_results_text.text = _summary_text()
 			_copy_status.text = ""
 			SocialWeb.set_share(results_json(), "", "")
+	_update_zones.call_deferred()
+	_publish()
+
+
+func _show_intro() -> void:
+	var i: int = state["index"]
+	_intro_text.text = ("%d puzzles, one after another, in a random order.\n\n" % total()
+		+ _tools_text() + "\n\n"
+		+ (str(_cfg["note"]) + "\n\n" if _cfg.has("note") else "")
+		+ "If you want to give up, tap EXIT and LEAVE.\n\nAfter each puzzle: a few quick questions.")
+	_start.text = "START" if i == 0 else ("CONTINUE  %d / %d" % [i + 1, total()] if i < total() else "SEE RESULTS")
 	_update_zones.call_deferred()
 	_publish()
 
@@ -414,8 +795,10 @@ func _build() -> void:
 	_start = _button("START", "Start", ACCENT, Palette.WHITE)
 	_start.pressed.connect(func():
 		AudioManager.play_ui_tap()
-		if int(state["index"]) >= total():
-			_show(Screen.RESULTS)
+		if pilot and int(state.get("reached", 0)) == 0:
+			_show(Screen.PROFILE)
+		elif int(state["index"]) >= total():
+			start_next()
 		else:
 			start_next())
 	intro.add_child(_start)
@@ -438,16 +821,16 @@ func _build() -> void:
 	var think_box := _column()
 	_q_label = _label(_cfg["q2"], 34, 900)
 	think_box.add_child(_q_label)
-	for a in ["YES", "NO"]:
-		var b := _button(a, "Think_%s" % a, Palette.WHITE, Palette.TEXT)
-		b.pressed.connect(func():
-			AudioManager.play_ui_tap()
-			think(a))
-		think_box.add_child(b)
-	var skip := _button("SKIP", "Think_SKIP", Palette.BACKGROUND, Palette.TEXT_SOFT)
-	skip.pressed.connect(func(): think(""))
-	think_box.add_child(skip)
+	_think_opts = VBoxContainer.new()
+	_think_opts.add_theme_constant_override("separation", 22)
+	think_box.add_child(_think_opts)
+	_build_options(_questions[0][3])
+	_think_skip = _button("SKIP", "Think_SKIP", Palette.BACKGROUND, Palette.TEXT_SOFT)
+	_think_skip.pressed.connect(func(): think(""))
+	think_box.add_child(_think_skip)
 	_pages[Screen.THINK] = think_box
+	if pilot:
+		_build_pilot()
 	# RESULTS
 	var res := _column()
 	res.add_child(_label("RESULTS", 40, 900))
@@ -465,6 +848,107 @@ func _build() -> void:
 	reset.pressed.connect(reset_test)
 	res.add_child(reset)
 	_pages[Screen.RESULTS] = res
+
+
+## The answer buttons of the follow-up question showing (YES / NO for
+## tests 1-3; a 1-5 scale in one row; EASIER / SIMILAR / ...).
+func _build_options(opts: Array) -> void:
+	for c in _think_opts.get_children():
+		_think_opts.remove_child(c)
+		c.queue_free()
+	var row: BoxContainer = _think_opts
+	if opts.size() == 5:
+		row = HBoxContainer.new()
+		row.add_theme_constant_override("separation", 14)
+		row.alignment = BoxContainer.ALIGNMENT_CENTER
+		_think_opts.add_child(row)
+	for a in opts:
+		var b := _button(a, "Think_%s" % a, Palette.WHITE, Palette.TEXT)
+		if opts.size() == 5:
+			b.custom_minimum_size = Vector2(110, 110)
+		b.pressed.connect(func():
+			AudioManager.play_ui_tap()
+			think(a))
+		row.add_child(b)
+
+
+## Pilot pages: campaign progress, the reminder card, the hardest
+## puzzle, and the clock + GIVE UP shown over the board.
+func _build_pilot() -> void:
+	var prof := _column()
+	prof.add_child(_label("How far have you played\nthe campaign?", 34, 900))
+	for r in REACHED:
+		var b := _button(r[0], "Reached_%d" % r[1], Palette.WHITE, Palette.TEXT)
+		b.pressed.connect(func():
+			AudioManager.play_ui_tap()
+			set_reached(r[1]))
+		prof.add_child(b)
+	_pages[Screen.PROFILE] = prof
+	var brief := _column()
+	_brief_text = _label("", 28, 800)
+	brief.add_child(_brief_text)
+	var go := _button("START PUZZLE", "BeginPuzzle", ACCENT, Palette.WHITE)
+	go.pressed.connect(func():
+		AudioManager.play_ui_tap()
+		begin_puzzle())
+	brief.add_child(go)
+	_pages[Screen.BRIEF] = brief
+	var hard := _column()
+	hard.add_child(_label("Which puzzle was the hardest?", 34, 900))
+	_hardest_label = _label("Tap its number (the order you played them in).", 22, 700)
+	hard.add_child(_hardest_label)
+	_hardest_grid = GridContainer.new()
+	_hardest_grid.columns = 7
+	_hardest_grid.add_theme_constant_override("h_separation", 10)
+	_hardest_grid.add_theme_constant_override("v_separation", 10)
+	hard.add_child(_hardest_grid)
+	hard.add_child(_label("Why? (optional - you can also write it in the chat)", 22, 700))
+	_hardest_why = LineEdit.new()
+	_hardest_why.name = "HardestWhy"
+	_hardest_why.custom_minimum_size = Vector2(0, 80)
+	_hardest_why.add_theme_font_size_override("font_size", 26)
+	hard.add_child(_hardest_why)
+	var done := _button("DONE", "HardestDone", ACCENT, Palette.WHITE)
+	done.pressed.connect(func():
+		AudioManager.play_ui_tap()
+		set_hardest(_hardest_pick, _hardest_why.text))
+	hard.add_child(done)
+	_pages[Screen.HARDEST] = hard
+	# Over the board while playing: the clock and GIVE UP (top right, below
+	# the game's own top bar).
+	_hud = Control.new()
+	_hud.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
+	_hud.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	_hud.visible = false
+	add_child(_hud)
+	var box := HBoxContainer.new()
+	box.set_anchors_and_offsets_preset(Control.PRESET_TOP_WIDE)
+	box.offset_top = 262.0
+	box.offset_left = 30.0
+	box.offset_right = -30.0
+	box.alignment = BoxContainer.ALIGNMENT_END
+	box.add_theme_constant_override("separation", 18)
+	_hud.add_child(box)
+	_clock = _label("0:00", 30, 900)
+	_clock.name = "Clock"
+	_clock.autowrap_mode = TextServer.AUTOWRAP_OFF
+	box.add_child(_clock)
+	_give_up = _button("GIVE UP", "GiveUp", Palette.WHITE, Palette.TEXT_SOFT)
+	_give_up.custom_minimum_size = Vector2(0, 72)
+	_give_up.pressed.connect(give_up)
+	box.add_child(_give_up)
+
+
+func _fill_hardest() -> void:
+	for c in _hardest_grid.get_children():
+		c.queue_free()
+	for i in state["results"].size():
+		var b := _button(str(i + 1), "Hardest_%d" % (i + 1), Palette.WHITE, Palette.TEXT)
+		b.custom_minimum_size = Vector2(80, 80)
+		b.pressed.connect(func():
+			_hardest_pick = i + 1
+			_hardest_label.text = "Puzzle %d selected." % (i + 1))
+		_hardest_grid.add_child(b)
 
 
 func _column() -> VBoxContainer:
@@ -504,6 +988,10 @@ func _publish() -> void:
 		return
 	var vis := get_viewport().get_visible_rect().size
 	var buttons := {}
+	if _hud and _hud.visible:
+		for b in _hud.find_children("*", "BaseButton", true, false):
+			var c: Vector2 = b.get_global_rect().get_center()
+			buttons[String(b.name)] = [snappedf(c.x / vis.x, 0.0001), snappedf(c.y / vis.y, 0.0001)]
 	if _root.visible:
 		for b in _pages[screen].find_children("*", "BaseButton", true, false):
 			if b.is_visible_in_tree():
