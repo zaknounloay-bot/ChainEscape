@@ -1,0 +1,58 @@
+{
+  "format": "ce-extreme-notes",
+  "note": "Development only. Hand-written explanations of the EXTREME prototypes (tools/extreme5_build.gd copies them into data/dev/extreme5.json by board fingerprint). Cells are named RnCm: row n, column m, counted from 1 at the top-left. Every move named here was traced on the solver's solution and its losing alternatives (--dossier).",
+  "boards": {
+    "85e76b5f9dfa208c375cf206fbe7d8e97c24a78b3bb669fe5ff397959a026d2d": {
+      "title": "Long-range dependencies (locks)",
+      "why": "Two colour locks hold two blocks until a whole colour has gone, so early, free-looking moves decide what is possible 8-11 moves later. The locked counter-clockwise spinner R at R2C3 must still point left when its blue lock opens. The plain R at R1C3 right above it becomes free after the first move and is the natural next tap, but leaving it turns that spinner to face down column 3, straight at the clockwise spinner R at R6C3, whose only exit is up the same column: a mutual block that cannot show until both blue blocks have gone. The green block at R7C2 is locked by purple in the same way. Every rule of thumb we model fails: the luckiest still hits 9 dead ends (median) with memory and a 2-move lookahead.",
+      "misleading_moves": [
+        "R at R1C3 (right), right after the first move: free and plain, but it turns the locked spinner below it (R2C3) to face down; play can go on for up to 11 moves before the board jams.",
+        "Spinner R at R4C5 (right) on the first move: it can leave at once, the classic 'take a free spinner', but it turns the counter-clockwise spinner G at R3C5 too early; up to 10 moves before the jam.",
+        "Spinner B at R3C1 leaving down as soon as G at R6C1 has gone: it should wait to be turned left by R at R3C2; up to 9 moves before the jam."
+      ],
+      "rules_defeated": "all four (luckiest: escape spinners last, 9 dead ends)"
+    },
+    "b31f8243eee0ac72bc8adf2fbf4c56a7632e686f8e409e795811dedce51895b5": {
+      "title": "Rotation and order (mixed spinner rules + Sequence)",
+      "why": "Clockwise, counter-clockwise and alternating spinners sit in one cluster, so one block leaving turns its neighbours different ways, and the order of escapes decides where each one ends up pointing. Three Sequence blocks can only take their first step when their first lane is clear, which ties them to the cluster: the red one at R1C3 points down column 3 and must wait until the cluster has emptied that column, then comes back pointing left. The two spinners that can leave at once (G at R4C3 down, P at R3C1 left) are both wrong at the start: each turns two neighbours of different rules too early, and the failure shows up to 11 moves later. Limitation: no spinner touches a Sequence block, so the Sequence advances turn nothing here; Sequence works through its lane condition only.",
+      "misleading_moves": [
+        "Spinner G at R4C3 (down) on the first move: its column is clear, so it looks like a free spinner, but it turns P at R3C3 and P at R4C4 too early; up to 11 moves before the jam.",
+        "Alternating spinner P at R3C1 (left, at the edge) on the first move: it leaves at once, turning the counter-clockwise Y at R2C1 and Y at R3C2; up to 10 moves before the jam.",
+        "Spinner P at R4C4 (up) once P at R1C4 has gone: free, but it has to be turned twice and leave down later; up to 10 moves before the jam."
+      ],
+      "rules_defeated": "all four (luckiest: fewest spinner turns, 6 dead ends)"
+    },
+    "7faf35eeee4afcbe175f67df03a658b45c7da3622d75ce1cfe5a53192ecd8081": {
+      "title": "Interacting control systems (switches + gate)",
+      "why": "Two switches and a chain gate form a control system that has to be timed as a whole. Switch A (R at R4C4) can leave on the very first move, but it reverses three blocks at once: firing it while two or three of them are still on the board always loses (checked exhaustively over every reachable position), so in every winning line it is one of the last five moves. Switch B (Y at R6C4) must fire at exactly the right moment: after B at R2C6 has left to the right (otherwise it is reversed into the spinner beside it), and before R at R5C2 can leave, because R points into a spinner until switch B reverses it. The gate at R6C1 opens only when both of its links (P at R2C1, R at R2C2) are gone, and it stands in P's way down, so P has to be turned rather than released. Every rule of thumb fails: the luckiest hits 11 dead ends.",
+      "misleading_moves": [
+        "Switch R at R4C4 on the first move (or at any time before the end): free, and the switch looks like the point of the puzzle; it reverses R at R2C2, B at R2C3 and B at R7C2 while they still need their original directions; up to 10 moves before the jam.",
+        "Spinner P at R7C3 (right) on the first move: free, but it turns Y at R6C3 to face switch B; up to 10 moves before the jam.",
+        "Switch Y at R6C4 on the first move: it fires before B at R2C6 has left and reverses it into the spinner beside it; up to 8 moves before the jam."
+      ],
+      "rules_defeated": "all four (luckiest: escape a spinner as soon as it can go, 11 dead ends)"
+    },
+    "854f153fbb266e936fc5f281a6f33a4f7303bda129b58c35effae49b8b40ccda": {
+      "title": "Spatial planning (one crate)",
+      "why": "The crate at R5C2 stands in the only exit column of P at R6C2 and in G's row. Exactly one route works (checked exhaustively over every reachable position): P at R6C2 pushes it up to R4C2, G at R5C3 leaves left through the gap, and then the clockwise spinner R at R4C4 - while it still points left - pushes the crate on into R4C1, out of every remaining lane. That push is the whole puzzle: the two blocks next to the spinner that can leave at once (B at R3C4 above it, Y at R4C5 beside it) both turn it upward when they go, and after that nothing can move the crate out of column 2. So the spinner has to be used as a pusher before it is used as a block that turns. Only 1 of the 5 legal first moves (the push by P) keeps the board solvable. Two pushes in all. Caution from Gate 0: crate boards that defeated every model were still rated EASY / MEDIUM.",
+      "misleading_moves": [
+        "B at R3C4 (left) on the first move: free along an empty row, the most natural tap, but it turns the spinner R at R4C4 upward before it has pushed the crate; play can go on for up to 11 moves before the jam.",
+        "Y at R4C5 (right) on the first move: also free, and it turns the same spinner; up to 11 moves before the jam.",
+        "A second push up by P at R6C2 (after the first): it moves the crate out of the spinner's lane; up to 10 moves before the jam.",
+        "G at R5C3 pushing the crate left into R5C1 on the first move: up to 8 moves before the jam."
+      ],
+      "rules_defeated": "all four plus 'push only when nothing else is left' (luckiest: fewest spinner turns, 6 dead ends)"
+    },
+    "3f8d71fdbc12434271a104ca5b3a4d25d80fb57f425aec345a665499f3c57e07": {
+      "title": "Magnet chain (best evidence-based combination)",
+      "why": "Three magnets and six spinners. A magnet that leaves drags the first block behind it into the cell it left, so lanes are created and destroyed, and here the solution is a chain. Every winning line uses the same three pulls in the same order (checked exhaustively). Move 1: the yellow magnet at R5C1 leaves down and drags the blue spinner at R4C1 into its place. Later the green magnet at R1C5 leaves right and drags the purple magnet from R1C1 along the whole top row into R1C5 - only possible once G at R1C2 has left down. The purple magnet then leaves up and drags Y at R4C5 up column 5 into the empty top row, from where it leaves left. Each magnet pulls whatever is first behind it at that moment, so the player has to plan the order before pulling. Only 1 of the 4 legal first moves keeps the board solvable. Without magnets the board cannot be solved at all.",
+      "misleading_moves": [
+        "Purple magnet at R1C1 (up) on the first move: free, but it drags the blue spinner at R4C1 up into the corner, and the chain needs that magnet later; up to 8 moves before the jam.",
+        "Green magnet at R1C5 (right) on the first move: free, but it drags G at R1C2, not the purple magnet, into R1C5; up to 7 moves before the jam.",
+        "Spinner G at R3C2 (right) on the first move: free, but it is needed later pointing down; up to 7 moves before the jam.",
+        "R at R4C3 (left) as soon as its lane is clear: it turns the spinner G at R5C3 too early; up to 7 moves before the jam."
+      ],
+      "rules_defeated": "all four (luckiest: escape a spinner as soon as it can go, 17 dead ends)"
+    }
+  }
+}

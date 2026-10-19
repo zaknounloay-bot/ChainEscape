@@ -39,7 +39,25 @@ extends CanvasLayer
 ##               recipient's check and SHOW A MOVE on every board instead.
 ##               Campaign tokens (Sequence ":", Movable "M") are parsed
 ##               only while this page runs, as the mechanic lab does.
+##   ?xtest5=1   EXTREME RESEARCH (data/dev/extreme5.json,
+##               tools/extreme5_build.gd, docs/extreme5.md): five
+##               prototypes, each testing one strategic difficulty
+##               hypothesis. Same flow as the pilot, with a five-step
+##               rating (EASY ... EXTREME), and after it: vs Level 300,
+##               enjoyment, achievement, fairness, meaningful planning.
+##               Blocked taps are logged too ("b"). Magnet ("*") is parsed
+##               while this page runs, as the Magnet lab does. The play
+##               screen's difficulty label is left blank (no anchoring).
 
+## EXTREME research: the rating and the follow-up questions.
+const X_RATINGS := ["EASY", "MEDIUM", "HARD", "VERY HARD", "EXTREME"]
+const X_QUESTIONS := [
+	["l300", "Compared with Campaign Level 300,\nthis puzzle was...", "vs Level 300", ["EASIER", "SIMILAR", "HARDER", "NOT SURE"]],
+	["enjoy", "How much did you enjoy it?\n(1 = not at all, 5 = a lot)", "enjoyment", ["1", "2", "3", "4", "5"]],
+	["achieve", "How strong was your sense\nof achievement?\n(1 = none, 5 = very strong)", "achievement", ["1", "2", "3", "4", "5"]],
+	["fair", "Did the puzzle feel fair?", "fair", ["YES", "MOSTLY", "NO"]],
+	["planned", "Did it require real planning\n(thinking several moves ahead)?", "needed planning", ["YES", "A LITTLE", "NO"]],
+]
 const PARAM := "vhtest"
 const DATA_PATH := "res://data/dev/vh_human_test.json"
 const STATE_PATH := "user://vh_human_test_state.json"
@@ -61,6 +79,10 @@ const TESTS := {
 	"vhtest4": {"data": "res://data/dev/vh_pilot4.json", "state": "user://vh_pilot4_state.json", "title": "VERY HARD PILOT\n(DEVELOPMENT)",
 		"q2": "", "q2_key": "l300", "q2_label": "harder than L300", "pilot": true,
 		"ls": "chain_escape_vhtest4_state"},
+	# EXTREME research prototypes (see the header).
+	"xtest5": {"data": "res://data/dev/extreme5.json", "state": "user://extreme5_state.json", "title": "EXTREME RESEARCH\n(DEVELOPMENT)",
+		"q2": "", "q2_key": "l300", "q2_label": "harder than L300", "pilot": true, "ratings": X_RATINGS, "questions": X_QUESTIONS,
+		"log_blocked": true, "hide_difficulty": true, "ls": "chain_escape_xtest5_state"},
 }
 ## Pilot follow-up questions: [key, text, label, options].
 const PILOT_QUESTIONS := [
@@ -86,6 +108,7 @@ const REMINDERS := {
 	"portal": "A lane that reaches a portal continues out of the matching portal.",
 	"sequence": "A Sequence block's first move comes back with its next arrow; the second move escapes.",
 	"crate": "A Movable block never leaves: a block launched into it pushes it one cell.",
+	"magnet": "When a magnet leaves, the first block behind it slides into the cell it left.",
 }
 ## Pilot: GIVE UP needs a second tap within this time.
 const GIVE_UP_CONFIRM_MS := 3000
@@ -99,6 +122,8 @@ enum Screen { INTRO, PLAYING, RATE, THINK, RESULTS, PROFILE, BRIEF, HARDEST }
 
 var test := PARAM
 var _cfg: Dictionary = TESTS[PARAM]
+## The rating scale of this test (EXTREME research: five steps).
+var ratings: Array = RATINGS
 var boards: Dictionary = {}  # id -> record (variant, puzzle, metrics)
 var state: Dictionary = {}  # order, index, results
 var screen: int = Screen.INTRO
@@ -147,7 +172,7 @@ static func requested() -> bool:
 static func requested_test() -> String:
 	if BuildFlags.dev_pages_off():
 		return ""  # player / QA build: developer pages off
-	for key in ["vhtest4", "vhtest3", "vhtest2", "vhtest"]:
+	for key in ["xtest5", "vhtest4", "vhtest3", "vhtest2", "vhtest"]:
 		if "--" + key in OS.get_cmdline_user_args():
 			return key
 	if not OS.has_feature("web"):
@@ -156,7 +181,7 @@ static func requested_test() -> String:
 	if loc == null:
 		return ""
 	var where := (str(loc.search) + str(loc.hash)).to_lower()
-	for key in ["vhtest4", "vhtest3", "vhtest2", "vhtest"]:
+	for key in ["xtest5", "vhtest4", "vhtest3", "vhtest2", "vhtest"]:
 		if where.contains(key + "=1") or where.contains(key + "=true"):
 			return key
 	return ""
@@ -167,12 +192,14 @@ func _init(p_test: String = PARAM) -> void:
 	test = p_test if TESTS.has(p_test) else PARAM
 	_cfg = TESTS[test]
 	pilot = _cfg.get("pilot", false)
+	ratings = _cfg.get("ratings", RATINGS)
 	if pilot:
-		_questions = PILOT_QUESTIONS.duplicate(true)
+		_questions = _cfg.get("questions", PILOT_QUESTIONS).duplicate(true)
 		bench = _bench_requested()
 		# Campaign tokens on this page only (as the mechanic lab does).
 		LevelManager.dev_sequence = true
 		LevelManager.dev_movable = true
+		LevelManager.dev_magnet = true
 		return
 	_questions = [[_cfg["q2_key"], _cfg["q2"], _cfg["q2_label"], ["YES", "NO"]]]
 	if _cfg.has("q3"):
@@ -267,12 +294,13 @@ func begin_puzzle() -> void:
 	_act_sig = []
 	play.start(c, SocialPlay.Mode.CREATOR_PREVIEW, Chapters.theme_for_chapter(1))
 	play._title.text = "PUZZLE %d / %d" % [i + 1, total()]
+	if _cfg.get("hide_difficulty", false):
+		play._chip.text = ""  # EXTREME research: no "VERY HARD" label to anchor the rating
 	_t0 = Time.get_ticks_msec()
 	_last_act = _t0
 	if pilot:
 		_prev_snap = _snap()
-		_act_sig_prev = [play.total_moves, play.total_undos, play.total_hints, play.total_hammers, play.plays,
-			play.total_pushes, play.total_rams, play.total_seq_advances]
+		_act_sig_prev = _sig()
 
 
 func _on_solved() -> void:
@@ -299,9 +327,7 @@ func _on_gave_up() -> void:
 ## Recorded: the longest, and every pause >= LONG_PAUSE_MS with where it
 ## happened (attempt number, blocks already cleared in that attempt / total).
 func _track_pauses() -> void:
-	# Pushes, rams and Sequence advances are moves too (their own counters).
-	var sig := [play.total_moves, play.total_undos, play.total_hints, play.total_hammers, play.plays,
-		play.total_pushes, play.total_rams, play.total_seq_advances]
+	var sig := _sig()
 	if _act_sig.is_empty():
 		_act_sig = sig
 		return
@@ -319,6 +345,17 @@ func _track_pauses() -> void:
 		_current["long_pauses"].append({"ms": gap, "attempt": play.plays, "cleared": cleared, "of": play._total_blocks})
 
 
+## What has happened so far in this puzzle. Pushes, rams and Sequence
+## advances are moves too (their own counters); EXTREME research also
+## counts blocked taps (a tap that moved nothing).
+func _sig() -> Array:
+	var sig := [play.total_moves, play.total_undos, play.total_hints, play.total_hammers, play.plays,
+		play.total_pushes, play.total_rams, play.total_seq_advances]
+	if _cfg.get("log_blocked", false):
+		sig.append(play.total_blocked)
+	return sig
+
+
 func _finish_attempt(solved: bool) -> void:
 	_current["completed"] = solved
 	_current["time_ms"] = Time.get_ticks_msec() - _t0
@@ -333,10 +370,12 @@ func _finish_attempt(solved: bool) -> void:
 		_current["rams"] = play.total_rams
 		_current["portal_uses"] = play.total_portal_uses
 		_current["blocked_taps"] = play.total_blocked
+		if _cfg.get("log_blocked", false):
+			_current["pulls"] = play.total_pulls
 
 
 func rate(i: int) -> void:
-	_current["rating"] = RATINGS[i]
+	_current["rating"] = ratings[i]
 	_q = 0
 	_show(Screen.THINK)
 
@@ -413,7 +452,8 @@ func _snap() -> Dictionary:
 
 ## One action of the pilot log: [ms since the puzzle started, kind, block]:
 ## "m" move (tapped block id, or -1 if it can't be told), "u" UNDO,
-## "h" SHOW A MOVE, "x" HAMMER, "r" RESTART.
+## "h" SHOW A MOVE, "x" HAMMER, "r" RESTART, "b" blocked tap (EXTREME
+## research only; the block is not known: -1).
 func _log_action(sig: Array, now: int) -> void:
 	var prev: Array = _act_sig_prev
 	_act_sig_prev = sig.duplicate()
@@ -431,6 +471,8 @@ func _log_action(sig: Array, now: int) -> void:
 		kind = "x"
 	elif sig[0] > prev[0] or sig[5] > prev[5] or sig[6] > prev[6] or sig[7] > prev[7]:
 		kind = "m"
+	elif sig.size() > 8 and sig[8] > prev[8]:
+		kind = "b"
 	if kind != "":
 		_current["log"].append([now - _t0, kind, infer_tap(_prev_snap, snap) if kind == "m" else -1])
 	_prev_snap = snap
@@ -641,8 +683,14 @@ func summary() -> Dictionary:
 		s["solved"] += 1 if r["completed"] else 0
 		if r["completed"]:
 			s["time_s"].append(snappedf(r["time_ms"] / 1000.0, 0.1))
-		s["rating"].append(RATINGS.find(r["rating"]) + 1)
+		s["rating"].append(ratings.find(r["rating"]) + 1)
 		s["very_hard"] += 1 if r["rating"] == "VERY HARD" else 0
+		if ratings.size() > RATINGS.size():
+			s["extreme"] = s.get("extreme", 0) + (1 if r["rating"] == "EXTREME" else 0)
+			s["unfair"] = s.get("unfair", 0) + (1 if r.get("fair", "") == "NO" else 0)
+			s["planned"] = s.get("planned", 0) + (1 if r.get("planned", "") == "YES" else 0)
+			s["blocked_taps"] = s.get("blocked_taps", 0) + int(r.get("blocked_taps", 0))
+			s["undos"] = s.get("undos", 0) + int(r.get("undos", 0))
 		s["q2_yes"] += 1 if r.get(_cfg["q2_key"], "") == "YES" else 0
 		if _cfg.has("q3_key"):
 			s["q3_yes"] = s.get("q3_yes", 0) + (1 if r.get(_cfg["q3_key"], "") == "YES" else 0)
@@ -669,6 +717,9 @@ func summary() -> Dictionary:
 		fm.sort()
 		s["median_first_move_s"] = fm[fm.size() / 2] if not fm.is_empty() else -1
 		s["avg_rating_1to4"] = snappedf(s["rating"].reduce(func(a, b): return a + b, 0) / float(maxi(s["n"], 1)), 0.01)
+		if ratings.size() > RATINGS.size():
+			s.erase("avg_rating_1to4")  # a five-step scale here
+			s["avg_rating_1to5"] = snappedf(s["rating"].reduce(func(a, b): return a + b, 0) / float(maxi(s["n"], 1)), 0.01)
 		for k in ["enjoy", "achieve"]:
 			if s.has(k) and not s[k].is_empty():
 				s["avg_" + k] = snappedf(s[k].reduce(func(a, b): return a + b, 0) / float(s[k].size()), 0.01)
@@ -696,6 +747,11 @@ func _summary_text() -> String:
 	keys.sort()
 	for v in keys:
 		var s: Dictionary = sm[v]
+		if ratings.size() > RATINGS.size():
+			lines.append("%s: %d played, %d solved, %d given up, median %ss, rated %.1f / 5, EXTREME x%d, VERY HARD x%d, harder than L300 x%d, enjoy %s, achieve %s, unfair x%d, needed planning x%d" % [
+				v, s["n"], s["solved"], s.get("gave_up", 0), str(s["median_time_s"]), s["avg_rating_1to5"], s.get("extreme", 0), s["very_hard"],
+				s.get("harder_than_l300", 0), str(s.get("avg_enjoy", "-")), str(s.get("avg_achieve", "-")), s.get("unfair", 0), s.get("planned", 0)])
+			continue
 		if pilot:
 			lines.append("Group %s: %d played, %d solved, %d given up, median %ss, rated %.1f / 4, VERY HARD x%d, harder than L300 x%d, enjoy %s, achieve %s, unfair x%d" % [
 				v, s["n"], s["solved"], s.get("gave_up", 0), str(s["median_time_s"]), s["avg_rating_1to4"], s["very_hard"], s.get("harder_than_l300", 0),
@@ -725,7 +781,7 @@ func _show(s: int) -> void:
 				return
 			var i: int = state["index"]
 			_intro_text.text = ("Up to %d puzzles, one after another, in a random order. You can stop at any time and continue later.\n\n" % boards.size()
-				+ _tools_text() + "\n\nEach puzzle starts with a one-line reminder of its rules.\nIf you want to stop a puzzle, tap GIVE UP twice.\n\nAfter each puzzle: five quick questions.")
+				+ _tools_text() + "\n\nEach puzzle starts with a one-line reminder of its rules.\nIf you want to stop a puzzle, tap GIVE UP twice.\n\nAfter each puzzle: %s quick questions." % ["five", "six"][mini(_questions.size() - 4, 1)])
 			_start.text = "START" if i == 0 else ("CONTINUE  %d / %d" % [i + 1, total()] if i < total() else "SEE RESULTS")
 		Screen.THINK:
 			_q_label.text = _questions[_q][1]
@@ -810,8 +866,8 @@ func _build() -> void:
 	var rate_box := _column()
 	_rate_title = _label("How difficult was this puzzle?", 34, 900)
 	rate_box.add_child(_rate_title)
-	for i in RATINGS.size():
-		var b := _button(RATINGS[i], "Rate_%s" % RATINGS[i].replace(" ", "_"), Palette.WHITE, Palette.TEXT)
+	for i in ratings.size():
+		var b := _button(ratings[i], "Rate_%s" % ratings[i].replace(" ", "_"), Palette.WHITE, Palette.TEXT)
 		b.pressed.connect(func():
 			AudioManager.play_ui_tap()
 			rate(i))
@@ -863,7 +919,7 @@ func _build_options(opts: Array) -> void:
 		row.alignment = BoxContainer.ALIGNMENT_CENTER
 		_think_opts.add_child(row)
 	for a in opts:
-		var b := _button(a, "Think_%s" % a, Palette.WHITE, Palette.TEXT)
+		var b := _button(a, "Think_%s" % a.replace(" ", "_"), Palette.WHITE, Palette.TEXT)
 		if opts.size() == 5:
 			b.custom_minimum_size = Vector2(110, 110)
 		b.pressed.connect(func():
@@ -914,29 +970,33 @@ func _build_pilot() -> void:
 		set_hardest(_hardest_pick, _hardest_why.text))
 	hard.add_child(done)
 	_pages[Screen.HARDEST] = hard
-	# Over the board while playing: the clock and GIVE UP (top right, below
-	# the game's own top bar).
+	# While playing: GIVE UP in the play screen's top bar (top right, on the
+	# EXIT row) with the clock under it - never over the board, whatever its
+	# size (7-row boards reach higher than the old place below the bar).
 	_hud = Control.new()
 	_hud.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
 	_hud.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	_hud.visible = false
 	add_child(_hud)
-	var box := HBoxContainer.new()
+	var box := VBoxContainer.new()
 	box.set_anchors_and_offsets_preset(Control.PRESET_TOP_WIDE)
-	box.offset_top = 262.0
+	box.offset_top = 28.0
 	box.offset_left = 30.0
 	box.offset_right = -30.0
-	box.alignment = BoxContainer.ALIGNMENT_END
-	box.add_theme_constant_override("separation", 18)
+	box.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	box.add_theme_constant_override("separation", 4)
 	_hud.add_child(box)
-	_clock = _label("0:00", 30, 900)
-	_clock.name = "Clock"
-	_clock.autowrap_mode = TextServer.AUTOWRAP_OFF
-	box.add_child(_clock)
 	_give_up = _button("GIVE UP", "GiveUp", Palette.WHITE, Palette.TEXT_SOFT)
 	_give_up.custom_minimum_size = Vector2(0, 72)
+	_give_up.size_flags_horizontal = Control.SIZE_SHRINK_END
 	_give_up.pressed.connect(give_up)
 	box.add_child(_give_up)
+	_clock = _label("0:00", 26, 900)
+	_clock.name = "Clock"
+	_clock.autowrap_mode = TextServer.AUTOWRAP_OFF
+	_clock.size_flags_horizontal = Control.SIZE_SHRINK_END
+	_clock.horizontal_alignment = HORIZONTAL_ALIGNMENT_RIGHT
+	box.add_child(_clock)
 
 
 func _fill_hardest() -> void:
@@ -997,5 +1057,10 @@ func _publish() -> void:
 			if b.is_visible_in_tree():
 				var c: Vector2 = b.get_global_rect().get_center()
 				buttons[String(b.name)] = [snappedf(c.x / vis.x, 0.0001), snappedf(c.y / vis.y, 0.0001)]
+	var hud_bottom := -1.0
+	var board_top := -1.0
+	if _hud and _hud.visible and play and play.board:
+		hud_bottom = snappedf(maxf(_give_up.get_global_rect().end.y, _clock.get_global_rect().end.y) / vis.y, 0.0001)
+		board_top = snappedf(play.board.get_board_rect().position.y / vis.y, 0.0001)
 	WebBridge.publish("chainEscapeVhTest", {"screen": Screen.keys()[screen], "index": state.get("index", 0), "total": total(),
-		"results": state.get("results", []).size(), "buttons": buttons})
+		"results": state.get("results", []).size(), "buttons": buttons, "hud_bottom": hud_bottom, "board_top": board_top})

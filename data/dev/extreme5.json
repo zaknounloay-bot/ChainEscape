@@ -1,0 +1,1176 @@
+{
+  "assist": {
+    "hammer": 0,
+    "show_a_move": 1,
+    "undo": 3
+  },
+  "boards": [
+    {
+      "accepted": true,
+      "canonical": "6x7|. . . . R^#B ./. . . G>@ Yv R>/. P^ . . . ./. G<@ Y> . . ./Bv@- R<@- . . G<@ P^@/. . . G>@-#P . ./. . B< G< . B^@",
+      "fingerprint": "85e76b5f9dfa208c375cf206fbe7d8e97c24a78b3bb669fe5ff397959a026d2d",
+      "first_level": 31,
+      "id": "T1",
+      "mechanics": [
+        "spinner_cw",
+        "lock",
+        "spinner_ccw"
+      ],
+      "metrics": {
+        "advances": 0,
+        "armored": 0,
+        "blocks": 15,
+        "branching": 4.13,
+        "calm_moves": 10,
+        "calm_moves_share": 0.67,
+        "calm_share": 0.67,
+        "calm_steps": 10,
+        "crates": 0,
+        "decision_points": 12,
+        "depth": 8,
+        "difficulty": 39.8,
+        "flip_targets": 0,
+        "gate_links": 0,
+        "gates": 0,
+        "heuristic_win": 0,
+        "hint": {
+          "aborted": false,
+          "consistent": true,
+          "dead_max_ms_desktop": 23.29,
+          "dead_max_nodes": 98,
+          "dead_states": 18,
+          "dead_worst_path": [
+            2,
+            1
+          ],
+          "max_ms_desktop": 17.77,
+          "max_nodes": 80,
+          "states": 15,
+          "worst_path": [
+            2,
+            11
+          ]
+        },
+        "impact": {
+          "armor": 0,
+          "crate": 0,
+          "gate": 0,
+          "lock": 10.2,
+          "portal": 0,
+          "rules": 7.6,
+          "sequence": 0,
+          "spinner": 32.9,
+          "switch": 0
+        },
+        "locks": 2,
+        "one_safe_steps": 0,
+        "portal_moves": 0,
+        "portal_pairs": 0,
+        "push_essential": false,
+        "push_traps": 0,
+        "pushes": 0,
+        "rams": 0,
+        "random_win": 0.0625,
+        "rules": {
+          "alt": 0,
+          "ccw": 3,
+          "cw": 5,
+          "pattern": 0
+        },
+        "safe_choices": 2.93,
+        "sequence_blocks": 0,
+        "size": "6x7",
+        "solution_length": 15,
+        "spinners": 8,
+        "start_calm": 2,
+        "start_moves": 6,
+        "start_safe": 5,
+        "switch_decisions": 0,
+        "switches": 0,
+        "trap_delay_avg": 5.9,
+        "trap_delay_max": 8.7,
+        "trap_moves": 18
+      },
+      "misleading_moves": [
+        "R at R1C3 (right), right after the first move: free and plain, but it turns the locked spinner below it (R2C3) to face down; play can go on for up to 11 moves before the board jams.",
+        "Spinner R at R4C5 (right) on the first move: it can leave at once, the classic 'take a free spinner', but it turns the counter-clockwise spinner G at R3C5 too early; up to 10 moves before the jam.",
+        "Spinner B at R3C1 leaving down as soon as G at R6C1 has gone: it should wait to be turned left by R at R3C2; up to 9 moves before the jam."
+      ],
+      "puzzle": {
+        "cols": 6,
+        "format": "ce-puzzle",
+        "map": [
+          "Pv@ . R> P> . .",
+          ". . R<@-#B . . .",
+          "Bv@ R>@ . . G>@- P^@-",
+          ". . . Y< R>@ .",
+          ". . . . Bv .",
+          "G< Y^ R<@ . . .",
+          ". Gv#P . . . ."
+        ],
+        "rows": 7,
+        "rules": 1,
+        "v": 1
+      },
+      "recipe": "E1_longrange",
+      "rules_defeated": "all four (luckiest: escape spinners last, 9 dead ends)",
+      "source": "generated (E1_longrange, seed 53, try 2)",
+      "title": "Long-range dependencies (locks)",
+      "variant": "E1",
+      "verify": {
+        "aborted": false,
+        "ms_desktop": 8.12,
+        "nodes": 146,
+        "solved": true
+      },
+      "why": "Two colour locks hold two blocks until a whole colour has gone, so early, free-looking moves decide what is possible 8-11 moves later. The locked counter-clockwise spinner R at R2C3 must still point left when its blue lock opens. The plain R at R1C3 right above it becomes free after the first move and is the natural next tap, but leaving it turns that spinner to face down column 3, straight at the clockwise spinner R at R6C3, whose only exit is up the same column: a mutual block that cannot show until both blue blocks have gone. The green block at R7C2 is locked by purple in the same way. Every rule of thumb we model fails: the luckiest still hits 9 dead ends (median) with memory and a 2-move lookahead.",
+      "x": {
+        "best_rule_dead_ends": 9,
+        "blind": {
+          "dead_ends_mean": 11.3,
+          "dead_ends_med": 12,
+          "taps_mean": 280.2,
+          "taps_med": 294,
+          "unfinished": 0
+        },
+        "choices": {
+          "forced_risky": 1,
+          "losing_options": 9,
+          "mech": {
+            "spinner_escape": {
+              "forced": 0,
+              "moves": 8,
+              "with_losing_alt": 7
+            },
+            "spinner_turn": {
+              "forced": 1,
+              "moves": 2,
+              "with_losing_alt": 1
+            }
+          },
+          "real_choices": 4,
+          "risky_steps": 5,
+          "steps": 15
+        },
+        "greedy_best": 0.03,
+        "late_misleading_moves": 3,
+        "magnets": 0,
+        "misleading": [
+          [
+            1,
+            1,
+            11
+          ],
+          [
+            0,
+            9,
+            10
+          ],
+          [
+            2,
+            1,
+            10
+          ],
+          [
+            1,
+            9,
+            9
+          ],
+          [
+            2,
+            4,
+            9
+          ],
+          [
+            3,
+            1,
+            9
+          ]
+        ],
+        "ordered": {
+          "min_turn": {
+            "dead_ends_mean": 11.1,
+            "dead_ends_med": 11,
+            "taps_mean": 275.9,
+            "taps_med": 293,
+            "unfinished": 0
+          },
+          "mobility": {
+            "dead_ends_mean": 13.5,
+            "dead_ends_med": 13,
+            "taps_mean": 303.3,
+            "taps_med": 313,
+            "unfinished": 0
+          },
+          "opportunist": {
+            "dead_ends_mean": 12.4,
+            "dead_ends_med": 12,
+            "taps_mean": 215.8,
+            "taps_med": 227,
+            "unfinished": 0
+          },
+          "patient": {
+            "dead_ends_mean": 8.8,
+            "dead_ends_med": 9,
+            "taps_mean": 241.7,
+            "taps_med": 203,
+            "unfinished": 0
+          }
+        },
+        "pieces": 15,
+        "policies": {
+          "look2": 0.03,
+          "look4": 0.008,
+          "min_turn": 0.015,
+          "mobility": 0,
+          "safe": 0.025
+        },
+        "time_runs_ms": [
+          16.4,
+          22.5,
+          16.5,
+          15.5,
+          18.4
+        ]
+      }
+    },
+    {
+      "accepted": true,
+      "canonical": "6x7|. . Rv:< B^ . ./G>@- . . . . ./B<@~ Gv@- Bv@ . . ./. . Yv@ B^@ . ./. . . Yv@- . ./Y^:< . . . . ./. Pv:> . . . Pv@-",
+      "fingerprint": "b31f8243eee0ac72bc8adf2fbf4c56a7632e686f8e409e795811dedce51895b5",
+      "first_level": 226,
+      "id": "T2",
+      "mechanics": [
+        "spinner_cw",
+        "spinner_ccw",
+        "spinner_alt",
+        "sequence"
+      ],
+      "metrics": {
+        "advances": 3,
+        "armored": 0,
+        "blocks": 12,
+        "branching": 3.73,
+        "calm_moves": 7,
+        "calm_moves_share": 0.47,
+        "calm_share": 0.47,
+        "calm_steps": 7,
+        "crates": 0,
+        "decision_points": 10,
+        "depth": 4,
+        "difficulty": 38.5,
+        "flip_targets": 0,
+        "gate_links": 0,
+        "gates": 0,
+        "heuristic_win": 0.0333333333333333,
+        "hint": {
+          "aborted": false,
+          "consistent": true,
+          "dead_max_ms_desktop": 22.46,
+          "dead_max_nodes": 91,
+          "dead_states": 25,
+          "dead_worst_path": [
+            1,
+            6
+          ],
+          "max_ms_desktop": 14.88,
+          "max_nodes": 144,
+          "states": 15,
+          "worst_path": [
+            1,
+            11
+          ]
+        },
+        "impact": {
+          "armor": 0,
+          "crate": 0,
+          "gate": 0,
+          "lock": 0,
+          "portal": 0,
+          "rules": 11.8,
+          "sequence": 12.8,
+          "spinner": 32.8,
+          "switch": 0
+        },
+        "locks": 0,
+        "one_safe_steps": 4,
+        "portal_moves": 0,
+        "portal_pairs": 0,
+        "push_essential": false,
+        "push_traps": 0,
+        "pushes": 0,
+        "rams": 0,
+        "random_win": 0,
+        "rules": {
+          "alt": 1,
+          "ccw": 4,
+          "cw": 3,
+          "pattern": 0
+        },
+        "safe_choices": 2.07,
+        "sequence_blocks": 3,
+        "size": "6x7",
+        "solution_length": 15,
+        "spinners": 8,
+        "start_calm": 2,
+        "start_moves": 7,
+        "start_safe": 5,
+        "switch_decisions": 0,
+        "switches": 0,
+        "trap_delay_avg": 6.2,
+        "trap_delay_max": 10,
+        "trap_moves": 25
+      },
+      "misleading_moves": [
+        "Spinner G at R4C3 (down) on the first move: its column is clear, so it looks like a free spinner, but it turns P at R3C3 and P at R4C4 too early; up to 11 moves before the jam.",
+        "Alternating spinner P at R3C1 (left, at the edge) on the first move: it leaves at once, turning the counter-clockwise Y at R2C1 and Y at R3C2; up to 10 moves before the jam.",
+        "Spinner P at R4C4 (up) once P at R1C4 has gone: free, but it has to be turned twice and leave down later; up to 10 moves before the jam."
+      ],
+      "puzzle": {
+        "cols": 6,
+        "format": "ce-puzzle",
+        "map": [
+          ". . Rv:< P^ . .",
+          "Y>@- . . . . .",
+          "P<@~ Yv@- Pv@ . . .",
+          ". . Gv@ P^@ . .",
+          ". . . Gv@- . .",
+          "G^:< . . . . .",
+          ". Bv:> . . . Bv@-"
+        ],
+        "rows": 7,
+        "rules": 1,
+        "v": 1
+      },
+      "recipe": "E4_rotseq",
+      "rules_defeated": "all four (luckiest: fewest spinner turns, 6 dead ends)",
+      "source": "generated (E4_rotseq, seed 67, try 3)",
+      "title": "Rotation and order (mixed spinner rules + Sequence)",
+      "variant": "E4",
+      "verify": {
+        "aborted": false,
+        "ms_desktop": 11.36,
+        "nodes": 145,
+        "solved": true
+      },
+      "why": "Clockwise, counter-clockwise and alternating spinners sit in one cluster, so one block leaving turns its neighbours different ways, and the order of escapes decides where each one ends up pointing. Three Sequence blocks can only take their first step when their first lane is clear, which ties them to the cluster: the red one at R1C3 points down column 3 and must wait until the cluster has emptied that column, then comes back pointing left. The two spinners that can leave at once (G at R4C3 down, P at R3C1 left) are both wrong at the start: each turns two neighbours of different rules too early, and the failure shows up to 11 moves later. Limitation: no spinner touches a Sequence block, so the Sequence advances turn nothing here; Sequence works through its lane condition only.",
+      "x": {
+        "best_rule_dead_ends": 6,
+        "blind": {
+          "dead_ends_mean": 8.6,
+          "dead_ends_med": 8.5,
+          "taps_mean": 366.8,
+          "taps_med": 368,
+          "unfinished": 0
+        },
+        "choices": {
+          "forced_risky": 1,
+          "losing_options": 15,
+          "mech": {
+            "advance": {
+              "forced": 1,
+              "moves": 3,
+              "with_losing_alt": 1
+            },
+            "spinner_escape": {
+              "forced": 0,
+              "moves": 8,
+              "with_losing_alt": 7
+            }
+          },
+          "real_choices": 6,
+          "risky_steps": 8,
+          "steps": 15
+        },
+        "greedy_best": 0.035,
+        "late_misleading_moves": 3,
+        "magnets": 0,
+        "misleading": [
+          [
+            0,
+            6,
+            11
+          ],
+          [
+            0,
+            3,
+            10
+          ],
+          [
+            1,
+            6,
+            10
+          ],
+          [
+            1,
+            7,
+            10
+          ],
+          [
+            1,
+            3,
+            9
+          ],
+          [
+            2,
+            6,
+            9
+          ]
+        ],
+        "ordered": {
+          "min_turn": {
+            "dead_ends_mean": 5.8,
+            "dead_ends_med": 6,
+            "taps_mean": 128.5,
+            "taps_med": 137,
+            "unfinished": 0
+          },
+          "mobility": {
+            "dead_ends_mean": 6.4,
+            "dead_ends_med": 7,
+            "taps_mean": 146.3,
+            "taps_med": 135,
+            "unfinished": 0
+          },
+          "opportunist": {
+            "dead_ends_mean": 10.1,
+            "dead_ends_med": 11,
+            "taps_mean": 520.9,
+            "taps_med": 491,
+            "unfinished": 0
+          },
+          "patient": {
+            "dead_ends_mean": 5.8,
+            "dead_ends_med": 7,
+            "taps_mean": 136.5,
+            "taps_med": 137,
+            "unfinished": 0
+          }
+        },
+        "pieces": 12,
+        "policies": {
+          "look2": 0.035,
+          "look4": 0.017,
+          "min_turn": 0,
+          "mobility": 0.025,
+          "safe": 0.005
+        },
+        "time_runs_ms": [
+          27.7,
+          17.3,
+          20,
+          24.8,
+          20.8
+        ]
+      }
+    },
+    {
+      "accepted": true,
+      "canonical": "7x7|. . . . . . ./. . Rv@- . . B^&A ./. . . . . Rv@ ./. R^%A . G>%B . . ./Y^@- R<@ Y>@- . . B<&B ./B^&B . G^&A . . G^&B+C ./. XC . . . Y<@+C .",
+      "fingerprint": "7faf35eeee4afcbe175f67df03a658b45c7da3622d75ce1cfe5a53192ecd8081",
+      "first_level": 121,
+      "id": "T3",
+      "mechanics": [
+        "spinner_cw",
+        "spinner_ccw",
+        "switch",
+        "gate"
+      ],
+      "metrics": {
+        "advances": 0,
+        "armored": 0,
+        "blocks": 13,
+        "branching": 2.85,
+        "calm_moves": 7,
+        "calm_moves_share": 0.54,
+        "calm_share": 0.54,
+        "calm_steps": 7,
+        "crates": 0,
+        "decision_points": 11,
+        "depth": 7,
+        "difficulty": 50.5,
+        "flip_targets": 5,
+        "gate_links": 2,
+        "gates": 1,
+        "heuristic_win": 0.0333333333333333,
+        "hint": {
+          "aborted": false,
+          "consistent": true,
+          "dead_max_ms_desktop": 12.17,
+          "dead_max_nodes": 24,
+          "dead_states": 17,
+          "dead_worst_path": [
+            13
+          ],
+          "max_ms_desktop": 6.79,
+          "max_nodes": 52,
+          "states": 13,
+          "worst_path": []
+        },
+        "impact": {
+          "armor": 0,
+          "crate": 0,
+          "gate": 36.5,
+          "lock": 0,
+          "portal": 0,
+          "rules": 99,
+          "sequence": 0,
+          "spinner": 99,
+          "switch": 99
+        },
+        "locks": 0,
+        "one_safe_steps": 6,
+        "portal_moves": 0,
+        "portal_pairs": 0,
+        "push_essential": false,
+        "push_traps": 0,
+        "pushes": 0,
+        "rams": 0,
+        "random_win": 0,
+        "rules": {
+          "alt": 0,
+          "ccw": 3,
+          "cw": 3,
+          "pattern": 0
+        },
+        "safe_choices": 1.54,
+        "sequence_blocks": 0,
+        "size": "7x7",
+        "solution_length": 13,
+        "spinners": 6,
+        "start_calm": 0,
+        "start_moves": 4,
+        "start_safe": 1,
+        "switch_decisions": 12,
+        "switches": 2,
+        "trap_delay_avg": 4.7,
+        "trap_delay_max": 7.4,
+        "trap_moves": 17
+      },
+      "misleading_moves": [
+        "Switch R at R4C4 on the first move (or at any time before the end): free, and the switch looks like the point of the puzzle; it reverses R at R2C2, B at R2C3 and B at R7C2 while they still need their original directions; up to 10 moves before the jam.",
+        "Spinner P at R7C3 (right) on the first move: free, but it turns Y at R6C3 to face switch B; up to 10 moves before the jam.",
+        "Switch Y at R6C4 on the first move: it fires before B at R2C6 has left and reverses it into the spinner beside it; up to 8 moves before the jam."
+      ],
+      "puzzle": {
+        "cols": 7,
+        "format": "ce-puzzle",
+        "map": [
+          ". . . . . . .",
+          "Pv@-+C R>&A+C Bv&A . Y<@- B>&B .",
+          ". . . . . . .",
+          ". . . R^%A . . .",
+          ". R>&B P^@ . . Y<@ .",
+          "XC . Yv@- Y>%B . . .",
+          ". B>&A P>@ . . . ."
+        ],
+        "rows": 7,
+        "rules": 1,
+        "v": 1
+      },
+      "recipe": "E2_control",
+      "rules_defeated": "all four (luckiest: escape a spinner as soon as it can go, 11 dead ends)",
+      "source": "generated (E2_control, seed 79, try 7)",
+      "title": "Interacting control systems (switches + gate)",
+      "variant": "E2",
+      "verify": {
+        "aborted": false,
+        "ms_desktop": 2.83,
+        "nodes": 53,
+        "solved": true
+      },
+      "why": "Two switches and a chain gate form a control system that has to be timed as a whole. Switch A (R at R4C4) can leave on the very first move, but it reverses three blocks at once: firing it while two or three of them are still on the board always loses (checked exhaustively over every reachable position), so in every winning line it is one of the last five moves. Switch B (Y at R6C4) must fire at exactly the right moment: after B at R2C6 has left to the right (otherwise it is reversed into the spinner beside it), and before R at R5C2 can leave, because R points into a spinner until switch B reverses it. The gate at R6C1 opens only when both of its links (P at R2C1, R at R2C2) are gone, and it stands in P's way down, so P has to be turned rather than released. Every rule of thumb fails: the luckiest hits 11 dead ends.",
+      "x": {
+        "best_rule_dead_ends": 11,
+        "blind": {
+          "dead_ends_mean": 13.3,
+          "dead_ends_med": 17,
+          "taps_mean": 291.7,
+          "taps_med": 344,
+          "unfinished": 0
+        },
+        "choices": {
+          "forced_risky": 1,
+          "losing_options": 10,
+          "mech": {
+            "spinner_escape": {
+              "forced": 0,
+              "moves": 6,
+              "with_losing_alt": 5
+            },
+            "spinner_turn": {
+              "forced": 0,
+              "moves": 3,
+              "with_losing_alt": 3
+            },
+            "switch": {
+              "forced": 1,
+              "moves": 2,
+              "with_losing_alt": 1
+            }
+          },
+          "real_choices": 5,
+          "risky_steps": 6,
+          "steps": 13
+        },
+        "greedy_best": 0.025,
+        "late_misleading_moves": 3,
+        "magnets": 0,
+        "misleading": [
+          [
+            0,
+            5,
+            10
+          ],
+          [
+            0,
+            13,
+            10
+          ],
+          [
+            1,
+            5,
+            9
+          ],
+          [
+            1,
+            13,
+            9
+          ],
+          [
+            0,
+            11,
+            8
+          ],
+          [
+            2,
+            5,
+            8
+          ]
+        ],
+        "ordered": {
+          "min_turn": {
+            "dead_ends_mean": 15.7,
+            "dead_ends_med": 16,
+            "taps_mean": 390.7,
+            "taps_med": 387,
+            "unfinished": 0
+          },
+          "mobility": {
+            "dead_ends_mean": 15.4,
+            "dead_ends_med": 16,
+            "taps_mean": 376.6,
+            "taps_med": 375,
+            "unfinished": 0
+          },
+          "opportunist": {
+            "dead_ends_mean": 13,
+            "dead_ends_med": 11,
+            "taps_mean": 299.1,
+            "taps_med": 235,
+            "unfinished": 0
+          },
+          "patient": {
+            "dead_ends_mean": 10.9,
+            "dead_ends_med": 14,
+            "taps_mean": 251.8,
+            "taps_med": 303,
+            "unfinished": 0
+          }
+        },
+        "pieces": 14,
+        "policies": {
+          "look2": 0.025,
+          "look4": 0.017,
+          "min_turn": 0,
+          "mobility": 0,
+          "safe": 0
+        },
+        "time_runs_ms": [
+          14.2,
+          12.6,
+          18.3,
+          13.7,
+          15.9
+        ]
+      }
+    },
+    {
+      "accepted": true,
+      "canonical": "6x6|. . . . . ./. . . . . ./. . . R< . ./. . . B<@ G> ./. M Y< P> R^ B<@/. P^ . P^ . .",
+      "fingerprint": "854f153fbb266e936fc5f281a6f33a4f7303bda129b58c35effae49b8b40ccda",
+      "first_level": 251,
+      "id": "T4",
+      "mechanics": [
+        "spinner_cw",
+        "crate"
+      ],
+      "metrics": {
+        "advances": 0,
+        "armored": 0,
+        "blocks": 10,
+        "branching": 2.82,
+        "calm_moves": 7,
+        "calm_moves_share": 0.64,
+        "calm_share": 0.91,
+        "calm_steps": 10,
+        "crates": 1,
+        "decision_points": 3,
+        "depth": 7,
+        "difficulty": 19.2,
+        "flip_targets": 0,
+        "gate_links": 0,
+        "gates": 0,
+        "heuristic_win": 0,
+        "hint": {
+          "aborted": false,
+          "consistent": true,
+          "dead_max_ms_desktop": 15.65,
+          "dead_max_nodes": 464,
+          "dead_states": 9,
+          "dead_worst_path": [
+            2097160,
+            2097160
+          ],
+          "max_ms_desktop": 35.22,
+          "max_nodes": 955,
+          "states": 11,
+          "worst_path": []
+        },
+        "impact": {
+          "armor": 0,
+          "crate": 13,
+          "gate": 0,
+          "lock": 0,
+          "portal": 0,
+          "rules": 0,
+          "sequence": 0,
+          "spinner": 99,
+          "switch": 0
+        },
+        "locks": 0,
+        "one_safe_steps": 1,
+        "portal_moves": 0,
+        "portal_pairs": 0,
+        "push_essential": true,
+        "push_traps": 3,
+        "pushes": 2,
+        "rams": 0,
+        "random_win": 0,
+        "rules": {
+          "alt": 0,
+          "ccw": 0,
+          "cw": 2,
+          "pattern": 0
+        },
+        "safe_choices": 2,
+        "sequence_blocks": 0,
+        "size": "6x6",
+        "solution_length": 11,
+        "spinners": 2,
+        "start_calm": 1,
+        "start_moves": 5,
+        "start_safe": 2,
+        "switch_decisions": 0,
+        "switches": 0,
+        "trap_delay_avg": 8.9,
+        "trap_delay_max": 9.8,
+        "trap_moves": 9
+      },
+      "misleading_moves": [
+        "B at R3C4 (left) on the first move: free along an empty row, the most natural tap, but it turns the spinner R at R4C4 upward before it has pushed the crate; play can go on for up to 11 moves before the jam.",
+        "Y at R4C5 (right) on the first move: also free, and it turns the same spinner; up to 11 moves before the jam.",
+        "A second push up by P at R6C2 (after the first): it moves the crate out of the spinner's lane; up to 10 moves before the jam.",
+        "G at R5C3 pushing the crate left into R5C1 on the first move: up to 8 moves before the jam."
+      ],
+      "puzzle": {
+        "cols": 6,
+        "format": "ce-puzzle",
+        "map": [
+          ". . . . . .",
+          ". . . . . .",
+          ". . . B< . .",
+          ". . . R<@ Y> .",
+          ". M G< P> B^ R<@",
+          ". P^ . P^ . ."
+        ],
+        "rows": 6,
+        "rules": 1,
+        "v": 1
+      },
+      "recipe": "E3_crate",
+      "rules_defeated": "all four plus 'push only when nothing else is left' (luckiest: fewest spinner turns, 6 dead ends)",
+      "source": "generated (E3_crate, seed 103, try 0)",
+      "title": "Spatial planning (one crate)",
+      "variant": "E3",
+      "verify": {
+        "aborted": false,
+        "ms_desktop": 32.94,
+        "nodes": 955,
+        "solved": true
+      },
+      "why": "The crate at R5C2 stands in the only exit column of P at R6C2 and in G's row. Exactly one route works (checked exhaustively over every reachable position): P at R6C2 pushes it up to R4C2, G at R5C3 leaves left through the gap, and then the clockwise spinner R at R4C4 - while it still points left - pushes the crate on into R4C1, out of every remaining lane. That push is the whole puzzle: the two blocks next to the spinner that can leave at once (B at R3C4 above it, Y at R4C5 beside it) both turn it upward when they go, and after that nothing can move the crate out of column 2. So the spinner has to be used as a pusher before it is used as a block that turns. Only 1 of the 5 legal first moves (the push by P) keeps the board solvable. Two pushes in all. Caution from Gate 0: crate boards that defeated every model were still rated EASY / MEDIUM.",
+      "x": {
+        "best_rule_dead_ends": 6,
+        "blind": {
+          "dead_ends_mean": 8.7,
+          "dead_ends_med": 10,
+          "taps_mean": 1558.3,
+          "taps_med": 1670,
+          "unfinished": 0
+        },
+        "choices": {
+          "forced_risky": 0,
+          "losing_options": 6,
+          "mech": {
+            "push": {
+              "forced": 0,
+              "moves": 2,
+              "with_losing_alt": 2
+            },
+            "spinner_escape": {
+              "forced": 0,
+              "moves": 2,
+              "with_losing_alt": 0
+            },
+            "spinner_turn": {
+              "forced": 0,
+              "moves": 2,
+              "with_losing_alt": 0
+            }
+          },
+          "real_choices": 2,
+          "risky_steps": 4,
+          "steps": 11
+        },
+        "greedy_best": 0,
+        "late_misleading_moves": 4,
+        "magnets": 0,
+        "misleading": [
+          [
+            0,
+            0,
+            11
+          ],
+          [
+            0,
+            2,
+            11
+          ],
+          [
+            1,
+            0,
+            10
+          ],
+          [
+            1,
+            2,
+            10
+          ],
+          [
+            1,
+            2097160,
+            10
+          ],
+          [
+            2,
+            0,
+            9
+          ]
+        ],
+        "ordered": {
+          "min_turn": {
+            "dead_ends_mean": 5.9,
+            "dead_ends_med": 6,
+            "taps_mean": 893.9,
+            "taps_med": 897,
+            "unfinished": 0
+          },
+          "mobility": {
+            "dead_ends_mean": 6.7,
+            "dead_ends_med": 7,
+            "taps_mean": 993.3,
+            "taps_med": 1005,
+            "unfinished": 0
+          },
+          "opportunist": {
+            "dead_ends_mean": 8.1,
+            "dead_ends_med": 9,
+            "taps_mean": 1532.2,
+            "taps_med": 1637,
+            "unfinished": 0
+          },
+          "patient": {
+            "dead_ends_mean": 8.1,
+            "dead_ends_med": 9,
+            "taps_mean": 1532.2,
+            "taps_med": 1637,
+            "unfinished": 0
+          },
+          "push_last": {
+            "dead_ends_mean": 9,
+            "dead_ends_med": 9,
+            "taps_mean": 1864.1,
+            "taps_med": 1859,
+            "unfinished": 0
+          }
+        },
+        "pieces": 10,
+        "policies": {
+          "look2": 0,
+          "look4": 0,
+          "min_turn": 0,
+          "mobility": 0,
+          "safe": 0
+        },
+        "time_runs_ms": [
+          21.8,
+          32.3,
+          21.2,
+          20.3,
+          27.4
+        ]
+      }
+    },
+    {
+      "accepted": true,
+      "canonical": "6x6|. . . . . ./R>@- . Bv . . R^*/. G> G^@- . . ./. Rv@- Gv . . ./. . Yv@- R^@- . R</. B<* P>@- . . Y>*",
+      "fingerprint": "3f8d71fdbc12434271a104ca5b3a4d25d80fb57f425aec345a665499f3c57e07",
+      "first_level": 76,
+      "id": "T5",
+      "mechanics": [
+        "spinner_cw",
+        "magnet"
+      ],
+      "metrics": {
+        "advances": 0,
+        "armored": 0,
+        "blocks": 13,
+        "branching": 2.77,
+        "calm_moves": 10,
+        "calm_moves_share": 0.77,
+        "calm_share": 1,
+        "calm_steps": 13,
+        "crates": 0,
+        "decision_points": 7,
+        "depth": 7,
+        "difficulty": 23.4,
+        "flip_targets": 0,
+        "gate_links": 0,
+        "gates": 0,
+        "heuristic_win": 0,
+        "hint": {
+          "aborted": false,
+          "consistent": true,
+          "dead_max_ms_desktop": 6.65,
+          "dead_max_nodes": 17,
+          "dead_states": 7,
+          "dead_worst_path": [
+            9,
+            5,
+            3,
+            6
+          ],
+          "max_ms_desktop": 28.8,
+          "max_nodes": 55,
+          "states": 13,
+          "worst_path": []
+        },
+        "impact": {
+          "armor": 0,
+          "crate": 0,
+          "gate": 0,
+          "lock": 0,
+          "portal": 0,
+          "rules": 0,
+          "sequence": 0,
+          "spinner": 17.3,
+          "switch": 0
+        },
+        "locks": 0,
+        "one_safe_steps": 1,
+        "portal_moves": 0,
+        "portal_pairs": 0,
+        "push_essential": false,
+        "push_traps": 0,
+        "pushes": 0,
+        "rams": 0,
+        "random_win": 0,
+        "rules": {
+          "alt": 0,
+          "ccw": 0,
+          "cw": 6,
+          "pattern": 0
+        },
+        "safe_choices": 2.23,
+        "sequence_blocks": 0,
+        "size": "6x6",
+        "solution_length": 13,
+        "spinners": 6,
+        "start_calm": 2,
+        "start_moves": 4,
+        "start_safe": 3,
+        "switch_decisions": 0,
+        "switches": 0,
+        "trap_delay_avg": 4.6,
+        "trap_delay_max": 6.5,
+        "trap_moves": 7
+      },
+      "misleading_moves": [
+        "Purple magnet at R1C1 (up) on the first move: free, but it drags the blue spinner at R4C1 up into the corner, and the chain needs that magnet later; up to 8 moves before the jam.",
+        "Green magnet at R1C5 (right) on the first move: free, but it drags G at R1C2, not the purple magnet, into R1C5; up to 7 moves before the jam.",
+        "Spinner G at R3C2 (right) on the first move: free, but it is needed later pointing down; up to 7 moves before the jam.",
+        "R at R4C3 (left) as soon as its lane is clear: it turns the spinner G at R5C3 too early; up to 7 moves before the jam."
+      ],
+      "puzzle": {
+        "cols": 6,
+        "format": "ce-puzzle",
+        "map": [
+          "P^* Gv . . G>* .",
+          ". . . . . .",
+          ". G>@ . . . .",
+          "B^@ P<@ R< R>@ Y< .",
+          "Yv* . G<@ R^ . .",
+          ". . . . G^@ ."
+        ],
+        "rows": 6,
+        "rules": 1,
+        "v": 1
+      },
+      "recipe": "E5_magnet",
+      "rules_defeated": "all four (luckiest: escape a spinner as soon as it can go, 17 dead ends)",
+      "source": "generated (E5_magnet, seed 107, try 0)",
+      "title": "Magnet chain (best evidence-based combination)",
+      "variant": "E5",
+      "verify": {
+        "aborted": false,
+        "ms_desktop": 12.23,
+        "nodes": 217,
+        "solved": true
+      },
+      "why": "Three magnets and six spinners. A magnet that leaves drags the first block behind it into the cell it left, so lanes are created and destroyed, and here the solution is a chain. Every winning line uses the same three pulls in the same order (checked exhaustively). Move 1: the yellow magnet at R5C1 leaves down and drags the blue spinner at R4C1 into its place. Later the green magnet at R1C5 leaves right and drags the purple magnet from R1C1 along the whole top row into R1C5 - only possible once G at R1C2 has left down. The purple magnet then leaves up and drags Y at R4C5 up column 5 into the empty top row, from where it leaves left. Each magnet pulls whatever is first behind it at that moment, so the player has to plan the order before pulling. Only 1 of the 4 legal first moves keeps the board solvable. Without magnets the board cannot be solved at all.",
+      "x": {
+        "best_rule_dead_ends": 17,
+        "blind": {
+          "dead_ends_mean": 16.7,
+          "dead_ends_med": 17,
+          "taps_mean": 733.6,
+          "taps_med": 729,
+          "unfinished": 0
+        },
+        "choices": {
+          "forced_risky": 2,
+          "losing_options": 12,
+          "mech": {
+            "magnet": {
+              "forced": 0,
+              "moves": 3,
+              "with_losing_alt": 3
+            },
+            "spinner_escape": {
+              "forced": 1,
+              "moves": 6,
+              "with_losing_alt": 3
+            },
+            "spinner_turn": {
+              "forced": 0,
+              "moves": 1,
+              "with_losing_alt": 0
+            }
+          },
+          "real_choices": 5,
+          "risky_steps": 9,
+          "steps": 13
+        },
+        "greedy_best": 0,
+        "late_misleading_moves": 4,
+        "magnet_matters": {
+          "matters": true,
+          "plain": "unsolvable"
+        },
+        "magnets": 3,
+        "misleading": [
+          [
+            0,
+            0,
+            8
+          ],
+          [
+            0,
+            2,
+            7
+          ],
+          [
+            0,
+            3,
+            7
+          ],
+          [
+            1,
+            0,
+            7
+          ],
+          [
+            2,
+            6,
+            7
+          ],
+          [
+            2,
+            0,
+            6
+          ]
+        ],
+        "ordered": {
+          "min_turn": {
+            "dead_ends_mean": 20,
+            "dead_ends_med": 20,
+            "taps_mean": 966.2,
+            "taps_med": 965,
+            "unfinished": 0
+          },
+          "mobility": {
+            "dead_ends_mean": 17.5,
+            "dead_ends_med": 18,
+            "taps_mean": 855.5,
+            "taps_med": 879,
+            "unfinished": 0
+          },
+          "opportunist": {
+            "dead_ends_mean": 16.4,
+            "dead_ends_med": 17,
+            "taps_mean": 662.7,
+            "taps_med": 627,
+            "unfinished": 0
+          },
+          "patient": {
+            "dead_ends_mean": 16.9,
+            "dead_ends_med": 18,
+            "taps_mean": 699.3,
+            "taps_med": 639,
+            "unfinished": 0
+          }
+        },
+        "pieces": 13,
+        "policies": {
+          "look2": 0,
+          "look4": 0,
+          "min_turn": 0,
+          "mobility": 0,
+          "safe": 0
+        },
+        "time_runs_ms": [
+          22,
+          29.4,
+          17.1,
+          16.4,
+          17.3
+        ]
+      }
+    }
+  ],
+  "format": "ce-extreme-proto",
+  "note": "Development only. EXTREME research prototypes (docs/extreme5.md); never shared, never production.",
+  "test": "xtest5",
+  "v": 1
+}
