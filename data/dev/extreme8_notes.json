@@ -1,0 +1,27 @@
+{
+  "format": "ce-extreme-notes",
+  "note": "Development only. Hand-written explanations of the EXTREME expert candidates (tools/extreme8_build.gd copies them into data/dev/extreme8.json by board fingerprint). Analyst-only: the test page never shows them. Cells are named RnCm: row n, column m, counted from 1 at the top-left. The ideas, first-move counts and ordering claims were checked over EVERY winning line; misleading moves and delays come from the solver's solution and its losing alternatives (--dossier).",
+  "boards": {
+    "56ad3da6b357fc6a852ca3c4a3d10c0883df0ef537d73b9a2161fcbcd0bcdd1d": {
+      "title": "Two gates, one switch, one held spinner",
+      "why": "The yellow switch at R4C4 reverses two blocks far away: the red block at R6C6 (stuck head-to-head with the blue block at R6C5; reversed, it leaves and opens gate C) and the green block at R6C2 (reversed, it would face the purple block at R7C2 head-to-head for good). Its own departure also turns the red spinner beside it (R4C5) from left to up - aiming it at gate C. So the switch has a window: green must already have left upward through gate D, which opens only when its link, the purple spinner at R5C3, has left upward; that needs the column above it cleared, which needs the three top-left pieces taken in one exact order (R2C2 first: each leaving turns the next counter-clockwise spinner to face the empty side). After the switch, the red spinner must leave through gate C before the purple counter-clockwise spinner below it (R5C5) leaves - that one is free from the first move but turns the red spinner if it goes early, which a player who releases free spinners at once will do. Checked over every winning line (896): only 1 of the 6 legal first moves keeps the board solvable; the switch always fires at step 7-9, after green and the gate D link have left; the red spinner always leaves before R5C5.",
+      "misleading_moves": [
+        "The switch Y at R4C4 on the first move: free, and it frees the red block at R6C6, but it reverses green into a stand-off below; play can go on for up to 11 moves before the jam.",
+        "The spinner P at R5C5 on the first move: free, but it turns the red spinner beside the switch too early; up to 11 moves.",
+        "The spinner B at R1C3 or the block R at R3C3 first: both are free, but they break the order of the top-left cascade the gate D link needs; up to 11 moves.",
+        "The block Y at R5C4 down on the first move: free; up to 11 moves."
+      ],
+      "rules_defeated": "all four rules of thumb with 4- and 6-move lookahead (luckiest: release spinners at once - 16 dead ends)"
+    },
+    "ea162c521ccde352595f2157c455e845fb6775d83eff75cc3e4cc774c82d74fb": {
+      "title": "The relay",
+      "why": "The armored red block at R7C4 can never be hit where it is. The only hammer is the purple clockwise spinner at R3C3, and it needs two magnets. The blue magnet at R3C4 leaves upward and drags the first block behind it - once column 4 is clear, that is the red magnet at R6C4, which lands in R3C4, right beside the hammer, now pointing right with the hammer first behind it. When the red magnet then leaves, it turns the hammer and drags it into R3C4, facing down column 4 at the shell: ram, and the cracked block leaves to the left. The hammer must have been turned exactly three times by then (left - up - right - down): once by the blue magnet's escape, once by the yellow counter-clockwise spinner below it (R4C3) leaving, once by the red magnet's escape. Meanwhile it is free to leave several times, and the red magnet is free from the first move (it would drag the purple spinner at R6C2 instead). Checked over every winning line (2714): the blue magnet always fires before the red one; the hammer is turned and carried by a magnet that another magnet moved, then rams, on every line; only 2 of the 5 legal first moves keep the board solvable.",
+      "misleading_moves": [
+        "The hammer P at R3C3 to the left on the first move: free, but it is the only block that can ever crack the shell; play can go on for up to 10 moves before the jam.",
+        "The red magnet at R6C4 on the first move: free, but the first block behind it is the purple spinner at R6C2, not the hammer; up to 10 moves.",
+        "The green spinner at R5C3 to the right early: free, but it turns the yellow spinner above it the wrong way; up to 10 moves."
+      ],
+      "rules_defeated": "all four rules of thumb with 4- and 6-move lookahead (luckiest: release spinners at once - 13 dead ends)"
+    }
+  }
+}

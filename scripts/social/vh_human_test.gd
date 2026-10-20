@@ -70,6 +70,14 @@ extends CanvasLayer
 ##               (T3, T5, H2) copied unchanged, for an independent second
 ##               player. Neutral ids and groups, random order, no labels,
 ##               no explanations; the same flow and questions as ?xtest7.
+##   ?xtest8=1   EXTREME EXPERT EXPERIMENT (data/dev/extreme8.json,
+##               tools/extreme8_build.gd, docs/extreme8.md): three
+##               concept-first EXTREME candidates for experienced players.
+##               The same flow and questions as ?xtest7, plus an optional
+##               free-text answer ("what made it difficult or interesting?")
+##               and the mechanism events of every move in the log (gate
+##               opened, block pulled, arrow reversed, spinners turned,
+##               shell cracked).
 
 ## EXTREME research: the rating and the follow-up questions.
 const X_RATINGS := ["EASY", "MEDIUM", "HARD", "VERY HARD", "EXTREME"]
@@ -88,6 +96,17 @@ const X6_QUESTIONS := [
 	["fair", "Did the puzzle feel fair?", "fair", ["YES", "MOSTLY", "NO"]],
 	["planned", "Did it require real planning\n(thinking several moves ahead)?", "needed planning", ["YES", "A LITTLE", "NO"]],
 	["combo", "Did the combination of mechanics\nmake the puzzle more interesting?", "combination more interesting", ["YES", "A LITTLE", "NO"]],
+]
+## EXTREME expert experiment: the ?xtest6 questions plus optional free text
+## (options ["TEXT"]: a text field with NEXT, or SKIP).
+const X8_QUESTIONS := [
+	["l300", "Compared with Campaign Level 300,\nthis puzzle was...", "vs Level 300", ["EASIER", "SIMILAR", "HARDER", "NOT SURE"]],
+	["enjoy", "How much did you enjoy it?\n(1 = not at all, 5 = a lot)", "enjoyment", ["1", "2", "3", "4", "5"]],
+	["achieve", "How strong was your sense\nof achievement?\n(1 = none, 5 = very strong)", "achievement", ["1", "2", "3", "4", "5"]],
+	["fair", "Did the puzzle feel fair?", "fair", ["YES", "MOSTLY", "NO"]],
+	["planned", "Did it require real planning\n(thinking several moves ahead)?", "needed planning", ["YES", "A LITTLE", "NO"]],
+	["combo", "Did the combination of mechanics\nmake the puzzle more interesting?", "combination more interesting", ["YES", "A LITTLE", "NO"]],
+	["feedback", "Optional: what made this puzzle\ndifficult or interesting?", "feedback", ["TEXT"]],
 ]
 const PARAM := "vhtest"
 const DATA_PATH := "res://data/dev/vh_human_test.json"
@@ -126,6 +145,10 @@ const TESTS := {
 	"vhval3": {"data": "res://data/dev/vh_validation3.json", "state": "user://vh_validation3_state.json", "title": "PUZZLE TEST\n(DEVELOPMENT)",
 		"q2": "", "q2_key": "l300", "q2_label": "harder than L300", "pilot": true, "ratings": X_RATINGS, "questions": X6_QUESTIONS,
 		"log_blocked": true, "hide_difficulty": true, "combo": true, "ls": "chain_escape_vhval3_state"},
+	# EXTREME expert experiment (see the header).
+	"xtest8": {"data": "res://data/dev/extreme8.json", "state": "user://extreme8_state.json", "title": "PUZZLE TEST\n(DEVELOPMENT)",
+		"q2": "", "q2_key": "l300", "q2_label": "harder than L300", "pilot": true, "ratings": X_RATINGS, "questions": X8_QUESTIONS,
+		"log_blocked": true, "hide_difficulty": true, "combo": true, "mech_events": true, "ls": "chain_escape_xtest8_state"},
 }
 ## Pilot follow-up questions: [key, text, label, options].
 const PILOT_QUESTIONS := [
@@ -219,7 +242,7 @@ static func requested() -> bool:
 static func requested_test() -> String:
 	if BuildFlags.dev_pages_off():
 		return ""  # player / QA build: developer pages off
-	for key in ["vhval3", "xtest7", "xtest6", "xtest5", "vhtest4", "vhtest3", "vhtest2", "vhtest"]:
+	for key in ["xtest8", "vhval3", "xtest7", "xtest6", "xtest5", "vhtest4", "vhtest3", "vhtest2", "vhtest"]:
 		if "--" + key in OS.get_cmdline_user_args():
 			return key
 	if not OS.has_feature("web"):
@@ -228,7 +251,7 @@ static func requested_test() -> String:
 	if loc == null:
 		return ""
 	var where := (str(loc.search) + str(loc.hash)).to_lower()
-	for key in ["vhval3", "xtest7", "xtest6", "xtest5", "vhtest4", "vhtest3", "vhtest2", "vhtest"]:
+	for key in ["xtest8", "vhval3", "xtest7", "xtest6", "xtest5", "vhtest4", "vhtest3", "vhtest2", "vhtest"]:
 		if where.contains(key + "=1") or where.contains(key + "=true"):
 			return key
 	return ""
@@ -592,10 +615,43 @@ func _log_action(sig: Array, now: int) -> void:
 	elif sig.size() > 8 and sig[8] > prev[8]:
 		kind = "b"
 	if kind != "":
-		_current["log"].append([now - _t0, kind, infer_tap(_prev_snap, snap) if kind == "m" else -1])
+		var entry := [now - _t0, kind, infer_tap(_prev_snap, snap) if kind == "m" else -1]
+		if kind == "m" and _cfg.get("mech_events", false):
+			var ev := mech_events(_prev_snap, snap)
+			if not ev.is_empty():
+				entry.append(ev)
+				var tot: Dictionary = _current.get("mech", {})
+				for k in ev:
+					tot[k] = int(tot.get(k, 0)) + int(ev[k])
+				_current["mech"] = tot
+		_current["log"].append(entry)
 	_prev_snap = snap
 
 var _act_sig_prev: Array = []
+
+
+## What one move did, from the board before / after (EXTREME expert
+## experiment): {"gate": gates opened, "pull": blocks moved by a magnet,
+## "flip": arrows reversed by a switch, "turn": spinners turned, "ram":
+## shells cracked}; only the non-zero counts. Read from the board only (the
+## same rules the player sees), never from the solver.
+static func mech_events(before: Dictionary, after: Dictionary) -> Dictionary:
+	var ev := {}
+	for id in before:
+		var b: Array = before[id]
+		if not after.has(id):
+			if b[4] == BlockData.Kind.GATE:
+				ev["gate"] = int(ev.get("gate", 0)) + 1
+			continue
+		var a: Array = after[id]
+		if b[4] != BlockData.Kind.CRATE and b[0] != a[0]:
+			ev["pull"] = int(ev.get("pull", 0)) + 1
+		if b[1] != a[1] and b[2] == a[2]:
+			var k := "turn" if b[4] == BlockData.Kind.SPINNER else "flip"
+			ev[k] = int(ev.get(k, 0)) + 1
+		if b[3] and not a[3]:
+			ev["ram"] = int(ev.get("ram", 0)) + 1
+	return ev
 
 
 ## The block a move was made with, from the board before / after: the
@@ -1042,6 +1098,19 @@ func _build_options(opts: Array) -> void:
 	for c in _think_opts.get_children():
 		_think_opts.remove_child(c)
 		c.queue_free()
+	if opts == ["TEXT"]:
+		# Free text (optional): a field and NEXT; SKIP stays below.
+		var field := LineEdit.new()
+		field.name = "ThinkText"
+		field.custom_minimum_size = Vector2(0, 80)
+		field.add_theme_font_size_override("font_size", 26)
+		_think_opts.add_child(field)
+		var next := _button("NEXT", "Think_NEXT", ACCENT, Palette.WHITE)
+		next.pressed.connect(func():
+			AudioManager.play_ui_tap()
+			think(field.text.strip_edges()))
+		_think_opts.add_child(next)
+		return
 	var row: BoxContainer = _think_opts
 	if opts.size() == 5:
 		row = HBoxContainer.new()

@@ -1,0 +1,590 @@
+{
+  "assist": {
+    "hammer": 0,
+    "show_a_move": 1,
+    "undo": 3
+  },
+  "boards": [
+    {
+      "accepted": true,
+      "canonical": "7x7|. . . . . . ./. R^@- . . XC B<&A G</Y<@ B<@ R^ . G<@-+C . ./. . . P<%A P> . ./. XD . R^@- Gv@ Yv ./. . . . . R^&A+D ./. . . B^ . . .",
+      "fingerprint": "56ad3da6b357fc6a852ca3c4a3d10c0883df0ef537d73b9a2161fcbcd0bcdd1d",
+      "first_level": 121,
+      "id": "E1",
+      "mechanics": [
+        "spinner_cw",
+        "spinner_ccw",
+        "switch",
+        "gate"
+      ],
+      "metrics": {
+        "advances": 0,
+        "armored": 0,
+        "blocks": 14,
+        "branching": 3.79,
+        "calm_moves": 10,
+        "calm_moves_share": 0.71,
+        "calm_share": 0.71,
+        "calm_steps": 10,
+        "crates": 0,
+        "decision_points": 10,
+        "depth": 8,
+        "difficulty": 49.2,
+        "flip_targets": 2,
+        "gate_links": 2,
+        "gates": 2,
+        "heuristic_win": 0.0333333333333333,
+        "hint": {
+          "aborted": false,
+          "consistent": true,
+          "dead_max_ms_desktop": 37.57,
+          "dead_max_nodes": 271,
+          "dead_states": 25,
+          "dead_worst_path": [
+            5
+          ],
+          "max_ms_desktop": 9.83,
+          "max_nodes": 63,
+          "states": 14,
+          "worst_path": []
+        },
+        "impact": {
+          "armor": 0,
+          "crate": 0,
+          "gate": 22.5,
+          "lock": 0,
+          "portal": 0,
+          "rules": 3.9,
+          "sequence": 0,
+          "spinner": 16.1,
+          "switch": 99
+        },
+        "locks": 0,
+        "one_safe_steps": 4,
+        "portal_moves": 0,
+        "portal_pairs": 0,
+        "push_essential": false,
+        "push_traps": 0,
+        "pushes": 0,
+        "rams": 0,
+        "random_win": 0,
+        "rules": {
+          "alt": 0,
+          "ccw": 3,
+          "cw": 3,
+          "pattern": 0
+        },
+        "safe_choices": 2,
+        "sequence_blocks": 0,
+        "size": "7x7",
+        "solution_length": 14,
+        "spinners": 6,
+        "start_calm": 0,
+        "start_moves": 6,
+        "start_safe": 1,
+        "switch_decisions": 6,
+        "switches": 1,
+        "trap_delay_avg": 7.3,
+        "trap_delay_max": 11,
+        "trap_moves": 25
+      },
+      "misleading_moves": [
+        "The switch Y at R4C4 on the first move: free, and it frees the red block at R6C6, but it reverses green into a stand-off below; play can go on for up to 11 moves before the jam.",
+        "The spinner P at R5C5 on the first move: free, but it turns the red spinner beside the switch too early; up to 11 moves.",
+        "The spinner B at R1C3 or the block R at R3C3 first: both are free, but they break the order of the top-left cascade the gate D link needs; up to 11 moves.",
+        "The block Y at R5C4 down on the first move: free; up to 11 moves."
+      ],
+      "puzzle": {
+        "cols": 7,
+        "format": "ce-puzzle",
+        "map": [
+          ". . B^@- . . . .",
+          ". R<@ G^@- . XC . .",
+          ". . R< . . . .",
+          ". . . Y^%A R<@ . G<",
+          ". XD P^@+D Yv P>@- . .",
+          ". G^&A . . B> R<&A+C .",
+          ". P^ . . . . ."
+        ],
+        "rows": 7,
+        "rules": 1,
+        "v": 1
+      },
+      "recipe": "X1_remote",
+      "rules_defeated": "all four rules of thumb with 4- and 6-move lookahead (luckiest: release spinners at once - 16 dead ends)",
+      "source": "hand-designed core (gate D link aimed and released, switch window, aimed spinner at gate C; docs/extreme8.md), refined by search with the core frozen, then two designed edits by hand (the stand-off block at R4C7, the held counter-clockwise spinner at R5C5); every piece shown needed",
+      "title": "Two gates, one switch, one held spinner",
+      "variant": "X1",
+      "verify": {
+        "aborted": false,
+        "ms_desktop": 6.66,
+        "nodes": 155,
+        "solved": true
+      },
+      "why": "The yellow switch at R4C4 reverses two blocks far away: the red block at R6C6 (stuck head-to-head with the blue block at R6C5; reversed, it leaves and opens gate C) and the green block at R6C2 (reversed, it would face the purple block at R7C2 head-to-head for good). Its own departure also turns the red spinner beside it (R4C5) from left to up - aiming it at gate C. So the switch has a window: green must already have left upward through gate D, which opens only when its link, the purple spinner at R5C3, has left upward; that needs the column above it cleared, which needs the three top-left pieces taken in one exact order (R2C2 first: each leaving turns the next counter-clockwise spinner to face the empty side). After the switch, the red spinner must leave through gate C before the purple counter-clockwise spinner below it (R5C5) leaves - that one is free from the first move but turns the red spinner if it goes early, which a player who releases free spinners at once will do. Checked over every winning line (896): only 1 of the 6 legal first moves keeps the board solvable; the switch always fires at step 7-9, after green and the gate D link have left; the red spinner always leaves before R5C5.",
+      "x": {
+        "best_rule_dead_ends": 16,
+        "blind": {
+          "dead_ends_mean": 23.3,
+          "dead_ends_med": 26.5,
+          "taps_mean": 1004,
+          "taps_med": 1140,
+          "unfinished": 0
+        },
+        "choices": {
+          "forced_risky": 0,
+          "losing_options": 12,
+          "mech": {
+            "spinner_escape": {
+              "forced": 0,
+              "moves": 6,
+              "with_losing_alt": 5
+            },
+            "switch": {
+              "forced": 0,
+              "moves": 1,
+              "with_losing_alt": 1
+            }
+          },
+          "real_choices": 4,
+          "risky_steps": 4,
+          "steps": 14
+        },
+        "expert": {
+          "learner": {
+            "look4": 17,
+            "look6": 17
+          },
+          "learner_min": 17,
+          "look6_greedy": 0.017,
+          "measure": {
+            "capped": false,
+            "decisions": {
+              "2": 10,
+              "4": 8,
+              "6": 6,
+              "8": 4
+            },
+            "deepest": 12,
+            "hidden": {
+              "2": 25,
+              "4": 23,
+              "6": 21,
+              "8": 16
+            },
+            "losing_moves_on_path": 25,
+            "median_trap_delay": 10,
+            "opening": "1 / 6",
+            "positions": 839,
+            "solution": 14,
+            "win_share": 0.077,
+            "winnable": 65
+          },
+          "ok": true,
+          "why": ""
+        },
+        "greedy_best": 0.035,
+        "idea_events": {
+          "aimed_ram": false,
+          "flip_opens_gate": true,
+          "gate_before_switch": true,
+          "moved_then_turned": false,
+          "moved_turned_adv": false,
+          "relay": false,
+          "relay_carry": false,
+          "reversed_escape": true,
+          "two_moved_turned": false
+        },
+        "idea_facts": {
+          "aimed_ram": false,
+          "flip_opens_gate": true,
+          "gate_before_switch": true,
+          "moved_then_turned": false,
+          "moved_turned_adv": false,
+          "relay": false,
+          "relay_carry": false,
+          "reversed_escape": true,
+          "two_moved_turned": false
+        },
+        "late_misleading_moves": 5,
+        "magnets": 0,
+        "misleading": [
+          [
+            0,
+            0,
+            11
+          ],
+          [
+            0,
+            4,
+            11
+          ],
+          [
+            0,
+            5,
+            11
+          ],
+          [
+            0,
+            10,
+            11
+          ],
+          [
+            0,
+            11,
+            11
+          ],
+          [
+            1,
+            0,
+            10
+          ]
+        ],
+        "ordered": {
+          "min_turn": {
+            "dead_ends_mean": 22.5,
+            "dead_ends_med": 25,
+            "taps_mean": 1046.1,
+            "taps_med": 1224,
+            "unfinished": 0
+          },
+          "mobility": {
+            "dead_ends_mean": 21.9,
+            "dead_ends_med": 21,
+            "taps_mean": 879.7,
+            "taps_med": 900,
+            "unfinished": 0
+          },
+          "opportunist": {
+            "dead_ends_mean": 14.5,
+            "dead_ends_med": 16,
+            "taps_mean": 572.4,
+            "taps_med": 582,
+            "unfinished": 0
+          },
+          "patient": {
+            "dead_ends_mean": 24.7,
+            "dead_ends_med": 25,
+            "taps_mean": 1263.2,
+            "taps_med": 1284,
+            "unfinished": 0
+          }
+        },
+        "pieces": 16,
+        "policies": {
+          "look2": 0.03,
+          "look4": 0.025,
+          "min_turn": 0.035,
+          "mobility": 0,
+          "safe": 0.015
+        },
+        "time_runs_ms": [
+          30.4,
+          31.8,
+          30,
+          34.3,
+          31.8
+        ]
+      }
+    },
+    {
+      "accepted": true,
+      "canonical": "7x7|. . . . . . ./. Rv . . . Bv@ G<@/. . B^@- Gv@ Yv@- . ./. Bv P<* . . Rv* R^=/. . . . . . ./. . . . . . ./Pv P^@ . . . . .",
+      "fingerprint": "ea162c521ccde352595f2157c455e845fb6775d83eff75cc3e4cc774c82d74fb",
+      "first_level": 151,
+      "id": "E2",
+      "mechanics": [
+        "spinner_cw",
+        "spinner_ccw",
+        "armor",
+        "magnet"
+      ],
+      "metrics": {
+        "advances": 0,
+        "armored": 1,
+        "blocks": 12,
+        "branching": 3.31,
+        "calm_moves": 6,
+        "calm_moves_share": 0.46,
+        "calm_share": 0.69,
+        "calm_steps": 9,
+        "crates": 0,
+        "decision_points": 6,
+        "depth": 8,
+        "difficulty": 28.1,
+        "flip_targets": 0,
+        "gate_links": 0,
+        "gates": 0,
+        "heuristic_win": 0,
+        "hint": {
+          "aborted": false,
+          "consistent": true,
+          "dead_max_ms_desktop": 17.36,
+          "dead_max_nodes": 175,
+          "dead_states": 13,
+          "dead_worst_path": [
+            4
+          ],
+          "max_ms_desktop": 13.02,
+          "max_nodes": 249,
+          "states": 13,
+          "worst_path": []
+        },
+        "impact": {
+          "armor": 17.1,
+          "crate": 0,
+          "gate": 0,
+          "lock": 0,
+          "portal": 0,
+          "rules": -4,
+          "sequence": 0,
+          "spinner": 99,
+          "switch": 0
+        },
+        "locks": 0,
+        "one_safe_steps": 0,
+        "portal_moves": 0,
+        "portal_pairs": 0,
+        "push_essential": false,
+        "push_traps": 0,
+        "pushes": 0,
+        "rams": 1,
+        "random_win": 0.0125,
+        "rules": {
+          "alt": 0,
+          "ccw": 4,
+          "cw": 2,
+          "pattern": 0
+        },
+        "safe_choices": 2.31,
+        "sequence_blocks": 0,
+        "size": "7x7",
+        "solution_length": 13,
+        "spinners": 6,
+        "start_calm": 1,
+        "start_moves": 5,
+        "start_safe": 3,
+        "switch_decisions": 0,
+        "switches": 0,
+        "trap_delay_avg": 7.3,
+        "trap_delay_max": 10,
+        "trap_moves": 13
+      },
+      "misleading_moves": [
+        "The hammer P at R3C3 to the left on the first move: free, but it is the only block that can ever crack the shell; play can go on for up to 10 moves before the jam.",
+        "The red magnet at R6C4 on the first move: free, but the first block behind it is the purple spinner at R6C2, not the hammer; up to 10 moves.",
+        "The green spinner at R5C3 to the right early: free, but it turns the yellow spinner above it the wrong way; up to 10 moves."
+      ],
+      "puzzle": {
+        "cols": 7,
+        "format": "ce-puzzle",
+        "map": [
+          ". . . . . . B>",
+          ". R> . P> . . B<@-",
+          ". . P<@ B^* . . .",
+          ". . Y>@- . . . .",
+          ". . G>@ . . . .",
+          ". P>@- . R>* . . .",
+          ". Y^@- . R<= . . ."
+        ],
+        "rows": 7,
+        "rules": 1,
+        "v": 1
+      },
+      "recipe": "X2_cascade",
+      "rules_defeated": "all four rules of thumb with 4- and 6-move lookahead (luckiest: release spinners at once - 13 dead ends)",
+      "source": "hand-designed core (a magnet relays a magnet, which turns and carries the hammer to the shell; docs/extreme8.md), refined by search with the core frozen, then designed edits by hand (counter-clockwise spinner at R4C3, spinners at R6C2 / R7C2, plain block at R2C4, a spinner removed for the mobile budget); every piece shown needed",
+      "title": "The relay",
+      "variant": "X2",
+      "verify": {
+        "aborted": false,
+        "ms_desktop": 4.54,
+        "nodes": 250,
+        "solved": true
+      },
+      "why": "The armored red block at R7C4 can never be hit where it is. The only hammer is the purple clockwise spinner at R3C3, and it needs two magnets. The blue magnet at R3C4 leaves upward and drags the first block behind it - once column 4 is clear, that is the red magnet at R6C4, which lands in R3C4, right beside the hammer, now pointing right with the hammer first behind it. When the red magnet then leaves, it turns the hammer and drags it into R3C4, facing down column 4 at the shell: ram, and the cracked block leaves to the left. The hammer must have been turned exactly three times by then (left - up - right - down): once by the blue magnet's escape, once by the yellow counter-clockwise spinner below it (R4C3) leaving, once by the red magnet's escape. Meanwhile it is free to leave several times, and the red magnet is free from the first move (it would drag the purple spinner at R6C2 instead). Checked over every winning line (2714): the blue magnet always fires before the red one; the hammer is turned and carried by a magnet that another magnet moved, then rams, on every line; only 2 of the 5 legal first moves keep the board solvable.",
+      "x": {
+        "best_rule_dead_ends": 13,
+        "blind": {
+          "dead_ends_mean": 13.5,
+          "dead_ends_med": 15.5,
+          "taps_mean": 1435.9,
+          "taps_med": 1602,
+          "unfinished": 0
+        },
+        "choices": {
+          "forced_risky": 2,
+          "losing_options": 15,
+          "mech": {
+            "magnet": {
+              "forced": 0,
+              "moves": 2,
+              "with_losing_alt": 1
+            },
+            "ram": {
+              "forced": 0,
+              "moves": 1,
+              "with_losing_alt": 0
+            },
+            "spinner_escape": {
+              "forced": 1,
+              "moves": 6,
+              "with_losing_alt": 2
+            },
+            "spinner_turn": {
+              "forced": 0,
+              "moves": 1,
+              "with_losing_alt": 1
+            }
+          },
+          "real_choices": 5,
+          "risky_steps": 10,
+          "steps": 13
+        },
+        "expert": {
+          "learner": {
+            "look4": 13,
+            "look6": 13
+          },
+          "learner_min": 13,
+          "look6_greedy": 0.017,
+          "measure": {
+            "capped": false,
+            "decisions": {
+              "2": 6,
+              "4": 6,
+              "6": 5,
+              "8": 3
+            },
+            "deepest": 11,
+            "hidden": {
+              "2": 18,
+              "4": 18,
+              "6": 15,
+              "8": 9
+            },
+            "losing_moves_on_path": 18,
+            "median_trap_delay": 9,
+            "opening": "2 / 5",
+            "positions": 614,
+            "solution": 13,
+            "win_share": 0.104,
+            "winnable": 64
+          },
+          "ok": true,
+          "why": ""
+        },
+        "greedy_best": 0,
+        "idea_events": {
+          "aimed_ram": true,
+          "flip_opens_gate": false,
+          "gate_before_switch": false,
+          "moved_then_turned": false,
+          "moved_turned_adv": false,
+          "relay": true,
+          "relay_carry": true,
+          "reversed_escape": false,
+          "two_moved_turned": false
+        },
+        "idea_facts": {
+          "aimed_ram": true,
+          "flip_opens_gate": false,
+          "gate_before_switch": false,
+          "moved_then_turned": false,
+          "moved_turned_adv": false,
+          "relay": true,
+          "relay_carry": true,
+          "reversed_escape": false,
+          "two_moved_turned": false
+        },
+        "late_misleading_moves": 3,
+        "magnet_matters": {
+          "matters": true,
+          "plain": "unsolvable"
+        },
+        "magnets": 2,
+        "misleading": [
+          [
+            0,
+            4,
+            10
+          ],
+          [
+            0,
+            7,
+            10
+          ],
+          [
+            0,
+            9,
+            10
+          ],
+          [
+            1,
+            4,
+            9
+          ],
+          [
+            1,
+            7,
+            9
+          ],
+          [
+            1,
+            9,
+            9
+          ]
+        ],
+        "ordered": {
+          "min_turn": {
+            "dead_ends_mean": 19.7,
+            "dead_ends_med": 20,
+            "taps_mean": 2035.3,
+            "taps_med": 2131,
+            "unfinished": 0
+          },
+          "mobility": {
+            "dead_ends_mean": 18,
+            "dead_ends_med": 18,
+            "taps_mean": 1380.1,
+            "taps_med": 1467,
+            "unfinished": 0
+          },
+          "opportunist": {
+            "dead_ends_mean": 11.7,
+            "dead_ends_med": 13,
+            "taps_mean": 1178.3,
+            "taps_med": 1211,
+            "unfinished": 0
+          },
+          "patient": {
+            "dead_ends_mean": 17.4,
+            "dead_ends_med": 18,
+            "taps_mean": 1803.5,
+            "taps_med": 1835,
+            "unfinished": 0
+          }
+        },
+        "pieces": 12,
+        "policies": {
+          "look2": 0,
+          "look4": 0,
+          "min_turn": 0,
+          "mobility": 0,
+          "safe": 0
+        },
+        "time_runs_ms": [
+          16.5,
+          17.9,
+          19.9,
+          19.2,
+          22.5
+        ]
+      }
+    }
+  ],
+  "format": "ce-extreme-proto",
+  "note": "Development only. EXTREME expert experiment: three concept-first candidates for experienced players (docs/extreme8.md); never shared, never production.",
+  "test": "xtest8",
+  "v": 1
+}
