@@ -58,6 +58,13 @@ extends CanvasLayer
 ##               used, a tiny interactive DEMO (the board file's "demos"):
 ##               one rule, played by the tester, never rated, never the
 ##               puzzle's solution.
+##   ?xtest7=1   EXTREME DESIGN EXPERIMENT (data/dev/extreme7.json,
+##               tools/extreme7_build.gd, docs/extreme7.md): two
+##               hand-designed VERY HARD candidates (switch / gate +
+##               spinners; magnet + armor + spinners). The same flow and
+##               questions as ?xtest6 (including the combination
+##               question); no demos (every rule here is taught by the
+##               campaign or by the ?xtest6 demos).
 
 ## EXTREME research: the rating and the follow-up questions.
 const X_RATINGS := ["EASY", "MEDIUM", "HARD", "VERY HARD", "EXTREME"]
@@ -106,6 +113,10 @@ const TESTS := {
 	"xtest6": {"data": "res://data/dev/extreme6.json", "state": "user://extreme6_state.json", "title": "PUZZLE PILOT 2\n(DEVELOPMENT)",
 		"q2": "", "q2_key": "l300", "q2_label": "harder than L300", "pilot": true, "ratings": X_RATINGS, "questions": X6_QUESTIONS,
 		"log_blocked": true, "hide_difficulty": true, "demos": true, "ls": "chain_escape_xtest6_state"},
+	# EXTREME design experiment (see the header).
+	"xtest7": {"data": "res://data/dev/extreme7.json", "state": "user://extreme7_state.json", "title": "PUZZLE PILOT 3\n(DEVELOPMENT)",
+		"q2": "", "q2_key": "l300", "q2_label": "harder than L300", "pilot": true, "ratings": X_RATINGS, "questions": X6_QUESTIONS,
+		"log_blocked": true, "hide_difficulty": true, "combo": true, "ls": "chain_escape_xtest7_state"},
 }
 ## Pilot follow-up questions: [key, text, label, options].
 const PILOT_QUESTIONS := [
@@ -199,7 +210,7 @@ static func requested() -> bool:
 static func requested_test() -> String:
 	if BuildFlags.dev_pages_off():
 		return ""  # player / QA build: developer pages off
-	for key in ["xtest6", "xtest5", "vhtest4", "vhtest3", "vhtest2", "vhtest"]:
+	for key in ["xtest7", "xtest6", "xtest5", "vhtest4", "vhtest3", "vhtest2", "vhtest"]:
 		if "--" + key in OS.get_cmdline_user_args():
 			return key
 	if not OS.has_feature("web"):
@@ -208,7 +219,7 @@ static func requested_test() -> String:
 	if loc == null:
 		return ""
 	var where := (str(loc.search) + str(loc.hash)).to_lower()
-	for key in ["xtest6", "xtest5", "vhtest4", "vhtest3", "vhtest2", "vhtest"]:
+	for key in ["xtest7", "xtest6", "xtest5", "vhtest4", "vhtest3", "vhtest2", "vhtest"]:
 		if where.contains(key + "=1") or where.contains(key + "=true"):
 			return key
 	return ""
@@ -853,7 +864,7 @@ func _summary_text() -> String:
 			lines.append("%s: %d played, %d solved, %d given up, median %ss, rated %.1f / 5, EXTREME x%d, VERY HARD x%d, harder than L300 x%d, enjoy %s, achieve %s, unfair x%d, needed planning x%d" % [
 				v, s["n"], s["solved"], s.get("gave_up", 0), str(s["median_time_s"]), s["avg_rating_1to5"], s.get("extreme", 0), s["very_hard"],
 				s.get("harder_than_l300", 0), str(s.get("avg_enjoy", "-")), str(s.get("avg_achieve", "-")), s.get("unfair", 0), s.get("planned", 0)]
-				+ (", combination more interesting x%d" % s.get("combo_yes", 0) if _cfg.get("demos", false) else ""))
+				+ (", combination more interesting x%d" % s.get("combo_yes", 0) if _cfg.get("combo", _cfg.get("demos", false)) else ""))
 			continue
 		if pilot:
 			lines.append("Group %s: %d played, %d solved, %d given up, median %ss, rated %.1f / 4, VERY HARD x%d, harder than L300 x%d, enjoy %s, achieve %s, unfair x%d" % [

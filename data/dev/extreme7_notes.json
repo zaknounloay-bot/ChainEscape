@@ -1,0 +1,28 @@
+{
+  "format": "ce-extreme-notes",
+  "note": "Development only. Hand-written explanations of the two hand-designed candidates (tools/extreme7_build.gd copies them into data/dev/extreme7.json by board fingerprint). Cells are named RnCm: row n, column m, counted from 1 at the top-left. The central idea, the first-move counts and the ordering claims were checked exhaustively over every winning line; the misleading moves and their delays come from the solver's solution and its losing alternatives (--dossier).",
+  "boards": {
+    "b391041394eeb22b3bc9ab58260d14543153be409ffee598f31986f4be69229b": {
+      "title": "One switch, two stand-offs",
+      "why": "The yellow switch at R3C3 is free on the first move and looks like the answer: it reverses the red block at R5C5, which is locked head-to-head with the green block at R5C4 and can only leave once it is reversed. But the same switch also reverses the green block at R5C2, and reversed it would face the blue block at R6C2 head-to-head for good. So the switch must wait until that green block has left upward - through the chain gate at R4C2, which opens only when its one link, the purple spinner at R3C4, has left. That spinner can only leave once it is turned to face right, by the block beside it (P at R3C5) leaving; the free spinner P at R2C4 above it turns it too, at the wrong moment. Order: turn the gate's link with P at R3C5 and let it out to the right, send green up through the open gate, and only then fire the switch. Afterwards the bottom row still needs care: the yellow spinner at R5C3 must be turned twice (by G at R5C4 and the counter-clockwise spinner G at R6C3) before it can leave. Checked over every winning line (30): the first four moves are always the same - P at R3C5, the gate's link, green up, the switch - so only 1 of the 3 legal first moves keeps the board solvable.",
+      "misleading_moves": [
+        "The switch Y at R3C3 on the first move: free, and it frees the red block at R5C5 at once, but it also reverses the green block at R5C2 into a stand-off with the blue block below it; play can go on for up to 8 moves before the jam.",
+        "The free spinner P at R2C4 (right) on the first move: its lane is empty, but leaving turns the purple spinner at R3C4 - the gate's only link - too early; up to 8 moves.",
+        "The switch after the gate's link has left but before green has gone up through the gate: the same stand-off; up to 6 moves.",
+        "The blue block at R6C2 as soon as green has left above it: it turns the counter-clockwise spinner G at R6C3 the wrong way; up to 5 moves."
+      ],
+      "rules_defeated": "all four (luckiest: escape spinners as soon as they can, or last - 9 dead ends)"
+    },
+    "e93b4cefaf38044e61d61c657e31e22290256eabdf412ec849ccd120d1de0092": {
+      "title": "Carry the hammer",
+      "why": "Two armored blocks, R5C3 and R4C6, and nothing that can ever hit them where it stands. The only hammer is the purple clockwise spinner at R6C4, and two magnets carry it. The blue magnet at R5C4 sits right above it: when the magnet leaves upward it first turns the spinner (it is a neighbour) and then drags it into R5C4 - so the spinner arrives facing left, at the first shell, only if it was turned exactly twice before, by both of its other neighbours (P at R6C3 and B at R7C4, freed by the spinner Y at R7C3). Ram; the cracked red block leaves downward and turns the hammer to face up. Now the green magnet at R5C6 drags it along row 5 to R5C6, right under the second shell: ram again; the cracked yellow block leaves to the right and turns the hammer to face right, out. Every departure re-aims the same hammer. Checked over every winning line (56): the hammer is aimed by a magnet's escape and carried by both magnets in every one, the blue magnet always fires at step 5, before the green one; only 2 of the 3 legal first moves keep the board solvable.",
+      "misleading_moves": [
+        "The green magnet at R5C6 on the first move: free, but the first block behind it is the blue magnet, which it drags away from above the hammer; play can go on for up to 9 moves before the jam.",
+        "The blue magnet at R5C4 as soon as its column is clear: it carries the hammer with too few turns, so it arrives facing away from the shell; up to 6 moves.",
+        "The hammer itself, the moment it can leave (to the right after one turn, downward after two): a free move that throws the only hammer away; up to 5-6 moves.",
+        "After the first shell is gone, the hammer can leave upward: again free, again the only hammer for the second shell."
+      ],
+      "rules_defeated": "all four (luckiest: keep the most moves open, or escape spinners last - 5 dead ends)"
+    }
+  }
+}
