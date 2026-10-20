@@ -86,6 +86,55 @@ const X_RECIPES := {
 var x_args := {}
 
 
+# --- Overridable settings (tools/extreme6_build.gd: the phase-2 pilot) -----------------------
+# The defaults are exactly the T1-T5 values.
+
+func recipes() -> Dictionary:
+	return X_RECIPES
+
+
+func out_path() -> String:
+	return X_OUT
+
+
+func notes_path() -> String:
+	return X_NOTES
+
+
+func own_prefix() -> String:
+	return "extreme5"  # this test's own board files (never "known" boards)
+
+
+func test_name() -> String:
+	return "xtest5"
+
+
+func id_prefix() -> String:
+	return "T"
+
+
+func boards_per_recipe() -> int:
+	return 1
+
+
+func max_pieces() -> int:
+	return MAX_PIECES
+
+
+func max_len() -> int:
+	return MAX_LEN
+
+
+func file_note() -> String:
+	return "Development only. EXTREME research prototypes (docs/extreme5.md); never shared, never production."
+
+
+## The recipe's central idea, checked on the solution (reasons it fails;
+## empty = holds). T1-T5 have none beyond their recipe's "use" list.
+func idea_check(_level: LevelData, _spec: Dictionary) -> Array:
+	return []
+
+
 func _initialize() -> void:
 	for a in OS.get_cmdline_user_args():
 		var kv := a.trim_prefix("--").split("=", true, 1)
@@ -119,7 +168,7 @@ func _load_known() -> void:
 		for sub in DirAccess.get_directories_at(dir):
 			stack.append(dir.path_join(sub))
 		for f in DirAccess.get_files_at(dir):
-			if f.ends_with(".json") and not f.begins_with("extreme5"):
+			if f.ends_with(".json") and not f.begins_with(own_prefix()):
 				_collect_maps(JSON.parse_string(FileAccess.get_file_as_string(dir.path_join(f))), dir.path_join(f))
 	print("known boards: %d" % known_keys.size())
 
@@ -148,7 +197,7 @@ func _solver(level: LevelData) -> Solver:
 # --- Search ----------------------------------------------------------------------------------
 
 func _x_build(name: String, tries: int, climb: int) -> Array:
-	var spec: Dictionary = X_RECIPES[name]
+	var spec: Dictionary = recipes()[name]
 	var found := []
 	var near := []  # best rejected boards: [score, why, map]
 	var seen := {}
@@ -305,11 +354,11 @@ func _x_eval(map: Array, spec: Dictionary, quick: bool = false) -> Dictionary:
 	# the climb has a direction even among easy boards.
 	var sc: float = 10.0 * minf(best_mean, 6.0) + 1.5 * minf(blind, 12.0) - 60.0 * maxf(pol - 0.02, 0.0) \
 		+ 0.5 * m["decision_points"] + 0.5 * m["one_safe_steps"]
-	if pieces > MAX_PIECES:
-		sc -= 5.0 * (pieces - MAX_PIECES)
+	if pieces > max_pieces():
+		sc -= 5.0 * (pieces - max_pieces())
 		why.append("pieces %d" % pieces)
-	if sol_len > MAX_LEN or sol_len < 10:
-		sc -= 4.0 * (maxi(sol_len - MAX_LEN, 0) + maxi(10 - sol_len, 0))
+	if sol_len > max_len() or sol_len < 10:
+		sc -= 4.0 * (maxi(sol_len - max_len(), 0) + maxi(10 - sol_len, 0))
 		why.append("len %d" % sol_len)
 	var c := PROBE.choices(s)
 	for u in spec["use"]:
@@ -322,8 +371,19 @@ func _x_eval(map: Array, spec: Dictionary, quick: bool = false) -> Dictionary:
 		why.append("pushes %d" % m["pushes"])
 	if best < MIN_DEAD_ENDS:
 		why.append("best rule %.1f dead ends" % best)
+	if pol > MAX_POLICY_WIN and pol <= 2.0 * MAX_POLICY_WIN and why.is_empty():
+		# Close: the quick 50-game estimate is too coarse (one game = 2 %).
+		# Re-measure with acceptance's own protocol (200 games, its seed).
+		pol = 0.0
+		for k in POLICIES:
+			pol = maxf(pol, PROBE.policy_win(s, k, 200 if k != "look4" else 120, 31))
 	if pol > MAX_POLICY_WIN:
 		why.append("greedy wins %.2f" % pol)
+	if why.is_empty():
+		var idea := idea_check(level, spec)
+		if not idea.is_empty():
+			sc -= 12.0
+			why.append_array(idea)
 	if why.is_empty():
 		# Close to the goal: the Gate 0 impact rule (every advanced family
 		# on the board must matter), checked only here because it is slow.
@@ -372,7 +432,7 @@ static func _pieces(map: Array) -> int:
 ## The Gate 0 technical record and acceptance (unchanged), plus the EXTREME
 ## measures and acceptance (larger samples than the climb).
 func _x_report(recipe: String, source: String, map: Array) -> Dictionary:
-	var spec: Dictionary = X_RECIPES[recipe]
+	var spec: Dictionary = recipes()[recipe]
 	var rec := _report(spec["group"], recipe, source, map, spec["needs"])
 	rec["mechanics"] = mechanics(map)
 	if not rec.has("metrics"):
@@ -414,10 +474,11 @@ func _x_report(recipe: String, source: String, map: Array) -> Dictionary:
 	rec["x"] = x
 	var why := [] if rec["ok"] else [rec["why"]]
 	var met: Dictionary = rec["metrics"]
-	if x["pieces"] > MAX_PIECES:
-		why.append("%d pieces (> %d)" % [x["pieces"], MAX_PIECES])
-	if met["solution_length"] > MAX_LEN:
-		why.append("solution %d taps (> %d)" % [met["solution_length"], MAX_LEN])
+	if x["pieces"] > max_pieces():
+		why.append("%d pieces (> %d)" % [x["pieces"], max_pieces()])
+	if met["solution_length"] > max_len():
+		why.append("solution %d taps (> %d)" % [met["solution_length"], max_len()])
+	why.append_array(idea_check(level, spec))
 	if best < MIN_DEAD_ENDS:
 		why.append("a rule of thumb solves it with %.1f dead ends (< %.0f)" % [best, MIN_DEAD_ENDS])
 	if worst > MAX_POLICY_WIN:
@@ -479,7 +540,7 @@ func _x_merge(paths: Array, write: bool) -> void:
 			by.get_or_add(b["recipe"], []).append(b)
 	var chosen := []
 	var keys := {}
-	for recipe in X_RECIPES:
+	for recipe in recipes():
 		var cands: Array = by.get(recipe, [])
 		var ok := []
 		for b in cands:
@@ -495,9 +556,19 @@ func _x_merge(paths: Array, write: bool) -> void:
 			print("SHORTFALL: no accepted %s board" % recipe)
 			continue
 		ok.sort_custom(func(a, b): return a["x_score"] > b["x_score"])
-		keys[canonical(Array(ok[0]["map"]))] = true
-		chosen.append(ok[0])
-		print("%s: %d accepted, kept x-score %.1f" % [recipe, ok.size(), ok[0]["x_score"]])
+		var kept := []
+		for rec in ok:
+			if kept.size() >= boards_per_recipe():
+				break
+			if kept.any(func(k): return _too_similar(Array(k["map"]), Array(rec["map"]))):
+				continue  # two boards of a recipe must not be variants of each other
+			kept.append(rec)
+		for rec in kept:
+			keys[canonical(Array(rec["map"]))] = true
+			chosen.append(rec)
+		print("%s: %d accepted, kept %d (x-score %s)" % [recipe, ok.size(), kept.size(), str(kept.map(func(k): return k["x_score"]))])
+		if kept.size() < boards_per_recipe():
+			print("SHORTFALL: %s has %d of %d distinct boards" % [recipe, kept.size(), boards_per_recipe()])
 	var r := RandomNumberGenerator.new()
 	r.seed = 2027
 	for i in range(chosen.size() - 1, 0, -1):
@@ -506,7 +577,7 @@ func _x_merge(paths: Array, write: bool) -> void:
 		chosen[i] = chosen[j]
 		chosen[j] = tmp
 	# Hand-written explanations, by board fingerprint (data/dev/extreme5_notes.json).
-	var notes = JSON.parse_string(FileAccess.get_file_as_string(X_NOTES)) if FileAccess.file_exists(X_NOTES) else {}
+	var notes = JSON.parse_string(FileAccess.get_file_as_string(notes_path())) if FileAccess.file_exists(notes_path()) else {}
 	var by_fp: Dictionary = notes.get("boards", {}) if typeof(notes) == TYPE_DICTIONARY else {}
 	var boards := []
 	for i in chosen.size():
@@ -514,7 +585,7 @@ func _x_merge(paths: Array, write: bool) -> void:
 		var map: Array = c["map"]
 		var lv := parse(map)
 		boards.append({
-			"id": "T%d" % (i + 1), "recipe": c["recipe"], "variant": c["group"], "source": c["source"],
+			"id": "%s%d" % [id_prefix(), i + 1], "recipe": c["recipe"], "variant": c["group"], "source": c["source"],
 			"first_level": _first_level(c["mechanics"]),
 			"puzzle": {"format": "ce-puzzle", "v": 1, "rules": 1, "rows": lv.rows, "cols": lv.columns, "map": map},
 			"mechanics": c["mechanics"], "fingerprint": c["fingerprint"], "canonical": c["canonical"],
@@ -528,12 +599,35 @@ func _x_merge(paths: Array, write: bool) -> void:
 			print("%s has no written explanation yet (%s)" % [boards[-1]["id"], c["fingerprint"]])
 		print("%s = %s  %s" % [boards[-1]["id"], c["recipe"], JSON.stringify(map)])
 	if write:
-		var f := FileAccess.open(X_OUT, FileAccess.WRITE)
-		f.store_string(JSON.stringify({"format": "ce-extreme-proto", "v": 1, "test": "xtest5", "assist": X_ASSIST,
-			"note": "Development only. EXTREME research prototypes (docs/extreme5.md); never shared, never production.",
-			"boards": boards}, "  "))
+		var out := {"format": "ce-extreme-proto", "v": 1, "test": test_name(), "assist": X_ASSIST, "note": file_note(), "boards": boards}
+		out.merge(extra_file_fields())
+		var f := FileAccess.open(out_path(), FileAccess.WRITE)
+		f.store_string(JSON.stringify(out, "  "))
 		f.close()
-		print("wrote %d boards to %s" % [boards.size(), X_OUT])
+		print("wrote %d boards to %s" % [boards.size(), out_path()])
+
+
+## More top-level fields for the board file (phase 2: the demos).
+func extra_file_fields() -> Dictionary:
+	return {}
+
+
+## Two boards are variants of each other when more than half of the
+## occupied cells hold the same piece (same size).
+static func _too_similar(a: Array, b: Array) -> bool:
+	if a.size() != b.size():
+		return false
+	var same := 0
+	var occupied := 0
+	for r in a.size():
+		var ra := String(a[r]).split(" ", false)
+		var rb := String(b[r]).split(" ", false)
+		for c in mini(ra.size(), rb.size()):
+			if ra[c] != "." or rb[c] != ".":
+				occupied += 1
+				if ra[c] == rb[c]:
+					same += 1
+	return occupied > 0 and same * 2 > occupied
 
 
 ## The first campaign level that teaches every mechanic on the board.

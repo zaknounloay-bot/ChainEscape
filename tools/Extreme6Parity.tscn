@@ -1,0 +1,6 @@
+[gd_scene load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://tools/extreme6_parity.gd" id="1_x6p"]
+
+[node name="Extreme6Parity" type="Node"]
+script = ExtResource("1_x6p")

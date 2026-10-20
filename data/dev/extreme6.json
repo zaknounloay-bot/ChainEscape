@@ -1,0 +1,573 @@
+{
+  "assist": {
+    "hammer": 0,
+    "show_a_move": 1,
+    "undo": 3
+  },
+  "boards": [
+    {
+      "accepted": true,
+      "canonical": "6x7|. . . . . ./. . . Rv@ . ./. . . . . ./. . . R<* B^ ./. . . . Gv@- Yv/. P< R< . . ./Gv= . Gv Y<@- R>* .",
+      "fingerprint": "6712cf75bee1ee13bb252d0fa23fcc9515fa50890f0f950416ba075bd3a4010e",
+      "first_level": 151,
+      "id": "P1",
+      "mechanics": [
+        "spinner_cw",
+        "spinner_ccw",
+        "armor",
+        "magnet"
+      ],
+      "metrics": {
+        "advances": 0,
+        "armored": 1,
+        "blocks": 11,
+        "branching": 3.75,
+        "calm_moves": 10,
+        "calm_moves_share": 0.83,
+        "calm_share": 1,
+        "calm_steps": 12,
+        "crates": 0,
+        "decision_points": 6,
+        "depth": 7,
+        "difficulty": 27.2,
+        "flip_targets": 0,
+        "gate_links": 0,
+        "gates": 0,
+        "heuristic_win": 0,
+        "hint": {
+          "aborted": false,
+          "consistent": true,
+          "dead_max_ms_desktop": 17.68,
+          "dead_max_nodes": 117,
+          "dead_states": 16,
+          "dead_worst_path": [
+            4,
+            5,
+            7
+          ],
+          "max_ms_desktop": 4.31,
+          "max_nodes": 34,
+          "states": 12,
+          "worst_path": [
+            4,
+            5,
+            1,
+            2
+          ]
+        },
+        "impact": {
+          "armor": 20,
+          "crate": 0,
+          "gate": 0,
+          "lock": 0,
+          "portal": 0,
+          "rules": 0.3,
+          "sequence": 0,
+          "spinner": 20.2,
+          "switch": 0
+        },
+        "locks": 0,
+        "one_safe_steps": 0,
+        "portal_moves": 0,
+        "portal_pairs": 0,
+        "push_essential": false,
+        "push_traps": 0,
+        "pushes": 0,
+        "rams": 1,
+        "random_win": 0,
+        "rules": {
+          "alt": 0,
+          "ccw": 1,
+          "cw": 2,
+          "pattern": 0
+        },
+        "safe_choices": 2.42,
+        "sequence_blocks": 0,
+        "size": "6x7",
+        "solution_length": 12,
+        "spinners": 3,
+        "start_calm": 2,
+        "start_moves": 6,
+        "start_safe": 3,
+        "switch_decisions": 0,
+        "switches": 0,
+        "trap_delay_avg": 6.1,
+        "trap_delay_max": 9,
+        "trap_moves": 16
+      },
+      "misleading_moves": [
+        "Blue magnet at R1C5 (right) on the first move: free, but it drags the spinner Y at R1C4 - the first block behind it - instead of the armored block; play can go on for up to 9 moves before the jam.",
+        "Y at R3C6 (up) on the first move: free, but it turns the spinner R at R3C5, the only block that can crack the shell once it arrives; up to 9 moves.",
+        "P at R4C5 (down) on the first move: free, and it turns the same spinner; up to 9 moves.",
+        "Blue magnet at R4C4 (left) early: it drags P at R4C5 into column 4, head-to-head with the spinner B at R6C4; up to 9 moves."
+      ],
+      "puzzle": {
+        "cols": 6,
+        "format": "ce-puzzle",
+        "map": [
+          "R^= . R^ Y<@ B>* .",
+          ". G< B< . . .",
+          ". . . . R^@ Y^",
+          ". . . B<* Pv .",
+          ". . . . . .",
+          ". . . B^@- . .",
+          ". . . . . ."
+        ],
+        "rows": 7,
+        "rules": 1,
+        "v": 1
+      },
+      "recipe": "B_armormag",
+      "rules_defeated": "all four (luckiest: keep the most moves open, 11 dead ends)",
+      "source": "generated (B_armormag, seed 807, try 7)",
+      "title": "Drag the shell into the line of fire",
+      "variant": "B",
+      "verify": {
+        "aborted": false,
+        "ms_desktop": 0.31,
+        "nodes": 8,
+        "solved": true
+      },
+      "why": "The armored red block in the top-left corner (R1C1) can never be hit where it is. The blue magnet at R1C5 is the way out: when it leaves to the right it drags the first block behind it along the top row, and once R1C3 and R1C4 have gone, that first block is the armored one. It lands in R1C5, straight above the clockwise spinner R at R3C5, which still points up and cracks it; then it can leave. So the top row has to be cleared in the right order first (R at R1C3 leaves and turns the spinner Y at R1C4 to point up, then Y leaves), and the rammer must still be pointing up when the shell arrives - its two neighbours, Y at R3C6 and P at R4C5, can leave at once, but each one turns it. Every winning line uses this pull-then-ram (checked exhaustively); only 2 of the 6 legal first moves keep the board solvable.",
+      "x": {
+        "best_rule_dead_ends": 11,
+        "blind": {
+          "dead_ends_mean": 12.5,
+          "dead_ends_med": 14,
+          "taps_mean": 692.7,
+          "taps_med": 786,
+          "unfinished": 0
+        },
+        "choices": {
+          "forced_risky": 1,
+          "losing_options": 13,
+          "mech": {
+            "magnet": {
+              "forced": 1,
+              "moves": 2,
+              "with_losing_alt": 1
+            },
+            "ram": {
+              "forced": 0,
+              "moves": 1,
+              "with_losing_alt": 1
+            },
+            "spinner_escape": {
+              "forced": 0,
+              "moves": 3,
+              "with_losing_alt": 2
+            },
+            "spinner_turn": {
+              "forced": 0,
+              "moves": 1,
+              "with_losing_alt": 1
+            }
+          },
+          "real_choices": 5,
+          "risky_steps": 6,
+          "steps": 12
+        },
+        "greedy_best": 0.015,
+        "idea_events": {
+          "portal_escapes": 0,
+          "pulled_then_rammed": 1,
+          "pulls": 1,
+          "rams": 1,
+          "reversed_pulls": 0,
+          "turned_spinner_portal": 0
+        },
+        "late_misleading_moves": 4,
+        "magnet_matters": {
+          "matters": true,
+          "plain": "unsolvable"
+        },
+        "magnets": 2,
+        "misleading": [
+          [
+            0,
+            3,
+            9
+          ],
+          [
+            0,
+            7,
+            9
+          ],
+          [
+            0,
+            8,
+            9
+          ],
+          [
+            0,
+            9,
+            9
+          ],
+          [
+            1,
+            3,
+            8
+          ],
+          [
+            1,
+            7,
+            8
+          ]
+        ],
+        "ordered": {
+          "min_turn": {
+            "dead_ends_mean": 10.5,
+            "dead_ends_med": 12,
+            "taps_mean": 497.3,
+            "taps_med": 712,
+            "unfinished": 0
+          },
+          "mobility": {
+            "dead_ends_mean": 10.1,
+            "dead_ends_med": 11,
+            "taps_mean": 558.4,
+            "taps_med": 640,
+            "unfinished": 0
+          },
+          "opportunist": {
+            "dead_ends_mean": 9.2,
+            "dead_ends_med": 13,
+            "taps_mean": 483.2,
+            "taps_med": 740,
+            "unfinished": 0
+          },
+          "patient": {
+            "dead_ends_mean": 12.9,
+            "dead_ends_med": 15,
+            "taps_mean": 663.5,
+            "taps_med": 812,
+            "unfinished": 0
+          }
+        },
+        "pieces": 11,
+        "policies": {
+          "look2": 0.015,
+          "look4": 0.008,
+          "min_turn": 0,
+          "mobility": 0,
+          "safe": 0.005
+        },
+        "time_runs_ms": [
+          19.6,
+          16.6,
+          22.1,
+          19.7,
+          29.9
+        ]
+      }
+    },
+    {
+      "accepted": true,
+      "canonical": "6x6|. . . . . R^*/. . . . . ./B>= . . G>* . ./Y> . . P>@ . ./P>@ Y^@ . . . Y<=/. . . Y^@- B> .",
+      "fingerprint": "a485309701001d32eb490d35220b91ae7862e0af6fb2a4086bbaeed90a94f85a",
+      "first_level": 151,
+      "id": "P2",
+      "mechanics": [
+        "spinner_cw",
+        "spinner_ccw",
+        "armor",
+        "magnet"
+      ],
+      "metrics": {
+        "advances": 0,
+        "armored": 2,
+        "blocks": 10,
+        "branching": 3.92,
+        "calm_moves": 9,
+        "calm_moves_share": 0.75,
+        "calm_share": 1,
+        "calm_steps": 12,
+        "crates": 0,
+        "decision_points": 6,
+        "depth": 6,
+        "difficulty": 25.6,
+        "flip_targets": 0,
+        "gate_links": 0,
+        "gates": 0,
+        "heuristic_win": 0,
+        "hint": {
+          "aborted": false,
+          "consistent": true,
+          "dead_max_ms_desktop": 20.68,
+          "dead_max_nodes": 130,
+          "dead_states": 10,
+          "dead_worst_path": [
+            9
+          ],
+          "max_ms_desktop": 19.33,
+          "max_nodes": 220,
+          "states": 12,
+          "worst_path": []
+        },
+        "impact": {
+          "armor": 5.9,
+          "crate": 0,
+          "gate": 0,
+          "lock": 0,
+          "portal": 0,
+          "rules": 0.3,
+          "sequence": 0,
+          "spinner": 18.3,
+          "switch": 0
+        },
+        "locks": 0,
+        "one_safe_steps": 0,
+        "portal_moves": 0,
+        "portal_pairs": 0,
+        "push_essential": false,
+        "push_traps": 0,
+        "pushes": 0,
+        "rams": 2,
+        "random_win": 0,
+        "rules": {
+          "alt": 0,
+          "ccw": 1,
+          "cw": 3,
+          "pattern": 0
+        },
+        "safe_choices": 3.08,
+        "sequence_blocks": 0,
+        "size": "6x6",
+        "solution_length": 12,
+        "spinners": 4,
+        "start_calm": 1,
+        "start_moves": 5,
+        "start_safe": 2,
+        "switch_decisions": 0,
+        "switches": 0,
+        "trap_delay_avg": 6,
+        "trap_delay_max": 7,
+        "trap_moves": 10
+      },
+      "misleading_moves": [
+        "Green magnet at R1C6 (up) on the first move: free, but it drags the purple block up into the corner while its shell is still on, where nothing can crack it; up to 9 moves before the jam.",
+        "P at R5C2 (up) on the first move: free, but it is the only block that can crack the purple shell later; up to 9 moves.",
+        "B at R6C5 (right) on the first move: free, but it turns the spinner P at R6C4 away from the column it must crack; up to 9 moves.",
+        "Red magnet at R3C4 (right) before Y at R4C4 has left: its escape turns Y to face down, into the spinner below; up to 7 moves."
+      ],
+      "puzzle": {
+        "cols": 6,
+        "format": "ce-puzzle",
+        "map": [
+          ". . . . . G^*",
+          ". . . . . .",
+          "B>= . . R>* . .",
+          "P> . . Y>@ . .",
+          "Y>@ P^@ . . . P<=",
+          ". . . P^@- B> ."
+        ],
+        "rows": 6,
+        "rules": 1,
+        "v": 1
+      },
+      "recipe": "B_armormag",
+      "rules_defeated": "all four (luckiest: fewest spinner turns / escape a spinner as soon as it can go, 9 dead ends)",
+      "source": "generated (B_armormag, seed 807, try 0)",
+      "title": "Two shells, two magnets, one order",
+      "variant": "B",
+      "verify": {
+        "aborted": false,
+        "ms_desktop": 9.59,
+        "nodes": 318,
+        "solved": true
+      },
+      "why": "Two armored blocks, cracked in two different ways. The red magnet at R3C4 drags the blue shell from the left edge (R3C1) into R3C4, straight above the counter-clockwise spinner P at R6C4, which cracks it - but only if Y at R4C4 has left that column first: otherwise the magnet's own escape turns Y to face down, head-to-head with P. The purple shell at R5C6 is cracked by the spinner P at R5C2, but only after a small chain has turned it to face right: P at R4C1 leaves, which turns Y at R5C1 to face down; Y leaves, which turns P at R5C2 to face right. Only then may the green magnet at R1C6 pull the (now unshelled) purple block up into the top row, where it leaves. Every winning line uses a pull-then-ram (checked exhaustively); only 1 of the 5 legal first moves keeps the board solvable.",
+      "x": {
+        "best_rule_dead_ends": 9,
+        "blind": {
+          "dead_ends_mean": 12.4,
+          "dead_ends_med": 13.5,
+          "taps_mean": 1179.7,
+          "taps_med": 1216,
+          "unfinished": 0
+        },
+        "choices": {
+          "forced_risky": 0,
+          "losing_options": 13,
+          "mech": {
+            "magnet": {
+              "forced": 0,
+              "moves": 2,
+              "with_losing_alt": 1
+            },
+            "ram": {
+              "forced": 0,
+              "moves": 2,
+              "with_losing_alt": 2
+            },
+            "spinner_escape": {
+              "forced": 0,
+              "moves": 4,
+              "with_losing_alt": 2
+            },
+            "spinner_turn": {
+              "forced": 0,
+              "moves": 1,
+              "with_losing_alt": 1
+            }
+          },
+          "real_choices": 5,
+          "risky_steps": 8,
+          "steps": 12
+        },
+        "greedy_best": 0.01,
+        "idea_events": {
+          "portal_escapes": 0,
+          "pulled_then_rammed": 1,
+          "pulls": 2,
+          "rams": 2,
+          "reversed_pulls": 0,
+          "turned_spinner_portal": 0
+        },
+        "late_misleading_moves": 4,
+        "magnet_matters": {
+          "matters": true,
+          "plain": "unsolvable"
+        },
+        "magnets": 2,
+        "misleading": [
+          [
+            0,
+            0,
+            9
+          ],
+          [
+            0,
+            6,
+            9
+          ],
+          [
+            0,
+            9,
+            9
+          ],
+          [
+            1,
+            0,
+            8
+          ],
+          [
+            1,
+            6,
+            8
+          ],
+          [
+            1,
+            9,
+            8
+          ]
+        ],
+        "ordered": {
+          "min_turn": {
+            "dead_ends_mean": 9.6,
+            "dead_ends_med": 9,
+            "taps_mean": 563.2,
+            "taps_med": 594,
+            "unfinished": 0
+          },
+          "mobility": {
+            "dead_ends_mean": 9.8,
+            "dead_ends_med": 11,
+            "taps_mean": 923.7,
+            "taps_med": 1126,
+            "unfinished": 0
+          },
+          "opportunist": {
+            "dead_ends_mean": 9.5,
+            "dead_ends_med": 9,
+            "taps_mean": 1038.9,
+            "taps_med": 962,
+            "unfinished": 0
+          },
+          "patient": {
+            "dead_ends_mean": 14,
+            "dead_ends_med": 14,
+            "taps_mean": 1305.1,
+            "taps_med": 1430,
+            "unfinished": 0
+          }
+        },
+        "pieces": 10,
+        "policies": {
+          "look2": 0.01,
+          "look4": 0.008,
+          "min_turn": 0,
+          "mobility": 0.01,
+          "safe": 0.01
+        },
+        "time_runs_ms": [
+          22.3,
+          15,
+          27.5,
+          22.7,
+          13.5
+        ]
+      }
+    }
+  ],
+  "demos": [
+    {
+      "group": "A",
+      "id": "DA1",
+      "puzzle": {
+        "cols": 4,
+        "format": "ce-puzzle",
+        "map": [
+          ". . Y^%A .",
+          "Gv B>&A* . Pv",
+          ". . . R^"
+        ],
+        "rows": 3,
+        "rules": 1,
+        "v": 1
+      },
+      "text": "A switch reverses every block linked to it - a magnet too. Its pull line moves to the other side.",
+      "try": "Try it: clear this board."
+    },
+    {
+      "group": "A",
+      "id": "DA2",
+      "puzzle": {
+        "cols": 3,
+        "format": "ce-puzzle",
+        "map": [
+          ". . P^+C",
+          "Y<* XC Bv",
+          ". . G^"
+        ],
+        "rows": 3,
+        "rules": 1,
+        "v": 1
+      },
+      "text": "A chain gate behind a magnet stops its pull. Once the gate opens, the magnet pulls the next block behind it.",
+      "try": "Try it: clear this board."
+    },
+    {
+      "group": "B",
+      "id": "DB1",
+      "puzzle": {
+        "cols": 3,
+        "format": "ce-puzzle",
+        "map": [
+          "Bv . .",
+          "Y<* . Rv=",
+          ". . ."
+        ],
+        "rows": 3,
+        "rules": 1,
+        "v": 1
+      },
+      "text": "A magnet can pull an armored block. The shell moves with it - into another block's lane.",
+      "try": "Try it: clear this board."
+    }
+  ],
+  "format": "ce-extreme-proto",
+  "note": "Development only. EXTREME phase 2: enriched VERY HARD candidates (docs/extreme6.md); never shared, never production.",
+  "test": "xtest6",
+  "v": 1
+}

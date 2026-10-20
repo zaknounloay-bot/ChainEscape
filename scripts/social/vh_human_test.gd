@@ -48,6 +48,16 @@ extends CanvasLayer
 ##               Blocked taps are logged too ("b"). Magnet ("*") is parsed
 ##               while this page runs, as the Magnet lab does. The play
 ##               screen's difficulty label is left blank (no anchoring).
+##   ?xtest6=1   EXTREME PHASE 2 (data/dev/extreme6.json,
+##               tools/extreme6_build.gd, docs/extreme6.md): six enriched
+##               VERY HARD candidates (magnet + switch / gate, armor +
+##               magnet, portal + spinner + gate). The same flow and
+##               questions as ?xtest5, plus "did the combination of
+##               mechanics make it more interesting?". Before the first
+##               puzzle of a group whose combination the campaign never
+##               used, a tiny interactive DEMO (the board file's "demos"):
+##               one rule, played by the tester, never rated, never the
+##               puzzle's solution.
 
 ## EXTREME research: the rating and the follow-up questions.
 const X_RATINGS := ["EASY", "MEDIUM", "HARD", "VERY HARD", "EXTREME"]
@@ -57,6 +67,15 @@ const X_QUESTIONS := [
 	["achieve", "How strong was your sense\nof achievement?\n(1 = none, 5 = very strong)", "achievement", ["1", "2", "3", "4", "5"]],
 	["fair", "Did the puzzle feel fair?", "fair", ["YES", "MOSTLY", "NO"]],
 	["planned", "Did it require real planning\n(thinking several moves ahead)?", "needed planning", ["YES", "A LITTLE", "NO"]],
+]
+## EXTREME phase 2: the ?xtest5 questions plus the combination question.
+const X6_QUESTIONS := [
+	["l300", "Compared with Campaign Level 300,\nthis puzzle was...", "vs Level 300", ["EASIER", "SIMILAR", "HARDER", "NOT SURE"]],
+	["enjoy", "How much did you enjoy it?\n(1 = not at all, 5 = a lot)", "enjoyment", ["1", "2", "3", "4", "5"]],
+	["achieve", "How strong was your sense\nof achievement?\n(1 = none, 5 = very strong)", "achievement", ["1", "2", "3", "4", "5"]],
+	["fair", "Did the puzzle feel fair?", "fair", ["YES", "MOSTLY", "NO"]],
+	["planned", "Did it require real planning\n(thinking several moves ahead)?", "needed planning", ["YES", "A LITTLE", "NO"]],
+	["combo", "Did the combination of mechanics\nmake the puzzle more interesting?", "combination more interesting", ["YES", "A LITTLE", "NO"]],
 ]
 const PARAM := "vhtest"
 const DATA_PATH := "res://data/dev/vh_human_test.json"
@@ -83,6 +102,10 @@ const TESTS := {
 	"xtest5": {"data": "res://data/dev/extreme5.json", "state": "user://extreme5_state.json", "title": "EXTREME RESEARCH\n(DEVELOPMENT)",
 		"q2": "", "q2_key": "l300", "q2_label": "harder than L300", "pilot": true, "ratings": X_RATINGS, "questions": X_QUESTIONS,
 		"log_blocked": true, "hide_difficulty": true, "ls": "chain_escape_xtest5_state"},
+	# EXTREME phase 2 (see the header).
+	"xtest6": {"data": "res://data/dev/extreme6.json", "state": "user://extreme6_state.json", "title": "PUZZLE PILOT 2\n(DEVELOPMENT)",
+		"q2": "", "q2_key": "l300", "q2_label": "harder than L300", "pilot": true, "ratings": X_RATINGS, "questions": X6_QUESTIONS,
+		"log_blocked": true, "hide_difficulty": true, "demos": true, "ls": "chain_escape_xtest6_state"},
 }
 ## Pilot follow-up questions: [key, text, label, options].
 const PILOT_QUESTIONS := [
@@ -125,6 +148,9 @@ var _cfg: Dictionary = TESTS[PARAM]
 ## The rating scale of this test (EXTREME research: five steps).
 var ratings: Array = RATINGS
 var boards: Dictionary = {}  # id -> record (variant, puzzle, metrics)
+## EXTREME phase 2: the interactive demos (board file "demos"), in order.
+var demos: Array = []
+var _demo: Dictionary = {}  # the demo on screen / being played
 var state: Dictionary = {}  # order, index, results
 var screen: int = Screen.INTRO
 var play: SocialPlay
@@ -152,6 +178,7 @@ var bench_results: Array = []
 var _think_opts: BoxContainer
 var _think_skip: PillButton
 var _brief_text: Label
+var _brief_go: PillButton
 var _hud: Control
 var _clock: Label
 var _give_up: PillButton
@@ -172,7 +199,7 @@ static func requested() -> bool:
 static func requested_test() -> String:
 	if BuildFlags.dev_pages_off():
 		return ""  # player / QA build: developer pages off
-	for key in ["xtest5", "vhtest4", "vhtest3", "vhtest2", "vhtest"]:
+	for key in ["xtest6", "xtest5", "vhtest4", "vhtest3", "vhtest2", "vhtest"]:
 		if "--" + key in OS.get_cmdline_user_args():
 			return key
 	if not OS.has_feature("web"):
@@ -181,7 +208,7 @@ static func requested_test() -> String:
 	if loc == null:
 		return ""
 	var where := (str(loc.search) + str(loc.hash)).to_lower()
-	for key in ["xtest5", "vhtest4", "vhtest3", "vhtest2", "vhtest"]:
+	for key in ["xtest6", "xtest5", "vhtest4", "vhtest3", "vhtest2", "vhtest"]:
 		if where.contains(key + "=1") or where.contains(key + "=true"):
 			return key
 	return ""
@@ -222,6 +249,8 @@ func _ready() -> void:
 		_assist = data.get("assist", _assist)
 		for b in data.get("boards", []):
 			boards[str(b["id"])] = b
+		if _cfg.get("demos", false):
+			demos = data.get("demos", [])
 	_load_state()
 	play = SocialPlay.new()
 	play.dev_assist = true  # its own tools, no Friend timer
@@ -270,9 +299,68 @@ func start_next() -> void:
 		_show(Screen.HARDEST if pilot and not state.has("hardest") and total() > 0 else Screen.RESULTS)
 		return
 	if pilot:
-		_show(Screen.BRIEF)  # the reminder card; its START begins the puzzle
+		_demo = _pending_demo()
+		_show(Screen.BRIEF)  # the reminder (or demo) card; its START begins the puzzle (or demo)
 		return
 	begin_puzzle()
+
+
+## Phase 2: the first demo of the next puzzle's group not played yet ({}).
+func _pending_demo() -> Dictionary:
+	if demos.is_empty() or int(state["index"]) >= total():
+		return {}
+	var group: String = boards[state["order"][state["index"]]]["variant"]
+	var done: Array = state.get("demos_done", [])
+	for d in demos:
+		if d["group"] == group and not done.has(d["id"]):
+			return d
+	return {}
+
+
+## The card's START: the demo if one is due, else the puzzle.
+func begin_from_card() -> void:
+	if _demo.is_empty():
+		begin_puzzle()
+	else:
+		begin_demo()
+
+
+## Phase 2: plays the demo board (never rated; its own record).
+func begin_demo() -> void:
+	var def := PuzzleDefinition.from_dict(_demo["puzzle"])
+	var c := SharedChallenge.friend_challenge(def, FriendGenerator.VERY_HARD)
+	_current = {"demo": _demo["id"], "first_move_ms": -1, "longest_pause_ms": 0, "long_pauses": [], "gave_up": false, "log": []}
+	_give_up_armed = 0
+	_give_up.text = "GIVE UP"
+	_show(Screen.PLAYING)
+	play.back_label = ""
+	_act_sig = []
+	play.start(c, SocialPlay.Mode.CREATOR_PREVIEW, Chapters.theme_for_chapter(1))
+	play._title.text = "TRY IT"
+	play._chip.text = ""
+	_t0 = Time.get_ticks_msec()
+	_last_act = _t0
+	_prev_snap = _snap()
+	_act_sig_prev = _sig()
+
+
+## Phase 2: a demo ends (solved, or given up): recorded, never rated; then
+## the next card (the next demo, or the puzzle's reminder card).
+func _end_demo(solved: bool) -> void:
+	_current["completed"] = solved
+	_current["time_ms"] = Time.get_ticks_msec() - _t0
+	_current["restarts"] = maxi(0, play.plays - 1)
+	_current["show_a_move"] = play.total_hints
+	play.end()
+	var done: Array = state.get("demos_done", [])
+	done.append(_current["demo"])
+	state["demos_done"] = done
+	var rec: Array = state.get("demos", [])
+	rec.append(_current.duplicate())
+	state["demos"] = rec
+	_save_state()
+	_current = {}
+	start_next()
 
 
 ## Starts puzzle `index` (pilot: from the reminder card).
@@ -306,6 +394,10 @@ func begin_puzzle() -> void:
 func _on_solved() -> void:
 	if screen != Screen.PLAYING:
 		return
+	if _current.has("demo"):
+		await get_tree().create_timer(1.0).timeout
+		_end_demo(true)
+		return
 	_finish_attempt(true)
 	# Let the board celebrate for a moment, then ask.
 	await get_tree().create_timer(1.0).timeout
@@ -319,6 +411,9 @@ func _on_gave_up() -> void:
 	if pilot:
 		_current["gave_up"] = true
 		_current["log"].append([Time.get_ticks_msec() - _t0, "g", -1])
+	if _current.has("demo"):
+		_end_demo(false)
+		return
 	_finish_attempt(false)
 	_show(Screen.RATE)
 
@@ -418,6 +513,9 @@ func give_up() -> void:
 	_give_up_armed = 0
 	_current["gave_up"] = true
 	_current["log"].append([now - _t0, "g", -1])
+	if _current.has("demo"):
+		_end_demo(false)
+		return
 	_finish_attempt(false)
 	_show(Screen.RATE)
 
@@ -669,6 +767,8 @@ func results_json() -> String:
 		out["reached"] = state.get("reached", 0)
 		out["hardest"] = state.get("hardest", {})
 		out["boards_offered"] = total()
+		if _cfg.get("demos", false):
+			out["demos"] = state.get("demos", [])
 	return JSON.stringify(out)
 
 
@@ -689,6 +789,8 @@ func summary() -> Dictionary:
 			s["extreme"] = s.get("extreme", 0) + (1 if r["rating"] == "EXTREME" else 0)
 			s["unfair"] = s.get("unfair", 0) + (1 if r.get("fair", "") == "NO" else 0)
 			s["planned"] = s.get("planned", 0) + (1 if r.get("planned", "") == "YES" else 0)
+			if r.has("combo"):
+				s["combo_yes"] = s.get("combo_yes", 0) + (1 if r["combo"] == "YES" else 0)
 			s["blocked_taps"] = s.get("blocked_taps", 0) + int(r.get("blocked_taps", 0))
 			s["undos"] = s.get("undos", 0) + int(r.get("undos", 0))
 		s["q2_yes"] += 1 if r.get(_cfg["q2_key"], "") == "YES" else 0
@@ -750,7 +852,8 @@ func _summary_text() -> String:
 		if ratings.size() > RATINGS.size():
 			lines.append("%s: %d played, %d solved, %d given up, median %ss, rated %.1f / 5, EXTREME x%d, VERY HARD x%d, harder than L300 x%d, enjoy %s, achieve %s, unfair x%d, needed planning x%d" % [
 				v, s["n"], s["solved"], s.get("gave_up", 0), str(s["median_time_s"]), s["avg_rating_1to5"], s.get("extreme", 0), s["very_hard"],
-				s.get("harder_than_l300", 0), str(s.get("avg_enjoy", "-")), str(s.get("avg_achieve", "-")), s.get("unfair", 0), s.get("planned", 0)])
+				s.get("harder_than_l300", 0), str(s.get("avg_enjoy", "-")), str(s.get("avg_achieve", "-")), s.get("unfair", 0), s.get("planned", 0)]
+				+ (", combination more interesting x%d" % s.get("combo_yes", 0) if _cfg.get("demos", false) else ""))
 			continue
 		if pilot:
 			lines.append("Group %s: %d played, %d solved, %d given up, median %ss, rated %.1f / 4, VERY HARD x%d, harder than L300 x%d, enjoy %s, achieve %s, unfair x%d" % [
@@ -781,12 +884,19 @@ func _show(s: int) -> void:
 				return
 			var i: int = state["index"]
 			_intro_text.text = ("Up to %d puzzles, one after another, in a random order. You can stop at any time and continue later.\n\n" % boards.size()
-				+ _tools_text() + "\n\nEach puzzle starts with a one-line reminder of its rules.\nIf you want to stop a puzzle, tap GIVE UP twice.\n\nAfter each puzzle: %s quick questions." % ["five", "six"][mini(_questions.size() - 4, 1)])
+				+ _tools_text() + "\n\nEach puzzle starts with a one-line reminder of its rules.\nIf you want to stop a puzzle, tap GIVE UP twice.\n\nAfter each puzzle: %s quick questions." % ["five", "six", "seven", "eight"][clampi(_questions.size() - 4, 0, 3)])
 			_start.text = "START" if i == 0 else ("CONTINUE  %d / %d" % [i + 1, total()] if i < total() else "SEE RESULTS")
 		Screen.THINK:
 			_q_label.text = _questions[_q][1]
 			_build_options(_questions[_q][3])
 		Screen.BRIEF:
+			if not _demo.is_empty():
+				_brief_text.text = "\n\n".join(["BEFORE PUZZLE %d / %d" % [int(state["index"]) + 1, total()], "A NEW COMBINATION", _demo["text"], _demo["try"]])
+				_brief_go.text = "TRY IT"
+				_update_zones.call_deferred()
+				_publish()
+				return
+			_brief_go.text = "START PUZZLE"
 			var rec: Dictionary = boards[state["order"][state["index"]]]
 			var lines := ["PUZZLE %d / %d" % [int(state["index"]) + 1, total()], ""]
 			var mech: Array = rec.get("mechanics", [])
@@ -944,9 +1054,10 @@ func _build_pilot() -> void:
 	_brief_text = _label("", 28, 800)
 	brief.add_child(_brief_text)
 	var go := _button("START PUZZLE", "BeginPuzzle", ACCENT, Palette.WHITE)
+	_brief_go = go
 	go.pressed.connect(func():
 		AudioManager.play_ui_tap()
-		begin_puzzle())
+		begin_from_card())
 	brief.add_child(go)
 	_pages[Screen.BRIEF] = brief
 	var hard := _column()
@@ -1063,4 +1174,5 @@ func _publish() -> void:
 		hud_bottom = snappedf(maxf(_give_up.get_global_rect().end.y, _clock.get_global_rect().end.y) / vis.y, 0.0001)
 		board_top = snappedf(play.board.get_board_rect().position.y / vis.y, 0.0001)
 	WebBridge.publish("chainEscapeVhTest", {"screen": Screen.keys()[screen], "index": state.get("index", 0), "total": total(),
-		"results": state.get("results", []).size(), "buttons": buttons, "hud_bottom": hud_bottom, "board_top": board_top})
+		"results": state.get("results", []).size(), "buttons": buttons, "hud_bottom": hud_bottom, "board_top": board_top,
+		"demo": _demo.get("id", ""), "demos_done": state.get("demos_done", []).size()})

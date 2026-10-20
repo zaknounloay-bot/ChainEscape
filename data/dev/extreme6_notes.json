@@ -1,0 +1,28 @@
+{
+  "format": "ce-extreme-notes",
+  "note": "Development only. Hand-written explanations of the phase-2 candidates (tools/extreme6_build.gd copies them into data/dev/extreme6.json by board fingerprint). Cells are named RnCm: row n, column m, counted from 1 at the top-left. Every claim was traced on the solver's solution and its losing alternatives (--dossier); the key idea and the first-move counts were checked exhaustively over every reachable position.",
+  "boards": {
+    "6712cf75bee1ee13bb252d0fa23fcc9515fa50890f0f950416ba075bd3a4010e": {
+      "title": "Drag the shell into the line of fire",
+      "why": "The armored red block in the top-left corner (R1C1) can never be hit where it is. The blue magnet at R1C5 is the way out: when it leaves to the right it drags the first block behind it along the top row, and once R1C3 and R1C4 have gone, that first block is the armored one. It lands in R1C5, straight above the clockwise spinner R at R3C5, which still points up and cracks it; then it can leave. So the top row has to be cleared in the right order first (R at R1C3 leaves and turns the spinner Y at R1C4 to point up, then Y leaves), and the rammer must still be pointing up when the shell arrives - its two neighbours, Y at R3C6 and P at R4C5, can leave at once, but each one turns it. Every winning line uses this pull-then-ram (checked exhaustively); only 2 of the 6 legal first moves keep the board solvable.",
+      "misleading_moves": [
+        "Blue magnet at R1C5 (right) on the first move: free, but it drags the spinner Y at R1C4 - the first block behind it - instead of the armored block; play can go on for up to 9 moves before the jam.",
+        "Y at R3C6 (up) on the first move: free, but it turns the spinner R at R3C5, the only block that can crack the shell once it arrives; up to 9 moves.",
+        "P at R4C5 (down) on the first move: free, and it turns the same spinner; up to 9 moves.",
+        "Blue magnet at R4C4 (left) early: it drags P at R4C5 into column 4, head-to-head with the spinner B at R6C4; up to 9 moves."
+      ],
+      "rules_defeated": "all four (luckiest: keep the most moves open, 11 dead ends)"
+    },
+    "a485309701001d32eb490d35220b91ae7862e0af6fb2a4086bbaeed90a94f85a": {
+      "title": "Two shells, two magnets, one order",
+      "why": "Two armored blocks, cracked in two different ways. The red magnet at R3C4 drags the blue shell from the left edge (R3C1) into R3C4, straight above the counter-clockwise spinner P at R6C4, which cracks it - but only if Y at R4C4 has left that column first: otherwise the magnet's own escape turns Y to face down, head-to-head with P. The purple shell at R5C6 is cracked by the spinner P at R5C2, but only after a small chain has turned it to face right: P at R4C1 leaves, which turns Y at R5C1 to face down; Y leaves, which turns P at R5C2 to face right. Only then may the green magnet at R1C6 pull the (now unshelled) purple block up into the top row, where it leaves. Every winning line uses a pull-then-ram (checked exhaustively); only 1 of the 5 legal first moves keeps the board solvable.",
+      "misleading_moves": [
+        "Green magnet at R1C6 (up) on the first move: free, but it drags the purple block up into the corner while its shell is still on, where nothing can crack it; up to 9 moves before the jam.",
+        "P at R5C2 (up) on the first move: free, but it is the only block that can crack the purple shell later; up to 9 moves.",
+        "B at R6C5 (right) on the first move: free, but it turns the spinner P at R6C4 away from the column it must crack; up to 9 moves.",
+        "Red magnet at R3C4 (right) before Y at R4C4 has left: its escape turns Y to face down, into the spinner below; up to 7 moves."
+      ],
+      "rules_defeated": "all four (luckiest: fewest spinner turns / escape a spinner as soon as it can go, 9 dead ends)"
+    }
+  }
+}
