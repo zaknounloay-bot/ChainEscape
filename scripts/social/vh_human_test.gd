@@ -65,6 +65,11 @@ extends CanvasLayer
 ##               questions as ?xtest6 (including the combination
 ##               question); no demos (every rule here is taught by the
 ##               campaign or by the ?xtest6 demos).
+##   ?vhval3=1   VERY HARD VALIDATION (data/dev/vh_validation3.json,
+##               tools/vhval3_build.gd): three previously tested boards
+##               (T3, T5, H2) copied unchanged, for an independent second
+##               player. Neutral ids and groups, random order, no labels,
+##               no explanations; the same flow and questions as ?xtest7.
 
 ## EXTREME research: the rating and the follow-up questions.
 const X_RATINGS := ["EASY", "MEDIUM", "HARD", "VERY HARD", "EXTREME"]
@@ -117,6 +122,10 @@ const TESTS := {
 	"xtest7": {"data": "res://data/dev/extreme7.json", "state": "user://extreme7_state.json", "title": "PUZZLE PILOT 3\n(DEVELOPMENT)",
 		"q2": "", "q2_key": "l300", "q2_label": "harder than L300", "pilot": true, "ratings": X_RATINGS, "questions": X6_QUESTIONS,
 		"log_blocked": true, "hide_difficulty": true, "combo": true, "ls": "chain_escape_xtest7_state"},
+	# VERY HARD validation, second player (see the header).
+	"vhval3": {"data": "res://data/dev/vh_validation3.json", "state": "user://vh_validation3_state.json", "title": "PUZZLE TEST\n(DEVELOPMENT)",
+		"q2": "", "q2_key": "l300", "q2_label": "harder than L300", "pilot": true, "ratings": X_RATINGS, "questions": X6_QUESTIONS,
+		"log_blocked": true, "hide_difficulty": true, "combo": true, "ls": "chain_escape_vhval3_state"},
 }
 ## Pilot follow-up questions: [key, text, label, options].
 const PILOT_QUESTIONS := [
@@ -210,7 +219,7 @@ static func requested() -> bool:
 static func requested_test() -> String:
 	if BuildFlags.dev_pages_off():
 		return ""  # player / QA build: developer pages off
-	for key in ["xtest7", "xtest6", "xtest5", "vhtest4", "vhtest3", "vhtest2", "vhtest"]:
+	for key in ["vhval3", "xtest7", "xtest6", "xtest5", "vhtest4", "vhtest3", "vhtest2", "vhtest"]:
 		if "--" + key in OS.get_cmdline_user_args():
 			return key
 	if not OS.has_feature("web"):
@@ -219,7 +228,7 @@ static func requested_test() -> String:
 	if loc == null:
 		return ""
 	var where := (str(loc.search) + str(loc.hash)).to_lower()
-	for key in ["xtest7", "xtest6", "xtest5", "vhtest4", "vhtest3", "vhtest2", "vhtest"]:
+	for key in ["vhval3", "xtest7", "xtest6", "xtest5", "vhtest4", "vhtest3", "vhtest2", "vhtest"]:
 		if where.contains(key + "=1") or where.contains(key + "=true"):
 			return key
 	return ""

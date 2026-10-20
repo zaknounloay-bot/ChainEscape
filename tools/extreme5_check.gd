@@ -145,6 +145,8 @@ func _known_keys() -> Dictionary:
 
 func _collect(v, where: String, known: Dictionary) -> void:
 	if typeof(v) == TYPE_DICTIONARY:
+		if v.has("original"):
+			return  # a declared copy of a board kept elsewhere (vh_validation3.json), not a new board
 		if v.has("map") and typeof(v["map"]) == TYPE_ARRAY and not v["map"].is_empty() and typeof(v["map"][0]) == TYPE_STRING:
 			var k: String = CANON.canonical(Array(v["map"]))
 			if not known.has(k):

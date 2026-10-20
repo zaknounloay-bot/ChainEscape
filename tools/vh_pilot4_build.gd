@@ -854,6 +854,8 @@ func _load_known() -> void:
 
 func _collect_maps(v, where: String) -> void:
 	if typeof(v) == TYPE_DICTIONARY:
+		if v.has("original"):
+			return  # a declared copy of a board kept elsewhere (vh_validation3.json), not a new board
 		if v.has("map") and typeof(v["map"]) == TYPE_ARRAY and not v["map"].is_empty() and typeof(v["map"][0]) == TYPE_STRING:
 			var k := canonical(Array(v["map"]))
 			if not known_keys.has(k):
