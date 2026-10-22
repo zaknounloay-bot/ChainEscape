@@ -1,0 +1,322 @@
+{
+ "format": "ce-extreme-proto",
+ "v": 1,
+ "test": "ptest14",
+ "assist": {
+  "undo": 3,
+  "show_a_move": 1,
+  "hammer": 0
+ },
+ "note": "Development only. Blind timed test board; never shared, never production. EXPERIMENTAL - HUMAN DIFFICULTY UNVALIDATED: passes every technical gate; the expert-learner screen (9 dead ends < 12) is a recorded heuristic exception.",
+ "boards": [
+  {
+   "id": "R1",
+   "accepted": true,
+   "label": "EXPERIMENTAL - HUMAN DIFFICULTY UNVALIDATED",
+   "recipe": "C2_flip",
+   "variant": "R",
+   "first_level": 151,
+   "source": "hand-designed core (switch-reversed magnet), refined by search and one-edit screens; one-piece removal checked (development tools)",
+   "canonical": "6x6|. . . . . R<%A/B^&A . . . . ./Gv@- Gv Y^ Y<&A* . B^&A/. . . . . ./. . . . . Y<@-/P^ Rv* . B>= Pv@ Y>@",
+   "fingerprint": "f4c56c3a37eb6225f457ac4b8f895e42bcb19a5218b782eb779362867f4def6c",
+   "mechanics": [
+    "spinner_cw",
+    "spinner_ccw",
+    "switch",
+    "armor",
+    "magnet"
+   ],
+   "puzzle": {
+    "format": "ce-puzzle",
+    "v": 1,
+    "rules": 1,
+    "rows": 6,
+    "cols": 6,
+    "map": [
+     "P>%A . . . . .",
+     ". . . . . R^&A",
+     "R^&A . B>&A* B^ Gv Gv@",
+     ". . . . . .",
+     "B>@ . . . . .",
+     "B<@- Yv@- R<= . Pv* Y^"
+    ]
+   },
+   "verify": {
+    "aborted": false,
+    "ms_desktop": 8.39,
+    "nodes": 273,
+    "solved": true
+   },
+   "metrics": {
+    "advances": 0,
+    "armored": 1,
+    "blocks": 13,
+    "branching": 3,
+    "calm_moves": 7,
+    "calm_moves_share": 0.5,
+    "calm_share": 1,
+    "calm_steps": 14,
+    "crates": 0,
+    "decision_points": 5,
+    "depth": 8,
+    "difficulty": 27.5,
+    "flip_targets": 3,
+    "gate_links": 0,
+    "gates": 0,
+    "heuristic_win": 0,
+    "hint": {
+     "aborted": false,
+     "consistent": true,
+     "dead_max_ms_desktop": 24,
+     "dead_max_nodes": 161,
+     "dead_states": 10,
+     "dead_worst_path": [
+      7
+     ],
+     "max_ms_desktop": 10.19,
+     "max_nodes": 71,
+     "states": 14,
+     "worst_path": []
+    },
+    "impact": {
+     "armor": 1.6,
+     "crate": 0,
+     "gate": 0,
+     "lock": 0,
+     "portal": 0,
+     "rules": 2.5,
+     "sequence": 0,
+     "spinner": 8.9,
+     "switch": 99
+    },
+    "locks": 0,
+    "one_safe_steps": 0,
+    "portal_moves": 0,
+    "portal_pairs": 0,
+    "push_essential": false,
+    "push_traps": 0,
+    "pushes": 0,
+    "rams": 1,
+    "random_win": 0,
+    "rules": {
+     "alt": 0,
+     "ccw": 2,
+     "cw": 2,
+     "pattern": 0
+    },
+    "safe_choices": 2.29,
+    "sequence_blocks": 0,
+    "size": "6x6",
+    "solution_length": 14,
+    "spinners": 4,
+    "start_calm": 2,
+    "start_moves": 7,
+    "start_safe": 4,
+    "switch_decisions": 1,
+    "switches": 1,
+    "trap_delay_avg": 7.3,
+    "trap_delay_max": 10,
+    "trap_moves": 10
+   },
+   "x": {
+    "best_rule_dead_ends": 8,
+    "blind": {
+     "dead_ends_mean": 10,
+     "dead_ends_med": 11,
+     "taps_mean": 1358.5,
+     "taps_med": 1345,
+     "unfinished": 0
+    },
+    "choices": {
+     "forced_risky": 1,
+     "losing_options": 18,
+     "mech": {
+      "magnet": {
+       "forced": 0,
+       "moves": 2,
+       "with_losing_alt": 1
+      },
+      "ram": {
+       "forced": 0,
+       "moves": 1,
+       "with_losing_alt": 0
+      },
+      "spinner_escape": {
+       "forced": 0,
+       "moves": 4,
+       "with_losing_alt": 3
+      },
+      "spinner_turn": {
+       "forced": 0,
+       "moves": 1,
+       "with_losing_alt": 1
+      },
+      "switch": {
+       "forced": 0,
+       "moves": 1,
+       "with_losing_alt": 1
+      }
+     },
+     "real_choices": 8,
+     "risky_steps": 12,
+     "steps": 14
+    },
+    "expert": {
+     "learner": {
+      "look4": 9,
+      "look6": 9
+     },
+     "learner_min": 9,
+     "look6_greedy": 0.025,
+     "measure": {
+      "capped": false,
+      "decisions": {
+       "2": 8,
+       "4": 8,
+       "6": 6,
+       "8": 4
+      },
+      "deepest": 12,
+      "hidden": {
+       "2": 18,
+       "4": 17,
+       "6": 15,
+       "8": 13
+      },
+      "losing_moves_on_path": 18,
+      "median_trap_delay": 10,
+      "opening": "3 / 7",
+      "positions": 523,
+      "solution": 14,
+      "win_share": 0.071,
+      "winnable": 37
+     },
+     "ok": false,
+     "why": "an expert learner (lookahead 4 / 6) solves it with 9 dead ends (< 12)"
+    },
+    "greedy_best": 0.017,
+    "heuristic_exceptions": [
+     "an expert learner (lookahead 4 / 6) solves it with 9 dead ends (< 12)"
+    ],
+    "idea_events": {
+     "flip_pull": true,
+     "flip_ram": true,
+     "relay": false,
+     "reversed_escape": true
+    },
+    "idea_facts": {
+     "flip_pull": true,
+     "flip_ram": true,
+     "relay": false,
+     "reversed_escape": true
+    },
+    "late_misleading_moves": 4,
+    "lost_hint_lab_ms": 35.2,
+    "magnet_matters": {
+     "matters": true,
+     "plain": "unsolvable"
+    },
+    "magnets": 2,
+    "misleading": [
+     [
+      0,
+      0,
+      11
+     ],
+     [
+      0,
+      7,
+      11
+     ],
+     [
+      0,
+      8,
+      11
+     ],
+     [
+      0,
+      11,
+      11
+     ],
+     [
+      1,
+      7,
+      10
+     ],
+     [
+      1,
+      8,
+      10
+     ]
+    ],
+    "ordered": {
+     "min_turn": {
+      "dead_ends_mean": 13.4,
+      "dead_ends_med": 14,
+      "taps_mean": 1553.6,
+      "taps_med": 1474,
+      "unfinished": 0
+     },
+     "mobility": {
+      "dead_ends_mean": 12.3,
+      "dead_ends_med": 12,
+      "taps_mean": 2005.6,
+      "taps_med": 1962,
+      "unfinished": 0
+     },
+     "opportunist": {
+      "dead_ends_mean": 7.6,
+      "dead_ends_med": 8,
+      "taps_mean": 898.3,
+      "taps_med": 1100,
+      "unfinished": 0
+     },
+     "patient": {
+      "dead_ends_mean": 10.6,
+      "dead_ends_med": 12,
+      "taps_mean": 1228.3,
+      "taps_med": 1134,
+      "unfinished": 0
+     }
+    },
+    "parity": {
+     "mismatch_hint": 0,
+     "mismatch_solve": 0,
+     "positions": 523
+    },
+    "pieces": 13,
+    "policies": {
+     "look2": 0.01,
+     "look4": 0.017,
+     "min_turn": 0,
+     "mobility": 0,
+     "safe": 0.005
+    },
+    "positions": 523,
+    "time_runs_ms": [
+     26.9,
+     35.7,
+     23.9,
+     24,
+     23.8
+    ],
+    "timing": {
+     "per": {
+      "3": [
+       1,
+       1
+      ],
+      "11": [
+       6,
+       26
+      ]
+     },
+     "timing_magnets": [
+      3,
+      11
+     ]
+    }
+   }
+  }
+ ]
+}

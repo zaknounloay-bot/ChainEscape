@@ -457,6 +457,10 @@ func _open_shared_challenge() -> void:
 	if FriendBench.requested():
 		add_child(FriendBench.new())
 		return
+	# Developer page (?rtime=1): a new blind board against the 3-minute clock (local only).
+	if BlindTimeAttack.requested():
+		add_child(BlindTimeAttack.new())
+		return
 	# Developer page (?q1time=1): the 3-minute challenge on the Q1 test board (local only).
 	if Q1TimeAttack.requested():
 		add_child(Q1TimeAttack.new())
