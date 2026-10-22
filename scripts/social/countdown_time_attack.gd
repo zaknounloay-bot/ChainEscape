@@ -4,10 +4,23 @@ extends BlindTimeAttack
 ## "S1", checked by its fingerprint) played blind against a 2-MINUTE clock,
 ## with a more prominent, staged countdown (docs/extreme15.md). Everything
 ## else is the phase 9 test (BlindTimeAttack / Q1TimeAttack): the start
-## convention, the clock that RESTART / UNDO / SHOW A MOVE / the background /
-## a reload never stop or give back, UNDO x3 per attempt, ONE SHOW A MOVE per
-## timed run, HAMMER x0, the frozen timed result, the optional CONTINUE
-## WITHOUT TIMER with its own record and log, isolated state.
+## convention, the clock that RESTART / UNDO / the background / a reload
+## never stop or give back, UNDO x3 per attempt, HAMMER x0, the frozen timed
+## result, the optional CONTINUE WITHOUT TIMER with its own record and log,
+## isolated state.
+##
+## THE 120 s TIME ATTACK RULES (phase 12B, TA120_RULES; this page and the
+## ?tta / ?ttb / ?ttc pages that extend it): NO SHOW A MOVE - not in the timed
+## run, not in the untimed continuation. The button is removed from the play
+## screen (hidden, disconnected, no input), the budget is 0, and a request
+## from anywhere else is refused without asking the solver. UNDO x3 per
+## attempt, unlimited RESTART, HAMMER x0. Every new record carries "assist"
+## (these rules and their version). The phase 10 / 11 human sessions were
+## played under TA120_RULES_V1 (ONE SHOW A MOVE per timed run): records
+## without "assist" are exported with those rules, never rewritten.
+## Q1TimeAttack (?q1time) and BlindTimeAttack (?rtime) keep their own
+## historical 180 s rules (ONE SHOW A MOVE per run): nothing here is shared
+## with them.
 ##
 ## The countdown: a pill of FIXED size between the top bar and the board
 ## (never over it; the board and the buttons never move), white digits on a
@@ -37,6 +50,8 @@ const STAGE_FILL := {"green": Color("#1E7B34"), "orange": Color("#C2410C"), "red
 const PULSE_DARK := Color("#7F1111")  # the deepest point of the red pulse
 const STAGE_WEIGHT := {"green": 700, "orange": 800, "red": 900}
 const PILL_SIZE := Vector2(360, 108)
+const TA120_RULES := {"version": "ta120-v2", "limit_ms": 120000, "undo": 3, "show_a_move": 0, "hammer": 0, "restart": "unlimited"}
+const TA120_RULES_V1 := {"version": "ta120-v1", "limit_ms": 120000, "undo": 3, "show_a_move": 1, "hammer": 0, "restart": "unlimited"}
 
 const S_TIMED_Q := [
 	["enjoy", "How much did you enjoy\nthe timed run?\n(1 = not at all, 5 = a lot)", "enjoyment", ["1", "2", "3", "4", "5"]],
@@ -58,7 +73,7 @@ const S_PUZZLE_Q := [
 ]
 const S_CFG := {"data": "res://data/dev/extreme15.json", "state": "user://stime_state.json", "title": "PUZZLE TEST\n(DEVELOPMENT)",
 	"q2": "", "q2_key": "enjoy", "q2_label": "enjoyment", "pilot": true, "questions": S_TIMED_Q,
-	"log_blocked": true, "hide_difficulty": true, "mech_events": true, "hint_budget": 1, "persist_live": true,
+	"log_blocked": true, "hide_difficulty": true, "mech_events": true, "hint_budget": 0, "persist_live": true,
 	"ls": "chain_escape_stime_state"}
 
 ## Set by tests (headless has no browser preference).
@@ -116,7 +131,7 @@ func puzzle_q() -> Array:
 
 
 func intro_text() -> String:
-	return ("One puzzle you have not seen before. Two minutes.\n\nThe clock starts when the board appears and never stops: thinking, UNDO, RESTART and SHOW A MOVE all use time. RESTART starts the board again, not the clock. Leaving or reloading the page does not stop it either.\n\n"
+	return ("One puzzle you have not seen before. Two minutes.\n\nThe clock starts when the board appears and never stops: thinking, UNDO and RESTART all use time. RESTART starts the board again, not the clock. Leaving or reloading the page does not stop it either.\n\n"
 		+ _tools_text() + "\n\nIf the time runs out, you can choose to keep playing without the clock.\n\nAfterwards: a few quick questions.")
 
 
@@ -158,7 +173,42 @@ func _ready() -> void:
 	if _new_run:
 		_new_run.text = "NEW 2-MINUTE RUN"
 	_set_stage("green", false, true)
+	_remove_show_a_move()
 	_show(screen)
+
+
+func _tools_text() -> String:
+	return "UNDO x%d per attempt, unlimited RESTART. No SHOW A MOVE and no HAMMER in this test." % int(TA120_RULES["undo"])
+
+
+# --- No SHOW A MOVE (TA120_RULES) -----------------------------------------------------------
+
+## The button leaves the play screen for good: hidden, every connection cut,
+## no mouse / touch / focus / keyboard, not processed; and a budget of 0.
+func _remove_show_a_move() -> void:
+	_assist = {"undo": int(TA120_RULES["undo"]), "show_a_move": 0, "hammer": 0}
+	play.max_hints = 0
+	var h: Button = play._hint
+	for c in h.pressed.get_connections():
+		h.pressed.disconnect(c["callable"])
+	h.visible = false
+	h.disabled = true
+	h.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	h.focus_mode = Control.FOCUS_NONE
+	h.shortcut = null
+	h.process_mode = Node.PROCESS_MODE_DISABLED
+
+
+## A SHOW A MOVE request from anywhere (none is reachable from the screen):
+## refused, the solver is never asked, nothing is shown or recorded.
+func budget_hint() -> void:
+	play.max_hints = 0
+
+
+## The rules of a record: those it carries, else (older records, played
+## before phase 12B) the phase 10 / 11 rules.
+static func record_rules(rec: Dictionary) -> Dictionary:
+	return rec["assist"] if typeof(rec.get("assist")) == TYPE_DICTIONARY else TA120_RULES_V1
 
 
 func _browser_reduced_motion() -> bool:
@@ -293,6 +343,7 @@ func _note_stage(st: String, l10: bool, was: String) -> void:
 
 func _start_run() -> void:
 	super._start_run()
+	_current["assist"] = TA120_RULES.duplicate()
 	_stage = ""
 	_set_stage("green", false, true)
 
@@ -310,6 +361,29 @@ func _finish_attempt(solved: bool) -> void:
 		state["timed"]["stages_reached"] = reached
 		state["timed"]["reduced_motion"] = reduced_motion
 		_save_state()
+
+
+## The untimed continuation: the same rules (no SHOW A MOVE), in its own record.
+func begin_untimed() -> void:
+	super.begin_untimed()
+	play.max_hints = 0
+	if not _current.has("assist"):
+		_current["assist"] = TA120_RULES.duplicate()
+		_save_untimed()
+	play._refresh_buttons()
+
+
+## The export names the rules of every run: the current ones, and for each
+## stored run the rules it was played under (older runs: TA120_RULES_V1).
+func results_json() -> String:
+	var runs := []
+	for r in state.get("results", []):
+		var x: Dictionary = r.duplicate()
+		x["assist"] = record_rules(r.get("timed", {}))
+		runs.append(x)
+	return JSON.stringify({"format": "ce-time-attack-blind", "v": 1, "test": test, "board": bid(), "fingerprint": bfp(), "limit_ms": limit(),
+		"device": OS.get_name(), "assist": TA120_RULES, "rules_version": TA120_RULES["version"], "runs": runs,
+		"in_progress": {"phase": phase(), "timed": state.get("timed", {}), "untimed": state.get("cont", {})} if state.has("timed") or run_active() else {}})
 
 
 ## The test snapshot also carries the countdown's look (tests read it and

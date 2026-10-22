@@ -3,10 +3,10 @@ extends CountdownTimeAttack
 ## DEVELOPMENT ONLY: three independent blind tests, one new board each
 ## (docs/extreme16.md), on EXACTLY the 120-second clock and countdown of
 ## CountdownTimeAttack (?stime=1) - the same stages, pill, reduced-motion
-## rule, start convention, UNDO x3 per attempt, ONE SHOW A MOVE per timed
-## run, HAMMER x0, the frozen timed result and the optional CONTINUE WITHOUT
-## TIMER. Only the board, its fingerprint, the page's storage and the
-## questions differ:
+## rule, start convention, the same 120 s rules (TA120_RULES: UNDO x3 per
+## attempt, unlimited RESTART, NO SHOW A MOVE, HAMMER x0), the frozen timed
+## result and the optional CONTINUE WITHOUT TIMER. Only the board, its
+## fingerprint, the page's storage and the questions differ:
 ##   ?tta=1   puzzle test A   data/dev/extreme16_a.json
 ##   ?ttb=1   puzzle test B   data/dev/extreme16_b.json
 ##   ?ttc=1   puzzle test C   data/dev/extreme16_c.json
@@ -79,7 +79,7 @@ func _init(test_key: String = "tta") -> void:
 	test = key
 	_cfg = {"data": preset["data"], "state": preset["state"], "title": "PUZZLE TEST %s\n(DEVELOPMENT)" % preset["letter"],
 		"q2": "", "q2_key": "enjoy", "q2_label": "enjoyment", "pilot": true, "questions": T_TIMED_Q,
-		"log_blocked": true, "hide_difficulty": true, "mech_events": true, "hint_budget": 1, "persist_live": true,
+		"log_blocked": true, "hide_difficulty": true, "mech_events": true, "hint_budget": 0, "persist_live": true,
 		"ls": preset["ls"]}
 	_questions = T_TIMED_Q.duplicate(true)
 
@@ -101,7 +101,7 @@ func puzzle_q() -> Array:
 
 
 func intro_text() -> String:
-	return ("Puzzle test %s: one puzzle you have not seen before. Two minutes.\n\nThe clock starts when the board appears and never stops: thinking, UNDO, RESTART and SHOW A MOVE all use time. RESTART starts the board again, not the clock. Leaving or reloading the page does not stop it either.\n\n" % preset["letter"]
+	return ("Puzzle test %s: one puzzle you have not seen before. Two minutes.\n\nThe clock starts when the board appears and never stops: thinking, UNDO and RESTART all use time. RESTART starts the board again, not the clock. Leaving or reloading the page does not stop it either.\n\n" % preset["letter"]
 		+ _tools_text() + "\n\nIf the time runs out, you can choose to keep playing without the clock.\n\nAfterwards: a few quick questions.")
 
 

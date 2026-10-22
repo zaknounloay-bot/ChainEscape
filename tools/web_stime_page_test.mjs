@@ -4,8 +4,8 @@
 // Real Chromium at iPhone SE size (375x667), real touches. The countdown's
 // colours are read from the SCREEN (pixels of a screenshot), not only from
 // the page's own state.
-//   run 1: neutral intro; 2:00 GREEN; a real reload (clock not restored, the
-//   hint not refilled); the real countdown through ORANGE (1:00), RED (0:30)
+//   run 1: neutral intro; 2:00 GREEN; a real reload (clock not restored, still
+//   no SHOW A MOVE); the real countdown through ORANGE (1:00), RED (0:30)
 //   and the last 10 s (pulse sampled from pixels: it only darkens) with a
 //   screenshot of each stage; the pill never over the board, the board never
 //   moving; TIME UP after 120 s of wall time; the timed questions (incl. the
@@ -142,7 +142,7 @@ try {
   await sleep(600);
   await a.shot('S1_intro');
   await a.enter();
-  let p = await a.waitFor(a.play, (x) => x.active && x.next && x.next.length === 2 && x.buttons.Hint, 'board');
+  let p = await a.waitFor(a.play, (x) => x.active && x.next && x.next.length === 2 && x.buttons.Undo && x.buttons.Restart, 'board');
   const fullBoard = p.blocks;
   let c = await a.waitFor(a.cd, (v) => v.visible && v.stage === 'green' && v.rect[3] > 0, 'countdown');
   t = await a.waitFor(a.ta, (v) => v.run_active, 'running');
@@ -154,6 +154,26 @@ try {
     `2:00: a GREEN pill on screen (pixel ${px}), clock icon, weight 700 (${c.text})`);
   check(rect0[1] + rect0[3] <= boardTop0 && rect0[1] > 0.05 && rect0[2] > 0.4 && rect0[3] > 0.06, `the pill sits between the top bar and the board, never over it (pill ${rect0.map((v) => v.toFixed(3))}, board top ${boardTop0})`);
   await a.shot('S2_green');
+  // Phase 12B: no SHOW A MOVE. Only UNDO and RESTART on screen; nothing a
+  // player can press (touches across the tool bar, Enter / Space / H keys)
+  // shows a move or is logged as a request.
+  const noHint = async (what) => {
+    const q = await a.play();
+    const bar = [q.buttons.Undo, q.buttons.Restart];
+    for (const fx of [0.15, 0.35, 0.5, 0.65, 0.85]) {
+      const y = (bar[0][1] + bar[1][1]) / 2;
+      if (Math.abs(fx - bar[0][0]) > 0.12 && Math.abs(fx - bar[1][0]) > 0.12) await a.tap([fx, y], 150);
+    }
+    for (const k of ['Enter', 'Space', 'h', 'H']) await a.page.keyboard.press(k);
+    await sleep(400);
+    const q2 = await a.play();
+    const s9 = await a.state();
+    const rec = (s9.live && s9.live.record) || {};
+    check(!q2.buttons.Hint && q2.hints_left === 0 && q2.tools[1] === 0 && q2.tools[0] === 3 && q2.tools[2] === 0 && !(rec.log || []).some((e) => e[1] === 'h')
+      && !(s9.budget) && (rec.assist || {}).show_a_move === 0,
+      `${what}: no SHOW A MOVE control (tools ${JSON.stringify(q2.tools)}: UNDO x3, SHOW A MOVE x0, HAMMER x0); touches and keys request nothing; the record says show_a_move 0`);
+  };
+  await noHint('timed run');
   for (let i = 0; i < 2; i++) { p = await a.waitFor(a.play, (x) => x.next && x.next.length === 2, 'move'); await a.tap(p.next, 500); }
   // A real reload in the timed game.
   const remBefore = (await a.ta()).remaining_ms;
@@ -161,11 +181,11 @@ try {
   await a.page.reload();
   await a.waitFor(a.vt, (v) => v.screen === 'INTRO' && v.buttons.Start, 'intro after reload', 120000);
   await a.enter();
-  p = await a.waitFor(a.play, (x) => x.active && x.buttons.Hint, 'timed after reload');
+  p = await a.waitFor(a.play, (x) => x.active && x.buttons.Undo && x.buttons.Restart, 'timed after reload');
   t = await a.waitFor(a.ta, (v) => v.run_active || v.card, 'timed running after reload');
   let st = await a.state();
-  check(p.blocks === fullBoard && t.remaining_ms < remBefore && p.hints_left === 1 && st.live.record.log.some((e) => e[1] === 'o'),
-    `reload in the timed game: the board from the start (logged), the clock not restored (${t.remaining_ms} < ${remBefore} ms), SHOW A MOVE x1`);
+  check(p.blocks === fullBoard && t.remaining_ms < remBefore && p.hints_left === 0 && !p.buttons.Hint && st.live.record.log.some((e) => e[1] === 'o'),
+    `reload in the timed game: the board from the start (logged), the clock not restored (${t.remaining_ms} < ${remBefore} ms), still no SHOW A MOVE`);
   for (let i = 0; i < 2; i++) { p = await a.waitFor(a.play, (x) => x.next && x.next.length === 2, 'move'); await a.tap(p.next, 500); }
   const blocksAt = (await a.play()).blocks;
   // The stages, on screen, in real time.
@@ -216,7 +236,8 @@ try {
   check(st.phase === 'offer' && ans.enjoy === '3' && ans.excite === '4' && ans.frustrate === '2' && ans.timer_better === 'YES' && ans.length === 'APPROPRIATE'
     && ans.noticed_colours === 'YES' && ans.colour_urgency === 'NOT SURE' && ans.again === 'YES', `the timed questions stored with the timed record ${JSON.stringify(ans)}`);
   await a.tapTa('TA_Untimed', 1500);
-  p = await a.waitFor(a.play, (x) => x.active && x.buttons.Hint, 'untimed board');
+  p = await a.waitFor(a.play, (x) => x.active && x.buttons.Undo && x.buttons.Restart, 'untimed board');
+  await noHint('untimed game');
   t = await a.ta();
   c = await a.cd();
   check(t.count_text === 'NO TIMER' && c.text === 'NO TIMER' && (st.offer.from !== 'timeout_state' || p.blocks === blocksAt), `untimed: NO TIMER; ${st.offer.from === 'timeout_state' ? 'the position at 0:00 (' + p.blocks + ' blocks)' : 'a fresh board (the 0:00 position was lost)'}`);
@@ -226,7 +247,7 @@ try {
   await a.page.reload();
   await a.waitFor(a.vt, (v) => v.screen === 'INTRO' && v.buttons.Start, 'intro after reload', 120000);
   await a.enter();
-  p = await a.waitFor(a.play, (x) => x.active && x.buttons.Hint, 'untimed after reload', 15000);
+  p = await a.waitFor(a.play, (x) => x.active && x.buttons.Undo && x.buttons.Restart, 'untimed after reload', 15000);
   st = await a.state();
   check(st.phase === 'untimed' && p.blocks === blocksBefore && (await a.ta()).count_text === 'NO TIMER', `reload in the untimed game: the position rebuilt (${p.blocks} blocks)`);
   check(await a.solveByTouches('the untimed game'), 'solved without the timer, by touches');
@@ -240,6 +261,7 @@ try {
   st = await a.state();
   const r = (st.results || [])[0] || {};
   check(r.timed && r.timed.outcome === 'TIME UP' && r.untimed && r.untimed.continued && r.untimed.completed && r.untimed.record && r.untimed.record.log[0][1] === 'c'
+    && r.timed.assist.show_a_move === 0 && r.timed.assist.version === 'ta120-v2' && r.untimed.record.assist.show_a_move === 0 && !r.timed.log.some((e) => e[1] === 'h') && !r.untimed.record.log.some((e) => e[1] === 'h')
     && r.untimed.reopens === 1 && r.puzzle_answers.difficulty === 'VERY HARD' && r.puzzle_answers.achieve === '4' && r.puzzle_answers.combo === 'A LITTLE' && !('fair' in r.puzzle_answers),
     'results: the timed TIME UP and the untimed completion in separate records; the puzzle answers');
   const other = await a.page.evaluate(() => ['q1time', 'ptest11', 'xtest8', 'rtime'].map((k) => localStorage.getItem('chain_escape_' + k + '_state')));

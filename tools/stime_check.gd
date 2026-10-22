@@ -11,6 +11,11 @@ extends "res://tools/extreme11_check.gd"
 ## the last 10 s), reduced motion (no ease, no pulse, no scale), the stages
 ## recorded (once each, with the time and the page's visibility) and copied
 ## into the frozen timed record; the new questions.
+## Phase 12B (TA120_RULES): NO SHOW A MOVE - the button is gone from the
+## play screen, no tap / touch / key / direct call shows a move, in the timed
+## run, after a reload and in the untimed game; new records carry the rules
+## (assist.show_a_move = 0); older records keep the rules they were played
+## under (TA120_RULES_V1).
 
 const DATA14 := "res://data/dev/extreme15.json"
 const RSTATE := "user://stime_state.json"
@@ -39,6 +44,7 @@ func _run() -> void:
 	await _timeout_continue_fresh()
 	await _reload_each_phase()
 	await _win_and_give_up()
+	await _historical_records()
 	_check(FileAccess.get_file_as_string("user://q1time_state.json") == q1t and FileAccess.get_file_as_string("user://extreme11_state.json") == p11
 		and FileAccess.get_file_as_string("user://rtime_state.json") == rt, "?q1time, ?ptest11 and ?rtime state untouched")
 	_check(not FileAccess.file_exists(PROGRESS_PATH), "no Classic progress written")
@@ -109,8 +115,12 @@ func _start_and_clock() -> void:
 		and not JSON.stringify(data["boards"][0]).to_lower().contains("turncoat"), "intro: neutral, the rules and the optional untimed play told up front")
 	await _enter(t)
 	var p := t.play
-	_check(t.run_active() and p.max_undos == 3 and p.max_hints == 1 and p.max_hammers == 0 and p._chip.text == "" and t._count.text in ["2:00", "1:59"],
-		"starts at 2:00: UNDO x3, SHOW A MOVE x1, HAMMER x0, no difficulty label")
+	_check(t.run_active() and p.max_undos == 3 and p.max_hints == 0 and p.max_hammers == 0 and p._chip.text == "" and t._count.text in ["2:00", "1:59"],
+		"starts at 2:00: UNDO x3, SHOW A MOVE x0, HAMMER x0, no difficulty label")
+	_check(_hint_gone(p) and p._undo.is_visible_in_tree() and p._restart.is_visible_in_tree() and not p._hammer.is_visible_in_tree(),
+		"tools on screen: UNDO and RESTART only (no SHOW A MOVE control: hidden, disconnected, no mouse / focus / shortcut)")
+	_check(t._current.get("assist", {}) == CountdownTimeAttack.TA120_RULES and t._current["assist"]["show_a_move"] == 0 and t._tools_text().contains("No SHOW A MOVE")
+		and not t._intro_text.text.contains("ONE SHOW A MOVE"), "the run's record carries the rules (assist.show_a_move = 0); the intro says no SHOW A MOVE")
 	var blocked := -1
 	for id in p.model.blocks:
 		if p.model.move_state(id) == "blocked":
@@ -154,14 +164,57 @@ func _start_and_clock() -> void:
 	if shell >= 0:
 		_check(at.size() == 1 and int(at[0][2]) == shell, "a tap on the armored shell is logged WITH its block (%d) %s" % [shell, str(at)])
 	var e2 := t.elapsed_ms()
-	p._hint.pressed.emit()
+	await _try_every_hint_path(t, "timed run")
 	await _wait(0.3)
-	_check(t.hint_spent("S1") and t.elapsed_ms() - e2 >= 280, "SHOW A MOVE does not pause the clock")
+	_check(t.elapsed_ms() - e2 >= 280 and t.run_active(), "the clock kept running through the refused requests")
 	await _close(t)
 
 
+## Every way a SHOW A MOVE could be asked for: the button's signal, a real
+## touch and a mouse click where the button would be, Enter / Space / H keys,
+## the page's and the play screen's own functions. Nothing is shown, spent,
+## solved or logged.
+func _try_every_hint_path(t: CountdownTimeAttack, tag: String) -> void:
+	var p := t.play
+	var log_n: int = t._current.get("log", []).size()
+	var r := p._hint.get_global_rect()
+	p._hint.pressed.emit()
+	p._hint.emit_signal("button_down")
+	p._hint.emit_signal("button_up")
+	for pressed in [true, false]:
+		var tch := InputEventScreenTouch.new()
+		tch.pressed = pressed
+		tch.position = r.get_center()
+		get_viewport().push_input(tch)
+		var mb := InputEventMouseButton.new()
+		mb.button_index = MOUSE_BUTTON_LEFT
+		mb.pressed = pressed
+		mb.position = r.get_center()
+		get_viewport().push_input(mb)
+	for key in [KEY_ENTER, KEY_SPACE, KEY_H]:
+		for pressed in [true, false]:
+			var k := InputEventKey.new()
+			k.keycode = key
+			k.physical_keycode = key
+			k.pressed = pressed
+			get_viewport().push_input(k)
+	t.budget_hint()
+	p.hint()
+	await _frames(3)
+	var hinted := p.board._views.values().any(func(v): return v.hinted)
+	var new_h: Array = t._current.get("log", []).slice(log_n).filter(func(e): return e[1] == "h")
+	_check(not hinted and p.max_hints == 0 and p.hints_used == 0 and p.total_hints == 0 and not t.state.has("budget") and new_h.is_empty() and _hint_gone(p)
+		and int(t._current.get("hint_presses", 0)) == 0, "%s: no SHOW A MOVE through any path (signal, touch, click, Enter / Space / H, direct calls): nothing shown, spent or logged" % tag)
+
+
+func _hint_gone(p: SocialPlay) -> bool:
+	var h: Button = p._hint
+	return not h.is_visible_in_tree() and h.pressed.get_connections().is_empty() and h.mouse_filter == Control.MOUSE_FILTER_IGNORE \
+		and h.focus_mode == Control.FOCUS_NONE and h.shortcut == null and h.process_mode == Node.PROCESS_MODE_DISABLED and p.max_hints == 0
+
+
 ## A reload in the timed phase: the clock is not restored, SHOW A MOVE stays
-## spent; going to the background is recorded and the clock keeps running;
+## unavailable; going to the background is recorded and the clock keeps running;
 ## the result says the run was interrupted; every log entry is timestamped.
 func _reopen_and_background() -> void:
 	var sol := _solution()
@@ -169,17 +222,19 @@ func _reopen_and_background() -> void:
 	await _enter(t)
 	t.play.tap_block(sol[0])
 	await _wait(0.05)
-	t.play._hint.pressed.emit()
+	await _try_every_hint_path(t, "before a reload")
 	await _wait(0.5)
 	var before := t.elapsed_ms()
 	t.queue_free()  # the page closes (a reload or the tab closed)
 	await _frames(2)
 	await _wait(1.0)
 	var t2: CountdownTimeAttack = await _page(false)
-	_check(t2.run_active() and t2.hint_spent("S1"), "after a reload: the run is still on, SHOW A MOVE still spent")
+	_check(t2.run_active() and not t2.state.has("budget"), "after a reload: the run is still on, nothing about SHOW A MOVE restored")
 	await _enter(t2)
 	_check(t2.elapsed_ms() >= before + 950 and t2.play.max_hints == 0 and int(t2._current["reopens"]) == 1 and t2._current["log"].any(func(e): return e[1] == "o"),
-		"the clock is not restored (%d -> %d ms, the closed time counts); the hint not refilled; reopen logged" % [before, t2.elapsed_ms()])
+		"the clock is not restored (%d -> %d ms, the closed time counts); still no SHOW A MOVE; reopen logged" % [before, t2.elapsed_ms()])
+	_check(_hint_gone(t2.play) and t2._current.get("assist", {}).get("show_a_move", -1) == 0, "after a reload: the SHOW A MOVE control is still gone; the record still says show_a_move 0")
+	await _try_every_hint_path(t2, "after a reload")
 	var e0 := t2.elapsed_ms()
 	t2.page_hidden(true)
 	await _wait(0.6)
@@ -203,7 +258,6 @@ func _timeout_continue_from_position() -> void:
 	for i in 3:
 		p.tap_block(sol[i])
 		await _wait(0.03)
-	p._hint.pressed.emit()  # the run's one SHOW A MOVE: spent in the timed phase
 	await _frames(1)
 	var before := p.model.snapshot().map(func(b): return [b.id, b.cell, b.direction, b.armored])
 	await _expire(t)
@@ -223,7 +277,9 @@ func _timeout_continue_from_position() -> void:
 	var after := t.play.model.snapshot().map(func(b): return [b.id, b.cell, b.direction, b.armored])
 	_check(t.phase() == "untimed" and t.screen == VhHumanTest.Screen.PLAYING and t._count.text == "NO TIMER" and JSON.stringify(after) == JSON.stringify(before),
 		"untimed: the same board, the position at 0:00 rebuilt exactly, NO TIMER")
-	_check(t.play.max_hints == 0 and t._current["log"][0][1] == "c" and t._current["phase"] == "untimed", "the spent SHOW A MOVE is not refilled; a separate log starting with the continuation marker")
+	_check(t.play.max_hints == 0 and t._current["log"][0][1] == "c" and t._current["phase"] == "untimed", "untimed: no SHOW A MOVE either; a separate log starting with the continuation marker")
+	_check(_hint_gone(t.play) and t._current.get("assist", {}) == CountdownTimeAttack.TA120_RULES, "untimed: the control is gone; the untimed record carries the same rules")
+	await _try_every_hint_path(t, "untimed game")
 	for k in 5:
 		t.play.restart()
 		await _wait(0.05)
@@ -247,6 +303,9 @@ func _timeout_continue_from_position() -> void:
 		"results screen; nothing left in progress")
 	var ex = JSON.parse_string(t.results_json())
 	_check(ex["format"] == "ce-time-attack-blind" and ex["runs"].size() == 1, "results JSON")
+	_check(ex["assist"]["show_a_move"] == 0 and ex["rules_version"] == "ta120-v2" and ex["runs"][0]["assist"]["version"] == "ta120-v2" and ex["runs"][0]["assist"]["show_a_move"] == 0
+		and ex["runs"][0]["timed"]["assist"]["show_a_move"] == 0 and ex["runs"][0]["untimed"]["record"]["assist"]["show_a_move"] == 0 and int(ex["runs"][0]["timed"].get("show_a_move", 0)) == 0,
+		"results JSON: hint allowance 0 for the run, its timed and its untimed record (rules ta120-v2)")
 	await _close(t)
 
 
@@ -272,7 +331,7 @@ func _timeout_continue_fresh() -> void:
 		"after TIME UP in a lost position: CONTINUE WITHOUT TIMER says it starts a fresh board")
 	t._untimed_btn.pressed.emit()
 	await _frames(3)
-	_check(t.play.model.block_count() == t.play._total_blocks and t.play.max_hints == 1, "the fresh untimed board; the unspent SHOW A MOVE is still there (once)")
+	_check(t.play.model.block_count() == t.play._total_blocks and t.play.max_hints == 0 and _hint_gone(t.play), "the fresh untimed board; no SHOW A MOVE")
 	var sol := _solution()
 	t.play.tap_block(sol[0])
 	await _wait(0.05)
@@ -469,3 +528,33 @@ func _boundary() -> void:
 		else:
 			_check(timed.get("outcome", "") == "TIME UP" and not timed["completed"], "at 0:00: TIME UP (a move after the clock ran out never wins)")
 		await _close(t)
+
+
+## A state saved before phase 12B (a run played with ONE SHOW A MOVE, its
+## hint spent, no "assist" in the record, a spent budget left over): still
+## read, exported with the rules it was played under (TA120_RULES_V1), never
+## rewritten; a new run on top of it has no SHOW A MOVE.
+func _historical_records() -> void:
+	var old_timed := {"id": "S1", "outcome": "COMPLETED", "elapsed_ms": 61500, "remaining_ms": 58500, "limit_ms": LIM, "completed": true, "restarts": 2,
+		"hint_presses": 1, "show_a_move": 1, "log": [[1000, "m", 3], [2000, "h", -1, {"att": 0, "r": "shown"}]]}
+	var old := {"order": ["S1"], "index": 1, "reached": 300, "hardest": {"skipped": true}, "seq": 7, "budget": {"S1": {"ms": 2000, "attempt": 0, "r": "shown"}},
+		"results": [{"id": "S1", "run": 1, "timed": old_timed, "untimed": {"continued": false}, "puzzle_answers": {"difficulty": "VERY HARD"}, "board_fingerprint": CountdownTimeAttack.S1_FINGERPRINT}]}
+	DirAccess.remove_absolute(ProjectSettings.globalize_path(RSTATE))
+	var f := FileAccess.open(RSTATE, FileAccess.WRITE)
+	f.store_string(JSON.stringify(old))
+	f.close()
+	var t: CountdownTimeAttack = await _page(false)
+	var ex = JSON.parse_string(t.results_json())
+	var r0: Dictionary = ex["runs"][0]
+	_check(r0["assist"]["version"] == "ta120-v1" and r0["assist"]["show_a_move"] == 1 and int(r0["timed"]["show_a_move"]) == 1
+		and int(r0["timed"]["hint_presses"]) == 1 and not r0["timed"].has("assist") and int(r0["timed"]["elapsed_ms"]) == 61500,
+		"an older record (played with ONE SHOW A MOVE) is read and exported with its own rules (ta120-v1), its hint use intact")
+	_check(not t.state["results"][0]["timed"].has("assist") and JSON.stringify(t.state["results"][0]["timed"]) == JSON.stringify(JSON.parse_string(JSON.stringify(old_timed))),
+		"the stored older record is not rewritten")
+	t._new_run.pressed.emit()
+	await _frames(2)
+	await _enter(t)
+	_check(t.run_active() and t.play.max_hints == 0 and _hint_gone(t.play) and not t.state.has("budget") and t._current.get("assist", {}).get("show_a_move", -1) == 0,
+		"a NEW run after it: no SHOW A MOVE, the old budget not carried over, the new record says show_a_move 0")
+	await _try_every_hint_path(t, "new run after older records")
+	await _close(t)

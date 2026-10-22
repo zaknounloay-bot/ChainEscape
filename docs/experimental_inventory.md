@@ -1,4 +1,4 @@
-# Experimental boards: inventory (Phase 12A consolidation)
+# Experimental boards: inventory (Phase 12A consolidation, updated in Phase 12B)
 
 Development only. Every board below lives in `data/dev/` and is reachable only through a development test page. Development pages are off in the player and QA builds (`BuildFlags.dev_pages_off()`). None is part of Production, the campaign, the Social MVP or Challenge a Friend.
 
@@ -9,7 +9,8 @@ Development only. Every board below lives in `data/dev/` and is reachable only t
 **Human results.** These come only from:
 - the session logs analysed in `docs/extreme12_replay.md` (Q1);
 - the expert comparison in `docs/extreme9_analysis.md` (earlier boards);
-- the results reported to me in the phase 10 and phase 11 briefs (R1, S1).
+- the results reported to me in the phase 10 and phase 11 briefs (R1, S1);
+- the six first-exposure TA / TB / TC sessions reported in the phase 12B brief.
 
 Anything not in those sources is marked "not recorded". Nothing is inferred.
 
@@ -24,29 +25,60 @@ Anything not in those sources is marked "not recorded". Nothing is inferred.
 
 | Board | Page | Fingerprint | Mechanics (from the data file) | Pieces | Technical QA | Human status |
 |---|---|---|---|---|---|---|
-| **Q1** "The Conveyor" | `?ptest11=1`, `?q1time=1` | `3fc4f9259fd8390236caf337bc5260c9b9e06eb36fec09032cdf452adb413711` | magnets, cw / ccw spinners, armored shell | 13 | TECHNICALLY VALIDATED (phase 6). Parity 0 mismatches in every position (later check, phase 9) | **HUMAN-TESTED** (`?ptest11`, untimed) |
-| **R1** | `?rtime=1` (180 s) | `db0dd7e1ae7c721c3c59d1f6f18aee26d71358773d8f6db52e886e758ddfeebc` | switch, magnets, cw / ccw spinners, armored shell | 13 | TECHNICALLY VALIDATED (phase 9). Heuristic exception: expert learner 9 < 12 | **HUMAN-TESTED** (180 s) |
+| **Q1** "The Conveyor" | `?ptest11=1`, `?q1time=1` (180 s, archived reference) | `3fc4f9259fd8390236caf337bc5260c9b9e06eb36fec09032cdf452adb413711` | magnets, cw / ccw spinners, armored shell | 13 | TECHNICALLY VALIDATED (phase 6). Parity 0 mismatches in every position (later check, phase 9) | **HUMAN-TESTED** (`?ptest11`, untimed) |
+| **R1** | `?rtime=1` (180 s, archived reference) | `db0dd7e1ae7c721c3c59d1f6f18aee26d71358773d8f6db52e886e758ddfeebc` | switch, magnets, cw / ccw spinners, armored shell | 13 | TECHNICALLY VALIDATED (phase 9). Heuristic exception: expert learner 9 < 12 | **HUMAN-TESTED** (180 s) |
 | **S1** | `?stime=1` (120 s, staged countdown) | `7714b7488829cefa28ea49fa427c4b2b51fabac8c2a1bae77fc9520a399efa2b` | lock, cw / ccw spinners | 13 | TECHNICALLY VALIDATED (phase 10). No exception (expert learner 23 / 25) | **HUMAN-TESTED** (120 s) |
-| **TA** (test A, magnet) | `?tta=1` (120 s) | `a28e22f0a1a216ba4ac701ff549e7d212ce1fe83ae2d8e3678065da555b730cf` | magnets, cw / ccw spinners | 13 | TECHNICALLY VALIDATED (phase 11). Heuristic exception: expert learner 10 < 12 | **NOT YET HUMAN-TESTED** |
-| **TB** (test B, spinner / lock) | `?ttb=1` (120 s) | `f8c22182180f45fa964593050c91d3fc534079338a438774f2b54dd00c924d99` | lock, cw / ccw spinners | 13 | TECHNICALLY VALIDATED (phase 11). Heuristic exception: expert learner 7 < 12. 6-move greedy at the 5 % limit | **NOT YET HUMAN-TESTED** |
-| **TC** (test C, switch / shell) | `?ttc=1` (120 s) | `7f7ae09342e86e56a34ab4d52628346e455b97111a8f6c4663c97a9a587988d5` | switch, armored shell, cw / ccw spinners | 12 | TECHNICALLY VALIDATED (phase 11). No exception (expert learner 18 / 19) | **NOT YET HUMAN-TESTED** |
+| **TA** (test A, magnet) | `?tta=1` (120 s) | `a28e22f0a1a216ba4ac701ff549e7d212ce1fe83ae2d8e3678065da555b730cf` | magnets, cw / ccw spinners | 13 | TECHNICALLY VALIDATED (phase 11). Heuristic exception: expert learner 10 < 12 | **HUMAN-TESTED** (120 s, first exposure, 2 testers) |
+| **TB** (test B, spinner / lock) | `?ttb=1` (120 s) | `f8c22182180f45fa964593050c91d3fc534079338a438774f2b54dd00c924d99` | lock, cw / ccw spinners | 13 | TECHNICALLY VALIDATED (phase 11). Heuristic exception: expert learner 7 < 12. 6-move greedy at the 5 % limit | **HUMAN-TESTED** (120 s, first exposure, 2 testers) |
+| **TC** (test C, switch / shell) | `?ttc=1` (120 s) | `7f7ae09342e86e56a34ab4d52628346e455b97111a8f6c4663c97a9a587988d5` | switch, armored shell, cw / ccw spinners | 12 | TECHNICALLY VALIDATED (phase 11). No exception (expert learner 18 / 19) | **HUMAN-TESTED** (120 s, first exposure, 2 testers) |
 
 ### Human results
 
 Columns are kept apart on purpose:
 - **Outcome, restarts and hints** are objective performance, from the logs.
+- **Hints** separates SHOW A MOVE *requests* from *winning moves shown*.
 - **Assistance** says whether the solution was the player's own.
-- **Subjective difficulty** is the player's own rating, not a measurement.
+- **Difficulty** is the player's own rating, not a measurement. A **first-exposure** rating is asked right after the timed run, before any untimed play. A **post-play** rating is asked after all play. The two are never merged.
+- **Timed** success and **untimed** (continuation) success are separate outcomes.
 
-| Board | Tester | Timed outcome | Untimed outcome | Assistance | Restarts | Hints | Subjective difficulty | Enjoyment | Achievement | Other answers |
-|---|---|---|---|---|---|---|---|---|---|---|
-| Q1 | son | (no timer: `?ptest11`) | solved, 199.6 s; no winning move ever shown | **none (independent solution)** | 9 | 1 spent ("lost"), 2 refused | VERY HARD | 5 / 5 | 5 / 5 | fair: YES. The core was reproduced exactly twice |
-| Q1 | father | (no timer) | completed | **assisted: the final solution involved help from his son** (not counted as independent) | 8 | 1 spent at 55 s ("can't be cleared") | EXTREME | 5 / 5 | 5 / 5 | rated it harder than Level 300; fair: NO (reason unknown) |
-| R1 | father | WIN, 1:01.5 of 3:00 | - | none reported | 2 | 0 | MEDIUM | 5 / 5 | not recorded | 180 s: TOO LONG; timer improved: unsure; play again: yes |
-| R1 | son | WIN, 2:17.3 of 3:00 | - | none reported | 6 | 0 | VERY HARD | 4 / 5 | 4 / 5 | 180 s: TOO LONG; timer improved: unsure; play again: yes |
-| S1 | father | TIME UP at 2:00 | completed without the timer | none reported | 6 | 0 | not recorded | 5 / 5 | achievement came from the untimed solve (no number reported) | timer improved: YES; colour urgency: YES; 120 s: APPROPRIATE |
-| S1 | son | WIN with 89 ms left (of 2:00) | - | none reported | 9 | 0 | VERY HARD | 5 / 5 (verbally corrected from an accidental 3) | 5 / 5 | timer improved: YES; colour urgency: YES; 120 s: APPROPRIATE |
-| TA, TB, TC | - | not yet played | - | - | - | - | - | - | - | - |
+Every session below was played under the assistance rules **of its time**: one SHOW A MOVE per run (Q1, R1: 180 s; S1, TA, TB, TC: rules `ta120-v1`). Phase 12B removed SHOW A MOVE from the 120 s pages for *future* sessions (section 3). None of these sessions is rewritten as having had zero hints available.
+
+#### Q1, R1, S1
+
+| Board | Tester | Timed outcome | Untimed outcome | Assistance | Restarts | Hints | First-exposure difficulty | Post-play difficulty | Enjoyment | Achievement | Other answers |
+|---|---|---|---|---|---|---|---|---|---|---|---|
+| Q1 | son | (no timer: `?ptest11`) | solved, 199.6 s; no winning move ever shown | **none (independent solution)** | 9 | 3 requests: 1 spent ("lost"), 2 refused; 0 winning moves shown | not asked | VERY HARD | 5 / 5 | 5 / 5 | fair: YES. The core was reproduced exactly twice |
+| Q1 | father | (no timer) | completed | **assisted: the final solution involved help from his son** (not counted as independent) | 8 | 1 request, spent at 55 s ("can't be cleared"); 0 winning moves shown | not asked | EXTREME | 5 / 5 | 5 / 5 | rated it harder than Level 300; fair: NO (reason unknown) |
+| R1 | father | WIN, 1:01.5 of 3:00 | - | none reported | 2 | 0 | not asked | MEDIUM | 5 / 5 | not recorded | 180 s: TOO LONG; timer improved: unsure; play again: yes |
+| R1 | son | WIN, 2:17.3 of 3:00 | - | none reported | 6 | 0 | not asked | VERY HARD | 4 / 5 | 4 / 5 | 180 s: TOO LONG; timer improved: unsure; play again: yes |
+| S1 | father | TIME UP at 2:00 | completed without the timer | none reported | 6 | 0 | not asked | not recorded | 5 / 5 | achievement came from the untimed solve (no number reported) | timer improved: YES; colour urgency: YES; 120 s: APPROPRIATE |
+| S1 | son | WIN with 89 ms left (of 2:00) | - | none reported | 9 | 0 | not asked | VERY HARD | 5 / 5 (verbally corrected from an accidental 3) | 5 / 5 | timer improved: YES; colour urgency: YES; 120 s: APPROPRIATE |
+
+#### TA, TB, TC (phase 12B data: six first-exposure sessions)
+
+Each tester saw each board for the first time. Attempts = restarts + 1. All six sessions were played under rules `ta120-v1` (UNDO x3 per attempt, ONE SHOW A MOVE per timed run, HAMMER x0, 120 s).
+
+| Board | Tester | Timed outcome | Attempts / restarts | Hints | Untimed continuation | First-exposure difficulty | Timed enjoyment | Excitement | Puzzle enjoyment | Achievement | Timer improved the experience | 120 s duration |
+|---|---|---|---|---|---|---|---|---|---|---|---|---|
+| TA | father | **WIN**, 25.222 s | 3 / 2 | 0 used | not needed | MEDIUM | 5 / 5 | 5 / 5 | 5 / 5 | 3 / 5 | YES | not recorded |
+| TA | son | **WIN**, 53.225 s | 5 / 4 | 0 used | not needed | HARD | 4 / 5 | 4 / 5 | 4 / 5 | 4 / 5 | YES | not recorded |
+| TB | father | **WIN**, 52.427 s | 6 / 5 | 0 used | not needed | MEDIUM | 5 / 5 | 5 / 5 | 5 / 5 | 5 / 5 | YES | **TOO LONG** |
+| TB | son | **WIN**, 73.884 s | 6 / 5 | 0 used | not needed | HARD | 4 / 5 | 4 / 5 | 4 / 5 | 4 / 5 | YES | not recorded |
+| TC | father | **TIME UP** at 120 s (not a timed success) | 10 / 9 | **1 request; 0 winning moves shown** | **solved without the timer** in 26.374 s, 1 more restart (untimed success, not a timed victory) | VERY HARD | 5 / 5 | 5 / 5 | 5 / 5 | 5 / 5, after the untimed solve | YES | not recorded |
+| TC | son | **WIN**, 84.170 s | 7 / 6 | 0 used | not needed | HARD | 5 / 5 | 4 / 5 | 4 / 5 | 4 / 5 | YES | not recorded |
+
+Not recorded for TA / TB / TC: a post-play difficulty rating, frustration, the colour questions, "another puzzle", insight, combination and free-text feedback. They are left blank rather than inferred.
+
+Reading of the six sessions:
+- **Timed success.** 5 of 6 were won in the 120 s. TC defeated the father in the timed run; he solved it untimed.
+- **Difficulty order.** By time, the order is TA < TB < TC for both testers.
+  - The son rated all three HARD.
+  - The father rated TA and TB MEDIUM and TC VERY HARD.
+  - The father solved TA and TB faster than the son.
+- **Experience.** Every session rated the timer as improving the experience. Enjoyment was 4-5 / 5 throughout.
+- **Achievement.** Achievement varied most: father TA 3 / 5 (a 25 s solve), the rest 4-5 / 5.
+- **Hints.** None of the six sessions received a winning move. The one request (father, TC) showed none.
+- **Caution.** These ratings are encouraging. They come from two players of one family, one first exposure each. They are **not** evidence of broad player demand.
 
 ### Known limitations per board
 
@@ -64,17 +96,21 @@ Columns are kept apart on purpose:
   - It has 5 clean-up taps with no wrong option.
   - The lock is a familiar campaign mechanic.
 - **TA:**
+  - Solved quickly by both testers (25 s, 53 s): the easiest of the three for both; the father's achievement was 3 / 5.
   - 8 spinners.
   - "Magnet fired too early" is a trap the son already knows from Q1 / R1.
   - The heuristic exception (10 < 12).
 - **TB:**
+  - Both testers won (52 s, 74 s); the father found 120 s TOO LONG for it.
   - The 6-move greedy player sits exactly at the 5 % limit.
   - The heuristic exception (7 < 12).
 - **TC:**
+  - The hardest of the three for both testers: the only TIME UP (father) and the son's slowest win (84 s).
   - 7 spinners.
   - The opening is forced: 1 of 5 legal first moves wins.
   - "Move F before the switch" is R1's opening trap in the same corner.
-- **TA and TC:** SHOW A MOVE after a mistake reaches 100-157 ms at x4 / x6 desktop CPU throttling (Q1 / R1: 140-240 ms). That is a simulation. None of the 120 s boards has been measured on a real iPhone (Safari, reduced motion, backgrounding).
+- **TA and TC (historical):** under rules `ta120-v1`, SHOW A MOVE after a mistake reached 100-157 ms at x4 / x6 desktop CPU throttling (Q1 / R1: 140-240 ms). Since phase 12B the 120 s pages no longer offer SHOW A MOVE, so this cost no longer applies to them. None of the 120 s boards has been measured on a real iPhone (Safari, reduced motion, backgrounding).
+- **All 120 s boards:** the six TA / TB / TC sessions were played *with* one SHOW A MOVE available. Five used none and the one request showed no move, but no session has yet been played under the new zero-hint rules.
 
 ## 2. Earlier experimental boards (earlier phases; kept, not active)
 
@@ -91,15 +127,25 @@ Columns are kept apart on purpose:
 
 Solver / exhaustive parity on Q1, T5, E1, E2, H1 and H2 was checked exhaustively in phase 9: 0 mismatches. Parity was not run on T1-T4, P1, P2. The 28 pilot boards of the VERY HARD pilot (`vh_*` files) are not listed here.
 
-## 3. Common timed-mode rules (unchanged)
+## 3. Timed-mode rules
 
-| Page | Clock | Assistance | Countdown UI |
-|---|---|---|---|
-| `?q1time` (Q1), `?rtime` (R1) | 180 s | UNDO x3 per attempt, SHOW A MOVE x1 per run, HAMMER x0 | plain digits; red in the last 30 s |
-| `?stime` (S1), `?tta` / `?ttb` / `?ttc` | **120 s** | UNDO x3 per attempt, SHOW A MOVE x1 per run, HAMMER x0 | fixed pill: green 2:00-1:01, orange 1:00-0:31, red 0:30-0:00 (pulse; filled icon in the last 10 s); reduced motion respected |
+| Page | Status | Clock | Assistance | Countdown UI |
+|---|---|---|---|---|
+| `?q1time` (Q1), `?rtime` (R1) | archived experimental references; their historical rules are unchanged, so old sessions stay reproducible | 180 s | UNDO x3 per attempt, SHOW A MOVE x1 per run, HAMMER x0 | plain digits; red in the last 30 s |
+| `?stime` (S1), `?tta` / `?ttb` / `?ttc` | the 120 s Time Attack for future use. **Rules `ta120-v2`** since phase 12B | **120 s** | **UNDO x3 per attempt, unlimited RESTART, SHOW A MOVE x0, HAMMER x0**, in the timed run *and* in the untimed continuation | fixed pill: green 2:00-1:01, orange 1:00-0:31, red 0:30-0:00 (pulse; filled icon in the last 10 s); reduced motion respected; no audio, no popups |
+
+**Rules `ta120-v2`** (`CountdownTimeAttack.TA120_RULES`) cover S1, TA, TB and TC:
+- **The SHOW A MOVE control is gone from the play screen.** It is hidden, every connection is cut, and it takes no mouse, touch, focus, shortcut or processing.
+- **The hint budget is 0.** Any request from code is refused without asking the solver: nothing is shown, spent or logged.
+- **Reload, RESTART and the untimed continuation cannot bring it back.**
+- **Every new record carries the rules.** The timed record, the untimed record and the export carry `assist`, with `show_a_move: 0` and version `ta120-v2`.
+- **Older records are not rewritten.** Records from before phase 12B (rules `ta120-v1`: ONE SHOW A MOVE per timed run) are exported with the rules they were played under, and their hint use stays intact.
+- **The board data files are unchanged.** Their `assist` block still documents the `ta120-v1` rules of the recorded sessions, and every fingerprint is unchanged.
+- **Untouched:** the campaign hint system, the Social MVP, Challenge a Friend, SocialPlay and the solver.
+- **Screenshots.** iPhone SE screenshots of the intro and the tool bar (timed and untimed, all four pages) are in `docs/ta120_v2_shots/`.
 
 Shared rules on every timed page:
-- The clock never stops or refills on RESTART, UNDO, SHOW A MOVE, the background or a reload.
-- TIME UP is frozen.
-- On `?rtime`, `?stime` and `?tt*`, CONTINUE WITHOUT TIMER is optional and keeps a separate record.
+- The clock never stops or refills on RESTART, UNDO, the background or a reload. It also never stops on SHOW A MOVE where that tool still exists (Q1, R1).
+- TIME UP is frozen. An untimed solve is never recorded as a timed victory.
+- On `?rtime`, `?stime` and `?tt*`, CONTINUE WITHOUT TIMER is optional. It keeps the same puzzle and continues from the 0:00 position when that position can still be cleared, otherwise it starts fresh. It keeps a separate record.
 - Each page has its own storage.
