@@ -78,6 +78,23 @@ extends CanvasLayer
 ##               and the mechanism events of every move in the log (gate
 ##               opened, block pulled, arrow reversed, spinners turned,
 ##               shell cracked).
+##   ?ptest11=1  EXTREME PHASE 6 (data/dev/extreme11.json,
+##               tools/extreme11_build.gd, docs/extreme11.md): one board,
+##               a neutral id, the ?xtest8 flow and questions, and the
+##               EXPERIMENTAL SHOW A MOVE RULE (this mode only; SocialPlay
+##               and every other mode keep theirs - docs/extreme11.md):
+##               ONE SHOW A MOVE for the whole puzzle, kept spent through
+##               RESTART, UNDO, a page refresh and coming back later (this
+##               mode's own state, saved before the answer shows). A press
+##               with it available always spends it: the position can be
+##               cleared - a move is highlighted; it can't - "Can't be
+##               cleared from here" (paid, never a free dead-end check). A
+##               board with no legal move at all (the screen already says
+##               "No moves left") spends nothing. Once spent, every press
+##               gets the same answer and the solver is not consulted.
+##               Every press is logged (outcome, attempt); the puzzle in
+##               progress survives a refresh (log, time and totals carry
+##               on; the board starts again - logged as "o").
 
 ## EXTREME research: the rating and the follow-up questions.
 const X_RATINGS := ["EASY", "MEDIUM", "HARD", "VERY HARD", "EXTREME"]
@@ -149,6 +166,11 @@ const TESTS := {
 	"xtest8": {"data": "res://data/dev/extreme8.json", "state": "user://extreme8_state.json", "title": "PUZZLE TEST\n(DEVELOPMENT)",
 		"q2": "", "q2_key": "l300", "q2_label": "harder than L300", "pilot": true, "ratings": X_RATINGS, "questions": X8_QUESTIONS,
 		"log_blocked": true, "hide_difficulty": true, "combo": true, "mech_events": true, "ls": "chain_escape_xtest8_state"},
+	# EXTREME phase 6, one board, the experimental SHOW A MOVE rule (see the header).
+	"ptest11": {"data": "res://data/dev/extreme11.json", "state": "user://extreme11_state.json", "title": "PUZZLE TEST\n(DEVELOPMENT)",
+		"q2": "", "q2_key": "l300", "q2_label": "harder than L300", "pilot": true, "ratings": X_RATINGS, "questions": X8_QUESTIONS,
+		"log_blocked": true, "hide_difficulty": true, "combo": true, "mech_events": true, "hint_budget": 1, "persist_live": true,
+		"ls": "chain_escape_ptest11_state"},
 }
 ## Pilot follow-up questions: [key, text, label, options].
 const PILOT_QUESTIONS := [
@@ -242,7 +264,7 @@ static func requested() -> bool:
 static func requested_test() -> String:
 	if BuildFlags.dev_pages_off():
 		return ""  # player / QA build: developer pages off
-	for key in ["xtest8", "vhval3", "xtest7", "xtest6", "xtest5", "vhtest4", "vhtest3", "vhtest2", "vhtest"]:
+	for key in ["ptest11", "xtest8", "vhval3", "xtest7", "xtest6", "xtest5", "vhtest4", "vhtest3", "vhtest2", "vhtest"]:
 		if "--" + key in OS.get_cmdline_user_args():
 			return key
 	if not OS.has_feature("web"):
@@ -251,7 +273,7 @@ static func requested_test() -> String:
 	if loc == null:
 		return ""
 	var where := (str(loc.search) + str(loc.hash)).to_lower()
-	for key in ["xtest8", "vhval3", "xtest7", "xtest6", "xtest5", "vhtest4", "vhtest3", "vhtest2", "vhtest"]:
+	for key in ["ptest11", "xtest8", "vhval3", "xtest7", "xtest6", "xtest5", "vhtest4", "vhtest3", "vhtest2", "vhtest"]:
 		if where.contains(key + "=1") or where.contains(key + "=true"):
 			return key
 	return ""
@@ -304,6 +326,10 @@ func _ready() -> void:
 	play.solved.connect(_on_solved)
 	play.exited.connect(_on_gave_up)
 	add_child(play)
+	if _cfg.has("hint_budget"):
+		# Phase 6: this page answers its own SHOW A MOVE (SocialPlay unchanged).
+		play._hint.pressed.disconnect(play.hint)
+		play._hint.pressed.connect(budget_hint)
 	_build()
 	_show(Screen.INTRO)
 	set_process(true)
@@ -410,6 +436,11 @@ func _end_demo(solved: bool) -> void:
 func begin_puzzle() -> void:
 	var i: int = state["index"]
 	var rec: Dictionary = boards[state["order"][i]]
+	if _cfg.get("persist_live", false) and state.get("live", {}).get("id", "") == rec["id"] and state["live"].get("finished", false):
+		# Played to the end before a refresh: straight to the rating.
+		_current = state["live"]["record"].duplicate(true)
+		_show(Screen.RATE)
+		return
 	var def := PuzzleDefinition.from_dict(rec["puzzle"])
 	var c := SharedChallenge.friend_challenge(def, FriendGenerator.VERY_HARD)
 	_current = {"id": rec["id"], "variant": rec["variant"], "fingerprint": def.fingerprint(), "order": i + 1, "first_move_ms": -1,
@@ -423,15 +454,22 @@ func begin_puzzle() -> void:
 	_show(Screen.PLAYING)
 	play.back_label = ""
 	_act_sig = []
+	if _cfg.has("hint_budget"):
+		play.max_hints = 0 if hint_spent(rec["id"]) else int(_cfg["hint_budget"])
+		_current["unaided_max_cleared"] = 0
+		_current["hint_presses"] = 0
 	play.start(c, SocialPlay.Mode.CREATOR_PREVIEW, Chapters.theme_for_chapter(1))
 	play._title.text = "PUZZLE %d / %d" % [i + 1, total()]
 	if _cfg.get("hide_difficulty", false):
 		play._chip.text = ""  # EXTREME research: no "VERY HARD" label to anchor the rating
 	_t0 = Time.get_ticks_msec()
 	_last_act = _t0
+	if _cfg.get("persist_live", false):
+		_resume_live(rec["id"])
 	if pilot:
 		_prev_snap = _snap()
 		_act_sig_prev = _sig()
+	play._refresh_buttons()
 
 
 func _on_solved() -> void:
@@ -510,6 +548,19 @@ func _finish_attempt(solved: bool) -> void:
 		_current["blocked_taps"] = play.total_blocked
 		if _cfg.get("log_blocked", false):
 			_current["pulls"] = play.total_pulls
+	if _cfg.has("hint_budget"):
+		_current["show_a_move"] = int(_current.get("hint_spends", 0))
+	if _cfg.get("persist_live", false):
+		# Totals from before a refresh (the board started again there).
+		var carry: Dictionary = _current.get("carry", {})
+		for k in carry:
+			_current[k] = int(_current.get(k, 0)) + int(carry[k])
+		_current["attempts"] = int(_current["restarts"]) + int(_current.get("reopens", 0)) + 1
+		_current.erase("carry")
+		_current.erase("live_totals")
+		# Finished: a refresh now goes back to the questions, not the board.
+		state["live"] = {"id": _current["id"], "finished": true, "record": _current}
+		_save_state()
 
 
 func rate(i: int) -> void:
@@ -529,6 +580,7 @@ func think(answer: String) -> void:
 	play.end()
 	state["results"].append(_current.duplicate())
 	state["index"] = int(state["index"]) + 1
+	state.erase("live")
 	_save_state()
 	_current = {}
 	start_next()
@@ -582,6 +634,97 @@ func set_hardest(order_pos: int, why: String) -> void:
 	_show(Screen.RESULTS)
 
 
+# --- Phase 6: one SHOW A MOVE per puzzle (?ptest11; see the header) ----------------------
+
+## True once this puzzle's SHOW A MOVE was used (this mode's own state).
+func hint_spent(id: String) -> bool:
+	return state.get("budget", {}).has(id)
+
+
+## This page's SHOW A MOVE button. Spends before it answers, and saves first.
+func budget_hint() -> void:
+	if screen != Screen.PLAYING or play.completed or play.model.is_empty() or not _current.has("id"):
+		return
+	var id: String = _current["id"]
+	var now := Time.get_ticks_msec()
+	var attempt := int(_current.get("carry", {}).get("restarts", 0)) + int(_current.get("reopens", 0)) + play.plays
+	var entry := [now - _t0, "h", -1, {"att": attempt}]
+	_current["hint_presses"] = int(_current.get("hint_presses", 0)) + 1
+	if hint_spent(id):
+		# The same answer in every position: no solver, nothing revealed.
+		play._show_message("No SHOW A MOVE left in this puzzle")
+		entry[3]["r"] = "none"
+	elif play.model.playable_ids().is_empty():
+		# Already on screen for everyone ("No moves left"): not hidden information.
+		play._show_message("No moves left - tap Undo" if play.undos_used < play.max_undos else "No moves left - tap Restart")
+		entry[3]["r"] = "stuck"
+	else:
+		var budget: Dictionary = state.get("budget", {})
+		budget[id] = {"ms": now - _t0, "attempt": attempt}
+		state["budget"] = budget
+		_current["hint_spends"] = int(_current.get("hint_spends", 0)) + 1
+		_current["first_hint_ms"] = now - _t0
+		_current["first_hint_attempt"] = attempt
+		play.max_hints = 0
+		play.hints_used = 0
+		_save_live()  # spent on disk before anything is shown
+		var hid := Solver.from_model(play.model).recommend_move()
+		if hid >= 0:
+			play.board.set_hint(hid)
+			AudioManager.play_hint()
+			entry[2] = hid
+			entry[3]["r"] = "shown"
+		else:
+			play._show_message("Can't be cleared from here - SHOW A MOVE used")
+			entry[3]["r"] = "lost"
+		budget[id]["r"] = entry[3]["r"]
+	_current["log"].append(entry)
+	_last_act = now
+	_save_live()
+	play._refresh_buttons()
+	play._publish.call_deferred()
+
+
+## The puzzle in progress, saved after every logged action (a refresh or a
+## return later carries on with the same record, time and budget).
+func _save_live() -> void:
+	if not _cfg.get("persist_live", false) or not _current.has("id"):
+		_save_state()
+		return
+	if _current.has("completed"):
+		# Finished (the last move can be logged a frame after the solve):
+		# stays finished, a refresh goes to the questions.
+		state["live"] = {"id": _current["id"], "finished": true, "record": _current}
+		_save_state()
+		return
+	_current["time_ms"] = Time.get_ticks_msec() - _t0
+	_current["live_totals"] = {"moves": play.total_moves, "restarts": maxi(0, play.plays - 1), "undos": play.total_undos,
+		"hammer": play.total_hammers, "pushes": play.total_pushes, "advances": play.total_seq_advances, "rams": play.total_rams,
+		"portal_uses": play.total_portal_uses, "blocked_taps": play.total_blocked, "pulls": play.total_pulls}
+	state["live"] = {"id": _current["id"], "elapsed_ms": Time.get_ticks_msec() - _t0, "record": _current}
+	_save_state()
+
+
+## A puzzle that was in progress when the page closed: the record, clock and
+## totals continue; the board starts again (logged "o").
+func _resume_live(id: String) -> void:
+	var live: Dictionary = state.get("live", {})
+	if live.get("id", "") != id or typeof(live.get("record")) != TYPE_DICTIONARY:
+		return
+	var rec: Dictionary = live["record"].duplicate(true)
+	var carry: Dictionary = rec.get("carry", {})
+	for k in rec.get("live_totals", {}):
+		carry[k] = int(carry.get(k, 0)) + int(rec["live_totals"][k])
+	rec["carry"] = carry
+	rec.erase("live_totals")
+	rec["reopens"] = int(rec.get("reopens", 0)) + 1
+	_current = rec
+	_t0 = Time.get_ticks_msec() - int(live.get("elapsed_ms", 0))
+	_last_act = Time.get_ticks_msec()
+	_current["log"].append([int(live.get("elapsed_ms", 0)), "o", -1])
+	_save_live()
+
+
 ## Every block's place and state (to infer the tapped block of a move).
 func _snap() -> Dictionary:
 	var out := {}
@@ -625,6 +768,11 @@ func _log_action(sig: Array, now: int) -> void:
 					tot[k] = int(tot.get(k, 0)) + int(ev[k])
 				_current["mech"] = tot
 		_current["log"].append(entry)
+		if _cfg.has("hint_budget") and not hint_spent(str(_current.get("id", ""))):
+			# Furthest progress before SHOW A MOVE was used (blocks cleared).
+			_current["unaided_max_cleared"] = maxi(int(_current.get("unaided_max_cleared", 0)), play._total_blocks - play.model.block_count())
+		if _cfg.get("persist_live", false) and _current.has("id"):
+			_save_live()
 	_prev_snap = snap
 
 var _act_sig_prev: Array = []
@@ -905,6 +1053,8 @@ func summary() -> Dictionary:
 
 
 func _tools_text() -> String:
+	if _cfg.has("hint_budget"):
+		return "Play it as you normally would. You have UNDO x%d per attempt (RESTART gives it back) and ONE SHOW A MOVE for the whole puzzle: it does not come back after RESTART, UNDO or if you leave and return." % int(_assist["undo"])
 	var parts := ["UNDO x%d" % int(_assist["undo"]), "SHOW A MOVE x%d" % int(_assist["show_a_move"])]
 	if int(_assist["hammer"]) > 0:
 		parts.append("HAMMER x%d" % int(_assist["hammer"]))
