@@ -457,6 +457,12 @@ func _open_shared_challenge() -> void:
 	if FriendBench.requested():
 		add_child(FriendBench.new())
 		return
+	# Developer pages (?tta=1 / ?ttb=1 / ?ttc=1): three independent blind boards on the
+	# same staged 2-minute clock (local only).
+	var tkey := ExpertTimeAttack.requested_key()
+	if tkey != "":
+		add_child(ExpertTimeAttack.new(tkey))
+		return
 	# Developer page (?stime=1): a new blind board against a staged 2-minute clock (local only).
 	if CountdownTimeAttack.requested():
 		add_child(CountdownTimeAttack.new())

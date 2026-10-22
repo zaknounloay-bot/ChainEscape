@@ -1,0 +1,293 @@
+{
+ "format": "ce-extreme-proto",
+ "v": 1,
+ "test": "ptest16",
+ "assist": {
+  "undo": 3,
+  "show_a_move": 1,
+  "hammer": 0
+ },
+ "note": "Development only. Blind 120-second test board B; never shared, never production. EXPERIMENTAL - HUMAN DIFFICULTY UNVALIDATED.",
+ "boards": [
+  {
+   "id": "TB",
+   "accepted": true,
+   "label": "EXPERIMENTAL - HUMAN DIFFICULTY UNVALIDATED",
+   "recipe": "B_keyturn",
+   "variant": "TB",
+   "first_level": 151,
+   "source": "hand-designed core (the last key turns the locked spinner as it frees it), refined by a seeded climb and one-edit screens (development tools)",
+   "canonical": "6x6|. . . . . ./. . . . . ./R> . R^ B^@#G G> Gv/Rv . Y^ Gv@ G>@ ./R<@- . . . . ./Pv@ R^@ . B< . .",
+   "fingerprint": "445ac14a25a7a981c27a4ca099494337a650d2ec6e1f005fabc60cb879f3ed3a",
+   "mechanics": [
+    "spinner_cw",
+    "lock",
+    "spinner_ccw"
+   ],
+   "puzzle": {
+    "format": "ce-puzzle",
+    "v": 1,
+    "rules": 1,
+    "rows": 6,
+    "cols": 6,
+    "map": [
+     ". . G> . . .",
+     ". . G^ G^@ . .",
+     ". . P<@#G G>@ . Pv",
+     ". . B< Y< . .",
+     ". . . . . B<@",
+     ". . B^ B> Bv@- R>@"
+    ]
+   },
+   "verify": {
+    "aborted": false,
+    "ms_desktop": 10.23,
+    "nodes": 262,
+    "solved": true
+   },
+   "metrics": {
+    "advances": 0,
+    "armored": 0,
+    "blocks": 13,
+    "branching": 3.62,
+    "calm_moves": 9,
+    "calm_moves_share": 0.69,
+    "calm_share": 0.69,
+    "calm_steps": 9,
+    "crates": 0,
+    "decision_points": 10,
+    "depth": 5,
+    "difficulty": 39.6,
+    "flip_targets": 0,
+    "gate_links": 0,
+    "gates": 0,
+    "heuristic_win": 0,
+    "hint": {
+     "aborted": false,
+     "consistent": true,
+     "dead_max_ms_desktop": 15.59,
+     "dead_max_nodes": 26,
+     "dead_states": 29,
+     "dead_worst_path": [
+      0,
+      12
+     ],
+     "max_ms_desktop": 21.86,
+     "max_nodes": 106,
+     "states": 13,
+     "worst_path": [
+      0
+     ]
+    },
+    "impact": {
+     "armor": 0,
+     "crate": 0,
+     "gate": 0,
+     "lock": 5.4,
+     "portal": 0,
+     "rules": 99,
+     "sequence": 0,
+     "spinner": 32.7,
+     "switch": 0
+    },
+    "locks": 1,
+    "one_safe_steps": 6,
+    "portal_moves": 0,
+    "portal_pairs": 0,
+    "push_essential": false,
+    "push_traps": 0,
+    "pushes": 0,
+    "rams": 0,
+    "random_win": 0,
+    "rules": {
+     "alt": 0,
+     "ccw": 1,
+     "cw": 5,
+     "pattern": 0
+    },
+    "safe_choices": 1.38,
+    "sequence_blocks": 0,
+    "size": "6x6",
+    "solution_length": 13,
+    "spinners": 6,
+    "start_calm": 1,
+    "start_moves": 6,
+    "start_safe": 2,
+    "switch_decisions": 0,
+    "switches": 0,
+    "trap_delay_avg": 5,
+    "trap_delay_max": 7,
+    "trap_moves": 29
+   },
+   "x": {
+    "best_rule_dead_ends": 7,
+    "blind": {
+     "dead_ends_mean": 13.6,
+     "dead_ends_med": 15,
+     "taps_mean": 552.1,
+     "taps_med": 622,
+     "unfinished": 0
+    },
+    "choices": {
+     "forced_risky": 0,
+     "losing_options": 13,
+     "mech": {
+      "spinner_escape": {
+       "forced": 0,
+       "moves": 6,
+       "with_losing_alt": 6
+      },
+      "spinner_turn": {
+       "forced": 0,
+       "moves": 1,
+       "with_losing_alt": 1
+      }
+     },
+     "real_choices": 4,
+     "risky_steps": 4,
+     "steps": 13
+    },
+    "expert": {
+     "learner": {
+      "look4": 7,
+      "look6": 7
+     },
+     "learner_min": 7,
+     "look6_greedy": 0.05,
+     "measure": {
+      "capped": false,
+      "decisions": {
+       "2": 9,
+       "4": 7,
+       "6": 5,
+       "8": 3
+      },
+      "deepest": 11,
+      "hidden": {
+       "2": 28,
+       "4": 24,
+       "6": 17,
+       "8": 9
+      },
+      "losing_moves_on_path": 29,
+      "median_trap_delay": 7,
+      "opening": "2 / 6",
+      "positions": 412,
+      "solution": 13,
+      "win_share": 0.109,
+      "winnable": 45
+     },
+     "ok": false,
+     "why": "an expert learner (lookahead 4 / 6) solves it with 7 dead ends (< 12)"
+    },
+    "greedy_best": 0.008,
+    "heuristic_exceptions": [
+     "an expert learner (lookahead 4 / 6) solves it with 7 dead ends (< 12)"
+    ],
+    "idea_events": {
+     "key_turn": true,
+     "lock_turn": true,
+     "moved_then_turned": false,
+     "reversed_ram": false
+    },
+    "idea_facts": {
+     "key_turn": true,
+     "lock_turn": true,
+     "moved_then_turned": false,
+     "reversed_ram": false
+    },
+    "late_misleading_moves": 5,
+    "lost_hint_lab_ms": 14.6,
+    "magnets": 0,
+    "misleading": [
+     [
+      0,
+      2,
+      9
+     ],
+     [
+      0,
+      6,
+      9
+     ],
+     [
+      0,
+      11,
+      8
+     ],
+     [
+      0,
+      12,
+      8
+     ],
+     [
+      1,
+      1,
+      8
+     ],
+     [
+      1,
+      2,
+      8
+     ]
+    ],
+    "ordered": {
+     "min_turn": {
+      "dead_ends_mean": 11.9,
+      "dead_ends_med": 12,
+      "taps_mean": 406.9,
+      "taps_med": 413,
+      "unfinished": 0
+     },
+     "mobility": {
+      "dead_ends_mean": 16,
+      "dead_ends_med": 16,
+      "taps_mean": 606.2,
+      "taps_med": 635,
+      "unfinished": 0
+     },
+     "opportunist": {
+      "dead_ends_mean": 7.3,
+      "dead_ends_med": 7,
+      "taps_mean": 280.6,
+      "taps_med": 305,
+      "unfinished": 0
+     },
+     "patient": {
+      "dead_ends_mean": 16,
+      "dead_ends_med": 16,
+      "taps_mean": 662.7,
+      "taps_med": 659,
+      "unfinished": 0
+     }
+    },
+    "parity": {
+     "mismatch_hint": 0,
+     "mismatch_solve": 0,
+     "positions": 412
+    },
+    "pieces": 13,
+    "policies": {
+     "look2": 0.005,
+     "look4": 0.008,
+     "min_turn": 0,
+     "mobility": 0,
+     "safe": 0
+    },
+    "positions": 412,
+    "spinners": 6,
+    "time_runs_ms": [
+     24.4,
+     22.7,
+     23.1,
+     32.4,
+     32.6
+    ],
+    "timing": {
+     "per": {},
+     "timing_magnets": []
+    }
+   }
+  }
+ ]
+}
