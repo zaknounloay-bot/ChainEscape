@@ -1,0 +1,288 @@
+{
+ "format": "ce-extreme-proto",
+ "v": 1,
+ "test": "ptest15",
+ "assist": {
+  "undo": 3,
+  "show_a_move": 1,
+  "hammer": 0
+ },
+ "note": "Development only. Blind 120-second test board; never shared, never production. EXPERIMENTAL - HUMAN DIFFICULTY UNVALIDATED.",
+ "boards": [
+  {
+   "id": "S1",
+   "accepted": true,
+   "label": "EXPERIMENTAL - HUMAN DIFFICULTY UNVALIDATED",
+   "recipe": "D_lock",
+   "variant": "S",
+   "first_level": 151,
+   "source": "hand-designed core (a colour-locked spinner, a second lock keyed to it), refined by a seeded climb; one-piece removal checked (development tools)",
+   "canonical": "6x6|. . . . . ./. . . Rv@ . ./. B<@ G>@- Y>@#B P>@- ./. G^@ Y>@ Gv P>@- ./. P^#Y . . G^@- ./B^@- . . Bv@- . .",
+   "fingerprint": "dd6568045f83ad765cf0251b6a3ecdfb449a970da48f807c38c9cf7780825112",
+   "mechanics": [
+    "spinner_cw",
+    "lock",
+    "spinner_ccw"
+   ],
+   "puzzle": {
+    "format": "ce-puzzle",
+    "v": 1,
+    "rules": 1,
+    "rows": 6,
+    "cols": 6,
+    "map": [
+     ". . . . . .",
+     ". . Y^@- Y^@- B<@- .",
+     ". R>@ P^@#G B> . G>@-",
+     ". . B^@- P^@ . .",
+     ". . Gv@ B<@ Y<#P .",
+     ". . . . . G<@-"
+    ]
+   },
+   "verify": {
+    "aborted": false,
+    "ms_desktop": 2.53,
+    "nodes": 101,
+    "solved": true
+   },
+   "metrics": {
+    "advances": 0,
+    "armored": 0,
+    "blocks": 13,
+    "branching": 3.08,
+    "calm_moves": 7,
+    "calm_moves_share": 0.54,
+    "calm_share": 0.54,
+    "calm_steps": 7,
+    "crates": 0,
+    "decision_points": 8,
+    "depth": 7,
+    "difficulty": 36.2,
+    "flip_targets": 0,
+    "gate_links": 0,
+    "gates": 0,
+    "heuristic_win": 0,
+    "hint": {
+     "aborted": false,
+     "consistent": true,
+     "dead_max_ms_desktop": 9.89,
+     "dead_max_nodes": 100,
+     "dead_states": 18,
+     "dead_worst_path": [
+      6,
+      9
+     ],
+     "max_ms_desktop": 4.16,
+     "max_nodes": 49,
+     "states": 13,
+     "worst_path": [
+      6,
+      12
+     ]
+    },
+    "impact": {
+     "armor": 0,
+     "crate": 0,
+     "gate": 0,
+     "lock": 2,
+     "portal": 0,
+     "rules": -0.1,
+     "sequence": 0,
+     "spinner": 29.1,
+     "switch": 0
+    },
+    "locks": 2,
+    "one_safe_steps": 5,
+    "portal_moves": 0,
+    "portal_pairs": 0,
+    "push_essential": false,
+    "push_traps": 0,
+    "pushes": 0,
+    "rams": 0,
+    "random_win": 0,
+    "rules": {
+     "alt": 0,
+     "ccw": 6,
+     "cw": 5,
+     "pattern": 0
+    },
+    "safe_choices": 1.69,
+    "sequence_blocks": 0,
+    "size": "6x6",
+    "solution_length": 13,
+    "spinners": 11,
+    "start_calm": 2,
+    "start_moves": 5,
+    "start_safe": 3,
+    "switch_decisions": 0,
+    "switches": 0,
+    "trap_delay_avg": 3.9,
+    "trap_delay_max": 7.4,
+    "trap_moves": 18
+   },
+   "x": {
+    "best_rule_dead_ends": 23,
+    "blind": {
+     "dead_ends_mean": 25.2,
+     "dead_ends_med": 29,
+     "taps_mean": 275.3,
+     "taps_med": 309,
+     "unfinished": 0
+    },
+    "choices": {
+     "forced_risky": 0,
+     "losing_options": 13,
+     "mech": {
+      "spinner_escape": {
+       "forced": 0,
+       "moves": 11,
+       "with_losing_alt": 7
+      },
+      "spinner_turn": {
+       "forced": 0,
+       "moves": 1,
+       "with_losing_alt": 1
+      }
+     },
+     "real_choices": 6,
+     "risky_steps": 6,
+     "steps": 13
+    },
+    "expert": {
+     "learner": {
+      "look4": 23,
+      "look6": 25
+     },
+     "learner_min": 23,
+     "look6_greedy": 0.042,
+     "measure": {
+      "capped": false,
+      "decisions": {
+       "2": 7,
+       "4": 6,
+       "6": 4,
+       "8": 2
+      },
+      "deepest": 10,
+      "hidden": {
+       "2": 16,
+       "4": 14,
+       "6": 10,
+       "8": 4
+      },
+      "losing_moves_on_path": 18,
+      "median_trap_delay": 7,
+      "opening": "3 / 5",
+      "positions": 306,
+      "solution": 13,
+      "win_share": 0.15,
+      "winnable": 46
+     },
+     "ok": true,
+     "why": ""
+    },
+    "greedy_best": 0.008,
+    "idea_events": {
+     "key_turn": false,
+     "lock_turn": true,
+     "lock_turn2": false
+    },
+    "idea_facts": {
+     "key_turn": false,
+     "lock_turn": true,
+     "lock_turn2": false
+    },
+    "late_misleading_moves": 4,
+    "lost_hint_lab_ms": 11,
+    "magnets": 0,
+    "misleading": [
+     [
+      0,
+      0,
+      9
+     ],
+     [
+      0,
+      9,
+      9
+     ],
+     [
+      1,
+      0,
+      8
+     ],
+     [
+      1,
+      9,
+      8
+     ],
+     [
+      1,
+      5,
+      7
+     ],
+     [
+      2,
+      0,
+      7
+     ]
+    ],
+    "ordered": {
+     "min_turn": {
+      "dead_ends_mean": 20.7,
+      "dead_ends_med": 25,
+      "taps_mean": 239.3,
+      "taps_med": 287,
+      "unfinished": 0
+     },
+     "mobility": {
+      "dead_ends_mean": 23.6,
+      "dead_ends_med": 23,
+      "taps_mean": 271.7,
+      "taps_med": 273,
+      "unfinished": 0
+     },
+     "opportunist": {
+      "dead_ends_mean": 21.6,
+      "dead_ends_med": 25,
+      "taps_mean": 251.1,
+      "taps_med": 285,
+      "unfinished": 0
+     },
+     "patient": {
+      "dead_ends_mean": 22.7,
+      "dead_ends_med": 26,
+      "taps_mean": 260.2,
+      "taps_med": 303,
+      "unfinished": 0
+     }
+    },
+    "parity": {
+     "mismatch_hint": 0,
+     "mismatch_solve": 0,
+     "positions": 306
+    },
+    "pieces": 13,
+    "policies": {
+     "look2": 0.005,
+     "look4": 0.008,
+     "min_turn": 0,
+     "mobility": 0,
+     "safe": 0
+    },
+    "positions": 306,
+    "time_runs_ms": [
+     11,
+     10.9,
+     13.5,
+     11.1,
+     11.6
+    ],
+    "timing": {
+     "per": {},
+     "timing_magnets": []
+    }
+   }
+  }
+ ]
+}

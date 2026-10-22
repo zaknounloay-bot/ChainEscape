@@ -177,8 +177,13 @@ func elapsed_ms() -> int:
 	return maxi(mono, wall) + debug_offset_ms
 
 
+## The countdown's length (a subclass may run a shorter clock).
+func limit() -> int:
+	return LIMIT_MS
+
+
 func remaining_ms() -> int:
-	return maxi(0, LIMIT_MS - elapsed_ms())
+	return maxi(0, limit() - elapsed_ms())
 
 
 func run_active() -> bool:
@@ -231,7 +236,7 @@ func _process(delta: float) -> void:
 		_current["log"].append([now - _t0, "v", -1, {"stall_ms": gap}])
 	var cleared := play._total_blocks - play.model.block_count()
 	_current["max_cleared"] = maxi(int(_current.get("max_cleared", 0)), cleared)
-	if elapsed_ms() >= LIMIT_MS:
+	if elapsed_ms() >= limit():
 		_time_up()
 		return
 	if now - _last_save >= SAVE_EVERY_MS:
@@ -267,7 +272,7 @@ func _time_up() -> void:
 	var now := Time.get_ticks_msec()
 	_current["log"].append([now - _t0, "t", -1])
 	_current["outcome"] = "TIME UP"
-	_current["elapsed_ms"] = LIMIT_MS
+	_current["elapsed_ms"] = limit()
 	_finish_attempt(false)
 	_show(Screen.RATE)
 
@@ -344,7 +349,7 @@ func begin_puzzle() -> void:
 		_last_save = _page_t0
 		_run_live = true
 		_current["run"] = int(run["n"])
-		if elapsed_ms() >= LIMIT_MS:
+		if elapsed_ms() >= limit():
 			_time_up()
 			return
 		_save_live()
@@ -360,7 +365,7 @@ func _on_solved() -> void:
 	if screen != Screen.PLAYING or not run_active():
 		return
 	var el := elapsed_ms()
-	if el >= LIMIT_MS:
+	if el >= limit():
 		_time_up()  # the last move came at or after 0:00
 		return
 	_current["outcome"] = "COMPLETED"
@@ -374,11 +379,11 @@ func _finish_attempt(solved: bool) -> void:
 	super._finish_attempt(solved)
 	if not _current.has("outcome"):
 		_current["outcome"] = "GAVE UP" if _current.get("gave_up", false) else ("COMPLETED" if solved else "NOT COMPLETED")
-	var el := clampi(int(_current.get("elapsed_ms", elapsed_ms())), 0, LIMIT_MS)
+	var el := clampi(int(_current.get("elapsed_ms", elapsed_ms())), 0, limit())
 	var run: Dictionary = state.get("run", {})
 	_current["elapsed_ms"] = el
-	_current["remaining_ms"] = LIMIT_MS - el
-	_current["limit_ms"] = LIMIT_MS
+	_current["remaining_ms"] = limit() - el
+	_current["limit_ms"] = limit()
 	_current["completed"] = _current["outcome"] == "COMPLETED"
 	_current["max_cleared"] = maxi(int(_current.get("max_cleared", 0)), play._total_blocks - play.model.block_count())
 	_current["cleared_at_end"] = play._total_blocks - play.model.block_count()
@@ -499,7 +504,7 @@ static func _mmss(ms: int, up: bool) -> String:
 
 
 func results_json() -> String:
-	return JSON.stringify({"format": "ce-q1-time-attack", "v": 1, "test": KEY, "board": "Q1", "fingerprint": Q1_FINGERPRINT, "limit_ms": LIMIT_MS,
+	return JSON.stringify({"format": "ce-q1-time-attack", "v": 1, "test": KEY, "board": "Q1", "fingerprint": Q1_FINGERPRINT, "limit_ms": limit(),
 		"device": OS.get_name(), "assist": _assist, "runs": state.get("results", []), "run_in_progress": state.get("run", {}) if run_active() else {}})
 
 

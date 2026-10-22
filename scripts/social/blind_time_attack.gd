@@ -66,18 +66,41 @@ static func requested() -> bool:
 	return where.contains(RKEY + "=1") or where.contains(RKEY + "=true")
 
 
+## The board, its fingerprint and the question sets (a later test page with
+## another board / clock overrides these).
+func bid() -> String:
+	return R1_ID
+
+
+func bfp() -> String:
+	return R1_FINGERPRINT
+
+
+func timed_q() -> Array:
+	return TIMED_Q
+
+
+func puzzle_q() -> Array:
+	return PUZZLE_Q
+
+
+func intro_text() -> String:
+	return ("One puzzle you have not seen before. Three minutes.\n\nThe clock starts when the board appears and never stops: thinking, UNDO, RESTART and SHOW A MOVE all use time. RESTART starts the board again, not the clock. Leaving or reloading the page does not stop it either.\n\n"
+		+ _tools_text() + "\n\nIf the time runs out, you can choose to keep playing without the clock.\n\nAfterwards: a few quick questions.")
+
+
 func _init() -> void:
 	super()
 	test = RKEY
 	_cfg = R_CFG
-	_questions = TIMED_Q.duplicate(true)
+	_questions = timed_q().duplicate(true)
 
 
 func _ready() -> void:
 	super._ready()
-	var rec: Dictionary = boards.get(R1_ID, {})
-	board_ok = boards.size() == 1 and not rec.is_empty() and R1_FINGERPRINT != "" \
-		and PuzzleDefinition.from_dict(rec["puzzle"]).fingerprint() == R1_FINGERPRINT
+	var rec: Dictionary = boards.get(bid(), {})
+	board_ok = boards.size() == 1 and not rec.is_empty() and bfp() != "" \
+		and PuzzleDefinition.from_dict(rec["puzzle"]).fingerprint() == bfp()
 	_continue_btn = _card.find_child("TA_Continue", true, false)
 	var col: Control = _continue_btn.get_parent()
 	_untimed_btn = _button("CONTINUE WITHOUT TIMER", "TA_Untimed", ACCENT, Palette.WHITE)
@@ -145,7 +168,7 @@ func _finish_attempt(solved: bool) -> void:
 		return
 	super._finish_attempt(solved)
 	_current["armored_taps"] = _current.get("log", []).filter(func(e): return e[1] == "a").size()
-	_current["board_fingerprint"] = R1_FINGERPRINT
+	_current["board_fingerprint"] = bfp()
 	_current["phase"] = "timed"
 	if not state.has("timed"):
 		# Frozen: the timed result of this session, never rewritten.
@@ -160,19 +183,18 @@ func _show(s: int) -> void:
 		match phase():
 			"untimed", "puzzle_q":
 				_q = int(state.get("q", 0))
-				_questions = PUZZLE_Q.duplicate(true)
+				_questions = puzzle_q().duplicate(true)
 				super._show(Screen.THINK)
 				_show_untimed_card()
 			_:
-				_questions = TIMED_Q.duplicate(true)
+				_questions = timed_q().duplicate(true)
 				_q = int(state.get("q", 0))
 				super._show(Screen.THINK)
 				_show_card()
 		return
 	super._show(s)
 	if s == Screen.INTRO and board_ok:
-		_intro_text.text = ("One puzzle you have not seen before. Three minutes.\n\nThe clock starts when the board appears and never stops: thinking, UNDO, RESTART and SHOW A MOVE all use time. RESTART starts the board again, not the clock. Leaving or reloading the page does not stop it either.\n\n"
-			+ _tools_text() + "\n\nIf the time runs out, you can choose to keep playing without the clock.\n\nAfterwards: a few quick questions.")
+		_intro_text.text = intro_text()
 	if s == Screen.INTRO and phase() != "timed" and int(state.get("index", 0)) < total():
 		_start.text = "CONTINUE"
 	if s == Screen.INTRO and not board_ok:
@@ -200,7 +222,7 @@ func _draw_count() -> void:
 # --- Questions -----------------------------------------------------------------------------
 
 func _build_options(opts: Array) -> void:
-	if opts != PUZZLE_Q[0][3]:
+	if opts != puzzle_q()[0][3]:
 		super._build_options(opts)
 		return
 	for c in _think_opts.get_children():
@@ -246,7 +268,7 @@ func _to_puzzle_questions(continued: bool) -> void:
 	if not continued and not state.has("cont"):
 		state["cont"] = {"continued": false}
 	_card.visible = false
-	_questions = PUZZLE_Q.duplicate(true)
+	_questions = puzzle_q().duplicate(true)
 	_q = 0
 	state["q"] = 0
 	_set_phase("puzzle_q")
@@ -256,9 +278,9 @@ func _to_puzzle_questions(continued: bool) -> void:
 func _store_results() -> void:
 	play.end()
 	var results: Array = state.get("results", [])
-	results.append({"id": R1_ID, "run": int(state["timed"].get("run", results.size() + 1)), "timed": state["timed"],
+	results.append({"id": bid(), "run": int(state["timed"].get("run", results.size() + 1)), "timed": state["timed"],
 		"untimed": state.get("cont", {"continued": false}), "puzzle_answers": state.get("puzzle_answers", {}),
-		"board_fingerprint": R1_FINGERPRINT})
+		"board_fingerprint": bfp()})
 	state["results"] = results
 	state["index"] = int(state["index"]) + 1
 	for k in ["live", "run", "budget", "timed", "cont", "phase", "q", "puzzle_answers"]:
@@ -290,7 +312,7 @@ static func attempt_moves(log: Array) -> Array:
 
 ## Replays `moves` on a fresh model: the model, or null if a move is not legal.
 func _replayed(moves: Array) -> BoardModel:
-	var rec: Dictionary = boards[R1_ID]
+	var rec: Dictionary = boards[bid()]
 	var level := PuzzleDefinition.from_dict(rec["puzzle"]).to_level()
 	var m := BoardModel.new()
 	m.setup(level.rows, level.columns, level.blocks)
@@ -343,7 +365,7 @@ func begin_untimed() -> void:
 		state.erase("live")
 		_set_phase("untimed")
 	var cont: Dictionary = state["cont"]
-	var rec: Dictionary = boards[R1_ID]
+	var rec: Dictionary = boards[bid()]
 	var def := PuzzleDefinition.from_dict(rec["puzzle"])
 	var c := SharedChallenge.friend_challenge(def, FriendGenerator.VERY_HARD)
 	var live: Dictionary = state.get("live", {})
@@ -353,13 +375,13 @@ func begin_untimed() -> void:
 		moves = attempt_moves(_current["log"])
 		cont["reopens"] = int(cont.get("reopens", 0)) + 1
 	else:
-		_current = {"id": R1_ID, "variant": rec["variant"], "phase": "untimed", "fingerprint": def.fingerprint(), "order": 1,
+		_current = {"id": bid(), "variant": rec["variant"], "phase": "untimed", "fingerprint": def.fingerprint(), "order": 1,
 			"first_move_ms": -1, "longest_pause_ms": 0, "long_pauses": [], "gave_up": false, "log": [], "hint_presses": 0, "unaided_max_cleared": 0}
 	_card.visible = false
 	_show(Screen.PLAYING)
 	play.back_label = ""
 	_act_sig = []
-	play.max_hints = 0 if hint_spent(R1_ID) else int(_cfg["hint_budget"])
+	play.max_hints = 0 if hint_spent(bid()) else int(_cfg["hint_budget"])
 	play.start(c, SocialPlay.Mode.CREATOR_PREVIEW, Chapters.theme_for_chapter(1))
 	play._title.text = "NO TIMER"
 	play._chip.text = ""
@@ -380,7 +402,7 @@ func begin_untimed() -> void:
 
 func _save_untimed() -> void:
 	_current["time_ms"] = Time.get_ticks_msec() - _t0
-	state["live"] = {"id": R1_ID, "phase": "untimed", "elapsed_ms": Time.get_ticks_msec() - _t0, "record": _current}
+	state["live"] = {"id": bid(), "phase": "untimed", "elapsed_ms": Time.get_ticks_msec() - _t0, "record": _current}
 	_save_state()
 
 
@@ -468,14 +490,14 @@ func begin_puzzle() -> void:
 			_current = state["timed"].duplicate(true)
 			_show(Screen.RATE)
 		"offer":
-			_questions = TIMED_Q.duplicate(true)
+			_questions = timed_q().duplicate(true)
 			_q = _questions.size() - 1
 			_show(Screen.THINK)
 			_show_offer()
 		"untimed":
 			begin_untimed()
 		"puzzle_q":
-			_questions = PUZZLE_Q.duplicate(true)
+			_questions = puzzle_q().duplicate(true)
 			_q = int(state.get("q", 0))
 			_show(Screen.THINK)
 		_:
@@ -484,7 +506,7 @@ func begin_puzzle() -> void:
 
 
 func results_json() -> String:
-	return JSON.stringify({"format": "ce-time-attack-blind", "v": 1, "test": RKEY, "board": R1_ID, "fingerprint": R1_FINGERPRINT, "limit_ms": LIMIT_MS,
+	return JSON.stringify({"format": "ce-time-attack-blind", "v": 1, "test": test, "board": bid(), "fingerprint": bfp(), "limit_ms": limit(),
 		"device": OS.get_name(), "assist": _assist, "runs": state.get("results", []),
 		"in_progress": {"phase": phase(), "timed": state.get("timed", {}), "untimed": state.get("cont", {})} if state.has("timed") or run_active() else {}})
 
