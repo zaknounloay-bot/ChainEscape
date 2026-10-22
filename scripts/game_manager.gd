@@ -457,6 +457,10 @@ func _open_shared_challenge() -> void:
 	if FriendBench.requested():
 		add_child(FriendBench.new())
 		return
+	# Developer page (?q1time=1): the 3-minute challenge on the Q1 test board (local only).
+	if Q1TimeAttack.requested():
+		add_child(Q1TimeAttack.new())
+		return
 	# Developer pages (?vhtest=1 / ?vhtest2=1): blind VERY HARD human tests (local only).
 	if VhHumanTest.requested():
 		add_child(VhHumanTest.new(VhHumanTest.requested_test()))
