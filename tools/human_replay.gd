@@ -15,11 +15,19 @@ extends SceneTree
 ## nothing (a lost position - "try Undo" - or none left), so those are
 ## invisible here. A move whose block could not be told (-1) stops the
 ## replay of that attempt (reported, never guessed).
+## ?ptest11 (one SHOW A MOVE per puzzle): EVERY press is logged, with its
+## outcome ([ms, "h", block, {"r": shown / lost / stuck / none, "att"}]),
+## and "o" = the page was reopened (the board started again, like RESTART).
+## Here the replay also says whether each press came from a position that
+## could still be cleared, and per puzzle: time and attempt of the first
+## SHOW A MOVE, the furthest winnable progress before it (unaided), the
+## losing decisions repeated across attempts and the progress per attempt.
 
 const EVENTS6 := preload("res://tools/extreme6_events.gd")
 ## Each blind test's board file (as in scripts/social/vh_human_test.gd TESTS).
 const DATA := {"xtest5": "res://data/dev/extreme5.json", "xtest6": "res://data/dev/extreme6.json", "xtest7": "res://data/dev/extreme7.json",
-	"vhval3": "res://data/dev/vh_validation3.json", "xtest8": "res://data/dev/extreme8.json", "vhtest4": "res://data/dev/vh_pilot4.json"}
+	"vhval3": "res://data/dev/vh_validation3.json", "xtest8": "res://data/dev/extreme8.json", "vhtest4": "res://data/dev/vh_pilot4.json",
+	"ptest11": "res://data/dev/extreme11.json"}
 
 var args := {}
 
@@ -105,6 +113,10 @@ func replay(board: Dictionary, r: Dictionary) -> Dictionary:
 	var cur := {"moves": [], "lost_at": -1, "lost_move": "", "after_loss": 0, "hints": [], "undos": 0, "blocked": 0, "end": "", "max_cleared": 0}
 	var lost := false
 	var stopped := ""
+	var hint_used := false
+	var first_hint := {}
+	var unaided_best := 0  # most winnable moves before SHOW A MOVE was first used
+	var presses := []
 	print("\n=== %s (%s) rating %s, %s, %.1f s, restarts %s, SHOW A MOVE %s, undos %s" % [r["id"], r.get("variant", ""), r.get("rating", ""),
 		"solved" if r.get("completed", false) else "NOT solved", float(r.get("time_ms", 0)) / 1000.0, r.get("restarts", 0), r.get("show_a_move", 0), r.get("undos", 0)])
 	for e in r.get("log", []):
@@ -149,12 +161,25 @@ func replay(board: Dictionary, r: Dictionary) -> Dictionary:
 				var s := Solver.from_model(m)
 				var hid := s.recommend_move()
 				var what := ("highlighted " + _cell(m, hid)) if hid >= 0 else "no winning move (try Undo)"
+				if e.size() > 3 and typeof(e[3]) == TYPE_DICTIONARY:
+					# One SHOW A MOVE per puzzle: the page's own outcome, and
+					# whether the position could still be cleared.
+					var outcome: String = e[3].get("r", "")
+					var w := _winnable(m)
+					var where := "winnable" if w == 1 else ("LOST" if w == 0 else "?")
+					var said: String = {"shown": "highlighted " + _cell(m, hid), "lost": "spent: can't be cleared",
+						"stuck": "no legal move (nothing spent)", "none": "refused: none left"}.get(outcome, outcome)
+					what = "%s (%s position)" % [said, where]
+					presses.append({"ms": int(e[0]), "outcome": outcome, "position": where, "attempt": attempts.size() + 1})
+					if outcome in ["shown", "lost"] and not hint_used:
+						hint_used = true
+						first_hint = {"ms": int(e[0]), "attempt": attempts.size() + 1, "after_moves": cur["moves"].size()}
 				cur["hints"].append("%s after %d moves: %s" % [t, cur["moves"].size(), what])
 				cur["moves"].append("%s SHOW A MOVE -> %s" % [t, what])
 			"b":
 				cur["blocked"] += 1
-			"r", "g":
-				cur["end"] = "restart" if kind == "r" else "gave up"
+			"r", "g", "o":
+				cur["end"] = {"r": "restart", "g": "gave up", "o": "page reopened"}[kind]
 				attempts.append(cur)
 				cur = {"moves": [], "lost_at": -1, "lost_move": "", "after_loss": 0, "hints": [], "undos": 0, "blocked": 0, "end": "", "max_cleared": 0}
 				m.restore(start)
@@ -178,7 +203,18 @@ func replay(board: Dictionary, r: Dictionary) -> Dictionary:
 		if a["lost_move"] != "":
 			firsts[a["lost_move"]] = firsts.get(a["lost_move"], []) + [i + 1]
 		a["winnable_prefix"] = won_before_loss
+		if first_hint.is_empty() or i + 1 < int(first_hint["attempt"]):
+			unaided_best = maxi(unaided_best, won_before_loss)
+		elif i + 1 == int(first_hint["attempt"]):
+			unaided_best = maxi(unaided_best, mini(won_before_loss, int(first_hint["after_moves"])))
 	print("  losing moves repeated across attempts: %s" % str(firsts))
+	var progress := attempts.map(func(a): return a["winnable_prefix"])
+	print("  winnable moves before the first losing one, per attempt (learning): %s" % str(progress))
+	if not presses.is_empty():
+		print("  SHOW A MOVE presses: %s" % str(presses))
+		print("  first SHOW A MOVE: %s; furthest unaided progress: %d winnable moves" % [
+			("%.1f s, attempt %d, after %d moves" % [float(first_hint["ms"]) / 1000.0, first_hint["attempt"], first_hint["after_moves"]]) if not first_hint.is_empty() else "never used", unaided_best])
 	if stopped != "":
 		print("  NOTE: " + stopped)
-	return {"id": r["id"], "attempts": attempts, "repeated_losing_moves": firsts, "stopped": stopped}
+	return {"id": r["id"], "attempts": attempts, "repeated_losing_moves": firsts, "stopped": stopped, "progress": progress,
+		"show_a_move_presses": presses, "first_show_a_move": first_hint, "unaided_best": unaided_best}
