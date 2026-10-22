@@ -457,6 +457,11 @@ func _open_shared_challenge() -> void:
 	if FriendBench.requested():
 		add_child(FriendBench.new())
 		return
+	# Developer page (?tapilot=1): the external Time Attack pilot - the four 120 s boards
+	# behind one entry point (local only).
+	if TaPilot.requested():
+		add_child(TaPilot.new())
+		return
 	# Developer pages (?tta=1 / ?ttb=1 / ?ttc=1): three independent blind boards on the
 	# same staged 2-minute clock (local only).
 	var tkey := ExpertTimeAttack.requested_key()

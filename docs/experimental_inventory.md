@@ -144,6 +144,8 @@ Solver / exhaustive parity on Q1, T5, E1, E2, H1 and H2 was checked exhaustively
 - **Untouched:** the campaign hint system, the Social MVP, Challenge a Friend, SocialPlay and the solver.
 - **Screenshots.** iPhone SE screenshots of the intro and the tool bar (timed and untimed, all four pages) are in `docs/ta120_v2_shots/`.
 
+**External pilot (phase 12C).** `?tapilot=1` puts the four 120 s boards behind one entry point for invited testers: welcome, a familiarity question, puzzle choice, the same pages and rules, skippable questions, and one export bundle. Its storage is separate. See `docs/tapilot.md`.
+
 Shared rules on every timed page:
 - The clock never stops or refills on RESTART, UNDO, the background or a reload. It also never stops on SHOW A MOVE where that tool still exists (Q1, R1).
 - TIME UP is frozen. An untimed solve is never recorded as a timed victory.
