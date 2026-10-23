@@ -457,6 +457,10 @@ func _open_shared_challenge() -> void:
 	if FriendBench.requested():
 		add_child(FriendBench.new())
 		return
+	# Developer page (?ta90=1): the 90-second Time Attack prototype with dynamic music (local only).
+	if Ta90Prototype.requested():
+		add_child(Ta90Prototype.new())
+		return
 	# Developer page (?tapilot=1): the external Time Attack pilot - the four 120 s boards
 	# behind one entry point (local only).
 	if TaPilot.requested():

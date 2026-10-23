@@ -127,7 +127,7 @@ THEMES = {
 }
 
 
-def render(name, overrides):
+def render(name, overrides, out_dir=None):
     cfg = dict(BASE)
     cfg.update(overrides)
     chords = [[n + cfg["transpose"] for n in ch] for ch in FAMILY[cfg["family"]]]
@@ -249,7 +249,7 @@ def render(name, overrides):
     buf = np.tanh(buf * 1.2)
     buf *= 0.7 / np.max(np.abs(buf))
     pcm = (buf * 32767).astype('<i2').tobytes()
-    out = os.path.join(os.path.dirname(__file__), "..", "assets", "audio", "music_%s.wav" % name)
+    out = os.path.join(out_dir or os.path.join(os.path.dirname(__file__), "..", "assets", "audio"), "music_%s.wav" % name)
     fmt = struct.pack('<HHIIHH', 1, 1, RATE, RATE * 2, 2, 16)
     smpl = struct.pack('<9I', 0, 0, int(1e9 / RATE), 60, 0, 0, 0, 1, 0) + struct.pack('<6I', 0, 0, 0, length - 1, 0, 0)
     riff = (b'WAVE' + b'fmt ' + struct.pack('<I', len(fmt)) + fmt + b'smpl' + struct.pack('<I', len(smpl)) + smpl

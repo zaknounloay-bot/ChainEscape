@@ -1,0 +1,11 @@
+Godot Engine v4.3.stable.official.77dcf97d8 - https://godotengine.org
+
+round 1: 2112 candidates, best:
+  2.5  greedy 0.083, hint nodes [8, 18], pieces 8, positions 57, dec6/8 1/0, hidden6/8 2/0, deepest 7, opening 1 / 3, learners {  }, lost hint 0.0 ms, band - 
+     [". . R^@- P<@ . .",". . . . . .",". Y<= Gv R^@ Bv@~ .",". . . Y^@- G> .",". . . . . .",". . . . . ."]
+  2.5  greedy 0.083, hint nodes [8, 18], pieces 8, positions 57, dec6/8 1/0, hidden6/8 2/0, deepest 7, opening 1 / 3, learners {  }, lost hint 0.0 ms, band - 
+     [". . R<@- P<@ . .",". . . . . .",". Y<= Gv R^@ Bv@~ .",". . . Y^@- G> .",". . . . . .",". . . . . ."]
+  2.5  greedy 0.083, hint nodes [8, 18], pieces 8, positions 57, dec6/8 1/0, hidden6/8 2/0, deepest 7, opening 1 / 3, learners {  }, lost hint 0.0 ms, band - 
+     [". . R^@~ P<@ . .",". . . . . .",". Y<= Gv R^@ Bv@~ .",". . . Y^@- G> .",". . . . . .",". . . . . ."]
+  2.5  greedy 0.083, hint nodes [8, 18], pieces 8, positions 57, dec6/8 1/0, hidden6/8 2/0, deepest 7, opening 1 / 3, learners {  }, lost hint 0.0 ms, band - 
+     [". . R<@~ P<@ . .",". . . . . .",". Y<= Gv R^@ Bv@~ .",". . . Y^@- G> .",". . . . . .",". . . . . ."]

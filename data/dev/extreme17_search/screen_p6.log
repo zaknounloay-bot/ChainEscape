@@ -1,0 +1,38 @@
+Godot Engine v4.3.stable.official.77dcf97d8 - https://godotengine.org
+
+round 1: 1936 candidates, best:
+  -78.5  greedy 1.000, hint nodes [2, 2], pieces 4, positions 11, dec6/8 0/0, hidden6/8 0/0, deepest 3, opening 1 / 2, learners {  }, lost hint 0.0 ms, band - 
+     [". . . . . .",". . . . . .",". Y<= . R^ Bv@~ .",". . . . G> .",". . . . . .",". . . . . ."]
+  -78.5  greedy 1.000, hint nodes [2, 2], pieces 4, positions 11, dec6/8 0/0, hidden6/8 0/0, deepest 3, opening 1 / 2, learners {  }, lost hint 0.0 ms, band - 
+     [". . . . . .",". . . . . .",". Y<= . Rv Bv@~ .",". . . . G> .",". . . . . .",". . . . . ."]
+  -78.5  greedy 1.000, hint nodes [2, 2], pieces 4, positions 11, dec6/8 0/0, hidden6/8 0/0, deepest 3, opening 1 / 2, learners {  }, lost hint 0.0 ms, band - 
+     [". . . . . .",". . . . . .",". Y<= . R^@ Bv@~ .",". . . . G> .",". . . . . .",". . . . . ."]
+  -78.5  greedy 1.000, hint nodes [2, 2], pieces 4, positions 11, dec6/8 0/0, hidden6/8 0/0, deepest 3, opening 1 / 2, learners {  }, lost hint 0.0 ms, band - 
+     [". . . . . .",". . . . . .",". Y<= . Rv@ Bv@~ .",". . . . G> .",". . . . . .",". . . . . ."]
+round 2: 8926 candidates, best:
+  -74.0  greedy 1.000, hint nodes [1, 2], pieces 5, positions 28, dec6/8 0/0, hidden6/8 0/0, deepest 4, opening 1 / 2, learners {  }, lost hint 0.0 ms, band - 
+     [". . . . . .",". . . . . .",". Y<= . R^@ Bv@~ .",". . . Y^@- G> .",". . . . . .",". . . . . ."]
+  -74.0  greedy 1.000, hint nodes [1, 2], pieces 5, positions 28, dec6/8 0/0, hidden6/8 0/0, deepest 4, opening 1 / 2, learners {  }, lost hint 0.0 ms, band - 
+     [". . . . . .",". . . . . .",". Y<= . R^@ Bv@~ .",". . . Y>@ G> .",". . . . . .",". . . . . ."]
+  -74.0  greedy 1.000, hint nodes [1, 5], pieces 5, positions 29, dec6/8 0/0, hidden6/8 0/0, deepest 4, opening 1 / 3, learners {  }, lost hint 0.0 ms, band - 
+     [". . . . . .",". . . . . .",". Y<= . R^@ Bv@~ .",". . . Y<@ G> .",". . . . . .",". . . . . ."]
+  -74.0  greedy 1.000, hint nodes [1, 2], pieces 5, positions 30, dec6/8 0/0, hidden6/8 0/0, deepest 4, opening 1 / 3, learners {  }, lost hint 0.0 ms, band - 
+     [". . . . . .",". . . . . .",". Y<= . R^@ Bv@~ .",". . . Yv@ G> .",". . . . . .",". . . . . ."]
+round 3: 9046 candidates, best:
+  -37.5  greedy 0.467, hint nodes [3, 8], pieces 6, positions 32, dec6/8 0/0, hidden6/8 0/0, deepest 5, opening 2 / 4, learners {  }, lost hint 0.0 ms, band - 
+     [". . . . . .",". . . . . .",". Y<= Rv@- R^@ Bv@~ .",". . . Yv@ G> .",". . . . . .",". . . . . ."]
+  -37.5  greedy 0.467, hint nodes [3, 8], pieces 6, positions 32, dec6/8 0/0, hidden6/8 0/0, deepest 5, opening 2 / 4, learners {  }, lost hint 0.0 ms, band - 
+     [". . . . . .",". . . . . .",". Y<= R^@~ R^@ Bv@~ .",". . . Yv@ G> .",". . . . . .",". . . . . ."]
+  -37.5  greedy 0.467, hint nodes [2, 13], pieces 6, positions 37, dec6/8 0/0, hidden6/8 0/0, deepest 5, opening 1 / 3, learners {  }, lost hint 0.0 ms, band - 
+     [". . . . . .",". . . . . .",". Y<= P>@~ R^@ Bv@~ .",". . . Y<@ G> .",". . . . . .",". . . . . ."]
+  -37.5  greedy 0.467, hint nodes [1, 4], pieces 6, positions 41, dec6/8 0/0, hidden6/8 0/0, deepest 5, opening 1 / 3, learners {  }, lost hint 0.0 ms, band - 
+     [". . . . . .",". . . . . .",". Y<= Gv R^@ Bv@~ .",". . . Y^@- G> .",". . . . . .",". . . . . ."]
+round 4: 8502 candidates, best:
+  -19.0  greedy 0.233, hint nodes [7, 11], pieces 7, positions 49, dec6/8 0/0, hidden6/8 0/0, deepest 6, opening 1 / 3, learners {  }, lost hint 0.0 ms, band - 
+     [". . . P<@ . .",". . . . . .",". Y<= Gv R^@ Bv@~ .",". . . Y^@- G> .",". . . . . .",". . . . . ."]
+  -19.0  greedy 0.233, hint nodes [7, 11], pieces 7, positions 49, dec6/8 0/0, hidden6/8 0/0, deepest 6, opening 1 / 3, learners {  }, lost hint 0.0 ms, band - 
+     [". . . B^@- . .",". . . . . .",". Y<= Gv R^@ Bv@~ .",". . . Y^@- G> .",". . . . . .",". . . . . ."]
+  -19.0  greedy 0.233, hint nodes [7, 11], pieces 7, positions 49, dec6/8 0/0, hidden6/8 0/0, deepest 6, opening 1 / 3, learners {  }, lost hint 0.0 ms, band - 
+     [". . . B>@ . .",". . . . . .",". Y<= Gv R^@ Bv@~ .",". . . Y^@- G> .",". . . . . .",". . . . . ."]
+  -19.0  greedy 0.233, hint nodes [7, 11], pieces 7, positions 49, dec6/8 0/0, hidden6/8 0/0, deepest 6, opening 1 / 3, learners {  }, lost hint 0.0 ms, band - 
+     [". . . B<@ . .",". . . . . .",". Y<= Gv R^@ Bv@~ .",". . . Y^@- G> .",". . . . . .",". . . . . ."]

@@ -1,0 +1,994 @@
+[
+ {
+  "dec6": 0,
+  "dec8": 0,
+  "deepest": 3,
+  "gates_ok": false,
+  "gates_why": "",
+  "greedy": 1,
+  "hid6": 0,
+  "hid8": 0,
+  "hint_ms": 0,
+  "hint_nodes": [
+   2,
+   2
+  ],
+  "learner": {
+
+  },
+  "learner_min": 0,
+  "map": [
+   ". . . . . .",
+   ". . . . . .",
+   ". Y<= . R^ Bv@~ .",
+   ". . . . G> .",
+   ". . . . . .",
+   ". . . . . ."
+  ],
+  "opening": "1 / 2",
+  "pieces": 4,
+  "positions": 11,
+  "score": -78.5
+ },
+ {
+  "dec6": 0,
+  "dec8": 0,
+  "deepest": 3,
+  "gates_ok": false,
+  "gates_why": "",
+  "greedy": 1,
+  "hid6": 0,
+  "hid8": 0,
+  "hint_ms": 0,
+  "hint_nodes": [
+   2,
+   2
+  ],
+  "learner": {
+
+  },
+  "learner_min": 0,
+  "map": [
+   ". . . . . .",
+   ". . . . . .",
+   ". Y<= . Rv Bv@~ .",
+   ". . . . G> .",
+   ". . . . . .",
+   ". . . . . ."
+  ],
+  "opening": "1 / 2",
+  "pieces": 4,
+  "positions": 11,
+  "score": -78.5
+ },
+ {
+  "dec6": 0,
+  "dec8": 0,
+  "deepest": 3,
+  "gates_ok": false,
+  "gates_why": "",
+  "greedy": 1,
+  "hid6": 0,
+  "hid8": 0,
+  "hint_ms": 0,
+  "hint_nodes": [
+   2,
+   2
+  ],
+  "learner": {
+
+  },
+  "learner_min": 0,
+  "map": [
+   ". . . . . .",
+   ". . . . . .",
+   ". Y<= . R^@ Bv@~ .",
+   ". . . . G> .",
+   ". . . . . .",
+   ". . . . . ."
+  ],
+  "opening": "1 / 2",
+  "pieces": 4,
+  "positions": 11,
+  "score": -78.5
+ },
+ {
+  "dec6": 0,
+  "dec8": 0,
+  "deepest": 3,
+  "gates_ok": false,
+  "gates_why": "",
+  "greedy": 1,
+  "hid6": 0,
+  "hid8": 0,
+  "hint_ms": 0,
+  "hint_nodes": [
+   2,
+   2
+  ],
+  "learner": {
+
+  },
+  "learner_min": 0,
+  "map": [
+   ". . . . . .",
+   ". . . . . .",
+   ". Y<= . Rv@ Bv@~ .",
+   ". . . . G> .",
+   ". . . . . .",
+   ". . . . . ."
+  ],
+  "opening": "1 / 2",
+  "pieces": 4,
+  "positions": 11,
+  "score": -78.5
+ },
+ {
+  "dec6": 0,
+  "dec8": 0,
+  "deepest": 3,
+  "gates_ok": false,
+  "gates_why": "",
+  "greedy": 1,
+  "hid6": 0,
+  "hid8": 0,
+  "hint_ms": 0,
+  "hint_nodes": [
+   2,
+   2
+  ],
+  "learner": {
+
+  },
+  "learner_min": 0,
+  "map": [
+   ". . . . . .",
+   ". . . . . .",
+   ". Y<= . R^@- Bv@~ .",
+   ". . . . G> .",
+   ". . . . . .",
+   ". . . . . ."
+  ],
+  "opening": "1 / 2",
+  "pieces": 4,
+  "positions": 11,
+  "score": -78.5
+ },
+ {
+  "dec6": 0,
+  "dec8": 0,
+  "deepest": 3,
+  "gates_ok": false,
+  "gates_why": "",
+  "greedy": 1,
+  "hid6": 0,
+  "hid8": 0,
+  "hint_ms": 0,
+  "hint_nodes": [
+   2,
+   2
+  ],
+  "learner": {
+
+  },
+  "learner_min": 0,
+  "map": [
+   ". . . . . .",
+   ". . . . . .",
+   ". Y<= . Rv@- Bv@~ .",
+   ". . . . G> .",
+   ". . . . . .",
+   ". . . . . ."
+  ],
+  "opening": "1 / 2",
+  "pieces": 4,
+  "positions": 11,
+  "score": -78.5
+ },
+ {
+  "dec6": 0,
+  "dec8": 0,
+  "deepest": 3,
+  "gates_ok": false,
+  "gates_why": "",
+  "greedy": 1,
+  "hid6": 0,
+  "hid8": 0,
+  "hint_ms": 0,
+  "hint_nodes": [
+   2,
+   2
+  ],
+  "learner": {
+
+  },
+  "learner_min": 0,
+  "map": [
+   ". . . . . .",
+   ". . . . . .",
+   ". Y<= . R^@~ Bv@~ .",
+   ". . . . G> .",
+   ". . . . . .",
+   ". . . . . ."
+  ],
+  "opening": "1 / 2",
+  "pieces": 4,
+  "positions": 11,
+  "score": -78.5
+ },
+ {
+  "dec6": 0,
+  "dec8": 0,
+  "deepest": 3,
+  "gates_ok": false,
+  "gates_why": "",
+  "greedy": 1,
+  "hid6": 0,
+  "hid8": 0,
+  "hint_ms": 0,
+  "hint_nodes": [
+   2,
+   2
+  ],
+  "learner": {
+
+  },
+  "learner_min": 0,
+  "map": [
+   ". . . . . .",
+   ". . . . . .",
+   ". Y<= . Rv@~ Bv@~ .",
+   ". . . . G> .",
+   ". . . . . .",
+   ". . . . . ."
+  ],
+  "opening": "1 / 2",
+  "pieces": 4,
+  "positions": 11,
+  "score": -78.5
+ },
+ {
+  "dec6": 0,
+  "dec8": 0,
+  "deepest": 4,
+  "gates_ok": false,
+  "gates_why": "",
+  "greedy": 1,
+  "hid6": 0,
+  "hid8": 0,
+  "hint_ms": 0,
+  "hint_nodes": [
+   1,
+   2
+  ],
+  "learner": {
+
+  },
+  "learner_min": 0,
+  "map": [
+   ". . . . . .",
+   ". . . . . .",
+   ". Y<= . R^@ Bv@~ .",
+   ". . . Y^@- G> .",
+   ". . . . . .",
+   ". . . . . ."
+  ],
+  "opening": "1 / 2",
+  "pieces": 5,
+  "positions": 28,
+  "score": -74
+ },
+ {
+  "dec6": 0,
+  "dec8": 0,
+  "deepest": 4,
+  "gates_ok": false,
+  "gates_why": "",
+  "greedy": 1,
+  "hid6": 0,
+  "hid8": 0,
+  "hint_ms": 0,
+  "hint_nodes": [
+   1,
+   2
+  ],
+  "learner": {
+
+  },
+  "learner_min": 0,
+  "map": [
+   ". . . . . .",
+   ". . . . . .",
+   ". Y<= . R^@ Bv@~ .",
+   ". . . Y>@ G> .",
+   ". . . . . .",
+   ". . . . . ."
+  ],
+  "opening": "1 / 2",
+  "pieces": 5,
+  "positions": 28,
+  "score": -74
+ },
+ {
+  "dec6": 0,
+  "dec8": 0,
+  "deepest": 4,
+  "gates_ok": false,
+  "gates_why": "",
+  "greedy": 1,
+  "hid6": 0,
+  "hid8": 0,
+  "hint_ms": 0,
+  "hint_nodes": [
+   1,
+   5
+  ],
+  "learner": {
+
+  },
+  "learner_min": 0,
+  "map": [
+   ". . . . . .",
+   ". . . . . .",
+   ". Y<= . R^@ Bv@~ .",
+   ". . . Y<@ G> .",
+   ". . . . . .",
+   ". . . . . ."
+  ],
+  "opening": "1 / 3",
+  "pieces": 5,
+  "positions": 29,
+  "score": -74
+ },
+ {
+  "dec6": 0,
+  "dec8": 0,
+  "deepest": 4,
+  "gates_ok": false,
+  "gates_why": "",
+  "greedy": 1,
+  "hid6": 0,
+  "hid8": 0,
+  "hint_ms": 0,
+  "hint_nodes": [
+   1,
+   2
+  ],
+  "learner": {
+
+  },
+  "learner_min": 0,
+  "map": [
+   ". . . . . .",
+   ". . . . . .",
+   ". Y<= . R^@ Bv@~ .",
+   ". . . Yv@ G> .",
+   ". . . . . .",
+   ". . . . . ."
+  ],
+  "opening": "1 / 3",
+  "pieces": 5,
+  "positions": 30,
+  "score": -74
+ },
+ {
+  "dec6": 0,
+  "dec8": 0,
+  "deepest": 4,
+  "gates_ok": false,
+  "gates_why": "",
+  "greedy": 1,
+  "hid6": 0,
+  "hid8": 0,
+  "hint_ms": 0,
+  "hint_nodes": [
+   5,
+   2
+  ],
+  "learner": {
+
+  },
+  "learner_min": 0,
+  "map": [
+   ". . . . . .",
+   ". . . . . .",
+   ". Y<= . R^@ Bv@~ .",
+   ". . . Y^@ G> .",
+   ". . . . . .",
+   ". . . . . ."
+  ],
+  "opening": "1 / 2",
+  "pieces": 5,
+  "positions": 19,
+  "score": -74
+ },
+ {
+  "dec6": 0,
+  "dec8": 0,
+  "deepest": 4,
+  "gates_ok": false,
+  "gates_why": "",
+  "greedy": 1,
+  "hid6": 0,
+  "hid8": 0,
+  "hint_ms": 0,
+  "hint_nodes": [
+   2,
+   2
+  ],
+  "learner": {
+
+  },
+  "learner_min": 0,
+  "map": [
+   ". . . . . .",
+   ". . . . . .",
+   ". Y<= . R^@ Bv@~ .",
+   ". . . Y> G> .",
+   ". . . . . .",
+   ". . . . . ."
+  ],
+  "opening": "1 / 2",
+  "pieces": 5,
+  "positions": 19,
+  "score": -74
+ },
+ {
+  "dec6": 0,
+  "dec8": 0,
+  "deepest": 4,
+  "gates_ok": false,
+  "gates_why": "",
+  "greedy": 1,
+  "hid6": 0,
+  "hid8": 0,
+  "hint_ms": 0,
+  "hint_nodes": [
+   2,
+   2
+  ],
+  "learner": {
+
+  },
+  "learner_min": 0,
+  "map": [
+   ". . . . . .",
+   ". . . . . .",
+   ". Y<= . R^@ Bv@~ .",
+   ". . . Y< G> .",
+   ". . . . . .",
+   ". . . . . ."
+  ],
+  "opening": "1 / 3",
+  "pieces": 5,
+  "positions": 24,
+  "score": -74
+ },
+ {
+  "dec6": 0,
+  "dec8": 0,
+  "deepest": 4,
+  "gates_ok": false,
+  "gates_why": "",
+  "greedy": 1,
+  "hid6": 0,
+  "hid8": 0,
+  "hint_ms": 0,
+  "hint_nodes": [
+   2,
+   2
+  ],
+  "learner": {
+
+  },
+  "learner_min": 0,
+  "map": [
+   ". . . . . .",
+   ". . . . . .",
+   ". Y<= . R^@ Bv@~ .",
+   ". . . Yv G> .",
+   ". . . . . .",
+   ". . . . . ."
+  ],
+  "opening": "1 / 3",
+  "pieces": 5,
+  "positions": 24,
+  "score": -74
+ },
+ {
+  "dec6": 0,
+  "dec8": 0,
+  "deepest": 5,
+  "gates_ok": false,
+  "gates_why": "",
+  "greedy": 0.467,
+  "hid6": 0,
+  "hid8": 0,
+  "hint_ms": 0,
+  "hint_nodes": [
+   3,
+   8
+  ],
+  "learner": {
+
+  },
+  "learner_min": 0,
+  "map": [
+   ". . . . . .",
+   ". . . . . .",
+   ". Y<= Rv@- R^@ Bv@~ .",
+   ". . . Yv@ G> .",
+   ". . . . . .",
+   ". . . . . ."
+  ],
+  "opening": "2 / 4",
+  "pieces": 6,
+  "positions": 32,
+  "score": -37.52
+ },
+ {
+  "dec6": 0,
+  "dec8": 0,
+  "deepest": 5,
+  "gates_ok": false,
+  "gates_why": "",
+  "greedy": 0.467,
+  "hid6": 0,
+  "hid8": 0,
+  "hint_ms": 0,
+  "hint_nodes": [
+   3,
+   8
+  ],
+  "learner": {
+
+  },
+  "learner_min": 0,
+  "map": [
+   ". . . . . .",
+   ". . . . . .",
+   ". Y<= R^@~ R^@ Bv@~ .",
+   ". . . Yv@ G> .",
+   ". . . . . .",
+   ". . . . . ."
+  ],
+  "opening": "2 / 4",
+  "pieces": 6,
+  "positions": 32,
+  "score": -37.52
+ },
+ {
+  "dec6": 0,
+  "dec8": 0,
+  "deepest": 5,
+  "gates_ok": false,
+  "gates_why": "",
+  "greedy": 0.467,
+  "hid6": 0,
+  "hid8": 0,
+  "hint_ms": 0,
+  "hint_nodes": [
+   2,
+   13
+  ],
+  "learner": {
+
+  },
+  "learner_min": 0,
+  "map": [
+   ". . . . . .",
+   ". . . . . .",
+   ". Y<= P>@~ R^@ Bv@~ .",
+   ". . . Y<@ G> .",
+   ". . . . . .",
+   ". . . . . ."
+  ],
+  "opening": "1 / 3",
+  "pieces": 6,
+  "positions": 37,
+  "score": -37.52
+ },
+ {
+  "dec6": 0,
+  "dec8": 0,
+  "deepest": 5,
+  "gates_ok": false,
+  "gates_why": "",
+  "greedy": 0.467,
+  "hid6": 0,
+  "hid8": 0,
+  "hint_ms": 0,
+  "hint_nodes": [
+   1,
+   4
+  ],
+  "learner": {
+
+  },
+  "learner_min": 0,
+  "map": [
+   ". . . . . .",
+   ". . . . . .",
+   ". Y<= Gv R^@ Bv@~ .",
+   ". . . Y^@- G> .",
+   ". . . . . .",
+   ". . . . . ."
+  ],
+  "opening": "1 / 3",
+  "pieces": 6,
+  "positions": 41,
+  "score": -37.52
+ },
+ {
+  "dec6": 0,
+  "dec8": 0,
+  "deepest": 5,
+  "gates_ok": false,
+  "gates_why": "",
+  "greedy": 0.467,
+  "hid6": 0,
+  "hid8": 0,
+  "hint_ms": 0,
+  "hint_nodes": [
+   1,
+   4
+  ],
+  "learner": {
+
+  },
+  "learner_min": 0,
+  "map": [
+   ". . . . . .",
+   ". . . . . .",
+   ". Y<= G^ R^@ Bv@~ .",
+   ". . . Y^@- G> .",
+   ". . . . . .",
+   ". . . . . ."
+  ],
+  "opening": "1 / 3",
+  "pieces": 6,
+  "positions": 41,
+  "score": -37.52
+ },
+ {
+  "dec6": 0,
+  "dec8": 0,
+  "deepest": 5,
+  "gates_ok": false,
+  "gates_why": "",
+  "greedy": 0.467,
+  "hid6": 0,
+  "hid8": 0,
+  "hint_ms": 0,
+  "hint_nodes": [
+   3,
+   8
+  ],
+  "learner": {
+
+  },
+  "learner_min": 0,
+  "map": [
+   ". . . . . .",
+   ". . . . . .",
+   ". Y<= G^@ R^@ Bv@~ .",
+   ". . . Yv@ G> .",
+   ". . . . . .",
+   ". . . . . ."
+  ],
+  "opening": "2 / 4",
+  "pieces": 6,
+  "positions": 32,
+  "score": -37.52
+ },
+ {
+  "dec6": 0,
+  "dec8": 0,
+  "deepest": 5,
+  "gates_ok": false,
+  "gates_why": "",
+  "greedy": 0.467,
+  "hid6": 0,
+  "hid8": 0,
+  "hint_ms": 0,
+  "hint_nodes": [
+   1,
+   4
+  ],
+  "learner": {
+
+  },
+  "learner_min": 0,
+  "map": [
+   ". . . . . .",
+   ". . . . . .",
+   ". Y<= Gv R^@ Bv@~ .",
+   ". . . Y>@ G> .",
+   ". . . . . .",
+   ". . . . . ."
+  ],
+  "opening": "1 / 3",
+  "pieces": 6,
+  "positions": 41,
+  "score": -37.52
+ },
+ {
+  "dec6": 0,
+  "dec8": 0,
+  "deepest": 5,
+  "gates_ok": false,
+  "gates_why": "",
+  "greedy": 0.467,
+  "hid6": 0,
+  "hid8": 0,
+  "hint_ms": 0,
+  "hint_nodes": [
+   3,
+   8
+  ],
+  "learner": {
+
+  },
+  "learner_min": 0,
+  "map": [
+   ". . . . . .",
+   ". . . . . .",
+   ". Y<= Gv@- R^@ Bv@~ .",
+   ". . . Yv@ G> .",
+   ". . . . . .",
+   ". . . . . ."
+  ],
+  "opening": "2 / 4",
+  "pieces": 6,
+  "positions": 32,
+  "score": -37.52
+ },
+ {
+  "dec6": 0,
+  "dec8": 0,
+  "deepest": 6,
+  "gates_ok": false,
+  "gates_why": "",
+  "greedy": 0.233,
+  "hid6": 0,
+  "hid8": 0,
+  "hint_ms": 0,
+  "hint_nodes": [
+   7,
+   11
+  ],
+  "learner": {
+
+  },
+  "learner_min": 0,
+  "map": [
+   ". . . P<@ . .",
+   ". . . . . .",
+   ". Y<= Gv R^@ Bv@~ .",
+   ". . . Y^@- G> .",
+   ". . . . . .",
+   ". . . . . ."
+  ],
+  "opening": "1 / 3",
+  "pieces": 7,
+  "positions": 49,
+  "score": -18.98
+ },
+ {
+  "dec6": 0,
+  "dec8": 0,
+  "deepest": 6,
+  "gates_ok": false,
+  "gates_why": "",
+  "greedy": 0.233,
+  "hid6": 0,
+  "hid8": 0,
+  "hint_ms": 0,
+  "hint_nodes": [
+   7,
+   11
+  ],
+  "learner": {
+
+  },
+  "learner_min": 0,
+  "map": [
+   ". . . B^@- . .",
+   ". . . . . .",
+   ". Y<= Gv R^@ Bv@~ .",
+   ". . . Y^@- G> .",
+   ". . . . . .",
+   ". . . . . ."
+  ],
+  "opening": "1 / 3",
+  "pieces": 7,
+  "positions": 49,
+  "score": -18.98
+ },
+ {
+  "dec6": 0,
+  "dec8": 0,
+  "deepest": 6,
+  "gates_ok": false,
+  "gates_why": "",
+  "greedy": 0.233,
+  "hid6": 0,
+  "hid8": 0,
+  "hint_ms": 0,
+  "hint_nodes": [
+   7,
+   11
+  ],
+  "learner": {
+
+  },
+  "learner_min": 0,
+  "map": [
+   ". . . B>@ . .",
+   ". . . . . .",
+   ". Y<= Gv R^@ Bv@~ .",
+   ". . . Y^@- G> .",
+   ". . . . . .",
+   ". . . . . ."
+  ],
+  "opening": "1 / 3",
+  "pieces": 7,
+  "positions": 49,
+  "score": -18.98
+ },
+ {
+  "dec6": 0,
+  "dec8": 0,
+  "deepest": 6,
+  "gates_ok": false,
+  "gates_why": "",
+  "greedy": 0.233,
+  "hid6": 0,
+  "hid8": 0,
+  "hint_ms": 0,
+  "hint_nodes": [
+   7,
+   11
+  ],
+  "learner": {
+
+  },
+  "learner_min": 0,
+  "map": [
+   ". . . B<@ . .",
+   ". . . . . .",
+   ". Y<= Gv R^@ Bv@~ .",
+   ". . . Y^@- G> .",
+   ". . . . . .",
+   ". . . . . ."
+  ],
+  "opening": "1 / 3",
+  "pieces": 7,
+  "positions": 49,
+  "score": -18.98
+ },
+ {
+  "dec6": 0,
+  "dec8": 0,
+  "deepest": 6,
+  "gates_ok": false,
+  "gates_why": "",
+  "greedy": 0.233,
+  "hid6": 0,
+  "hid8": 0,
+  "hint_ms": 0,
+  "hint_nodes": [
+   7,
+   11
+  ],
+  "learner": {
+
+  },
+  "learner_min": 0,
+  "map": [
+   ". . . B^@ . .",
+   ". . . . . .",
+   ". Y<= Gv R^@ Bv@~ .",
+   ". . . Y^@- G> .",
+   ". . . . . .",
+   ". . . . . ."
+  ],
+  "opening": "1 / 3",
+  "pieces": 7,
+  "positions": 49,
+  "score": -18.98
+ },
+ {
+  "dec6": 0,
+  "dec8": 0,
+  "deepest": 6,
+  "gates_ok": false,
+  "gates_why": "",
+  "greedy": 0.233,
+  "hid6": 0,
+  "hid8": 0,
+  "hint_ms": 0,
+  "hint_nodes": [
+   7,
+   11
+  ],
+  "learner": {
+
+  },
+  "learner_min": 0,
+  "map": [
+   ". . . P>@ . .",
+   ". . . . . .",
+   ". Y<= Gv R^@ Bv@~ .",
+   ". . . Y^@- G> .",
+   ". . . . . .",
+   ". . . . . ."
+  ],
+  "opening": "1 / 3",
+  "pieces": 7,
+  "positions": 49,
+  "score": -18.98
+ },
+ {
+  "dec6": 0,
+  "dec8": 0,
+  "deepest": 6,
+  "gates_ok": false,
+  "gates_why": "",
+  "greedy": 0.233,
+  "hid6": 0,
+  "hid8": 0,
+  "hint_ms": 0,
+  "hint_nodes": [
+   7,
+   11
+  ],
+  "learner": {
+
+  },
+  "learner_min": 0,
+  "map": [
+   ". . . P^@- . .",
+   ". . . . . .",
+   ". Y<= Gv R^@ Bv@~ .",
+   ". . . Y^@- G> .",
+   ". . . . . .",
+   ". . . . . ."
+  ],
+  "opening": "1 / 3",
+  "pieces": 7,
+  "positions": 49,
+  "score": -18.98
+ },
+ {
+  "dec6": 0,
+  "dec8": 0,
+  "deepest": 6,
+  "gates_ok": false,
+  "gates_why": "",
+  "greedy": 0.233,
+  "hid6": 0,
+  "hid8": 0,
+  "hint_ms": 0,
+  "hint_nodes": [
+   7,
+   11
+  ],
+  "learner": {
+
+  },
+  "learner_min": 0,
+  "map": [
+   ". . . G>@~ . .",
+   ". . . . . .",
+   ". Y<= Gv R^@ Bv@~ .",
+   ". . . Y^@- G> .",
+   ". . . . . .",
+   ". . . . . ."
+  ],
+  "opening": "1 / 3",
+  "pieces": 7,
+  "positions": 49,
+  "score": -18.98
+ }
+]

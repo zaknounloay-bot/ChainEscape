@@ -146,6 +146,12 @@ Solver / exhaustive parity on Q1, T5, E1, E2, H1 and H2 was checked exhaustively
 
 **External pilot (phase 12C).** `?tapilot=1` puts the four 120 s boards behind one entry point for invited testers: welcome, a familiarity question, puzzle choice, the same pages and rules, skippable questions, and one export bundle. Its storage is separate. See `docs/tapilot.md`.
 
+**Phase 13 (curated bank, then the 90-second prototype).**
+- Five candidates were started (P5-P9, `tools/extreme17_*`; state preserved in `data/dev/extreme17_search/`).
+- The bank was then paused for a 90-second prototype with dynamic music: `?ta90=1`, `docs/ta90_prototype.md`.
+- **No Phase 13 board has been accepted.** P5 and P6 failed the full mandatory acceptance. P6's first version (a movable crate) was rejected because the Solver overflows the stack on crate boards. P7-P9 are paused.
+- The prototype runs with TA as a labelled technical reference only.
+
 Shared rules on every timed page:
 - The clock never stops or refills on RESTART, UNDO, the background or a reload. It also never stops on SHOW A MOVE where that tool still exists (Q1, R1).
 - TIME UP is frozen. An untimed solve is never recorded as a timed victory.

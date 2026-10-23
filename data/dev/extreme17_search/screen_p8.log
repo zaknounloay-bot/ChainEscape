@@ -1,0 +1,47 @@
+Godot Engine v4.3.stable.official.77dcf97d8 - https://godotengine.org
+
+round 1: 1440 candidates, best:
+  -84.0  greedy 1.000, hint nodes [1, 0], pieces 5, positions 8, dec6/8 0/0, hidden6/8 0/0, deepest 0, opening 2 / 2, learners {  }, lost hint 0.0 ms, band - 
+     [". . . . . .",". Pv%A . . . .",". . . . . .",". . . Y<@ . .","Y> . XA G<&A+A . .",". . . . . ."]
+  -84.0  greedy 1.000, hint nodes [2, 0], pieces 5, positions 5, dec6/8 0/0, hidden6/8 0/0, deepest 0, opening 1 / 1, learners {  }, lost hint 0.0 ms, band - 
+     [". . . . . .",". Pv%A . . . .",". . . . . .",". . . Yv@ . .","Y> . XA G<&A+A . .",". . . . . ."]
+  -84.0  greedy 1.000, hint nodes [1, 0], pieces 5, positions 8, dec6/8 0/0, hidden6/8 0/0, deepest 0, opening 2 / 2, learners {  }, lost hint 0.0 ms, band - 
+     [". . . . . .",". Pv%A . . . .",". . . . . .",". . . Y^@ . .","Y> . XA G<&A+A . .",". . . . . ."]
+  -84.0  greedy 1.000, hint nodes [1, 0], pieces 5, positions 7, dec6/8 0/0, hidden6/8 0/0, deepest 0, opening 2 / 2, learners {  }, lost hint 0.0 ms, band - 
+     [". . . . . .",". Pv%A . . . .",". . . . . .",". . . Y> . .","Y> . XA G<&A+A . .",". . . . . ."]
+round 2: 5501 candidates, best:
+  -79.0  greedy 1.000, hint nodes [2, 1], pieces 6, positions 11, dec6/8 0/0, hidden6/8 0/0, deepest 2, opening 2 / 2, learners {  }, lost hint 0.0 ms, band - 
+     [". . . . . .",". Pv%A . . . .",". . . . . .",". . . Y^@ P<@ .","Y> . XA G<&A+A . .",". . . . . ."]
+  -79.0  greedy 1.000, hint nodes [2, 1], pieces 6, positions 11, dec6/8 0/0, hidden6/8 0/0, deepest 2, opening 2 / 2, learners {  }, lost hint 0.0 ms, band - 
+     [". . . . . .",". Pv%A . . . .",". . . Rv@ . .",". . . Y<@ . .","Y> . XA G<&A+A . .",". . . . . ."]
+  -79.0  greedy 1.000, hint nodes [2, 1], pieces 6, positions 11, dec6/8 0/0, hidden6/8 0/0, deepest 2, opening 2 / 2, learners {  }, lost hint 0.0 ms, band - 
+     [". . . . . .",". Pv%A . . . .",". . . . . .",". . . Y^@ P<@- .","Y> . XA G<&A+A . .",". . . . . ."]
+  -79.0  greedy 1.000, hint nodes [2, 1], pieces 6, positions 11, dec6/8 0/0, hidden6/8 0/0, deepest 2, opening 2 / 2, learners {  }, lost hint 0.0 ms, band - 
+     [". . . . . .",". Pv%A . . . .",". . . . . .",". . . Y^@ Y<@- .","Y> . XA G<&A+A . .",". . . . . ."]
+round 3: 5686 candidates, best:
+  -74.5  greedy 1.000, hint nodes [2, 1], pieces 7, positions 14, dec6/8 0/0, hidden6/8 0/0, deepest 3, opening 2 / 2, learners {  }, lost hint 0.0 ms, band - 
+     [". . . . . .",". Pv%A . . . .","Pv@- . . . . .",". . . Y^@ P<@ .","Y> . XA G<&A+A . .",". . . . . ."]
+  -74.5  greedy 1.000, hint nodes [2, 1], pieces 7, positions 14, dec6/8 0/0, hidden6/8 0/0, deepest 3, opening 2 / 2, learners {  }, lost hint 0.0 ms, band - 
+     [". . . . . .",". Pv%A . . . .",". . . . . .","Gv . . Y^@ Y<@- .","Y> . XA G<&A+A . .",". . . . . ."]
+  -74.5  greedy 1.000, hint nodes [2, 1], pieces 7, positions 14, dec6/8 0/0, hidden6/8 0/0, deepest 3, opening 2 / 2, learners {  }, lost hint 0.0 ms, band - 
+     [". . . . . .",". Pv%A . . . .","Pv . . . . .",". . . Y^@ P<@- .","Y> . XA G<&A+A . .",". . . . . ."]
+  -74.5  greedy 1.000, hint nodes [2, 1], pieces 7, positions 17, dec6/8 0/0, hidden6/8 0/0, deepest 3, opening 2 / 2, learners {  }, lost hint 0.0 ms, band - 
+     [". . . . . .",". Pv%A . . . .",". . . . . .","R>@- . . Y^@ Y<@- .","Y> . XA G<&A+A . .",". . . . . ."]
+round 4: 5732 candidates, best:
+  -70.0  greedy 1.000, hint nodes [2, 1], pieces 8, positions 17, dec6/8 0/0, hidden6/8 0/0, deepest 4, opening 2 / 2, learners {  }, lost hint 0.0 ms, band - 
+     [". . . . . .",". Pv%A . . . .","Pv@- . . . . Y<@",". . . Y^@ P<@ .","Y> . XA G<&A+A . .",". . . . . ."]
+  -70.0  greedy 1.000, hint nodes [2, 1], pieces 8, positions 28, dec6/8 0/0, hidden6/8 0/0, deepest 4, opening 2 / 2, learners {  }, lost hint 0.0 ms, band - 
+     [". . . . . .",". Pv%A . . . .",". . Pv . . .","R>@- . . Y^@ Y<@- .","Y> . XA G<&A+A . .",". . . . . ."]
+  -70.0  greedy 1.000, hint nodes [2, 1], pieces 8, positions 17, dec6/8 0/0, hidden6/8 0/0, deepest 4, opening 2 / 2, learners {  }, lost hint 0.0 ms, band - 
+     [". . . . . .",". Pv%A . . . .","Pv@- . . . . Y<@-",". . . Y^@ P<@ .","Y> . XA G<&A+A . .",". . . . . ."]
+  -70.0  greedy 1.000, hint nodes [2, 1], pieces 8, positions 26, dec6/8 0/0, hidden6/8 0/0, deepest 4, opening 2 / 2, learners {  }, lost hint 0.0 ms, band - 
+     [". . . . . .",". Pv%A . . R<@ .","Pv . . . . .",". . . Y^@ P<@- .","Y> . XA G<&A+A . .",". . . . . ."]
+round 5: 5800 candidates, best:
+  -35.0  greedy 0.500, hint nodes [3, 2], pieces 9, positions 35, dec6/8 0/0, hidden6/8 0/0, deepest 6, opening 2 / 3, learners {  }, lost hint 0.0 ms, band - 
+     [". . . . . .","P<@- Pv%A . . . .","Pv@- . . . . Y<@-",". . . Y^@ P<@ .","Y> . XA G<&A+A . .",". . . . . ."]
+  -35.0  greedy 0.500, hint nodes [3, 2], pieces 9, positions 35, dec6/8 0/0, hidden6/8 0/0, deepest 6, opening 2 / 3, learners {  }, lost hint 0.0 ms, band - 
+     [". . . . . .","R<@- Pv%A . . . .","Pv@- . . . . Y<@",". . . Y^@ P<@ .","Y> . XA G<&A+A . .",". . . . . ."]
+  -35.0  greedy 0.500, hint nodes [3, 2], pieces 9, positions 35, dec6/8 0/0, hidden6/8 0/0, deepest 6, opening 2 / 3, learners {  }, lost hint 0.0 ms, band - 
+     [". . . . . .","G<@- Pv%A . . . .","Pv@- . . . . Y<@",". . . Y^@ P<@ .","Y> . XA G<&A+A . .",". . . . . ."]
+  -35.0  greedy 0.500, hint nodes [3, 2], pieces 9, positions 35, dec6/8 0/0, hidden6/8 0/0, deepest 6, opening 2 / 3, learners {  }, lost hint 0.0 ms, band - 
+     [". . . . . .","Y<@- Pv%A . . . .","Pv@- . . . . Y<@",". . . Y^@ P<@ .","Y> . XA G<&A+A . .",". . . . . ."]
