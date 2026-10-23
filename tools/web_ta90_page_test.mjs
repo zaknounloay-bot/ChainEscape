@@ -305,6 +305,54 @@ try {
     await ctx.close();
   }
 
+  // ---------------- Run 3: the Phase 14 boards (N1-N3) ------------------------------------
+  // Each puzzle of the selection: the brief, the WebAssembly cost of a full
+  // solve (&bench=1: the same Solver call the page makes at TIME UP), and a
+  // timed solve by touches (N2, N3; N1 is run 1's board).
+  if (!BOARD) {
+    const ctx = await browser.newContext(ctxOpts);
+    const e = await session(ctx, 'run 3');
+    await e.page.goto(url + '&bench=1');
+    await e.tapHub('PilotStart', 'WELCOME');
+    await e.tapHub('Familiar_PLAYED_A_LITTLE', 'FAMILIARITY');
+    let h3 = await e.waitFor(e.hub, (v) => v.view === 'SELECT', 'select 3');
+    check(JSON.stringify(h3.order) === JSON.stringify(['N1', 'N2', 'N3']) && !Object.keys(h3.buttons).includes('Puzzle_4'), `the selection: PUZZLE 1-3 = N1-N3, no reference row ${JSON.stringify(h3.order)}`);
+    const benchMs = {};
+    for (const [i, b] of [[2, 'N2'], [3, 'N3'], [1, 'N1']]) {
+      h3 = await e.waitFor(e.hub, (v) => v.view === 'SELECT' && v.buttons['Puzzle_' + i], 'select ' + b);
+      await e.page.evaluate(() => { window.chainEscapeVhBench = null; });
+      await e.tapHub('Puzzle_' + i, 'SELECT', 1200);
+      const v = await e.waitFor(e.vt, (x) => x.screen === 'BRIEF' && x.buttons.BeginPuzzle, 'brief ' + b);
+      const bench = await e.waitFor(() => e.page.evaluate(() => window.chainEscapeVhBench || null), (x) => x.done && x.results.length === 1 && x.results[0].id === b, 'bench ' + b, 60000);
+      benchMs[b] = bench.results[0].verify_ms;
+      await e.shot(`M10_brief_${b}`);
+      check(v.screen === 'BRIEF', `${b}: the brief before the board`);
+      if (b === 'N1') break;  // run 1 played N1: its brief and its solve cost are enough here
+      await e.begin();
+      await e.waitFor(e.ta, (x) => x.run_active, 'running ' + b);
+      const ok = await e.solveByTouches('timed ' + b);
+      const t = await e.waitFor(e.ta, (x) => x.card, 'card ' + b, 15000);
+      const st = await e.state(b);
+      check(ok && t.card_head === 'SOLVED' && st.timed.outcome === 'COMPLETED' && st.timed.limit_ms === 90000 && st.timed.assist.version === 'ta90-v1',
+        `${b}: solved by touches in a timed 90 s run (${((90000 - st.timed.remaining_ms) / 1000).toFixed(1)} s); rules ta90-v1`);
+      await e.shot(`M11_solved_${b}`);
+      await e.tapTa('TA_Continue');
+      // Every question skipped (whatever comes next) until the selection is back.
+      for (let k = 0; k < 40; k++) {
+        if ((await e.hub()).view === 'SELECT') break;
+        const q = await e.vt();
+        const tcard = await e.ta();
+        if (q && q.screen === 'THINK' && q.buttons.Think_SKIP) await e.tap(q.buttons.Think_SKIP, 600);
+        else if (tcard && tcard.card && tcard.buttons && (tcard.buttons.TA_Finish || tcard.buttons.TA_Continue)) await e.tap(tcard.buttons.TA_Finish || tcard.buttons.TA_Continue, 900);
+        else await sleep(400);
+      }
+    }
+    check(Object.values(benchMs).every((x) => x <= 250), `WebAssembly: a full solve (the TIME UP check) per board ${JSON.stringify(benchMs)} ms (a one-off call at 0:00, limit 250 ms here)`);
+    console.log('BENCH ' + JSON.stringify(benchMs));
+    allErrors.push(...e.errors); allExternal.push(...e.external);
+    await ctx.close();
+  }
+
   // ---------------- The player build ignores ?ta90=1 --------------------------------------
   if (server2) {
     const ctx = await browser.newContext(ctxOpts);

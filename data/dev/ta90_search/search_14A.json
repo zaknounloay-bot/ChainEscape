@@ -1,0 +1,521 @@
+{
+ "beam": [
+  {
+   "distinct": 2,
+   "endgame": false,
+   "map": [
+    ". . R>@~ . . .",
+    ". B^ Y<@ P^%A . .",
+    ". B>&A . . R< .",
+    ". . . . . .",
+    ". . G^&A P<@ . Rv@",
+    ". . R^ . . ."
+   ],
+   "matters": "1/1",
+   "per_step": [
+    2,
+    2,
+    2,
+    1,
+    1,
+    0,
+    0,
+    0,
+    0,
+    0
+   ],
+   "pieces": 10,
+   "positions": 121,
+   "score": 20.09,
+   "shortcut": 0.325,
+   "solution": 10,
+   "steps": 5,
+   "thirds": [
+    1,
+    1,
+    0
+   ]
+  },
+  {
+   "distinct": 2,
+   "endgame": false,
+   "map": [
+    ". . R>@~ . . .",
+    ". B^ Y<@ P^%A . .",
+    ". B>&A . . R< .",
+    ". . . . . .",
+    ". . G^&A P<@ . R^@~",
+    ". . R^ . . ."
+   ],
+   "matters": "1/1",
+   "per_step": [
+    2,
+    2,
+    2,
+    1,
+    1,
+    0,
+    0,
+    0,
+    0,
+    0
+   ],
+   "pieces": 10,
+   "positions": 121,
+   "score": 20.09,
+   "shortcut": 0.325,
+   "solution": 10,
+   "steps": 5,
+   "thirds": [
+    1,
+    1,
+    0
+   ]
+  },
+  {
+   "distinct": 2,
+   "endgame": false,
+   "map": [
+    ". . R<@- . . .",
+    ". B^ Y<@ P^%A . .",
+    ". B>&A . . R< .",
+    ". . . . . .",
+    ". . G^&A . . R>",
+    ". . R^ . . ."
+   ],
+   "matters": "1/1",
+   "per_step": [
+    2,
+    2,
+    2,
+    1,
+    0,
+    0,
+    0,
+    0,
+    0
+   ],
+   "pieces": 9,
+   "positions": 97,
+   "score": 19.29,
+   "shortcut": 0.325,
+   "solution": 9,
+   "steps": 4,
+   "thirds": [
+    1,
+    1,
+    0
+   ]
+  },
+  {
+   "distinct": 2,
+   "endgame": false,
+   "map": [
+    ". . R<@- . . .",
+    ". B^ Y<@ P^%A . .",
+    ". B>&A . . R< .",
+    ". . . . . .",
+    ". . G^&A . . Rv@",
+    ". . R^ . . ."
+   ],
+   "matters": "1/1",
+   "per_step": [
+    2,
+    2,
+    2,
+    1,
+    0,
+    0,
+    0,
+    0,
+    0
+   ],
+   "pieces": 9,
+   "positions": 97,
+   "score": 19.29,
+   "shortcut": 0.325,
+   "solution": 9,
+   "steps": 4,
+   "thirds": [
+    1,
+    1,
+    0
+   ]
+  },
+  {
+   "distinct": 1,
+   "endgame": false,
+   "map": [
+    ". G< . . . .",
+    ". B^ Y<@ P^%A . .",
+    ". B>&A . . R< .",
+    ". . . . . .",
+    ". . G^&A . . .",
+    ". . R^ . . ."
+   ],
+   "matters": "1/1",
+   "per_step": [
+    1,
+    1,
+    1,
+    1,
+    0,
+    0,
+    0,
+    0
+   ],
+   "pieces": 8,
+   "positions": 32,
+   "score": 12.02,
+   "shortcut": 0.45,
+   "solution": 8,
+   "steps": 4,
+   "thirds": [
+    1,
+    1,
+    0
+   ]
+  }
+ ],
+ "best": {
+  "distinct": 2,
+  "endgame": false,
+  "map": [
+   ". . R>@~ . . .",
+   ". B^ Y<@ P^%A . .",
+   ". B>&A . . R< .",
+   ". . . . . .",
+   ". . G^&A R<@~ . R^@",
+   ". . R^ . . ."
+  ],
+  "matters": "1/1",
+  "per_step": [
+   2,
+   2,
+   2,
+   1,
+   1,
+   0,
+   0,
+   0,
+   0,
+   0
+  ],
+  "pieces": 10,
+  "positions": 121,
+  "score": 20.09,
+  "shortcut": 0.325,
+  "solution": 10,
+  "steps": 5,
+  "thirds": [
+   1,
+   1,
+   0
+  ]
+ },
+ "evaluated": 631,
+ "log": [
+  {
+   "distinct": 1,
+   "endgame": false,
+   "evaluated": 1,
+   "matters": "1/1",
+   "pieces": 7,
+   "positions": 25,
+   "round": 0,
+   "score": 7.55,
+   "shortcut": 0.45,
+   "steps": 3
+  },
+  {
+   "distinct": 1,
+   "endgame": false,
+   "evaluated": 41,
+   "matters": "1/1",
+   "pieces": 8,
+   "positions": 32,
+   "round": 1,
+   "score": 12.02,
+   "shortcut": 0.45,
+   "steps": 4
+  },
+  {
+   "distinct": 1,
+   "endgame": false,
+   "evaluated": 72,
+   "matters": "1/1",
+   "pieces": 8,
+   "positions": 32,
+   "round": 2,
+   "score": 12.02,
+   "shortcut": 0.45,
+   "steps": 4
+  },
+  {
+   "distinct": 1,
+   "endgame": false,
+   "evaluated": 104,
+   "matters": "1/1",
+   "pieces": 10,
+   "positions": 122,
+   "round": 3,
+   "score": 15.26,
+   "shortcut": 0.35,
+   "steps": 5
+  },
+  {
+   "distinct": 2,
+   "endgame": false,
+   "evaluated": 132,
+   "matters": "1/1",
+   "pieces": 9,
+   "positions": 55,
+   "round": 4,
+   "score": 15.33,
+   "shortcut": 0.45,
+   "steps": 4
+  },
+  {
+   "distinct": 3,
+   "endgame": false,
+   "evaluated": 167,
+   "matters": "1/1",
+   "pieces": 10,
+   "positions": 149,
+   "round": 5,
+   "score": 16.55,
+   "shortcut": 0.55,
+   "steps": 5
+  },
+  {
+   "distinct": 3,
+   "endgame": false,
+   "evaluated": 197,
+   "matters": "1/1",
+   "pieces": 10,
+   "positions": 98,
+   "round": 6,
+   "score": 19.68,
+   "shortcut": 0.325,
+   "steps": 4
+  },
+  {
+   "distinct": 3,
+   "endgame": false,
+   "evaluated": 228,
+   "matters": "1/1",
+   "pieces": 10,
+   "positions": 98,
+   "round": 7,
+   "score": 19.68,
+   "shortcut": 0.325,
+   "steps": 4
+  },
+  {
+   "distinct": 3,
+   "endgame": false,
+   "evaluated": 256,
+   "matters": "1/1",
+   "pieces": 10,
+   "positions": 98,
+   "round": 8,
+   "score": 19.68,
+   "shortcut": 0.325,
+   "steps": 4
+  },
+  {
+   "distinct": 3,
+   "endgame": false,
+   "evaluated": 282,
+   "matters": "1/1",
+   "pieces": 10,
+   "positions": 98,
+   "round": 9,
+   "score": 19.68,
+   "shortcut": 0.325,
+   "steps": 4
+  },
+  {
+   "distinct": 3,
+   "endgame": false,
+   "evaluated": 302,
+   "matters": "1/1",
+   "pieces": 10,
+   "positions": 98,
+   "round": 10,
+   "score": 19.68,
+   "shortcut": 0.325,
+   "steps": 4
+  },
+  {
+   "distinct": 3,
+   "endgame": false,
+   "evaluated": 323,
+   "matters": "1/1",
+   "pieces": 10,
+   "positions": 95,
+   "round": 11,
+   "score": 19.7,
+   "shortcut": 0.325,
+   "steps": 4
+  },
+  {
+   "distinct": 2,
+   "endgame": false,
+   "evaluated": 348,
+   "matters": "1/1",
+   "pieces": 10,
+   "positions": 129,
+   "round": 12,
+   "score": 20.06,
+   "shortcut": 0.325,
+   "steps": 5
+  },
+  {
+   "distinct": 2,
+   "endgame": false,
+   "evaluated": 374,
+   "matters": "1/1",
+   "pieces": 10,
+   "positions": 129,
+   "round": 13,
+   "score": 20.06,
+   "shortcut": 0.325,
+   "steps": 5
+  },
+  {
+   "distinct": 2,
+   "endgame": false,
+   "evaluated": 396,
+   "matters": "1/1",
+   "pieces": 10,
+   "positions": 129,
+   "round": 14,
+   "score": 20.06,
+   "shortcut": 0.325,
+   "steps": 5
+  },
+  {
+   "distinct": 2,
+   "endgame": false,
+   "evaluated": 419,
+   "matters": "1/1",
+   "pieces": 10,
+   "positions": 129,
+   "round": 15,
+   "score": 20.06,
+   "shortcut": 0.325,
+   "steps": 5
+  },
+  {
+   "distinct": 2,
+   "endgame": false,
+   "evaluated": 441,
+   "matters": "1/1",
+   "pieces": 10,
+   "positions": 121,
+   "round": 16,
+   "score": 20.09,
+   "shortcut": 0.325,
+   "steps": 5
+  },
+  {
+   "distinct": 2,
+   "endgame": false,
+   "evaluated": 467,
+   "matters": "1/1",
+   "pieces": 10,
+   "positions": 121,
+   "round": 17,
+   "score": 20.09,
+   "shortcut": 0.325,
+   "steps": 5
+  },
+  {
+   "distinct": 2,
+   "endgame": false,
+   "evaluated": 495,
+   "matters": "1/1",
+   "pieces": 10,
+   "positions": 121,
+   "round": 18,
+   "score": 20.09,
+   "shortcut": 0.325,
+   "steps": 5
+  },
+  {
+   "distinct": 2,
+   "endgame": false,
+   "evaluated": 526,
+   "matters": "1/1",
+   "pieces": 10,
+   "positions": 121,
+   "round": 19,
+   "score": 20.09,
+   "shortcut": 0.325,
+   "steps": 5
+  },
+  {
+   "distinct": 2,
+   "endgame": false,
+   "evaluated": 551,
+   "matters": "1/1",
+   "pieces": 10,
+   "positions": 121,
+   "round": 20,
+   "score": 20.09,
+   "shortcut": 0.325,
+   "steps": 5
+  },
+  {
+   "distinct": 2,
+   "endgame": false,
+   "evaluated": 575,
+   "matters": "1/1",
+   "pieces": 10,
+   "positions": 121,
+   "round": 21,
+   "score": 20.09,
+   "shortcut": 0.325,
+   "steps": 5
+  },
+  {
+   "distinct": 2,
+   "endgame": false,
+   "evaluated": 596,
+   "matters": "1/1",
+   "pieces": 10,
+   "positions": 121,
+   "round": 22,
+   "score": 20.09,
+   "shortcut": 0.325,
+   "steps": 5
+  },
+  {
+   "distinct": 2,
+   "endgame": false,
+   "evaluated": 612,
+   "matters": "1/1",
+   "pieces": 10,
+   "positions": 121,
+   "round": 23,
+   "score": 20.09,
+   "shortcut": 0.325,
+   "steps": 5
+  },
+  {
+   "distinct": 2,
+   "endgame": false,
+   "evaluated": 631,
+   "matters": "1/1",
+   "pieces": 10,
+   "positions": 121,
+   "round": 24,
+   "score": 20.09,
+   "shortcut": 0.325,
+   "steps": 5
+  }
+ ],
+ "rounds": 24,
+ "stopped": "patience"
+}

@@ -1,0 +1,17 @@
+{
+ "cand_14A": {
+  "map": [
+   ". . R^ . . .",
+   ". B^ Y<@ P^%A . .",
+   ". B>&A G<@ Gv@~ R< .",
+   ". . B< . . .",
+   ". . G^&A . . .",
+   ". . R^ . . ."
+  ],
+  "target": "MEDIUM",
+  "facts": [
+   "reversed_escape"
+  ],
+  "mechanic": "switch"
+ }
+}

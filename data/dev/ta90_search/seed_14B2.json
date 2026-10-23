@@ -1,0 +1,48 @@
+{
+ "target": "HARD",
+ "facts": [
+  "gate_through",
+  "shell_rammed"
+ ],
+ "mechanic": "gate,armor",
+ "map": [
+  ". . . Bv . .",
+  ". . . XA . P<",
+  ". B^ . . . .",
+  ". R^@ . . Y^+A= .",
+  ". Gv . . . .",
+  ". . . . . ."
+ ],
+ "frozen": [
+  [
+   0,
+   3
+  ],
+  [
+   1,
+   3
+  ],
+  [
+   1,
+   5
+  ],
+  [
+   2,
+   1
+  ],
+  [
+   3,
+   1
+  ],
+  [
+   3,
+   4
+  ],
+  [
+   4,
+   1
+  ]
+ ],
+ "max_pieces": 12,
+ "shortcut_weight": 80
+}

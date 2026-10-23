@@ -18,11 +18,15 @@ extends PilotTimeAttack
 
 const LIMIT_90_MS := 90000
 const TA90_RULES := {"version": "ta90-v1", "limit_ms": 90000, "undo": 3, "show_a_move": 0, "hammer": 0, "restart": "unlimited"}
-## The prototype's boards. P5 / P6: the Phase 13 candidates once accepted
-## (tools/extreme17_build.gd). TA: the validated 120-second board, used ONLY
-## as an internal technical reference for the clock and the music (never
-## listed as a new puzzle).
+## The prototype's boards. N1-N3: the Phase 14 HUMAN-REVIEW CANDIDATES
+## (tools/ta90_design.gd, docs/ta90_design.md; neutral names, shown as
+## PUZZLE 1-3). TA: the validated 120-second board, used ONLY as an internal
+## technical reference for the clock and the music (never listed as a new
+## puzzle).
 const BOARDS90 := {
+	"N1": {"data": "res://data/dev/ta90_n1.json", "fp": "b5bb75f5937f03404ba786ff93d3e914d167ad2d5e28f88f5ed46e4a40377bff"},
+	"N2": {"data": "res://data/dev/ta90_n2.json", "fp": "f4be705fcc692f27f13e0cc8d7eca216a4ba68d117b84dce4980bfa5e76d695f"},
+	"N3": {"data": "res://data/dev/ta90_n3.json", "fp": "76d704deb06f8a6686040e5f5cfa6edeecdfc3f2a1af8f0c98be9a4922f2272c"},
 	"TA": {"data": "res://data/dev/extreme16_a.json", "fp": "a28e22f0a1a216ba4ac701ff549e7d212ce1fe83ae2d8e3678065da555b730cf", "reference": true},
 }
 const P90_TIMED_Q := [

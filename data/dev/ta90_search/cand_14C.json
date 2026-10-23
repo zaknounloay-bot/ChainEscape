@@ -1,0 +1,17 @@
+{
+ "cand_14C": {
+  "map": [
+   "G^%A Gv@- . . Y<@- .",
+   "B>@ . B<@- . . Y>@~",
+   ". . Y> B<&A+A Y^@- Yv@",
+   "R> . . . . .",
+   "G>@- . XA . . .",
+   ". . R^ . . ."
+  ],
+  "target": "VERY HARD",
+  "facts": [
+   "flip_opens_gate"
+  ],
+  "mechanic": "switch,gate"
+ }
+}

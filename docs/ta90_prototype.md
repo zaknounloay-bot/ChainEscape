@@ -4,12 +4,19 @@
 
 ## Boards
 
-**No new Phase 13 board passed its checks.** P5 and P6 were rejected by the full mandatory acceptance; the reasons are in `data/dev/extreme17_search/README.md`. The prototype therefore lists one row only: **REFERENCE (TA)**.
-- TA is the validated 120-second board. It is used here only to test the clock and the music.
-- The selection screen says so in words.
+**Phase 14 (`docs/ta90_design.md`):** three new boards with neutral names, each a **HUMAN-REVIEW CANDIDATE**: technically validated, but their strategic quality is not yet confirmed by people. The selection lists them as PUZZLE 1-3. The targets are design intentions, not ratings.
+
+| Shown as | Key | Data | Fingerprint | Design target | Idea |
+|---|---|---|---|---|---|
+| PUZZLE 1 | N1 | `data/dev/ta90_n1.json` | `b5bb75f5937f03404ba786ff93d3e914d167ad2d5e28f88f5ed46e4a40377bff` | MEDIUM | switch timing |
+| PUZZLE 2 | N2 | `data/dev/ta90_n2.json` | `f4be705fcc692f27f13e0cc8d7eca216a4ba68d117b84dce4980bfa5e76d695f` | HARD | ram timing + chain gate |
+| PUZZLE 3 | N3 | `data/dev/ta90_n3.json` | `76d704deb06f8a6686040e5f5cfa6edeecdfc3f2a1af8f0c98be9a4922f2272c` | VERY HARD | a reversal opens the gate |
+
+**REFERENCE (TA)** is the validated 120-second board, used only to test the clock and the music.
+- It shows only with `&ta90ref=1`, labelled REFERENCE and listed after the three puzzles.
 - TA's 120-second record and fingerprint are untouched: the prototype has its own storage.
 
-Accepted boards would go in `Ta90Prototype.ORDER90` and `Ta90TimeAttack.BOARDS90`. TA then shows only with `&ta90ref=1`.
+Phase 13's P5 and P6 were rejected (`data/dev/extreme17_search/README.md`); they are not used.
 
 ## Rules
 
@@ -57,6 +64,6 @@ The rules are `Ta90TimeAttack.TA90_RULES`, version `ta90-v1`, and every record c
 
 ## QA
 
-- `tools/ta90_check.gd` is the headless check.
-- `tools/web_ta90_page_test.mjs` runs a full real-time 90 s game in Chromium at iPhone SE size: stages and mixes, mute, background, reload and the tap rule, TIME UP, the calm untimed game, the bundle export, reduced motion and the player build.
+- `tools/ta90_check.gd` is the headless check. Since Phase 14 the full timed flow runs on N1, and N2 and N3 are each solved in a timed run on the real page.
+- `tools/web_ta90_page_test.mjs` runs a full real-time 90 s game in Chromium at iPhone SE size: stages and mixes, mute, background, reload and the tap rule, TIME UP, the calm untimed game, the bundle export, reduced motion and the player build. Run 3 (Phase 14) opens each new puzzle, reads the WebAssembly cost of a full solve (`&bench=1`, the Solver call the page makes at TIME UP) and solves N2 and N3 by touch in timed runs. `--board=TA` runs the same game on the reference (`&ta90ref=1`).
 - **Chromium is not iPhone Safari.** The audio checks read Chromium's Web Audio state and the mix and position the page publishes; nobody listened. The real Safari unlock, background behaviour and audio quality need a phone. Headless Chromium uses software rendering at about 4 fps, so its frame-rate comparison (with and without music) is only a rough sign.

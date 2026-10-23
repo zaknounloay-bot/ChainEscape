@@ -19,6 +19,7 @@ extends RefCounted
 ##                   escapes
 ##   flip_opens_gate a block a switch reversed leaves, and its leaving opens a
 ##                   chain gate (tools/extreme8_events.gd)
+##   shell_rammed    (phase 14) an armored shell was rammed (cracked)
 ##   gate_pull       a magnet's escape pulls a block that sat beyond a chain
 ##                   gate's cell on its line - possible only after the gate
 ##                   opened (a gate stops a pull)
@@ -29,7 +30,7 @@ extends RefCounted
 const EV16 := preload("res://tools/extreme16_events.gd")
 const EV8 := preload("res://tools/extreme8_events.gd")
 const EVENTS6 := preload("res://tools/extreme6_events.gd")
-const FACTS := ["gate_through", "crate_through", "alt_ram", "advance_turn", "flip_opens_gate", "gate_pull", "moved_then_turned", "key_turn", "reversed_ram"]
+const FACTS := ["gate_through", "crate_through", "alt_ram", "shell_rammed", "reversed_escape", "advance_turn", "flip_opens_gate", "gate_pull", "moved_then_turned", "key_turn", "reversed_ram"]
 
 ## Each crate's starting cell (set when a search starts; a crate never
 ## comes back into play once pushed away from it in these facts).
@@ -90,6 +91,8 @@ static func move_events(s: Solver, mv: int) -> Dictionary:
 static func fact_step(st: Dictionary, e: Dictionary) -> Dictionary:
 	var n := EV16.fact_step(st, e)
 	var id: int = e["id"]
+	if e["ram"]:
+		n["shell_rammed"] = true
 	if e["ram"] and e["alt"] and int(st.get("N%d" % id, 0)) >= 1:
 		n["alt_ram"] = true
 	for t in e["turned"]:

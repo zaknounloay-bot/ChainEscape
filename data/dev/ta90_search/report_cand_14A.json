@@ -1,0 +1,100 @@
+{
+ "cand_14A": {
+  "A": {
+   "fingerprint": "b5bb75f5937f03404ba786ff93d3e914d167ad2d5e28f88f5ed46e4a40377bff",
+   "hint_nodes": [
+    27,
+    29
+   ],
+   "parity": [
+    0,
+    0
+   ],
+   "positions": 173,
+   "replay": true,
+   "solution": 11,
+   "solve_ms": 2,
+   "winnable": 31
+  },
+  "B": {
+   "decision_steps": 6,
+   "distinct_mistakes": 4,
+   "endgame_decision": false,
+   "idea_reversed_escape": true,
+   "line": [
+    "r0c2^ [x4]",
+    "r1c2^ [x4]",
+    "r1c1^ [x3]",
+    "r2c2^ [x3]",
+    "r3c2< [x1]",
+    "r4c2^ [x1]",
+    "r5c2^",
+    "r1c3^",
+    "r2c1<",
+    "r2c3v",
+    "r2c4<"
+   ],
+   "losing_per_step": [
+    4,
+    4,
+    3,
+    3,
+    1,
+    1,
+    0,
+    0,
+    0,
+    0,
+    0
+   ],
+   "matters_switch": true,
+   "mistakes": [
+    "r1c1^",
+    "r1c3^",
+    "r2c3v",
+    "r3c2<"
+   ],
+   "shortcut": 0.03,
+   "without_switch": "unsolvable without it"
+  },
+  "C": {
+   "decisions_k4_6_8": [
+    5,
+    3,
+    1
+   ],
+   "deepest": 9,
+   "greedy": {
+    "look2": 0.015,
+    "look4": 0.025,
+    "min_turn": 0.03,
+    "mobility": 0,
+    "safe": 0.015
+   },
+   "hidden_k6_8": [
+    10,
+    4
+   ],
+   "learner": {
+    "look4": 2,
+    "look6": 0
+   },
+   "look6_greedy": 0.1,
+   "opening": "1 / 5",
+   "win_share": 0.179
+  },
+  "map": [
+   ". . R^ . . .",
+   ". B^ Y<@ P^%A . .",
+   ". B>&A G<@ Gv@~ R< .",
+   ". . B< . . .",
+   ". . G^&A . . .",
+   ". . R^ . . ."
+  ],
+  "name": "cand_14A",
+  "target": "MEDIUM",
+  "verdict": "HUMAN-REVIEW CANDIDATE",
+  "why_a": [],
+  "why_b": []
+ }
+}

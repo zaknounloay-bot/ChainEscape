@@ -1,4 +1,4 @@
-# Experimental boards: inventory (Phase 12A consolidation, updated in Phase 12B)
+# Experimental boards: inventory (Phase 12A consolidation, updated in Phases 12B, 13 and 14)
 
 Development only. Every board below lives in `data/dev/` and is reachable only through a development test page. Development pages are off in the player and QA builds (`BuildFlags.dev_pages_off()`). None is part of Production, the campaign, the Social MVP or Challenge a Friend.
 
@@ -10,7 +10,8 @@ Development only. Every board below lives in `data/dev/` and is reachable only t
 - the session logs analysed in `docs/extreme12_replay.md` (Q1);
 - the expert comparison in `docs/extreme9_analysis.md` (earlier boards);
 - the results reported to me in the phase 10 and phase 11 briefs (R1, S1);
-- the six first-exposure TA / TB / TC sessions reported in the phase 12B brief.
+- the six first-exposure TA / TB / TC sessions reported in the phase 12B brief;
+- the TA90 family-test correction reported in the phase 14 brief (section 4).
 
 Anything not in those sources is marked "not recorded". Nothing is inferred.
 
@@ -150,10 +151,55 @@ Solver / exhaustive parity on Q1, T5, E1, E2, H1 and H2 was checked exhaustively
 - Five candidates were started (P5-P9, `tools/extreme17_*`; state preserved in `data/dev/extreme17_search/`).
 - The bank was then paused for a 90-second prototype with dynamic music: `?ta90=1`, `docs/ta90_prototype.md`.
 - **No Phase 13 board has been accepted.** P5 and P6 failed the full mandatory acceptance. P6's first version (a movable crate) was rejected because the Solver overflows the stack on crate boards. P7-P9 are paused.
-- The prototype runs with TA as a labelled technical reference only.
+- The prototype ran with TA as a labelled technical reference only, until Phase 14.
+
+**Phase 14 (the 90-second design pipeline).** See `docs/ta90_design.md`.
+- **Three new boards on `?ta90=1`:** N1, N2 and N3, shown as PUZZLE 1-3. Their status is **HUMAN-REVIEW CANDIDATE**: they passed every technical check, but their strategic quality is not confirmed by people. Nobody has played them yet.
+- TA is now shown only with `&ta90ref=1`, as a labelled REFERENCE.
+- Phase 13's P5 and P6 stay rejected.
 
 Shared rules on every timed page:
 - The clock never stops or refills on RESTART, UNDO, the background or a reload. It also never stops on SHOW A MOVE where that tool still exists (Q1, R1).
 - TIME UP is frozen. An untimed solve is never recorded as a timed victory.
 - On `?rtime`, `?stime` and `?tt*`, CONTINUE WITHOUT TIMER is optional. It keeps the same puzzle and continues from the 0:00 position when that position can still be cleared, otherwise it starts fresh. It keeps a separate record.
 - Each page has its own storage.
+
+
+## 4. Phase 14: the 90-second prototype (`?ta90=1`)
+
+### Boards
+
+Every board passed the mandatory technical checks of `tools/ta90_design.gd`, category A: intact parse, solvable, Solver / exhaustive-search parity 0 / 0 in every position, a deterministic replay, at most 700 positions, and at most 40 ms for the solve and the TIME UP check. All three are **NOT YET HUMAN-TESTED**.
+
+| Board | Fingerprint | Mechanics | Pieces | Design target (not a rating) | Status |
+|---|---|---|---|---|---|
+| **N1** (PUZZLE 1) | `b5bb75f5937f03404ba786ff93d3e914d167ad2d5e28f88f5ed46e4a40377bff` | switch, cw / alternating spinners | 11 | MEDIUM | HUMAN-REVIEW CANDIDATE |
+| **N2** (PUZZLE 2) | `f4be705fcc692f27f13e0cc8d7eca216a4ba68d117b84dce4980bfa5e76d695f` | chain gate, armored shell, cw / ccw / alternating spinners | 13 | HARD | HUMAN-REVIEW CANDIDATE |
+| **N3** (PUZZLE 3) | `76d704deb06f8a6686040e5f5cfa6edeecdfc3f2a1af8f0c98be9a4922f2272c` | switch, chain gate, cw / ccw spinners | 14 | VERY HARD | HUMAN-REVIEW CANDIDATE |
+
+### TA90 family test: a correction
+
+TA90 here means the reference board TA, played on the 90-second prototype.
+
+- **The middle son's frustration rating.** The recorded raw answer was **5 / 5**. He later clarified verbally that he meant **1 / 5** (not frustrating).
+  - The raw value is kept unchanged as recorded.
+  - The interpretation to use is **1 / 5 (verbal clarification)**.
+  - Any analysis must name which one it uses.
+- No other values from that test were reported to me, so none are listed here. They are not inferred.
+
+### Recording sheet for the coming first-exposure sessions (N1-N3)
+
+The `ce-ta90` bundle (COPY ALL RESULTS) carries the objective fields. The answers come from the questions after each run. One row per player and board.
+
+| Field | Source |
+|---|---|
+| Time and outcome (WIN with the time left / TIME UP), untimed outcome kept apart | bundle: `timed_outcome`, `elapsed_ms`, `untimed_success` |
+| Attempts and restarts | bundle: `restarts` (attempts = restarts + 1) |
+| UNDO use | bundle: `undos` |
+| Blocked taps | bundle: `blocked_taps` |
+| Difficulty (first exposure) | question: "How difficult was this puzzle?" |
+| Enjoyment, excitement, frustration (1-5) | questions |
+| Achievement | the post-play question, where answered |
+| Music contribution | question: "Did the music make the experience better?" (YES / NO / NOT SURE / MUSIC WAS OFF) |
+| Desire to play again | question: "Would you play another puzzle?" |
+| Verbal corrections | written next to the raw value, never instead of it (as above) |

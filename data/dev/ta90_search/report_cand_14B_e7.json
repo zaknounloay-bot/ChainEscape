@@ -1,0 +1,108 @@
+{
+ "cand_14B_e7": {
+  "A": {
+   "fingerprint": "1fa09d0c9c274f6acc2763db0a788309adee21243a4a93e28b9b491a025cbb19",
+   "hint_nodes": [
+    123,
+    140
+   ],
+   "parity": [
+    0,
+    0
+   ],
+   "positions": 334,
+   "replay": true,
+   "solution": 13,
+   "solve_ms": 32.5,
+   "winnable": 53
+  },
+  "B": {
+   "decision_steps": 9,
+   "distinct_mistakes": 5,
+   "endgame_decision": true,
+   "idea_gate_through": true,
+   "idea_shell_rammed": true,
+   "line": [
+    "r3c3v [x5]",
+    "r3c2v [x4]",
+    "r3c1> ram [x4]",
+    "r2c1^ [x1]",
+    "r3c0v [x1]",
+    "r2c0^ [x1]",
+    "r3c1< [x1]",
+    "r4c1v [x1]",
+    "r2c4< [x1]",
+    "r3c4^",
+    "r0c3v",
+    "r1c5<",
+    "r2c5<"
+   ],
+   "losing_per_step": [
+    5,
+    4,
+    4,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    0,
+    0,
+    0,
+    0
+   ],
+   "matters_armor": true,
+   "matters_gate": true,
+   "mistakes": [
+    "r2c1^",
+    "r2c5>",
+    "r3c0v",
+    "r3c2v",
+    "r4c1v"
+   ],
+   "shortcut": 0.02,
+   "without_armor": "without it: 5 decision steps, 1 distinct mistakes (with it: 9, 5)",
+   "without_gate": "without it: 11 decision steps, 6 distinct mistakes (with it: 9, 5)"
+  },
+  "C": {
+   "decisions_k4_6_8": [
+    5,
+    3,
+    1
+   ],
+   "deepest": 9,
+   "greedy": {
+    "look2": 0.01,
+    "look4": 0.008,
+    "min_turn": 0,
+    "mobility": 0,
+    "safe": 0.02
+   },
+   "hidden_k6_8": [
+    13,
+    5
+   ],
+   "learner": {
+    "look4": 7,
+    "look6": 7
+   },
+   "look6_greedy": 0.033,
+   "opening": "1 / 6",
+   "win_share": 0.159
+  },
+  "map": [
+   ". . . Bv . .",
+   ". . . XA . P<",
+   "Yv@- B^ . . Y<@- B>@-",
+   "Pv@- R^@ Yv Gv@~ Y^+A= .",
+   ". Gv . . . .",
+   ". . . . . ."
+  ],
+  "name": "cand_14B_e7",
+  "target": "HARD",
+  "verdict": "HUMAN-REVIEW CANDIDATE",
+  "why_a": [],
+  "why_b": []
+ }
+}

@@ -1,0 +1,106 @@
+{
+ "cand_14C2": {
+  "A": {
+   "fingerprint": "76d704deb06f8a6686040e5f5cfa6edeecdfc3f2a1af8f0c98be9a4922f2272c",
+   "hint_nodes": [
+    3,
+    3
+   ],
+   "parity": [
+    0,
+    0
+   ],
+   "positions": 58,
+   "replay": true,
+   "solution": 13,
+   "solve_ms": 1.2,
+   "winnable": 17
+  },
+  "B": {
+   "decision_steps": 11,
+   "distinct_mistakes": 4,
+   "endgame_decision": true,
+   "idea_flip_opens_gate": true,
+   "line": [
+    "r0c1v [x3]",
+    "r0c0^ [x2]",
+    "r0c4< [x2]",
+    "r1c5> [x2]",
+    "r2c4^ [x1]",
+    "r2c5^ [x1]",
+    "r2c3> [x1]",
+    "r4c0> [x2]",
+    "r3c0> [x1]",
+    "r1c0v [x1]",
+    "r1c2< [x1]",
+    "r2c2>",
+    "r5c2^"
+   ],
+   "losing_per_step": [
+    3,
+    2,
+    2,
+    2,
+    1,
+    1,
+    1,
+    2,
+    1,
+    1,
+    1,
+    0,
+    0
+   ],
+   "matters_gate": true,
+   "matters_switch": true,
+   "mistakes": [
+    "r0c0^",
+    "r2c5v",
+    "r3c0>",
+    "r2c2>"
+   ],
+   "shortcut": 0.15,
+   "without_gate": "without it: 8 decision steps, 3 distinct mistakes (with it: 11, 4)",
+   "without_switch": "unsolvable without it"
+  },
+  "C": {
+   "decisions_k4_6_8": [
+    5,
+    3,
+    1
+   ],
+   "deepest": 9,
+   "greedy": {
+    "look2": 0.135,
+    "look4": 0.133,
+    "min_turn": 0.15,
+    "mobility": 0,
+    "safe": 0.15
+   },
+   "hidden_k6_8": [
+    3,
+    1
+   ],
+   "learner": {
+    "look4": 1,
+    "look6": 0
+   },
+   "look6_greedy": 0.433,
+   "opening": "2 / 5",
+   "win_share": 0.293
+  },
+  "map": [
+   "G^%A Gv@- . . Y<@- .",
+   "B>@ . B<@- . . Y>",
+   ". . Y> B<&A+A Y^@- Yv@",
+   "R> . . . . .",
+   "G>@- . XA . . .",
+   ". . R^ . . ."
+  ],
+  "name": "cand_14C2",
+  "target": "VERY HARD",
+  "verdict": "HUMAN-REVIEW CANDIDATE",
+  "why_a": [],
+  "why_b": []
+ }
+}

@@ -18,7 +18,7 @@ extends CanvasLayer
 ## and only if the global music setting is on.
 ## &ta90ref=1 (development checks only): adds TA, a validated 120-second
 ## board, as an internal REFERENCE row to test the clock and the music - it
-## is never a Phase 13 puzzle and is never listed without that flag.
+## is never a new puzzle and is never listed without that flag.
 ## Player / QA builds: never opened (BuildFlags.dev_pages_off()); the boards
 ## and the music are not in those builds.
 
@@ -26,8 +26,8 @@ const PARAM := "ta90"
 const STATE_PATH := "user://ta90_hub.json"
 const LS_KEY := "chain_escape_ta90_hub"
 const ACCENT := Color("#1A9FE6")
-## The accepted Phase 13 boards, in the order shown (PUZZLE 1, 2).
-const ORDER90 := []
+## The Phase 14 HUMAN-REVIEW CANDIDATES, in the order shown (PUZZLE 1-3).
+const ORDER90 := ["N1", "N2", "N3"]
 const WELCOME := "Clear a puzzle in 90 seconds, with music that follows the clock.\n\nPlay one puzzle, or more, in any order. Turn the music off any time with the MUSIC button.\n\nAfter each puzzle: a few quick questions (you can skip any of them).\n\nNo names, no accounts: your answers stay on this phone until you tap COPY ALL RESULTS and send them to us."
 
 enum View { WELCOME, FAMILIARITY, SELECT, PUZZLE }
@@ -280,7 +280,7 @@ func _build() -> void:
 	s.add_child(_label("CHOOSE A PUZZLE", 40, 900))
 	s.add_child(_label("90 seconds each. Play one or more.", 24, 700))
 	if ORDER90.is_empty():
-		# No Phase 13 board passed its checks yet: say so - the reference is not a new puzzle.
+		# No new board passed its checks yet: say so - the reference is not a new puzzle.
 		var note := _label("Technical test build: no new 90-second puzzle has passed its checks yet. REFERENCE (TA) is an existing board, used to test the clock and the music.", 20, 700)
 		note.name = "ReferenceNote"
 		note.add_theme_color_override("font_color", Palette.TEXT_SOFT)

@@ -1,0 +1,39 @@
+{
+ "target": "VERY HARD",
+ "facts": [
+  "flip_opens_gate"
+ ],
+ "mechanic": "switch,gate",
+ "map": [
+  "G^%A . . . . .",
+  ". . . . . .",
+  ". . Y> B<&A+A . .",
+  ". . . . . .",
+  ". . XA . . .",
+  ". . R^ . . ."
+ ],
+ "frozen": [
+  [
+   0,
+   0
+  ],
+  [
+   2,
+   2
+  ],
+  [
+   2,
+   3
+  ],
+  [
+   4,
+   2
+  ],
+  [
+   5,
+   2
+  ]
+ ],
+ "max_pieces": 12,
+ "seed": 1
+}

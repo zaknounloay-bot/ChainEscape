@@ -1,0 +1,18 @@
+{
+ "cand_14B_e6": {
+  "map": [
+   ". . . Bv . .",
+   ". . . XA . P<",
+   "Rv@- B^ . . Y<@- B>@-",
+   "P<@~ R^@ Y^ Gv@ Y^+A= .",
+   ". Gv . . . .",
+   ". . . . . ."
+  ],
+  "target": "HARD",
+  "facts": [
+   "gate_through",
+   "shell_rammed"
+  ],
+  "mechanic": "gate,armor"
+ }
+}

@@ -60,3 +60,7 @@ P5 and P6 were retargeted to the 90-second band "TA90" (expert learner 4-10) in 
 Both boards are still far too easy and too shallow. Neither is used anywhere. The 90-second prototype (`?ta90=1`) runs with TA as a labelled internal REFERENCE only.
 
 To continue later, start from `resume90_pN.json`. With 2-3 growth rounds left, the screens need several more hours each.
+
+## Phase 14
+
+P5 and P6 were measured again with the Phase 14 design report (`tools/ta90_design.gd`). Both boards are technically valid, but their mechanic is decoration and they have no endgame decision. They remain rejected. The 90-second prototype now plays three Phase 14 boards (N1-N3): see `docs/ta90_design.md` and `data/dev/ta90_search/`.

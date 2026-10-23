@@ -1,0 +1,8 @@
+{
+ "core_14A": {"target": "MEDIUM", "facts": ["reversed_escape"], "mechanic": "switch",
+  "map": [". . . . . .", ". B^ Y<@ P^%A . .", ". B>&A . . R< .", ". . . . . .", ". . G^&A . . .", ". . R^ . . ."]},
+ "core_14B": {"target": "HARD", "facts": ["gate_through", "shell_rammed"], "mechanic": "gate,armor",
+  "map": [". . Bv . . .", ". . XA . . .", ". . . . . .", ". R>+A . . G^= .", ". . . . . .", ". . . . . ."]},
+ "core_14C": {"target": "VERY HARD", "facts": ["flip_opens_gate"], "mechanic": "switch,gate",
+  "map": ["G^%A . . . . .", ". . . . . .", ". . Y> B<&A+A . .", ". . . . . .", ". . XA . . .", ". . R^ . . ."]}
+}

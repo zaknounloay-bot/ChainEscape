@@ -1,0 +1,117 @@
+{
+ "format": "ce-ta90-proto",
+ "v": 1,
+ "test": "ta90_n1",
+ "assist": {
+  "undo": 3,
+  "show_a_move": 0,
+  "hammer": 0
+ },
+ "note": "Development only. Phase 14 90-second prototype board (?ta90=1); never shared, never production. HUMAN-REVIEW CANDIDATE: technically validated, strategic quality unconfirmed by people.",
+ "boards": [
+  {
+   "id": "N1",
+   "accepted": true,
+   "label": "HUMAN-REVIEW CANDIDATE - EXPERIMENTAL, HUMAN DIFFICULTY UNVALIDATED",
+   "variant": "N1",
+   "design": "14A",
+   "target": "MEDIUM (a design target, not a rating)",
+   "idea": "switch timing: a flip target must leave BEFORE the switch fires, the other only after it (reversed_escape on every winning line)",
+   "source": "hand-drawn idea core, grown by the bounded constructive search (tools/ta90_search.gd), checked by tools/ta90_design.gd",
+   "fingerprint": "b5bb75f5937f03404ba786ff93d3e914d167ad2d5e28f88f5ed46e4a40377bff",
+   "mechanics": [
+    "spinner_cw",
+    "spinner_alt",
+    "switch"
+   ],
+   "puzzle": {
+    "format": "ce-puzzle",
+    "v": 1,
+    "rules": 1,
+    "rows": 6,
+    "cols": 6,
+    "map": [
+     ". . R^ . . .",
+     ". B^ Y<@ P^%A . .",
+     ". B>&A G<@ Gv@~ R< .",
+     ". . B< . . .",
+     ". . G^&A . . .",
+     ". . R^ . . ."
+    ]
+   },
+   "design_report": {
+    "A": {
+     "fingerprint": "b5bb75f5937f03404ba786ff93d3e914d167ad2d5e28f88f5ed46e4a40377bff",
+     "hint_nodes": [
+      27,
+      29
+     ],
+     "parity": [
+      0,
+      0
+     ],
+     "positions": 173,
+     "replay": true,
+     "solution": 11,
+     "solve_ms": 2,
+     "winnable": 31
+    },
+    "B": {
+     "decision_steps": 6,
+     "distinct_mistakes": 4,
+     "endgame_decision": false,
+     "idea_reversed_escape": true,
+     "losing_per_step": [
+      4,
+      4,
+      3,
+      3,
+      1,
+      1,
+      0,
+      0,
+      0,
+      0,
+      0
+     ],
+     "matters_switch": true,
+     "mistakes": [
+      "r1c1^",
+      "r1c3^",
+      "r2c3v",
+      "r3c2<"
+     ],
+     "shortcut": 0.03,
+     "without_switch": "unsolvable without it"
+    },
+    "C": {
+     "decisions_k4_6_8": [
+      5,
+      3,
+      1
+     ],
+     "deepest": 9,
+     "greedy": {
+      "look2": 0.015,
+      "look4": 0.025,
+      "min_turn": 0.03,
+      "mobility": 0,
+      "safe": 0.015
+     },
+     "hidden_k6_8": [
+      10,
+      4
+     ],
+     "learner": {
+      "look4": 2,
+      "look6": 0
+     },
+     "look6_greedy": 0.1,
+     "opening": "1 / 5",
+     "win_share": 0.179
+    },
+    "verdict": "HUMAN-REVIEW CANDIDATE"
+   }
+  }
+ ]
+}

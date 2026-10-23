@@ -16,7 +16,7 @@ extends "res://tools/extreme11_check.gd"
 const LIM := 90000
 const OTHER := ["user://tapilot_hub.json", "user://tapilot_ta_state.json", "user://tapilot_s1_state.json", "user://stime_state.json", "user://tta_state.json",
 	"user://rtime_state.json", "user://q1time_state.json", "user://extreme11_state.json"]
-var REF := "TA"
+var REF := "N1"  # the full timed flow runs on the first Phase 14 board
 
 
 func _ready() -> void:
@@ -43,6 +43,7 @@ func _run() -> void:
 	await _timeup_untimed()
 	await _win_and_music_controls()
 	await _export_and_isolation()
+	await _new_boards()
 	_check(OTHER.all(func(f): return FileAccess.get_file_as_string(f) == before[f]), "the 120-second pilot's and every standalone page's storage untouched")
 	_check(not FileAccess.file_exists(PROGRESS_PATH), "no campaign progress written")
 	print("TA90 CHECK: %s (%d checks)" % ["PASSED" if failures.is_empty() else "FAILED", passed + failures.size()])
@@ -58,7 +59,9 @@ func _boards() -> void:
 		var rec: Dictionary = d["boards"].filter(func(x): return str(x["id"]) == b)[0]
 		ok = ok and PuzzleDefinition.from_dict(rec["puzzle"]).fingerprint() == Ta90TimeAttack.BOARDS90[b]["fp"]
 	_check(ok and Ta90TimeAttack.BOARDS90["TA"].get("reference", false) and not Ta90Prototype.ORDER90.has("TA"),
-		"every prototype board matches its fingerprint; TA is only an internal reference, never a Phase 13 puzzle")
+		"every prototype board matches its fingerprint; TA is only an internal reference, never a new puzzle")
+	_check(Ta90Prototype.ORDER90 == ["N1", "N2", "N3"] and Ta90Prototype.ORDER90.all(func(b): return not Ta90TimeAttack.BOARDS90[b].get("reference", false)),
+		"Phase 14: the three HUMAN-REVIEW CANDIDATES N1-N3 (neutral names) are the prototype's puzzles")
 	_check(Ta90TimeAttack.LIMIT_90_MS == LIM and Ta90TimeAttack.TA90_RULES["show_a_move"] == 0 and Ta90TimeAttack.TA90_RULES["undo"] == 3
 		and Ta90TimeAttack.TA90_RULES["hammer"] == 0 and Ta90TimeAttack.TA90_RULES["restart"] == "unlimited", "rules ta90-v1: 90 s, SHOW A MOVE x0, UNDO x3, unlimited RESTART, HAMMER x0")
 	_check(Ta90TimeAttack.state_path90("P5") != PilotTimeAttack.state_path("P5") and Ta90Prototype.STATE_PATH != TaPilot.STATE_PATH and Ta90Prototype.LS_KEY != TaPilot.LS_KEY
@@ -118,8 +121,9 @@ func _hub_flow() -> void:
 	(h.find_child("Familiar_PLAYED_A_LITTLE", true, false) as Button).pressed.emit()
 	await _frames(2)
 	_check(h.view == Ta90Prototype.View.SELECT and h.order.has(REF), "familiarity once, then CHOOSE A PUZZLE")
-	_check(not Ta90Prototype.ORDER90.is_empty() or ((h.find_child("ReferenceNote", true, false) as Label).is_visible_in_tree()
-		and h.find_child("Puzzle_1", true, false).text == "REFERENCE (TA)"), "no Phase 13 board accepted: the selection says so, and TA is labelled REFERENCE")
+	_check(h.order == ["N1", "N2", "N3"] and h.find_child("ReferenceNote", true, false) == null
+		and ["Puzzle_1", "Puzzle_2", "Puzzle_3"].all(func(n): return h.find_child(n, true, false).text == "PUZZLE %d" % (int(n.right(1))))
+		and h.find_child("Puzzle_4", true, false) == null, "the selection: PUZZLE 1-3 (N1-N3, neutral names); no reference row without &ta90ref=1")
 	await _close(h)
 	_check(not AudioServer.is_bus_mute(mbus), "closing the prototype restores the campaign music bus (the saved setting was never changed)")
 
@@ -268,5 +272,32 @@ func _export_and_isolation() -> void:
 	var r0: Dictionary = runs[0] if not runs.is_empty() else {}
 	_check(b["format"] == "ce-ta90" and b["rules"]["version"] == "ta90-v1" and runs.size() == 2 and r0.get("timed_outcome", "") == "TIME UP" and r0.get("untimed_success", false)
 		and r0.get("hint_allowance", -1) == 0 and r0.get("rules", "") == "ta90-v1" and r0.get("elapsed_ms", 0) == LIM and r0["timed_answers"].get("music", "") == "YES"
-		and b["boards"]["TA"]["reference"] == true and not b.has("device"), "COPY ALL RESULTS: one ce-ta90 bundle (2 runs, rules ta90-v1, 90 s, TIME UP and the untimed solve apart, the music answer; TA marked reference)")
+		and b["boards"]["N1"]["reference"] == false and b["boards"]["N1"]["fingerprint"] == Ta90TimeAttack.BOARDS90["N1"]["fp"] and not b["boards"].has("TA") and not b.has("device"),
+		"COPY ALL RESULTS: one ce-ta90 bundle (2 runs, rules ta90-v1, 90 s, TIME UP and the untimed solve apart, the music answer; N1 with its fingerprint, no reference row)")
 	await _close(h)
+
+
+## Phase 14: every new board on the real page - its brief (90 seconds, its
+## mechanics explained, no hints), then the Solver's line tapped in a timed
+## run clears it (SOLVED, music off).
+func _new_boards() -> void:
+	for b in ["N2", "N3"]:
+		var h: Ta90Prototype = await _hub()
+		h.open_puzzle(b)
+		await _frames(3)
+		var p := h.page
+		var mech: Array = p.boards.get(b, {}).get("mechanics", [])
+		var brief: String = p._brief_text.text
+		_check(p.board_ok and p.screen == VhHumanTest.Screen.BRIEF and brief.contains("You have 90 seconds.") and brief.contains("No hints.")
+			and mech.all(func(m): return m == "spinner_cw" or not VhHumanTest.REMINDERS.has(m) or brief.contains(VhHumanTest.REMINDERS[m])),
+			"%s: the board loads (fingerprint), the brief says 90 seconds, no hints, and explains its mechanics %s" % [b, str(mech)])
+		p._brief_go.pressed.emit()
+		await _frames(4)
+		_check(p.run_active() and _hint_gone(p.play) and p.play.max_undos == 3, "%s: a 90 s run, no SHOW A MOVE, UNDO x3" % b)
+		for mv in _solution(b):
+			p.play.tap_block(mv)
+			await _wait(0.03)
+		await _wait(1.3)
+		_check(p.state["timed"]["outcome"] == "COMPLETED" and p._card_head.text == "SOLVED" and p.music.stage == "",
+			"%s: the Solver's line clears it on the page in a timed run (SOLVED; the music fades out)" % b)
+		await _close(h)

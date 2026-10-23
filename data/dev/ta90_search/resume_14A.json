@@ -1,0 +1,48 @@
+{
+ "target": "MEDIUM",
+ "facts": [
+  "reversed_escape"
+ ],
+ "mechanic": "switch",
+ "map": [
+  ". . R>@~ . . .",
+  ". B^ Y<@ P^%A . .",
+  ". B>&A . . R< .",
+  ". . . . . .",
+  ". . G^&A R<@~ . R^@",
+  ". . R^ . . ."
+ ],
+ "frozen": [
+  [
+   1,
+   1
+  ],
+  [
+   1,
+   2
+  ],
+  [
+   1,
+   3
+  ],
+  [
+   2,
+   1
+  ],
+  [
+   2,
+   4
+  ],
+  [
+   4,
+   2
+  ],
+  [
+   5,
+   2
+  ]
+ ],
+ "max_pieces": 11,
+ "seed": 1,
+ "shortcut_weight": 80
+}

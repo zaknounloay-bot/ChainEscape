@@ -1,0 +1,107 @@
+{
+ "cand_14B_s5": {
+  "A": {
+   "fingerprint": "cec5949f4d237021f979d798b19741be71f6fd01ef993198da33352b8a8de1c7",
+   "hint_nodes": [
+    5,
+    54
+   ],
+   "parity": [
+    0,
+    0
+   ],
+   "positions": 218,
+   "replay": true,
+   "solution": 12,
+   "solve_ms": 10.5,
+   "winnable": 116
+  },
+  "B": {
+   "decision_steps": 4,
+   "distinct_mistakes": 4,
+   "endgame_decision": true,
+   "idea_gate_through": true,
+   "idea_shell_rammed": true,
+   "line": [
+    "r3c2^ [x3]",
+    "r3c1> ram [x2]",
+    "r2c1^",
+    "r2c4<",
+    "r3c4^",
+    "r1c5<",
+    "r4c1v",
+    "r3c1< [x1]",
+    "r4c3> [x1]",
+    "r0c3v",
+    "r4c2<",
+    "r0c0>"
+   ],
+   "losing_per_step": [
+    3,
+    2,
+    0,
+    0,
+    0,
+    0,
+    0,
+    1,
+    1,
+    0,
+    0,
+    0
+   ],
+   "matters_armor": true,
+   "matters_gate": true,
+   "mistakes": [
+    "r2c1^",
+    "r4c1v",
+    "r4c2v",
+    "r4c2^"
+   ],
+   "shortcut": 0.225,
+   "without_armor": "without it: 7 decision steps, 2 distinct mistakes (with it: 4, 4)",
+   "without_gate": "without it: 5 decision steps, 4 distinct mistakes (with it: 4, 4)"
+  },
+  "C": {
+   "decisions_k4_6_8": [
+    2,
+    1,
+    0
+   ],
+   "deepest": 7,
+   "greedy": {
+    "look2": 0.225,
+    "look4": 0.217,
+    "min_turn": 0,
+    "mobility": 0,
+    "safe": 0.21
+   },
+   "hidden_k6_8": [
+    2,
+    0
+   ],
+   "learner": {
+    "look4": 1,
+    "look6": 0
+   },
+   "look6_greedy": 0.525,
+   "opening": "2 / 5",
+   "win_share": 0.532
+  },
+  "map": [
+   "P>@~ . . Bv . .",
+   ". . . XA . P<",
+   ". B^ . . G<@- .",
+   ". R^@ R^@- . Y^+A= .",
+   ". Gv Rv@- P>@- . .",
+   ". . . . . ."
+  ],
+  "name": "cand_14B_s5",
+  "target": "HARD",
+  "verdict": "NEEDS WORK",
+  "why_a": [],
+  "why_b": [
+   "a simple greedy player wins 22% (> 20%): a shortcut"
+  ]
+ }
+}

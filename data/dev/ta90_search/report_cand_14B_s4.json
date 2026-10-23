@@ -1,0 +1,108 @@
+{
+ "cand_14B_s4": {
+  "A": {
+   "fingerprint": "12b0777fc2c8d5a989d89295e40a60d0e486beee28f9ed2772da7b7c13879fdc",
+   "hint_nodes": [
+    100,
+    87
+   ],
+   "parity": [
+    0,
+    0
+   ],
+   "positions": 298,
+   "replay": true,
+   "solution": 12,
+   "solve_ms": 12.8,
+   "winnable": 79
+  },
+  "B": {
+   "decision_steps": 5,
+   "distinct_mistakes": 5,
+   "endgame_decision": false,
+   "idea_gate_through": true,
+   "idea_shell_rammed": true,
+   "line": [
+    "r3c3v [x5]",
+    "r3c2^ [x4]",
+    "r3c1> ram [x4]",
+    "r2c1^ [x1]",
+    "r2c4< [x1]",
+    "r3c4^",
+    "r0c3v",
+    "r1c5<",
+    "r2c5<",
+    "r3c0<",
+    "r3c1<",
+    "r4c1v"
+   ],
+   "losing_per_step": [
+    5,
+    4,
+    4,
+    1,
+    1,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0
+   ],
+   "matters_armor": true,
+   "matters_gate": true,
+   "mistakes": [
+    "r2c1^",
+    "r2c5>",
+    "r3c0<",
+    "r3c2^",
+    "r4c1v"
+   ],
+   "shortcut": 0.12,
+   "without_armor": "without it: 3 decision steps, 1 distinct mistakes (with it: 5, 5)",
+   "without_gate": "without it: 7 decision steps, 6 distinct mistakes (with it: 5, 5)"
+  },
+  "C": {
+   "decisions_k4_6_8": [
+    4,
+    2,
+    0
+   ],
+   "deepest": 8,
+   "greedy": {
+    "look2": 0.035,
+    "look4": 0.042,
+    "min_turn": 0.12,
+    "mobility": 0,
+    "safe": 0.015
+   },
+   "hidden_k6_8": [
+    9,
+    0
+   ],
+   "learner": {
+    "look4": 6,
+    "look6": 6
+   },
+   "look6_greedy": 0.042,
+   "opening": "1 / 6",
+   "win_share": 0.265
+  },
+  "map": [
+   ". . . Bv . .",
+   ". . . XA . P<",
+   ". B^ . . Y<@- B>@-",
+   "P< R^@ Y^ Gv@~ Y^+A= .",
+   ". Gv . . . .",
+   ". . . . . ."
+  ],
+  "name": "cand_14B_s4",
+  "target": "HARD",
+  "verdict": "NEEDS WORK",
+  "why_a": [],
+  "why_b": [
+   "no decision in the last third"
+  ]
+ }
+}

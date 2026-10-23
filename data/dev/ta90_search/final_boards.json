@@ -1,0 +1,48 @@
+{
+ "N1": {
+  "map": [
+   ". . R^ . . .",
+   ". B^ Y<@ P^%A . .",
+   ". B>&A G<@ Gv@~ R< .",
+   ". . B< . . .",
+   ". . G^&A . . .",
+   ". . R^ . . ."
+  ],
+  "target": "MEDIUM",
+  "facts": [
+   "reversed_escape"
+  ],
+  "mechanic": "switch"
+ },
+ "N2": {
+  "map": [
+   ". . . Bv . .",
+   ". . . XA . P<",
+   "Rv@- B^ . . Y<@- B>@-",
+   "P<@~ R^@ Y^ Gv@ Y^+A= .",
+   ". Gv . . . .",
+   ". . . . . ."
+  ],
+  "target": "HARD",
+  "facts": [
+   "gate_through",
+   "shell_rammed"
+  ],
+  "mechanic": "gate,armor"
+ },
+ "N3": {
+  "map": [
+   "G^%A Gv@- . . Y<@- .",
+   "B>@ . B<@- . . Y>",
+   ". . Y> B<&A+A Y^@- Yv@",
+   "R> . . . . .",
+   "G>@- . XA . . .",
+   ". . R^ . . ."
+  ],
+  "target": "VERY HARD",
+  "facts": [
+   "flip_opens_gate"
+  ],
+  "mechanic": "switch,gate"
+ }
+}
