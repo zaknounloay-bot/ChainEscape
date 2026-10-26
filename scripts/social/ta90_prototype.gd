@@ -26,8 +26,9 @@ const PARAM := "ta90"
 const STATE_PATH := "user://ta90_hub.json"
 const LS_KEY := "chain_escape_ta90_hub"
 const ACCENT := Color("#1A9FE6")
-## The Phase 14 HUMAN-REVIEW CANDIDATES, in the order shown (PUZZLE 1-3).
-const ORDER90 := ["N1", "N2", "N3"]
+## The HUMAN-REVIEW CANDIDATES in the order shown: N1-N3 (Phase 14), N4-N13
+## (Phase 15, in a mixed order of size and design target - PUZZLE k is N<k>).
+const ORDER90 := ["N1", "N2", "N3", "N4", "N5", "N6", "N7", "N8", "N9", "N10", "N11", "N12", "N13"]
 const WELCOME := "Clear a puzzle in 90 seconds, with music that follows the clock.\n\nPlay one puzzle, or more, in any order. Turn the music off any time with the MUSIC button.\n\nAfter each puzzle: a few quick questions (you can skip any of them).\n\nNo names, no accounts: your answers stay on this phone until you tap COPY ALL RESULTS and send them to us."
 
 enum View { WELCOME, FAMILIARITY, SELECT, PUZZLE }
@@ -207,6 +208,23 @@ func _status(board: String) -> String:
 	return line + ("  (played %d times)" % res.size() if res.size() > 1 else "")
 
 
+## The grid tile's status (a few words: the full line does not fit a tile).
+func short_status(board: String) -> String:
+	var st := Ta90TimeAttack.read_state90(board)
+	var res: Array = st.get("results", [])
+	if _in_progress(st):
+		return "Continue"
+	if res.is_empty():
+		return "New"
+	var s := PilotTimeAttack.summarize(board, res[-1])
+	var line := "Stopped"
+	if s["timed_success"]:
+		line = "Solved " + Q1TimeAttack._mmss(int(s["elapsed_ms"]), false)
+	elif s["timed_outcome"] == "TIME UP":
+		line = "Time up" + (" / solved" if s["untimed_success"] else "")
+	return line + (" x%d" % res.size() if res.size() > 1 else "")
+
+
 # --- Screens ------------------------------------------------------------------------------
 
 func _show(v: int) -> void:
@@ -216,7 +234,7 @@ func _show(v: int) -> void:
 		_pages[k].visible = k == v
 	if v == View.SELECT:
 		for b in _rows:
-			_rows[b][1].text = _status(b)
+			_rows[b][1].text = _status(b) if Ta90TimeAttack.BOARDS90[b].get("reference", false) else short_status(b)
 		_copy_status.text = ""
 		if OS.has_feature("web"):
 			SocialWeb.set_share(results_json(), "", "")
@@ -285,16 +303,38 @@ func _build() -> void:
 		note.name = "ReferenceNote"
 		note.add_theme_color_override("font_color", Palette.TEXT_SOFT)
 		s.add_child(note)
+	# Phase 15: up to 15 puzzles on an iPhone SE without scrolling - a grid of
+	# compact tiles (PUZZLE n + a short status), three to a row; the reference
+	# (&ta90ref=1 only) keeps its own full-width, labelled row below.
+	var grid := GridContainer.new()
+	grid.name = "PuzzleGrid"
+	grid.columns = 3
+	grid.add_theme_constant_override("h_separation", 12)
+	grid.add_theme_constant_override("v_separation", 10)
+	s.add_child(grid)
 	for b in order:
-		var label := ("REFERENCE (TA)" if Ta90TimeAttack.BOARDS90[b].get("reference", false) else "PUZZLE %d" % (order.find(b) + 1))
-		var btn := _button(label, "Puzzle_%d" % (order.find(b) + 1), Palette.WHITE, Palette.TEXT)
+		var ref: bool = Ta90TimeAttack.BOARDS90[b].get("reference", false)
+		var n := order.find(b) + 1
+		var btn: PillButton
+		var st := _label("", 18 if not ref else 22, 700)
+		st.add_theme_color_override("font_color", Palette.TEXT_SOFT)
+		if ref:
+			btn = _button("REFERENCE (TA)", "Puzzle_%d" % n, Palette.WHITE, Palette.TEXT)
+			s.add_child(btn)
+			s.add_child(st)
+		else:
+			btn = PillButton.new("PUZZLE %d" % n, PillButton.Icon.NONE, Palette.WHITE, Palette.TEXT, 24)
+			btn.name = "Puzzle_%d" % n
+			btn.custom_minimum_size = Vector2(0, 84)
+			var tile := VBoxContainer.new()
+			tile.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+			tile.add_theme_constant_override("separation", 2)
+			tile.add_child(btn)
+			tile.add_child(st)
+			grid.add_child(tile)
 		btn.pressed.connect(func():
 			AudioManager.play_ui_tap()
 			open_puzzle(b))
-		var st := _label("", 22, 700)
-		st.add_theme_color_override("font_color", Palette.TEXT_SOFT)
-		s.add_child(btn)
-		s.add_child(st)
 		_rows[b] = [btn, st]
 	_copy = _button("COPY ALL RESULTS", "CopyResults", ACCENT, Palette.WHITE)
 	s.add_child(_copy)  # the copy itself runs in the page script, inside the tap (iOS)

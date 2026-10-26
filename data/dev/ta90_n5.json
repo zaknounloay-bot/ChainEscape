@@ -1,0 +1,127 @@
+{
+ "format": "ce-ta90-proto",
+ "v": 1,
+ "test": "ta90_n5",
+ "assist": {
+  "undo": 3,
+  "show_a_move": 0,
+  "hammer": 0
+ },
+ "note": "Development only. Phase 15 90-second collection board (?ta90=1); never shared, never production. HUMAN-REVIEW CANDIDATE: technically validated, strategic quality unconfirmed by people.",
+ "boards": [
+  {
+   "id": "N5",
+   "accepted": true,
+   "label": "HUMAN-REVIEW CANDIDATE - EXPERIMENTAL, HUMAN DIFFICULTY UNVALIDATED",
+   "variant": "N5",
+   "design": "15M2",
+   "target": "MEDIUM (a design target, not a rating; never shown to players)",
+   "idea": "the Sequence block's first move is a key: its advance turns the trapped spinner",
+   "source": "hand-drawn idea core, grown by the bounded constructive search (tools/ta90_search.gd), checked by tools/ta90_design.gd (Phase 15)",
+   "fingerprint": "3f420b14215a44aa1bb6b96c85be519ff1c247312a6300c444c673f43e650c40",
+   "mechanics": [
+    "spinner_cw",
+    "spinner_ccw",
+    "spinner_alt",
+    "sequence"
+   ],
+   "puzzle": {
+    "format": "ce-puzzle",
+    "v": 1,
+    "rules": 1,
+    "rows": 6,
+    "cols": 6,
+    "map": [
+     ". R^ Rv@- P^@- . .",
+     ". P^@ Gv Gv@~ . .",
+     ". B<:^ R^@ P<@~ . .",
+     ". P>@~ P^@~ . . .",
+     ". B>@- . . . .",
+     ". R> . . . ."
+    ]
+   },
+   "design_report": {
+    "A": {
+     "fingerprint": "3f420b14215a44aa1bb6b96c85be519ff1c247312a6300c444c673f43e650c40",
+     "hint_nodes": [
+      37,
+      9
+     ],
+     "parity": [
+      0,
+      0
+     ],
+     "position_cap": 700,
+     "positions": 122,
+     "replay": true,
+     "solution": 14,
+     "solve_ms": 4.9,
+     "timeup_worst_ms": 2.2,
+     "timeup_worst_nodes": 41,
+     "winnable": 29
+    },
+    "B": {
+     "coverage": 0.86,
+     "decision_steps": 12,
+     "distinct_mistakes": 4,
+     "endgame_decision": true,
+     "idea_advance_turn": true,
+     "last_decision": 12,
+     "late": 0.86,
+     "losing_per_step": [
+      3,
+      3,
+      2,
+      2,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      0,
+      0
+     ],
+     "matters_sequence": true,
+     "mistakes": [
+      "r0c3^",
+      "r2c1< advance",
+      "r5c1>",
+      "r0c3<"
+     ],
+     "shortcut": 0.01,
+     "without_sequence": "without it: 11 decision steps, 4 distinct mistakes (with it: 12, 4)"
+    },
+    "C": {
+     "decisions_k4_6_8": [
+      8,
+      6,
+      4
+     ],
+     "deepest": 12,
+     "greedy": {
+      "look2": 0,
+      "look4": 0.008,
+      "min_turn": 0,
+      "mobility": 0,
+      "safe": 0.01
+     },
+     "hidden_k6_8": [
+      6,
+      4
+     ],
+     "learner": {
+      "look4": 2,
+      "look6": 0
+     },
+     "look6_greedy": 0.083,
+     "opening": "2 / 5",
+     "win_share": 0.238
+    },
+    "verdict": "HUMAN-REVIEW CANDIDATE"
+   }
+  }
+ ]
+}

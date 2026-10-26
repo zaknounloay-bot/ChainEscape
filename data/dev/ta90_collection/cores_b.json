@@ -1,0 +1,17 @@
+{
+ "core_H1": {"target": "HARD", "facts": ["reversed_ram"], "mechanic": "switch,armor",
+  "idea": "reverse the rammer first: escaping it the easy way strands the shell",
+  "map": [". . . . . . .", ". . . . . . .", ". . . . . . .", ". B<&A . . . G^= .", ". . . . . . .", "P^%A . . . . . ."]},
+ "core_H2": {"target": "HARD", "facts": ["moved_then_turned"], "mechanic": "magnet,lock",
+  "idea": "pull, then turn: the magnet brings a trapped spinner next to the key that turns it",
+  "map": [". . . . . . .", ". . . . . . .", ". . . Y>#B . Gv .", ". . . Y<* . R^@ .", ". . . Bv . . .", ". . . . . . .", ". . . . . . ."]},
+ "core_H3": {"target": "HARD", "facts": ["gate_through"], "mechanic": "lock,gate",
+  "idea": "unlock the link: the gate's only link is locked by a pattern spinner's colour",
+  "map": [". . . Bv . . .", ". . . . . . .", ". . . . . . .", ". . . XA . . .", ". . . . G>@* . .", ". R<#G+A . . . . .", ". . . . . . ."]},
+ "core_X1": {"target": "EXTREME", "facts": ["key_turn", "gate_through"], "mechanic": "lock,gate",
+  "idea": "the key turns the lock, the lock goes through the gate: a long chain of keys and links",
+  "map": [". . . . . . .", ". . . . . . .", ". . . Yv . . .", ". . . R^@#B Bv XA .", ". . . . . . .", ". . . . . . .", "G^+A . . . . . ."]},
+ "core_X2": {"target": "EXTREME", "facts": ["advance_turn", "shell_rammed"], "mechanic": "sequence,armor",
+  "idea": "aim with a Sequence step: the advance turns a spinner onto the shell",
+  "map": [". . . . . . .", ". . . . . . .", ". . Gv . . . .", ". B<:v R^@ . . Y^= .", ". . . . . . .", ". . . . . . .", ". . . . . . ."]}
+}

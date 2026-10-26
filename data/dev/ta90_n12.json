@@ -1,0 +1,126 @@
+{
+ "format": "ce-ta90-proto",
+ "v": 1,
+ "test": "ta90_n12",
+ "assist": {
+  "undo": 3,
+  "show_a_move": 0,
+  "hammer": 0
+ },
+ "note": "Development only. Phase 15 90-second collection board (?ta90=1); never shared, never production. HUMAN-REVIEW CANDIDATE: technically validated, strategic quality unconfirmed by people.",
+ "boards": [
+  {
+   "id": "N12",
+   "accepted": true,
+   "label": "HUMAN-REVIEW CANDIDATE - EXPERIMENTAL, HUMAN DIFFICULTY UNVALIDATED",
+   "variant": "N12",
+   "design": "15M3",
+   "target": "MEDIUM (a design target, not a rating; never shown to players)",
+   "idea": "count the turns: an alternating spinner faces the shell only after an odd number of turns",
+   "source": "hand-drawn idea core, grown by the bounded constructive search (tools/ta90_search.gd), checked by tools/ta90_design.gd (Phase 15)",
+   "fingerprint": "52dffbaefdde0a4cd91cba51a37999cf238f705d06a9da42179400fe3357fbbd",
+   "mechanics": [
+    "spinner_cw",
+    "spinner_alt",
+    "armor"
+   ],
+   "puzzle": {
+    "format": "ce-puzzle",
+    "v": 1,
+    "rules": 1,
+    "rows": 6,
+    "cols": 6,
+    "map": [
+     ". . Gv@~ R< . .",
+     "Y>@~ B^ R< . . .",
+     "P< P^@~ Yv@ Y<@ G^= .",
+     ". Bv . . . .",
+     ". . . . . .",
+     ". . . . . ."
+    ]
+   },
+   "design_report": {
+    "A": {
+     "fingerprint": "52dffbaefdde0a4cd91cba51a37999cf238f705d06a9da42179400fe3357fbbd",
+     "hint_nodes": [
+      23,
+      18
+     ],
+     "parity": [
+      0,
+      0
+     ],
+     "position_cap": 700,
+     "positions": 82,
+     "replay": true,
+     "solution": 12,
+     "solve_ms": 4.7,
+     "timeup_worst_ms": 2,
+     "timeup_worst_nodes": 44,
+     "winnable": 18
+    },
+    "B": {
+     "coverage": 0.75,
+     "decision_steps": 9,
+     "distinct_mistakes": 4,
+     "endgame_decision": true,
+     "idea_alt_ram": true,
+     "last_decision": 9,
+     "late": 0.75,
+     "losing_per_step": [
+      2,
+      2,
+      1,
+      3,
+      1,
+      1,
+      1,
+      1,
+      1,
+      0,
+      0,
+      0
+     ],
+     "matters_alt": true,
+     "matters_armor": true,
+     "mistakes": [
+      "r1c1^",
+      "r3c1v",
+      "r1c2<",
+      "r2c1^"
+     ],
+     "shortcut": 0.04,
+     "without_alt": "unsolvable without it",
+     "without_armor": "without it: 2 decision steps, 1 distinct mistakes (with it: 9, 4)"
+    },
+    "C": {
+     "decisions_k4_6_8": [
+      6,
+      4,
+      2
+     ],
+     "deepest": 10,
+     "greedy": {
+      "look2": 0.005,
+      "look4": 0.008,
+      "min_turn": 0,
+      "mobility": 0.04,
+      "safe": 0
+     },
+     "hidden_k6_8": [
+      6,
+      2
+     ],
+     "learner": {
+      "look4": 1,
+      "look6": 1
+     },
+     "look6_greedy": 0.1,
+     "opening": "2 / 4",
+     "win_share": 0.22
+    },
+    "verdict": "HUMAN-REVIEW CANDIDATE"
+   }
+  }
+ ]
+}

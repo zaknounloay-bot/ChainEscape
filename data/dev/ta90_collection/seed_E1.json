@@ -1,0 +1,36 @@
+{
+ "target": "EASY",
+ "facts": [],
+ "mechanic": "",
+ "idea": "spinner order: the blocked spinner must turn exactly once before it leaves",
+ "map": [
+  ". . . . .",
+  ". . Rv . .",
+  ". B< Y^@ . .",
+  ". . Gv . .",
+  ". . . . ."
+ ],
+ "piece_free": 7,
+ "max_pieces": 9,
+ "shortcut_weight": 40,
+ "max_positions": 700,
+ "frozen": [
+  [
+   1,
+   2
+  ],
+  [
+   2,
+   1
+  ],
+  [
+   2,
+   2
+  ],
+  [
+   3,
+   2
+  ]
+ ],
+ "seed": 1
+}

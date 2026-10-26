@@ -25,15 +25,29 @@ extends "res://tools/extreme17_build.gd"
 ## (with the reasons).
 ##   godot --headless --path . --script res://tools/ta90_design.gd -- --file=boards.json [--name=a,b] [--quick]
 ## boards.json: {"name": {"map": [...], "target": "MEDIUM|HARD|VERY HARD", "facts": ["..."], "mechanic": "switch,gate"}}
-## mechanic: a comma list of switch | gate | lock | armor | magnet | alt; each must matter.
+## max_positions: the analysis-size cap (default 700); the TIME UP gate is never relaxed.
+## mechanic: a comma list of switch | gate | lock | armor | magnet | alt | pattern | sequence; each must matter.
 ## --quick: skip the learners (category C) and parity (category A is then
 ## marked incomplete).
 
 const SHORTCUT_MAX := 0.20
 ## Distinct decisions (and an endgame decision) each target asks for.
-const NEED := {"MEDIUM": {"distinct": 2, "steps": 3, "endgame": false},
-	"HARD": {"distinct": 3, "steps": 4, "endgame": true},
-	"VERY HARD": {"distinct": 4, "steps": 5, "endgame": true}}
+## Phase 15 adds EASY and EXTREME, and three optional keys:
+##   shortcut  the greedy cap for that target (default SHORTCUT_MAX);
+##   coverage  decision steps / solution length (sustained risk: the
+##             advanced campaign levels keep a losing move available on 75-95%
+##             of their steps, N3 on 85%);
+##   late      the last step with a losing move / solution length;
+##   min_solution  the shortest solution for the target.
+## MEDIUM / VERY HARD are Phase 14's values unchanged; HARD only gains a light
+## coverage floor (N2: 0.69).
+const NEED := {"EASY": {"distinct": 1, "steps": 2, "endgame": false, "shortcut": 0.40},
+	"MEDIUM": {"distinct": 2, "steps": 3, "endgame": false},
+	"HARD": {"distinct": 3, "steps": 4, "endgame": true, "coverage": 0.45},
+	"VERY HARD": {"distinct": 4, "steps": 5, "endgame": true},
+	# Anchored on N3, the family test's EXTREME reference (4 distinct, 11 steps,
+	# coverage 0.85, late 0.85, 13 moves, greedy 15 %): the floor, not the aim.
+	"EXTREME": {"distinct": 4, "steps": 8, "endgame": true, "coverage": 0.60, "late": 0.75, "min_solution": 13}}
 
 
 func _initialize() -> void:
@@ -82,8 +96,13 @@ func report(name: String, spec: Dictionary) -> Dictionary:
 	var win: Dictionary = memo["win"]
 	r["A"]["positions"] = win.size()
 	r["A"]["winnable"] = win.values().count(true)
-	if memo["capped"] or win.size() > MAX_POSITIONS:
-		r["why_a"].append("%d positions (> %d)" % [win.size(), MAX_POSITIONS])
+	# The analysis-size cap: 700 by default (Phase 11's SHOW A MOVE proxy); a
+	# larger board states its own (Phase 15, docs/ta90_collection.md) - the
+	# RUNTIME gate is the TIME UP check below, unchanged.
+	var cap := int(spec.get("max_positions", MAX_POSITIONS))
+	r["A"]["position_cap"] = cap
+	if memo["capped"] or win.size() > cap:
+		r["why_a"].append("%d positions (> %d)" % [win.size(), cap])
 	if not win.get(s._key(), false):
 		r["why_a"].append("unsolvable")
 		return _verdict(r)
@@ -115,6 +134,8 @@ func report(name: String, spec: Dictionary) -> Dictionary:
 	var tu := _timeup_cost(level, s)
 	r["A"]["timeup_worst_ms"] = tu["ms"]
 	r["A"]["timeup_worst_nodes"] = tu["nodes"]
+	if tu["aborted"]:
+		r["why_a"].append("the TIME UP check hit the Solver's node limit in some position (result unknown)")
 	if tu["ms"] > 40.0:
 		r["why_a"].append("the TIME UP check takes %.1f ms in its worst position (> 40)" % tu["ms"])
 	# --- B: strategic quality -----------------------------------------------------------------
@@ -130,6 +151,15 @@ func report(name: String, spec: Dictionary) -> Dictionary:
 		r["why_b"].append("%d distinct mistakes on the solution (< %d)" % [dec["distinct_mistakes"], need["distinct"]])
 	if dec["decision_steps"] < need["steps"]:
 		r["why_b"].append("%d decision steps (< %d)" % [dec["decision_steps"], need["steps"]])
+	var sl: int = maxi(1, sol.size())
+	r["B"]["coverage"] = snappedf(float(dec["decision_steps"]) / sl, 0.01)
+	r["B"]["late"] = snappedf(float(dec["last_decision"]) / sl, 0.01)
+	if r["B"]["coverage"] < float(need.get("coverage", 0.0)):
+		r["why_b"].append("losing moves on %.0f%% of the steps (< %.0f%%): too much free tapping" % [r["B"]["coverage"] * 100.0, float(need["coverage"]) * 100.0])
+	if r["B"]["late"] < float(need.get("late", 0.0)):
+		r["why_b"].append("the last decision at %.0f%% of the solution (< %.0f%%): a free endgame" % [r["B"]["late"] * 100.0, float(need["late"]) * 100.0])
+	if sol.size() < int(need.get("min_solution", 0)):
+		r["why_b"].append("a %d-move solution (< %d)" % [sol.size(), int(need["min_solution"])])
 	if need["endgame"] and not dec["endgame_decision"]:
 		r["why_b"].append("no decision in the last third")
 	for mech in str(spec.get("mechanic", "")).split(",", false):
@@ -146,8 +176,9 @@ func report(name: String, spec: Dictionary) -> Dictionary:
 		best = maxf(best, g)
 	r["C"]["greedy"] = pol
 	r["B"]["shortcut"] = snappedf(best, 0.001)
-	if best > SHORTCUT_MAX:
-		r["why_b"].append("a simple greedy player wins %.0f%% (> %.0f%%): a shortcut" % [best * 100.0, SHORTCUT_MAX * 100.0])
+	var cut := float(need.get("shortcut", SHORTCUT_MAX))
+	if best > cut:
+		r["why_b"].append("a simple greedy player wins %.0f%% (> %.0f%%): a shortcut" % [best * 100.0, cut * 100.0])
 	var near := near_copy_of(map)
 	if near != "":
 		r["why_b"].append("a variant of " + near)
@@ -185,15 +216,29 @@ func _verdict(r: Dictionary) -> Dictionary:
 func _replay(level: LevelData, moves: Array) -> String:
 	var m := EVENTS6.model_of(level)
 	for mv in moves:
-		var id: int = mv & Solver.ID_MASK
-		match m.move_state(id):
-			"ok":
-				m.remove(id)
-			"ram":
-				m.ram(id)
-			_:
-				return "illegal move %d" % id
+		if not play_move(m, mv):
+			return "illegal move %d" % (mv & Solver.ID_MASK)
 	return "empty" if m.block_count() == 0 else "%d blocks left" % m.block_count()
+
+
+## One Solver move on a BoardModel, dispatched exactly as SocialPlay.tap does
+## (escape / Sequence advance / push / ram); false if the play screen would
+## not accept it. (Twins are not here: SocialPlay has no pair move, so twin
+## boards are never Time Attack boards - docs/ta90_collection.md.)
+static func play_move(m: BoardModel, mv: int) -> bool:
+	var id: int = mv & Solver.ID_MASK
+	match m.move_state(id):
+		"ok":
+			m.remove(id)
+		"advance":
+			m.advance(id)
+		"push":
+			m.push(id)
+		"ram":
+			m.ram(id)
+		_:
+			return false
+	return true
 
 
 ## The TIME UP check (Solver.from_model(board).solve(), as the page runs it)
@@ -216,22 +261,21 @@ func _timeup_cost(level: LevelData, s: Solver) -> Dictionary:
 			s._undo_move(path[i])
 	var worst := 0.0
 	var nodes := 0
+	var aborted := false
 	for k in paths:
 		var best := 1e9
 		for run in 3:
 			var m := EVENTS6.model_of(level)
 			for mv in paths[k]:
-				if mv & Solver.RAM:
-					m.ram(mv & Solver.ID_MASK)
-				else:
-					m.remove(mv & Solver.ID_MASK)
+				play_move(m, mv)
 			var sv := Solver.from_model(m)
 			var t0 := Time.get_ticks_usec()
 			sv.solve()
 			best = minf(best, (Time.get_ticks_usec() - t0) / 1000.0)
 			nodes = maxi(nodes, sv.nodes)
+			aborted = aborted or sv.aborted
 		worst = maxf(worst, best)
-	return {"ms": snappedf(worst, 0.1), "nodes": nodes, "positions": paths.size()}
+	return {"ms": snappedf(worst, 0.1), "nodes": nodes, "positions": paths.size(), "aborted": aborted}
 
 
 ## Along the Solver's solution: steps where a legal move loses, the distinct
@@ -261,7 +305,11 @@ func _decisions(s: Solver, win: Dictionary, sol: Array) -> Dictionary:
 		s._do(sol[i])
 	for i in range(sol.size() - 1, -1, -1):
 		s._undo_move(sol[i])
-	return {"decision_steps": steps, "distinct_mistakes": distinct.size(), "endgame_decision": endgame, "losing_per_step": per_step,
+	var last := 0
+	for i in per_step.size():
+		if per_step[i] > 0:
+			last = i + 1
+	return {"decision_steps": steps, "distinct_mistakes": distinct.size(), "endgame_decision": endgame, "losing_per_step": per_step, "last_decision": last,
 		"mistakes": distinct.keys(), "line": line}
 
 
@@ -285,6 +333,11 @@ func _counterfactual(map: Array, mech: String, dec: Dictionary) -> Dictionary:
 					x = x.trim_suffix("*") if not x.contains("@") else x
 				"alt":
 					x = x.replace("@~", "@")
+				"pattern":
+					x = x.replace("@*", "@")
+				"sequence":
+					var q := x.find(":")
+					x = x if q < 0 else x.substr(0, q) + x.substr(q + 2)
 			cells.append(x)
 		m2.append(" ".join(cells))
 	if m2 == map:

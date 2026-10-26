@@ -1,0 +1,50 @@
+{
+ "target": "EXTREME",
+ "facts": [
+  "key_turn",
+  "gate_through"
+ ],
+ "mechanic": "lock,gate",
+ "idea": "a waiting lock keeps turning: every neighbour that leaves while the spinner is locked turns it, so the player chooses what to clear before the last key, to aim it at the gate",
+ "map": [
+  ". . . . . . .",
+  ". . . . . . .",
+  ". . . B^ . . .",
+  ". . Bv R^@#B . . .",
+  ". . . . . . .",
+  ". . . XA . . .",
+  "G<+A . . . . . ."
+ ],
+ "piece_free": 17,
+ "max_pieces": 24,
+ "shortcut_weight": 80,
+ "coverage_weight": 25,
+ "late_weight": 20,
+ "endgame_weight": 20,
+ "length_weight": 1.0,
+ "length_cap": 20,
+ "max_positions": 3000,
+ "frozen": [
+  [
+   2,
+   3
+  ],
+  [
+   3,
+   2
+  ],
+  [
+   3,
+   3
+  ],
+  [
+   5,
+   3
+  ],
+  [
+   6,
+   0
+  ]
+ ],
+ "seed": 1
+}

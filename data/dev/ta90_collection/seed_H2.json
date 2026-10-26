@@ -1,0 +1,47 @@
+{
+ "target": "HARD",
+ "facts": [
+  "moved_then_turned"
+ ],
+ "mechanic": "magnet,lock",
+ "idea": "pull, then turn: the magnet brings a trapped spinner next to the key that turns it",
+ "map": [
+  ". . . . . . .",
+  ". . . . . . .",
+  ". . . Y>#B . Gv .",
+  ". . . Y<* . R^@ .",
+  ". . . Bv . . .",
+  ". . . . . . .",
+  ". . . . . . ."
+ ],
+ "piece_free": 13,
+ "max_pieces": 17,
+ "shortcut_weight": 80,
+ "coverage_weight": 15,
+ "late_weight": 10,
+ "endgame_weight": 15,
+ "max_positions": 1500,
+ "frozen": [
+  [
+   2,
+   3
+  ],
+  [
+   2,
+   5
+  ],
+  [
+   3,
+   3
+  ],
+  [
+   3,
+   5
+  ],
+  [
+   4,
+   3
+  ]
+ ],
+ "seed": 1
+}

@@ -60,8 +60,17 @@ func _boards() -> void:
 		ok = ok and PuzzleDefinition.from_dict(rec["puzzle"]).fingerprint() == Ta90TimeAttack.BOARDS90[b]["fp"]
 	_check(ok and Ta90TimeAttack.BOARDS90["TA"].get("reference", false) and not Ta90Prototype.ORDER90.has("TA"),
 		"every prototype board matches its fingerprint; TA is only an internal reference, never a new puzzle")
-	_check(Ta90Prototype.ORDER90 == ["N1", "N2", "N3"] and Ta90Prototype.ORDER90.all(func(b): return not Ta90TimeAttack.BOARDS90[b].get("reference", false)),
-		"Phase 14: the three HUMAN-REVIEW CANDIDATES N1-N3 (neutral names) are the prototype's puzzles")
+	var o: Array = Ta90Prototype.ORDER90
+	_check(o.size() == 13 and o.slice(0, 3) == ["N1", "N2", "N3"] and o.all(func(b): return not Ta90TimeAttack.BOARDS90[b].get("reference", false))
+		and o.all(func(b): return b == "N%d" % (o.find(b) + 1)) and Ta90TimeAttack.BOARDS90.size() == 14,
+		"the collection: N1-N3 (Phase 14) and N4-N13 (Phase 15), key N<k> = PUZZLE k, every one a HUMAN-REVIEW CANDIDATE; TA the only reference")
+	var fps := {}
+	for b in Ta90TimeAttack.BOARDS90:
+		fps[Ta90TimeAttack.BOARDS90[b]["fp"]] = true
+	_check(fps.size() == Ta90TimeAttack.BOARDS90.size() and Ta90TimeAttack.BOARDS90["N1"]["fp"] == "b5bb75f5937f03404ba786ff93d3e914d167ad2d5e28f88f5ed46e4a40377bff"
+		and Ta90TimeAttack.BOARDS90["N2"]["fp"] == "f4be705fcc692f27f13e0cc8d7eca216a4ba68d117b84dce4980bfa5e76d695f"
+		and Ta90TimeAttack.BOARDS90["N3"]["fp"] == "76d704deb06f8a6686040e5f5cfa6edeecdfc3f2a1af8f0c98be9a4922f2272c",
+		"every board has its own fingerprint; N1-N3 unchanged")
 	_check(Ta90TimeAttack.LIMIT_90_MS == LIM and Ta90TimeAttack.TA90_RULES["show_a_move"] == 0 and Ta90TimeAttack.TA90_RULES["undo"] == 3
 		and Ta90TimeAttack.TA90_RULES["hammer"] == 0 and Ta90TimeAttack.TA90_RULES["restart"] == "unlimited", "rules ta90-v1: 90 s, SHOW A MOVE x0, UNDO x3, unlimited RESTART, HAMMER x0")
 	_check(Ta90TimeAttack.state_path90("P5") != PilotTimeAttack.state_path("P5") and Ta90Prototype.STATE_PATH != TaPilot.STATE_PATH and Ta90Prototype.LS_KEY != TaPilot.LS_KEY
@@ -121,9 +130,15 @@ func _hub_flow() -> void:
 	(h.find_child("Familiar_PLAYED_A_LITTLE", true, false) as Button).pressed.emit()
 	await _frames(2)
 	_check(h.view == Ta90Prototype.View.SELECT and h.order.has(REF), "familiarity once, then CHOOSE A PUZZLE")
-	_check(h.order == ["N1", "N2", "N3"] and h.find_child("ReferenceNote", true, false) == null
-		and ["Puzzle_1", "Puzzle_2", "Puzzle_3"].all(func(n): return h.find_child(n, true, false).text == "PUZZLE %d" % (int(n.right(1))))
-		and h.find_child("Puzzle_4", true, false) == null, "the selection: PUZZLE 1-3 (N1-N3, neutral names); no reference row without &ta90ref=1")
+	var vis := h.get_viewport().get_visible_rect()
+	var tiles_ok := true
+	for i in range(1, 14):
+		var t: Control = h.find_child("Puzzle_%d" % i, true, false)
+		tiles_ok = tiles_ok and t != null and t.text == "PUZZLE %d" % i and vis.encloses(t.get_global_rect()) and t.size.y >= 80
+	var sts := h._rows.values().map(func(r): return r[1].text)
+	_check(h.order == Ta90Prototype.ORDER90 and h.find_child("ReferenceNote", true, false) == null and tiles_ok
+		and h.find_child("Puzzle_14", true, false) == null and sts.all(func(t): return t == "New") and h._copy.is_visible_in_tree() and vis.encloses(h._copy.get_global_rect()),
+		"the selection: a grid of PUZZLE 1-13 tiles (neutral names, no difficulty), all on screen with COPY ALL RESULTS, each 'New'; no reference row without &ta90ref=1")
 	await _close(h)
 	_check(not AudioServer.is_bus_mute(mbus), "closing the prototype restores the campaign music bus (the saved setting was never changed)")
 
@@ -277,11 +292,12 @@ func _export_and_isolation() -> void:
 	await _close(h)
 
 
-## Phase 14: every new board on the real page - its brief (90 seconds, its
-## mechanics explained, no hints), then the Solver's line tapped in a timed
-## run clears it (SOLVED, music off).
+## Phase 14 / 15: every board of the collection except REF (it plays the full
+## flow above) on the real page - its brief (90 seconds, its mechanics
+## explained, no hints), then the Solver's line tapped in a timed run clears
+## it (SOLVED, music off), and the run is recorded under its own key.
 func _new_boards() -> void:
-	for b in ["N2", "N3"]:
+	for b in Ta90Prototype.ORDER90.filter(func(x): return x != REF):
 		var h: Ta90Prototype = await _hub()
 		h.open_puzzle(b)
 		await _frames(3)
@@ -300,4 +316,11 @@ func _new_boards() -> void:
 		await _wait(1.3)
 		_check(p.state["timed"]["outcome"] == "COMPLETED" and p._card_head.text == "SOLVED" and p.music.stage == "",
 			"%s: the Solver's line clears it on the page in a timed run (SOLVED; the music fades out)" % b)
+		await _close(h)
+		h = await _hub()
+		var bb: Dictionary = h.bundle()["boards"][b]
+		var tm: Dictionary = bb["in_progress"].get("timed", {}) if not bb["in_progress"].is_empty() else {}
+		_check(bb["fingerprint"] == Ta90TimeAttack.BOARDS90[b]["fp"] and bb["puzzle"] == Ta90Prototype.ORDER90.find(b) + 1 and tm.get("outcome", "") == "COMPLETED"
+			and int(tm.get("limit_ms", 0)) == LIM and tm.get("assist", {}).get("version", "") == "ta90-v1" and int(tm.get("moves", -1)) >= 0,
+			"%s: the export carries the run under its own key (PUZZLE %d, its fingerprint, COMPLETED, 90 s, rules ta90-v1)" % [b, Ta90Prototype.ORDER90.find(b) + 1])
 		await _close(h)

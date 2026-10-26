@@ -12,6 +12,8 @@
 | PUZZLE 2 | N2 | `data/dev/ta90_n2.json` | `f4be705fcc692f27f13e0cc8d7eca216a4ba68d117b84dce4980bfa5e76d695f` | HARD | ram timing + chain gate |
 | PUZZLE 3 | N3 | `data/dev/ta90_n3.json` | `76d704deb06f8a6686040e5f5cfa6edeecdfc3f2a1af8f0c98be9a4922f2272c` | VERY HARD | a reversal opens the gate |
 
+**Phase 15 (`docs/ta90_collection.md`):** ten more HUMAN-REVIEW CANDIDATES, N4-N13, shown as PUZZLE 4-13 (key N<k> = PUZZLE k). Data files `data/dev/ta90_n4.json` … `ta90_n13.json`. The selection screen is a 3-column grid of PUZZLE tiles with short statuses.
+
 **REFERENCE (TA)** is the validated 120-second board, used only to test the clock and the music.
 - It shows only with `&ta90ref=1`, labelled REFERENCE and listed after the three puzzles.
 - TA's 120-second record and fingerprint are untouched: the prototype has its own storage.
@@ -64,6 +66,6 @@ The rules are `Ta90TimeAttack.TA90_RULES`, version `ta90-v1`, and every record c
 
 ## QA
 
-- `tools/ta90_check.gd` is the headless check. Since Phase 14 the full timed flow runs on N1, and N2 and N3 are each solved in a timed run on the real page.
-- `tools/web_ta90_page_test.mjs` runs a full real-time 90 s game in Chromium at iPhone SE size: stages and mixes, mute, background, reload and the tap rule, TIME UP, the calm untimed game, the bundle export, reduced motion and the player build. Run 3 (Phase 14) opens each new puzzle, reads the WebAssembly cost of a full solve (`&bench=1`, the Solver call the page makes at TIME UP) and solves N2 and N3 by touch in timed runs. `--board=TA` runs the same game on the reference (`&ta90ref=1`).
+- `tools/ta90_check.gd` is the headless check. Since Phase 14 the full timed flow runs on N1. Every other board (N2-N13) is solved in a timed run on the real page, and its export entry (key, fingerprint, outcome, rules) is checked; the selection grid is checked on screen.
+- `tools/web_ta90_page_test.mjs` runs a full real-time 90 s game in Chromium at iPhone SE size: stages and mixes, mute, background, reload and the tap rule, TIME UP, the calm untimed game, the bundle export, reduced motion and the player build. Run 3 (Phase 14) opens each new puzzle, reads the WebAssembly cost of a full solve (`&bench=1`, the Solver call the page makes at TIME UP) and solves N2-N13 by touch in timed runs (Phase 15: the 13-tile grid on the iPhone SE screen). `--board=TA` runs the same game on the reference (`&ta90ref=1`).
 - **Chromium is not iPhone Safari.** The audio checks read Chromium's Web Audio state and the mix and position the page publishes; nobody listened. The real Safari unlock, background behaviour and audio quality need a phone. Headless Chromium uses software rendering at about 4 fps, so its frame-rate comparison (with and without music) is only a rough sign.

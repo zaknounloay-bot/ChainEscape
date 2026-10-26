@@ -1,0 +1,41 @@
+{
+ "target": "MEDIUM",
+ "facts": [
+  "alt_ram"
+ ],
+ "mechanic": "alt,armor",
+ "idea": "count the turns: an alternating spinner faces the shell only after an odd number of turns",
+ "map": [
+  ". . . . . .",
+  ". B^ . . . .",
+  ". P^@~ . . G^= .",
+  ". Bv . . . .",
+  ". . . . . .",
+  ". . . . . ."
+ ],
+ "piece_free": 10,
+ "max_pieces": 13,
+ "shortcut_weight": 80,
+ "coverage_weight": 8,
+ "late_weight": 4,
+ "max_positions": 700,
+ "frozen": [
+  [
+   1,
+   1
+  ],
+  [
+   2,
+   1
+  ],
+  [
+   2,
+   4
+  ],
+  [
+   3,
+   1
+  ]
+ ],
+ "seed": 1
+}

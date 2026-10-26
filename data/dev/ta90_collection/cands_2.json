@@ -1,0 +1,55 @@
+{
+ "cand_E2c": {
+  "map": [
+   ". . . . . .",
+   ". . R>@ . . .",
+   ". Y<* B>@~ Bv P>@ R>@-",
+   ". . Y<@- R^ . .",
+   ". . G<@ . . .",
+   ". . . . . ."
+  ],
+  "target": "EASY",
+  "facts": [],
+  "mechanic": "magnet",
+  "idea": "the magnet frees a jam: its departure pulls a deadlocked block into an open lane",
+  "max_positions": 700
+ },
+ "cand_X1b_s1": {
+  "map": [
+   ". . . . . . .",
+   "R< . Gv@~ . . . .",
+   "Yv@- . R>@~ B^ P< . .",
+   ". P^@- Bv R^@#B . . .",
+   ". . R<@~ . . . .",
+   "G<@~ B>@- P>@ XA . . .",
+   "G<+A . R> Gv@~ . . ."
+  ],
+  "target": "EXTREME",
+  "facts": [
+   "key_turn",
+   "gate_through"
+  ],
+  "mechanic": "lock,gate",
+  "idea": "a waiting lock keeps turning: every neighbour that leaves while the spinner is locked turns it, so the player chooses what to clear before the last key, to aim it at the gate",
+  "max_positions": 3000
+ },
+ "cand_X1b_s2": {
+  "map": [
+   "Pv@- . G> P^@~ . . .",
+   ". . P<@ Yv@~ . . .",
+   ". R>@- Gv@~ B^ G<@- . .",
+   "Y>@~ . Bv R^@#B . . .",
+   "Y<@~ . Y<@~ . . . .",
+   ". . G>@~ XA . . P>@",
+   "G<+A . Y<@~ . . . ."
+  ],
+  "target": "EXTREME",
+  "facts": [
+   "key_turn",
+   "gate_through"
+  ],
+  "mechanic": "lock,gate",
+  "idea": "a waiting lock keeps turning: every neighbour that leaves while the spinner is locked turns it, so the player chooses what to clear before the last key, to aim it at the gate",
+  "max_positions": 3000
+ }
+}

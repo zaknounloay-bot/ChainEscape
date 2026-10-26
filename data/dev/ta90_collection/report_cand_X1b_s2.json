@@ -1,0 +1,126 @@
+{
+ "cand_X1b_s2": {
+  "A": {
+   "fingerprint": "75d9c71b35964bbfa788047ab02ece632fbc14e887fcad31c99296132ab825af",
+   "hint_nodes": [
+    42,
+    92
+   ],
+   "parity": [
+    0,
+    0
+   ],
+   "position_cap": 3000,
+   "positions": 829,
+   "replay": true,
+   "solution": 18,
+   "solve_ms": 14.1,
+   "timeup_worst_ms": 7.8,
+   "timeup_worst_nodes": 120,
+   "winnable": 271
+  },
+  "B": {
+   "coverage": 0.78,
+   "decision_steps": 14,
+   "distinct_mistakes": 3,
+   "endgame_decision": true,
+   "idea_gate_through": true,
+   "idea_key_turn": true,
+   "last_decision": 14,
+   "late": 0.78,
+   "line": [
+    "r5c6> [x1]",
+    "r6c0< [x1]",
+    "r1c2< [x2]",
+    "r1c3< [x2]",
+    "r0c3> [x1]",
+    "r0c2> [x2]",
+    "r4c0< [x2]",
+    "r3c0v [x2]",
+    "r0c0v [x2]",
+    "r4c2< [x2]",
+    "r6c2< [x1]",
+    "r5c2> [x1]",
+    "r3c2v [x1]",
+    "r2c2v [x1]",
+    "r2c1^",
+    "r2c3^",
+    "r2c4v",
+    "r3c3v"
+   ],
+   "losing_per_step": [
+    1,
+    1,
+    2,
+    2,
+    1,
+    2,
+    2,
+    2,
+    2,
+    2,
+    1,
+    1,
+    1,
+    1,
+    0,
+    0,
+    0,
+    0
+   ],
+   "matters_gate": false,
+   "matters_lock": true,
+   "mistakes": [
+    "r0c3^",
+    "r5c2>",
+    "r2c3^"
+   ],
+   "shortcut": 0.067,
+   "without_gate": "without it: 14 decision steps, 3 distinct mistakes (with it: 14, 3)",
+   "without_lock": "without it: 15 decision steps, 3 distinct mistakes (with it: 14, 3)"
+  },
+  "C": {
+   "decisions_k4_6_8": [
+    12,
+    10,
+    7
+   ],
+   "deepest": 14,
+   "greedy": {
+    "look2": 0.03,
+    "look4": 0.067,
+    "min_turn": 0,
+    "mobility": 0.015,
+    "safe": 0.01
+   },
+   "hidden_k6_8": [
+    13,
+    9
+   ],
+   "learner": {
+    "look4": 2,
+    "look6": 2
+   },
+   "look6_greedy": 0.083,
+   "opening": "4 / 5",
+   "win_share": 0.327
+  },
+  "map": [
+   "Pv@- . G> P^@~ . . .",
+   ". . P<@ Yv@~ . . .",
+   ". R>@- Gv@~ B^ G<@- . .",
+   "Y>@~ . Bv R^@#B . . .",
+   "Y<@~ . Y<@~ . . . .",
+   ". . G>@~ XA . . P>@",
+   "G<+A . Y<@~ . . . ."
+  ],
+  "name": "cand_X1b_s2",
+  "target": "EXTREME",
+  "verdict": "NEEDS WORK",
+  "why_a": [],
+  "why_b": [
+   "3 distinct mistakes on the solution (< 4)",
+   "the gate is decoration: without it: 14 decision steps, 3 distinct mistakes (with it: 14, 3)"
+  ]
+ }
+}

@@ -1,4 +1,4 @@
-# Experimental boards: inventory (Phase 12A consolidation, updated in Phases 12B, 13 and 14)
+# Experimental boards: inventory (Phase 12A consolidation, updated in Phases 12B, 13, 14 and 15)
 
 Development only. Every board below lives in `data/dev/` and is reachable only through a development test page. Development pages are off in the player and QA builds (`BuildFlags.dev_pages_off()`). None is part of Production, the campaign, the Social MVP or Challenge a Friend.
 
@@ -158,6 +158,12 @@ Solver / exhaustive parity on Q1, T5, E1, E2, H1 and H2 was checked exhaustively
 - TA is now shown only with `&ta90ref=1`, as a labelled REFERENCE.
 - Phase 13's P5 and P6 stay rejected.
 
+**Phase 15 (the 90-second collection).** See `docs/ta90_collection.md`.
+- **Ten more boards, N4-N13, shown as PUZZLE 4-13.** They range from 5×5 with 9 pieces to 7×7 with 21. Their design targets are 2 EASY, 3 MEDIUM, 3 HARD and 2 EXTREME; players never see them.
+- Every new board is a **HUMAN-REVIEW CANDIDATE** and NOT YET HUMAN-TESTED. N1-N3 and their fingerprints are unchanged.
+- The selection screen is now a grid of PUZZLE tiles.
+- N3 is the design reference for the EXTREME experience (family test). It defines the EXTREME floor of the design checks.
+
 Shared rules on every timed page:
 - The clock never stops or refills on RESTART, UNDO, the background or a reload. It also never stops on SHOW A MOVE where that tool still exists (Q1, R1).
 - TIME UP is frozen. An untimed solve is never recorded as a timed victory.
@@ -177,6 +183,23 @@ Every board passed the mandatory technical checks of `tools/ta90_design.gd`, cat
 | **N2** (PUZZLE 2) | `f4be705fcc692f27f13e0cc8d7eca216a4ba68d117b84dce4980bfa5e76d695f` | chain gate, armored shell, cw / ccw / alternating spinners | 13 | HARD | HUMAN-REVIEW CANDIDATE |
 | **N3** (PUZZLE 3) | `76d704deb06f8a6686040e5f5cfa6edeecdfc3f2a1af8f0c98be9a4922f2272c` | switch, chain gate, cw / ccw spinners | 14 | VERY HARD | HUMAN-REVIEW CANDIDATE |
 
+### Phase 15 boards
+
+All passed category A: parity 0 / 0 everywhere, a deterministic replay, and a TIME UP check of at most 40 ms on desktop in every reachable position. All are **NOT YET HUMAN-TESTED**.
+
+| Board | Fingerprint | Mechanics | Size, pieces | Design target (hidden from players) | Status |
+|---|---|---|---|---|---|
+| **N4** (PUZZLE 4) | `6adc71d670366c04f57bdef2f825990f930214ff63baa0a754f8d3362002c7e9` | cw spinners, ccw spinners | 5×5, 9 | EASY | HUMAN-REVIEW CANDIDATE |
+| **N5** (PUZZLE 5) | `3f420b14215a44aa1bb6b96c85be519ff1c247312a6300c444c673f43e650c40` | cw spinners, ccw spinners, alternating spinners, Sequence | 6×6, 13 | MEDIUM | HUMAN-REVIEW CANDIDATE |
+| **N6** (PUZZLE 6) | `d2850675394c1963e34a0986ece8010b83f81758aa4f3790ea8a93f686afecb0` | cw spinners, ccw spinners, alternating spinners, switch, armored shell | 6×7, 13 | HARD | HUMAN-REVIEW CANDIDATE |
+| **N7** (PUZZLE 7) | `a9465918d8f02112da791892a32c7e3ff2d79d8fe173c59b34b2d674d8e9587b` | cw spinners, ccw spinners, alternating spinners, armored shell, Sequence | 7×7, 21 | EXTREME | HUMAN-REVIEW CANDIDATE |
+| **N8** (PUZZLE 8) | `033745db265b1291d2b19f342fb679d5ec4708fcdffa29e660a72ce0d0161e01` | cw spinners, ccw spinners, alternating spinners, chain gate, magnet | 6×6, 12 | MEDIUM | HUMAN-REVIEW CANDIDATE |
+| **N9** (PUZZLE 9) | `c631418dff67b0bf39bfb88411be0ec9abde6b41dad3cb13dcb181b91b5b75a3` | cw spinners, ccw spinners, alternating spinners, magnet | 6×6, 9 | EASY | HUMAN-REVIEW CANDIDATE |
+| **N10** (PUZZLE 10) | `a5474adbd79311a651865a183c1094fd080bd65fe4b26bb4bc4bb1f80f8fddfe` | cw spinners, ccw spinners, alternating spinners, pattern spinner, lock, chain gate | 7×7, 14 | HARD | HUMAN-REVIEW CANDIDATE |
+| **N11** (PUZZLE 11) | `a92813074460913b95b9f54433ffd156ead01c04c1e5d357ad83ea380f8bf4fb` | cw spinners, ccw spinners, alternating spinners, lock, chain gate | 7×7, 17 | EXTREME | HUMAN-REVIEW CANDIDATE |
+| **N12** (PUZZLE 12) | `52dffbaefdde0a4cd91cba51a37999cf238f705d06a9da42179400fe3357fbbd` | cw spinners, alternating spinners, armored shell | 6×6, 11 | MEDIUM | HUMAN-REVIEW CANDIDATE |
+| **N13** (PUZZLE 13) | `9acdd496511edcd6e847217ec37d7029d7cc82a62d1f93258d7ac08b5d86c943` | cw spinners, ccw spinners, alternating spinners, lock, magnet | 7×7, 16 | HARD | HUMAN-REVIEW CANDIDATE |
+
 ### TA90 family test: a correction
 
 TA90 here means the reference board TA, played on the 90-second prototype.
@@ -187,7 +210,7 @@ TA90 here means the reference board TA, played on the 90-second prototype.
   - Any analysis must name which one it uses.
 - No other values from that test were reported to me, so none are listed here. They are not inferred.
 
-### Recording sheet for the coming first-exposure sessions (N1-N3)
+### Recording sheet for the coming first-exposure sessions (N1-N13)
 
 The `ce-ta90` bundle (COPY ALL RESULTS) carries the objective fields. The answers come from the questions after each run. One row per player and board.
 
@@ -195,7 +218,7 @@ The `ce-ta90` bundle (COPY ALL RESULTS) carries the objective fields. The answer
 |---|---|
 | Time and outcome (WIN with the time left / TIME UP), untimed outcome kept apart | bundle: `timed_outcome`, `elapsed_ms`, `untimed_success` |
 | Attempts and restarts | bundle: `restarts` (attempts = restarts + 1) |
-| UNDO use | bundle: `undos` |
+| Moves and UNDO use | bundle: `moves`, `undos` |
 | Blocked taps | bundle: `blocked_taps` |
 | Difficulty (first exposure) | question: "How difficult was this puzzle?" |
 | Enjoyment, excitement, frustration (1-5) | questions |
@@ -203,3 +226,5 @@ The `ce-ta90` bundle (COPY ALL RESULTS) carries the objective fields. The answer
 | Music contribution | question: "Did the music make the experience better?" (YES / NO / NOT SURE / MUSIC WAS OFF) |
 | Desire to play again | question: "Would you play another puzzle?" |
 | Verbal corrections | written next to the raw value, never instead of it (as above) |
+
+The family results already collected (TA, TB, TC, Q1, R1, S1, the TA90 test) remain historical evidence; nothing above rewrites them. N3 is the experiential EXTREME reference (family test): strong excitement, real time pressure, music-driven tension, frustration from not solving rather than unfairness, and motivation to try again. No new board is required to copy its mechanics.

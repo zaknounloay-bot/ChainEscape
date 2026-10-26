@@ -1,0 +1,37 @@
+{
+ "target": "MEDIUM",
+ "facts": [
+  "advance_turn"
+ ],
+ "mechanic": "sequence",
+ "idea": "the Sequence block's first move is a key: its advance turns the trapped spinner",
+ "map": [
+  ". . . . . .",
+  ". . Gv . . .",
+  ". B<:^ R^@ . . .",
+  ". . . . . .",
+  ". . . . . .",
+  ". . . . . ."
+ ],
+ "piece_free": 10,
+ "max_pieces": 13,
+ "shortcut_weight": 80,
+ "coverage_weight": 8,
+ "late_weight": 4,
+ "max_positions": 700,
+ "frozen": [
+  [
+   1,
+   2
+  ],
+  [
+   2,
+   1
+  ],
+  [
+   2,
+   2
+  ]
+ ],
+ "seed": 1
+}

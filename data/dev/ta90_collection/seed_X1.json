@@ -1,0 +1,50 @@
+{
+ "target": "EXTREME",
+ "facts": [
+  "key_turn",
+  "gate_through"
+ ],
+ "mechanic": "lock,gate",
+ "idea": "the key turns the lock, the lock goes through the gate: a long chain of keys and links",
+ "map": [
+  ". . . . . . .",
+  ". . . . . . .",
+  ". . . Yv . . .",
+  ". . . R^@#B Bv XA .",
+  ". . . . . . .",
+  ". . . . . . .",
+  "G^+A . . . . . ."
+ ],
+ "piece_free": 17,
+ "max_pieces": 24,
+ "shortcut_weight": 80,
+ "coverage_weight": 25,
+ "late_weight": 20,
+ "endgame_weight": 20,
+ "length_weight": 1.0,
+ "length_cap": 20,
+ "max_positions": 3000,
+ "frozen": [
+  [
+   2,
+   3
+  ],
+  [
+   3,
+   3
+  ],
+  [
+   3,
+   4
+  ],
+  [
+   3,
+   5
+  ],
+  [
+   6,
+   0
+  ]
+ ],
+ "seed": 1
+}

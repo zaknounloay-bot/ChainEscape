@@ -1,0 +1,183 @@
+{
+ "N4": {
+  "map": [
+   ". . . . P<@",
+   "Y>@ . Rv . G>@",
+   ". B< Y^@ . P<@-",
+   ". . Gv . Y^@",
+   ". . . . ."
+  ],
+  "target": "EASY",
+  "facts": [],
+  "mechanic": "",
+  "idea": "spinner order: the blocked spinner must turn exactly once before it leaves",
+  "max_positions": 700,
+  "design": "E1"
+ },
+ "N5": {
+  "map": [
+   ". R^ Rv@- P^@- . .",
+   ". P^@ Gv Gv@~ . .",
+   ". B<:^ R^@ P<@~ . .",
+   ". P>@~ P^@~ . . .",
+   ". B>@- . . . .",
+   ". R> . . . ."
+  ],
+  "target": "MEDIUM",
+  "facts": [
+   "advance_turn"
+  ],
+  "mechanic": "sequence",
+  "idea": "the Sequence block's first move is a key: its advance turns the trapped spinner",
+  "max_positions": 700,
+  "design": "M2"
+ },
+ "N6": {
+  "map": [
+   "R<@ Y^@~ Y^@- . . . .",
+   "Y^@- P<@ . . . Bv@~ G>@~",
+   "R>@- P<@ . . . B^@- .",
+   ". B<&A . . . G^= .",
+   ". . . . . . .",
+   "P^%A . . . . . ."
+  ],
+  "target": "HARD",
+  "facts": [
+   "reversed_ram"
+  ],
+  "mechanic": "switch,armor",
+  "idea": "reverse the rammer first: escaping it the easy way strands the shell",
+  "max_positions": 1500,
+  "design": "H1"
+ },
+ "N7": {
+  "map": [
+   "R^@ . B<@- . . . .",
+   "Yv@~ G^@~ Y<@ . . G<@- G^@-",
+   ". . Gv . . . Rv",
+   ". B<:v R^@ . B<@- Y^= .",
+   ". . R^@- . . . Yv",
+   ". . . . R^@ P^@~ .",
+   ". . P>@ . Gv@- G<@ G^@"
+  ],
+  "target": "EXTREME",
+  "facts": [
+   "advance_turn",
+   "shell_rammed"
+  ],
+  "mechanic": "sequence,armor",
+  "idea": "aim with a Sequence step: the advance turns a spinner onto the shell",
+  "max_positions": 3000,
+  "design": "X2_s2"
+ },
+ "N8": {
+  "map": [
+   "G^+A B^@~ Bv@~ . . .",
+   ". . Y<@ . . Y<@~",
+   ". . . Y<* XA Bv",
+   ". . P^@- . . R^",
+   ". . . Y<@~ G>@~ .",
+   ". . . . . ."
+  ],
+  "target": "MEDIUM",
+  "facts": [
+   "gate_pull"
+  ],
+  "mechanic": "magnet,gate",
+  "idea": "open, then pull: the magnet must wait for the gate, or the block behind it is stranded",
+  "max_positions": 700,
+  "design": "M1"
+ },
+ "N9": {
+  "map": [
+   ". . . . . .",
+   ". . R>@ . . .",
+   ". Y<* B>@~ Bv P>@ R>@-",
+   ". . Y<@- R^ . .",
+   ". . G<@ . . .",
+   ". . . . . ."
+  ],
+  "target": "EASY",
+  "facts": [],
+  "mechanic": "magnet",
+  "idea": "the magnet frees a jam: its departure pulls a deadlocked block into an open lane",
+  "max_positions": 700,
+  "design": "E2c"
+ },
+ "N10": {
+  "map": [
+   ". . . Bv P>@~ . .",
+   ". . . G>@ R>@- . .",
+   ". . . P^@ R>@- . .",
+   ". . . XA P> . .",
+   ". . . R<@ G>@* . .",
+   ". R<#G+A . . . . .",
+   "P^ G>@- . . G^@~ . ."
+  ],
+  "target": "HARD",
+  "facts": [
+   "gate_through"
+  ],
+  "mechanic": "lock,gate",
+  "idea": "unlock the link: the gate's only link is locked by a pattern spinner's colour",
+  "max_positions": 1500,
+  "design": "H3"
+ },
+ "N11": {
+  "map": [
+   ". . . . . . .",
+   "R< . Gv@~ . . . .",
+   "Yv@- . R>@~ B^ P< . .",
+   ". P^@- Bv R^@#B . . .",
+   ". . R<@~ . . . .",
+   "G<@~ B>@- P>@ XA . . .",
+   "G<+A . R> Gv@~ . . ."
+  ],
+  "target": "EXTREME",
+  "facts": [
+   "key_turn",
+   "gate_through"
+  ],
+  "mechanic": "lock,gate",
+  "idea": "a waiting lock keeps turning: every neighbour that leaves while the spinner is locked turns it, so the player chooses what to clear before the last key, to aim it at the gate",
+  "max_positions": 3000,
+  "design": "X1b_s1"
+ },
+ "N12": {
+  "map": [
+   ". . Gv@~ R< . .",
+   "Y>@~ B^ R< . . .",
+   "P< P^@~ Yv@ Y<@ G^= .",
+   ". Bv . . . .",
+   ". . . . . .",
+   ". . . . . ."
+  ],
+  "target": "MEDIUM",
+  "facts": [
+   "alt_ram"
+  ],
+  "mechanic": "alt,armor",
+  "idea": "count the turns: an alternating spinner faces the shell only after an odd number of turns",
+  "max_positions": 700,
+  "design": "M3"
+ },
+ "N13": {
+  "map": [
+   ". . . . . . .",
+   ". . . . . B<@ B>@~",
+   "R^@ R^ Rv@ Y>#B . Gv .",
+   "R<@ P<@ G<@- Y<* . R^@ Y<@-",
+   "R>@- . . Bv . . .",
+   ". . . . . . .",
+   ". . . Pv@~ . . ."
+  ],
+  "target": "HARD",
+  "facts": [
+   "moved_then_turned"
+  ],
+  "mechanic": "magnet,lock",
+  "idea": "pull, then turn: the magnet brings a trapped spinner next to the key that turns it",
+  "max_positions": 1500,
+  "design": "H2"
+ }
+}

@@ -1,0 +1,33 @@
+{
+ "target": "EASY",
+ "facts": [],
+ "mechanic": "magnet",
+ "idea": "the magnet frees a jam: its departure pulls a deadlocked block into an open lane",
+ "map": [
+  ". . . . . .",
+  ". . . . . .",
+  ". Y<* . Bv . .",
+  ". . . R^ . .",
+  ". . . . . .",
+  ". . . . . ."
+ ],
+ "piece_free": 7,
+ "max_pieces": 9,
+ "shortcut_weight": 40,
+ "max_positions": 700,
+ "frozen": [
+  [
+   2,
+   1
+  ],
+  [
+   2,
+   3
+  ],
+  [
+   3,
+   3
+  ]
+ ],
+ "seed": 1
+}

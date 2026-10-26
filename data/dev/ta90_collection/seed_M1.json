@@ -1,0 +1,45 @@
+{
+ "target": "MEDIUM",
+ "facts": [
+  "gate_pull"
+ ],
+ "mechanic": "magnet,gate",
+ "idea": "open, then pull: the magnet must wait for the gate, or the block behind it is stranded",
+ "map": [
+  "G^+A . . . . .",
+  ". . . . . .",
+  ". . . Y<* XA Bv",
+  ". . . . . R^",
+  ". . . . . .",
+  ". . . . . ."
+ ],
+ "piece_free": 10,
+ "max_pieces": 13,
+ "shortcut_weight": 80,
+ "coverage_weight": 8,
+ "late_weight": 4,
+ "max_positions": 700,
+ "frozen": [
+  [
+   0,
+   0
+  ],
+  [
+   2,
+   3
+  ],
+  [
+   2,
+   4
+  ],
+  [
+   2,
+   5
+  ],
+  [
+   3,
+   5
+  ]
+ ],
+ "seed": 1
+}

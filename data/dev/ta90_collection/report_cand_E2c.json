@@ -1,0 +1,100 @@
+{
+ "cand_E2c": {
+  "A": {
+   "fingerprint": "c631418dff67b0bf39bfb88411be0ec9abde6b41dad3cb13dcb181b91b5b75a3",
+   "hint_nodes": [
+    63,
+    23
+   ],
+   "parity": [
+    0,
+    0
+   ],
+   "position_cap": 700,
+   "positions": 128,
+   "replay": true,
+   "solution": 9,
+   "solve_ms": 6.3,
+   "timeup_worst_ms": 4,
+   "timeup_worst_nodes": 95,
+   "winnable": 38
+  },
+  "B": {
+   "coverage": 0.56,
+   "decision_steps": 5,
+   "distinct_mistakes": 3,
+   "endgame_decision": false,
+   "last_decision": 5,
+   "late": 0.56,
+   "line": [
+    "r2c5> [x3]",
+    "r2c4v [x3]",
+    "r4c2< [x3]",
+    "r3c2v [x2]",
+    "r2c2v [x2]",
+    "r1c2v",
+    "r2c1<",
+    "r3c3^",
+    "r2c1v"
+   ],
+   "losing_per_step": [
+    3,
+    3,
+    3,
+    2,
+    2,
+    0,
+    0,
+    0,
+    0
+   ],
+   "matters_magnet": true,
+   "mistakes": [
+    "r1c2>",
+    "r2c1<",
+    "r3c2<"
+   ],
+   "shortcut": 0.1,
+   "without_magnet": "unsolvable without it"
+  },
+  "C": {
+   "decisions_k4_6_8": [
+    3,
+    1,
+    0
+   ],
+   "deepest": 7,
+   "greedy": {
+    "look2": 0.035,
+    "look4": 0.1,
+    "min_turn": 0.05,
+    "mobility": 0,
+    "safe": 0.04
+   },
+   "hidden_k6_8": [
+    3,
+    0
+   ],
+   "learner": {
+    "look4": 2,
+    "look6": 0
+   },
+   "look6_greedy": 0.367,
+   "opening": "2 / 5",
+   "win_share": 0.297
+  },
+  "map": [
+   ". . . . . .",
+   ". . R>@ . . .",
+   ". Y<* B>@~ Bv P>@ R>@-",
+   ". . Y<@- R^ . .",
+   ". . G<@ . . .",
+   ". . . . . ."
+  ],
+  "name": "cand_E2c",
+  "target": "EASY",
+  "verdict": "HUMAN-REVIEW CANDIDATE",
+  "why_a": [],
+  "why_b": []
+ }
+}

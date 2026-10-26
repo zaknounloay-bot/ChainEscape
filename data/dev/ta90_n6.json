@@ -1,0 +1,131 @@
+{
+ "format": "ce-ta90-proto",
+ "v": 1,
+ "test": "ta90_n6",
+ "assist": {
+  "undo": 3,
+  "show_a_move": 0,
+  "hammer": 0
+ },
+ "note": "Development only. Phase 15 90-second collection board (?ta90=1); never shared, never production. HUMAN-REVIEW CANDIDATE: technically validated, strategic quality unconfirmed by people.",
+ "boards": [
+  {
+   "id": "N6",
+   "accepted": true,
+   "label": "HUMAN-REVIEW CANDIDATE - EXPERIMENTAL, HUMAN DIFFICULTY UNVALIDATED",
+   "variant": "N6",
+   "design": "15H1",
+   "target": "HARD (a design target, not a rating; never shown to players)",
+   "idea": "reverse the rammer first: escaping it the easy way strands the shell",
+   "source": "hand-drawn idea core, grown by the bounded constructive search (tools/ta90_search.gd), checked by tools/ta90_design.gd (Phase 15)",
+   "fingerprint": "d2850675394c1963e34a0986ece8010b83f81758aa4f3790ea8a93f686afecb0",
+   "mechanics": [
+    "spinner_cw",
+    "spinner_ccw",
+    "spinner_alt",
+    "switch",
+    "armor"
+   ],
+   "puzzle": {
+    "format": "ce-puzzle",
+    "v": 1,
+    "rules": 1,
+    "rows": 6,
+    "cols": 7,
+    "map": [
+     "R<@ Y^@~ Y^@- . . . .",
+     "Y^@- P<@ . . . Bv@~ G>@~",
+     "R>@- P<@ . . . B^@- .",
+     ". B<&A . . . G^= .",
+     ". . . . . . .",
+     "P^%A . . . . . ."
+    ]
+   },
+   "design_report": {
+    "A": {
+     "fingerprint": "d2850675394c1963e34a0986ece8010b83f81758aa4f3790ea8a93f686afecb0",
+     "hint_nodes": [
+      148,
+      71
+     ],
+     "parity": [
+      0,
+      0
+     ],
+     "position_cap": 1500,
+     "positions": 268,
+     "replay": true,
+     "solution": 14,
+     "solve_ms": 18.7,
+     "timeup_worst_ms": 17.8,
+     "timeup_worst_nodes": 365,
+     "winnable": 39
+    },
+    "B": {
+     "coverage": 0.79,
+     "decision_steps": 11,
+     "distinct_mistakes": 5,
+     "endgame_decision": true,
+     "idea_reversed_ram": true,
+     "last_decision": 11,
+     "late": 0.79,
+     "losing_per_step": [
+      3,
+      2,
+      2,
+      2,
+      1,
+      2,
+      2,
+      2,
+      1,
+      1,
+      1,
+      0,
+      0,
+      0
+     ],
+     "matters_armor": true,
+     "matters_switch": true,
+     "mistakes": [
+      "r0c0<",
+      "r0c1^",
+      "r3c1<",
+      "r0c0^",
+      "r2c0^"
+     ],
+     "shortcut": 0.02,
+     "without_armor": "without it: 5 decision steps, 4 distinct mistakes (with it: 11, 5)",
+     "without_switch": "unsolvable without it"
+    },
+    "C": {
+     "decisions_k4_6_8": [
+      8,
+      6,
+      4
+     ],
+     "deepest": 12,
+     "greedy": {
+      "look2": 0,
+      "look4": 0.017,
+      "min_turn": 0,
+      "mobility": 0.02,
+      "safe": 0
+     },
+     "hidden_k6_8": [
+      10,
+      5
+     ],
+     "learner": {
+      "look4": 4,
+      "look6": 0
+     },
+     "look6_greedy": 0.008,
+     "opening": "2 / 5",
+     "win_share": 0.146
+    },
+    "verdict": "HUMAN-REVIEW CANDIDATE"
+   }
+  }
+ ]
+}

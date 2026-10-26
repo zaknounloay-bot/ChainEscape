@@ -16,6 +16,9 @@ extends "res://tools/ta90_design.gd"
 ## --patience rounds (then the strategy should change, not the run length).
 ##   godot --headless --path . --script res://tools/ta90_search.gd -- --file=seed.json --minutes=10 --batch=40 --beam=5 --out=res.json
 ## seed.json: {"map": [...], "frozen": [[row, col], ...], "target": "HARD", "facts": [...], "mechanic": "gate,armor", "max_pieces": 11, "seed": 1,
+##   Phase 15 (all default to the Phase 14 behaviour): "piece_free": 8 (pieces
+##   without a size penalty), "position_weight": 0.004, "coverage_weight" /
+##   "late_weight": 0 (sustained risk), "length_weight" / "length_cap": 0,
 ##   "endgame_weight": 4 (the bonus for a decision in the last third),
 ##   "shortcut_weight": 25 (how hard a greedy shortcut above 20 % is penalised; raised when boards stall on it)}
 
@@ -190,16 +193,21 @@ func _score(map: Array) -> Dictionary:
 	var sc: float = 4.0 * mini(dec["distinct_mistakes"], need["distinct"] + 2) + 1.5 * mini(dec["decision_steps"], need["steps"] + 3) \
 		+ 3.0 * (thirds[0] + thirds[1] + thirds[2]) + (float(_spec.get("endgame_weight", 4.0)) if dec["endgame_decision"] else 0.0) \
 		+ 6.0 * matters - 8.0 * (mechs.size() - matters) \
-		- float(_spec.get("shortcut_weight", 25.0)) * maxf(0.0, shortcut - SHORTCUT_MAX) - 8.0 * shortcut \
-		- 0.6 * maxi(0, pieces - 8) - 0.004 * win.size()
+		- float(_spec.get("shortcut_weight", 25.0)) * maxf(0.0, shortcut - float(need.get("shortcut", SHORTCUT_MAX))) - 8.0 * shortcut \
+		- 0.6 * maxi(0, pieces - int(_spec.get("piece_free", 8))) - float(_spec.get("position_weight", 0.004)) * win.size()
+	# Phase 15 (0 by default: earlier seeds reproduce): sustained risk.
+	var sl := float(maxi(1, sol.size()))
+	sc += float(_spec.get("coverage_weight", 0.0)) * (dec["decision_steps"] / sl) + float(_spec.get("late_weight", 0.0)) * (dec["last_decision"] / sl)
+	sc += float(_spec.get("length_weight", 0.0)) * mini(sol.size(), int(_spec.get("length_cap", 0)))
 	return {"map": map, "score": snappedf(sc, 0.01), "pieces": pieces, "positions": win.size(), "solution": sol.size(),
 		"distinct": dec["distinct_mistakes"], "steps": dec["decision_steps"], "endgame": dec["endgame_decision"], "thirds": thirds,
-		"matters": "%d/%d" % [matters, mechs.size()], "shortcut": snappedf(shortcut, 0.001), "per_step": lps}
+		"matters": "%d/%d" % [matters, mechs.size()], "shortcut": snappedf(shortcut, 0.001), "per_step": lps,
+		"coverage": snappedf(dec["decision_steps"] / sl, 0.01), "late": snappedf(dec["last_decision"] / sl, 0.01)}
 
 
 func _line(r: Dictionary) -> String:
-	return "%.1f | %d pieces, %d positions, solution %d, distinct %d, steps %d, endgame %s, thirds %s, mechanic %s, shortcut %.0f%% | %s" % [r["score"], r["pieces"],
-		r["positions"], r["solution"], r["distinct"], r["steps"], r["endgame"], str(r["thirds"]), r["matters"], r["shortcut"] * 100.0, JSON.stringify(r["map"])]
+	return "%.1f | %d pieces, %d positions, solution %d, distinct %d, steps %d (cover %.2f, late %.2f), endgame %s, mechanic %s, shortcut %.0f%% | %s" % [r["score"], r["pieces"],
+		r["positions"], r["solution"], r["distinct"], r["steps"], r.get("coverage", 0.0), r.get("late", 0.0), r["endgame"], r["matters"], r["shortcut"] * 100.0, JSON.stringify(r["map"])]
 
 
 func _brief(r: Dictionary, round: int) -> Dictionary:

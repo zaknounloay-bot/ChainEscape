@@ -1,0 +1,409 @@
+{
+ "cand_E1": {
+  "A": {
+   "fingerprint": "6adc71d670366c04f57bdef2f825990f930214ff63baa0a754f8d3362002c7e9",
+   "hint_nodes": [
+    12,
+    3
+   ],
+   "parity": [
+    0,
+    0
+   ],
+   "position_cap": 700,
+   "positions": 39,
+   "replay": true,
+   "solution": 9,
+   "solve_ms": 2.2,
+   "timeup_worst_ms": 1.1,
+   "timeup_worst_nodes": 21,
+   "winnable": 15
+  },
+  "B": {
+   "coverage": 0.78,
+   "decision_steps": 7,
+   "distinct_mistakes": 2,
+   "endgame_decision": true,
+   "last_decision": 7,
+   "late": 0.78,
+   "line": [
+    "r2c1< [x2]",
+    "r3c2v [x2]",
+    "r2c2v [x2]",
+    "r1c2v [x2]",
+    "r2c4< [x2]",
+    "r3c4> [x1]",
+    "r1c4v [x1]",
+    "r0c4^",
+    "r1c0>"
+   ],
+   "losing_per_step": [
+    2,
+    2,
+    2,
+    2,
+    2,
+    1,
+    1,
+    0,
+    0
+   ],
+   "mistakes": [
+    "r0c4<",
+    "r1c4>"
+   ],
+   "shortcut": 0.315
+  },
+  "C": {
+   "decisions_k4_6_8": [
+    3,
+    1,
+    0
+   ],
+   "deepest": 7,
+   "greedy": {
+    "look2": 0.085,
+    "look4": 0.25,
+    "min_turn": 0,
+    "mobility": 0.315,
+    "safe": 0.03
+   },
+   "hidden_k6_8": [
+    2,
+    0
+   ],
+   "learner": {
+    "look4": 0,
+    "look6": 0
+   },
+   "look6_greedy": 0.55,
+   "opening": "2 / 4",
+   "win_share": 0.385
+  },
+  "map": [
+   ". . . . P<@",
+   "Y>@ . Rv . G>@",
+   ". B< Y^@ . P<@-",
+   ". . Gv . Y^@",
+   ". . . . ."
+  ],
+  "name": "cand_E1",
+  "target": "EASY",
+  "verdict": "HUMAN-REVIEW CANDIDATE",
+  "why_a": [],
+  "why_b": []
+ },
+ "cand_E2b": {
+  "A": {
+   "fingerprint": "6026b09fe8ef5506c9d1168de64b47079eec85dd281e206eba5ffc68f2fef16b",
+   "hint_nodes": [
+    11,
+    7
+   ],
+   "parity": [
+    0,
+    0
+   ],
+   "position_cap": 700,
+   "positions": 38,
+   "replay": true,
+   "solution": 8,
+   "solve_ms": 1.6,
+   "timeup_worst_ms": 0.9,
+   "timeup_worst_nodes": 23,
+   "winnable": 14
+  },
+  "B": {
+   "coverage": 0.5,
+   "decision_steps": 4,
+   "distinct_mistakes": 2,
+   "endgame_decision": false,
+   "last_decision": 4,
+   "late": 0.5,
+   "line": [
+    "r3c2v [x1]",
+    "r5c3< [x2]",
+    "r4c3> [x2]",
+    "r3c3v [x1]",
+    "r2c3<",
+    "r3c1<",
+    "r4c1^",
+    "r0c3v"
+   ],
+   "losing_per_step": [
+    1,
+    2,
+    2,
+    1,
+    0,
+    0,
+    0,
+    0
+   ],
+   "matters_lock": true,
+   "mistakes": [
+    "r2c3<",
+    "r3c3>"
+   ],
+   "shortcut": 0.433,
+   "without_lock": "without it: 3 decision steps, 1 distinct mistakes (with it: 4, 2)"
+  },
+  "C": {
+   "decisions_k4_6_8": [
+    2,
+    0,
+    0
+   ],
+   "deepest": 5,
+   "greedy": {
+    "look2": 0.145,
+    "look4": 0.433,
+    "min_turn": 0.145,
+    "mobility": 0.145,
+    "safe": 0.12
+   },
+   "hidden_k6_8": [
+    0,
+    0
+   ],
+   "learner": {
+    "look4": 0,
+    "look6": 0
+   },
+   "look6_greedy": 1,
+   "opening": "2 / 3",
+   "win_share": 0.368
+  },
+  "map": [
+   ". . . Rv@~ . .",
+   ". . . . . .",
+   ". . . G< . .",
+   ". R<#B Bv@~ B^@ . .",
+   ". Y^ . G^@~ . .",
+   ". . . B<@~ . ."
+  ],
+  "name": "cand_E2b",
+  "target": "EASY",
+  "verdict": "NEEDS WORK",
+  "why_a": [],
+  "why_b": [
+   "a simple greedy player wins 43% (> 40%): a shortcut"
+  ]
+ },
+ "cand_M1": {
+  "A": {
+   "fingerprint": "033745db265b1291d2b19f342fb679d5ec4708fcdffa29e660a72ce0d0161e01",
+   "hint_nodes": [
+    5,
+    9
+   ],
+   "parity": [
+    0,
+    0
+   ],
+   "position_cap": 700,
+   "positions": 242,
+   "replay": true,
+   "solution": 11,
+   "solve_ms": 3.7,
+   "timeup_worst_ms": 3.1,
+   "timeup_worst_nodes": 40,
+   "winnable": 63
+  },
+  "B": {
+   "coverage": 0.82,
+   "decision_steps": 9,
+   "distinct_mistakes": 4,
+   "endgame_decision": true,
+   "idea_gate_pull": true,
+   "last_decision": 9,
+   "late": 0.82,
+   "line": [
+    "r0c1^ [x4]",
+    "r0c0^ [x3]",
+    "r0c2< [x2]",
+    "r1c2^ [x1]",
+    "r1c5< [x1]",
+    "r3c2^ [x1]",
+    "r2c3< [x1]",
+    "r3c5^ [x1]",
+    "r4c3< [x1]",
+    "r4c4v",
+    "r2c3v"
+   ],
+   "losing_per_step": [
+    4,
+    3,
+    2,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    0,
+    0
+   ],
+   "matters_gate": true,
+   "matters_magnet": true,
+   "mistakes": [
+    "r0c0^",
+    "r1c2<",
+    "r2c3<",
+    "r4c4>"
+   ],
+   "shortcut": 0.083,
+   "without_gate": "without it: 9 decision steps, 3 distinct mistakes (with it: 9, 4)",
+   "without_magnet": "unsolvable without it"
+  },
+  "C": {
+   "decisions_k4_6_8": [
+    5,
+    3,
+    1
+   ],
+   "deepest": 9,
+   "greedy": {
+    "look2": 0.07,
+    "look4": 0.083,
+    "min_turn": 0,
+    "mobility": 0,
+    "safe": 0.06
+   },
+   "hidden_k6_8": [
+    9,
+    3
+   ],
+   "learner": {
+    "look4": 8,
+    "look6": 8
+   },
+   "look6_greedy": 0.133,
+   "opening": "2 / 6",
+   "win_share": 0.26
+  },
+  "map": [
+   "G^+A B^@~ Bv@~ . . .",
+   ". . Y<@ . . Y<@~",
+   ". . . Y<* XA Bv",
+   ". . P^@- . . R^",
+   ". . . Y<@~ G>@~ .",
+   ". . . . . ."
+  ],
+  "name": "cand_M1",
+  "target": "MEDIUM",
+  "verdict": "HUMAN-REVIEW CANDIDATE",
+  "why_a": [],
+  "why_b": []
+ },
+ "cand_M2": {
+  "A": {
+   "fingerprint": "3f420b14215a44aa1bb6b96c85be519ff1c247312a6300c444c673f43e650c40",
+   "hint_nodes": [
+    37,
+    9
+   ],
+   "parity": [
+    0,
+    0
+   ],
+   "position_cap": 700,
+   "positions": 122,
+   "replay": true,
+   "solution": 14,
+   "solve_ms": 5.4,
+   "timeup_worst_ms": 3.8,
+   "timeup_worst_nodes": 41,
+   "winnable": 29
+  },
+  "B": {
+   "coverage": 0.86,
+   "decision_steps": 12,
+   "distinct_mistakes": 4,
+   "endgame_decision": true,
+   "idea_advance_turn": true,
+   "last_decision": 12,
+   "late": 0.86,
+   "line": [
+    "r0c1^ [x3]",
+    "r4c1> [x3]",
+    "r5c1> [x2]",
+    "r3c1v [x2]",
+    "r2c1< advance [x1]",
+    "r3c2> [x1]",
+    "r2c2v [x1]",
+    "r1c2v [x1]",
+    "r1c1< [x1]",
+    "r2c1^ [x1]",
+    "r0c2^ [x1]",
+    "r1c3< [x1]",
+    "r2c3<",
+    "r0c3v"
+   ],
+   "losing_per_step": [
+    3,
+    3,
+    2,
+    2,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    0,
+    0
+   ],
+   "matters_sequence": true,
+   "mistakes": [
+    "r0c3^",
+    "r2c1< advance",
+    "r5c1>",
+    "r0c3<"
+   ],
+   "shortcut": 0.01,
+   "without_sequence": "without it: 11 decision steps, 4 distinct mistakes (with it: 12, 4)"
+  },
+  "C": {
+   "decisions_k4_6_8": [
+    8,
+    6,
+    4
+   ],
+   "deepest": 12,
+   "greedy": {
+    "look2": 0,
+    "look4": 0.008,
+    "min_turn": 0,
+    "mobility": 0,
+    "safe": 0.01
+   },
+   "hidden_k6_8": [
+    6,
+    4
+   ],
+   "learner": {
+    "look4": 2,
+    "look6": 0
+   },
+   "look6_greedy": 0.083,
+   "opening": "2 / 5",
+   "win_share": 0.238
+  },
+  "map": [
+   ". R^ Rv@- P^@- . .",
+   ". P^@ Gv Gv@~ . .",
+   ". B<:^ R^@ P<@~ . .",
+   ". P>@~ P^@~ . . .",
+   ". B>@- . . . .",
+   ". R> . . . ."
+  ],
+  "name": "cand_M2",
+  "target": "MEDIUM",
+  "verdict": "HUMAN-REVIEW CANDIDATE",
+  "why_a": [],
+  "why_b": []
+ }
+}

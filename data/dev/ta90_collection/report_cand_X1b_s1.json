@@ -1,0 +1,120 @@
+{
+ "cand_X1b_s1": {
+  "A": {
+   "fingerprint": "a92813074460913b95b9f54433ffd156ead01c04c1e5d357ad83ea380f8bf4fb",
+   "hint_nodes": [
+    55,
+    109
+   ],
+   "parity": [
+    0,
+    0
+   ],
+   "position_cap": 3000,
+   "positions": 641,
+   "replay": true,
+   "solution": 16,
+   "solve_ms": 10.4,
+   "timeup_worst_ms": 10.5,
+   "timeup_worst_nodes": 173,
+   "winnable": 91
+  },
+  "B": {
+   "coverage": 0.75,
+   "decision_steps": 12,
+   "distinct_mistakes": 4,
+   "endgame_decision": true,
+   "idea_gate_through": true,
+   "idea_key_turn": true,
+   "last_decision": 12,
+   "late": 0.75,
+   "line": [
+    "r3c1^ [x3]",
+    "r6c3v [x3]",
+    "r4c2< [x4]",
+    "r5c0< [x4]",
+    "r6c0< [x3]",
+    "r2c0v [x3]",
+    "r1c0< [x2]",
+    "r5c1^ [x2]",
+    "r5c2< [x2]",
+    "r6c2> [x1]",
+    "r3c2v [x1]",
+    "r2c2v [x1]",
+    "r1c2<",
+    "r2c3^",
+    "r2c4<",
+    "r3c3v"
+   ],
+   "losing_per_step": [
+    3,
+    3,
+    4,
+    4,
+    3,
+    3,
+    2,
+    2,
+    2,
+    1,
+    1,
+    1,
+    0,
+    0,
+    0,
+    0
+   ],
+   "matters_gate": true,
+   "matters_lock": true,
+   "mistakes": [
+    "r1c0<",
+    "r2c3^",
+    "r6c0<",
+    "r6c2>"
+   ],
+   "shortcut": 0.03,
+   "without_gate": "without it: 12 decision steps, 5 distinct mistakes (with it: 12, 4)",
+   "without_lock": "without it: 13 decision steps, 4 distinct mistakes (with it: 12, 4)"
+  },
+  "C": {
+   "decisions_k4_6_8": [
+    9,
+    7,
+    6
+   ],
+   "deepest": 14,
+   "greedy": {
+    "look2": 0.03,
+    "look4": 0.008,
+    "min_turn": 0.025,
+    "mobility": 0,
+    "safe": 0.005
+   },
+   "hidden_k6_8": [
+    18,
+    13
+   ],
+   "learner": {
+    "look4": 0,
+    "look6": 0
+   },
+   "look6_greedy": 0.1,
+   "opening": "4 / 7",
+   "win_share": 0.142
+  },
+  "map": [
+   ". . . . . . .",
+   "R< . Gv@~ . . . .",
+   "Yv@- . R>@~ B^ P< . .",
+   ". P^@- Bv R^@#B . . .",
+   ". . R<@~ . . . .",
+   "G<@~ B>@- P>@ XA . . .",
+   "G<+A . R> Gv@~ . . ."
+  ],
+  "name": "cand_X1b_s1",
+  "target": "EXTREME",
+  "verdict": "HUMAN-REVIEW CANDIDATE",
+  "why_a": [],
+  "why_b": []
+ }
+}

@@ -1,0 +1,211 @@
+{
+ "cand_E1": {
+  "map": [
+   ". . . . P<@",
+   "Y>@ . Rv . G>@",
+   ". B< Y^@ . P<@-",
+   ". . Gv . Y^@",
+   ". . . . ."
+  ],
+  "target": "EASY",
+  "facts": [],
+  "mechanic": "",
+  "idea": "spinner order: the blocked spinner must turn exactly once before it leaves",
+  "max_positions": 700
+ },
+ "cand_E2b": {
+  "map": [
+   ". . . Rv@~ . .",
+   ". . . . . .",
+   ". . . G< . .",
+   ". R<#B Bv@~ B^@ . .",
+   ". Y^ . G^@~ . .",
+   ". . . B<@~ . ."
+  ],
+  "target": "EASY",
+  "facts": [],
+  "mechanic": "lock",
+  "idea": "the lock is the bottleneck: the yellow block needs the locked cell, and the blue key is a spinner that must leave at the right turn",
+  "max_positions": 700
+ },
+ "cand_M1": {
+  "map": [
+   "G^+A B^@~ Bv@~ . . .",
+   ". . Y<@ . . Y<@~",
+   ". . . Y<* XA Bv",
+   ". . P^@- . . R^",
+   ". . . Y<@~ G>@~ .",
+   ". . . . . ."
+  ],
+  "target": "MEDIUM",
+  "facts": [
+   "gate_pull"
+  ],
+  "mechanic": "magnet,gate",
+  "idea": "open, then pull: the magnet must wait for the gate, or the block behind it is stranded",
+  "max_positions": 700
+ },
+ "cand_M2": {
+  "map": [
+   ". R^ Rv@- P^@- . .",
+   ". P^@ Gv Gv@~ . .",
+   ". B<:^ R^@ P<@~ . .",
+   ". P>@~ P^@~ . . .",
+   ". B>@- . . . .",
+   ". R> . . . ."
+  ],
+  "target": "MEDIUM",
+  "facts": [
+   "advance_turn"
+  ],
+  "mechanic": "sequence",
+  "idea": "the Sequence block's first move is a key: its advance turns the trapped spinner",
+  "max_positions": 700
+ },
+ "cand_M3": {
+  "map": [
+   ". . Gv@~ R< . .",
+   "Y>@~ B^ R< . . .",
+   "P< P^@~ Yv@ Y<@ G^= .",
+   ". Bv . . . .",
+   ". . . . . .",
+   ". . . . . ."
+  ],
+  "target": "MEDIUM",
+  "facts": [
+   "alt_ram"
+  ],
+  "mechanic": "alt,armor",
+  "idea": "count the turns: an alternating spinner faces the shell only after an odd number of turns",
+  "max_positions": 700
+ },
+ "cand_H1": {
+  "map": [
+   "R<@ Y^@~ Y^@- . . . .",
+   "Y^@- P<@ . . . Bv@~ G>@~",
+   "R>@- P<@ . . . B^@- .",
+   ". B<&A . . . G^= .",
+   ". . . . . . .",
+   "P^%A . . . . . ."
+  ],
+  "target": "HARD",
+  "facts": [
+   "reversed_ram"
+  ],
+  "mechanic": "switch,armor",
+  "idea": "reverse the rammer first: escaping it the easy way strands the shell",
+  "max_positions": 1500
+ },
+ "cand_H2": {
+  "map": [
+   ". . . . . . .",
+   ". . . . . B<@ B>@~",
+   "R^@ R^ Rv@ Y>#B . Gv .",
+   "R<@ P<@ G<@- Y<* . R^@ Y<@-",
+   "R>@- . . Bv . . .",
+   ". . . . . . .",
+   ". . . Pv@~ . . ."
+  ],
+  "target": "HARD",
+  "facts": [
+   "moved_then_turned"
+  ],
+  "mechanic": "magnet,lock",
+  "idea": "pull, then turn: the magnet brings a trapped spinner next to the key that turns it",
+  "max_positions": 1500
+ },
+ "cand_H3": {
+  "map": [
+   ". . . Bv P>@~ . .",
+   ". . . G>@ R>@- . .",
+   ". . . P^@ R>@- . .",
+   ". . . XA P> . .",
+   ". . . R<@ G>@* . .",
+   ". R<#G+A . . . . .",
+   "P^ G>@- . . G^@~ . ."
+  ],
+  "target": "HARD",
+  "facts": [
+   "gate_through"
+  ],
+  "mechanic": "lock,gate",
+  "idea": "unlock the link: the gate's only link is locked by a pattern spinner's colour",
+  "max_positions": 1500
+ },
+ "cand_X1_s1": {
+  "map": [
+   "R^@~ . . . . R>@- .",
+   ". . . . . G>@ .",
+   ". R> . Yv R>@~ G>@- R>@",
+   "R^@ . . R^@#B Bv XA R<@",
+   "B<@~ . . Y>@- . Y<@ R>",
+   "B^@- . . P<@~ B^@~ . .",
+   "G^+A . . . Y<@- . ."
+  ],
+  "target": "EXTREME",
+  "facts": [
+   "key_turn",
+   "gate_through"
+  ],
+  "mechanic": "lock,gate",
+  "idea": "the key turns the lock, the lock goes through the gate: a long chain of keys and links",
+  "max_positions": 3000
+ },
+ "cand_X1_s2": {
+  "map": [
+   "G> . Y^@- R> . . .",
+   ". . . . . . .",
+   ". . P<@ Yv Y<@- G<@- .",
+   "P^@~ G^@ . R^@#B Bv XA P^@-",
+   ". . . . Y<@- P^@~ G^@-",
+   ". . . . . . Y>@-",
+   "G^+A . . Y< Y>@- . P>@~"
+  ],
+  "target": "EXTREME",
+  "facts": [
+   "key_turn",
+   "gate_through"
+  ],
+  "mechanic": "lock,gate",
+  "idea": "the key turns the lock, the lock goes through the gate: a long chain of keys and links",
+  "max_positions": 3000
+ },
+ "cand_X2_s1": {
+  "map": [
+   ". . Gv@- B^ . B^@- P^@-",
+   ". . . Yv@- . B<@- .",
+   ". R>@~ Gv Y< . . G^@~",
+   ". B<:v R^@ R< B^@ Y^= .",
+   ". R<@ . . . . .",
+   ". . G<@ . . . .",
+   ". . . . . . ."
+  ],
+  "target": "EXTREME",
+  "facts": [
+   "advance_turn",
+   "shell_rammed"
+  ],
+  "mechanic": "sequence,armor",
+  "idea": "aim with a Sequence step: the advance turns a spinner onto the shell",
+  "max_positions": 3000
+ },
+ "cand_X2_s2": {
+  "map": [
+   "R^@ . B<@- . . . .",
+   "Yv@~ G^@~ Y<@ . . G<@- G^@-",
+   ". . Gv . . . Rv",
+   ". B<:v R^@ . B<@- Y^= .",
+   ". . R^@- . . . Yv",
+   ". . . . R^@ P^@~ .",
+   ". . P>@ . Gv@- G<@ G^@"
+  ],
+  "target": "EXTREME",
+  "facts": [
+   "advance_turn",
+   "shell_rammed"
+  ],
+  "mechanic": "sequence,armor",
+  "idea": "aim with a Sequence step: the advance turns a spinner onto the shell",
+  "max_positions": 3000
+ }
+}

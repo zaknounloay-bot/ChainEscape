@@ -1,0 +1,127 @@
+{
+ "format": "ce-ta90-proto",
+ "v": 1,
+ "test": "ta90_n8",
+ "assist": {
+  "undo": 3,
+  "show_a_move": 0,
+  "hammer": 0
+ },
+ "note": "Development only. Phase 15 90-second collection board (?ta90=1); never shared, never production. HUMAN-REVIEW CANDIDATE: technically validated, strategic quality unconfirmed by people.",
+ "boards": [
+  {
+   "id": "N8",
+   "accepted": true,
+   "label": "HUMAN-REVIEW CANDIDATE - EXPERIMENTAL, HUMAN DIFFICULTY UNVALIDATED",
+   "variant": "N8",
+   "design": "15M1",
+   "target": "MEDIUM (a design target, not a rating; never shown to players)",
+   "idea": "open, then pull: the magnet must wait for the gate, or the block behind it is stranded",
+   "source": "hand-drawn idea core, grown by the bounded constructive search (tools/ta90_search.gd), checked by tools/ta90_design.gd (Phase 15)",
+   "fingerprint": "033745db265b1291d2b19f342fb679d5ec4708fcdffa29e660a72ce0d0161e01",
+   "mechanics": [
+    "spinner_cw",
+    "spinner_ccw",
+    "spinner_alt",
+    "gate",
+    "magnet"
+   ],
+   "puzzle": {
+    "format": "ce-puzzle",
+    "v": 1,
+    "rules": 1,
+    "rows": 6,
+    "cols": 6,
+    "map": [
+     "G^+A B^@~ Bv@~ . . .",
+     ". . Y<@ . . Y<@~",
+     ". . . Y<* XA Bv",
+     ". . P^@- . . R^",
+     ". . . Y<@~ G>@~ .",
+     ". . . . . ."
+    ]
+   },
+   "design_report": {
+    "A": {
+     "fingerprint": "033745db265b1291d2b19f342fb679d5ec4708fcdffa29e660a72ce0d0161e01",
+     "hint_nodes": [
+      5,
+      9
+     ],
+     "parity": [
+      0,
+      0
+     ],
+     "position_cap": 700,
+     "positions": 242,
+     "replay": true,
+     "solution": 11,
+     "solve_ms": 4,
+     "timeup_worst_ms": 2.3,
+     "timeup_worst_nodes": 40,
+     "winnable": 63
+    },
+    "B": {
+     "coverage": 0.82,
+     "decision_steps": 9,
+     "distinct_mistakes": 4,
+     "endgame_decision": true,
+     "idea_gate_pull": true,
+     "last_decision": 9,
+     "late": 0.82,
+     "losing_per_step": [
+      4,
+      3,
+      2,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      0,
+      0
+     ],
+     "matters_gate": true,
+     "matters_magnet": true,
+     "mistakes": [
+      "r0c0^",
+      "r1c2<",
+      "r2c3<",
+      "r4c4>"
+     ],
+     "shortcut": 0.083,
+     "without_gate": "without it: 9 decision steps, 3 distinct mistakes (with it: 9, 4)",
+     "without_magnet": "unsolvable without it"
+    },
+    "C": {
+     "decisions_k4_6_8": [
+      5,
+      3,
+      1
+     ],
+     "deepest": 9,
+     "greedy": {
+      "look2": 0.07,
+      "look4": 0.083,
+      "min_turn": 0,
+      "mobility": 0,
+      "safe": 0.06
+     },
+     "hidden_k6_8": [
+      9,
+      3
+     ],
+     "learner": {
+      "look4": 8,
+      "look6": 8
+     },
+     "look6_greedy": 0.133,
+     "opening": "2 / 6",
+     "win_share": 0.26
+    },
+    "verdict": "HUMAN-REVIEW CANDIDATE"
+   }
+  }
+ ]
+}

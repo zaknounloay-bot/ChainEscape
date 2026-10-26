@@ -308,7 +308,7 @@ try {
   // ---------------- Run 3: the Phase 14 boards (N1-N3) ------------------------------------
   // Each puzzle of the selection: the brief, the WebAssembly cost of a full
   // solve (&bench=1: the same Solver call the page makes at TIME UP), and a
-  // timed solve by touches (N2, N3; N1 is run 1's board).
+  // timed solve by touches (N2-N13; N1 is run 1's board).
   if (!BOARD) {
     const ctx = await browser.newContext(ctxOpts);
     const e = await session(ctx, 'run 3');
@@ -316,9 +316,14 @@ try {
     await e.tapHub('PilotStart', 'WELCOME');
     await e.tapHub('Familiar_PLAYED_A_LITTLE', 'FAMILIARITY');
     let h3 = await e.waitFor(e.hub, (v) => v.view === 'SELECT', 'select 3');
-    check(JSON.stringify(h3.order) === JSON.stringify(['N1', 'N2', 'N3']) && !Object.keys(h3.buttons).includes('Puzzle_4'), `the selection: PUZZLE 1-3 = N1-N3, no reference row ${JSON.stringify(h3.order)}`);
+    const want = Array.from({ length: 13 }, (_, i) => 'N' + (i + 1));
+    const tiles = want.map((_, i) => h3.rects['Puzzle_' + (i + 1)]);
+    check(JSON.stringify(h3.order) === JSON.stringify(want) && !Object.keys(h3.buttons).includes('Puzzle_14') && tiles.every((r) => r && r[1] + r[3] <= 1.0001 && r[3] * H >= 40)
+      && await e.hubFits() && await e.noOverflow() && Object.values(h3.statuses).every((t) => t === 'New'),
+      `the selection: a grid of PUZZLE 1-13 (N1-N13), every tile on the iPhone SE screen and at least 40 px tall, no reference row ${JSON.stringify(h3.order)}`);
+    await e.shot('M2b_select_13');
     const benchMs = {};
-    for (const [i, b] of [[2, 'N2'], [3, 'N3'], [1, 'N1']]) {
+    for (const [i, b] of [...want.slice(1).map((k, j) => [j + 2, k]), [1, 'N1']]) {
       h3 = await e.waitFor(e.hub, (v) => v.view === 'SELECT' && v.buttons['Puzzle_' + i], 'select ' + b);
       await e.page.evaluate(() => { window.chainEscapeVhBench = null; });
       await e.tapHub('Puzzle_' + i, 'SELECT', 1200);
@@ -347,7 +352,7 @@ try {
         else await sleep(400);
       }
     }
-    check(Object.values(benchMs).every((x) => x <= 250), `WebAssembly: a full solve (the TIME UP check) per board ${JSON.stringify(benchMs)} ms (a one-off call at 0:00, limit 250 ms here)`);
+    check(Object.keys(benchMs).length === 13 && Object.values(benchMs).every((x) => x <= 250), `WebAssembly: a full solve (the TIME UP check) per board ${JSON.stringify(benchMs)} ms (a one-off call at 0:00, limit 250 ms here)`);
     console.log('BENCH ' + JSON.stringify(benchMs));
     allErrors.push(...e.errors); allExternal.push(...e.external);
     await ctx.close();

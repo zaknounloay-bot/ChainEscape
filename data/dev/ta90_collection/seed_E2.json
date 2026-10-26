@@ -1,0 +1,34 @@
+{
+ "target": "EASY",
+ "facts": [
+  "key_turn"
+ ],
+ "mechanic": "lock",
+ "idea": "key first: the last blue block's departure both unlocks and turns the locked spinner",
+ "map": [
+  ". . . . . .",
+  ". . Gv . . .",
+  ". . R^@#B Bv . .",
+  ". . . . . .",
+  ". . . . . ."
+ ],
+ "piece_free": 7,
+ "max_pieces": 9,
+ "shortcut_weight": 40,
+ "max_positions": 700,
+ "frozen": [
+  [
+   1,
+   2
+  ],
+  [
+   2,
+   2
+  ],
+  [
+   2,
+   3
+  ]
+ ],
+ "seed": 1
+}

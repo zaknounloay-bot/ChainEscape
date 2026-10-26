@@ -1,0 +1,120 @@
+{
+ "format": "ce-ta90-proto",
+ "v": 1,
+ "test": "ta90_n9",
+ "assist": {
+  "undo": 3,
+  "show_a_move": 0,
+  "hammer": 0
+ },
+ "note": "Development only. Phase 15 90-second collection board (?ta90=1); never shared, never production. HUMAN-REVIEW CANDIDATE: technically validated, strategic quality unconfirmed by people.",
+ "boards": [
+  {
+   "id": "N9",
+   "accepted": true,
+   "label": "HUMAN-REVIEW CANDIDATE - EXPERIMENTAL, HUMAN DIFFICULTY UNVALIDATED",
+   "variant": "N9",
+   "design": "15E2c",
+   "target": "EASY (a design target, not a rating; never shown to players)",
+   "idea": "the magnet frees a jam: its departure pulls a deadlocked block into an open lane",
+   "source": "hand-drawn idea core, grown by the bounded constructive search (tools/ta90_search.gd), checked by tools/ta90_design.gd (Phase 15)",
+   "fingerprint": "c631418dff67b0bf39bfb88411be0ec9abde6b41dad3cb13dcb181b91b5b75a3",
+   "mechanics": [
+    "spinner_cw",
+    "spinner_ccw",
+    "spinner_alt",
+    "magnet"
+   ],
+   "puzzle": {
+    "format": "ce-puzzle",
+    "v": 1,
+    "rules": 1,
+    "rows": 6,
+    "cols": 6,
+    "map": [
+     ". . . . . .",
+     ". . R>@ . . .",
+     ". Y<* B>@~ Bv P>@ R>@-",
+     ". . Y<@- R^ . .",
+     ". . G<@ . . .",
+     ". . . . . ."
+    ]
+   },
+   "design_report": {
+    "A": {
+     "fingerprint": "c631418dff67b0bf39bfb88411be0ec9abde6b41dad3cb13dcb181b91b5b75a3",
+     "hint_nodes": [
+      63,
+      23
+     ],
+     "parity": [
+      0,
+      0
+     ],
+     "position_cap": 700,
+     "positions": 128,
+     "replay": true,
+     "solution": 9,
+     "solve_ms": 6.3,
+     "timeup_worst_ms": 3.8,
+     "timeup_worst_nodes": 95,
+     "winnable": 38
+    },
+    "B": {
+     "coverage": 0.56,
+     "decision_steps": 5,
+     "distinct_mistakes": 3,
+     "endgame_decision": false,
+     "last_decision": 5,
+     "late": 0.56,
+     "losing_per_step": [
+      3,
+      3,
+      3,
+      2,
+      2,
+      0,
+      0,
+      0,
+      0
+     ],
+     "matters_magnet": true,
+     "mistakes": [
+      "r1c2>",
+      "r2c1<",
+      "r3c2<"
+     ],
+     "shortcut": 0.1,
+     "without_magnet": "unsolvable without it"
+    },
+    "C": {
+     "decisions_k4_6_8": [
+      3,
+      1,
+      0
+     ],
+     "deepest": 7,
+     "greedy": {
+      "look2": 0.035,
+      "look4": 0.1,
+      "min_turn": 0.05,
+      "mobility": 0,
+      "safe": 0.04
+     },
+     "hidden_k6_8": [
+      3,
+      0
+     ],
+     "learner": {
+      "look4": 2,
+      "look6": 0
+     },
+     "look6_greedy": 0.367,
+     "opening": "2 / 5",
+     "win_share": 0.297
+    },
+    "verdict": "HUMAN-REVIEW CANDIDATE"
+   }
+  }
+ ]
+}

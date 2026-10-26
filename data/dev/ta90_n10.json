@@ -1,0 +1,132 @@
+{
+ "format": "ce-ta90-proto",
+ "v": 1,
+ "test": "ta90_n10",
+ "assist": {
+  "undo": 3,
+  "show_a_move": 0,
+  "hammer": 0
+ },
+ "note": "Development only. Phase 15 90-second collection board (?ta90=1); never shared, never production. HUMAN-REVIEW CANDIDATE: technically validated, strategic quality unconfirmed by people.",
+ "boards": [
+  {
+   "id": "N10",
+   "accepted": true,
+   "label": "HUMAN-REVIEW CANDIDATE - EXPERIMENTAL, HUMAN DIFFICULTY UNVALIDATED",
+   "variant": "N10",
+   "design": "15H3",
+   "target": "HARD (a design target, not a rating; never shown to players)",
+   "idea": "unlock the link: the gate's only link is locked by a pattern spinner's colour",
+   "source": "hand-drawn idea core, grown by the bounded constructive search (tools/ta90_search.gd), checked by tools/ta90_design.gd (Phase 15)",
+   "fingerprint": "a5474adbd79311a651865a183c1094fd080bd65fe4b26bb4bc4bb1f80f8fddfe",
+   "mechanics": [
+    "spinner_cw",
+    "spinner_ccw",
+    "spinner_alt",
+    "spinner_pattern",
+    "lock",
+    "gate"
+   ],
+   "puzzle": {
+    "format": "ce-puzzle",
+    "v": 1,
+    "rules": 1,
+    "rows": 7,
+    "cols": 7,
+    "map": [
+     ". . . Bv P>@~ . .",
+     ". . . G>@ R>@- . .",
+     ". . . P^@ R>@- . .",
+     ". . . XA P> . .",
+     ". . . R<@ G>@* . .",
+     ". R<#G+A . . . . .",
+     "P^ G>@- . . G^@~ . ."
+    ]
+   },
+   "design_report": {
+    "A": {
+     "fingerprint": "a5474adbd79311a651865a183c1094fd080bd65fe4b26bb4bc4bb1f80f8fddfe",
+     "hint_nodes": [
+      6,
+      41
+     ],
+     "parity": [
+      0,
+      0
+     ],
+     "position_cap": 1500,
+     "positions": 183,
+     "replay": true,
+     "solution": 13,
+     "solve_ms": 1.2,
+     "timeup_worst_ms": 5.4,
+     "timeup_worst_nodes": 107,
+     "winnable": 33
+    },
+    "B": {
+     "coverage": 0.77,
+     "decision_steps": 10,
+     "distinct_mistakes": 5,
+     "endgame_decision": true,
+     "idea_gate_through": true,
+     "last_decision": 10,
+     "late": 0.77,
+     "losing_per_step": [
+      5,
+      4,
+      3,
+      2,
+      2,
+      2,
+      1,
+      1,
+      1,
+      1,
+      0,
+      0,
+      0
+     ],
+     "matters_gate": true,
+     "matters_lock": true,
+     "mistakes": [
+      "r1c4>",
+      "r2c4>",
+      "r3c4>",
+      "r4c4>",
+      "r6c0^"
+     ],
+     "shortcut": 0.005,
+     "without_gate": "without it: 11 decision steps, 5 distinct mistakes (with it: 10, 5)",
+     "without_lock": "without it: 6 decision steps, 4 distinct mistakes (with it: 10, 5)"
+    },
+    "C": {
+     "decisions_k4_6_8": [
+      6,
+      5,
+      3
+     ],
+     "deepest": 11,
+     "greedy": {
+      "look2": 0,
+      "look4": 0,
+      "min_turn": 0,
+      "mobility": 0,
+      "safe": 0.005
+     },
+     "hidden_k6_8": [
+      10,
+      5
+     ],
+     "learner": {
+      "look4": 4,
+      "look6": 2
+     },
+     "look6_greedy": 0.05,
+     "opening": "2 / 7",
+     "win_share": 0.18
+    },
+    "verdict": "HUMAN-REVIEW CANDIDATE"
+   }
+  }
+ ]
+}

@@ -1,0 +1,43 @@
+{
+ "target": "HARD",
+ "facts": [
+  "gate_through"
+ ],
+ "mechanic": "lock,gate",
+ "idea": "unlock the link: the gate's only link is locked by a pattern spinner's colour",
+ "map": [
+  ". . . Bv . . .",
+  ". . . . . . .",
+  ". . . . . . .",
+  ". . . XA . . .",
+  ". . . . G>@* . .",
+  ". R<#G+A . . . . .",
+  ". . . . . . ."
+ ],
+ "piece_free": 13,
+ "max_pieces": 17,
+ "shortcut_weight": 80,
+ "coverage_weight": 15,
+ "late_weight": 10,
+ "endgame_weight": 15,
+ "max_positions": 1500,
+ "frozen": [
+  [
+   0,
+   3
+  ],
+  [
+   3,
+   3
+  ],
+  [
+   4,
+   4
+  ],
+  [
+   5,
+   1
+  ]
+ ],
+ "seed": 1
+}

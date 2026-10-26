@@ -1,0 +1,114 @@
+{
+ "format": "ce-ta90-proto",
+ "v": 1,
+ "test": "ta90_n4",
+ "assist": {
+  "undo": 3,
+  "show_a_move": 0,
+  "hammer": 0
+ },
+ "note": "Development only. Phase 15 90-second collection board (?ta90=1); never shared, never production. HUMAN-REVIEW CANDIDATE: technically validated, strategic quality unconfirmed by people.",
+ "boards": [
+  {
+   "id": "N4",
+   "accepted": true,
+   "label": "HUMAN-REVIEW CANDIDATE - EXPERIMENTAL, HUMAN DIFFICULTY UNVALIDATED",
+   "variant": "N4",
+   "design": "15E1",
+   "target": "EASY (a design target, not a rating; never shown to players)",
+   "idea": "spinner order: the blocked spinner must turn exactly once before it leaves",
+   "source": "hand-drawn idea core, grown by the bounded constructive search (tools/ta90_search.gd), checked by tools/ta90_design.gd (Phase 15)",
+   "fingerprint": "6adc71d670366c04f57bdef2f825990f930214ff63baa0a754f8d3362002c7e9",
+   "mechanics": [
+    "spinner_cw",
+    "spinner_ccw"
+   ],
+   "puzzle": {
+    "format": "ce-puzzle",
+    "v": 1,
+    "rules": 1,
+    "rows": 5,
+    "cols": 5,
+    "map": [
+     ". . . . P<@",
+     "Y>@ . Rv . G>@",
+     ". B< Y^@ . P<@-",
+     ". . Gv . Y^@",
+     ". . . . ."
+    ]
+   },
+   "design_report": {
+    "A": {
+     "fingerprint": "6adc71d670366c04f57bdef2f825990f930214ff63baa0a754f8d3362002c7e9",
+     "hint_nodes": [
+      12,
+      3
+     ],
+     "parity": [
+      0,
+      0
+     ],
+     "position_cap": 700,
+     "positions": 39,
+     "replay": true,
+     "solution": 9,
+     "solve_ms": 1.7,
+     "timeup_worst_ms": 1,
+     "timeup_worst_nodes": 21,
+     "winnable": 15
+    },
+    "B": {
+     "coverage": 0.78,
+     "decision_steps": 7,
+     "distinct_mistakes": 2,
+     "endgame_decision": true,
+     "last_decision": 7,
+     "late": 0.78,
+     "losing_per_step": [
+      2,
+      2,
+      2,
+      2,
+      2,
+      1,
+      1,
+      0,
+      0
+     ],
+     "mistakes": [
+      "r0c4<",
+      "r1c4>"
+     ],
+     "shortcut": 0.315
+    },
+    "C": {
+     "decisions_k4_6_8": [
+      3,
+      1,
+      0
+     ],
+     "deepest": 7,
+     "greedy": {
+      "look2": 0.085,
+      "look4": 0.25,
+      "min_turn": 0,
+      "mobility": 0.315,
+      "safe": 0.03
+     },
+     "hidden_k6_8": [
+      2,
+      0
+     ],
+     "learner": {
+      "look4": 0,
+      "look6": 0
+     },
+     "look6_greedy": 0.55,
+     "opening": "2 / 4",
+     "win_share": 0.385
+    },
+    "verdict": "HUMAN-REVIEW CANDIDATE"
+   }
+  }
+ ]
+}

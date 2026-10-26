@@ -1,0 +1,17 @@
+{
+ "core_E1": {"target": "EASY", "facts": [], "mechanic": "",
+  "idea": "spinner order: the blocked spinner must turn exactly once before it leaves",
+  "map": [". . . . .", ". . Rv . .", ". B< Y^@ . .", ". . Gv . .", ". . . . ."]},
+ "core_E2": {"target": "EASY", "facts": ["key_turn"], "mechanic": "lock",
+  "idea": "key first: the last blue block's departure both unlocks and turns the locked spinner",
+  "map": [". . . . . .", ". . Gv . . .", ". . R^@#B Bv . .", ". . . . . .", ". . . . . ."]},
+ "core_M1": {"target": "MEDIUM", "facts": ["gate_pull"], "mechanic": "magnet,gate",
+  "idea": "open, then pull: the magnet must wait for the gate, or the block behind it is stranded",
+  "map": ["G^+A . . . . .", ". . . . . .", ". . . Y<* XA Bv", ". . . . . R^", ". . . . . .", ". . . . . ."]},
+ "core_M2": {"target": "MEDIUM", "facts": ["advance_turn"], "mechanic": "sequence",
+  "idea": "the Sequence block's first move is a key: its advance turns the trapped spinner",
+  "map": [". . . . . .", ". . Gv . . .", ". B<:^ R^@ . . .", ". . . . . .", ". . . . . .", ". . . . . ."]},
+ "core_M3": {"target": "MEDIUM", "facts": ["alt_ram"], "mechanic": "alt,armor",
+  "idea": "count the turns: an alternating spinner faces the shell only after an odd number of turns",
+  "map": [". . . . . .", ". B^ . . . .", ". P^@~ . . G^= .", ". Bv . . . .", ". . . . . .", ". . . . . ."]}
+}
