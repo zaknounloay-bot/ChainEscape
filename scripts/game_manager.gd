@@ -457,6 +457,10 @@ func _open_shared_challenge() -> void:
 	if FriendBench.requested():
 		add_child(FriendBench.new())
 		return
+	# Developer page (?extreme90=1): the EXTREME Time Attack bank on the same 90 s page (local only).
+	if Extreme90Bank.bank_requested():
+		add_child(Extreme90Bank.new())
+		return
 	# Developer page (?ta90=1): the 90-second Time Attack prototype with dynamic music (local only).
 	if Ta90Prototype.requested():
 		add_child(Ta90Prototype.new())

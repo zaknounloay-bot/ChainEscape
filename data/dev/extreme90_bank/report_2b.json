@@ -1,0 +1,254 @@
+{
+ "cand_F2": {
+  "A": {
+   "fingerprint": "4f81a66e1485b564f0e6478d1017ae9d532929cdf7d9f73566e6dd993a5b00ac",
+   "hint_nodes": [
+    178,
+    300
+   ],
+   "parity": [
+    0,
+    0
+   ],
+   "position_cap": 3000,
+   "positions": 647,
+   "replay": true,
+   "solution": 21,
+   "solve_ms": 16.2,
+   "timeup_worst_ms": 23.9,
+   "timeup_worst_nodes": 405,
+   "winnable": 207
+  },
+  "B": {
+   "coverage": 0.9,
+   "decision_steps": 19,
+   "distinct_mistakes": 6,
+   "endgame_decision": true,
+   "idea_shell_rammed": true,
+   "last_decision": 19,
+   "late": 0.9,
+   "line": [
+    "r5c4> [x1]",
+    "r0c6> [x2]",
+    "r1c6^ [x2]",
+    "r1c2> [x2]",
+    "r0c2> ram [x1]",
+    "r5c1> [x1]",
+    "r3c1v [x1]",
+    "r2c4v [x2]",
+    "r2c5v [x3]",
+    "r0c5v [x1]",
+    "r2c6^ [x1]",
+    "r0c2> [x1]",
+    "r2c4^ [x1]",
+    "r2c3> [x1]",
+    "r6c3^ [x1]",
+    "r6c2> [x1]",
+    "r2c2v [x1]",
+    "r2c1> [x1]",
+    "r2c0> [x1]",
+    "r3c0>",
+    "r0c0v"
+   ],
+   "losing_per_step": [
+    1,
+    2,
+    2,
+    2,
+    1,
+    1,
+    1,
+    2,
+    3,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    0,
+    0
+   ],
+   "matters_armor": true,
+   "matters_magnet": true,
+   "mistakes": [
+    "r0c2^",
+    "r2c4v",
+    "r0c4^",
+    "r3c0>",
+    "r2c4^",
+    "r2c6>"
+   ],
+   "shortcut": 0.055,
+   "without_armor": "without it: 18 decision steps, 5 distinct mistakes (with it: 19, 6)",
+   "without_magnet": "unsolvable without it"
+  },
+  "C": {
+   "decisions_k4_6_8": [
+    15,
+    13,
+    9
+   ],
+   "deepest": 12,
+   "greedy": {
+    "look2": 0,
+    "look4": 0,
+    "min_turn": 0,
+    "mobility": 0.055,
+    "safe": 0
+   },
+   "hidden_k6_8": [
+    17,
+    11
+   ],
+   "learner": {
+    "look4": 6,
+    "look6": 6
+   },
+   "look6_greedy": 0,
+   "opening": "2 / 3",
+   "win_share": 0.32
+  },
+  "map": [
+   "Yv@~ . P^@ . G^= G>@~ B>",
+   ". . G>@~ . . . P^",
+   "R^@~ B> B^@- Y>@~ Yv* P>@ P^@~",
+   "R> Gv@~ . . . . .",
+   ". . . . . . .",
+   ". Y>@- . . Y> . .",
+   ". . Y> R^ . . ."
+  ],
+  "name": "cand_F2",
+  "target": "EXTREME",
+  "verdict": "HUMAN-REVIEW CANDIDATE",
+  "why_a": [],
+  "why_b": []
+ },
+ "cand_J2": {
+  "A": {
+   "fingerprint": "feeefb09e8bae3941b0964f6652b2d134a092471c4bce41b74d6fa1c500e7141",
+   "hint_nodes": [
+    52,
+    53
+   ],
+   "parity": [
+    0,
+    0
+   ],
+   "position_cap": 3000,
+   "positions": 719,
+   "replay": true,
+   "solution": 18,
+   "solve_ms": 4.2,
+   "timeup_worst_ms": 3.7,
+   "timeup_worst_nodes": 53,
+   "winnable": 103
+  },
+  "B": {
+   "coverage": 0.83,
+   "decision_steps": 15,
+   "distinct_mistakes": 6,
+   "endgame_decision": true,
+   "idea_reversed_escape": true,
+   "last_decision": 15,
+   "late": 0.83,
+   "line": [
+    "r2c6> [x2]",
+    "r0c0^ [x2]",
+    "r0c2^ [x4]",
+    "r1c2^ [x3]",
+    "r1c1> [x3]",
+    "r0c1^ [x2]",
+    "r0c3< [x2]",
+    "r2c1^ [x2]",
+    "r2c0< [x2]",
+    "r4c0^ [x2]",
+    "r4c1^ [x1]",
+    "r2c2< [x1]",
+    "r2c4< [x1]",
+    "r5c1< [x1]",
+    "r5c4< [x1]",
+    "r5c5<",
+    "r0c5v",
+    "r4c4<"
+   ],
+   "losing_per_step": [
+    2,
+    2,
+    4,
+    3,
+    3,
+    2,
+    2,
+    2,
+    2,
+    2,
+    1,
+    1,
+    1,
+    1,
+    1,
+    0,
+    0,
+    0
+   ],
+   "matters_lock": true,
+   "matters_switch": true,
+   "mistakes": [
+    "r0c3v",
+    "r5c5v",
+    "r0c1^",
+    "r2c0^",
+    "r0c1<",
+    "r4c1^"
+   ],
+   "shortcut": 0.01,
+   "without_lock": "without it: 10 decision steps, 5 distinct mistakes (with it: 15, 6)",
+   "without_switch": "unsolvable without it"
+  },
+  "C": {
+   "decisions_k4_6_8": [
+    12,
+    10,
+    8
+   ],
+   "deepest": 16,
+   "greedy": {
+    "look2": 0.01,
+    "look4": 0,
+    "min_turn": 0,
+    "mobility": 0,
+    "safe": 0
+   },
+   "hidden_k6_8": [
+    19,
+    9
+   ],
+   "learner": {
+    "look4": 3,
+    "look6": 3
+   },
+   "look6_greedy": 0.025,
+   "opening": "3 / 5",
+   "win_share": 0.143
+  },
+  "map": [
+   "R^ B<@~ G^@- Pv@~ . Bv .",
+   ". Y^@ P^ . . . .",
+   "G^@- B<@ B>&A . R< . Y>",
+   ". . . . . . .",
+   "B^@~ P^%A . . G<#P . .",
+   ". P^@- . . P<@~ Pv@ .",
+   ". . . . . . ."
+  ],
+  "name": "cand_J2",
+  "target": "EXTREME",
+  "verdict": "HUMAN-REVIEW CANDIDATE",
+  "why_a": [],
+  "why_b": []
+ }
+}

@@ -1,0 +1,20 @@
+{
+ "N22": {
+  "map": [
+   "G^#P+A . . . . . .",
+   "Pv . . . . . .",
+   ". P<@- . Y<* XA Bv G^@",
+   "P>@ . . . . R^ P>@",
+   "Pv@- P>@ G^@ Rv@ R>@ . G<@~",
+   "Y>@ Rv@ . . . . ."
+  ],
+  "target": "EXTREME",
+  "facts": [
+   "gate_pull"
+  ],
+  "mechanic": "magnet,gate,lock",
+  "idea": "unlock, open, pull: the gate's link is locked; the magnet must wait for both",
+  "max_positions": 3000,
+  "design": "16C2"
+ }
+}

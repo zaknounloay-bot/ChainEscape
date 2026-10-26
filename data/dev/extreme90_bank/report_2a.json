@@ -1,0 +1,230 @@
+{
+ "cand_A2": {
+  "A": {
+   "fingerprint": "ebff998e4fcb4be47bc015ac7c7dff6a1eb64e944e3f6f88753dd537ff5a47b0",
+   "hint_nodes": [
+    130,
+    82
+   ],
+   "parity": [
+    0,
+    0
+   ],
+   "position_cap": 3000,
+   "positions": 527,
+   "replay": true,
+   "solution": 14,
+   "solve_ms": 6.5,
+   "timeup_worst_ms": 9.6,
+   "timeup_worst_nodes": 218,
+   "winnable": 124
+  },
+  "B": {
+   "coverage": 0.86,
+   "decision_steps": 12,
+   "distinct_mistakes": 6,
+   "endgame_decision": true,
+   "idea_reversed_escape": true,
+   "last_decision": 12,
+   "late": 0.86,
+   "line": [
+    "r0c1< [x5]",
+    "r1c1^ [x4]",
+    "r2c0^ [x3]",
+    "r2c1^ [x3]",
+    "r5c3> [x4]",
+    "r5c2v [x3]",
+    "r0c3v [x3]",
+    "r0c4^ [x2]",
+    "r0c2^ [x2]",
+    "r1c2^ [x2]",
+    "r1c5< [x1]",
+    "r2c2< [x1]",
+    "r2c4<",
+    "r4c4>"
+   ],
+   "losing_per_step": [
+    5,
+    4,
+    3,
+    3,
+    4,
+    3,
+    3,
+    2,
+    2,
+    2,
+    1,
+    1,
+    0,
+    0
+   ],
+   "matters_switch": true,
+   "mistakes": [
+    "r0c2^",
+    "r0c4^",
+    "r2c1v",
+    "r4c4>",
+    "r5c2<",
+    "r2c2<"
+   ],
+   "shortcut": 0.11,
+   "without_switch": "unsolvable without it"
+  },
+  "C": {
+   "decisions_k4_6_8": [
+    8,
+    6,
+    4
+   ],
+   "deepest": 12,
+   "greedy": {
+    "look2": 0,
+    "look4": 0.008,
+    "min_turn": 0,
+    "mobility": 0.11,
+    "safe": 0
+   },
+   "hidden_k6_8": [
+    18,
+    9
+   ],
+   "learner": {
+    "look4": 2,
+    "look6": 2
+   },
+   "look6_greedy": 0.042,
+   "opening": "3 / 8",
+   "win_share": 0.235
+  },
+  "map": [
+   ". R<@- B^@~ Yv@~ G^ .",
+   ". P^%A Y^@~ . . P<@",
+   "P^@~ Yv@- B>&A . R< .",
+   ". . . . . .",
+   ". . . . Y>%A .",
+   ". . B<@- P>@- . ."
+  ],
+  "name": "cand_A2",
+  "target": "EXTREME",
+  "verdict": "HUMAN-REVIEW CANDIDATE",
+  "why_a": [],
+  "why_b": []
+ },
+ "cand_I2": {
+  "A": {
+   "fingerprint": "f03a0bec59608c30fdedd8b80854226242d679323f63724ff7d4306ccf506076",
+   "hint_nodes": [
+    90,
+    48
+   ],
+   "parity": [
+    0,
+    0
+   ],
+   "position_cap": 3000,
+   "positions": 228,
+   "replay": true,
+   "solution": 16,
+   "solve_ms": 13.8,
+   "timeup_worst_ms": 8.5,
+   "timeup_worst_nodes": 150,
+   "winnable": 58
+  },
+  "B": {
+   "coverage": 0.88,
+   "decision_steps": 14,
+   "distinct_mistakes": 6,
+   "endgame_decision": true,
+   "idea_shell_rammed": true,
+   "last_decision": 14,
+   "late": 0.88,
+   "line": [
+    "r3c3> ram [x2]",
+    "r3c5^ [x3]",
+    "r3c4^ [x2]",
+    "r3c3> [x2]",
+    "r3c2> [x2]",
+    "r2c2^ ram [x2]",
+    "r4c0> [x3]",
+    "r3c0> [x2]",
+    "r2c0v [x2]",
+    "r1c0v [x2]",
+    "r0c0> [x2]",
+    "r2c1v [x2]",
+    "r1c1v [x1]",
+    "r2c2< [x1]",
+    "r1c2^",
+    "r5c2^"
+   ],
+   "losing_per_step": [
+    2,
+    3,
+    2,
+    2,
+    2,
+    2,
+    3,
+    2,
+    2,
+    2,
+    2,
+    2,
+    1,
+    1,
+    0,
+    0
+   ],
+   "matters_armor": true,
+   "mistakes": [
+    "r1c1^",
+    "r2c2>",
+    "r3c4^",
+    "r3c0>",
+    "r1c2^",
+    "r1c1<"
+   ],
+   "shortcut": 0,
+   "without_armor": "without it: 12 decision steps, 5 distinct mistakes (with it: 14, 6)"
+  },
+  "C": {
+   "decisions_k4_6_8": [
+    10,
+    8,
+    5
+   ],
+   "deepest": 13,
+   "greedy": {
+    "look2": 0,
+    "look4": 0,
+    "min_turn": 0,
+    "mobility": 0,
+    "safe": 0
+   },
+   "hidden_k6_8": [
+    11,
+    5
+   ],
+   "learner": {
+    "look4": 2,
+    "look6": 2
+   },
+   "look6_greedy": 0.033,
+   "opening": "3 / 5",
+   "win_share": 0.254
+  },
+  "map": [
+   "Yv@- . . . . .",
+   "Gv G^@- G^= . . .",
+   "B>@~ P<@- G>@- . . .",
+   "B> . Y^@ B> R^= Y^@-",
+   "G>@- . . . . .",
+   ". . Y^ . . ."
+  ],
+  "name": "cand_I2",
+  "target": "EXTREME",
+  "verdict": "HUMAN-REVIEW CANDIDATE",
+  "why_a": [],
+  "why_b": []
+ }
+}

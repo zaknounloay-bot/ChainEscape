@@ -14,6 +14,11 @@
 
 **Phase 15 (`docs/ta90_collection.md`):** ten more HUMAN-REVIEW CANDIDATES, N4-N13, shown as PUZZLE 4-13 (key N<k> = PUZZLE k). Data files `data/dev/ta90_n4.json` … `ta90_n13.json`. The selection screen is a 3-column grid of PUZZLE tiles with short statuses.
 
+**Phase 16 (`docs/extreme90_bank.md`):** the same page also serves the EXTREME bank, `?extreme90=1` (`Extreme90Bank`).
+- It shows CHALLENGE 1-15: N3, N5, N7, N11, N13 and N14-N23. N14-N23 are played only there.
+- It has its own storage (`xb90_*`) and its own export (`ce-xb90`). The rules, music and questions are identical.
+- `?ta90=1` keeps N1-N13 unchanged.
+
 **REFERENCE (TA)** is the validated 120-second board, used only to test the clock and the music.
 - It shows only with `&ta90ref=1`, labelled REFERENCE and listed after the three puzzles.
 - TA's 120-second record and fingerprint are untouched: the prototype has its own storage.

@@ -1,0 +1,44 @@
+{
+ "target": "EXTREME",
+ "facts": [
+  "shell_rammed"
+ ],
+ "mechanic": "armor",
+ "max_positions": 3000,
+ "idea": "two shells, two rammers: spend each rammer on the right shell, and keep both until their shell is cracked",
+ "map": [
+  ". . . . . .",
+  ". . G^= . . .",
+  ". . . . . .",
+  "B> . . . R^= .",
+  ". . . . . .",
+  ". . Y^ . . ."
+ ],
+ "piece_free": 12,
+ "max_pieces": 14,
+ "shortcut_weight": 80,
+ "coverage_weight": 25,
+ "late_weight": 20,
+ "endgame_weight": 20,
+ "length_weight": 1.0,
+ "length_cap": 22,
+ "seed": 1,
+ "frozen": [
+  [
+   1,
+   2
+  ],
+  [
+   3,
+   0
+  ],
+  [
+   3,
+   4
+  ],
+  [
+   5,
+   2
+  ]
+ ]
+}

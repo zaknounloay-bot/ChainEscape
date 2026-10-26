@@ -1,0 +1,140 @@
+{
+ "format": "ce-ta90-proto",
+ "v": 1,
+ "test": "ta90_n16",
+ "assist": {
+  "undo": 3,
+  "show_a_move": 0,
+  "hammer": 0
+ },
+ "note": "Development only. Phase 16 EXTREME bank board (?extreme90=1); never shared, never production. HUMAN-REVIEW CANDIDATE: technically validated, strategic quality unconfirmed by people.",
+ "boards": [
+  {
+   "id": "N16",
+   "accepted": true,
+   "label": "HUMAN-REVIEW CANDIDATE - EXPERIMENTAL, HUMAN DIFFICULTY UNVALIDATED",
+   "variant": "N16",
+   "design": "16D",
+   "target": "EXTREME (a design target, not a rating; never shown to players)",
+   "idea": "reverse to ram, ram to open: the shell the reversed rammer cracks is the gate's link",
+   "source": "hand-drawn idea core, grown by the bounded constructive search (tools/ta90_search.gd), checked by tools/ta90_design.gd (Phase 16, EXTREME bank)",
+   "fingerprint": "b46e1063d26a1090121bdcc0320412019553918d001dbdf940d9b2882152531b",
+   "mechanics": [
+    "spinner_cw",
+    "spinner_ccw",
+    "spinner_alt",
+    "switch",
+    "gate",
+    "armor"
+   ],
+   "puzzle": {
+    "format": "ce-puzzle",
+    "v": 1,
+    "rules": 1,
+    "rows": 7,
+    "cols": 7,
+    "map": [
+     "Y<@~ . . Yv Y^@- B> .",
+     "P>@ . Rv@- . . G<@~ P>",
+     ". . . XA . . .",
+     "P^@ B<&B . Rv B^@- G^+A= .",
+     "B^ . . . . . .",
+     "R<@- . . . . . .",
+     "P^%B . . . . . ."
+    ]
+   },
+   "design_report": {
+    "A": {
+     "fingerprint": "b46e1063d26a1090121bdcc0320412019553918d001dbdf940d9b2882152531b",
+     "hint_nodes": [
+      210,
+      114
+     ],
+     "parity": [
+      0,
+      0
+     ],
+     "position_cap": 3000,
+     "positions": 386,
+     "replay": true,
+     "solution": 17,
+     "solve_ms": 17.9,
+     "timeup_worst_ms": 17.1,
+     "timeup_worst_nodes": 328,
+     "winnable": 80
+    },
+    "B": {
+     "coverage": 0.76,
+     "decision_steps": 13,
+     "distinct_mistakes": 6,
+     "endgame_decision": true,
+     "idea_gate_through": true,
+     "idea_reversed_ram": true,
+     "last_decision": 13,
+     "late": 0.76,
+     "losing_per_step": [
+      4,
+      3,
+      3,
+      3,
+      2,
+      2,
+      1,
+      1,
+      3,
+      2,
+      2,
+      1,
+      1,
+      0,
+      0,
+      0,
+      0
+     ],
+     "matters_armor": true,
+     "matters_gate": true,
+     "matters_switch": true,
+     "mistakes": [
+      "r0c0<",
+      "r0c5>",
+      "r1c6>",
+      "r3c3v",
+      "r3c1<",
+      "r4c0^"
+     ],
+     "shortcut": 0.17,
+     "without_armor": "without it: 11 decision steps, 2 distinct mistakes (with it: 13, 6)",
+     "without_gate": "without it: 14 decision steps, 6 distinct mistakes (with it: 13, 6)",
+     "without_switch": "unsolvable without it"
+    },
+    "C": {
+     "decisions_k4_6_8": [
+      10,
+      8,
+      6
+     ],
+     "deepest": 14,
+     "greedy": {
+      "look2": 0.01,
+      "look4": 0.042,
+      "min_turn": 0.125,
+      "mobility": 0.17,
+      "safe": 0
+     },
+     "hidden_k6_8": [
+      14,
+      8
+     ],
+     "learner": {
+      "look4": 0,
+      "look6": 0
+     },
+     "look6_greedy": 0.067,
+     "opening": "3 / 7",
+     "win_share": 0.207
+    },
+    "verdict": "HUMAN-REVIEW CANDIDATE"
+   }
+  }
+ ]
+}

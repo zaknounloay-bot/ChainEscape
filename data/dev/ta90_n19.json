@@ -1,0 +1,132 @@
+{
+ "format": "ce-ta90-proto",
+ "v": 1,
+ "test": "ta90_n19",
+ "assist": {
+  "undo": 3,
+  "show_a_move": 0,
+  "hammer": 0
+ },
+ "note": "Development only. Phase 16 EXTREME bank board (?extreme90=1); never shared, never production. HUMAN-REVIEW CANDIDATE: technically validated, strategic quality unconfirmed by people.",
+ "boards": [
+  {
+   "id": "N19",
+   "accepted": true,
+   "label": "HUMAN-REVIEW CANDIDATE - EXPERIMENTAL, HUMAN DIFFICULTY UNVALIDATED",
+   "variant": "N19",
+   "design": "16E",
+   "target": "EXTREME (a design target, not a rating; never shown to players)",
+   "idea": "gate chain: one gate's link waits behind the other gate",
+   "source": "hand-drawn idea core, grown by the bounded constructive search (tools/ta90_search.gd), checked by tools/ta90_design.gd (Phase 16, EXTREME bank)",
+   "fingerprint": "ddb67ffbb74a9040069043a04b48addb3da640118b8e6483efd3e75ecf5cab4f",
+   "mechanics": [
+    "spinner_cw",
+    "spinner_ccw",
+    "spinner_alt",
+    "gate"
+   ],
+   "puzzle": {
+    "format": "ce-puzzle",
+    "v": 1,
+    "rules": 1,
+    "rows": 7,
+    "cols": 7,
+    "map": [
+     ". . Bv . . P<@- Bv@~",
+     "P< . . . . . .",
+     "Y<@- . XA . B>@~ . .",
+     "Y<@~ P>@ P<@- . G<@- Rv@ .",
+     "P<@- . . . R>+A XB .",
+     "Y<@~ . . . . P^@ .",
+     "G^+B . . . . . ."
+    ]
+   },
+   "design_report": {
+    "A": {
+     "fingerprint": "ddb67ffbb74a9040069043a04b48addb3da640118b8e6483efd3e75ecf5cab4f",
+     "hint_nodes": [
+      101,
+      41
+     ],
+     "parity": [
+      0,
+      0
+     ],
+     "position_cap": 3000,
+     "positions": 290,
+     "replay": true,
+     "solution": 16,
+     "solve_ms": 19.5,
+     "timeup_worst_ms": 12.9,
+     "timeup_worst_nodes": 220,
+     "winnable": 74
+    },
+    "B": {
+     "coverage": 0.88,
+     "decision_steps": 14,
+     "distinct_mistakes": 6,
+     "endgame_decision": true,
+     "idea_gate_through": true,
+     "last_decision": 14,
+     "late": 0.88,
+     "losing_per_step": [
+      5,
+      3,
+      4,
+      2,
+      2,
+      2,
+      2,
+      2,
+      2,
+      1,
+      1,
+      1,
+      1,
+      1,
+      0,
+      0
+     ],
+     "matters_gate": true,
+     "mistakes": [
+      "r0c6v",
+      "r1c0<",
+      "r2c4>",
+      "r3c0<",
+      "r5c0<",
+      "r3c0^"
+     ],
+     "shortcut": 0.008,
+     "without_gate": "without it: 8 decision steps, 3 distinct mistakes (with it: 14, 6)"
+    },
+    "C": {
+     "decisions_k4_6_8": [
+      10,
+      8,
+      6
+     ],
+     "deepest": 14,
+     "greedy": {
+      "look2": 0,
+      "look4": 0.008,
+      "min_turn": 0,
+      "mobility": 0,
+      "safe": 0
+     },
+     "hidden_k6_8": [
+      21,
+      12
+     ],
+     "learner": {
+      "look4": 8,
+      "look6": 7
+     },
+     "look6_greedy": 0.017,
+     "opening": "2 / 7",
+     "win_share": 0.255
+    },
+    "verdict": "HUMAN-REVIEW CANDIDATE"
+   }
+  }
+ ]
+}

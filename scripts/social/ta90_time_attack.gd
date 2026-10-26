@@ -21,7 +21,8 @@ const TA90_RULES := {"version": "ta90-v1", "limit_ms": 90000, "undo": 3, "show_a
 ## The prototype's boards. N1-N3: the Phase 14 HUMAN-REVIEW CANDIDATES
 ## (tools/ta90_design.gd, docs/ta90_design.md); N4-N13: the Phase 15
 ## collection (docs/ta90_collection.md). Key N<k> is shown as PUZZLE k;
-## neutral names, no difficulty shown. TA: the validated 120-second board, used ONLY as an internal
+## neutral names, no difficulty shown. N14-N23: the Phase 16 EXTREME bank
+## candidates (docs/extreme90_bank.md), played only in ?extreme90=1. TA: the validated 120-second board, used ONLY as an internal
 ## technical reference for the clock and the music (never listed as a new
 ## puzzle).
 const BOARDS90 := {
@@ -38,6 +39,16 @@ const BOARDS90 := {
 	"N11": {"data": "res://data/dev/ta90_n11.json", "fp": "a92813074460913b95b9f54433ffd156ead01c04c1e5d357ad83ea380f8bf4fb"},
 	"N12": {"data": "res://data/dev/ta90_n12.json", "fp": "52dffbaefdde0a4cd91cba51a37999cf238f705d06a9da42179400fe3357fbbd"},
 	"N13": {"data": "res://data/dev/ta90_n13.json", "fp": "9acdd496511edcd6e847217ec37d7029d7cc82a62d1f93258d7ac08b5d86c943"},
+	"N14": {"data": "res://data/dev/ta90_n14.json", "fp": "c26a76e8fcd75672540d08e26a053559cc1a13ef9bfd12a87500f710e41b8698"},
+	"N15": {"data": "res://data/dev/ta90_n15.json", "fp": "4868df06805eaa4d89925a7f42a1e2cd85d5248e8d1b3dcd609feccfcc52e087"},
+	"N16": {"data": "res://data/dev/ta90_n16.json", "fp": "b46e1063d26a1090121bdcc0320412019553918d001dbdf940d9b2882152531b"},
+	"N17": {"data": "res://data/dev/ta90_n17.json", "fp": "f03a0bec59608c30fdedd8b80854226242d679323f63724ff7d4306ccf506076"},
+	"N18": {"data": "res://data/dev/ta90_n18.json", "fp": "4f81a66e1485b564f0e6478d1017ae9d532929cdf7d9f73566e6dd993a5b00ac"},
+	"N19": {"data": "res://data/dev/ta90_n19.json", "fp": "ddb67ffbb74a9040069043a04b48addb3da640118b8e6483efd3e75ecf5cab4f"},
+	"N20": {"data": "res://data/dev/ta90_n20.json", "fp": "ebff998e4fcb4be47bc015ac7c7dff6a1eb64e944e3f6f88753dd537ff5a47b0"},
+	"N21": {"data": "res://data/dev/ta90_n21.json", "fp": "598cee830d3bcce7533cfe9b99847b376705e6e5c52181083c771e3fd8231c68"},
+	"N22": {"data": "res://data/dev/ta90_n22.json", "fp": "1f4c569074172b7802c5525057cc87e0fd20bff67fc38e909a1270b5c448ffef"},
+	"N23": {"data": "res://data/dev/ta90_n23.json", "fp": "feeefb09e8bae3941b0964f6652b2d134a092471c4bce41b74d6fa1c500e7141"},
 	"TA": {"data": "res://data/dev/extreme16_a.json", "fp": "a28e22f0a1a216ba4ac701ff549e7d212ce1fe83ae2d8e3678065da555b730cf", "reference": true},
 }
 const P90_TIMED_Q := [
@@ -60,34 +71,46 @@ var _music_btn: PillButton
 var _music_pub := 0
 
 
-func _init(p_board: String = "TA", p_familiarity: String = "", p_session: String = "", p_number: int = 1, p_music_on: bool = true) -> void:
+## Phase 16: p_store is the storage prefix ("ta90": the experimental
+## collection, ?ta90=1; "xb90": the EXTREME bank, ?extreme90=1) - the same
+## board keeps separate records per entry, its id and fingerprint unchanged
+## in every record; p_word is the neutral player-facing label ("PUZZLE" /
+## "CHALLENGE").
+var store := "ta90"
+var word := "PUZZLE"
+
+
+func _init(p_board: String = "TA", p_familiarity: String = "", p_session: String = "", p_number: int = 1, p_music_on: bool = true,
+		p_store: String = "ta90", p_word: String = "PUZZLE") -> void:
 	super("TA", p_familiarity, p_session)
 	board_key = p_board if BOARDS90.has(p_board) else "TA"
 	number = p_number
 	music_on = p_music_on
-	key = "ta90_" + board_key.to_lower()
+	store = p_store
+	word = p_word
+	key = store + "_" + board_key.to_lower()
 	test = key
 	preset = {"id": board_key, "letter": str(number), "data": BOARDS90[board_key]["data"], "fp": BOARDS90[board_key]["fp"],
-		"state": state_path90(board_key), "ls": ls_key90(board_key)}
+		"state": state_path90(board_key, store), "ls": ls_key90(board_key, store)}
 	for k in ["data", "state", "ls"]:
 		_cfg[k] = preset[k]
-	_cfg["title"] = "PUZZLE %d" % number
+	_cfg["title"] = "%s %d" % [word, number]
 	_cfg["questions"] = P90_TIMED_Q
 	_questions = P90_TIMED_Q.duplicate(true)
 
 
-static func state_path90(board: String) -> String:
-	return "user://ta90_%s_state.json" % board.to_lower()
+static func state_path90(board: String, p_store: String = "ta90") -> String:
+	return "user://%s_%s_state.json" % [p_store, board.to_lower()]
 
 
-static func ls_key90(board: String) -> String:
-	return "chain_escape_ta90_%s_state" % board.to_lower()
+static func ls_key90(board: String, p_store: String = "ta90") -> String:
+	return "chain_escape_%s_%s_state" % [p_store, board.to_lower()]
 
 
-static func read_state90(board: String) -> Dictionary:
-	var texts := [FileAccess.get_file_as_string(state_path90(board)) if FileAccess.file_exists(state_path90(board)) else ""]
+static func read_state90(board: String, p_store: String = "ta90") -> Dictionary:
+	var texts := [FileAccess.get_file_as_string(state_path90(board, p_store)) if FileAccess.file_exists(state_path90(board, p_store)) else ""]
 	if OS.has_feature("web"):
-		texts.append(WebBridge.ls_get(ls_key90(board)))
+		texts.append(WebBridge.ls_get(ls_key90(board, p_store)))
 	var best := {}
 	for t in texts:
 		var parsed = JSON.parse_string(t) if t != "" else null
@@ -155,6 +178,15 @@ func _show(s: int) -> void:
 	if s == Screen.BRIEF:
 		_brief_go.text = "START - 1:30"
 		_brief_text.text = _brief_text.text.replace("You have 2 minutes.", "You have 90 seconds.")
+		if word != "PUZZLE":
+			_brief_text.text = _brief_text.text.replace("PUZZLE %d" % number, "%s %d" % [word, number])
+
+
+## The board's title in play (the neutral label of its entry).
+func begin_puzzle() -> void:
+	super.begin_puzzle()
+	if word != "PUZZLE" and screen == Screen.PLAYING and play and phase() != "untimed":
+		play._title.text = "%s %d" % [word, number]
 
 
 func _show_card() -> void:

@@ -62,6 +62,58 @@ func _init() -> void:
 	layer = 29  # over the game UI; the puzzle page (VhHumanTest, 30) over it
 
 
+# --- What an entry is (Phase 16: Extreme90Bank overrides these; here they are
+# exactly the ?ta90=1 experimental collection's constants) ---------------------------------
+
+## The boards shown, in order.
+func board_order() -> Array:
+	return ORDER90
+
+
+## The board pages' storage prefix (Ta90TimeAttack p_store).
+func store() -> String:
+	return "ta90"
+
+
+func hub_state_path() -> String:
+	return STATE_PATH
+
+
+func hub_ls_key() -> String:
+	return LS_KEY
+
+
+## The neutral player-facing word for one board.
+func word() -> String:
+	return "PUZZLE"
+
+
+func welcome_title() -> String:
+	return "TIME ATTACK\nPLAYTEST"
+
+
+func welcome_text() -> String:
+	return WELCOME
+
+
+func select_title() -> String:
+	return "CHOOSE A PUZZLE"
+
+
+## &ta90ref=1 adds the TA reference row (development checks).
+func allows_reference() -> bool:
+	return true
+
+
+func bundle_format() -> String:
+	return "ce-ta90"
+
+
+## The window.* name of the read-only snapshot for browser tests.
+func publish_name() -> String:
+	return "chainEscapeTa90"
+
+
 static func reference_requested() -> bool:
 	if "--ta90ref" in OS.get_cmdline_user_args():
 		return true
@@ -72,8 +124,8 @@ static func reference_requested() -> bool:
 
 
 func _ready() -> void:
-	order = ORDER90.duplicate()
-	if reference_requested() or order.is_empty():
+	order = board_order().duplicate()
+	if allows_reference() and (reference_requested() or order.is_empty()):
 		order.append("TA")
 	_silence_campaign_music(true)
 	_load_state()
@@ -81,7 +133,7 @@ func _ready() -> void:
 	set_process(true)
 	# A puzzle left mid-way (a reload, the page closed): straight back to it.
 	var cur := str(state.get("current", ""))
-	if cur != "" and _in_progress(Ta90TimeAttack.read_state90(cur)):
+	if cur != "" and order.has(cur) and _in_progress(Ta90TimeAttack.read_state90(cur, store())):
 		open_puzzle(cur)
 	elif str(state.get("familiarity", "")) != "":
 		_show(View.SELECT)
@@ -92,9 +144,9 @@ func _ready() -> void:
 # --- State (its own key; anonymous) --------------------------------------------------------
 
 func _load_state() -> void:
-	var texts := [FileAccess.get_file_as_string(STATE_PATH) if FileAccess.file_exists(STATE_PATH) else ""]
+	var texts := [FileAccess.get_file_as_string(hub_state_path()) if FileAccess.file_exists(hub_state_path()) else ""]
 	if OS.has_feature("web"):
-		texts.append(WebBridge.ls_get(LS_KEY))
+		texts.append(WebBridge.ls_get(hub_ls_key()))
 	for t in texts:
 		var parsed = JSON.parse_string(t) if t != "" else null
 		if typeof(parsed) == TYPE_DICTIONARY and parsed.has("session") and (state.is_empty() or int(parsed.get("seq", 0)) > int(state.get("seq", 0))):
@@ -109,12 +161,12 @@ func _load_state() -> void:
 func _save_state() -> void:
 	state["seq"] = int(state.get("seq", 0)) + 1
 	var text := JSON.stringify(state)
-	var f := FileAccess.open(STATE_PATH, FileAccess.WRITE)
+	var f := FileAccess.open(hub_state_path(), FileAccess.WRITE)
 	if f:
 		f.store_string(text)
 		f.close()
 	if OS.has_feature("web"):
-		WebBridge.ls_set(LS_KEY, text)
+		WebBridge.ls_set(hub_ls_key(), text)
 
 
 ## A board's page has something unfinished (a run, the questions, the untimed game).
@@ -139,7 +191,7 @@ func open_puzzle(board: String) -> void:
 	close_puzzle(false)
 	state["current"] = board
 	_save_state()
-	page = Ta90TimeAttack.new(board, str(state.get("familiarity", "")), str(state["session"]), order.find(board) + 1, bool(state.get("music_on", true)))
+	page = Ta90TimeAttack.new(board, str(state.get("familiarity", "")), str(state["session"]), order.find(board) + 1, bool(state.get("music_on", true)), store(), word())
 	page.music_changed.connect(func(on):
 		state["music_on"] = on
 		_save_state())
@@ -175,13 +227,13 @@ func bundle() -> Dictionary:
 	var boards := {}
 	var runs := []
 	for b in order:
-		var st := Ta90TimeAttack.read_state90(b)
+		var st := Ta90TimeAttack.read_state90(b, store())
 		var raw: Array = st.get("results", [])
 		for r in raw:
 			runs.append(PilotTimeAttack.summarize(b, r))
 		boards[b] = {"puzzle": order.find(b) + 1, "fingerprint": Ta90TimeAttack.BOARDS90[b]["fp"], "reference": Ta90TimeAttack.BOARDS90[b].get("reference", false), "raw": raw,
 			"in_progress": {"phase": st.get("phase", "timed"), "timed": st.get("timed", {}), "untimed": st.get("cont", {})} if _in_progress(st) else {}}
-	return {"format": "ce-ta90", "v": 1, "session": state["session"], "familiarity": state.get("familiarity", ""), "started": state.get("started", ""),
+	return {"format": bundle_format(), "v": 1, "session": state["session"], "familiarity": state.get("familiarity", ""), "started": state.get("started", ""),
 		"music_on": state.get("music_on", true), "rules": Ta90TimeAttack.TA90_RULES, "runs": runs, "boards": boards}
 
 
@@ -191,7 +243,7 @@ func results_json() -> String:
 
 ## One line per board for the selection screen.
 func _status(board: String) -> String:
-	var st := Ta90TimeAttack.read_state90(board)
+	var st := Ta90TimeAttack.read_state90(board, store())
 	var res: Array = st.get("results", [])
 	if _in_progress(st):
 		return "In progress - tap to continue"
@@ -210,7 +262,7 @@ func _status(board: String) -> String:
 
 ## The grid tile's status (a few words: the full line does not fit a tile).
 func short_status(board: String) -> String:
-	var st := Ta90TimeAttack.read_state90(board)
+	var st := Ta90TimeAttack.read_state90(board, store())
 	var res: Array = st.get("results", [])
 	if _in_progress(st):
 		return "Continue"
@@ -274,8 +326,8 @@ func _build() -> void:
 	_root.add_child(bg)
 	# WELCOME
 	var w := _column()
-	w.add_child(_label("TIME ATTACK\nPLAYTEST", 44, 900))
-	w.add_child(_label(WELCOME, 26, 700))
+	w.add_child(_label(welcome_title(), 44, 900))
+	w.add_child(_label(welcome_text(), 26, 700))
 	var go := _button("START", "PilotStart", ACCENT, Palette.WHITE)
 	go.pressed.connect(func():
 		AudioManager.play_ui_tap()
@@ -295,9 +347,9 @@ func _build() -> void:
 	# SELECT
 	var s := _column()
 	s.add_theme_constant_override("separation", 10)
-	s.add_child(_label("CHOOSE A PUZZLE", 40, 900))
+	s.add_child(_label(select_title(), 40, 900))
 	s.add_child(_label("90 seconds each. Play one or more.", 24, 700))
-	if ORDER90.is_empty():
+	if board_order().is_empty():
 		# No new board passed its checks yet: say so - the reference is not a new puzzle.
 		var note := _label("Technical test build: no new 90-second puzzle has passed its checks yet. REFERENCE (TA) is an existing board, used to test the clock and the music.", 20, 700)
 		note.name = "ReferenceNote"
@@ -323,9 +375,12 @@ func _build() -> void:
 			s.add_child(btn)
 			s.add_child(st)
 		else:
-			btn = PillButton.new("PUZZLE %d" % n, PillButton.Icon.NONE, Palette.WHITE, Palette.TEXT, 24)
+			# A long word ("CHALLENGE 12") must never widen its tile past a
+			# third of the screen: a smaller font, and the text clipped.
+			btn = PillButton.new("%s %d" % [word(), n], PillButton.Icon.NONE, Palette.WHITE, Palette.TEXT, 18 if word().length() > 6 else 24)
 			btn.name = "Puzzle_%d" % n
 			btn.custom_minimum_size = Vector2(0, 84)
+			btn.clip_text = true
 			var tile := VBoxContainer.new()
 			tile.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 			tile.add_theme_constant_override("separation", 2)
@@ -394,7 +449,7 @@ func _publish() -> void:
 	var statuses := {}
 	for b in _rows:
 		statuses[str(order.find(b) + 1)] = _rows[b][1].text
-	WebBridge.publish("chainEscapeTa90", {"order": order, "music_on": state.get("music_on", true), "view": View.keys()[view], "buttons": buttons, "rects": rects, "statuses": statuses,
+	WebBridge.publish(publish_name(), {"order": order, "music_on": state.get("music_on", true), "view": View.keys()[view], "buttons": buttons, "rects": rects, "statuses": statuses,
 		"familiarity": state.get("familiarity", ""), "current": state.get("current", ""), "session": state.get("session", ""), "copy_status": _copy_status.text,
 		"content_bottom": snappedf(_pages[view].get_combined_minimum_size().y / vis.y, 0.0001) if view != View.PUZZLE else -1.0})
 

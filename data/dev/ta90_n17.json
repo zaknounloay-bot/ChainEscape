@@ -1,0 +1,131 @@
+{
+ "format": "ce-ta90-proto",
+ "v": 1,
+ "test": "ta90_n17",
+ "assist": {
+  "undo": 3,
+  "show_a_move": 0,
+  "hammer": 0
+ },
+ "note": "Development only. Phase 16 EXTREME bank board (?extreme90=1); never shared, never production. HUMAN-REVIEW CANDIDATE: technically validated, strategic quality unconfirmed by people.",
+ "boards": [
+  {
+   "id": "N17",
+   "accepted": true,
+   "label": "HUMAN-REVIEW CANDIDATE - EXPERIMENTAL, HUMAN DIFFICULTY UNVALIDATED",
+   "variant": "N17",
+   "design": "16I2",
+   "target": "EXTREME (a design target, not a rating; never shown to players)",
+   "idea": "two shells, two rammers: spend each rammer on the right shell, and keep both until their shell is cracked",
+   "source": "hand-drawn idea core, grown by the bounded constructive search (tools/ta90_search.gd), checked by tools/ta90_design.gd (Phase 16, EXTREME bank)",
+   "fingerprint": "f03a0bec59608c30fdedd8b80854226242d679323f63724ff7d4306ccf506076",
+   "mechanics": [
+    "spinner_cw",
+    "spinner_ccw",
+    "spinner_alt",
+    "armor"
+   ],
+   "puzzle": {
+    "format": "ce-puzzle",
+    "v": 1,
+    "rules": 1,
+    "rows": 6,
+    "cols": 6,
+    "map": [
+     "Yv@- . . . . .",
+     "Gv G^@- G^= . . .",
+     "B>@~ P<@- G>@- . . .",
+     "B> . Y^@ B> R^= Y^@-",
+     "G>@- . . . . .",
+     ". . Y^ . . ."
+    ]
+   },
+   "design_report": {
+    "A": {
+     "fingerprint": "f03a0bec59608c30fdedd8b80854226242d679323f63724ff7d4306ccf506076",
+     "hint_nodes": [
+      90,
+      48
+     ],
+     "parity": [
+      0,
+      0
+     ],
+     "position_cap": 3000,
+     "positions": 228,
+     "replay": true,
+     "solution": 16,
+     "solve_ms": 8.6,
+     "timeup_worst_ms": 8.3,
+     "timeup_worst_nodes": 150,
+     "winnable": 58
+    },
+    "B": {
+     "coverage": 0.88,
+     "decision_steps": 14,
+     "distinct_mistakes": 6,
+     "endgame_decision": true,
+     "idea_shell_rammed": true,
+     "last_decision": 14,
+     "late": 0.88,
+     "losing_per_step": [
+      2,
+      3,
+      2,
+      2,
+      2,
+      2,
+      3,
+      2,
+      2,
+      2,
+      2,
+      2,
+      1,
+      1,
+      0,
+      0
+     ],
+     "matters_armor": true,
+     "mistakes": [
+      "r1c1^",
+      "r2c2>",
+      "r3c4^",
+      "r3c0>",
+      "r1c2^",
+      "r1c1<"
+     ],
+     "shortcut": 0,
+     "without_armor": "without it: 12 decision steps, 5 distinct mistakes (with it: 14, 6)"
+    },
+    "C": {
+     "decisions_k4_6_8": [
+      10,
+      8,
+      5
+     ],
+     "deepest": 13,
+     "greedy": {
+      "look2": 0,
+      "look4": 0,
+      "min_turn": 0,
+      "mobility": 0,
+      "safe": 0
+     },
+     "hidden_k6_8": [
+      11,
+      5
+     ],
+     "learner": {
+      "look4": 2,
+      "look6": 2
+     },
+     "look6_greedy": 0.033,
+     "opening": "3 / 5",
+     "win_share": 0.254
+    },
+    "verdict": "HUMAN-REVIEW CANDIDATE"
+   }
+  }
+ ]
+}

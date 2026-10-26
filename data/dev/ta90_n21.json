@@ -1,0 +1,139 @@
+{
+ "format": "ce-ta90-proto",
+ "v": 1,
+ "test": "ta90_n21",
+ "assist": {
+  "undo": 3,
+  "show_a_move": 0,
+  "hammer": 0
+ },
+ "note": "Development only. Phase 16 EXTREME bank board (?extreme90=1); never shared, never production. HUMAN-REVIEW CANDIDATE: technically validated, strategic quality unconfirmed by people.",
+ "boards": [
+  {
+   "id": "N21",
+   "accepted": true,
+   "label": "HUMAN-REVIEW CANDIDATE - EXPERIMENTAL, HUMAN DIFFICULTY UNVALIDATED",
+   "variant": "N21",
+   "design": "16H2",
+   "target": "EXTREME (a design target, not a rating; never shown to players)",
+   "idea": "a key that leaves in two steps: the Sequence key's advance turns the locked spinner without unlocking it; its escape unlocks and turns it again",
+   "source": "hand-drawn idea core, grown by the bounded constructive search (tools/ta90_search.gd), checked by tools/ta90_design.gd (Phase 16, EXTREME bank)",
+   "fingerprint": "598cee830d3bcce7533cfe9b99847b376705e6e5c52181083c771e3fd8231c68",
+   "mechanics": [
+    "spinner_cw",
+    "spinner_ccw",
+    "spinner_alt",
+    "lock",
+    "sequence"
+   ],
+   "puzzle": {
+    "format": "ce-puzzle",
+    "v": 1,
+    "rules": 1,
+    "rows": 7,
+    "cols": 7,
+    "map": [
+     ". . . . . . .",
+     ". . . . . . .",
+     "Y< Yv@ . Yv P>@ . Gv",
+     ". . G^@ R^@#B Y^@~ Y^@~ P>@",
+     ". P^@~ Gv@- B<:v . . Y>@~",
+     ". . . G>@~ G<@~ . Y^@~",
+     ". . . G> G>@- . R^@~"
+    ]
+   },
+   "design_report": {
+    "A": {
+     "fingerprint": "598cee830d3bcce7533cfe9b99847b376705e6e5c52181083c771e3fd8231c68",
+     "hint_nodes": [
+      131,
+      161
+     ],
+     "parity": [
+      0,
+      0
+     ],
+     "position_cap": 3000,
+     "positions": 967,
+     "replay": true,
+     "solution": 21,
+     "solve_ms": 7.3,
+     "timeup_worst_ms": 9.8,
+     "timeup_worst_nodes": 178,
+     "winnable": 398
+    },
+    "B": {
+     "coverage": 0.9,
+     "decision_steps": 19,
+     "distinct_mistakes": 5,
+     "endgame_decision": true,
+     "idea_key_turn": true,
+     "last_decision": 19,
+     "late": 0.9,
+     "losing_per_step": [
+      3,
+      3,
+      3,
+      2,
+      2,
+      3,
+      2,
+      2,
+      2,
+      1,
+      1,
+      1,
+      2,
+      2,
+      2,
+      1,
+      1,
+      1,
+      1,
+      0,
+      0
+     ],
+     "matters_lock": true,
+     "matters_sequence": true,
+     "mistakes": [
+      "r3c5^",
+      "r3c6>",
+      "r4c2v",
+      "r4c3< advance",
+      "r3c4^"
+     ],
+     "shortcut": 0.01,
+     "without_lock": "without it: 10 decision steps, 3 distinct mistakes (with it: 19, 5)",
+     "without_sequence": "without it: 10 decision steps, 3 distinct mistakes (with it: 19, 5)"
+    },
+    "C": {
+     "decisions_k4_6_8": [
+      15,
+      13,
+      11
+     ],
+     "deepest": 17,
+     "greedy": {
+      "look2": 0.01,
+      "look4": 0.008,
+      "min_turn": 0.005,
+      "mobility": 0,
+      "safe": 0.005
+     },
+     "hidden_k6_8": [
+      24,
+      19
+     ],
+     "learner": {
+      "look4": 1,
+      "look6": 0
+     },
+     "look6_greedy": 0.05,
+     "opening": "3 / 6",
+     "win_share": 0.412
+    },
+    "verdict": "HUMAN-REVIEW CANDIDATE"
+   }
+  }
+ ]
+}

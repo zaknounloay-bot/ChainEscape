@@ -1,0 +1,189 @@
+{
+ "N14": {
+  "map": [
+   ". . . . B<@~ R>@",
+   ". . . . G>@ .",
+   ". G>@ B^ . . .",
+   ". B< R^@* . R^@~ G^=",
+   "G> . Y>@ . . .",
+   "P<@~ P^@ G<= . . ."
+  ],
+  "target": "EXTREME",
+  "facts": [
+   "shell_rammed"
+  ],
+  "mechanic": "pattern,armor",
+  "idea": "the pattern's rhythm: a pattern spinner (cw, cw, ccw) must ram two shells in turn",
+  "max_positions": 3000,
+  "design": "16B"
+ },
+ "N15": {
+  "map": [
+   ". G^ . . . . .",
+   "B<@~ . . . . . .",
+   "B<@- G^@ . Yv R^@- . .",
+   ". . Gv@- R^@#B Pv@~ Pv@ G^=",
+   ". . Gv@ Bv . . .",
+   "R>@- G^ . . . . .",
+   "G<@ B^ P< R< . R<@~ ."
+  ],
+  "target": "EXTREME",
+  "facts": [
+   "shell_rammed"
+  ],
+  "mechanic": "lock,armor",
+  "idea": "the key aims the lock: the departing key turns the locked spinner onto the shell",
+  "max_positions": 3000,
+  "design": "16G"
+ },
+ "N16": {
+  "map": [
+   "Y<@~ . . Yv Y^@- B> .",
+   "P>@ . Rv@- . . G<@~ P>",
+   ". . . XA . . .",
+   "P^@ B<&B . Rv B^@- G^+A= .",
+   "B^ . . . . . .",
+   "R<@- . . . . . .",
+   "P^%B . . . . . ."
+  ],
+  "target": "EXTREME",
+  "facts": [
+   "reversed_ram",
+   "gate_through"
+  ],
+  "mechanic": "switch,armor,gate",
+  "idea": "reverse to ram, ram to open: the shell the reversed rammer cracks is the gate's link",
+  "max_positions": 3000,
+  "design": "16D"
+ },
+ "N17": {
+  "map": [
+   "Yv@- . . . . .",
+   "Gv G^@- G^= . . .",
+   "B>@~ P<@- G>@- . . .",
+   "B> . Y^@ B> R^= Y^@-",
+   "G>@- . . . . .",
+   ". . Y^ . . ."
+  ],
+  "target": "EXTREME",
+  "facts": [
+   "shell_rammed"
+  ],
+  "mechanic": "armor",
+  "idea": "two shells, two rammers: spend each rammer on the right shell, and keep both until their shell is cracked",
+  "max_positions": 3000,
+  "design": "16I2"
+ },
+ "N18": {
+  "map": [
+   "Yv@~ . P^@ . G^= G>@~ B>",
+   ". . G>@~ . . . P^",
+   "R^@~ B> B^@- Y>@~ Yv* P>@ P^@~",
+   "R> Gv@~ . . . . .",
+   ". . . . . . .",
+   ". Y>@- . . Y> . .",
+   ". . Y> R^ . . ."
+  ],
+  "target": "EXTREME",
+  "facts": [
+   "shell_rammed"
+  ],
+  "mechanic": "magnet,armor",
+  "idea": "bring the shell: a magnet pulls the shell into the only rammer's lane - the rammer must not leave first",
+  "max_positions": 3000,
+  "design": "16F2"
+ },
+ "N19": {
+  "map": [
+   ". . Bv . . P<@- Bv@~",
+   "P< . . . . . .",
+   "Y<@- . XA . B>@~ . .",
+   "Y<@~ P>@ P<@- . G<@- Rv@ .",
+   "P<@- . . . R>+A XB .",
+   "Y<@~ . . . . P^@ .",
+   "G^+B . . . . . ."
+  ],
+  "target": "EXTREME",
+  "facts": [
+   "gate_through"
+  ],
+  "mechanic": "gate",
+  "idea": "gate chain: one gate's link waits behind the other gate",
+  "max_positions": 3000,
+  "design": "16E"
+ },
+ "N20": {
+  "map": [
+   ". R<@- B^@~ Yv@~ G^ .",
+   ". P^%A Y^@~ . . P<@",
+   "P^@~ Yv@- B>&A . R< .",
+   ". . . . . .",
+   ". . . . Y>%A .",
+   ". . B<@- P>@- . ."
+  ],
+  "target": "EXTREME",
+  "facts": [
+   "reversed_escape"
+  ],
+  "mechanic": "switch",
+  "idea": "between two switches: two switches flip the same target; it must leave between the two firings",
+  "max_positions": 3000,
+  "design": "16A2"
+ },
+ "N21": {
+  "map": [
+   ". . . . . . .",
+   ". . . . . . .",
+   "Y< Yv@ . Yv P>@ . Gv",
+   ". . G^@ R^@#B Y^@~ Y^@~ P>@",
+   ". P^@~ Gv@- B<:v . . Y>@~",
+   ". . . G>@~ G<@~ . Y^@~",
+   ". . . G> G>@- . R^@~"
+  ],
+  "target": "EXTREME",
+  "facts": [
+   "key_turn"
+  ],
+  "mechanic": "sequence,lock",
+  "idea": "a key that leaves in two steps: the Sequence key's advance turns the locked spinner without unlocking it; its escape unlocks and turns it again",
+  "max_positions": 3000,
+  "design": "16H2"
+ },
+ "N22": {
+  "map": [
+   "G^#P+A . . . . . .",
+   "Pv . . . . . .",
+   ". P<@- . Y<* XA Bv G^@",
+   "P>@ . . . . R^ P>@",
+   "Pv@- P>@ G^@ Rv@ R>@ . G<@~",
+   "Y>@ Rv@ . . . . ."
+  ],
+  "target": "EXTREME",
+  "facts": [
+   "gate_pull"
+  ],
+  "mechanic": "magnet,gate,lock",
+  "idea": "unlock, open, pull: the gate's link is locked; the magnet must wait for both",
+  "max_positions": 3000,
+  "design": "16C2"
+ },
+ "N23": {
+  "map": [
+   "R^ B<@~ G^@- Pv@~ . Bv .",
+   ". Y^@ P^ . . . .",
+   "G^@- B<@ B>&A . R< . Y>",
+   ". . . . . . .",
+   "B^@~ P^%A . . G<#P . .",
+   ". P^@- . . P<@~ Pv@ .",
+   ". . . . . . ."
+  ],
+  "target": "EXTREME",
+  "facts": [
+   "reversed_escape"
+  ],
+  "mechanic": "switch,lock",
+  "idea": "one departure, two effects: the switch is also the last key of a lock - its timing serves both",
+  "max_positions": 3000,
+  "design": "16J2"
+ }
+}

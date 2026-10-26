@@ -1,0 +1,52 @@
+{
+ "target": "EXTREME",
+ "facts": [
+  "gate_pull"
+ ],
+ "mechanic": "magnet,gate,lock",
+ "idea": "unlock, open, pull: the gate's link is locked; the magnet must wait for both",
+ "map": [
+  "G^#P+A . . . . . .",
+  ". . . . . . .",
+  ". . . Y<* XA Bv .",
+  ". . . . . R^ .",
+  ". P>@ . . . . .",
+  ". . . . . . ."
+ ],
+ "max_positions": 3000,
+ "piece_free": 15,
+ "max_pieces": 18,
+ "shortcut_weight": 80,
+ "coverage_weight": 25,
+ "late_weight": 20,
+ "endgame_weight": 20,
+ "length_weight": 1.0,
+ "length_cap": 22,
+ "seed": 1,
+ "frozen": [
+  [
+   0,
+   0
+  ],
+  [
+   2,
+   3
+  ],
+  [
+   2,
+   4
+  ],
+  [
+   2,
+   5
+  ],
+  [
+   3,
+   5
+  ],
+  [
+   4,
+   1
+  ]
+ ]
+}

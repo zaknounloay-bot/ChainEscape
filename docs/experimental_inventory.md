@@ -1,4 +1,4 @@
-# Experimental boards: inventory (Phase 12A consolidation, updated in Phases 12B, 13, 14 and 15)
+# Experimental boards: inventory (Phase 12A consolidation, updated in Phases 12B, 13, 14, 15 and 16)
 
 Development only. Every board below lives in `data/dev/` and is reachable only through a development test page. Development pages are off in the player and QA builds (`BuildFlags.dev_pages_off()`). None is part of Production, the campaign, the Social MVP or Challenge a Friend.
 
@@ -164,6 +164,13 @@ Solver / exhaustive parity on Q1, T5, E1, E2, H1 and H2 was checked exhaustively
 - The selection screen is now a grid of PUZZLE tiles.
 - N3 is the design reference for the EXTREME experience (family test). It defines the EXTREME floor of the design checks.
 
+**Phase 16 (the EXTREME Time Attack bank).** See `docs/extreme90_bank.md`.
+- **A dedicated entry, `?extreme90=1`, with EXTREME puzzles only,** shown as neutral CHALLENGE 1-15.
+- **Baseline (5):** N3, N5, N7, N11, N13, chosen from the family playtests. Their board data and fingerprints are unchanged.
+- **New (10):** N14-N23, each a HUMAN-REVIEW CANDIDATE and NOT YET HUMAN-TESTED.
+- **The other eight experimental boards** (N1, N2, N4, N6, N8, N9, N10, N12) stay archived in the full collection, `?ta90=1`, which is unchanged. Nothing was deleted.
+- **Storage:** the bank has its own (`xb90_*`). The same board keeps separate records per entry, always with its internal id and fingerprint.
+
 Shared rules on every timed page:
 - The clock never stops or refills on RESTART, UNDO, the background or a reload. It also never stops on SHOW A MOVE where that tool still exists (Q1, R1).
 - TIME UP is frozen. An untimed solve is never recorded as a timed victory.
@@ -200,6 +207,28 @@ All passed category A: parity 0 / 0 everywhere, a deterministic replay, and a TI
 | **N12** (PUZZLE 12) | `52dffbaefdde0a4cd91cba51a37999cf238f705d06a9da42179400fe3357fbbd` | cw spinners, alternating spinners, armored shell | 6×6, 11 | MEDIUM | HUMAN-REVIEW CANDIDATE |
 | **N13** (PUZZLE 13) | `9acdd496511edcd6e847217ec37d7029d7cc82a62d1f93258d7ac08b5d86c943` | cw spinners, ccw spinners, alternating spinners, lock, magnet | 7×7, 16 | HARD | HUMAN-REVIEW CANDIDATE |
 
+### Phase 16 EXTREME bank boards (`?extreme90=1`)
+
+| Bank | Boards | Status |
+|---|---|---|
+| Baseline | N3 (CHALLENGE 1), N5 (2), N7 (3), N11 (4), N13 (5) | data and fingerprints unchanged; chosen from the family playtests |
+| Archived (only in `?ta90=1`) | N1, N2, N4, N6, N8, N9, N10, N12 | kept: data files, records and fingerprints unchanged |
+
+All new boards passed category A: parity 0 / 0, a deterministic replay, and a solve and a TIME UP check of at most 40 ms on desktop in every reachable position. All passed the EXTREME category B benchmark calibrated on N3. All are **NOT YET HUMAN-TESTED**.
+
+| Board | Fingerprint | Mechanics | Size, pieces | Status |
+|---|---|---|---|---|
+| **N14** (CHALLENGE 6) | `c26a76e8fcd75672540d08e26a053559cc1a13ef9bfd12a87500f710e41b8698` | cw spinners, alternating spinners, pattern spinner, armored shell | 6×6, 14 | HUMAN-REVIEW CANDIDATE |
+| **N15** (CHALLENGE 7) | `4868df06805eaa4d89925a7f42a1e2cd85d5248e8d1b3dcd609feccfcc52e087` | cw spinners, ccw spinners, alternating spinners, lock, armored shell | 7×7, 20 | HUMAN-REVIEW CANDIDATE |
+| **N16** (CHALLENGE 8) | `b46e1063d26a1090121bdcc0320412019553918d001dbdf940d9b2882152531b` | cw spinners, ccw spinners, alternating spinners, switch, chain gate, armored shell | 7×7, 17 | HUMAN-REVIEW CANDIDATE |
+| **N17** (CHALLENGE 9) | `f03a0bec59608c30fdedd8b80854226242d679323f63724ff7d4306ccf506076` | cw spinners, ccw spinners, alternating spinners, armored shell | 6×6, 14 | HUMAN-REVIEW CANDIDATE |
+| **N18** (CHALLENGE 10) | `4f81a66e1485b564f0e6478d1017ae9d532929cdf7d9f73566e6dd993a5b00ac` | cw spinners, ccw spinners, alternating spinners, armored shell, magnet | 7×7, 20 | HUMAN-REVIEW CANDIDATE |
+| **N19** (CHALLENGE 11) | `ddb67ffbb74a9040069043a04b48addb3da640118b8e6483efd3e75ecf5cab4f` | cw spinners, ccw spinners, alternating spinners, chain gate | 7×7, 18 | HUMAN-REVIEW CANDIDATE |
+| **N20** (CHALLENGE 12) | `ebff998e4fcb4be47bc015ac7c7dff6a1eb64e944e3f6f88753dd537ff5a47b0` | cw spinners, ccw spinners, alternating spinners, switch | 6×6, 14 | HUMAN-REVIEW CANDIDATE |
+| **N21** (CHALLENGE 13) | `598cee830d3bcce7533cfe9b99847b376705e6e5c52181083c771e3fd8231c68` | cw spinners, ccw spinners, alternating spinners, lock, Sequence | 7×7, 20 | HUMAN-REVIEW CANDIDATE |
+| **N22** (CHALLENGE 14) | `1f4c569074172b7802c5525057cc87e0fd20bff67fc38e909a1270b5c448ffef` | cw spinners, ccw spinners, alternating spinners, lock, chain gate, magnet | 6×7, 18 | HUMAN-REVIEW CANDIDATE |
+| **N23** (CHALLENGE 15) | `feeefb09e8bae3941b0964f6652b2d134a092471c4bce41b74d6fa1c500e7141` | cw spinners, ccw spinners, alternating spinners, lock, switch | 7×7, 18 | HUMAN-REVIEW CANDIDATE |
+
 ### TA90 family test: a correction
 
 TA90 here means the reference board TA, played on the 90-second prototype.
@@ -210,7 +239,7 @@ TA90 here means the reference board TA, played on the 90-second prototype.
   - Any analysis must name which one it uses.
 - No other values from that test were reported to me, so none are listed here. They are not inferred.
 
-### Recording sheet for the coming first-exposure sessions (N1-N13)
+### Recording sheet for the coming first-exposure sessions (N1-N23)
 
 The `ce-ta90` bundle (COPY ALL RESULTS) carries the objective fields. The answers come from the questions after each run. One row per player and board.
 

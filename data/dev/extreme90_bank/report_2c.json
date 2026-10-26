@@ -1,0 +1,130 @@
+{
+ "cand_H2": {
+  "A": {
+   "fingerprint": "598cee830d3bcce7533cfe9b99847b376705e6e5c52181083c771e3fd8231c68",
+   "hint_nodes": [
+    131,
+    161
+   ],
+   "parity": [
+    0,
+    0
+   ],
+   "position_cap": 3000,
+   "positions": 967,
+   "replay": true,
+   "solution": 21,
+   "solve_ms": 9.2,
+   "timeup_worst_ms": 10.4,
+   "timeup_worst_nodes": 178,
+   "winnable": 398
+  },
+  "B": {
+   "coverage": 0.9,
+   "decision_steps": 19,
+   "distinct_mistakes": 5,
+   "endgame_decision": true,
+   "idea_key_turn": true,
+   "last_decision": 19,
+   "late": 0.9,
+   "line": [
+    "r2c0< [x3]",
+    "r2c1< [x3]",
+    "r3c2^ [x3]",
+    "r4c1^ [x2]",
+    "r4c2^ [x2]",
+    "r4c6> [x3]",
+    "r5c6> [x2]",
+    "r6c6> [x2]",
+    "r3c6v [x2]",
+    "r2c6v [x1]",
+    "r2c4> [x1]",
+    "r3c5> [x1]",
+    "r6c4> [x2]",
+    "r6c3> [x2]",
+    "r5c3v [x2]",
+    "r5c4< [x1]",
+    "r4c3< advance [x1]",
+    "r4c3v [x1]",
+    "r3c3< [x1]",
+    "r2c3v",
+    "r3c4>"
+   ],
+   "losing_per_step": [
+    3,
+    3,
+    3,
+    2,
+    2,
+    3,
+    2,
+    2,
+    2,
+    1,
+    1,
+    1,
+    2,
+    2,
+    2,
+    1,
+    1,
+    1,
+    1,
+    0,
+    0
+   ],
+   "matters_lock": true,
+   "matters_sequence": true,
+   "mistakes": [
+    "r3c5^",
+    "r3c6>",
+    "r4c2v",
+    "r4c3< advance",
+    "r3c4^"
+   ],
+   "shortcut": 0.01,
+   "without_lock": "without it: 10 decision steps, 3 distinct mistakes (with it: 19, 5)",
+   "without_sequence": "without it: 10 decision steps, 3 distinct mistakes (with it: 19, 5)"
+  },
+  "C": {
+   "decisions_k4_6_8": [
+    15,
+    13,
+    11
+   ],
+   "deepest": 17,
+   "greedy": {
+    "look2": 0.01,
+    "look4": 0.008,
+    "min_turn": 0.005,
+    "mobility": 0,
+    "safe": 0.005
+   },
+   "hidden_k6_8": [
+    24,
+    19
+   ],
+   "learner": {
+    "look4": 1,
+    "look6": 0
+   },
+   "look6_greedy": 0.05,
+   "opening": "3 / 6",
+   "win_share": 0.412
+  },
+  "map": [
+   ". . . . . . .",
+   ". . . . . . .",
+   "Y< Yv@ . Yv P>@ . Gv",
+   ". . G^@ R^@#B Y^@~ Y^@~ P>@",
+   ". P^@~ Gv@- B<:v . . Y>@~",
+   ". . . G>@~ G<@~ . Y^@~",
+   ". . . G> G>@- . R^@~"
+  ],
+  "name": "cand_H2",
+  "target": "EXTREME",
+  "verdict": "HUMAN-REVIEW CANDIDATE",
+  "why_a": [],
+  "why_b": []
+ }
+}

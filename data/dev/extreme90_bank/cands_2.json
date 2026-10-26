@@ -1,0 +1,90 @@
+{
+ "cand_A2": {
+  "map": [
+   ". R<@- B^@~ Yv@~ G^ .",
+   ". P^%A Y^@~ . . P<@",
+   "P^@~ Yv@- B>&A . R< .",
+   ". . . . . .",
+   ". . . . Y>%A .",
+   ". . B<@- P>@- . ."
+  ],
+  "target": "EXTREME",
+  "facts": [
+   "reversed_escape"
+  ],
+  "mechanic": "switch",
+  "idea": "between two switches: two switches flip the same target; it must leave between the two firings",
+  "max_positions": 3000
+ },
+ "cand_F2": {
+  "map": [
+   "Yv@~ . P^@ . G^= G>@~ B>",
+   ". . G>@~ . . . P^",
+   "R^@~ B> B^@- Y>@~ Yv* P>@ P^@~",
+   "R> Gv@~ . . . . .",
+   ". . . . . . .",
+   ". Y>@- . . Y> . .",
+   ". . Y> R^ . . ."
+  ],
+  "target": "EXTREME",
+  "facts": [
+   "shell_rammed"
+  ],
+  "mechanic": "magnet,armor",
+  "idea": "bring the shell: a magnet pulls the shell into the only rammer's lane - the rammer must not leave first",
+  "max_positions": 3000
+ },
+ "cand_H2": {
+  "map": [
+   ". . . . . . .",
+   ". . . . . . .",
+   "Y< Yv@ . Yv P>@ . Gv",
+   ". . G^@ R^@#B Y^@~ Y^@~ P>@",
+   ". P^@~ Gv@- B<:v . . Y>@~",
+   ". . . G>@~ G<@~ . Y^@~",
+   ". . . G> G>@- . R^@~"
+  ],
+  "target": "EXTREME",
+  "facts": [
+   "key_turn"
+  ],
+  "mechanic": "sequence,lock",
+  "idea": "a key that leaves in two steps: the Sequence key's advance turns the locked spinner without unlocking it; its escape unlocks and turns it again",
+  "max_positions": 3000
+ },
+ "cand_I2": {
+  "map": [
+   "Yv@- . . . . .",
+   "Gv G^@- G^= . . .",
+   "B>@~ P<@- G>@- . . .",
+   "B> . Y^@ B> R^= Y^@-",
+   "G>@- . . . . .",
+   ". . Y^ . . ."
+  ],
+  "target": "EXTREME",
+  "facts": [
+   "shell_rammed"
+  ],
+  "mechanic": "armor",
+  "idea": "two shells, two rammers: spend each rammer on the right shell, and keep both until their shell is cracked",
+  "max_positions": 3000
+ },
+ "cand_J2": {
+  "map": [
+   "R^ B<@~ G^@- Pv@~ . Bv .",
+   ". Y^@ P^ . . . .",
+   "G^@- B<@ B>&A . R< . Y>",
+   ". . . . . . .",
+   "B^@~ P^%A . . G<#P . .",
+   ". P^@- . . P<@~ Pv@ .",
+   ". . . . . . ."
+  ],
+  "target": "EXTREME",
+  "facts": [
+   "reversed_escape"
+  ],
+  "mechanic": "switch,lock",
+  "idea": "one departure, two effects: the switch is also the last key of a lock - its timing serves both",
+  "max_positions": 3000
+ }
+}

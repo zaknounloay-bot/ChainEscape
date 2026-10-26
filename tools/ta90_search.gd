@@ -19,6 +19,8 @@ extends "res://tools/ta90_design.gd"
 ##   Phase 15 (all default to the Phase 14 behaviour): "piece_free": 8 (pieces
 ##   without a size penalty), "position_weight": 0.004, "coverage_weight" /
 ##   "late_weight": 0 (sustained risk), "length_weight" / "length_cap": 0,
+##   "max_solve_nodes" (Phase 16, optional): reject boards whose opening solve
+##   needs more Solver nodes (keeps large boards inside the TIME UP gate),
 ##   "endgame_weight": 4 (the bonus for a decision in the last third),
 ##   "shortcut_weight": 25 (how hard a greedy shortcut above 20 % is penalised; raised when boards stall on it)}
 
@@ -173,6 +175,10 @@ func _score(map: Array) -> Dictionary:
 		if not EV17.witness(level, k).is_empty():
 			return {}
 	var sol := s.solve_moves()
+	# Phase 16: a Solver-cost cap (the nodes of the opening solve), so large
+	# boards stay inside the 40 ms TIME UP gate of ta90_design.gd.
+	if _spec.has("max_solve_nodes") and s.nodes > int(_spec["max_solve_nodes"]):
+		return {}
 	var dec := _decisions(s, win, sol)
 	var need: Dictionary = NEED.get(str(_spec.get("target", "MEDIUM")), NEED["MEDIUM"])
 	# Where the mistakes are: opening / middle / endgame thirds.

@@ -1,0 +1,41 @@
+{
+ "target": "EXTREME",
+ "facts": [
+  "shell_rammed"
+ ],
+ "mechanic": "magnet,armor",
+ "idea": "bring the shell: a magnet pulls the shell into the only rammer's lane - the rammer must not leave first",
+ "map": [
+  ". . . . G^= . .",
+  ". . . . . . .",
+  ". B> . . Yv* . .",
+  ". . . . . . .",
+  ". . . . . . .",
+  ". . . . . . .",
+  ". . . . . . ."
+ ],
+ "max_positions": 3000,
+ "piece_free": 20,
+ "max_pieces": 25,
+ "shortcut_weight": 80,
+ "coverage_weight": 25,
+ "late_weight": 20,
+ "endgame_weight": 20,
+ "length_weight": 1.0,
+ "length_cap": 22,
+ "seed": 1,
+ "frozen": [
+  [
+   0,
+   4
+  ],
+  [
+   2,
+   1
+  ],
+  [
+   2,
+   4
+  ]
+ ]
+}

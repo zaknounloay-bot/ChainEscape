@@ -1,0 +1,45 @@
+{
+ "target": "EXTREME",
+ "facts": [
+  "reversed_escape"
+ ],
+ "mechanic": "switch,lock",
+ "max_positions": 3000,
+ "idea": "one departure, two effects: the switch is also the last key of a lock - its timing serves both",
+ "map": [
+  ". . . . . . .",
+  ". . . . . . .",
+  ". . B>&A . R< . .",
+  ". . . . . . .",
+  ". P^%A . . G<#P . .",
+  ". . . . . . .",
+  ". . . . . . ."
+ ],
+ "piece_free": 15,
+ "max_pieces": 18,
+ "shortcut_weight": 80,
+ "coverage_weight": 25,
+ "late_weight": 20,
+ "endgame_weight": 20,
+ "length_weight": 1.0,
+ "length_cap": 22,
+ "seed": 1,
+ "frozen": [
+  [
+   2,
+   2
+  ],
+  [
+   2,
+   4
+  ],
+  [
+   4,
+   1
+  ],
+  [
+   4,
+   4
+  ]
+ ]
+}

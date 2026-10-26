@@ -1,0 +1,214 @@
+{
+ "core_A": {
+  "target": "EXTREME",
+  "facts": [
+   "reversed_escape"
+  ],
+  "mechanic": "switch",
+  "idea": "between two switches: two switches flip the same target; it must leave between the two firings",
+  "map": [
+   ". . . . . .",
+   ". P^%A . . . .",
+   ". . B>&A . R< .",
+   ". . . . . .",
+   ". . . . Y>%A .",
+   ". . . . . ."
+  ],
+  "max_positions": 3000
+ },
+ "core_B": {
+  "target": "EXTREME",
+  "facts": [
+   "shell_rammed"
+  ],
+  "mechanic": "pattern,armor",
+  "idea": "the pattern's rhythm: a pattern spinner (cw, cw, ccw) must ram two shells in turn",
+  "map": [
+   ". . . . . .",
+   ". . . . . .",
+   ". . B^ . . .",
+   ". B< R^@* . . G^=",
+   ". . . . . .",
+   ". . G<= . . ."
+  ],
+  "max_positions": 3000
+ },
+ "core_C": {
+  "target": "EXTREME",
+  "facts": [
+   "gate_pull"
+  ],
+  "mechanic": "magnet,gate,lock",
+  "idea": "unlock, open, pull: the gate's link is locked; the magnet must wait for both",
+  "map": [
+   "G^#P+A . . . . . .",
+   ". . . . . . .",
+   ". . . Y<* XA Bv .",
+   ". . . . . R^ .",
+   ". P>@ . . . . .",
+   ". . . . . . ."
+  ],
+  "max_positions": 3000
+ },
+ "core_D": {
+  "target": "EXTREME",
+  "facts": [
+   "reversed_ram",
+   "gate_through"
+  ],
+  "mechanic": "switch,armor,gate",
+  "idea": "reverse to ram, ram to open: the shell the reversed rammer cracks is the gate's link",
+  "map": [
+   ". . . Yv . . .",
+   ". . . . . . .",
+   ". . . XA . . .",
+   ". B<&B . . . G^+A= .",
+   ". . . . . . .",
+   ". . . . . . .",
+   "P^%B . . . . . ."
+  ],
+  "max_positions": 3000
+ },
+ "core_E": {
+  "target": "EXTREME",
+  "facts": [
+   "gate_through"
+  ],
+  "mechanic": "gate",
+  "idea": "gate chain: one gate's link waits behind the other gate",
+  "map": [
+   ". . Bv . . . .",
+   ". . . . . . .",
+   ". . XA . . . .",
+   ". . . . . . .",
+   ". . . . R>+A XB .",
+   ". . . . . . .",
+   "G^+B . . . . . ."
+  ],
+  "max_positions": 3000
+ },
+ "core_F": {
+  "target": "EXTREME",
+  "facts": [
+   "shell_rammed"
+  ],
+  "mechanic": "magnet,armor",
+  "idea": "bring the shell: a magnet pulls the shell into the only rammer's lane - the rammer must not leave first",
+  "map": [
+   ". . . . G^= . .",
+   ". . . . . . .",
+   ". B> . . Yv* . .",
+   ". . . . . . .",
+   ". . . . . . .",
+   ". . . . . . .",
+   ". . . . . . ."
+  ],
+  "max_positions": 3000
+ },
+ "core_G": {
+  "target": "EXTREME",
+  "facts": [
+   "shell_rammed"
+  ],
+  "mechanic": "lock,armor",
+  "idea": "the key aims the lock: the departing key turns the locked spinner onto the shell",
+  "map": [
+   ". . . . . . .",
+   ". . . . . . .",
+   ". . . Yv . . .",
+   ". . . R^@#B . . G^=",
+   ". . . Bv . . .",
+   ". . . . . . .",
+   ". B^ . . . . ."
+  ],
+  "max_positions": 3000
+ },
+ "core_H": {
+  "target": "EXTREME",
+  "facts": [
+   "key_turn"
+  ],
+  "mechanic": "sequence,lock",
+  "max_positions": 3000,
+  "idea": "a key that leaves in two steps: the Sequence key's advance turns the locked spinner without unlocking it; its escape unlocks and turns it again",
+  "map": [
+   ". . . . . . .",
+   ". . . . . . .",
+   ". . . Yv . . .",
+   ". . . R^@#B . . .",
+   ". . . B<:v . . .",
+   ". . . . . . .",
+   ". . . . . . ."
+  ]
+ },
+ "core_I": {
+  "target": "EXTREME",
+  "facts": [
+   "reversed_escape"
+  ],
+  "mechanic": "pattern,switch",
+  "idea": "flip and spin: a pattern spinner is also a switch target - turns and a reversal combine",
+  "map": [
+   ". . . . . . .",
+   ". . . Gv . . .",
+   ". . B< R^@*&A . . .",
+   ". . . . . . .",
+   ". . . . . . .",
+   ". . . . . . .",
+   "P^%A . . . . . ."
+  ],
+  "max_positions": 3000,
+  "rejected": "engine rule: a spinner cannot be a switch / flip target (LevelManager)"
+ },
+ "core_J": {
+  "target": "EXTREME",
+  "facts": [],
+  "mechanic": "lock",
+  "idea": "lock ladder: each lock's key is itself locked",
+  "map": [
+   ". . . . . .",
+   ". R<#B . G^ . .",
+   ". . . . . .",
+   ". B^#G . . . .",
+   ". . . Yv@ . .",
+   ". . . . . ."
+  ],
+  "max_positions": 3000,
+  "rejected": "unsolvable as drawn (PuzzleDefinition.verify = the Solver must clear it): no order frees the lock chain"
+ },
+ "core_I2": {
+  "target": "EXTREME",
+  "facts": [
+   "shell_rammed"
+  ],
+  "mechanic": "armor",
+  "max_positions": 3000,
+  "idea": "two shells, two rammers: spend each rammer on the right shell, and keep both until their shell is cracked",
+  "map": [
+   ". . . . . .",
+   ". . G^= . . .",
+   ". . . . . .",
+   "B> . . . R^= .",
+   ". . . . . .",
+   ". . Y^ . . ."
+  ]
+ },
+ "core_J2": {
+  "target": "EXTREME",
+  "facts": [
+   "reversed_escape"
+  ],
+  "mechanic": "switch,lock",
+  "max_positions": 3000,
+  "idea": "one departure, two effects: the switch is also the last key of a lock - its timing serves both",
+  "map": [
+   ". . . . . . .",
+   ". . . . . . .",
+   ". . B>&A . R< . .",
+   ". . . . . . .",
+   ". P^%A . . G<#P . .",
+   ". . . . . . .",
+   ". . . . . . ."
+  ]
+ }
+}
