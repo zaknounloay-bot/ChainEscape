@@ -47,6 +47,7 @@ func _run() -> void:
 	for b in Extreme90Bank.BANK:
 		await _solve_on_page(b)
 	await _timeup_untimed(Extreme90Bank.BANK[0])
+	await _short_flows()
 	_check(before.keys().all(func(f): return FileAccess.get_file_as_string(f) == before[f]),
 		"?ta90=1's records (hub and every board), the 120-second pilot's and the standalone pages' storage untouched")
 	_check(not FileAccess.file_exists(PROGRESS_PATH), "no campaign progress written")
@@ -174,9 +175,13 @@ func _timeup_untimed(b: String) -> void:
 	_check(p.state.get("timed", {}).get("outcome", "") == "TIME UP" and int(p.state["timed"]["elapsed_ms"]) == LIM and p.music.stage == "", "%s: TIME UP at 90 s; the music fades out" % b)
 	(p._card.find_child("TA_Continue", true, false) as Button).pressed.emit()
 	await _frames(1)
-	for a in ["HARD", "4", "5", "2", "YES", "YES", "APPROPRIATE", "YES"]:
+	_check(p.screen == VhHumanTest.Screen.THINK and p._questions == Ta90TimeAttack.SHORT_Q and p._q_label.text == Ta90TimeAttack.SHORT_Q[0][1],
+		"%s: after TIME UP, the SHORT questionnaire (3 questions)" % b)
+	for a in ["EXTREME", "4", "YES"]:
 		p.think(a)
 	await _frames(2)
+	_check(p.phase() == "offer" and p._untimed_btn.visible and p.state["timed"]["answers"] == {"difficulty": "EXTREME", "enjoy": "4", "another": "YES"}
+		and p.state["timed"]["answers_set"] == Ta90TimeAttack.SHORT_SET, "%s: 3 answers, then CONTINUE WITHOUT TIMER is offered (no other question)" % b)
 	p._untimed_btn.pressed.emit()
 	await _frames(4)
 	_check(p.phase() == "untimed" and p._count.text == "NO TIMER" and p.music.stage == "calm" and _hint_gone(p.play), "%s: CONTINUE WITHOUT TIMER - NO TIMER, the calm mix, still no SHOW A MOVE" % b)
@@ -186,5 +191,128 @@ func _timeup_untimed(b: String) -> void:
 		p.play.tap_block(mv)
 		await _wait(0.03)
 	await _wait(1.3)
-	_check(p._card_head.text == "SOLVED" and p.state["timed"]["outcome"] == "TIME UP", "%s: solved without the timer; the timed result stays TIME UP" % b)
+	_check(p._card_head.text == "SOLVED" and p.state["timed"]["outcome"] == "TIME UP" and not p._card_text.text.contains("questions"),
+		"%s: solved without the timer; the timed result stays TIME UP; the card announces no more questions" % b)
+	(p._card.find_child("TA_Continue", true, false) as Button).pressed.emit()
+	await _frames(4)
+	var rs: Array = Ta90TimeAttack.read_state90(b, "xb90").get("results", [])
+	_check(rs.size() == 1 and rs[0]["timed"]["outcome"] == "TIME UP" and rs[0]["untimed"].get("completed", false) and rs[0]["puzzle_answers"] == {"_after": "untimed play"}
+		and h.view == Ta90Prototype.View.SELECT, "%s: CONTINUE stores the run at once - no post-play questionnaire after the untimed game; back to CHOOSE A CHALLENGE" % b)
 	await _close(h)
+
+
+func _results(b: String) -> Array:
+	return Ta90TimeAttack.read_state90(b, "xb90").get("results", [])
+
+
+## Opens a bank board and starts its timed run (a replay when played before).
+func _start(h: Extreme90Bank, b: String) -> Ta90TimeAttack:
+	h.open_puzzle(b)
+	await _frames(3)
+	var p := h.page
+	if p.screen == VhHumanTest.Screen.BRIEF:
+		p._brief_go.pressed.emit()
+	await _frames(4)
+	return p
+
+
+## Phase 16A: the SHORT questionnaire in every ending - a win answered, a win
+## skipped, a GIVE UP, TIME UP skipped then FINISH - replay, the next
+## challenge, the export, and ?ta90=1 still asking its own questions.
+func _short_flows() -> void:
+	var b: String = Extreme90Bank.BANK[1]
+	var nxt: String = Extreme90Bank.BANK[2]
+	for x in [b, nxt]:
+		DirAccess.remove_absolute(ProjectSettings.globalize_path(Ta90TimeAttack.state_path90(x, "xb90")))
+	var h := await _hub()
+	# 1. A timed win, the three answers: stored at once.
+	var p := await _start(h, b)
+	for mv in _solution(b):
+		p.play.tap_block(mv)
+		await _wait(0.03)
+	await _wait(1.3)
+	_check(p._card_text.text.contains("Three quick questions next (or SKIP).") and p.short_q, "WIN: the card says three quick questions, or SKIP")
+	(p._card.find_child("TA_Continue", true, false) as Button).pressed.emit()
+	await _frames(1)
+	var backs: Array = p.find_children("BackToPuzzles", "Button", true, false)
+	var opts_ok: bool = p._think_opts.find_child("Think_VERY_HARD", true, false) != null and p._think_skip.is_visible_in_tree() \
+		and not backs.is_empty() and backs.all(func(x): return x.text == "BACK TO CHALLENGES")
+	p.think("HARD")
+	await _frames(1)
+	var row: Node = p._think_opts.find_child("Think_3", true, false)
+	var row_ok: bool = row != null and row.get_parent() is HBoxContainer and p._q_label.text == Ta90TimeAttack.SHORT_Q[1][1]
+	p.think("5")
+	await _frames(1)
+	var yn: Node = p._think_opts.find_child("Think_YES", true, false)
+	var yn_ok: bool = yn != null and yn.get_parent() is HBoxContainer and p._think_opts.find_child("Think_NO", true, false) != null
+	p.think("NO")
+	await _frames(4)
+	var rs := _results(b)
+	_check(opts_ok and row_ok and yn_ok, "the questions: EASY ... EXTREME one per line, 1-5 in one row, YES / NO in one row, SKIP always shown, BACK TO CHALLENGES")
+	_check(rs.size() == 1 and rs[0]["timed"]["outcome"] == "COMPLETED" and rs[0]["timed"]["answers"] == {"difficulty": "HARD", "enjoy": "5", "another": "NO"}
+		and rs[0]["timed"]["answers_set"] == Ta90TimeAttack.SHORT_SET and rs[0]["puzzle_answers"] == {"_after": "timed win"} and h.view == Ta90Prototype.View.SELECT,
+		"WIN: the 3 answers stored at once with the set's version (no post-play questions); back to CHOOSE A CHALLENGE")
+	# 2. Replay the same challenge: a new run; this time SKIP.
+	p = await _start(h, b)
+	_check(p.run_active() and int(p.state["run"]["n"]) == 2, "REPLAY: the same challenge again is a new 90 s run (run 2)")
+	for mv in _solution(b):
+		p.play.tap_block(mv)
+		await _wait(0.03)
+	await _wait(1.3)
+	(p._card.find_child("TA_Continue", true, false) as Button).pressed.emit()
+	await _frames(1)
+	p._think_skip.pressed.emit()
+	await _frames(4)
+	rs = _results(b)
+	_check(rs.size() == 2 and rs[1]["timed"]["outcome"] == "COMPLETED" and rs[1]["timed"].get("answers_skipped", false)
+		and not rs[1]["timed"].get("answers", {}).has("difficulty") and h.view == Ta90Prototype.View.SELECT,
+		"SKIP: one tap leaves the whole questionnaire (recorded as skipped, nothing inferred); the run is stored; back to the selection")
+	# 3. The next challenge: GIVE UP, then SKIP.
+	p = await _start(h, nxt)
+	_check(p.run_active() and p.board_key == nxt, "NEXT CHALLENGE: opens and runs after a skipped questionnaire")
+	p.give_up()
+	p.give_up()
+	await _frames(3)
+	_check(p.state.get("timed", {}).get("outcome", "") == "GAVE UP", "GIVE UP: the timed result is GAVE UP")
+	(p._card.find_child("TA_Continue", true, false) as Button).pressed.emit()
+	await _frames(1)
+	_check(p.screen == VhHumanTest.Screen.THINK and p._questions == Ta90TimeAttack.SHORT_Q, "GIVE UP: the same three questions")
+	p._think_skip.pressed.emit()
+	await _frames(4)
+	rs = _results(nxt)
+	_check(rs.size() == 1 and rs[0]["timed"]["outcome"] == "GAVE UP" and rs[0]["puzzle_answers"] == {"_after": "timed give up"} and h.view == Ta90Prototype.View.SELECT,
+		"GIVE UP + SKIP: stored at once; back to the selection")
+	# 4. TIME UP, SKIP: the untimed offer straight away; FINISH stores it.
+	p = await _start(h, nxt)
+	p.debug_offset_ms += LIM - p.elapsed_ms()
+	await _frames(3)
+	(p._card.find_child("TA_Continue", true, false) as Button).pressed.emit()
+	await _frames(1)
+	p._think_skip.pressed.emit()
+	await _frames(2)
+	_check(p.phase() == "offer" and p._untimed_btn.visible and p._finish_btn.visible, "TIME UP + SKIP: CONTINUE WITHOUT TIMER / FINISH offered at once")
+	p._finish_btn.pressed.emit()
+	await _frames(4)
+	rs = _results(nxt)
+	_check(rs.size() == 2 and rs[1]["timed"]["outcome"] == "TIME UP" and rs[1]["timed"].get("answers_skipped", false) and rs[1]["puzzle_answers"] == {"_after": "finish after TIME UP"}
+		and h.view == Ta90Prototype.View.SELECT, "FINISH after TIME UP: stored at once - no question after TIME UP beyond the three")
+	# 5. The export: answers apart from the automatic telemetry.
+	var bd: Dictionary = h.bundle()
+	var runs: Array = bd["runs"].filter(func(r): return r["board"] == b)
+	var r0: Dictionary = runs[0] if not runs.is_empty() else {}
+	var raw: Array = bd["boards"][b]["raw"]
+	_check(bd["questionnaire"] == Ta90TimeAttack.SHORT_SET and bd["boards"][b]["mechanics"] == _rec(b)["mechanics"] and not bd["boards"][b]["mechanics"].is_empty(),
+		"export: the questionnaire version, and each board's mechanics")
+	_check(runs.size() == 2 and r0["timed_outcome"] == "COMPLETED" and r0["timed_success"] and r0["fingerprint"] == Ta90TimeAttack.BOARDS90[b]["fp"]
+		and r0["timed_answers"] == {"difficulty": "HARD", "enjoy": "5", "another": "NO"} and r0.has("elapsed_ms") and r0.has("restarts") and r0.has("undos")
+		and r0.has("blocked_taps") and r0.has("attempts") and r0.has("moves"),
+		"export: id, fingerprint, timed_outcome, time, attempts, restarts, moves, UNDO, blocked taps - the three answers apart in timed_answers")
+	_check(raw.size() == 2 and raw[0]["timed"]["answers_set"] == Ta90TimeAttack.SHORT_SET and raw[1]["timed"].get("answers_skipped", false)
+		and runs[1]["timed_answers"].is_empty() and runs[1]["timed_outcome"] == "COMPLETED",
+		"export: the raw records keep the set's version and the skip; a skipped questionnaire leaves the answers empty, the outcome still COMPLETED")
+	await _close(h)
+	# 6. ?ta90=1 unchanged: its page still asks its own 8 timed questions.
+	var t90 := Ta90TimeAttack.new("N3")
+	_check(not t90.short_q and t90.timed_q() == Ta90TimeAttack.P90_TIMED_Q and t90.timed_q().size() == 8 and not Ta90Prototype.new().short_questions(),
+		"?ta90=1 (and its records) unchanged: no short questionnaire there")
+	t90.free()

@@ -188,3 +188,22 @@ The timing gates were never relaxed, and no failing board was re-measured until 
 - **Pre-existing, not Phase 16:** RecipientTest, the same 3 layout checks as before (en / he / ar).
 - **Changed outside the dev pages:** only the 4-line `?extreme90=1` hook in `game_manager.gd`, behind `BuildFlags.dev_pages_off()`, like `?ta90=1`.
 - Screenshots: `docs/extreme90_bank_shots/`.
+
+## 8. Phase 16A: the short playtest questionnaire (`?extreme90=1` only)
+
+Questionnaire fatigue was reduced. After each tested challenge, **whatever the outcome** (a timed win, TIME UP or GIVE UP), the bank asks only:
+
+| # | Question | Answers | Control |
+|---|---|---|---|
+| Q1 | How difficult was this puzzle? | EASY / MEDIUM / HARD / VERY HARD / EXTREME | one compact button per line |
+| Q2 | How much did you enjoy it? | 1-5 | one row |
+| Q3 | Would you play another challenge? | YES / NO | one row |
+
+- **Nothing else is asked.** No music, timer, excitement, frustration, length, achievement or "was it solved" questions, and **no second (post-play) questionnaire**, not even after TIME UP and the untimed game. The run is stored as soon as the third answer, a FINISH or the untimed result's CONTINUE is tapped.
+- **SKIP** (always shown) leaves the whole questionnaire in one tap. It is recorded as `answers_skipped`, never inferred. It never blocks replay, the next challenge, the untimed offer after TIME UP, or navigation.
+- **Kept apart in the records:**
+  - the answers in each run's `timed.answers` (exported as `timed_answers`), with `answers_set: "xb90-short-v1"`;
+  - the automatic telemetry: the board id, fingerprint, `timed_outcome`, time, attempts, restarts, moves, UNDO and blocked taps. Success is only ever the `timed_outcome`.
+  - The export also carries the questionnaire version and each board's mechanics.
+- **Scope:** the page change is opt-in (`Ta90TimeAttack.short_q`, set by `Extreme90Bank.short_questions()`). `?ta90=1` still asks its own questions, and every earlier record stays readable and unchanged. The rules, puzzles, fingerprints, timer and music are unchanged.
+- **Older bank records** (Phase 16) keep their 8-answer `timed.answers` and post-play `puzzle_answers`. The two sets are told apart by `answers_set`.

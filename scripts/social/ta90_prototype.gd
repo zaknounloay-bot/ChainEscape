@@ -109,6 +109,11 @@ func bundle_format() -> String:
 	return "ce-ta90"
 
 
+## Phase 16A: the page's SHORT questionnaire (Ta90TimeAttack.short_q).
+func short_questions() -> bool:
+	return false
+
+
 ## The window.* name of the read-only snapshot for browser tests.
 func publish_name() -> String:
 	return "chainEscapeTa90"
@@ -192,6 +197,7 @@ func open_puzzle(board: String) -> void:
 	state["current"] = board
 	_save_state()
 	page = Ta90TimeAttack.new(board, str(state.get("familiarity", "")), str(state["session"]), order.find(board) + 1, bool(state.get("music_on", true)), store(), word())
+	page.short_q = short_questions()
 	page.music_changed.connect(func(on):
 		state["music_on"] = on
 		_save_state())

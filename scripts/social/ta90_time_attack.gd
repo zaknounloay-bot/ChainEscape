@@ -62,6 +62,21 @@ const P90_TIMED_Q := [
 	["another", "Would you play\nanother puzzle?", "play another", ["YES", "NO", "NOT SURE"]],
 ]
 
+## Phase 16A: the EXTREME bank's SHORT questionnaire (?extreme90=1 only; the
+## hub sets short_q before the page enters the tree). Three questions after
+## each tested run, whatever its outcome - and no second (post-play) set:
+## the outcome, time, attempts, UNDO, blocked taps... are recorded by the game.
+## SKIP leaves the whole questionnaire at once and never blocks anything.
+## The answers stay in the timed record's "answers" (with "set" = SHORT_SET),
+## apart from the automatic telemetry.
+const SHORT_SET := "xb90-short-v1"
+const SHORT_Q := [
+	["difficulty", "How difficult was\nthis puzzle?", "difficulty", ["EASY", "MEDIUM", "HARD", "VERY HARD", "EXTREME"]],
+	["enjoy", "How much did you\nenjoy it?\n(1 = not at all, 5 = a lot)", "enjoyment", ["1", "2", "3", "4", "5"]],
+	["another", "Would you play\nanother challenge?", "play another", ["YES", "NO"]],
+]
+var short_q := false
+
 ## The MUSIC toggle changed (the hub remembers it).
 signal music_changed(on: bool)
 
@@ -124,7 +139,7 @@ func limit() -> int:
 
 
 func timed_q() -> Array:
-	return P90_TIMED_Q
+	return SHORT_Q if short_q else P90_TIMED_Q
 
 
 func _tools_text() -> String:
@@ -136,7 +151,20 @@ func intro_text() -> String:
 
 
 func _ready() -> void:
+	if short_q:
+		_cfg["questions"] = SHORT_Q
+		_questions = SHORT_Q.duplicate(true)
 	super._ready()
+	if word != "PUZZLE":
+		# The entry's neutral word on the way back too ("BACK TO CHALLENGES").
+		for bb in find_children("BackToPuzzles", "Button", true, false):
+			bb.text = "BACK TO %sS" % word
+	if short_q:
+		# SKIP leaves the whole questionnaire (not one question at a time).
+		for c in _think_skip.pressed.get_connections():
+			_think_skip.pressed.disconnect(c["callable"])
+		_think_skip.pressed.connect(skip_questions)
+		_continue_btn.pressed.connect(_short_after_card)
 	_count.text = "1:30"
 	if _new_run:
 		_new_run.text = "NEW 90-SECOND RUN"
@@ -189,11 +217,93 @@ func begin_puzzle() -> void:
 		play._title.text = "%s %d" % [word, number]
 
 
+## SHORT questionnaire: an answer is recorded with the set's version.
+func think(answer: String) -> void:
+	if short_q and phase() == "timed_q":
+		state["timed"]["answers_set"] = SHORT_SET
+	super.think(answer)
+
+
+## SHORT questionnaire: SKIP - the remaining questions are left unanswered
+## (recorded as skipped, never inferred) and play goes on at once.
+func skip_questions() -> void:
+	AudioManager.play_ui_tap()
+	if phase() != "timed_q":
+		think("")
+		return
+	var t: Dictionary = state["timed"]
+	t["answers_set"] = SHORT_SET
+	t["answers_skipped"] = true
+	_q = _questions.size()
+	state["q"] = _q
+	_save_state()
+	if str(t.get("outcome", "")) == "TIME UP":
+		_show_offer()
+	else:
+		_to_puzzle_questions(false)
+
+
+## SHORT questionnaire: no second, post-play set - the run is stored at once
+## (after a timed win / GIVE UP, a FINISH or the untimed play after TIME UP).
+func _to_puzzle_questions(continued: bool) -> void:
+	if not short_q:
+		super._to_puzzle_questions(continued)
+		return
+	var t: Dictionary = state.get("timed", {})
+	var cont: Dictionary = state.get("cont", {})
+	if not continued and not state.has("cont"):
+		state["cont"] = {"continued": false}
+	# What the run ended with (automatic, as the post set recorded it).
+	state["puzzle_answers"] = {"_after": "untimed play" if cont.get("continued", false) or continued else (
+		"timed win" if t.get("outcome", "") == "COMPLETED" else ("finish after TIME UP" if t.get("outcome", "") == "TIME UP" else "timed give up"))}
+	_card.visible = false
+	_store_results()
+
+
+## SHORT questionnaire: the difficulty words one per line (compact), the
+## 1-5 and YES / NO answers in one row.
+func _build_options(opts: Array) -> void:
+	if not short_q or not (opts in [SHORT_Q[0][3], SHORT_Q[2][3]]):
+		super._build_options(opts)
+		return
+	for c in _think_opts.get_children():
+		_think_opts.remove_child(c)
+		c.queue_free()
+	var box: BoxContainer = _think_opts
+	if opts == SHORT_Q[2][3]:
+		box = HBoxContainer.new()
+		box.add_theme_constant_override("separation", 18)
+		box.alignment = BoxContainer.ALIGNMENT_CENTER
+		_think_opts.add_child(box)
+	for a in opts:
+		var b := _button(a, "Think_%s" % a.replace(" ", "_"), Palette.WHITE, Palette.TEXT)
+		b.custom_minimum_size = Vector2(220 if opts == SHORT_Q[2][3] else 0, 76)
+		b.pressed.connect(func():
+			AudioManager.play_ui_tap()
+			think(a))
+		box.add_child(b)
+
+
 func _show_card() -> void:
 	super._show_card()
 	_card_text.text = _card_text.text.replace("The 2 minutes are over.", "The 90 seconds are over.")
+	if short_q:
+		_card_text.text = _card_text.text.replace("A few quick questions about the timed run next.", "Three quick questions next (or SKIP).")
 	if music:
 		music.stop_music()
+
+
+## SHORT questionnaire: after the untimed game the result card says nothing
+## about more questions, and its CONTINUE stores the run (no post-play set).
+func _show_untimed_card() -> void:
+	super._show_untimed_card()
+	if short_q:
+		_card_text.text = _card_text.text.replace("\n\nA few quick questions about the puzzle next.", "")
+
+
+func _short_after_card() -> void:
+	if short_q and phase() == "puzzle_q":
+		_to_puzzle_questions(true)
 
 
 func _show_offer() -> void:

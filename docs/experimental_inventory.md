@@ -241,6 +241,8 @@ TA90 here means the reference board TA, played on the 90-second prototype.
 
 ### Recording sheet for the coming first-exposure sessions (N1-N23)
 
+**EXTREME bank (`?extreme90=1`, Phase 16A):** the questions are only difficulty, enjoyment (1-5) and "play another challenge?" (`answers_set: xb90-short-v1`, SKIP allowed). The other rows below come from the automatic telemetry. Excitement, frustration, achievement and the music contribution are no longer asked there; record them only if a tester volunteers them, labelled as volunteered.
+
 The `ce-ta90` bundle (COPY ALL RESULTS) carries the objective fields. The answers come from the questions after each run. One row per player and board.
 
 | Field | Source |

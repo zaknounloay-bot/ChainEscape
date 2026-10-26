@@ -6,8 +6,12 @@
 //   WebAssembly cost of a full solve (&bench=1 - the Solver call the page makes
 //   at TIME UP), a timed 90 s run solved by touches (ta90-v1; the GREEN mix
 //   after the START gesture), SOLVED with silence, questions skipped.
+//   Phase 16A: CHALLENGE 1's SHORT questionnaire answered by touch (3
+//   questions, compact, on screen), every other one left with a single SKIP;
+//   never a second questionnaire.
 //   run 2: TIME UP on CHALLENGE 1 (the saved clock moved to 0:05 at a reload),
-//   silence, CONTINUE WITHOUT TIMER with the CALM mix, solved by touches;
+//   silence, one SKIP, CONTINUE WITHOUT TIMER with the CALM mix, solved by
+//   touches, straight back to the selection;
 //   COPY ALL RESULTS: one ce-xb90 bundle with every board's internal id and
 //   fingerprint; ?ta90=1's storage never written.
 //   --player: the player build ignores ?extreme90=1.
@@ -186,7 +190,31 @@ try {
     check(ok && t.card_head === 'SOLVED' && st.timed.outcome === 'COMPLETED' && st.timed.limit_ms === 90000 && st.timed.assist.version === 'ta90-v1' && m.sounding === 0,
       `CHALLENGE ${i + 1} (${b}): solved by touches in a timed 90 s run (${((90000 - st.timed.remaining_ms) / 1000).toFixed(1)} s), rules ta90-v1, silence on SOLVED`);
     await a.tapTa('TA_Continue');
-    check(await skipToSelect(a), `${b}: every question skippable, back to CHOOSE A CHALLENGE`);
+    if (i === 0) {
+      // The SHORT questionnaire by touch: 3 questions, compact, all on screen; no second set.
+      let q = await a.waitFor(a.vt, (x) => x.screen === 'THINK' && x.buttons.Think_EXTREME, 'difficulty');
+      const fits = (x) => Object.values(x.buttons).every((c) => c[0] > 0 && c[0] < 1 && c[1] > 0 && c[1] < 1);
+      const f1 = fits(q) && !!q.buttons.Think_SKIP;
+      await a.shot('X6_q_difficulty');
+      await a.tap(q.buttons.Think_HARD, 600);
+      q = await a.waitFor(a.vt, (x) => x.screen === 'THINK' && x.buttons.Think_5, 'enjoy');
+      const f2 = fits(q) && Math.abs(q.buttons.Think_1[1] - q.buttons.Think_5[1]) < 0.01;
+      await a.shot('X7_q_enjoy');
+      await a.tap(q.buttons.Think_4, 600);
+      q = await a.waitFor(a.vt, (x) => x.screen === 'THINK' && x.buttons.Think_YES && x.buttons.Think_NO, 'another');
+      const f3 = fits(q) && Math.abs(q.buttons.Think_YES[1] - q.buttons.Think_NO[1]) < 0.01;
+      await a.shot('X8_q_another');
+      await a.tap(q.buttons.Think_YES, 900);
+      const back = await a.waitFor(a.hub, (x) => x.view === 'SELECT', 'select after 3 answers', 15000).then(() => true).catch(() => false);
+      const st2 = await a.state(b);
+      const r0 = (st2.results || [])[0] || {};
+      check(f1 && f2 && f3 && back && r0.timed && r0.timed.answers && r0.timed.answers.difficulty === 'HARD' && r0.timed.answers.enjoy === '4' && r0.timed.answers.another === 'YES' && Object.keys(r0.timed.answers).length === 3 && r0.timed.outcome === 'COMPLETED',
+        `${b}: the SHORT questionnaire by touch - difficulty (one per line), 1-5 in a row, YES / NO in a row, all on the iPhone SE screen; then straight back to the selection (no second set)`);
+    } else {
+      await a.tapVt('Think_SKIP', 'THINK', 900);
+      const back = await a.waitFor(a.hub, (x) => x.view === 'SELECT', 'select after SKIP', 15000).then(() => true).catch(() => false);
+      check(back, `${b}: one SKIP leaves the questionnaire; back to CHOOSE A CHALLENGE`);
+    }
   }
   check(Object.keys(benchMs).length === bank.length && Object.values(benchMs).every((x) => x <= 250), `WebAssembly: a full solve (the TIME UP check) per board ${JSON.stringify(benchMs)} ms`);
   console.log('BENCH ' + JSON.stringify(benchMs));
@@ -217,8 +245,9 @@ try {
     check(t.card_head === 'TIME UP' && st.timed.outcome === 'TIME UP' && st.timed.limit_ms === 90000 && m.sounding === 0, `CHALLENGE 1 (${b0}): TIME UP at 90 s (the clock kept running through a reload); silence`);
     await d.shot('X5_timeup');
     await d.tapTa('TA_Continue');
-    for (let k = 0; k < 8; k++) await d.tapVt('Think_SKIP', 'THINK', 600);
-    await d.waitFor(d.ta, (x) => x.card && x.buttons.TA_Untimed, 'offer');
+    await d.tapVt('Think_SKIP', 'THINK', 900);
+    const offer = await d.waitFor(d.ta, (x) => x.card && x.buttons.TA_Untimed, 'offer');
+    check(offer.card && offer.buttons.TA_Finish, 'TIME UP: one SKIP, then CONTINUE WITHOUT TIMER / FINISH at once (no other question)');
     await d.tapTa('TA_Untimed', 1500);
     const p = await d.waitFor(d.play, (x) => x.active && x.buttons.Undo, 'untimed');
     // The calm mix needs an unlocked context: the CONTINUE tap was the gesture.
@@ -227,7 +256,8 @@ try {
     check(await d.solveByTouches('untimed'), 'solved without the timer, by touches');
     await d.waitFor(d.ta, (x) => x.card, 'untimed card', 15000);
     await d.tapTa('TA_Continue');
-    check(await skipToSelect(d), 'back to CHOOSE A CHALLENGE');
+    const back2 = await d.waitFor(d.hub, (x) => x.view === 'SELECT', 'select after untimed', 15000).then(() => true).catch(() => false);
+    check(back2, 'after the untimed solve: straight back to CHOOSE A CHALLENGE (no post-play questionnaire)');
     const hh = await d.hub();
     await d.page.evaluate(() => navigator.clipboard.writeText(''));
     await d.tap(hh.buttons.CopyResults, 1200);
@@ -235,6 +265,8 @@ try {
     try { bundle = JSON.parse(await d.page.evaluate(() => navigator.clipboard.readText())); } catch { /* not JSON */ }
     const r = bundle && bundle.runs[0];
     console.log('BUNDLE ' + JSON.stringify(bundle ? { format: bundle.format, rules: bundle.rules && bundle.rules.version, run0: r && { board: r.board, timed: r.timed_outcome, untimed: r.untimed_success }, keys: Object.keys(bundle.boards), nums: Object.values(bundle.boards).map((x) => x.puzzle) } : null));
+    check(bundle && bundle.questionnaire === 'xb90-short-v1' && h2.order.every((b) => Array.isArray(bundle.boards[b].mechanics) && bundle.boards[b].mechanics.length > 0)
+      && r && r.timed_answers && Object.keys(r.timed_answers).length === 0 && r.timed_outcome === 'TIME UP', 'export: questionnaire version, each board\'s mechanics; the skipped run has no answers and keeps its TIME UP outcome');
     check(bundle && bundle.format === 'ce-xb90' && bundle.rules.version === 'ta90-v1' && r && r.board === b0 && r.timed_outcome === 'TIME UP' && r.untimed_success
       && Object.keys(bundle.boards).length === h2.order.length && h2.order.every((b, i) => bundle.boards[b].puzzle === i + 1 && /^[0-9a-f]{64}$/.test(bundle.boards[b].fingerprint)),
       'COPY ALL RESULTS: one ce-xb90 bundle - every board under its internal id with its fingerprint and challenge number; the run kept TIME UP and the untimed solve apart');
