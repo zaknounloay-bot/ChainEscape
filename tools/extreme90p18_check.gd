@@ -70,6 +70,12 @@ func _selection() -> void:
 	_check(ok and fps.size() == sel.size() and not sel.has("TA"), "every selection board (%d) loads with its own fingerprint; no reference board" % sel.size())
 	_check(nums == range(31, 31 + nums.size()) and Extreme90P18.NEW18.all(func(b): return not Extreme90Bank.BANK.has(b) and not Ta90Prototype.ORDER90.has(b) and not Extreme90Review.selection().has(b)),
 		"the Phase 18 boards are N31-N%d: new ids, no existing id reused, not on any earlier entry" % (30 + nums.size()))
+	var groups := {}
+	for b in sel:
+		groups[Extreme90P18.group_of(b)] = int(groups.get(Extreme90P18.group_of(b), 0)) + 1
+	_check(int(groups.get("core", 0)) + int(groups.get("strong", 0)) == 18 and int(groups.get("provisional", 0)) == 2 and sel.size() == 20
+		and Extreme90P18.NEW18.all(func(b): return Extreme90P18.group_of(b) == "strong") and sel.slice(16, 20) == ["N31", "N32", "N33", "N34"],
+		"Phase 18B: 18 core / strong boards (N31-N34 now strong after the playtests) and 2 provisional; N31-N34 keep CHALLENGE 17-20")
 	_check(Extreme90Bank.BANK.size() == 15 and Ta90Prototype.ORDER90.size() == 13 and Extreme90Review.selection().size() == 18,
 		"?extreme90=1 (15 boards), ?extreme90p17=1 (18) and ?ta90=1 (13) unchanged")
 	_check(Extreme90P18.P18_STATE_PATH != Extreme90Review.REVIEW_STATE_PATH and Extreme90P18.P18_LS_KEY != Extreme90Review.REVIEW_LS_KEY
@@ -291,19 +297,27 @@ func _timeup_position18() -> void:
 	_check(p.phase() == "untimed" and p.play.model.block_count() == ref.block_count() and p.play.model.snapshot().size() == ref.snapshot().size(),
 		"%s: CONTINUE WITHOUT TIMER resumes the TIME UP board (%d blocks left, as at 0:00)" % [b, ref.block_count()])
 	await _close(h)
-	# N5 (Sequence, no crate, no portal): the replay is BlindTimeAttack's, unchanged
-	# (escapes and rams only: a Sequence advance still reads as not replayable).
+	# Phase 18B: N5 (Sequence): the 90 s page now replays a Sequence advance
+	# (BlindTimeAttack's own replay, used by the older pages, is unchanged and
+	# still reads it as illegal).
 	var hb := await _hub()
 	hb.open_puzzle("N5")
 	await _frames(3)
 	var t: Ta90TimeAttack = hb.page
 	var s5 := _solution("N5")
-	var same := true
-	for k in range(0, mini(6, s5.size()) + 1):
-		var mine := t._replayed(s5.slice(0, k)) != null
-		var base := _base_replay("N5", s5.slice(0, k))
-		same = same and mine == base
-	_check(same, "N5 (Sequence): the TIME UP replay is unchanged by Phase 18 (the change is scoped to Movable / portal boards)")
+	var fixed := true
+	var base_unchanged := true
+	var saw_advance := false
+	for k in range(0, s5.size() + 1):
+		var r5 := EV6.model_of(PuzzleDefinition.from_dict(_rec("N5")["puzzle"]).to_level())
+		for i in k:
+			saw_advance = saw_advance or r5.move_state(int(s5[i])) == "advance"
+			play_move17(r5, int(s5[i]))
+		var mine := t._replayed(s5.slice(0, k))
+		fixed = fixed and mine != null and Ta90TimeAttack.board_state(mine) == Ta90TimeAttack.board_state(r5)
+		base_unchanged = base_unchanged and (_base_replay("N5", s5.slice(0, k)) == (not saw_advance))
+	_check(fixed and base_unchanged and saw_advance,
+		"N5 (Sequence): every prefix of its line, advances included, replays exactly on the 90 s page; BlindTimeAttack's own replay unchanged")
 	await _close(hb)
 
 

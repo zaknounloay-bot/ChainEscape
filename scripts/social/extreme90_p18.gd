@@ -46,10 +46,16 @@ static func selection() -> Array:
 	return CORE + STRONG + PROVISIONAL + NEW18
 
 
+## Phase 18B: N31-N34 were played by three family players and kept as strong
+## human-review candidates (data/dev/extreme90_p18/human_p18.json). They keep
+## their place (CHALLENGE 17-20) and their ids; only their group changes.
+const TESTED18 := ["N31", "N32", "N33", "N34"]
+
+
 static func group_of(k: String) -> String:
 	if CORE.has(k):
 		return "core"
-	if STRONG.has(k):
+	if STRONG.has(k) or TESTED18.has(k):
 		return "strong"
 	if PROVISIONAL.has(k):
 		return "provisional"

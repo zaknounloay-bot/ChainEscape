@@ -256,7 +256,14 @@ func bundle() -> Dictionary:
 		var st := Ta90TimeAttack.read_state90(b, store())
 		var raw: Array = st.get("results", [])
 		for r in raw:
-			runs.append(PilotTimeAttack.summarize(b, r))
+			var sm := PilotTimeAttack.summarize(b, r)
+			# Phase 18B: where the untimed game started ("timeout_state" =
+			# the board of 0:00) and how it was rebuilt (replay / snapshot).
+			var u: Dictionary = r.get("untimed", {})
+			if u.get("continued", false):
+				sm["untimed_from"] = u.get("from", "")
+				sm["untimed_resume"] = u.get("resume", "")
+			runs.append(sm)
 		boards[b] = {"puzzle": order.find(b) + 1, "fingerprint": Ta90TimeAttack.BOARDS90[b]["fp"], "reference": Ta90TimeAttack.BOARDS90[b].get("reference", false), "raw": raw,
 			"in_progress": {"phase": st.get("phase", "timed"), "timed": st.get("timed", {}), "untimed": st.get("cont", {})} if _in_progress(st) else {}}
 	return {"format": bundle_format(), "v": 1, "session": state["session"], "familiarity": state.get("familiarity", ""), "started": state.get("started", ""),

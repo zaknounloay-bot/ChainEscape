@@ -319,23 +319,61 @@ func _short_after_card() -> void:
 		_to_puzzle_questions(true)
 
 
+## Phase 18B (approved product rule, docs/extreme90_phase18b.md): TIME UP
+## ends the timed result; CONTINUE WITHOUT TIMER resumes the EXACT board of
+## 0:00 - never a fresh board in its place, even when that position can no
+## longer be cleared (RESTART starts again, UNDO takes moves back). The board
+## at 0:00 is captured at TIME UP (every field of every block); the run's
+## moves are replayed as the play screen dispatches them (escape, Sequence
+## advance, push, ram, portals included) and used when they rebuild exactly
+## that board (UNDO history kept), else the captured board itself is restored.
 func _show_offer() -> void:
-	super._show_offer()
+	var moves := attempt_moves(state["timed"].get("log", []))
+	var at0: Array = state["timed"].get("board_at_timeup", [])
+	var m := _replayed(moves)
+	var method := "replay"
+	if m == null or (not at0.is_empty() and board_state(m) != at0):
+		method = "snapshot" if not at0.is_empty() else "fresh"
+		m = model_from_state(at0) if not at0.is_empty() else null
+	var winnable := m != null and (m.is_empty() or not Solver.from_model(m).solve().is_empty())
+	_offer_fresh = method == "fresh"
+	state["offer"] = {"from": "fresh" if _offer_fresh else "timeout_state", "moves": moves if method == "replay" else [],
+		"resume": method, "winnable_at_timeup": winnable}
+	if method == "snapshot":
+		state["offer"]["board"] = at0
+	_set_phase("offer")
+	_card_head.text = "TIME UP"
+	var where := " from where you were at 0:00." if not _offer_fresh else ".\nThe board at 0:00 could not be rebuilt, so it starts fresh."
+	if not _offer_fresh and not winnable:
+		where += "\nThat position can no longer be cleared: RESTART starts it again."
+	_card_text.text = "The timed result is recorded: TIME UP.\n\nYou can keep playing the same puzzle without the clock" + where + "\nThis does not change the timed result."
+	_continue_btn.visible = false
+	_untimed_btn.visible = true
+	_finish_btn.visible = true
+	_card.visible = true
+	_publish_ta()
+	_publish_settled()
+	_save_state()
 	if music:
 		music.stop_music()
 
 
-## Phase 18: the position at TIME UP, replayed to decide where the untimed
-## continuation starts. A board with Movable crates or portals replays every
-## move as the play screen dispatches it (escape, Sequence advance, push,
-## ram) on a model WITH its portals - otherwise a push or a portal escape
-## would read as illegal and the continuation would silently start fresh.
-## Every other board keeps BlindTimeAttack's replay exactly (docs/extreme90_phase18.md).
+## The board at 0:00, captured before the timed record is frozen.
+func _time_up() -> void:
+	if run_active() and play != null and play.model != null:
+		_current["board_at_timeup"] = board_state(play.model)
+	super._time_up()
+
+
+## Every move replayed on a fresh model as the play screen dispatches it
+## (escape, Sequence advance, push, ram; the board's portals set): the model,
+## or null if a move is not legal there (Phase 17's escapes-and-rams replay
+## read a Sequence advance as illegal).
 func _replayed(moves: Array) -> BoardModel:
 	var rec: Dictionary = boards.get(bid(), {})
 	var level := PuzzleDefinition.from_dict(rec.get("puzzle", {})).to_level() if not rec.is_empty() else null
-	if level == null or (level.portals.is_empty() and not level.blocks.any(func(b): return b.is_crate())):
-		return super._replayed(moves)
+	if level == null:
+		return null
 	var m := BoardModel.new()
 	m.setup(level.rows, level.columns, level.blocks)
 	m.set_portals(level.portals)
@@ -354,13 +392,93 @@ func _replayed(moves: Array) -> BoardModel:
 	return m
 
 
+## Every gameplay field of every block, by id (JSON-safe): the board state
+## the continuation must reproduce.
+static func board_state(m: BoardModel) -> Array:
+	var out := []
+	var ids: Array = m.blocks.keys()
+	ids.sort()
+	for id in ids:
+		var b: BlockData = m.blocks[id]
+		out.append([b.id, b.cell.x, b.cell.y, b.color, b.direction, b.kind, b.lock_color, b.hidden, b.spin_rule, b.spin_step,
+			b.rarity, b.switch_group, b.flip_link, b.gate_group, b.gate_link, b.armored, b.seq_stage, b.seq_next, b.twin, b.magnet])
+	return out
+
+
+static func blocks_from_state(st: Array) -> Array:
+	var out := []
+	for e in st:
+		var b := BlockData.new(int(e[0]), Vector2i(int(e[1]), int(e[2])), str(e[3]), int(e[4]), int(e[5]))
+		b.lock_color = str(e[6])
+		b.hidden = bool(e[7])
+		b.spin_rule = int(e[8])
+		b.spin_step = int(e[9])
+		b.rarity = int(e[10])
+		b.switch_group = str(e[11])
+		b.flip_link = str(e[12])
+		b.gate_group = str(e[13])
+		b.gate_link = str(e[14])
+		b.armored = bool(e[15])
+		b.seq_stage = int(e[16])
+		b.seq_next = int(e[17])
+		b.twin = str(e[18])
+		b.magnet = bool(e[19])
+		out.append(b)
+	return out
+
+
+func model_from_state(st: Array) -> BoardModel:
+	var rec: Dictionary = boards.get(bid(), {})
+	var level := PuzzleDefinition.from_dict(rec["puzzle"]).to_level()
+	var m := BoardModel.new()
+	m.setup(level.rows, level.columns, blocks_from_state(st))
+	m.set_portals(level.portals)
+	return m
+
+
+## The play screen shows `st` (the board itself, as UNDO does - no replay).
+func _show_state(st: Array) -> void:
+	play.model.restore(blocks_from_state(st))
+	play.history.clear()
+	play.board.clear_hint()
+	play.board.sync_to(play.model.snapshot())
+	play.board.refresh_locks(play.model)
+	play._progress.set_progress(1.0 - float(play.model.block_count()) / maxf(play._total_blocks, 1.0))
+	play._refresh_buttons()
+
+
+## Phase 18B: every save of the untimed game keeps its board (a reload comes
+## back to exactly this board, not to a replay of inferred taps).
+func _save_untimed() -> void:
+	super._save_untimed()
+	if play != null and play.model != null and state.has("live"):
+		state["live"]["board"] = board_state(play.model)
+		_save_state()
+
+
 func _start_run() -> void:
 	super._start_run()
 	_current["assist"] = TA90_RULES.duplicate()
 
 
 func begin_untimed() -> void:
+	# The board to show: after a reload during the untimed game, the board it
+	# had (saved with every action); else the board of 0:00 when the offer
+	# had to restore it rather than replay the moves.
+	var resume := phase() == "untimed"
+	var target: Array = []
+	if resume:
+		target = state.get("live", {}).get("board", [])
+	else:
+		target = state.get("offer", {}).get("board", [])
 	super.begin_untimed()
+	var cont: Dictionary = state.get("cont", {})
+	cont["resume"] = state.get("offer", {}).get("resume", cont.get("resume", "replay"))
+	cont["winnable_at_timeup"] = state.get("offer", {}).get("winnable_at_timeup", cont.get("winnable_at_timeup", true))
+	if not target.is_empty() and board_state(play.model) != target:
+		_show_state(target)
+		if resume:
+			cont["reopen_restored"] = int(cont.get("reopen_restored", 0)) + 1
 	_current["assist"] = TA90_RULES.duplicate()
 	_save_untimed()
 	if music:

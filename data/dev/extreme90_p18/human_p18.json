@@ -1,0 +1,138 @@
+{
+ "source": "three family players on iPhone, first exposure (Phase 18B brief); small-sample observations, not validated difficulty labels. The automatic timed outcome is the authoritative record.",
+ "boards": {
+  "N31": {
+   "mechanics": "magnet",
+   "outcomes": [
+    "TIME UP",
+    "TIME UP",
+    "TIME UP"
+   ],
+   "difficulty": [
+    "EXTREME",
+    "EXTREME",
+    "VERY HARD"
+   ],
+   "enjoy": [
+    5,
+    5,
+    5
+   ],
+   "another": [
+    "YES",
+    "YES",
+    "YES"
+   ],
+   "decision": "strong"
+  },
+  "N32": {
+   "mechanics": "magnet + armor",
+   "outcomes": [
+    "TIME UP",
+    "TIME UP",
+    "COMPLETED 57.01 s"
+   ],
+   "difficulty": [
+    "EXTREME",
+    "EXTREME",
+    "HARD"
+   ],
+   "enjoy": [
+    5,
+    5,
+    5
+   ],
+   "another": [
+    "YES",
+    "YES",
+    "YES"
+   ],
+   "decision": "strong"
+  },
+  "N33": {
+   "mechanics": "movable + spinner",
+   "outcomes": [
+    "TIME UP",
+    "TIME UP",
+    "TIME UP"
+   ],
+   "difficulty": [
+    "EXTREME",
+    "EXTREME",
+    "VERY HARD"
+   ],
+   "enjoy": [
+    5,
+    5,
+    5
+   ],
+   "another": [
+    "YES",
+    "YES",
+    "YES"
+   ],
+   "decision": "strong",
+   "note": "one record: timed TIME UP, untimed continued from 'fresh', STOPPED after ~3.5 s - explained in docs/extreme90_phase18b.md (the position at 0:00 could not be cleared; the Phase 10 rule then started a fresh board)"
+  },
+  "N34": {
+   "mechanics": "portal + spinner",
+   "outcomes": [
+    "COMPLETED 64.25 s",
+    "COMPLETED 83.97 s",
+    "TIME UP"
+   ],
+   "difficulty": [
+    "HARD",
+    "VERY HARD",
+    "VERY HARD"
+   ],
+   "enjoy": [
+    5,
+    5,
+    5
+   ],
+   "another": [
+    "YES",
+    "YES",
+    "YES"
+   ],
+   "decision": "strong"
+  }
+ },
+ "selection_after": {
+  "core": [
+   "N3",
+   "N5",
+   "N7",
+   "N11",
+   "N13"
+  ],
+  "strong": [
+   "N14",
+   "N15",
+   "N16",
+   "N18",
+   "N21",
+   "N26",
+   "N27",
+   "N29",
+   "N30",
+   "N31",
+   "N32",
+   "N33",
+   "N34"
+  ],
+  "provisional": [
+   "N23",
+   "N24"
+  ],
+  "archived": [
+   "N17",
+   "N19",
+   "N20",
+   "N22",
+   "N25",
+   "N28"
+  ]
+ }
+}
