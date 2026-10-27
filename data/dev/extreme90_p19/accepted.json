@@ -1,0 +1,27 @@
+{
+ "N35": {
+  "design": "MAS2_2",
+  "family": "A/E crate + two switches + armor",
+  "dims": "7x7",
+  "pieces": 17,
+  "fp": "3e6a96041ad6e090b24ea50696b7436ff8819b14d5c73d5974ae5b9121d6adc2",
+  "mechanics": [
+   "switch",
+   "armor",
+   "movable"
+  ],
+  "idea": "push, turn, ram - and a second switch the push can shut out: the pusher clears a column, is turned around to crack the shell behind it; the other switch must fire before the crate lands in its lane"
+ },
+ "N36": {
+  "design": "MX4_1",
+  "family": "C/D magnet + switch",
+  "dims": "7x7",
+  "pieces": 17,
+  "fp": "0ce35e1d021d6a7e0496c5439836e429c769a321f5bce1638484edea380971c6",
+  "mechanics": [
+   "switch",
+   "magnet"
+  ],
+  "idea": "two ways to lock blocks face to face: the magnet drags a block under one pointing back at it, the switch turns a block toward one waiting for it - each must wait for the right block to leave, and both are needed"
+ }
+}

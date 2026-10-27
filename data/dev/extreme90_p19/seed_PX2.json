@@ -1,0 +1,81 @@
+{
+ "target": "EXTREME",
+ "facts": [],
+ "mechanic": "portal,movable,switch",
+ "idea": "the crate travels and a lane bends back: pushed into the portal the crate lands where another block's lane comes out of the portal - two switches decide who can still leave",
+ "family": "B portal-first (portal + crate + two switches)",
+ "map": [
+  ". . Gv . . . .",
+  ". . . . . . .",
+  ". B>&A M OA . . .",
+  ". . . . . . .",
+  ". . . . . . .",
+  ". . . . OA . R<&B",
+  "P^%A . . Gv%B . Y^ ."
+ ],
+ "frozen": [
+  [
+   0,
+   2
+  ],
+  [
+   2,
+   1
+  ],
+  [
+   2,
+   2
+  ],
+  [
+   2,
+   3
+  ],
+  [
+   5,
+   4
+  ],
+  [
+   5,
+   6
+  ],
+  [
+   6,
+   0
+  ],
+  [
+   6,
+   3
+  ],
+  [
+   6,
+   5
+  ]
+ ],
+ "max_positions": 1500,
+ "piece_free": 13,
+ "max_pieces": 17,
+ "shortcut_weight": 80,
+ "coverage_weight": 25,
+ "late_weight": 20,
+ "endgame_weight": 20,
+ "length_weight": 1.0,
+ "length_cap": 18,
+ "pressure_weight": 1.5,
+ "palette": "arrows",
+ "suffixes": [
+  "&A",
+  "&B"
+ ],
+ "suffix_rate": 0.3,
+ "suffix_max": {
+  "*": 3,
+  "=": 3,
+  "&A": 3,
+  "&B": 3
+ },
+ "crates_max": 1,
+ "seed": 191,
+ "size": "medium",
+ "max_solve_nodes": 300,
+ "redesign": "round 1 (PX) reached 3 distinct mistakes: one switch, one trap; a second switch and a flip target whose lane runs through the portal"
+}

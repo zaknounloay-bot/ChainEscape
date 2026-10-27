@@ -1,0 +1,53 @@
+{
+ "MAS2_1": {
+  "map": [
+   ". R^= . . . Gv .",
+   ". . . . . . B^&A",
+   ". Y^= . . R>&A M P^=",
+   ". Y^ . . . . B<&A",
+   "G> B<&B . . . . .",
+   ". G>= . . . B>&B P^",
+   "P^%A Yv&B . . . . G^%B"
+  ],
+  "target": "EXTREME",
+  "facts": [],
+  "mechanic": "movable,switch,armor",
+  "idea": "push, turn, ram - and a second switch the push can shut out: the pusher clears a column, is turned around to crack the shell behind it; the other switch must fire before the crate lands in its lane",
+  "family": "A/E crate + two switches + armor",
+  "max_positions": 1500
+ },
+ "MAS2_2": {
+  "map": [
+   ". R^= . . . Gv .",
+   ". B> . . . . B^&A",
+   ". Y^= . . R>&A M P^=",
+   ". Y^ . . . R<&B B<&A",
+   "G> B<&B . . . . .",
+   ". G>= . . . . .",
+   "P^%A Yv&B . . . . G^%B"
+  ],
+  "target": "EXTREME",
+  "facts": [],
+  "mechanic": "movable,switch,armor",
+  "idea": "push, turn, ram - and a second switch the push can shut out: the pusher clears a column, is turned around to crack the shell behind it; the other switch must fire before the crate lands in its lane",
+  "family": "A/E crate + two switches + armor",
+  "max_positions": 1500
+ },
+ "MAS2_3": {
+  "map": [
+   ". R^= . . . Gv .",
+   ". . . . . . B^&A",
+   ". Y^= . . R>&A M P^=",
+   ". Y^ . . . R< B<&A",
+   "G> B<&B . . . . .",
+   ". G>= . . . . .",
+   "P^%A Yv&B . . . . G^%B"
+  ],
+  "target": "EXTREME",
+  "facts": [],
+  "mechanic": "movable,switch,armor",
+  "idea": "push, turn, ram - and a second switch the push can shut out: the pusher clears a column, is turned around to crack the shell behind it; the other switch must fire before the crate lands in its lane",
+  "family": "A/E crate + two switches + armor",
+  "max_positions": 1500
+ }
+}

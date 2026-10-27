@@ -1,0 +1,82 @@
+{
+ "target": "EXTREME",
+ "facts": [],
+ "mechanic": "switch,gate",
+ "idea": "a reversal can lock two blocks face to face: each switch frees the block it must, but turns another toward a block that waits for it - fire it before that block has left and both are stuck; the gate decides who can leave first",
+ "family": "C switch / gate (early reversal = deadlock)",
+ "map": [
+  ". . Bv+C . . . Rv%B",
+  ". . . . . . .",
+  ". . Gv&A . . . .",
+  ". XC . . R>&A . Y<",
+  ". . . . . . .",
+  ". Y^&B . . . . .",
+  ". R^ . . . P^%A ."
+ ],
+ "frozen": [
+  [
+   0,
+   2
+  ],
+  [
+   0,
+   6
+  ],
+  [
+   2,
+   2
+  ],
+  [
+   3,
+   1
+  ],
+  [
+   3,
+   4
+  ],
+  [
+   3,
+   6
+  ],
+  [
+   5,
+   1
+  ],
+  [
+   6,
+   1
+  ],
+  [
+   6,
+   5
+  ]
+ ],
+ "max_positions": 1500,
+ "piece_free": 13,
+ "max_pieces": 17,
+ "shortcut_weight": 80,
+ "coverage_weight": 25,
+ "late_weight": 20,
+ "endgame_weight": 20,
+ "length_weight": 1.0,
+ "length_cap": 18,
+ "pressure_weight": 1.5,
+ "palette": "arrows",
+ "suffixes": [
+  "&A",
+  "&B",
+  "+C"
+ ],
+ "suffix_rate": 0.3,
+ "suffix_max": {
+  "*": 3,
+  "=": 3,
+  "&A": 3,
+  "&B": 3
+ },
+ "crates_max": 0,
+ "seed": 191,
+ "size": "medium",
+ "max_solve_nodes": 300,
+ "redesign": "round 1 (SG3) reached 2 distinct mistakes: its reversals only freed blocks; now each switch also turns a block toward a block that waits for it (an early switch is a deadlock)"
+}

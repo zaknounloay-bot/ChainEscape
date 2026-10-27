@@ -1,0 +1,155 @@
+{
+ "MF2_1": {
+  "map": [
+   ". . . . . Gv .",
+   "Y> Pv . . . . P>&A",
+   "R>&B . . . R>&A M .",
+   ". . . . Rv P< .",
+   ". B<&B R< P< R< . .",
+   ". Bv&A . . . . .",
+   "Y^%A R> . . . . P^%B"
+  ],
+  "target": "EXTREME",
+  "facts": [],
+  "mechanic": "movable,switch",
+  "idea": "one push to the edge, two switches: the crate must be pushed out of a column by a block that can only leave once switch A reverses it - and the push itself closes switch B's own lane; fire A early, or B late, and a block is boxed in for good",
+  "family": "A movable-first (crates + two switches)",
+  "max_positions": 1500
+ },
+ "MF2_2": {
+  "map": [
+   ". . . . . Gv .",
+   "Y> Pv . . . . P>&A",
+   "R>&B . . . R>&A M .",
+   ". . . . Rv P< .",
+   ". B<&B R< P<&B R< . .",
+   ". Bv . . . . .",
+   "Y^%A R> . . . . P^%B"
+  ],
+  "target": "EXTREME",
+  "facts": [],
+  "mechanic": "movable,switch",
+  "idea": "one push to the edge, two switches: the crate must be pushed out of a column by a block that can only leave once switch A reverses it - and the push itself closes switch B's own lane; fire A early, or B late, and a block is boxed in for good",
+  "family": "A movable-first (crates + two switches)",
+  "max_positions": 1500
+ },
+ "MF2_3": {
+  "map": [
+   ". . . . . Gv .",
+   "Y> Pv . . . . P>&A",
+   "R>&B . . . R>&A M .",
+   ". . . . Rv P< .",
+   ". B<&B R< P< R< . .",
+   ". . . . . . .",
+   "Y^%A R> . . . . P^%B"
+  ],
+  "target": "EXTREME",
+  "facts": [],
+  "mechanic": "movable,switch",
+  "idea": "one push to the edge, two switches: the crate must be pushed out of a column by a block that can only leave once switch A reverses it - and the push itself closes switch B's own lane; fire A early, or B late, and a block is boxed in for good",
+  "family": "A movable-first (crates + two switches)",
+  "max_positions": 1500
+ },
+ "MG3_1": {
+  "map": [
+   "Gv . . G^ . Gv P>*",
+   ". . . B^ . . B<",
+   "B<#R . . . . . .",
+   "R<* . . P^ P>#R . Y^",
+   ". . . R> . . Y^",
+   ". . . Gv . . B>*",
+   ". . . G<#R . . Y^"
+  ],
+  "target": "EXTREME",
+  "facts": [],
+  "mechanic": "magnet",
+  "idea": "a pull can lock two blocks face to face: each magnet drags a block into a lane where it meets a block pointing back at it - each magnet must wait until that block has left, and must still go before the block it is holding up",
+  "family": "D magnet displacement (two magnets, face-to-face pulls)",
+  "max_positions": 2000
+ },
+ "MG3_2": {
+  "map": [
+   "Gv . . G^ . Gv P>*",
+   ". . . B^ Yv#R . .",
+   ". . . . . . B^",
+   "R<* . . P^ P>#R . Y^",
+   ". . . R> . . Y^",
+   ". . . Gv . . B>*",
+   ". . . G<#R . . Y^"
+  ],
+  "target": "EXTREME",
+  "facts": [],
+  "mechanic": "magnet",
+  "idea": "a pull can lock two blocks face to face: each magnet drags a block into a lane where it meets a block pointing back at it - each magnet must wait until that block has left, and must still go before the block it is holding up",
+  "family": "D magnet displacement (two magnets, face-to-face pulls)",
+  "max_positions": 2000
+ },
+ "MG3_3": {
+  "map": [
+   "Gv . . G^ . Gv P>*",
+   ". . . . . . B^",
+   "B<#R . . . . . .",
+   "R<* . . P^ P>#R . Y^",
+   ". . . R> . . Y^",
+   ". . . Gv . . B>*",
+   ". . . G<#R . . Y^"
+  ],
+  "target": "EXTREME",
+  "facts": [],
+  "mechanic": "magnet",
+  "idea": "a pull can lock two blocks face to face: each magnet drags a block into a lane where it meets a block pointing back at it - each magnet must wait until that block has left, and must still go before the block it is holding up",
+  "family": "D magnet displacement (two magnets, face-to-face pulls)",
+  "max_positions": 2000
+ },
+ "MX4_1": {
+  "map": [
+   "Gv . . Bv Gv&A . .",
+   ". . . R> . Y^ Pv",
+   ". . . Pv&A . . Y>*",
+   "R<* . . . Y^ . .",
+   ". . . B> . Y^ .",
+   ". R>&A . . . . Y<",
+   ". . . Bv* P< P^%A ."
+  ],
+  "target": "EXTREME",
+  "facts": [],
+  "mechanic": "magnet,switch",
+  "idea": "two ways to lock blocks face to face: the magnet drags a block under one pointing back at it, the switch turns a block toward one waiting for it - each must wait for the right block to leave, and both are needed",
+  "family": "C/D magnet + switch (pull and flip deadlocks)",
+  "max_positions": 1500
+ },
+ "MX4_2": {
+  "map": [
+   "Gv . R> Bv Gv&A . .",
+   ". . . R> . . Pv",
+   ". . . Pv&A . . Y>*",
+   "R<* . . . Y^ . .",
+   ". . . B> . Y> .",
+   ". R>&A . . . . Y<",
+   ". . . Bv* P< P^%A ."
+  ],
+  "target": "EXTREME",
+  "facts": [],
+  "mechanic": "magnet,switch",
+  "idea": "two ways to lock blocks face to face: the magnet drags a block under one pointing back at it, the switch turns a block toward one waiting for it - each must wait for the right block to leave, and both are needed",
+  "family": "C/D magnet + switch (pull and flip deadlocks)",
+  "max_positions": 1500
+ },
+ "MX4_3": {
+  "map": [
+   "Gv . . Bv Gv&A . .",
+   ". . . R> . . Pv",
+   ". . . Pv&A . . Y>*",
+   "R<* . . . Y^ . .",
+   ". . . B> . Y> .",
+   ". R>&A . . . . Y<",
+   ". . . Bv* P< P^%A ."
+  ],
+  "target": "EXTREME",
+  "facts": [],
+  "mechanic": "magnet,switch",
+  "idea": "two ways to lock blocks face to face: the magnet drags a block under one pointing back at it, the switch turns a block toward one waiting for it - each must wait for the right block to leave, and both are needed",
+  "family": "C/D magnet + switch (pull and flip deadlocks)",
+  "max_positions": 1500
+ }
+}

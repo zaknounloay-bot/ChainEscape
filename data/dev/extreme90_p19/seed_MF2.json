@@ -1,0 +1,68 @@
+{
+ "target": "EXTREME",
+ "facts": [],
+ "mechanic": "movable,switch",
+ "idea": "one push to the edge, two switches: the crate must be pushed out of a column by a block that can only leave once switch A reverses it - and the push itself closes switch B's own lane; fire A early, or B late, and a block is boxed in for good",
+ "family": "A movable-first (crates + two switches)",
+ "map": [
+  ". . . . . Gv .",
+  ". . . . . . .",
+  ". . . . R>&A M .",
+  ". . . . . . .",
+  ". B<&B . . . . .",
+  ". . . . . . .",
+  "Y^%A . . . . . P^%B"
+ ],
+ "frozen": [
+  [
+   0,
+   5
+  ],
+  [
+   2,
+   4
+  ],
+  [
+   2,
+   5
+  ],
+  [
+   4,
+   1
+  ],
+  [
+   6,
+   0
+  ],
+  [
+   6,
+   6
+  ]
+ ],
+ "max_positions": 1500,
+ "piece_free": 13,
+ "max_pieces": 17,
+ "shortcut_weight": 80,
+ "coverage_weight": 25,
+ "late_weight": 20,
+ "endgame_weight": 20,
+ "length_weight": 1.0,
+ "length_cap": 18,
+ "pressure_weight": 1.5,
+ "palette": "arrows",
+ "suffixes": [
+  "&A",
+  "&B"
+ ],
+ "suffix_rate": 0.3,
+ "suffix_max": {
+  "*": 3,
+  "=": 3,
+  "&A": 3,
+  "&B": 3
+ },
+ "crates_max": 1,
+ "seed": 19,
+ "size": "medium",
+ "max_solve_nodes": 300
+}

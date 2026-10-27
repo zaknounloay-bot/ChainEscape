@@ -1,0 +1,26 @@
+{
+ "MF2_3": {
+  "closest_known": "N31",
+  "overlap": 0.19,
+  "closest_new": "MAS2_2",
+  "closest_new_overlap": 0.43
+ },
+ "MG3_1": {
+  "closest_known": "N16",
+  "overlap": 0.28,
+  "closest_new": "MX4_1",
+  "closest_new_overlap": 0.29
+ },
+ "MX4_1": {
+  "closest_known": "N32",
+  "overlap": 0.32,
+  "closest_new": "MG3_1",
+  "closest_new_overlap": 0.29
+ },
+ "MAS2_2": {
+  "closest_known": "N16",
+  "overlap": 0.21,
+  "closest_new": "MF2_3",
+  "closest_new_overlap": 0.43
+ }
+}

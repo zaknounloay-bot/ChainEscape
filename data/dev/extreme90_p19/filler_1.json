@@ -1,0 +1,65 @@
+{
+ "MF2_1": {
+  "distinct": 4,
+  "pieces_tested": 17,
+  "steps": 14,
+  "trivial": [],
+  "trivial_removals": 0
+ },
+ "MF2_2": {
+  "distinct": 4,
+  "pieces_tested": 17,
+  "steps": 14,
+  "trivial": [],
+  "trivial_removals": 0
+ },
+ "MF2_3": {
+  "distinct": 4,
+  "pieces_tested": 16,
+  "steps": 13,
+  "trivial": [],
+  "trivial_removals": 0
+ },
+ "MG3_1": {
+  "distinct": 4,
+  "pieces_tested": 17,
+  "steps": 15,
+  "trivial": [],
+  "trivial_removals": 0
+ },
+ "MG3_2": {
+  "distinct": 4,
+  "pieces_tested": 17,
+  "steps": 15,
+  "trivial": [],
+  "trivial_removals": 0
+ },
+ "MG3_3": {
+  "distinct": 4,
+  "pieces_tested": 16,
+  "steps": 14,
+  "trivial": [],
+  "trivial_removals": 0
+ },
+ "MX4_1": {
+  "distinct": 4,
+  "pieces_tested": 17,
+  "steps": 15,
+  "trivial": [],
+  "trivial_removals": 0
+ },
+ "MX4_2": {
+  "distinct": 4,
+  "pieces_tested": 17,
+  "steps": 15,
+  "trivial": [],
+  "trivial_removals": 0
+ },
+ "MX4_3": {
+  "distinct": 4,
+  "pieces_tested": 16,
+  "steps": 14,
+  "trivial": [],
+  "trivial_removals": 0
+ }
+}

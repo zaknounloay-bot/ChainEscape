@@ -1,0 +1,23 @@
+{
+ "MAS2_1": {
+  "distinct": 5,
+  "pieces_tested": 17,
+  "steps": 18,
+  "trivial": [],
+  "trivial_removals": 0
+ },
+ "MAS2_2": {
+  "distinct": 4,
+  "pieces_tested": 17,
+  "steps": 18,
+  "trivial": [],
+  "trivial_removals": 0
+ },
+ "MAS2_3": {
+  "distinct": 4,
+  "pieces_tested": 16,
+  "steps": 17,
+  "trivial": [],
+  "trivial_removals": 0
+ }
+}

@@ -1,0 +1,60 @@
+{
+ "target": "EXTREME",
+ "facts": [],
+ "mechanic": "armor,switch",
+ "idea": "one rammer, two shells, one reversal: the rammer cracks the shell in front, must not leave yet, and is turned around to crack the one behind - leave early or turn early and a shell stays",
+ "family": "E rammer / armor (with a switch)",
+ "map": [
+  ". . . . . . .",
+  ". . . . . . .",
+  "G<= . B>&A . Y^= . .",
+  ". . . . . . .",
+  ". . . . . . .",
+  ". . . . . . .",
+  ". . . . . . P^%A"
+ ],
+ "frozen": [
+  [
+   2,
+   0
+  ],
+  [
+   2,
+   2
+  ],
+  [
+   2,
+   4
+  ],
+  [
+   6,
+   6
+  ]
+ ],
+ "max_positions": 2000,
+ "piece_free": 10,
+ "max_pieces": 14,
+ "shortcut_weight": 80,
+ "coverage_weight": 25,
+ "late_weight": 20,
+ "endgame_weight": 20,
+ "length_weight": 1.0,
+ "length_cap": 18,
+ "pressure_weight": 1.5,
+ "palette": "arrows",
+ "suffixes": [
+  "=",
+  "&A"
+ ],
+ "suffix_rate": 0.3,
+ "suffix_max": {
+  "*": 3,
+  "=": 3,
+  "&A": 3,
+  "&B": 3
+ },
+ "crates_max": 0,
+ "seed": 19,
+ "size": "compact",
+ "max_solve_nodes": 300
+}

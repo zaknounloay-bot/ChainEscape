@@ -28,7 +28,7 @@ extends "res://tools/ta90_design.gd"
 ##   Phase 18: "palette": "arrows" (grow with plain arrows only - no spinner
 ##   ever added to a non-spinner core) | "all" (default); "crates_max" /
 ##   "crate_rate": the search may also add Movable crates ("M") up to that
-##   count (default 0).}
+##   count (default 0); Phase 19: "suffix_max": {"*": 3} caps each mark.}
 
 const TOKENS := ["^", "v", "<", ">", "^@", "v@", "<@", ">@", "^@-", "v@-", "<@-", ">@-", "^@~", "v@~", "<@~", ">@~"]
 const PALETTE := ["R", "G", "B", "Y", "P"]
@@ -133,11 +133,11 @@ func _edit(map: Array) -> Array:
 			g[at.y][at.x] = "M"
 		else:
 			var col: String = PALETTE[_rng.randi_range(0, PALETTE.size() - 1)]
-			g[at.y][at.x] = col + toks[_rng.randi_range(0, toks.size() - 1)] + _suffix(col)
+			g[at.y][at.x] = col + toks[_rng.randi_range(0, toks.size() - 1)] + _suffix(col, g)
 	elif kind < 8 and not pieces.is_empty():
 		var at: Vector2i = pieces[_rng.randi_range(0, pieces.size() - 1)]
 		var col: String = str(g[at.y][at.x])[0]
-		g[at.y][at.x] = col + toks[_rng.randi_range(0, toks.size() - 1)] + _suffix(col)
+		g[at.y][at.x] = col + toks[_rng.randi_range(0, toks.size() - 1)] + _suffix(col, g)
 	elif not pieces.is_empty():
 		var at: Vector2i = pieces[_rng.randi_range(0, pieces.size() - 1)]
 		g[at.y][at.x] = "."
@@ -163,12 +163,30 @@ func _tokens() -> Array:
 ## parser's rules still apply (an invalid mark makes the board not intact:
 ## filtered). Only with a plain-arrow token (flip targets / locks on spinners
 ## are refused by the engine anyway).
-func _suffix(col: String) -> String:
+## Phase 19: "suffix_max" ({"*": 3, ...}) caps how many pieces may carry a
+## mark (mechanic economy during the search: no magnet-crowded boards).
+func _suffix(col: String, g: Array = []) -> String:
 	var sx: Array = _spec.get("suffixes", [])
 	if sx.is_empty() or _rng.randf() >= float(_spec.get("suffix_rate", 0.25)):
 		return ""
 	var x := str(sx[_rng.randi_range(0, sx.size() - 1)])
+	var cap: Dictionary = _spec.get("suffix_max", {})
+	if cap.has(x) and _marked(g, x) >= int(cap[x]):
+		return ""
 	return "" if x.begins_with("#") and x.substr(1) == col else x  # never locked by its own colour
+
+
+## Pieces carrying the mark `x` (a magnet "*" is never a spinner's "@*").
+static func _marked(g: Array, x: String) -> int:
+	var n := 0
+	for row in g:
+		for t in row:
+			var s := str(t)
+			if x == "*":
+				n += int(s.ends_with("*") and not s.contains("@"))
+			else:
+				n += int(s.contains(x))
+	return n
 
 
 static func _count(g: Array, tok: String) -> int:

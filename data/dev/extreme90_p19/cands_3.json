@@ -1,0 +1,17 @@
+{
+ "MG3_1e": {
+  "map": [
+   "Gv . . G^ . Gv P>*",
+   ". . . B^ . . B<",
+   "B< . . . . . .",
+   "R<* . . P^ P> . Y^",
+   ". . . R> . . Y^",
+   ". . . Gv . . B>*",
+   ". . . G< . . Y^"
+  ],
+  "target": "EXTREME",
+  "facts": [],
+  "mechanic": "magnet",
+  "max_positions": 2000
+ }
+}

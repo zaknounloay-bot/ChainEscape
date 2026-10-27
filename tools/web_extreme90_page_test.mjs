@@ -38,9 +38,10 @@ const benchOut = (process.argv.find((a) => a.startsWith('--bench-out=')) || '').
 const playerRoot = (process.argv.find((a) => a.startsWith('--player=')) || '').slice(9);
 const PORT = 8840, W = 375, H = 667;  // iPhone SE
 const ENTRY = (process.argv.find((a) => a.startsWith('--entry=')) || '--entry=extreme90').slice(8);
-const P17 = ENTRY === 'extreme90p17' || ENTRY === 'extreme90p18';  // a later selection: the earlier entries' storage must stay untouched
-const ST = { extreme90: 'xb90', extreme90p17: 'xb17', extreme90p18: 'xb18' }[ENTRY], FMT = 'ce-' + ST, PUB = 'chainEscape' + ST[0].toUpperCase() + ST.slice(1);
-const OLDER = { extreme90: [], extreme90p17: ['xb90'], extreme90p18: ['xb90', 'xb17'] }[ENTRY];
+const P17 = ENTRY === 'extreme90p17' || ENTRY === 'extreme90p18' || ENTRY === 'extreme90p19';  // a later selection: the earlier entries' storage must stay untouched
+const ST = { extreme90: 'xb90', extreme90p17: 'xb17', extreme90p18: 'xb18', extreme90p19: 'xb19' }[ENTRY], FMT = 'ce-' + ST, PUB = 'chainEscape' + ST[0].toUpperCase() + ST.slice(1);
+const OLDER = { extreme90: [], extreme90p17: ['xb90'], extreme90p18: ['xb90', 'xb17'], extreme90p19: ['xb90', 'xb17', 'xb18'] }[ENTRY];
+const SCROLL = ENTRY === 'extreme90p19';  // Phase 19: the challenge list scrolls (only the tiles in view are published)
 const LSB = (b) => `chain_escape_${ST}_${b.toLowerCase()}_state`;
 const FILL = { green: [0x1e, 0x7b, 0x34], orange: [0xc2, 0x41, 0x0c], red: [0xb9, 0x1c, 0x1c] };
 const types = { '.html': 'text/html', '.js': 'text/javascript', '.wasm': 'application/wasm', '.pck': 'application/octet-stream', '.png': 'image/png' };
@@ -116,6 +117,20 @@ async function session(context, label) {
   s.tap = async (p, after = 700) => { await touch('touchStart', p[0] * W, p[1] * H); await sleep(80); await touch('touchEnd', p[0] * W, p[1] * H); await sleep(after); };
   s.shot = async (n) => { if (shots) { fs.mkdirSync(shots, { recursive: true }); await page.screenshot({ path: path.join(shots, n + '.png') }); } };
   s.tapHub = async (name, view, after = 900) => { const v = await s.waitFor(s.hub, (v) => v.view === view && v.buttons[name], name); await s.tap(v.buttons[name], after); };
+  // Phase 19: scroll the challenge list (mouse wheel over it) until a tile is in view.
+  s.reveal = async (name) => {
+    for (let k = 0; k < 40; k++) {
+      const v = await s.hub();
+      if (v.buttons[name]) return true;
+      const shown = Object.keys(v.buttons).filter((n) => n.startsWith('Puzzle_')).map((n) => +n.slice(7));
+      const want = +name.slice(7);
+      const down = shown.length === 0 || want > Math.max(...shown);
+      await s.page.mouse.move(W / 2, H * 0.5);
+      await s.page.mouse.wheel(0, down ? 120 : -120);
+      await sleep(250);
+    }
+    return false;
+  };
   s.tapVt = async (name, screen, after = 600) => { const v = await s.waitFor(s.vt, (v) => v.screen === screen && v.buttons[name], name); await s.tap(v.buttons[name], after); };
   s.tapTa = async (name, after = 900) => { await sleep(400); const x = await s.waitFor(s.ta, (v) => v.buttons && v.buttons[name], name); await s.tap(x.buttons[name], after); };
   s.state = async (b) => JSON.parse(await page.evaluate((k) => localStorage.getItem(k), LSB(b)) || '{}');
@@ -169,16 +184,29 @@ try {
   await a.tapHub('Familiar_PLAYED_A_LITTLE', 'FAMILIARITY');
   h = await a.waitFor(a.hub, (v) => v.view === 'SELECT', 'select');
   const bank = h.order;
-  const tiles = bank.map((_, i) => h.rects['Puzzle_' + (i + 1)]);
-  check(bank.slice(0, 5).join(',') === 'N3,N5,N7,N11,N13' && !bank.includes('TA') && tiles.every((r) => r && r[1] + r[3] <= 1.0001 && r[3] * H >= 40)
+  let tiles = bank.map((_, i) => h.rects['Puzzle_' + (i + 1)]);
+  if (SCROLL) {
+    // Every tile can be scrolled into view (each checked where it is shown).
+    tiles = [];
+    for (let i = 0; i < bank.length; i++) {
+      await a.reveal('Puzzle_' + (i + 1));
+      tiles.push((await a.hub()).rects['Puzzle_' + (i + 1)]);
+    }
+    for (let k = 0; k < 40; k++) { await a.page.mouse.move(W / 2, H * 0.5); await a.page.mouse.wheel(0, -400); await sleep(60); }
+    await sleep(400);
+    h = await a.hub();
+    check(h.scroll && h.scroll.length === 2 && h.scroll[0] === 0 && h.scroll[1] > 0, `the challenge list scrolls (scrolled back to the top: ${JSON.stringify(h.scroll)})`);
+  }
+  check(bank.slice(0, 5).join(',') === 'N3,N5,N7,N11,N13' && !bank.includes('TA') && tiles.every((r) => r && r[1] >= 0 && r[1] + r[3] <= 1.0001 && r[3] * H >= 40)
     && !h.buttons['Puzzle_' + (bank.length + 1)] && await a.hubFits() && await a.noOverflow() && Object.values(h.statuses).every((t) => t === 'New'),
-    `CHOOSE A CHALLENGE: only the bank (${bank.join(', ')}), CHALLENGE 1-${bank.length} tiles all on the iPhone SE screen, no reference`);
+    `CHOOSE A CHALLENGE: only the bank (${bank.join(', ')}), CHALLENGE 1-${bank.length} tiles ${SCROLL ? 'each reachable by scrolling, each on screen where shown' : 'all on the iPhone SE screen'}, no reference`);
   await a.shot('X2_select');
   const benchMs = {};
   let unlocked = false;
   for (let i = 0; i < bank.length; i++) {
     const b = bank[i];
     await a.page.evaluate(() => { window.chainEscapeVhBench = null; });
+    if (SCROLL) await a.reveal('Puzzle_' + (i + 1));
     await a.tapHub('Puzzle_' + (i + 1), 'SELECT', 1200);
     await a.waitFor(a.vt, (x) => x.screen === 'BRIEF' && x.buttons.BeginPuzzle, 'brief ' + b);
     const bench = await a.waitFor(() => a.page.evaluate(() => window.chainEscapeVhBench || null), (x) => x.done && x.results.length === 1 && x.results[0].id === b, 'bench ' + b, 60000);

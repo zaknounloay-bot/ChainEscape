@@ -41,6 +41,7 @@ var _pages: Dictionary = {}
 var _root: Control
 var _rows: Dictionary = {}  # board -> [button, status label]
 var _copy: PillButton
+var _scroll: ScrollContainer = null
 var _copy_status: Label
 
 
@@ -122,6 +123,16 @@ func grid_columns() -> int:
 
 func tile_height() -> int:
 	return 84
+
+
+## Phase 19: the challenge grid scrolls (a long list keeps full-size,
+## readable tiles); a short neutral line above it (e.g. where the newest are).
+func select_scroll() -> bool:
+	return false
+
+
+func select_note() -> String:
+	return ""
 
 
 ## A longer list: a tighter selection screen (smaller title, gaps and
@@ -383,6 +394,10 @@ func _build() -> void:
 	s.add_theme_constant_override("separation", 6 if cmp else 10)
 	s.add_child(_label(select_title(), 34 if cmp else 40, 900))
 	s.add_child(_label("90 seconds each. Play one or more.", 20 if cmp else 24, 700))
+	if select_note() != "":
+		var note := _label(select_note(), 20, 800)
+		note.name = "SelectNote"
+		s.add_child(note)
 	if board_order().is_empty():
 		# No new board passed its checks yet: say so - the reference is not a new puzzle.
 		var note := _label("Technical test build: no new 90-second puzzle has passed its checks yet. REFERENCE (TA) is an existing board, used to test the clock and the music.", 20, 700)
@@ -397,7 +412,19 @@ func _build() -> void:
 	grid.columns = grid_columns()
 	grid.add_theme_constant_override("h_separation", 12)
 	grid.add_theme_constant_override("v_separation", 6 if cmp else 10)
-	s.add_child(grid)
+	if select_scroll():
+		# Phase 19: a longer list scrolls inside its own area; the title and
+		# both buttons stay on screen.
+		_scroll = ScrollContainer.new()
+		_scroll.name = "PuzzleScroll"
+		_scroll.size_flags_vertical = Control.SIZE_EXPAND_FILL
+		_scroll.horizontal_scroll_mode = ScrollContainer.SCROLL_MODE_DISABLED
+		grid.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+		_scroll.add_child(grid)
+		s.add_child(_scroll)
+		_scroll.get_v_scroll_bar().value_changed.connect(func(_v): _publish.call_deferred())
+	else:
+		s.add_child(grid)
 	for b in order:
 		var ref: bool = Ta90TimeAttack.BOARDS90[b].get("reference", false)
 		var n := order.find(b) + 1
@@ -477,9 +504,13 @@ func _publish() -> void:
 	var buttons := {}
 	var rects := {}
 	if _root.visible:
+		var clip := _scroll.get_global_rect() if _scroll != null and view == View.SELECT else Rect2()
 		for b in _pages[view].find_children("*", "BaseButton", true, false):
 			if b.is_visible_in_tree():
 				var r: Rect2 = b.get_global_rect()
+				# A tile scrolled out of its area is not on screen (not tappable).
+				if clip.size.x > 0 and _scroll.is_ancestor_of(b) and not clip.encloses(r):
+					continue
 				buttons[String(b.name)] = [snappedf(r.get_center().x / vis.x, 0.0001), snappedf(r.get_center().y / vis.y, 0.0001)]
 				rects[String(b.name)] = [snappedf(r.position.x / vis.x, 0.0001), snappedf(r.position.y / vis.y, 0.0001), snappedf(r.size.x / vis.x, 0.0001), snappedf(r.size.y / vis.y, 0.0001)]
 	var statuses := {}
@@ -487,7 +518,8 @@ func _publish() -> void:
 		statuses[str(order.find(b) + 1)] = _rows[b][1].text
 	WebBridge.publish(publish_name(), {"order": order, "music_on": state.get("music_on", true), "view": View.keys()[view], "buttons": buttons, "rects": rects, "statuses": statuses,
 		"familiarity": state.get("familiarity", ""), "current": state.get("current", ""), "session": state.get("session", ""), "copy_status": _copy_status.text,
-		"content_bottom": snappedf(_pages[view].get_combined_minimum_size().y / vis.y, 0.0001) if view != View.PUZZLE else -1.0})
+		"content_bottom": snappedf(_pages[view].get_combined_minimum_size().y / vis.y, 0.0001) if view != View.PUZZLE else -1.0,
+		"scroll": [_scroll.scroll_vertical, int(_scroll.get_v_scroll_bar().max_value - _scroll.size.y)] if _scroll != null else []})
 
 
 ## The campaign music bus stays silent while the prototype is open (the

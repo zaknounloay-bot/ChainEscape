@@ -1,0 +1,68 @@
+{
+ "target": "EXTREME",
+ "facts": [],
+ "mechanic": "magnet",
+ "idea": "a pull can lock two blocks face to face: each magnet drags a block into a lane where it meets a block pointing back at it - each magnet must wait until that block has left, and must still go before the block it is holding up",
+ "family": "D magnet displacement (two magnets, face-to-face pulls)",
+ "map": [
+  "Gv . . . . . .",
+  ". . . . . . .",
+  ". . . . . . .",
+  "R<* . . P^ . . .",
+  ". . . . . . .",
+  ". . . Gv . . B>*",
+  ". . . . . . Y^"
+ ],
+ "frozen": [
+  [
+   0,
+   0
+  ],
+  [
+   3,
+   0
+  ],
+  [
+   3,
+   3
+  ],
+  [
+   5,
+   3
+  ],
+  [
+   5,
+   6
+  ],
+  [
+   6,
+   6
+  ]
+ ],
+ "max_positions": 2000,
+ "piece_free": 13,
+ "max_pieces": 17,
+ "shortcut_weight": 80,
+ "coverage_weight": 25,
+ "late_weight": 20,
+ "endgame_weight": 20,
+ "length_weight": 1.0,
+ "length_cap": 18,
+ "pressure_weight": 1.5,
+ "palette": "arrows",
+ "suffixes": [
+  "*"
+ ],
+ "suffix_rate": 0.3,
+ "suffix_max": {
+  "*": 3,
+  "=": 5,
+  "&A": 3,
+  "&B": 3
+ },
+ "crates_max": 0,
+ "seed": 195,
+ "size": "medium",
+ "max_solve_nodes": 300,
+ "redesign": "MG3 (round 2) grew decorative locks on all three beam boards (lock counterfactual: no change; without them the board is too costly); the same core grown with magnets only (at most 3)"
+}

@@ -1,0 +1,9 @@
+{
+ "MG3_1e": {
+  "distinct": 4,
+  "pieces_tested": 17,
+  "steps": 15,
+  "trivial": [],
+  "trivial_removals": 0
+ }
+}

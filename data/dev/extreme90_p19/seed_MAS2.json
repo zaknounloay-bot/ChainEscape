@@ -1,0 +1,73 @@
+{
+ "target": "EXTREME",
+ "facts": [],
+ "mechanic": "movable,switch,armor",
+ "idea": "push, turn, ram - and a second switch the push can shut out: the pusher clears a column, is turned around to crack the shell behind it; the other switch must fire before the crate lands in its lane",
+ "family": "A/E crate + two switches + armor",
+ "map": [
+  ". . . . . Gv .",
+  ". . . . . . .",
+  ". Y^= . . R>&A M .",
+  ". . . . . . .",
+  ". B<&B . . . . .",
+  ". . . . . . .",
+  "P^%A . . . . . G^%B"
+ ],
+ "frozen": [
+  [
+   0,
+   5
+  ],
+  [
+   2,
+   1
+  ],
+  [
+   2,
+   4
+  ],
+  [
+   2,
+   5
+  ],
+  [
+   4,
+   1
+  ],
+  [
+   6,
+   0
+  ],
+  [
+   6,
+   6
+  ]
+ ],
+ "max_positions": 1500,
+ "piece_free": 13,
+ "max_pieces": 17,
+ "shortcut_weight": 80,
+ "coverage_weight": 25,
+ "late_weight": 20,
+ "endgame_weight": 20,
+ "length_weight": 1.0,
+ "length_cap": 18,
+ "pressure_weight": 1.5,
+ "palette": "arrows",
+ "suffixes": [
+  "=",
+  "&A",
+  "&B"
+ ],
+ "suffix_rate": 0.3,
+ "suffix_max": {
+  "=": 4,
+  "&A": 3,
+  "&B": 3
+ },
+ "crates_max": 1,
+ "seed": 194,
+ "size": "medium",
+ "max_solve_nodes": 300,
+ "redesign": "round 1 (MAS) reached 3 distinct mistakes; a second switch whose lane the pushed crate closes (the MF2 trap)"
+}

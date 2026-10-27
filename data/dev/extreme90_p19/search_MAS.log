@@ -1,0 +1,310 @@
+Godot Engine v4.3.stable.official.77dcf97d8 - https://godotengine.org
+
+known boards: 1209
+known boards incl. T1-T5 and the demos: 1209; played boards for the near-copy guard: 333
+seed: 40.9 | 5 pieces, 42 positions, solution 6, distinct 2, steps 1 (cover 0.17, late 0.17), endgame false, mechanic 3/3, shortcut 28% | [". . . . . Gv .",". . . . . . .",". Y^= . . R>&A M .",". . . . . . .",". . . . . . .",". . . . . . .","P^%A . . . . . ."]
+ERROR: Level 0: block at (5, 5) flips with switch B, which does not exist
+   at: push_error (core/variant/variant_utility.cpp:1092)
+ERROR: Level 0: block at (5, 1) flips with switch B, which does not exist
+   at: push_error (core/variant/variant_utility.cpp:1092)
+ERROR: Level 0: block at (1, 5) flips with switch B, which does not exist
+   at: push_error (core/variant/variant_utility.cpp:1092)
+ERROR: Level 0: block at (6, 0) flips with switch B, which does not exist
+   at: push_error (core/variant/variant_utility.cpp:1092)
+round 1 (40 evaluated, 4 s): best 47.1 | 6 pieces, 85 positions, solution 7, distinct 2, steps 2 (cover 0.29, late 0.29), endgame false, mechanic 3/3, shortcut 30% | [". . . . . Gv .",". . . . . . .",". Y^= . . R>&A M .",". . . . Rv&A . .",". . . . . . .",". . . . . . .","P^%A . . . . . ."]
+ERROR: Level 0: block at (0, 5) flips with switch B, which does not exist
+   at: push_error (core/variant/variant_utility.cpp:1092)
+ERROR: Level 0: block at (4, 6) flips with switch B, which does not exist
+   at: push_error (core/variant/variant_utility.cpp:1092)
+ERROR: Level 0: block at (6, 2) flips with switch B, which does not exist
+   at: push_error (core/variant/variant_utility.cpp:1092)
+ERROR: Level 0: block at (1, 0) flips with switch B, which does not exist
+   at: push_error (core/variant/variant_utility.cpp:1092)
+round 2 (78 evaluated, 9 s): best 63.0 | 7 pieces, 135 positions, solution 8, distinct 2, steps 3 (cover 0.38, late 0.38), endgame false, mechanic 3/3, shortcut 10% | [". . . . . Gv .",". . . . . . .",". Y^= . . R>&A M Bv&A",". . . . Rv&A . .",". . . . . . .",". . . . . . .","P^%A . . . . . ."]
+ERROR: Level 0: block at (4, 5) flips with switch B, which does not exist
+   at: push_error (core/variant/variant_utility.cpp:1092)
+ERROR: Level 0: block at (1, 0) flips with switch B, which does not exist
+   at: push_error (core/variant/variant_utility.cpp:1092)
+ERROR: Level 0: block at (5, 5) flips with switch B, which does not exist
+   at: push_error (core/variant/variant_utility.cpp:1092)
+ERROR: Level 0: block at (4, 4) flips with switch B, which does not exist
+   at: push_error (core/variant/variant_utility.cpp:1092)
+round 3 (115 evaluated, 15 s): best 72.3 | 8 pieces, 213 positions, solution 9, distinct 2, steps 4 (cover 0.44, late 0.44), endgame false, mechanic 3/3, shortcut 8% | [". . . . . Gv .",". . . . . . .",". Y^= . . R>&A M Bv&A",". . . . Rv&A . .",". . . . . . .",". . . . . Rv .","P^%A . . . . . ."]
+ERROR: Level 0: block at (3, 3) flips with switch B, which does not exist
+   at: push_error (core/variant/variant_utility.cpp:1092)
+ERROR: Level 0: block at (4, 4) flips with switch B, which does not exist
+   at: push_error (core/variant/variant_utility.cpp:1092)
+ERROR: Level 0: block at (4, 6) flips with switch B, which does not exist
+   at: push_error (core/variant/variant_utility.cpp:1092)
+round 4 (147 evaluated, 21 s): best 97.8 | 9 pieces, 451 positions, solution 10, distinct 2, steps 7 (cover 0.70, late 0.70), endgame true, mechanic 3/3, shortcut 30% | [". . . . . Gv .",". . . . . . .",". Y^= . . R>&A M Bv&A",". . . . Rv&A . .",". G^ . . . . .",". . . . . Rv .","P^%A . . . . . ."]
+ERROR: Level 0: block at (4, 0) flips with switch B, which does not exist
+   at: push_error (core/variant/variant_utility.cpp:1092)
+ERROR: Level 0: block at (0, 3) flips with switch B, which does not exist
+   at: push_error (core/variant/variant_utility.cpp:1092)
+round 5 (180 evaluated, 27 s): best 100.7 | 10 pieces, 851 positions, solution 11, distinct 2, steps 8 (cover 0.73, late 0.73), endgame true, mechanic 3/3, shortcut 30% | [". . . . . Gv .",". . . . . . .",". Y^= . Gv R>&A M Bv&A",". . . . Rv&A . .",". G^ . . . . .",". . . . . Rv .","P^%A . . . . . ."]
+ERROR: Level 0: block at (6, 5) flips with switch B, which does not exist
+   at: push_error (core/variant/variant_utility.cpp:1092)
+ERROR: Level 0: block at (1, 4) flips with switch B, which does not exist
+   at: push_error (core/variant/variant_utility.cpp:1092)
+ERROR: Level 0: block at (5, 5) flips with switch B, which does not exist
+   at: push_error (core/variant/variant_utility.cpp:1092)
+ERROR: Level 0: block at (6, 5) flips with switch B, which does not exist
+   at: push_error (core/variant/variant_utility.cpp:1092)
+round 6 (210 evaluated, 35 s): best 105.4 | 11 pieces, 1303 positions, solution 12, distinct 2, steps 9 (cover 0.75, late 0.75), endgame true, mechanic 3/3, shortcut 30% | [". . Y^ . . Gv .","R> . . . . . .",". Y^= . . R>&A M Bv&A",". . . . Rv&A . .",". G^ . . . . .",". . . . . Rv .","P^%A . . . . . ."]
+ERROR: Level 0: block at (0, 5) flips with switch B, which does not exist
+   at: push_error (core/variant/variant_utility.cpp:1092)
+ERROR: Level 0: block at (1, 4) flips with switch B, which does not exist
+   at: push_error (core/variant/variant_utility.cpp:1092)
+round 7 (238 evaluated, 43 s): best 107.0 | 11 pieces, 903 positions, solution 12, distinct 2, steps 9 (cover 0.75, late 0.75), endgame true, mechanic 3/3, shortcut 30% | [". . . Bv . Gv .",". . . . . . .",". Y^= . G< R>&A M Bv&A",". . . . Rv&A . .",". G^ . . . . .",". . . . . Rv .","P^%A . . . . . ."]
+ERROR: Level 0: block at (5, 4) flips with switch B, which does not exist
+   at: push_error (core/variant/variant_utility.cpp:1092)
+round 8 (274 evaluated, 54 s): best 110.0 | 13 pieces, 789 positions, solution 14, distinct 2, steps 8 (cover 0.57, late 0.79), endgame true, mechanic 3/3, shortcut 22% | [". . Y^ . . Gv .","R> . R^ . . . .",". Y^= . . R>&A M Bv&A",". . . . Rv&A Y< .",". G^ . . . . .",". . . . . Rv .","P^%A . . . . . ."]
+ERROR: Level 0: block at (5, 4) flips with switch B, which does not exist
+   at: push_error (core/variant/variant_utility.cpp:1092)
+ERROR: Level 0: block at (1, 5) flips with switch B, which does not exist
+   at: push_error (core/variant/variant_utility.cpp:1092)
+round 9 (306 evaluated, 62 s): best 119.8 | 12 pieces, 991 positions, solution 14, distinct 2, steps 11 (cover 0.79, late 0.79), endgame true, mechanic 3/3, shortcut 22% | [". Y^ . . . Gv .",". . . . . . .",". Y^= . Gv R>&A M Bv&A",". . . . Rv&A . .","G<= G^ . . R< . .",". . . . . . .","P^%A . . . . . ."]
+ERROR: Level 0: block at (1, 6) flips with switch B, which does not exist
+   at: push_error (core/variant/variant_utility.cpp:1092)
+ERROR: Level 0: block at (5, 5) flips with switch B, which does not exist
+   at: push_error (core/variant/variant_utility.cpp:1092)
+ERROR: Level 0: block at (5, 4) flips with switch B, which does not exist
+   at: push_error (core/variant/variant_utility.cpp:1092)
+ERROR: Level 0: block at (1, 1) flips with switch B, which does not exist
+   at: push_error (core/variant/variant_utility.cpp:1092)
+ERROR: Level 0: block at (0, 0) flips with switch B, which does not exist
+   at: push_error (core/variant/variant_utility.cpp:1092)
+ERROR: Level 0: block at (6, 6) flips with switch B, which does not exist
+   at: push_error (core/variant/variant_utility.cpp:1092)
+round 10 (340 evaluated, 72 s): best 119.8 | 12 pieces, 991 positions, solution 14, distinct 2, steps 11 (cover 0.79, late 0.79), endgame true, mechanic 3/3, shortcut 22% | [". Y^ . . . Gv .",". . . . . . .",". Y^= . Gv R>&A M Bv&A",". . . . Rv&A . .","G<= G^ . . R< . .",". . . . . . .","P^%A . . . . . ."]
+ERROR: Level 0: block at (4, 1) flips with switch B, which does not exist
+   at: push_error (core/variant/variant_utility.cpp:1092)
+ERROR: Level 0: block at (1, 4) flips with switch B, which does not exist
+   at: push_error (core/variant/variant_utility.cpp:1092)
+round 11 (371 evaluated, 83 s): best 119.8 | 12 pieces, 991 positions, solution 14, distinct 2, steps 11 (cover 0.79, late 0.79), endgame true, mechanic 3/3, shortcut 22% | [". Y^ . . . Gv .",". . . . . . .",". Y^= . Gv R>&A M Bv&A",". . . . Rv&A . .","G<= G^ . . R< . .",". . . . . . .","P^%A . . . . . ."]
+ERROR: Level 0: block at (0, 1) flips with switch B, which does not exist
+   at: push_error (core/variant/variant_utility.cpp:1092)
+ERROR: Level 0: block at (1, 4) flips with switch B, which does not exist
+   at: push_error (core/variant/variant_utility.cpp:1092)
+ERROR: Level 0: block at (4, 4) flips with switch B, which does not exist
+   at: push_error (core/variant/variant_utility.cpp:1092)
+ERROR: Level 0: block at (1, 4) flips with switch B, which does not exist
+   at: push_error (core/variant/variant_utility.cpp:1092)
+ERROR: Level 0: block at (3, 2) flips with switch B, which does not exist
+   at: push_error (core/variant/variant_utility.cpp:1092)
+round 12 (403 evaluated, 91 s): best 119.8 | 12 pieces, 991 positions, solution 14, distinct 2, steps 11 (cover 0.79, late 0.79), endgame true, mechanic 3/3, shortcut 22% | [". Y^ . . . Gv .",". . . . . . .",". Y^= . Gv R>&A M Bv&A",". . . . Rv&A . .","G<= G^ . . R< . .",". . . . . . .","P^%A . . . . . ."]
+ERROR: Level 0: block at (3, 4) flips with switch B, which does not exist
+   at: push_error (core/variant/variant_utility.cpp:1092)
+ERROR: Level 0: block at (0, 3) flips with switch B, which does not exist
+   at: push_error (core/variant/variant_utility.cpp:1092)
+ERROR: Level 0: block at (6, 6) flips with switch B, which does not exist
+   at: push_error (core/variant/variant_utility.cpp:1092)
+round 13 (430 evaluated, 97 s): best 120.1 | 13 pieces, 1167 positions, solution 16, distinct 2, steps 13 (cover 0.81, late 0.81), endgame true, mechanic 3/3, shortcut 25% | [". Y< . . . Gv .",". . . . . . .",". Y^= . Gv R>&A M Bv&A",". . . . Rv&A . .","G<= G^ . . R< . .",". . . . Rv= . .","P^%A . . . . . ."]
+ERROR: Level 0: block at (4, 4) flips with switch B, which does not exist
+   at: push_error (core/variant/variant_utility.cpp:1092)
+ERROR: Level 0: block at (1, 0) flips with switch B, which does not exist
+   at: push_error (core/variant/variant_utility.cpp:1092)
+ERROR: Level 0: block at (1, 6) flips with switch B, which does not exist
+   at: push_error (core/variant/variant_utility.cpp:1092)
+round 14 (463 evaluated, 106 s): best 120.1 | 13 pieces, 1167 positions, solution 16, distinct 2, steps 13 (cover 0.81, late 0.81), endgame true, mechanic 3/3, shortcut 25% | [". Y< . . . Gv .",". . . . . . .",". Y^= . Gv R>&A M Bv&A",". . . . Rv&A . .","G<= G^ . . R< . .",". . . . Rv= . .","P^%A . . . . . ."]
+ERROR: Level 0: block at (1, 4) flips with switch B, which does not exist
+   at: push_error (core/variant/variant_utility.cpp:1092)
+ERROR: Level 0: block at (3, 2) flips with switch B, which does not exist
+   at: push_error (core/variant/variant_utility.cpp:1092)
+ERROR: Level 0: block at (1, 3) flips with switch B, which does not exist
+   at: push_error (core/variant/variant_utility.cpp:1092)
+ERROR: Level 0: block at (1, 4) flips with switch B, which does not exist
+   at: push_error (core/variant/variant_utility.cpp:1092)
+round 15 (495 evaluated, 113 s): best 123.4 | 13 pieces, 329 positions, solution 16, distinct 2, steps 12 (cover 0.75, late 0.75), endgame true, mechanic 3/3, shortcut 12% | [". Y> . . . Gv .",". . . . . . .",". Y^= . Gv R>&A M Bv&A",". . . . Rv&A . .","G<= G^ . . R< . .",". . . . Rv= . .","P^%A . . . . . ."]
+ERROR: Level 0: block at (1, 0) flips with switch B, which does not exist
+   at: push_error (core/variant/variant_utility.cpp:1092)
+ERROR: Level 0: block at (5, 6) flips with switch B, which does not exist
+   at: push_error (core/variant/variant_utility.cpp:1092)
+ERROR: Level 0: block at (4, 1) flips with switch B, which does not exist
+   at: push_error (core/variant/variant_utility.cpp:1092)
+round 16 (527 evaluated, 121 s): best 125.4 | 14 pieces, 393 positions, solution 18, distinct 2, steps 13 (cover 0.72, late 0.78), endgame true, mechanic 3/3, shortcut 10% | [". Y> . . . Gv .",". . . . . Pv= .",". Y^= . Gv R>&A M Bv&A",". . . . Rv&A . .","G<= G^ . . R< . .",". . . . Rv= . .","P^%A . . . . . ."]
+ERROR: Level 0: block at (3, 4) flips with switch B, which does not exist
+   at: push_error (core/variant/variant_utility.cpp:1092)
+ERROR: Level 0: block at (3, 2) flips with switch B, which does not exist
+   at: push_error (core/variant/variant_utility.cpp:1092)
+round 17 (564 evaluated, 136 s): best 125.8 | 15 pieces, 461 positions, solution 19, distinct 2, steps 15 (cover 0.79, late 0.79), endgame true, mechanic 3/3, shortcut 18% | [". Y> . . . Gv .",". . . . . . .",". Y^= . Gv R>&A M Bv&A",". . . . Rv&A . .","G<= G^ . . R< . .",". . . . Rv= B> .","P^%A . . . . Y>= ."]
+ERROR: Level 0: block at (5, 5) flips with switch B, which does not exist
+   at: push_error (core/variant/variant_utility.cpp:1092)
+ERROR: Level 0: block at (1, 0) flips with switch B, which does not exist
+   at: push_error (core/variant/variant_utility.cpp:1092)
+round 18 (594 evaluated, 149 s): best 125.8 | 15 pieces, 461 positions, solution 19, distinct 2, steps 15 (cover 0.79, late 0.79), endgame true, mechanic 3/3, shortcut 18% | [". Y> . . . Gv .",". . . . . . .",". Y^= . Gv R>&A M Bv&A",". . . . Rv&A . .","G<= G^ . . R< . .",". . . . Rv= B> .","P^%A . . . . Y>= ."]
+ERROR: Level 0: block at (5, 1) flips with switch B, which does not exist
+   at: push_error (core/variant/variant_utility.cpp:1092)
+ERROR: Level 0: block at (6, 0) flips with switch B, which does not exist
+   at: push_error (core/variant/variant_utility.cpp:1092)
+ERROR: Level 0: block at (0, 5) flips with switch B, which does not exist
+   at: push_error (core/variant/variant_utility.cpp:1092)
+round 19 (627 evaluated, 163 s): best 126.6 | 16 pieces, 1225 positions, solution 19, distinct 3, steps 15 (cover 0.79, late 0.79), endgame true, mechanic 3/3, shortcut 12% | [". Y> Y> . . Gv Rv",". . . . . . .",". Y^= . Gv R>&A M Bv&A",". . . . Rv&A . .","G<= G^ . . R< . .",". . . . Rv= B> .","P^%A . . . . . ."]
+round 20 (661 evaluated, 177 s): best 128.7 | 15 pieces, 825 positions, solution 18, distinct 3, steps 14 (cover 0.78, late 0.78), endgame true, mechanic 3/3, shortcut 8% | [". Y> Y> . . Gv Rv",". . . . . . .",". Y^= . Gv R>&A M Bv&A",". . . . Rv&A . .","G<= G^ . . R< . .",". . . . Rv= . .","P^%A . . . . . ."]
+ERROR: Level 0: block at (6, 0) flips with switch B, which does not exist
+   at: push_error (core/variant/variant_utility.cpp:1092)
+round 21 (692 evaluated, 188 s): best 129.1 | 16 pieces, 633 positions, solution 19, distinct 3, steps 15 (cover 0.79, late 0.79), endgame true, mechanic 3/3, shortcut 10% | [". Y> Y> . . Gv Rv",". . . . . . .",". Y^= . G< R>&A M Bv&A",". . . . Rv&A . .","G<= G^ . . R< . .",". . . . Rv= B> .","P^%A . . . . . ."]
+ERROR: Level 0: block at (5, 4) flips with switch B, which does not exist
+   at: push_error (core/variant/variant_utility.cpp:1092)
+ERROR: Level 0: block at (6, 0) flips with switch B, which does not exist
+   at: push_error (core/variant/variant_utility.cpp:1092)
+ERROR: Level 0: block at (3, 2) flips with switch B, which does not exist
+   at: push_error (core/variant/variant_utility.cpp:1092)
+round 22 (724 evaluated, 200 s): best 129.7 | 17 pieces, 761 positions, solution 21, distinct 3, steps 17 (cover 0.81, late 0.81), endgame true, mechanic 3/3, shortcut 10% | [". Y> Y> . . Gv Rv",". . . . . . .",". Y^= . G< R>&A M Bv&A",". . . . Rv&A . Y>=","G<= G^ . . R< . .",". . . . Rv= B> .","P^%A . . . . . ."]
+ERROR: Level 0: block at (5, 5) flips with switch B, which does not exist
+   at: push_error (core/variant/variant_utility.cpp:1092)
+ERROR: Level 0: block at (1, 0) flips with switch B, which does not exist
+   at: push_error (core/variant/variant_utility.cpp:1092)
+ERROR: Level 0: block at (1, 0) flips with switch B, which does not exist
+   at: push_error (core/variant/variant_utility.cpp:1092)
+ERROR: Level 0: block at (1, 4) flips with switch B, which does not exist
+   at: push_error (core/variant/variant_utility.cpp:1092)
+round 23 (758 evaluated, 214 s): best 130.8 | 16 pieces, 513 positions, solution 20, distinct 3, steps 16 (cover 0.80, late 0.80), endgame true, mechanic 3/3, shortcut 10% | [". Y> Y> . . Gv Rv",". . . . . . .",". Y^= . G< R>&A M Bv&A",". . . . Rv&A . Y>=","G<= G^ . . R< . .",". . . . Rv= . .","P^%A . . . . . ."]
+ERROR: Level 0: block at (5, 1) flips with switch B, which does not exist
+   at: push_error (core/variant/variant_utility.cpp:1092)
+ERROR: Level 0: block at (4, 4) flips with switch B, which does not exist
+   at: push_error (core/variant/variant_utility.cpp:1092)
+ERROR: Level 0: block at (1, 4) flips with switch B, which does not exist
+   at: push_error (core/variant/variant_utility.cpp:1092)
+ERROR: Level 0: block at (1, 0) flips with switch B, which does not exist
+   at: push_error (core/variant/variant_utility.cpp:1092)
+round 24 (792 evaluated, 228 s): best 130.8 | 16 pieces, 513 positions, solution 20, distinct 3, steps 16 (cover 0.80, late 0.80), endgame true, mechanic 3/3, shortcut 10% | [". Y> Y> . . Gv Rv",". . . . . . .",". Y^= . G< R>&A M Bv&A",". . . . Rv&A . Y>=","G<= G^ . . R< . .",". . . . Rv= . .","P^%A . . . . . ."]
+ERROR: Level 0: block at (4, 4) flips with switch B, which does not exist
+   at: push_error (core/variant/variant_utility.cpp:1092)
+ERROR: Level 0: block at (4, 4) flips with switch B, which does not exist
+   at: push_error (core/variant/variant_utility.cpp:1092)
+ERROR: Level 0: block at (2, 0) flips with switch B, which does not exist
+   at: push_error (core/variant/variant_utility.cpp:1092)
+ERROR: Level 0: block at (2, 0) flips with switch B, which does not exist
+   at: push_error (core/variant/variant_utility.cpp:1092)
+round 25 (823 evaluated, 242 s): best 130.8 | 16 pieces, 513 positions, solution 20, distinct 3, steps 16 (cover 0.80, late 0.80), endgame true, mechanic 3/3, shortcut 10% | [". Y> Y> . . Gv Rv",". . . . . . .",". Y^= . G< R>&A M Bv&A",". . . . Rv&A . Y>=","G<= G^ . . R< . .",". . . . Rv= . .","P^%A . . . . . ."]
+ERROR: Level 0: block at (2, 6) flips with switch B, which does not exist
+   at: push_error (core/variant/variant_utility.cpp:1092)
+ERROR: Level 0: block at (2, 0) flips with switch B, which does not exist
+   at: push_error (core/variant/variant_utility.cpp:1092)
+ERROR: Level 0: block at (3, 2) flips with switch B, which does not exist
+   at: push_error (core/variant/variant_utility.cpp:1092)
+ERROR: Level 0: block at (1, 3) flips with switch B, which does not exist
+   at: push_error (core/variant/variant_utility.cpp:1092)
+round 26 (854 evaluated, 255 s): best 130.8 | 16 pieces, 513 positions, solution 20, distinct 3, steps 16 (cover 0.80, late 0.80), endgame true, mechanic 3/3, shortcut 10% | [". Y> Y> . . Gv Rv",". . . . . . .",". Y^= . G< R>&A M Bv&A",". . . . Rv&A . Y>=","G<= G^ . . R< . .",". . . . Rv= . .","P^%A . . . . . ."]
+ERROR: Level 0: block at (5, 1) flips with switch B, which does not exist
+   at: push_error (core/variant/variant_utility.cpp:1092)
+ERROR: Level 0: block at (4, 4) flips with switch B, which does not exist
+   at: push_error (core/variant/variant_utility.cpp:1092)
+round 27 (882 evaluated, 264 s): best 130.8 | 16 pieces, 513 positions, solution 20, distinct 3, steps 16 (cover 0.80, late 0.80), endgame true, mechanic 3/3, shortcut 10% | [". Y> Y> . . Gv Rv",". . . . . . .",". Y^= . G< R>&A M Bv&A",". . . . Rv&A . Y>=","G<= G^ . . R< . .",". . . . Rv= . .","P^%A . . . . . ."]
+ERROR: Level 0: block at (1, 0) flips with switch B, which does not exist
+   at: push_error (core/variant/variant_utility.cpp:1092)
+ERROR: Level 0: block at (3, 1) flips with switch B, which does not exist
+   at: push_error (core/variant/variant_utility.cpp:1092)
+ERROR: Level 0: block at (3, 4) flips with switch B, which does not exist
+   at: push_error (core/variant/variant_utility.cpp:1092)
+ERROR: Level 0: block at (4, 6) flips with switch B, which does not exist
+   at: push_error (core/variant/variant_utility.cpp:1092)
+round 28 (909 evaluated, 272 s): best 130.8 | 16 pieces, 513 positions, solution 20, distinct 3, steps 16 (cover 0.80, late 0.80), endgame true, mechanic 3/3, shortcut 10% | [". Y> Y> . . Gv Rv",". . . . . . .",". Y^= . G< R>&A M Bv&A",". . . . Rv&A . Y>=","G<= G^ . . R< . .",". . . . Rv= . .","P^%A . . . . . ."]
+ERROR: Level 0: block at (3, 2) flips with switch B, which does not exist
+   at: push_error (core/variant/variant_utility.cpp:1092)
+ERROR: Level 0: block at (6, 0) flips with switch B, which does not exist
+   at: push_error (core/variant/variant_utility.cpp:1092)
+ERROR: Level 0: block at (2, 0) flips with switch B, which does not exist
+   at: push_error (core/variant/variant_utility.cpp:1092)
+round 29 (937 evaluated, 284 s): best 130.9 | 16 pieces, 501 positions, solution 20, distinct 3, steps 16 (cover 0.80, late 0.80), endgame true, mechanic 3/3, shortcut 10% | [". Y> Y> . . Gv Rv",". . . . . . .",". Y^= . . R>&A M Bv&A",". . . . Rv&A . Y>=","G<= G^ . P< R< . .",". . . . Rv= . .","P^%A . . . . . ."]
+ERROR: Level 0: block at (1, 4) flips with switch B, which does not exist
+   at: push_error (core/variant/variant_utility.cpp:1092)
+round 30 (965 evaluated, 295 s): best 130.9 | 16 pieces, 501 positions, solution 20, distinct 3, steps 16 (cover 0.80, late 0.80), endgame true, mechanic 3/3, shortcut 10% | [". Y> Y> . . Gv Rv",". . . . . . .",". Y^= . . R>&A M Bv&A",". . . . Rv&A . Y>=","G<= G^ . P< R< . .",". . . . Rv= . .","P^%A . . . . . ."]
+ERROR: Level 0: block at (2, 2) flips with switch B, which does not exist
+   at: push_error (core/variant/variant_utility.cpp:1092)
+ERROR: Level 0: block at (1, 0) flips with switch B, which does not exist
+   at: push_error (core/variant/variant_utility.cpp:1092)
+ERROR: Level 0: block at (1, 5) flips with switch B, which does not exist
+   at: push_error (core/variant/variant_utility.cpp:1092)
+ERROR: Level 0: block at (4, 4) flips with switch B, which does not exist
+   at: push_error (core/variant/variant_utility.cpp:1092)
+ERROR: Level 0: block at (0, 2) flips with switch B, which does not exist
+   at: push_error (core/variant/variant_utility.cpp:1092)
+ERROR: Level 0: block at (4, 0) flips with switch B, which does not exist
+   at: push_error (core/variant/variant_utility.cpp:1092)
+round 31 (991 evaluated, 305 s): best 130.9 | 16 pieces, 501 positions, solution 20, distinct 3, steps 16 (cover 0.80, late 0.80), endgame true, mechanic 3/3, shortcut 10% | [". Y> Y> . . Gv Rv",". . . . . . .",". Y^= . . R>&A M Bv&A",". . . . Rv&A . Y>=","G<= G^ . P< R< . .",". . . . Rv= . .","P^%A . . . . . ."]
+ERROR: Level 0: block at (4, 4) flips with switch B, which does not exist
+   at: push_error (core/variant/variant_utility.cpp:1092)
+ERROR: Level 0: block at (3, 4) flips with switch B, which does not exist
+   at: push_error (core/variant/variant_utility.cpp:1092)
+ERROR: Level 0: block at (3, 6) flips with switch B, which does not exist
+   at: push_error (core/variant/variant_utility.cpp:1092)
+round 32 (1014 evaluated, 318 s): best 130.9 | 16 pieces, 501 positions, solution 20, distinct 3, steps 16 (cover 0.80, late 0.80), endgame true, mechanic 3/3, shortcut 10% | [". Y> Y> . . Gv Rv",". . . . . . .",". Y^= . . R>&A M Bv&A",". . . . Rv&A . Y>=","G<= G^ . P< R< . .",". . . . Rv= . .","P^%A . . . . . ."]
+ERROR: Level 0: block at (1, 5) flips with switch B, which does not exist
+   at: push_error (core/variant/variant_utility.cpp:1092)
+round 33 (1039 evaluated, 330 s): best 130.9 | 16 pieces, 501 positions, solution 20, distinct 3, steps 16 (cover 0.80, late 0.80), endgame true, mechanic 3/3, shortcut 10% | [". Y> Y> . . Gv Rv",". . . . . . .",". Y^= . . R>&A M Bv&A",". . . . Rv&A . Y>=","G<= G^ . P< R< . .",". . . . Rv= . .","P^%A . . . . . ."]
+ERROR: Level 0: block at (5, 4) flips with switch B, which does not exist
+   at: push_error (core/variant/variant_utility.cpp:1092)
+ERROR: Level 0: block at (2, 0) flips with switch B, which does not exist
+   at: push_error (core/variant/variant_utility.cpp:1092)
+ERROR: Level 0: block at (3, 4) flips with switch B, which does not exist
+   at: push_error (core/variant/variant_utility.cpp:1092)
+ERROR: Level 0: block at (6, 1) flips with switch B, which does not exist
+   at: push_error (core/variant/variant_utility.cpp:1092)
+round 34 (1061 evaluated, 337 s): best 130.9 | 16 pieces, 501 positions, solution 20, distinct 3, steps 16 (cover 0.80, late 0.80), endgame true, mechanic 3/3, shortcut 10% | [". Y> Y> . . Gv Rv",". . . . . . .",". Y^= . . R>&A M Bv&A",". . . . Rv&A . Y>=","G<= G^ . P< R< . .",". . . . Rv= . .","P^%A . . . . . ."]
+ERROR: Level 0: block at (3, 2) flips with switch B, which does not exist
+   at: push_error (core/variant/variant_utility.cpp:1092)
+ERROR: Level 0: block at (2, 4) flips with switch B, which does not exist
+   at: push_error (core/variant/variant_utility.cpp:1092)
+round 35 (1077 evaluated, 343 s): best 131.7 | 15 pieces, 454 positions, solution 19, distinct 3, steps 16 (cover 0.84, late 0.84), endgame true, mechanic 3/3, shortcut 15% | [". Y> . . . Gv Rv",". . . . Yv . .",". Y^= . . R>&A M Bv&A",". . . . Rv&A . Y>=","G<= G^ . . R< . .",". . . . Rv= . .","P^%A . . . . . ."]
+ERROR: Level 0: block at (4, 1) flips with switch B, which does not exist
+   at: push_error (core/variant/variant_utility.cpp:1092)
+round 36 (1098 evaluated, 354 s): best 131.7 | 15 pieces, 454 positions, solution 19, distinct 3, steps 16 (cover 0.84, late 0.84), endgame true, mechanic 3/3, shortcut 15% | [". Y> . . . Gv Rv",". . . . Yv . .",". Y^= . . R>&A M Bv&A",". . . . Rv&A . Y>=","G<= G^ . . R< . .",". . . . Rv= . .","P^%A . . . . . ."]
+ERROR: Level 0: block at (1, 0) flips with switch B, which does not exist
+   at: push_error (core/variant/variant_utility.cpp:1092)
+ERROR: Level 0: block at (1, 0) flips with switch B, which does not exist
+   at: push_error (core/variant/variant_utility.cpp:1092)
+round 37 (1121 evaluated, 363 s): best 131.7 | 15 pieces, 454 positions, solution 19, distinct 3, steps 16 (cover 0.84, late 0.84), endgame true, mechanic 3/3, shortcut 15% | [". Y> . . . Gv Rv",". . . . Yv . .",". Y^= . . R>&A M Bv&A",". . . . Rv&A . Y>=","G<= G^ . . R< . .",". . . . Rv= . .","P^%A . . . . . ."]
+ERROR: Level 0: block at (2, 0) flips with switch B, which does not exist
+   at: push_error (core/variant/variant_utility.cpp:1092)
+ERROR: Level 0: block at (0, 0) flips with switch B, which does not exist
+   at: push_error (core/variant/variant_utility.cpp:1092)
+ERROR: Level 0: block at (6, 4) flips with switch B, which does not exist
+   at: push_error (core/variant/variant_utility.cpp:1092)
+round 38 (1146 evaluated, 373 s): best 131.7 | 15 pieces, 454 positions, solution 19, distinct 3, steps 16 (cover 0.84, late 0.84), endgame true, mechanic 3/3, shortcut 15% | [". Y> . . . Gv Rv",". . . . Yv . .",". Y^= . . R>&A M Bv&A",". . . . Rv&A . Y>=","G<= G^ . . R< . .",". . . . Rv= . .","P^%A . . . . . ."]
+ERROR: Level 0: block at (1, 4) flips with switch B, which does not exist
+   at: push_error (core/variant/variant_utility.cpp:1092)
+ERROR: Level 0: block at (3, 3) flips with switch B, which does not exist
+   at: push_error (core/variant/variant_utility.cpp:1092)
+round 39 (1174 evaluated, 385 s): best 131.7 | 15 pieces, 454 positions, solution 19, distinct 3, steps 16 (cover 0.84, late 0.84), endgame true, mechanic 3/3, shortcut 15% | [". Y> . . . Gv Rv",". . . . Yv . .",". Y^= . . R>&A M Bv&A",". . . . Rv&A . Y>=","G<= G^ . . R< . .",". . . . Rv= . .","P^%A . . . . . ."]
+ERROR: Level 0: block at (4, 4) flips with switch B, which does not exist
+   at: push_error (core/variant/variant_utility.cpp:1092)
+ERROR: Level 0: block at (6, 4) flips with switch B, which does not exist
+   at: push_error (core/variant/variant_utility.cpp:1092)
+ERROR: Level 0: block at (4, 1) flips with switch B, which does not exist
+   at: push_error (core/variant/variant_utility.cpp:1092)
+ERROR: Level 0: block at (3, 6) flips with switch B, which does not exist
+   at: push_error (core/variant/variant_utility.cpp:1092)
+ERROR: Level 0: block at (1, 4) flips with switch B, which does not exist
+   at: push_error (core/variant/variant_utility.cpp:1092)
+ERROR: Level 0: block at (4, 1) flips with switch B, which does not exist
+   at: push_error (core/variant/variant_utility.cpp:1092)
+round 40 (1206 evaluated, 398 s): best 131.7 | 15 pieces, 454 positions, solution 19, distinct 3, steps 16 (cover 0.84, late 0.84), endgame true, mechanic 3/3, shortcut 15% | [". Y> . . . Gv Rv",". . . . Yv . .",". Y^= . . R>&A M Bv&A",". . . . Rv&A . Y>=","G<= G^ . . R< . .",". . . . Rv= . .","P^%A . . . . . ."]
+ERROR: Level 0: block at (5, 3) flips with switch B, which does not exist
+   at: push_error (core/variant/variant_utility.cpp:1092)
+ERROR: Level 0: block at (2, 2) flips with switch B, which does not exist
+   at: push_error (core/variant/variant_utility.cpp:1092)
+ERROR: Level 0: block at (6, 0) flips with switch B, which does not exist
+   at: push_error (core/variant/variant_utility.cpp:1092)
+ERROR: Level 0: block at (4, 4) flips with switch B, which does not exist
+   at: push_error (core/variant/variant_utility.cpp:1092)
+ERROR: Level 0: block at (1, 0) flips with switch B, which does not exist
+   at: push_error (core/variant/variant_utility.cpp:1092)
+round 41 (1234 evaluated, 409 s): best 131.7 | 15 pieces, 454 positions, solution 19, distinct 3, steps 16 (cover 0.84, late 0.84), endgame true, mechanic 3/3, shortcut 15% | [". Y> . . . Gv Rv",". . . . Yv . .",". Y^= . . R>&A M Bv&A",". . . . Rv&A . Y>=","G<= G^ . . R< . .",". . . . Rv= . .","P^%A . . . . . ."]
+ERROR: Level 0: block at (4, 4) flips with switch B, which does not exist
+   at: push_error (core/variant/variant_utility.cpp:1092)
+ERROR: Level 0: block at (4, 0) flips with switch B, which does not exist
+   at: push_error (core/variant/variant_utility.cpp:1092)
+ERROR: Level 0: block at (4, 0) flips with switch B, which does not exist
+   at: push_error (core/variant/variant_utility.cpp:1092)
+round 42 (1258 evaluated, 416 s): best 131.7 | 15 pieces, 454 positions, solution 19, distinct 3, steps 16 (cover 0.84, late 0.84), endgame true, mechanic 3/3, shortcut 15% | [". Y> . . . Gv Rv",". . . . Yv . .",". Y^= . . R>&A M Bv&A",". . . . Rv&A . Y>=","G<= G^ . . R< . .",". . . . Rv= . .","P^%A . . . . . ."]
+ERROR: Level 0: block at (3, 1) flips with switch B, which does not exist
+   at: push_error (core/variant/variant_utility.cpp:1092)
+ERROR: Level 0: block at (1, 4) flips with switch B, which does not exist
+   at: push_error (core/variant/variant_utility.cpp:1092)
+ERROR: Level 0: block at (4, 4) flips with switch B, which does not exist
+   at: push_error (core/variant/variant_utility.cpp:1092)
+round 43 (1283 evaluated, 428 s): best 131.7 | 15 pieces, 454 positions, solution 19, distinct 3, steps 16 (cover 0.84, late 0.84), endgame true, mechanic 3/3, shortcut 15% | [". Y> . . . Gv Rv",". . . . Yv . .",". Y^= . . R>&A M Bv&A",". . . . Rv&A . Y>=","G<= G^ . . R< . .",". . . . Rv= . .","P^%A . . . . . ."]
+stopped after 43 rounds: no improvement for 8 rounds
+BEST [". Y> . . . Gv Rv",". . . . Yv . .",". Y^= . . R>&A M Bv&A",". . . . Rv&A . Y>=","G<= G^ . . R< . .",". . . . Rv= . .","P^%A . . . . . ."]

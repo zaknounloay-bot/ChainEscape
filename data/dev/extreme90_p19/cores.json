@@ -1,0 +1,219 @@
+{
+ "core_MF2": {
+  "family": "A movable-first (crates + two switches)",
+  "mechanic": "movable,switch",
+  "target": "EXTREME",
+  "idea": "one push to the edge, two switches: the crate must be pushed out of a column by a block that can only leave once switch A reverses it - and the push itself closes switch B's own lane; fire A early, or B late, and a block is boxed in for good",
+  "map": [
+   ". . . . . Gv .",
+   ". . . . . . .",
+   ". . . . R>&A M .",
+   ". . . . . . .",
+   ". B<&B . . . . .",
+   ". . . . . . .",
+   "Y^%A . . . . . P^%B"
+  ],
+  "redesign": "round 1 core (two crates in open rows) had 5325 positions and a 96.5 ms TIME UP check; the crate now moves at most once (pushed to the edge)"
+ },
+ "core_PX": {
+  "family": "B portal-first (portal + crate + switch)",
+  "mechanic": "portal,movable,switch",
+  "target": "EXTREME",
+  "idea": "the crate travels: pushed into the portal it lands on the far side, in a lane someone still needs - who must leave before the push, and the pusher can only leave after its switch",
+  "map": [
+   ". . Gv . . . .",
+   ". . . . . . .",
+   ". B>&A M OA . . .",
+   ". . . . . . .",
+   ". . . . . . .",
+   ". . . . OA . .",
+   "P^%A . . . . Y^ ."
+  ]
+ },
+ "core_SG3": {
+  "family": "C switch / gate (two switches, flips into deadlocks)",
+  "mechanic": "switch,gate",
+  "target": "EXTREME",
+  "idea": "two switches, each turning its own pair: a reversal frees one block and can lock another - the gate opens only when its link is gone",
+  "map": [
+   ". . . . . . .",
+   ". Rv&A . . . Gv&B .",
+   ". . . . . . .",
+   ". Y^+C . XC . P^ .",
+   ". . . . . . .",
+   "B>%A . . . . . .",
+   ". . . . . . Pv%B"
+  ]
+ },
+ "core_MG2": {
+  "family": "D magnet displacement (at most 3 magnets) + lock",
+  "mechanic": "magnet,lock",
+  "target": "EXTREME",
+  "idea": "a pull moves the key: the magnet drags a block across the lane of a locked block - the order of pulls decides which lanes are open when the lock releases",
+  "map": [
+   ". . . Gv#R . . .",
+   ". . . . . . .",
+   ". . . . . . .",
+   "R<* . . B> . . .",
+   ". . . . . . .",
+   ". . . . . . .",
+   ". . . . . . ."
+  ]
+ },
+ "core_AS": {
+  "family": "E rammer / armor (with a switch)",
+  "mechanic": "armor,switch",
+  "target": "EXTREME",
+  "idea": "one rammer, two shells, one reversal: the rammer cracks the shell in front, must not leave yet, and is turned around to crack the one behind - leave early or turn early and a shell stays",
+  "map": [
+   ". . . . . . .",
+   ". . . . . . .",
+   "G<= . B>&A . Y^= . .",
+   ". . . . . . .",
+   ". . . . . . .",
+   ". . . . . . .",
+   ". . . . . . P^%A"
+  ]
+ },
+ "core_SQX": {
+  "family": "F mixed (Sequence + magnet)",
+  "mechanic": "sequence,magnet",
+  "target": "EXTREME",
+  "idea": "advance or be pulled: a Sequence block turns when tapped with a clear lane, a magnet drags it elsewhere - in which order decides where its second arrow points",
+  "map": [
+   ". . . Rv . . .",
+   ". . . . . . .",
+   ". . . . . . .",
+   "Y<* . . B>:^ . . .",
+   ". . . . . . .",
+   ". . . . . . .",
+   ". . . . . . ."
+  ]
+ },
+ "core_PX2": {
+  "family": "B portal-first (portal + crate + two switches)",
+  "mechanic": "portal,movable,switch",
+  "target": "EXTREME",
+  "idea": "the crate travels and a lane bends back: pushed into the portal the crate lands where another block's lane comes out of the portal - two switches decide who can still leave",
+  "map": [
+   ". . Gv . . . .",
+   ". . . . . . .",
+   ". B>&A M OA . . .",
+   ". . . . . . .",
+   ". . . . . . .",
+   ". . . . OA . R<&B",
+   "P^%A . . Gv%B . Y^ ."
+  ],
+  "redesign": "round 1 (PX) reached 3 distinct mistakes: one switch, one trap; a second switch and a flip target whose lane runs through the portal"
+ },
+ "core_SG4": {
+  "family": "C switch / gate (early reversal = deadlock)",
+  "mechanic": "switch,gate",
+  "target": "EXTREME",
+  "idea": "a reversal can lock two blocks face to face: each switch frees the block it must, but turns another toward a block that waits for it - fire it before that block has left and both are stuck; the gate decides who can leave first",
+  "map": [
+   ". . Bv+C . . . Rv%B",
+   ". . . . . . .",
+   ". . Gv&A . . . .",
+   ". XC . . R>&A . Y<",
+   ". . . . . . .",
+   ". Y^&B . . . . .",
+   ". R^ . . . P^%A ."
+  ],
+  "redesign": "round 1 (SG3) reached 2 distinct mistakes: its reversals only freed blocks; now each switch also turns a block toward a block that waits for it (an early switch is a deadlock)"
+ },
+ "core_AS2": {
+  "family": "E rammer / armor (two rammers, two switches)",
+  "mechanic": "armor,switch",
+  "target": "EXTREME",
+  "idea": "two rammers, four shells, two reversals: each rammer cracks the shell in front, must stay, and is turned around to crack the one behind - and one switch can only fire once the other pair is done",
+  "map": [
+   ". . . . . . .",
+   ". . . . . . .",
+   "G<= . B>&A . Y^= . .",
+   ". . . . . . .",
+   ". . . . . . .",
+   ". . P^= . R<&B . Gv=",
+   "Y^%B . . . . P^%A ."
+  ],
+  "redesign": "round 1 (AS: one rammer, one switch) reached 1 distinct mistake with a 70% shortcut; two rammer / switch pairs, the second switch's lane opened only by the first pair"
+ },
+ "core_MG3": {
+  "family": "D magnet displacement (two magnets, face-to-face pulls)",
+  "mechanic": "magnet",
+  "target": "EXTREME",
+  "idea": "a pull can lock two blocks face to face: each magnet drags a block into a lane where it meets a block pointing back at it - each magnet must wait until that block has left, and must still go before the block it is holding up",
+  "map": [
+   "Gv . . . . . .",
+   ". . . . . . .",
+   ". . . . . . .",
+   "R<* . . P^ . . .",
+   ". . . . . . .",
+   ". . . Gv . . B>*",
+   ". . . . . . Y^"
+  ],
+  "redesign": "round 1 (MG2: one magnet + lock) reached 2 distinct mistakes; two magnets, each pulling a block into a face-to-face deadlock if fired early"
+ },
+ "core_SQX2": {
+  "family": "F mixed (Sequence + two magnets)",
+  "mechanic": "sequence,magnet",
+  "target": "EXTREME",
+  "idea": "advance or be pulled: Sequence blocks turn when tapped with a clear lane, magnets drag them elsewhere - the order decides where their second arrows point",
+  "map": [
+   ". . . Rv . . .",
+   ". . . . . . .",
+   ". . . . . . .",
+   "Y<* . . B>:^ . . .",
+   ". . . . . . .",
+   ". . . . . . .",
+   ". . . G^:< . . P>*"
+  ],
+  "redesign": "round 1 (SQX) reached 2 distinct mistakes; a second magnet and Sequence block"
+ },
+ "core_MX4": {
+  "family": "C/D magnet + switch (pull and flip deadlocks)",
+  "mechanic": "magnet,switch",
+  "target": "EXTREME",
+  "idea": "two ways to lock blocks face to face: the magnet drags a block under one pointing back at it, the switch turns a block toward one waiting for it - each must wait for the right block to leave, and both are needed",
+  "map": [
+   "Gv . . Bv . . .",
+   ". . . . . . .",
+   ". . . Pv&A . . .",
+   "R<* . . . Y^ . .",
+   ". . . . . . .",
+   ". R>&A . . . . Y<",
+   ". . . . . P^%A ."
+  ]
+ },
+ "core_MAS": {
+  "family": "A/E crate + switch + armor",
+  "mechanic": "movable,switch,armor",
+  "target": "EXTREME",
+  "idea": "push, turn, ram: a block pushes the crate out of a column, is turned around by the switch and must then crack the shell behind it - turn it early and the crate stays, leave a shell and it is stuck",
+  "map": [
+   ". . . . . Gv .",
+   ". . . . . . .",
+   ". Y^= . . R>&A M .",
+   ". . . . . . .",
+   ". . . . . . .",
+   ". . . . . . .",
+   "P^%A . . . . . ."
+  ]
+ },
+ "core_MAS2": {
+  "family": "A/E crate + two switches + armor",
+  "mechanic": "movable,switch,armor",
+  "target": "EXTREME",
+  "idea": "push, turn, ram - and a second switch the push can shut out: the pusher clears a column, is turned around to crack the shell behind it; the other switch must fire before the crate lands in its lane",
+  "map": [
+   ". . . . . Gv .",
+   ". . . . . . .",
+   ". Y^= . . R>&A M .",
+   ". . . . . . .",
+   ". B<&B . . . . .",
+   ". . . . . . .",
+   "P^%A . . . . . G^%B"
+  ],
+  "redesign": "round 1 (MAS) reached 3 distinct mistakes; a second switch whose lane the pushed crate closes (the MF2 trap)"
+ }
+}

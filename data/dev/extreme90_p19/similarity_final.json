@@ -1,0 +1,14 @@
+{
+ "N35": {
+  "closest_known": "N16",
+  "overlap": 0.21,
+  "closest_new": "N36",
+  "closest_new_overlap": 0.27
+ },
+ "N36": {
+  "closest_known": "N32",
+  "overlap": 0.32,
+  "closest_new": "N35",
+  "closest_new_overlap": 0.27
+ }
+}

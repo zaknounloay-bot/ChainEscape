@@ -1,0 +1,130 @@
+Godot Engine v4.3.stable.official.77dcf97d8 - https://godotengine.org
+
+known boards: 1219
+known boards incl. T1-T5 and the demos: 1219; played boards for the near-copy guard: 333
+
+=== MF2_1 (target EXTREME, 17 pieces) ===
+   . . . . . Gv .
+   Y> Pv . . . . P>&A
+   R>&B . . . R>&A M .
+   . . . . Rv P< .
+   . B<&B R< P< R< . .
+   . Bv&A . . . . .
+   Y^%A R> . . . . P^%B
+   solution: r1c6> [x1], r4c1< [x2], r4c2< [x1], r4c3< [x1], r4c4< [x1], r3c4v [x1], r3c5< [x1], r6c6^ [x2], r2c0< [x1], r6c1> [x1], r5c1v [x1], r1c1v [x1], r1c0> [x1], r2c4> push [x2], r0c5v, r6c0^, r2c4<
+   A {"fingerprint":"d7d03b50bd2360259ab26d8ad302b3cc584a908d9a8a43c63ec9775a2ea75bc1","hint_nodes":[51,264],"parity":[0,0],"portals":0,"position_cap":1500,"positions":365,"replay":true,"solution":17,"solve_ms":3.1,"timeup_worst_ms":7.8,"timeup_worst_nodes":293,"winnable":157}
+   B {"coverage":0.82,"decision_steps":14,"distinct_mistakes":4,"endgame_decision":true,"last_decision":14,"late":0.82,"line(see above)":["r1c6> [x1]","r4c1< [x2]","r4c2< [x1]","r4c3< [x1]","r4c4< [x1]","r3c4v [x1]","r3c5< [x1]","r6c6^ [x2]","r2c0< [x1]","r6c1> [x1]","r5c1v [x1]","r1c1v [x1]","r1c0> [x1]","r2c4> push [x2]","r0c5v","r6c0^","r2c4<"],"losing_per_step":[1,2,1,1,1,1,1,2,1,1,1,1,1,2,0,0,0],"matters_movable":true,"matters_switch":true,"mistakes":["r2c4> push","r6c6^","r0c5v push","r6c0^"],"shortcut":0.158,"without_movable":"without it: 2 decision steps, 1 distinct mistakes (with it: 14, 4)","without_switch":"unsolvable without it"}
+   C {"decisions_k4_6_8":[14,13,9],"deepest":13,"greedy":{"look2":0.12,"look4":0.158,"min_turn":0.12,"mobility":0,"safe":0.12},"hidden_k6_8":[13,9],"learner":{"look4":1,"look6":0},"look6_greedy":0.567,"opening":"2 / 3","pressure":{"advances":0,"calm_prefix":7,"flips":2,"multi_turned":0,"prediction_share":0.12,"pulls":0,"rams":0,"signals":1,"spinners_turned":0,"trap_delay_median":8,"turns":0,"undo_proof":1},"win_share":0.43}
+   VERDICT: HUMAN-REVIEW CANDIDATE
+
+=== MF2_2 (target EXTREME, 17 pieces) ===
+   . . . . . Gv .
+   Y> Pv . . . . P>&A
+   R>&B . . . R>&A M .
+   . . . . Rv P< .
+   . B<&B R< P<&B R< . .
+   . Bv . . . . .
+   Y^%A R> . . . . P^%B
+   solution: r1c6> [x1], r4c1< [x2], r4c2< [x2], r4c3< [x2], r4c4< [x1], r3c4v [x1], r3c5< [x1], r6c6^ [x2], r2c0< [x1], r6c1> [x1], r5c1v [x1], r1c1v [x1], r1c0> [x1], r2c4> push [x2], r0c5v, r6c0^, r2c4<
+   A {"fingerprint":"9c9b4d07ba11b1df149bc5615a0b37fde4dacb2097ecc04d2d1179fde4b95279","hint_nodes":[51,264],"parity":[0,0],"portals":0,"position_cap":1500,"positions":365,"replay":true,"solution":17,"solve_ms":5.5,"timeup_worst_ms":11.5,"timeup_worst_nodes":293,"winnable":113}
+   B {"coverage":0.82,"decision_steps":14,"distinct_mistakes":4,"endgame_decision":true,"last_decision":14,"late":0.82,"line(see above)":["r1c6> [x1]","r4c1< [x2]","r4c2< [x2]","r4c3< [x2]","r4c4< [x1]","r3c4v [x1]","r3c5< [x1]","r6c6^ [x2]","r2c0< [x1]","r6c1> [x1]","r5c1v [x1]","r1c1v [x1]","r1c0> [x1]","r2c4> push [x2]","r0c5v","r6c0^","r2c4<"],"losing_per_step":[1,2,2,2,1,1,1,2,1,1,1,1,1,2,0,0,0],"matters_movable":true,"matters_switch":true,"mistakes":["r2c4> push","r6c6^","r0c5v push","r6c0^"],"shortcut":0.158,"without_movable":"without it: 4 decision steps, 1 distinct mistakes (with it: 14, 4)","without_switch":"unsolvable without it"}
+   C {"decisions_k4_6_8":[14,13,9],"deepest":13,"greedy":{"look2":0.12,"look4":0.158,"min_turn":0.12,"mobility":0,"safe":0.12},"hidden_k6_8":[15,11],"learner":{"look4":1,"look6":0},"look6_greedy":0.567,"opening":"2 / 3","pressure":{"advances":0,"calm_prefix":7,"flips":2,"multi_turned":0,"prediction_share":0.12,"pulls":0,"rams":0,"signals":1,"spinners_turned":0,"trap_delay_median":8,"turns":0,"undo_proof":1},"win_share":0.31}
+   VERDICT: HUMAN-REVIEW CANDIDATE
+
+=== MF2_3 (target EXTREME, 16 pieces) ===
+   . . . . . Gv .
+   Y> Pv . . . . P>&A
+   R>&B . . . R>&A M .
+   . . . . Rv P< .
+   . B<&B R< P< R< . .
+   . . . . . . .
+   Y^%A R> . . . . P^%B
+   solution: r1c6> [x1], r4c1< [x2], r4c2< [x1], r4c3< [x1], r4c4< [x1], r3c4v [x1], r3c5< [x1], r6c6^ [x2], r2c0< [x1], r6c1> [x1], r1c1v [x1], r1c0> [x1], r2c4> push [x2], r0c5v, r6c0^, r2c4<
+   A {"fingerprint":"680f5c8ed977da4567d9cd388f3ac1d4ace296bcf4c9d0e6e4e3eaa4b813776e","hint_nodes":[50,220],"parity":[0,0],"portals":0,"position_cap":1500,"positions":319,"replay":true,"solution":16,"solve_ms":2.2,"timeup_worst_ms":5.3,"timeup_worst_nodes":249,"winnable":131}
+   B {"coverage":0.81,"decision_steps":13,"distinct_mistakes":4,"endgame_decision":true,"last_decision":13,"late":0.81,"line(see above)":["r1c6> [x1]","r4c1< [x2]","r4c2< [x1]","r4c3< [x1]","r4c4< [x1]","r3c4v [x1]","r3c5< [x1]","r6c6^ [x2]","r2c0< [x1]","r6c1> [x1]","r1c1v [x1]","r1c0> [x1]","r2c4> push [x2]","r0c5v","r6c0^","r2c4<"],"losing_per_step":[1,2,1,1,1,1,1,2,1,1,1,1,2,0,0,0],"matters_movable":true,"matters_switch":true,"mistakes":["r2c4> push","r6c6^","r0c5v push","r6c0^"],"shortcut":0.135,"without_movable":"without it: 2 decision steps, 1 distinct mistakes (with it: 13, 4)","without_switch":"unsolvable without it"}
+   C {"decisions_k4_6_8":[13,12,8],"deepest":13,"greedy":{"look2":0.135,"look4":0.117,"min_turn":0.135,"mobility":0,"safe":0.135},"hidden_k6_8":[12,8],"learner":{"look4":1,"look6":0},"look6_greedy":0.508,"opening":"2 / 3","pressure":{"advances":0,"calm_prefix":7,"flips":2,"multi_turned":0,"prediction_share":0.13,"pulls":0,"rams":0,"signals":1,"spinners_turned":0,"trap_delay_median":8,"turns":0,"undo_proof":0.94},"win_share":0.411}
+   VERDICT: HUMAN-REVIEW CANDIDATE
+
+=== MG3_1 (target EXTREME, 17 pieces) ===
+   Gv . . G^ . Gv P>*
+   . . . B^ . . B<
+   B<#R . . . . . .
+   R<* . . P^ P>#R . Y^
+   . . . R> . . Y^
+   . . . Gv . . B>*
+   . . . G<#R . . Y^
+   solution: r0c5v [x4], r0c6> [x3], r1c3^ [x2], r0c6^ [x2], r1c6< [x2], r3c3^ [x2], r3c0< [x1], r3c6^ [x1], r4c6^ [x1], r4c3> [x1], r6c3< [x1], r2c0< [x1], r3c0> [x1], r0c0v [x1], r5c3v [x1], r5c6>, r6c6^
+   A {"fingerprint":"1d1cd81d32bbeba3e01ab82c4277475892be2953ccf3bcc50cc3a83db7938a1a","hint_nodes":[131,0],"parity":[0,0],"portals":0,"position_cap":2000,"positions":214,"replay":true,"solution":17,"solve_ms":10.4,"timeup_worst_ms":9.2,"timeup_worst_nodes":220,"winnable":48}
+   B {"coverage":0.88,"decision_steps":15,"distinct_mistakes":4,"endgame_decision":true,"last_decision":15,"late":0.88,"line(see above)":["r0c5v [x4]","r0c6> [x3]","r1c3^ [x2]","r0c6^ [x2]","r1c6< [x2]","r3c3^ [x2]","r3c0< [x1]","r3c6^ [x1]","r4c6^ [x1]","r4c3> [x1]","r6c3< [x1]","r2c0< [x1]","r3c0> [x1]","r0c0v [x1]","r5c3v [x1]","r5c6>","r6c6^"],"losing_per_step":[4,3,2,2,2,2,1,1,1,1,1,1,1,1,1,0,0],"matters_magnet":true,"mistakes":["r0c3^","r0c6>","r3c0<","r5c6>"],"shortcut":0,"without_magnet":"without it: 0 decision steps, 0 distinct mistakes (with it: 15, 4)"}
+   C {"decisions_k4_6_8":[11,9,7],"deepest":15,"greedy":{"look2":0,"look4":0,"min_turn":0,"mobility":0,"safe":0},"hidden_k6_8":[18,13],"learner":{"look4":7,"look6":5},"look6_greedy":0,"opening":"1 / 5","pressure":{"advances":0,"calm_prefix":0,"flips":0,"multi_turned":0,"prediction_share":0.12,"pulls":2,"rams":0,"signals":1,"spinners_turned":0,"trap_delay_median":9,"turns":0,"undo_proof":0.83},"win_share":0.224}
+   VERDICT: HUMAN-REVIEW CANDIDATE
+
+=== MG3_2 (target EXTREME, 17 pieces) ===
+   Gv . . G^ . Gv P>*
+   . . . B^ Yv#R . .
+   . . . . . . B^
+   R<* . . P^ P>#R . Y^
+   . . . R> . . Y^
+   . . . Gv . . B>*
+   . . . G<#R . . Y^
+   solution: r0c5v [x4], r0c6> [x3], r1c3^ [x2], r0c6^ [x2], r2c6^ [x2], r3c3^ [x2], r3c0< [x1], r3c6^ [x1], r4c6^ [x1], r4c3> [x1], r6c3< [x1], r1c4v [x1], r3c0> [x1], r0c0v [x1], r5c3v [x1], r5c6>, r6c6^
+   A {"fingerprint":"1c5a37ea97359343161cb5b00bd008d202ee54cab027f3598d371b8e9b122d58","hint_nodes":[68,0],"parity":[0,0],"portals":0,"position_cap":2000,"positions":213,"replay":true,"solution":17,"solve_ms":9.8,"timeup_worst_ms":4.7,"timeup_worst_nodes":102,"winnable":54}
+   B {"coverage":0.88,"decision_steps":15,"distinct_mistakes":4,"endgame_decision":true,"last_decision":15,"late":0.88,"line(see above)":["r0c5v [x4]","r0c6> [x3]","r1c3^ [x2]","r0c6^ [x2]","r2c6^ [x2]","r3c3^ [x2]","r3c0< [x1]","r3c6^ [x1]","r4c6^ [x1]","r4c3> [x1]","r6c3< [x1]","r1c4v [x1]","r3c0> [x1]","r0c0v [x1]","r5c3v [x1]","r5c6>","r6c6^"],"losing_per_step":[4,3,2,2,2,2,1,1,1,1,1,1,1,1,1,0,0],"matters_magnet":true,"mistakes":["r0c3^","r0c6>","r3c0<","r5c6>"],"shortcut":0,"without_magnet":"without it: 0 decision steps, 0 distinct mistakes (with it: 15, 4)"}
+   C {"decisions_k4_6_8":[11,9,7],"deepest":15,"greedy":{"look2":0,"look4":0,"min_turn":0,"mobility":0,"safe":0},"hidden_k6_8":[16,13],"learner":{"look4":6,"look6":3},"look6_greedy":0,"opening":"1 / 5","pressure":{"advances":0,"calm_prefix":0,"flips":0,"multi_turned":0,"prediction_share":0.12,"pulls":2,"rams":0,"signals":1,"spinners_turned":0,"trap_delay_median":9,"turns":0,"undo_proof":0.83},"win_share":0.254}
+   VERDICT: HUMAN-REVIEW CANDIDATE
+
+=== MG3_3 (target EXTREME, 16 pieces) ===
+   Gv . . G^ . Gv P>*
+   . . . . . . B^
+   B<#R . . . . . .
+   R<* . . P^ P>#R . Y^
+   . . . R> . . Y^
+   . . . Gv . . B>*
+   . . . G<#R . . Y^
+   solution: r0c5v [x4], r0c6> [x3], r0c6^ [x2], r1c6^ [x2], r3c3^ [x2], r3c0< [x1], r3c6^ [x1], r4c6^ [x1], r4c3> [x1], r6c3< [x1], r2c0< [x1], r3c0> [x1], r0c0v [x1], r5c3v [x1], r5c6>, r6c6^
+   A {"fingerprint":"7ef7d6a0275cfc1992110466d5aff09806cbcfebf30032c6adc20cb0ba2cdfc6","hint_nodes":[80,0],"parity":[0,0],"portals":0,"position_cap":2000,"positions":150,"replay":true,"solution":16,"solve_ms":5.8,"timeup_worst_ms":4.8,"timeup_worst_nodes":124,"winnable":43}
+   B {"coverage":0.88,"decision_steps":14,"distinct_mistakes":4,"endgame_decision":true,"last_decision":14,"late":0.88,"line(see above)":["r0c5v [x4]","r0c6> [x3]","r0c6^ [x2]","r1c6^ [x2]","r3c3^ [x2]","r3c0< [x1]","r3c6^ [x1]","r4c6^ [x1]","r4c3> [x1]","r6c3< [x1]","r2c0< [x1]","r3c0> [x1]","r0c0v [x1]","r5c3v [x1]","r5c6>","r6c6^"],"losing_per_step":[4,3,2,2,2,1,1,1,1,1,1,1,1,1,0,0],"matters_magnet":true,"mistakes":["r0c3^","r0c6>","r3c0<","r5c6>"],"shortcut":0,"without_magnet":"without it: 0 decision steps, 0 distinct mistakes (with it: 14, 4)"}
+   C {"decisions_k4_6_8":[10,8,6],"deepest":14,"greedy":{"look2":0,"look4":0,"min_turn":0,"mobility":0,"safe":0},"hidden_k6_8":[13,11],"learner":{"look4":7,"look6":3},"look6_greedy":0.008,"opening":"1 / 5","pressure":{"advances":0,"calm_prefix":0,"flips":0,"multi_turned":0,"prediction_share":0.13,"pulls":2,"rams":0,"signals":1,"spinners_turned":0,"trap_delay_median":8,"turns":0,"undo_proof":0.82},"win_share":0.287}
+   VERDICT: HUMAN-REVIEW CANDIDATE
+
+=== MX4_1 (target EXTREME, 17 pieces) ===
+   Gv . . Bv Gv&A . .
+   . . . R> . Y^ Pv
+   . . . Pv&A . . Y>*
+   R<* . . . Y^ . .
+   . . . B> . Y^ .
+   . R>&A . . . . Y<
+   . . . Bv* P< P^%A .
+   solution: r1c5^ [x3], r4c5^ [x3], r4c3> [x4], r6c3v [x3], r6c3v [x2], r2c6> [x1], r6c4< [x1], r6c5^ [x1], r0c4^ [x1], r5c1< [x1], r5c6< [x1], r1c6v [x1], r1c3> [x1], r0c3v [x1], r3c4^ [x1], r3c0<, r0c0v
+   A {"fingerprint":"0ce35e1d021d6a7e0496c5439836e429c769a321f5bce1638484edea380971c6","hint_nodes":[105,32],"parity":[0,0],"portals":0,"position_cap":1500,"positions":372,"replay":true,"solution":17,"solve_ms":12,"timeup_worst_ms":9,"timeup_worst_nodes":113,"winnable":99}
+   B {"coverage":0.88,"decision_steps":15,"distinct_mistakes":4,"endgame_decision":true,"last_decision":15,"late":0.88,"line(see above)":["r1c5^ [x3]","r4c5^ [x3]","r4c3> [x4]","r6c3v [x3]","r6c3v [x2]","r2c6> [x1]","r6c4< [x1]","r6c5^ [x1]","r0c4^ [x1]","r5c1< [x1]","r5c6< [x1]","r1c6v [x1]","r1c3> [x1]","r0c3v [x1]","r3c4^ [x1]","r3c0<","r0c0v"],"losing_per_step":[3,3,4,3,2,1,1,1,1,1,1,1,1,1,1,0,0],"matters_magnet":true,"matters_switch":true,"mistakes":["r2c6>","r3c0<","r6c3v","r6c5^"],"shortcut":0.017,"without_magnet":"without it: 5 decision steps, 1 distinct mistakes (with it: 15, 4)","without_switch":"unsolvable without it"}
+   C {"decisions_k4_6_8":[11,9,7],"deepest":15,"greedy":{"look2":0,"look4":0.017,"min_turn":0,"mobility":0,"safe":0},"hidden_k6_8":[19,17],"learner":{"look4":6,"look6":6},"look6_greedy":0.008,"opening":"1 / 4","pressure":{"advances":0,"calm_prefix":2,"flips":2,"multi_turned":0,"prediction_share":0.12,"pulls":1,"rams":0,"signals":1,"spinners_turned":0,"trap_delay_median":9,"turns":0,"undo_proof":0.84},"win_share":0.266}
+   VERDICT: HUMAN-REVIEW CANDIDATE
+
+=== MX4_2 (target EXTREME, 17 pieces) ===
+   Gv . R> Bv Gv&A . .
+   . . . R> . . Pv
+   . . . Pv&A . . Y>*
+   R<* . . . Y^ . .
+   . . . B> . Y> .
+   . R>&A . . . . Y<
+   . . . Bv* P< P^%A .
+   solution: r4c5> [x3], r4c3> [x4], r6c3v [x3], r6c3v [x2], r2c6> [x1], r6c4< [x1], r6c5^ [x1], r0c4^ [x1], r5c1< [x1], r5c6< [x1], r1c6v [x1], r1c3> [x1], r0c3v [x1], r0c2> [x1], r3c4^ [x1], r3c0<, r0c0v
+   A {"fingerprint":"2774b7214639ae98b1f7b6dfb1cd9d4c52d525a18b122f67e2be5cd11b98b5d4","hint_nodes":[105,32],"parity":[0,0],"portals":0,"position_cap":1500,"positions":374,"replay":true,"solution":17,"solve_ms":12.4,"timeup_worst_ms":5.9,"timeup_worst_nodes":113,"winnable":106}
+   B {"coverage":0.88,"decision_steps":15,"distinct_mistakes":4,"endgame_decision":true,"last_decision":15,"late":0.88,"line(see above)":["r4c5> [x3]","r4c3> [x4]","r6c3v [x3]","r6c3v [x2]","r2c6> [x1]","r6c4< [x1]","r6c5^ [x1]","r0c4^ [x1]","r5c1< [x1]","r5c6< [x1]","r1c6v [x1]","r1c3> [x1]","r0c3v [x1]","r0c2> [x1]","r3c4^ [x1]","r3c0<","r0c0v"],"losing_per_step":[3,4,3,2,1,1,1,1,1,1,1,1,1,1,1,0,0],"matters_magnet":true,"matters_switch":true,"mistakes":["r2c6>","r3c0<","r6c3v","r6c5^"],"shortcut":0.015,"without_magnet":"without it: 5 decision steps, 1 distinct mistakes (with it: 15, 4)","without_switch":"unsolvable without it"}
+   C {"decisions_k4_6_8":[11,9,7],"deepest":15,"greedy":{"look2":0.005,"look4":0.008,"min_turn":0.015,"mobility":0,"safe":0},"hidden_k6_8":[17,15],"learner":{"look4":6,"look6":7},"look6_greedy":0.008,"opening":"1 / 4","pressure":{"advances":0,"calm_prefix":1,"flips":2,"multi_turned":0,"prediction_share":0.12,"pulls":1,"rams":0,"signals":1,"spinners_turned":0,"trap_delay_median":9,"turns":0,"undo_proof":0.83},"win_share":0.283}
+   VERDICT: HUMAN-REVIEW CANDIDATE
+
+=== MX4_3 (target EXTREME, 16 pieces) ===
+   Gv . . Bv Gv&A . .
+   . . . R> . . Pv
+   . . . Pv&A . . Y>*
+   R<* . . . Y^ . .
+   . . . B> . Y> .
+   . R>&A . . . . Y<
+   . . . Bv* P< P^%A .
+   solution: r4c5> [x3], r4c3> [x4], r6c3v [x3], r6c3v [x2], r2c6> [x1], r6c4< [x1], r6c5^ [x1], r0c4^ [x1], r5c1< [x1], r5c6< [x1], r1c6v [x1], r1c3> [x1], r0c3v [x1], r3c4^ [x1], r3c0<, r0c0v
+   A {"fingerprint":"27b8e9e2eab96c6523b10fb0c61026993f8715e08e2b3605d5a9626b3cd67072","hint_nodes":[105,32],"parity":[0,0],"portals":0,"position_cap":1500,"positions":364,"replay":true,"solution":16,"solve_ms":8.5,"timeup_worst_ms":5.5,"timeup_worst_nodes":113,"winnable":98}
+   B {"coverage":0.88,"decision_steps":14,"distinct_mistakes":4,"endgame_decision":true,"last_decision":14,"late":0.88,"line(see above)":["r4c5> [x3]","r4c3> [x4]","r6c3v [x3]","r6c3v [x2]","r2c6> [x1]","r6c4< [x1]","r6c5^ [x1]","r0c4^ [x1]","r5c1< [x1]","r5c6< [x1]","r1c6v [x1]","r1c3> [x1]","r0c3v [x1]","r3c4^ [x1]","r3c0<","r0c0v"],"losing_per_step":[3,4,3,2,1,1,1,1,1,1,1,1,1,1,0,0],"matters_magnet":true,"matters_switch":true,"mistakes":["r2c6>","r3c0<","r6c3v","r6c5^"],"shortcut":0.005,"without_magnet":"without it: 5 decision steps, 1 distinct mistakes (with it: 14, 4)","without_switch":"unsolvable without it"}
+   C {"decisions_k4_6_8":[10,8,6],"deepest":14,"greedy":{"look2":0.005,"look4":0,"min_turn":0.005,"mobility":0,"safe":0},"hidden_k6_8":[16,14],"learner":{"look4":6,"look6":7},"look6_greedy":0.008,"opening":"1 / 4","pressure":{"advances":0,"calm_prefix":1,"flips":2,"multi_turned":0,"prediction_share":0.13,"pulls":1,"rams":0,"signals":1,"spinners_turned":0,"trap_delay_median":9,"turns":0,"undo_proof":0.82},"win_share":0.269}
+   VERDICT: HUMAN-REVIEW CANDIDATE
