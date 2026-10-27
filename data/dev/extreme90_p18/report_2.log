@@ -1,0 +1,32 @@
+Godot Engine v4.3.stable.official.77dcf97d8 - https://godotengine.org
+
+known boards: 1137
+known boards incl. T1-T5 and the demos: 1137; played boards for the near-copy guard: 333
+
+=== MG_3e (target EXTREME, 16 pieces) ===
+   Rv . . . R> Bv .
+   . R> Y> . . . .
+   R<* Bv* Rv* P<* G^ . .
+   Y<* . . B^ . G>* .
+   . . . R^ . P<* G^
+   . . . . . . .
+   . . . . . . .
+   solution: r1c2> [x5], r1c1> [x4], r2c1v [x3], r2c2v [x3], r2c0< [x2], r3c3^ [x3], r3c0< [x1], r3c0> [x1], r4c3^ [x1], r4c6^ [x2], r4c5< [x1], r0c5v [x1], r0c4> [x1], r2c4^ [x1], r2c0<, r0c0v
+   A {"fingerprint":"81fde18027c093943a6414373fbbbc452517689c9d6d3350553c6d5bd67a5f8b","hint_nodes":[106,0],"parity":[0,0],"portals":0,"position_cap":2000,"positions":432,"replay":true,"solution":16,"solve_ms":10.4,"timeup_worst_ms":19,"timeup_worst_nodes":427,"winnable":44}
+   B {"coverage":0.88,"decision_steps":14,"distinct_mistakes":6,"endgame_decision":true,"last_decision":14,"late":0.88,"line(see above)":["r1c2> [x5]","r1c1> [x4]","r2c1v [x3]","r2c2v [x3]","r2c0< [x2]","r3c3^ [x3]","r3c0< [x1]","r3c0> [x1]","r4c3^ [x1]","r4c6^ [x2]","r4c5< [x1]","r0c5v [x1]","r0c4> [x1]","r2c4^ [x1]","r2c0<","r0c0v"],"losing_per_step":[5,4,3,3,2,3,1,1,1,2,1,1,1,1,0,0],"matters_magnet":true,"mistakes":["r2c0<","r2c1v","r2c2v","r3c0<","r3c5>","r4c5<"],"shortcut":0.045,"without_magnet":"without it: 0 decision steps, 0 distinct mistakes (with it: 14, 6)"}
+   C {"decisions_k4_6_8":[10,8,6],"deepest":14,"greedy":{"look2":0,"look4":0,"min_turn":0,"mobility":0.045,"safe":0},"hidden_k6_8":[20,15],"learner":{"look4":7,"look6":7},"look6_greedy":0,"opening":"2 / 7","pressure":{"advances":0,"calm_prefix":0,"flips":0,"multi_turned":0,"prediction_share":0.13,"pulls":2,"rams":0,"signals":1,"spinners_turned":0,"trap_delay_median":8,"turns":0,"undo_proof":0.83},"win_share":0.102}
+   VERDICT: HUMAN-REVIEW CANDIDATE
+
+=== AR2_1e (target EXTREME, 16 pieces) ===
+   . . . . P<* G>= Pv=
+   . . . Pv= P^* Y< Gv*
+   Rv . G^ . R>* . .
+   Y<* . Y^ B> G^ G^= .
+   . . . . . . .
+   . . . . . Rv* .
+   . . . . . . .
+   solution: r0c4< [x4], r1c4^ ram [x4], r0c4> ram [x4], r1c6v [x3], r0c4> [x3], r1c6v [x4], r2c4> [x4], r1c4^ [x2], r1c4^ [x2], r1c5< ram [x2], r3c2^ [x2], r3c0< [x1], r1c3v [x1], r1c5< [x1], r3c4^ [x1], r3c0> ram [x1], r3c5^, r3c0>, r2c0v, r5c5v
+   A {"fingerprint":"bb36f7d5fea3359b009cfbc854d221e51d0d4705a140a97c6bd7d8bf2aa09e24","hint_nodes":[577,0],"parity":[0,0],"portals":0,"position_cap":2000,"positions":776,"replay":true,"solution":20,"solve_ms":8.7,"timeup_worst_ms":30.2,"timeup_worst_nodes":583,"winnable":149}
+   B {"coverage":0.8,"decision_steps":16,"distinct_mistakes":5,"endgame_decision":true,"last_decision":16,"late":0.8,"line(see above)":["r0c4< [x4]","r1c4^ ram [x4]","r0c4> ram [x4]","r1c6v [x3]","r0c4> [x3]","r1c6v [x4]","r2c4> [x4]","r1c4^ [x2]","r1c4^ [x2]","r1c5< ram [x2]","r3c2^ [x2]","r3c0< [x1]","r1c3v [x1]","r1c5< [x1]","r3c4^ [x1]","r3c0> ram [x1]","r3c5^","r3c0>","r2c0v","r5c5v"],"losing_per_step":[4,4,4,3,3,4,4,2,2,2,2,1,1,1,1,1,0,0,0,0],"matters_armor":true,"matters_magnet":true,"mistakes":["r1c6v","r2c2^","r3c0<","r5c5v","r1c4^"],"shortcut":0.005,"without_armor":"without it: 8 decision steps, 3 distinct mistakes (with it: 16, 5)","without_magnet":"unsolvable without it"}
+   C {"decisions_k4_6_8":[14,12,10],"deepest":18,"greedy":{"look2":0,"look4":0,"min_turn":0.005,"mobility":0,"safe":0.005},"hidden_k6_8":[32,27],"learner":{"look4":8,"look6":8},"look6_greedy":0,"opening":"2 / 6","pressure":{"advances":0,"calm_prefix":0,"flips":0,"multi_turned":0,"prediction_share":0.45,"pulls":5,"rams":4,"signals":3,"spinners_turned":0,"trap_delay_median":10,"turns":0,"undo_proof":0.95},"win_share":0.192}
+   VERDICT: HUMAN-REVIEW CANDIDATE

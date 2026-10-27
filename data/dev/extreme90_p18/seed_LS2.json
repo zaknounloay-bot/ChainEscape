@@ -1,0 +1,57 @@
+{
+ "target": "EXTREME",
+ "facts": [],
+ "mechanic": "lock,switch",
+ "idea": "the key is turned by a switch: the red key can only leave after the switch reverses it, and the switch also turns other blocks - when to fire it",
+ "family": "F/E lock + switch",
+ "map": [
+  ". . . . . . .",
+  ". Gv#R . . . . .",
+  ". . . . . . .",
+  ". R>&A . . . B< .",
+  ". . . . . . .",
+  ". . . . . . .",
+  ". . . . Y^%A . ."
+ ],
+ "frozen": [
+  [
+   1,
+   1
+  ],
+  [
+   3,
+   1
+  ],
+  [
+   3,
+   5
+  ],
+  [
+   6,
+   4
+  ]
+ ],
+ "max_positions": 2000,
+ "piece_free": 13,
+ "max_pieces": 17,
+ "shortcut_weight": 80,
+ "coverage_weight": 25,
+ "late_weight": 20,
+ "endgame_weight": 20,
+ "length_weight": 1.0,
+ "length_cap": 18,
+ "pressure_weight": 1.5,
+ "palette": "arrows",
+ "suffixes": [
+  "#R",
+  "#G",
+  "#B",
+  "&A"
+ ],
+ "suffix_rate": 0.3,
+ "crates_max": 0,
+ "seed": 183,
+ "size": "medium",
+ "max_solve_nodes": 400,
+ "redesign": "round 3: a monotone mechanic (lock / gate / shell / portal) cannot create a losing move with plain arrows; paired with a non-monotone one (switch flip / magnet pull)"
+}

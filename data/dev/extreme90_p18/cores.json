@@ -1,0 +1,257 @@
+{
+ "core_MS": {
+  "family": "A/F movable + sequence",
+  "mechanic": "movable,sequence",
+  "target": "EXTREME",
+  "idea": "the Sequence pusher: pushing the crate also advances the pusher's arrow - who must leave before the crate moves, and who only after",
+  "map": [
+   ". . . Gv . . .",
+   ". . . . . . .",
+   ". . B>:^ M . . .",
+   ". . . . . . .",
+   ". . . . . . .",
+   ". . . . R^ . .",
+   ". . . . . . ."
+  ]
+ },
+ "core_MF": {
+  "family": "A/E movable + switch",
+  "mechanic": "movable,switch",
+  "target": "EXTREME",
+  "idea": "push, then be turned around: a flip target clears a lane by pushing the crate, and can only leave once the switch reverses it - the switch must not go first",
+  "map": [
+   ". . Gv . . . .",
+   ". . . . . . .",
+   ". R>&A M . . . .",
+   ". . . . . . .",
+   ". . . B^ . . .",
+   ". . . . . . .",
+   ". . . . Y^%A . ."
+  ]
+ },
+ "core_PR": {
+  "family": "B portal routing",
+  "mechanic": "portal",
+  "target": "EXTREME",
+  "idea": "lanes that bend: a block's way out runs through the portal and is blocked far from where it starts",
+  "map": [
+   ". . . Yv . . .",
+   ". . . . . . .",
+   "R> . OA . . . .",
+   ". . . . . . .",
+   ". . . . . . .",
+   ". . . . OA B> .",
+   ". . . . . . ."
+  ]
+ },
+ "core_PG": {
+  "family": "B/E portal + gate",
+  "mechanic": "portal,gate",
+  "target": "EXTREME",
+  "idea": "the gate's key leaves through the portal: its exit lane on the far side must be cleared first",
+  "map": [
+   ". . . Pv . . .",
+   ". . . . . . .",
+   ". . . XA . . .",
+   ". G>+A . . . OA .",
+   ". . . . . . .",
+   ". OA . . . . .",
+   ". . . . . . ."
+  ]
+ },
+ "core_MG": {
+  "family": "C magnet relocation",
+  "mechanic": "magnet",
+  "target": "EXTREME",
+  "idea": "the pull decides who is in the way: the magnet drags a plain block into a lane another block still needs",
+  "map": [
+   "Rv . . . . . .",
+   ". . . . . . .",
+   ". . . . . . .",
+   "Y<* . . B^ . . .",
+   ". . . . . . .",
+   ". . . . . . .",
+   ". . . . . . ."
+  ]
+ },
+ "core_SG": {
+  "family": "E switch / gate stages",
+  "mechanic": "switch,gate",
+  "target": "EXTREME",
+  "idea": "two stages: a gate opens only when its keys are gone, and the switch that turns the keys around must fire between them",
+  "map": [
+   ". . . . . . .",
+   ". Bv&A . . Rv+B . .",
+   ". . . . . . .",
+   ". G> . XB . . .",
+   ". . . . . . .",
+   ". . Y^%A . . . .",
+   ". . . . . . ."
+  ]
+ },
+ "core_LS": {
+  "family": "F lock / key / sequence",
+  "mechanic": "lock,sequence",
+  "target": "EXTREME",
+  "idea": "the key must turn before it can leave: a Sequence block is the only red key - its advance changes which lane it needs",
+  "map": [
+   ". . . . . . .",
+   ". . R>:v . . . .",
+   ". . . . . . .",
+   ". . . G^#R . . .",
+   ". . . . . . .",
+   ". . . . . . .",
+   ". . . . . . ."
+  ]
+ },
+ "core_AR": {
+  "family": "D rammer allocation",
+  "mechanic": "armor",
+  "target": "EXTREME",
+  "idea": "one rammer, several shells: which shell to crack first, and who must still be there to crack the next",
+  "map": [
+   ". . . . . . .",
+   ". . . . . . .",
+   ". B> . Y^= . Gv= .",
+   ". . . . . . .",
+   ". . . . . . .",
+   ". . . . . . .",
+   ". . . . . . ."
+  ]
+ },
+ "core_PM": {
+  "family": "B/A portal + movable + sequence",
+  "mechanic": "portal,movable,sequence",
+  "target": "EXTREME",
+  "idea": "the crate goes through the portal: a push sends it to the far side of the board, where it blocks a different lane - who must leave before, and who can only leave after",
+  "map": [
+   ". . . . . . .",
+   ". . . . . . .",
+   ". B>:v M OA . . .",
+   ". . . . . . .",
+   ". . . . . . .",
+   ". . . . . OA .",
+   ". . . . . . Y^"
+  ]
+ },
+ "core_LS2": {
+  "family": "F/E lock + switch",
+  "mechanic": "lock,switch",
+  "target": "EXTREME",
+  "idea": "the key is turned by a switch: the red key can only leave after the switch reverses it, and the switch also turns other blocks - when to fire it",
+  "map": [
+   ". . . . . . .",
+   ". Gv#R . . . . .",
+   ". . . . . . .",
+   ". R>&A . . . B< .",
+   ". . . . . . .",
+   ". . . . . . .",
+   ". . . . Y^%A . ."
+  ]
+ },
+ "core_AR2": {
+  "family": "D/C rammer + magnet",
+  "mechanic": "armor,magnet",
+  "target": "EXTREME",
+  "idea": "the magnet brings the rammer: a pull moves a block into the lane of a shell - or into a lane where it is only in the way",
+  "map": [
+   ". . . . . . .",
+   ". . . . . . .",
+   ". . . . . . .",
+   "Y<* . . B> . G^= .",
+   ". . . . . . .",
+   ". . . . . . .",
+   ". . . . . . ."
+  ]
+ },
+ "core_PS": {
+  "family": "B/E portal + switch",
+  "mechanic": "portal,switch",
+  "target": "EXTREME",
+  "idea": "reversed through the portal: a flipped block's new lane runs through the portal to the far side - fire the switch before or after that side is clear",
+  "map": [
+   ". . . . . . .",
+   ". . . . . . .",
+   ". . OA . R>&A . .",
+   ". . . . . . .",
+   ". . . . . . .",
+   ". . . . OA . .",
+   ". . . . Y^%A . ."
+  ]
+ },
+ "core_MX1": {
+  "family": "C/E magnet + switch",
+  "mechanic": "magnet,switch",
+  "target": "EXTREME",
+  "idea": "pull, then turn: the magnet drags a block across the board while the switch reverses others - a pulled block can land in a lane the switch has just turned toward it",
+  "map": [
+   ". . . . . . .",
+   ". Gv&A . . . . .",
+   ". . . . . . .",
+   "Y<* . . R> . . .",
+   ". . . . . . .",
+   ". . . . . . .",
+   ". . . P^%A . . ."
+  ]
+ },
+ "core_MX2": {
+  "family": "A/E crate + two switches",
+  "mechanic": "movable,switch",
+  "target": "EXTREME",
+  "idea": "two switches, one crate: each switch reverses its own blocks; one reversal must wait for a push, the other must come before a block is boxed in",
+  "map": [
+   ". . Gv . . . .",
+   ". . . . . . .",
+   ". R>&A M . . Bv&B .",
+   ". . . . . . .",
+   ". . . B^ . . .",
+   ". . . . . . .",
+   ". . . . Y^%A P<%B ."
+  ]
+ },
+ "core_MX3": {
+  "family": "C/F magnets + lock",
+  "mechanic": "magnet,lock",
+  "target": "EXTREME",
+  "idea": "keys on the move: two magnets drag the keys of a lock around the board - pulled early, a key blocks the lane it was meant to open",
+  "map": [
+   ". . . . . . .",
+   ". . . . . . .",
+   "R<* . . G> . . .",
+   ". . . . . . .",
+   ". . . . . . Bv#G",
+   ". . . . . . .",
+   "P<* . . . Y^ . ."
+  ]
+ },
+ "core_SPC": {
+  "family": "H/A spinner + crate",
+  "mechanic": "movable",
+  "target": "EXTREME",
+  "idea": "push before you turn: a spinner must launch the crate out of a lane before a neighbour's departure turns it away - and the crate's new cell must not be in anyone's way",
+  "map": [
+   ". . . . . . .",
+   ". . . Gv . . .",
+   ". B< R>@ M . . .",
+   ". . . . . . .",
+   ". . . . . . .",
+   ". . . . Y^ . .",
+   ". . . . . . ."
+  ]
+ },
+ "core_SPP": {
+  "family": "H/B spinner + portal",
+  "mechanic": "portal",
+  "target": "EXTREME",
+  "idea": "a turn that changes the far side: a spinner's lane runs through the portal in one facing and straight out in another",
+  "map": [
+   ". . . . . . .",
+   ". . . . . . .",
+   ". OA . R<@ G^ . .",
+   ". . . . . . .",
+   ". . . . . . .",
+   ". . . . . OA .",
+   ". . . . . . ."
+  ]
+ }
+}

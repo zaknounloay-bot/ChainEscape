@@ -1,0 +1,50 @@
+{
+ "target": "EXTREME",
+ "facts": [],
+ "mechanic": "magnet",
+ "idea": "the pull decides who is in the way: the magnet drags a plain block into a lane another block still needs",
+ "family": "C magnet relocation",
+ "map": [
+  "Rv . . . . . .",
+  ". . . . . . .",
+  ". . . . . . .",
+  "Y<* . . B^ . . .",
+  ". . . . . . .",
+  ". . . . . . .",
+  ". . . . . . ."
+ ],
+ "frozen": [
+  [
+   0,
+   0
+  ],
+  [
+   3,
+   0
+  ],
+  [
+   3,
+   3
+  ]
+ ],
+ "max_positions": 2000,
+ "piece_free": 13,
+ "max_pieces": 17,
+ "shortcut_weight": 80,
+ "coverage_weight": 25,
+ "late_weight": 20,
+ "endgame_weight": 20,
+ "length_weight": 1.0,
+ "length_cap": 18,
+ "pressure_weight": 1.5,
+ "palette": "arrows",
+ "suffixes": [
+  "*"
+ ],
+ "suffix_rate": 0.3,
+ "crates_max": 0,
+ "crate_rate": 0.15,
+ "seed": 181,
+ "size": "medium",
+ "max_solve_nodes": 400
+}

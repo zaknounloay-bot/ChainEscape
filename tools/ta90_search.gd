@@ -24,7 +24,11 @@ extends "res://tools/ta90_design.gd"
 ##   "max_solve_nodes" (Phase 16, optional): reject boards whose opening solve
 ##   needs more Solver nodes (keeps large boards inside the TIME UP gate),
 ##   "endgame_weight": 4 (the bonus for a decision in the last third),
-##   "shortcut_weight": 25 (how hard a greedy shortcut above 20 % is penalised; raised when boards stall on it)}
+##   "shortcut_weight": 25 (how hard a greedy shortcut above 20 % is penalised; raised when boards stall on it),
+##   Phase 18: "palette": "arrows" (grow with plain arrows only - no spinner
+##   ever added to a non-spinner core) | "all" (default); "crates_max" /
+##   "crate_rate": the search may also add Movable crates ("M") up to that
+##   count (default 0).}
 
 const TOKENS := ["^", "v", "<", ">", "^@", "v@", "<@", ">@", "^@-", "v@-", "<@-", ">@-", "^@~", "v@~", "<@~", ">@~"]
 const PALETTE := ["R", "G", "B", "Y", "P"]
@@ -121,12 +125,19 @@ func _edit(map: Array) -> Array:
 				spots.append(Vector2i(c, r))
 	var kind := _rng.randi_range(0, 9)
 	var maxp := int(_spec.get("max_pieces", 12))
+	var toks := _tokens()
 	if (kind < 5 or pieces.is_empty()) and not spots.is_empty() and _pieces(map) < maxp:
 		var at: Vector2i = spots[_rng.randi_range(0, spots.size() - 1)]
-		g[at.y][at.x] = PALETTE[_rng.randi_range(0, PALETTE.size() - 1)] + TOKENS[_rng.randi_range(0, TOKENS.size() - 1)]
+		var crates: int = int(_spec.get("crates_max", 0))
+		if crates > 0 and _count(g, "M") < crates and _rng.randf() < float(_spec.get("crate_rate", 0.15)):
+			g[at.y][at.x] = "M"
+		else:
+			var col: String = PALETTE[_rng.randi_range(0, PALETTE.size() - 1)]
+			g[at.y][at.x] = col + toks[_rng.randi_range(0, toks.size() - 1)] + _suffix(col)
 	elif kind < 8 and not pieces.is_empty():
 		var at: Vector2i = pieces[_rng.randi_range(0, pieces.size() - 1)]
-		g[at.y][at.x] = str(g[at.y][at.x])[0] + TOKENS[_rng.randi_range(0, TOKENS.size() - 1)]
+		var col: String = str(g[at.y][at.x])[0]
+		g[at.y][at.x] = col + toks[_rng.randi_range(0, toks.size() - 1)] + _suffix(col)
 	elif not pieces.is_empty():
 		var at: Vector2i = pieces[_rng.randi_range(0, pieces.size() - 1)]
 		g[at.y][at.x] = "."
@@ -136,6 +147,35 @@ func _edit(map: Array) -> Array:
 	for row in g:
 		out.append(" ".join(row))
 	return out
+
+
+## Phase 18: the tokens the search may place ("palette": "arrows" - plain
+## arrows only, so a non-spinner core never grows spinners; "all" - TOKENS,
+## the Phase 14-17 default).
+func _tokens() -> Array:
+	return TOKENS.slice(0, 4) if str(_spec.get("palette", "all")) == "arrows" else TOKENS
+
+
+## Phase 18: "suffixes" (e.g. ["&A", "+B", "#R"]): a new or changed piece
+## sometimes (suffix_rate, default 0.25) also takes one of the core's own
+## mechanic marks - a flip target of switch A, a link of gate B, a lock - so a
+## switch / gate / lock core grows dependencies, not only plain arrows. The
+## parser's rules still apply (an invalid mark makes the board not intact:
+## filtered). Only with a plain-arrow token (flip targets / locks on spinners
+## are refused by the engine anyway).
+func _suffix(col: String) -> String:
+	var sx: Array = _spec.get("suffixes", [])
+	if sx.is_empty() or _rng.randf() >= float(_spec.get("suffix_rate", 0.25)):
+		return ""
+	var x := str(sx[_rng.randi_range(0, sx.size() - 1)])
+	return "" if x.begins_with("#") and x.substr(1) == col else x  # never locked by its own colour
+
+
+static func _count(g: Array, tok: String) -> int:
+	var n := 0
+	for row in g:
+		n += Array(row).count(tok)
+	return n
 
 
 ## Plain arrows and spinners can be edited; designed pieces (switches, flip

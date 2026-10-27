@@ -1,0 +1,185 @@
+{
+ "format": "ce-ta90-proto",
+ "v": 1,
+ "test": "ta90_n32",
+ "assist": {
+  "undo": 3,
+  "show_a_move": 0,
+  "hammer": 0
+ },
+ "note": "Development only. Phase 18 EXTREME candidate (?extreme90p18=1); never shared, never production. HUMAN-REVIEW CANDIDATE: technically validated, strategic quality unconfirmed by people.",
+ "boards": [
+  {
+   "id": "N32",
+   "accepted": true,
+   "label": "HUMAN-REVIEW CANDIDATE - EXPERIMENTAL, HUMAN DIFFICULTY UNVALIDATED",
+   "variant": "N32",
+   "design": "18AR2_1e",
+   "family": "D/C rammer + magnet",
+   "primary": "non-spinner",
+   "target": "EXTREME (a design target, not a rating; never shown to players)",
+   "idea": "the magnet brings the rammer: a pull moves a block into the lane of a shell - or into a lane where it is only in the way",
+   "source": "hand-drawn idea core (data/dev/extreme90_p18/cores.json), grown by the bounded constructive search (tools/ta90_search.gd, Phase 18 palette), checked by tools/ta90_design.gd and tools/xb90_filler.gd (Phase 18)",
+   "fingerprint": "bb36f7d5fea3359b009cfbc854d221e51d0d4705a140a97c6bd7d8bf2aa09e24",
+   "mechanics": [
+    "armor",
+    "magnet"
+   ],
+   "puzzle": {
+    "format": "ce-puzzle",
+    "v": 1,
+    "rules": 1,
+    "rows": 7,
+    "cols": 7,
+    "map": [
+     ". . . . P<* G>= Pv=",
+     ". . . Pv= P^* Y< Gv*",
+     "Rv . G^ . R>* . .",
+     "Y<* . Y^ B> G^ G^= .",
+     ". . . . . . .",
+     ". . . . . Rv* .",
+     ". . . . . . ."
+    ]
+   },
+   "design_report": {
+    "A": {
+     "fingerprint": "bb36f7d5fea3359b009cfbc854d221e51d0d4705a140a97c6bd7d8bf2aa09e24",
+     "hint_nodes": [
+      577,
+      0
+     ],
+     "parity": [
+      0,
+      0
+     ],
+     "portals": 0,
+     "position_cap": 2000,
+     "positions": 776,
+     "replay": true,
+     "solution": 20,
+     "solve_ms": 8.7,
+     "timeup_worst_ms": 30.2,
+     "timeup_worst_nodes": 583,
+     "winnable": 149
+    },
+    "B": {
+     "coverage": 0.8,
+     "decision_steps": 16,
+     "distinct_mistakes": 5,
+     "endgame_decision": true,
+     "last_decision": 16,
+     "late": 0.8,
+     "line": [
+      "r0c4< [x4]",
+      "r1c4^ ram [x4]",
+      "r0c4> ram [x4]",
+      "r1c6v [x3]",
+      "r0c4> [x3]",
+      "r1c6v [x4]",
+      "r2c4> [x4]",
+      "r1c4^ [x2]",
+      "r1c4^ [x2]",
+      "r1c5< ram [x2]",
+      "r3c2^ [x2]",
+      "r3c0< [x1]",
+      "r1c3v [x1]",
+      "r1c5< [x1]",
+      "r3c4^ [x1]",
+      "r3c0> ram [x1]",
+      "r3c5^",
+      "r3c0>",
+      "r2c0v",
+      "r5c5v"
+     ],
+     "losing_per_step": [
+      4,
+      4,
+      4,
+      3,
+      3,
+      4,
+      4,
+      2,
+      2,
+      2,
+      2,
+      1,
+      1,
+      1,
+      1,
+      1,
+      0,
+      0,
+      0,
+      0
+     ],
+     "matters_armor": true,
+     "matters_magnet": true,
+     "mistakes": [
+      "r1c6v",
+      "r2c2^",
+      "r3c0<",
+      "r5c5v",
+      "r1c4^"
+     ],
+     "shortcut": 0.005,
+     "without_armor": "without it: 8 decision steps, 3 distinct mistakes (with it: 16, 5)",
+     "without_magnet": "unsolvable without it"
+    },
+    "C": {
+     "decisions_k4_6_8": [
+      14,
+      12,
+      10
+     ],
+     "deepest": 18,
+     "greedy": {
+      "look2": 0,
+      "look4": 0,
+      "min_turn": 0.005,
+      "mobility": 0,
+      "safe": 0.005
+     },
+     "hidden_k6_8": [
+      32,
+      27
+     ],
+     "learner": {
+      "look4": 8,
+      "look6": 8
+     },
+     "look6_greedy": 0,
+     "opening": "2 / 6",
+     "pressure": {
+      "advances": 0,
+      "calm_prefix": 0,
+      "flips": 0,
+      "multi_turned": 0,
+      "prediction_share": 0.45,
+      "pulls": 5,
+      "rams": 4,
+      "signals": 3,
+      "spinners_turned": 0,
+      "trap_delay_median": 10,
+      "turns": 0,
+      "undo_proof": 0.95
+     },
+     "win_share": 0.192
+    },
+    "filler": {
+     "distinct": 5,
+     "pieces_tested": 16,
+     "steps": 16,
+     "trivial": [],
+     "trivial_removals": 0
+    },
+    "similarity": {
+     "closest_known": "N24",
+     "overlap": 0.26,
+     "closest_new": "N31",
+     "closest_new_overlap": 0.33
+    }
+   }
+  }
+ ]
+}

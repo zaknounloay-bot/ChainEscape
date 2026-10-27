@@ -1,0 +1,47 @@
+{
+ "core_LS2": {
+  "family": "F/E lock + switch",
+  "mechanic": "lock,switch",
+  "target": "EXTREME",
+  "idea": "the key is turned by a switch: the red key can only leave after the switch reverses it, and the switch also turns other blocks - when to fire it",
+  "map": [
+   ". . . . . . .",
+   ". Gv#R . . . . .",
+   ". . . . . . .",
+   ". R>&A . . . B< .",
+   ". . . . . . .",
+   ". . . . . . .",
+   ". . . . Y^%A . ."
+  ]
+ },
+ "core_AR2": {
+  "family": "D/C rammer + magnet",
+  "mechanic": "armor,magnet",
+  "target": "EXTREME",
+  "idea": "the magnet brings the rammer: a pull moves a block into the lane of a shell - or into a lane where it is only in the way",
+  "map": [
+   ". . . . . . .",
+   ". . . . . . .",
+   ". . . . . . .",
+   "Y<* . . B> . G^= .",
+   ". . . . . . .",
+   ". . . . . . .",
+   ". . . . . . ."
+  ]
+ },
+ "core_PS": {
+  "family": "B/E portal + switch",
+  "mechanic": "portal,switch",
+  "target": "EXTREME",
+  "idea": "reversed through the portal: a flipped block's new lane runs through the portal to the far side - fire the switch before or after that side is clear",
+  "map": [
+   ". . . . . . .",
+   ". . . . . . .",
+   ". . OA . R>&A . .",
+   ". . . . . . .",
+   ". . . . . . .",
+   ". . . . OA . .",
+   ". . . . Y^%A . ."
+  ]
+ }
+}

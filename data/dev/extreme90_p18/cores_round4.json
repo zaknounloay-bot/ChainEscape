@@ -1,0 +1,47 @@
+{
+ "core_MX1": {
+  "family": "C/E magnet + switch",
+  "mechanic": "magnet,switch",
+  "target": "EXTREME",
+  "idea": "pull, then turn: the magnet drags a block across the board while the switch reverses others - a pulled block can land in a lane the switch has just turned toward it",
+  "map": [
+   ". . . . . . .",
+   ". Gv&A . . . . .",
+   ". . . . . . .",
+   "Y<* . . R> . . .",
+   ". . . . . . .",
+   ". . . . . . .",
+   ". . . P^%A . . ."
+  ]
+ },
+ "core_MX2": {
+  "family": "A/E crate + two switches",
+  "mechanic": "movable,switch",
+  "target": "EXTREME",
+  "idea": "two switches, one crate: each switch reverses its own blocks; one reversal must wait for a push, the other must come before a block is boxed in",
+  "map": [
+   ". . Gv . . . .",
+   ". . . . . . .",
+   ". R>&A M . . Bv&B .",
+   ". . . . . . .",
+   ". . . B^ . . .",
+   ". . . . . . .",
+   ". . . . Y^%A P<%B ."
+  ]
+ },
+ "core_MX3": {
+  "family": "C/F magnets + lock",
+  "mechanic": "magnet,lock",
+  "target": "EXTREME",
+  "idea": "keys on the move: two magnets drag the keys of a lock around the board - pulled early, a key blocks the lane it was meant to open",
+  "map": [
+   ". . . . . . .",
+   ". . . . . . .",
+   "R<* . . G> . . .",
+   ". . . . . . .",
+   ". . . . . . Bv#G",
+   ". . . . . . .",
+   "P<* . . . Y^ . ."
+  ]
+ }
+}

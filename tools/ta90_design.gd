@@ -26,7 +26,10 @@ extends "res://tools/extreme17_build.gd"
 ##   godot --headless --path . --script res://tools/ta90_design.gd -- --file=boards.json [--name=a,b] [--quick]
 ## boards.json: {"name": {"map": [...], "target": "MEDIUM|HARD|VERY HARD", "facts": ["..."], "mechanic": "switch,gate"}}
 ## max_positions: the analysis-size cap (default 700); the TIME UP gate is never relaxed.
-## mechanic: a comma list of switch | gate | lock | armor | magnet | alt | pattern | sequence; each must matter.
+## mechanic: a comma list of switch | gate | lock | armor | magnet | alt | pattern | sequence
+##   (Phase 18: | movable | portal); each must matter. Phase 18 also reports
+##   B.spinner_dependence: the "spinners" counterfactual (every spinner a plain
+##   arrow) - "unsolvable" / the decisions it keeps - on every board with spinners.
 ## --quick: skip the learners (category C) and parity (category A is then
 ## marked incomplete).
 
@@ -87,9 +90,10 @@ func report(name: String, spec: Dictionary) -> Dictionary:
 		return _verdict(r)
 	var def := PuzzleDefinition.from_dict({"format": PuzzleDefinition.FORMAT, "v": PuzzleDefinition.VERSION, "rules": PuzzleDefinition.RULES,
 		"rows": map.size(), "cols": str(map[0]).split(" ", false).size(), "map": map})
-	if def == null or not def.verify():
+	if def == null or not verify_equiv(def):
 		r["why_a"].append("not a well-formed, verifiable puzzle")
 		return _verdict(r)
+	r["A"]["portals"] = def.to_level().portals.size()
 	r["A"]["fingerprint"] = def.fingerprint()
 	var s := _solver(level)
 	var memo := EXPERT.explore(s)
@@ -168,6 +172,9 @@ func report(name: String, spec: Dictionary) -> Dictionary:
 		r["B"]["without_" + mech] = cf["what"]
 		if not cf["matters"]:
 			r["why_b"].append("the %s is decoration: %s" % [mech, cf["what"]])
+	# Phase 18 (reported, not a gate): how much the board leans on spinner turns.
+	if "|".join(map).contains("@"):
+		r["B"]["spinner_dependence"] = _counterfactual(map, "spinners", dec)["what"]
 	var pol := {}
 	var best := 0.0
 	for k in POLICIES:
@@ -341,6 +348,17 @@ func _counterfactual(map: Array, mech: String, dec: Dictionary) -> Dictionary:
 				"sequence":
 					var q := x.find(":")
 					x = x if q < 0 else x.substr(0, q) + x.substr(q + 2)
+				# Phase 18: Movable crates and portal pairs removed; "spinners":
+				# every spinner a plain arrow in its starting direction (how much
+				# of the board's decision structure is spinner turns).
+				"movable":
+					x = "." if x == "M" else x
+				"portal":
+					x = "." if x.length() == 2 and x[0] == "O" else x
+				"spinners":
+					var at := x.find("@")
+					if at >= 0:
+						x = x.substr(0, at) + x.substr(at + (2 if at + 1 < x.length() and x[at + 1] in ["-", "~", "*"] else 1))
 			cells.append(x)
 		m2.append(" ".join(cells))
 	if m2 == map:
@@ -355,6 +373,36 @@ func _counterfactual(map: Array, mech: String, dec: Dictionary) -> Dictionary:
 	var d2 := _decisions(s, memo["win"], s.solve_moves())
 	var same: bool = d2["decision_steps"] == dec["decision_steps"] and d2["distinct_mistakes"] == dec["distinct_mistakes"]
 	return {"matters": not same, "what": "without it: %d decision steps, %d distinct mistakes (with it: %d, %d)" % [d2["decision_steps"], d2["distinct_mistakes"], dec["decision_steps"], dec["distinct_mistakes"]]}
+
+
+## Phase 18: PuzzleDefinition.verify() for a 90 s board. Without portals it IS
+## verify(). With portals: the same checks (every cell parsed, the board's
+## size, a fresh Solver clears it within its default limit), counting portal
+## cells as cells and giving the Solver the portals - exactly what the 90 s
+## page plays (SocialPlay sets them on the model). verify() itself is never
+## changed: it stays the Social recipient check, where portals are refused,
+## so a portal board can never be shared.
+static func verify_equiv(def: PuzzleDefinition) -> bool:
+	var level := def.to_level()
+	if level == null or level.portals.is_empty():
+		return def.verify()
+	if level.rows != def.rows or level.columns != def.columns or level.blocks.is_empty():
+		return false
+	var tokens := 0
+	for row in def.map:
+		for t in row.split(" ", false):
+			if t != "." and not (t.length() == 2 and t[0] == "O"):
+				tokens += 1
+	if tokens != level.blocks.size():
+		return false
+	var model := BoardModel.new()
+	model.setup(level.rows, level.columns, level.blocks)
+	model.set_portals(level.portals)
+	if model.portals.size() != level.portals.size():
+		return false
+	var solver := Solver.from_model(model)
+	var moves := solver.solve_moves()
+	return not solver.aborted and not moves.is_empty()
 
 
 static func _strip(t: String, mark: String) -> String:

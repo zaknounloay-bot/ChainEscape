@@ -1,0 +1,32 @@
+{
+ "core_SPC": {
+  "family": "H/A spinner + crate",
+  "mechanic": "movable",
+  "target": "EXTREME",
+  "idea": "push before you turn: a spinner must launch the crate out of a lane before a neighbour's departure turns it away - and the crate's new cell must not be in anyone's way",
+  "map": [
+   ". . . . . . .",
+   ". . . Gv . . .",
+   ". B< R>@ M . . .",
+   ". . . . . . .",
+   ". . . . . . .",
+   ". . . . Y^ . .",
+   ". . . . . . ."
+  ]
+ },
+ "core_SPP": {
+  "family": "H/B spinner + portal",
+  "mechanic": "portal",
+  "target": "EXTREME",
+  "idea": "a turn that changes the far side: a spinner's lane runs through the portal in one facing and straight out in another",
+  "map": [
+   ". . . . . . .",
+   ". . . . . . .",
+   ". OA . R<@ G^ . .",
+   ". . . . . . .",
+   ". . . . . . .",
+   ". . . . . OA .",
+   ". . . . . . ."
+  ]
+ }
+}

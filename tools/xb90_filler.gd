@@ -20,13 +20,48 @@ func _initialize() -> void:
 	for k in d:
 		if x_args.has("name") and not str(x_args["name"]).split(",").has(k):
 			continue
-		out[k] = removals(Array(d[k]["map"]))
+		if x_args.has("economize"):
+			out[k] = economize(Array(d[k]["map"]), str(x_args["economize"]))
+		else:
+			out[k] = removals(Array(d[k]["map"]))
 		print("%s %s" % [k, JSON.stringify(out[k])])
 	if x_args.has("out"):
 		var f := FileAccess.open(str(x_args["out"]), FileAccess.WRITE)
 		f.store_string(JSON.stringify(out, " "))
 		f.close()
 	quit()
+
+
+## Phase 18 (--economize=*): mechanic economy - one at a time, a piece's
+## mark (a magnet "*", a shell "=") is stripped (the piece stays, a plain
+## arrow) when the board keeps its decision steps and distinct mistakes; repeated
+## until no mark can go. Fewer marks, the same decisions: a more readable board.
+func economize(map: Array, mark: String) -> Dictionary:
+	var base := _structure(map)
+	var cur := map.duplicate()
+	var stripped := []
+	var changed := true
+	while changed:
+		changed = false
+		for r in cur.size():
+			var row: Array = Array(str(cur[r]).split(" ", false))
+			for c in row.size():
+				var t: String = row[c]
+				if not t.ends_with(mark) or t.contains("@"):
+					continue
+				var row2 := row.duplicate()
+				row2[c] = t.trim_suffix(mark)
+				var m2 := cur.duplicate()
+				m2[r] = " ".join(row2)
+				var d := _structure(m2)
+				if not d.is_empty() and d["decision_steps"] >= base["decision_steps"] and d["distinct_mistakes"] >= base["distinct_mistakes"]:
+					cur = m2
+					stripped.append("r%dc%d %s" % [r, c, t])
+					changed = true
+					break
+			if changed:
+				break
+	return {"map": cur, "stripped": stripped, "steps": base.get("decision_steps", 0), "distinct": base.get("distinct_mistakes", 0)}
 
 
 func _structure(map: Array) -> Dictionary:

@@ -1,0 +1,59 @@
+{
+ "target": "EXTREME",
+ "facts": [],
+ "mechanic": "portal,gate",
+ "idea": "the gate's key leaves through the portal: its exit lane on the far side must be cleared first",
+ "family": "B/E portal + gate",
+ "map": [
+  ". . . Pv . . .",
+  ". . . . . . .",
+  ". . . XA . . .",
+  ". G>+A . . . OA .",
+  ". . . . . . .",
+  ". OA . . . . .",
+  ". . . . . . ."
+ ],
+ "frozen": [
+  [
+   0,
+   3
+  ],
+  [
+   2,
+   3
+  ],
+  [
+   3,
+   1
+  ],
+  [
+   3,
+   5
+  ],
+  [
+   5,
+   1
+  ]
+ ],
+ "max_positions": 2000,
+ "piece_free": 13,
+ "max_pieces": 17,
+ "shortcut_weight": 80,
+ "coverage_weight": 25,
+ "late_weight": 20,
+ "endgame_weight": 20,
+ "length_weight": 1.0,
+ "length_cap": 18,
+ "pressure_weight": 1.5,
+ "palette": "arrows",
+ "suffixes": [
+  "+A"
+ ],
+ "suffix_rate": 0.3,
+ "crates_max": 0,
+ "crate_rate": 0.15,
+ "seed": 181,
+ "size": "medium",
+ "max_solve_nodes": 400,
+ "redesign": "round 2: plain-arrow growth gave 0 decision steps (nothing made a state change permanent); grown with the core's own marks +A"
+}

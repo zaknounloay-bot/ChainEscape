@@ -1,0 +1,54 @@
+{
+ "target": "EXTREME",
+ "facts": [],
+ "mechanic": "portal",
+ "idea": "lanes that bend: a block's way out runs through the portal and is blocked far from where it starts",
+ "family": "B portal routing",
+ "map": [
+  ". . . Yv . . .",
+  ". . . . . . .",
+  "R> . OA . . . .",
+  ". . . . . . .",
+  ". . . . . . .",
+  ". . . . OA B> .",
+  ". . . . . . ."
+ ],
+ "frozen": [
+  [
+   0,
+   3
+  ],
+  [
+   2,
+   0
+  ],
+  [
+   2,
+   2
+  ],
+  [
+   5,
+   4
+  ],
+  [
+   5,
+   5
+  ]
+ ],
+ "max_positions": 3000,
+ "piece_free": 17,
+ "max_pieces": 21,
+ "shortcut_weight": 80,
+ "coverage_weight": 25,
+ "late_weight": 20,
+ "endgame_weight": 20,
+ "length_weight": 1.0,
+ "length_cap": 22,
+ "pressure_weight": 1.5,
+ "palette": "arrows",
+ "crates_max": 0,
+ "crate_rate": 0.15,
+ "seed": 18,
+ "size": "large",
+ "max_solve_nodes": 300
+}

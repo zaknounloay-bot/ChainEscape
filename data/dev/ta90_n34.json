@@ -1,0 +1,178 @@
+{
+ "format": "ce-ta90-proto",
+ "v": 1,
+ "test": "ta90_n34",
+ "assist": {
+  "undo": 3,
+  "show_a_move": 0,
+  "hammer": 0
+ },
+ "note": "Development only. Phase 18 EXTREME candidate (?extreme90p18=1); never shared, never production. HUMAN-REVIEW CANDIDATE: technically validated, strategic quality unconfirmed by people.",
+ "boards": [
+  {
+   "id": "N34",
+   "accepted": true,
+   "label": "HUMAN-REVIEW CANDIDATE - EXPERIMENTAL, HUMAN DIFFICULTY UNVALIDATED",
+   "variant": "N34",
+   "design": "18SPP_1",
+   "family": "H/B spinner + portal",
+   "primary": "spinner-based (mixed)",
+   "target": "EXTREME (a design target, not a rating; never shown to players)",
+   "idea": "a turn that changes the far side: a spinner's lane runs through the portal in one facing and straight out in another",
+   "source": "hand-drawn idea core (data/dev/extreme90_p18/cores.json), grown by the bounded constructive search (tools/ta90_search.gd, Phase 18 palette), checked by tools/ta90_design.gd and tools/xb90_filler.gd (Phase 18)",
+   "fingerprint": "5616045b9a16674cf627f624edb7e75d793973a6adbbbb8cb3e44a4c73dbfe5a",
+   "mechanics": [
+    "spinner_cw",
+    "spinner_ccw",
+    "spinner_alt",
+    "portal"
+   ],
+   "puzzle": {
+    "format": "ce-puzzle",
+    "v": 1,
+    "rules": 1,
+    "rows": 7,
+    "cols": 7,
+    "map": [
+     ". . . . . . .",
+     ". . . Gv . Gv@- .",
+     "Y>@~ OA . R<@ G^ . .",
+     "R^@- P^@- . . . . .",
+     ". Y<@ . Y^@ B^@~ Gv@~ .",
+     ". Yv@~ Rv@~ Rv@- Pv@~ OA .",
+     ". . . . . . ."
+    ]
+   },
+   "design_report": {
+    "A": {
+     "fingerprint": "5616045b9a16674cf627f624edb7e75d793973a6adbbbb8cb3e44a4c73dbfe5a",
+     "hint_nodes": [
+      302,
+      67
+     ],
+     "parity": [
+      0,
+      0
+     ],
+     "portals": 2,
+     "position_cap": 2000,
+     "positions": 518,
+     "replay": true,
+     "solution": 15,
+     "solve_ms": 33.7,
+     "timeup_worst_ms": 23.7,
+     "timeup_worst_nodes": 355,
+     "winnable": 82
+    },
+    "B": {
+     "coverage": 0.87,
+     "decision_steps": 13,
+     "distinct_mistakes": 7,
+     "endgame_decision": true,
+     "last_decision": 13,
+     "late": 0.87,
+     "line": [
+      "r2c0> [x4]",
+      "r3c0< [x4]",
+      "r4c1< [x5]",
+      "r5c1< [x3]",
+      "r3c1v [x3]",
+      "r4c5v [x3]",
+      "r1c5v [x3]",
+      "r4c4> [x3]",
+      "r5c3v [x3]",
+      "r4c3v [x1]",
+      "r5c2v [x1]",
+      "r5c4v [x1]",
+      "r2c3< [x1]",
+      "r2c4^",
+      "r1c3v"
+     ],
+     "losing_per_step": [
+      4,
+      4,
+      5,
+      3,
+      3,
+      3,
+      3,
+      3,
+      3,
+      1,
+      1,
+      1,
+      1,
+      0,
+      0
+     ],
+     "matters_portal": true,
+     "mistakes": [
+      "r2c4^",
+      "r5c1v",
+      "r5c2v",
+      "r5c4v",
+      "r3c1<",
+      "r5c2<",
+      "r4c3>"
+     ],
+     "shortcut": 0.067,
+     "spinner_dependence": "unsolvable without it",
+     "without_portal": "without it: 6 decision steps, 4 distinct mistakes (with it: 13, 7)"
+    },
+    "C": {
+     "decisions_k4_6_8": [
+      9,
+      7,
+      5
+     ],
+     "deepest": 13,
+     "greedy": {
+      "look2": 0.03,
+      "look4": 0.067,
+      "min_turn": 0,
+      "mobility": 0,
+      "safe": 0.03
+     },
+     "hidden_k6_8": [
+      25,
+      17
+     ],
+     "learner": {
+      "look4": 7,
+      "look6": 7
+     },
+     "look6_greedy": 0.083,
+     "opening": "3 / 7",
+     "pressure": {
+      "advances": 0,
+      "calm_prefix": 0,
+      "flips": 0,
+      "multi_turned": 4,
+      "prediction_share": 0.47,
+      "pulls": 0,
+      "rams": 0,
+      "signals": 3,
+      "spinners_turned": 7,
+      "trap_delay_median": 7,
+      "turns": 11,
+      "undo_proof": 0.83
+     },
+     "win_share": 0.158
+    },
+    "filler": {
+     "distinct": 7,
+     "pieces_tested": 17,
+     "steps": 13,
+     "trivial": [],
+     "trivial_removals": 0
+    },
+    "similarity": {
+     "closest_known": "N29",
+     "overlap": 0.39,
+     "closest_new": "N33",
+     "closest_new_overlap": 0.12
+    }
+   }
+  }
+ ]
+}

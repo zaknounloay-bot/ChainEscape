@@ -114,6 +114,26 @@ func short_questions() -> bool:
 	return false
 
 
+## The selection grid (Phase 18: a longer list takes four tiles to a row so it
+## still fits an iPhone SE without scrolling). Three to a row, 84 high, as before.
+func grid_columns() -> int:
+	return 3
+
+
+func tile_height() -> int:
+	return 84
+
+
+## A longer list: a tighter selection screen (smaller title, gaps and
+## buttons) so every tile and both buttons stay on one iPhone SE screen.
+func select_compact() -> bool:
+	return false
+
+
+func tile_font() -> int:
+	return 18 if word().length() > 6 else 24
+
+
 ## The window.* name of the read-only snapshot for browser tests.
 func publish_name() -> String:
 	return "chainEscapeTa90"
@@ -352,9 +372,10 @@ func _build() -> void:
 	_pages[View.FAMILIARITY] = f
 	# SELECT
 	var s := _column()
-	s.add_theme_constant_override("separation", 10)
-	s.add_child(_label(select_title(), 40, 900))
-	s.add_child(_label("90 seconds each. Play one or more.", 24, 700))
+	var cmp := select_compact()
+	s.add_theme_constant_override("separation", 6 if cmp else 10)
+	s.add_child(_label(select_title(), 34 if cmp else 40, 900))
+	s.add_child(_label("90 seconds each. Play one or more.", 20 if cmp else 24, 700))
 	if board_order().is_empty():
 		# No new board passed its checks yet: say so - the reference is not a new puzzle.
 		var note := _label("Technical test build: no new 90-second puzzle has passed its checks yet. REFERENCE (TA) is an existing board, used to test the clock and the music.", 20, 700)
@@ -366,15 +387,15 @@ func _build() -> void:
 	# (&ta90ref=1 only) keeps its own full-width, labelled row below.
 	var grid := GridContainer.new()
 	grid.name = "PuzzleGrid"
-	grid.columns = 3
+	grid.columns = grid_columns()
 	grid.add_theme_constant_override("h_separation", 12)
-	grid.add_theme_constant_override("v_separation", 10)
+	grid.add_theme_constant_override("v_separation", 6 if cmp else 10)
 	s.add_child(grid)
 	for b in order:
 		var ref: bool = Ta90TimeAttack.BOARDS90[b].get("reference", false)
 		var n := order.find(b) + 1
 		var btn: PillButton
-		var st := _label("", 18 if not ref else 22, 700)
+		var st := _label("", (16 if cmp else 18) if not ref else 22, 700)
 		st.add_theme_color_override("font_color", Palette.TEXT_SOFT)
 		if ref:
 			btn = _button("REFERENCE (TA)", "Puzzle_%d" % n, Palette.WHITE, Palette.TEXT)
@@ -383,9 +404,9 @@ func _build() -> void:
 		else:
 			# A long word ("CHALLENGE 12") must never widen its tile past a
 			# third of the screen: a smaller font, and the text clipped.
-			btn = PillButton.new("%s %d" % [word(), n], PillButton.Icon.NONE, Palette.WHITE, Palette.TEXT, 18 if word().length() > 6 else 24)
+			btn = PillButton.new("%s %d" % [word(), n], PillButton.Icon.NONE, Palette.WHITE, Palette.TEXT, tile_font())
 			btn.name = "Puzzle_%d" % n
-			btn.custom_minimum_size = Vector2(0, 84)
+			btn.custom_minimum_size = Vector2(0, tile_height())
 			btn.clip_text = true
 			var tile := VBoxContainer.new()
 			tile.size_flags_horizontal = Control.SIZE_EXPAND_FILL
@@ -398,11 +419,13 @@ func _build() -> void:
 			open_puzzle(b))
 		_rows[b] = [btn, st]
 	_copy = _button("COPY ALL RESULTS", "CopyResults", ACCENT, Palette.WHITE)
+	if cmp:
+		_copy.custom_minimum_size = Vector2(0, 84)
 	s.add_child(_copy)  # the copy itself runs in the page script, inside the tap (iOS)
-	_copy_status = _label("", 22, 800)
+	_copy_status = _label("", 18 if cmp else 22, 800)
 	s.add_child(_copy_status)
 	var how := _button("HOW IT WORKS", "HowItWorks", Palette.BACKGROUND, Palette.TEXT_SOFT)
-	how.custom_minimum_size = Vector2(0, 80)
+	how.custom_minimum_size = Vector2(0, 68 if cmp else 80)
 	how.pressed.connect(func(): _show(View.WELCOME))
 	s.add_child(how)
 	_pages[View.SELECT] = s

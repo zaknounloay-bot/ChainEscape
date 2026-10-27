@@ -1,0 +1,57 @@
+{
+ "N31": {
+  "design": "MG_3e",
+  "family": "C magnet relocation",
+  "primary": "non-spinner",
+  "dims": "7x7",
+  "pieces": 16,
+  "fp": "81fde18027c093943a6414373fbbbc452517689c9d6d3350553c6d5bd67a5f8b",
+  "mechanics": [
+   "magnet"
+  ],
+  "idea": "the pull decides who is in the way: the magnet drags a plain block into a lane another block still needs"
+ },
+ "N32": {
+  "design": "AR2_1e",
+  "family": "D/C rammer + magnet",
+  "primary": "non-spinner",
+  "dims": "7x7",
+  "pieces": 16,
+  "fp": "bb36f7d5fea3359b009cfbc854d221e51d0d4705a140a97c6bd7d8bf2aa09e24",
+  "mechanics": [
+   "armor",
+   "magnet"
+  ],
+  "idea": "the magnet brings the rammer: a pull moves a block into the lane of a shell - or into a lane where it is only in the way"
+ },
+ "N33": {
+  "design": "SPC_1",
+  "family": "H/A spinner + crate",
+  "primary": "spinner-based (mixed)",
+  "dims": "7x7",
+  "pieces": 14,
+  "fp": "2846f6a5cab3cb3d51bad78b307bf0d6a980aa7cf591ded097a8d1e1fb796f75",
+  "mechanics": [
+   "spinner_cw",
+   "spinner_ccw",
+   "spinner_alt",
+   "movable"
+  ],
+  "idea": "push before you turn: a spinner must launch the crate out of a lane before a neighbour's departure turns it away - and the crate's new cell must not be in anyone's way"
+ },
+ "N34": {
+  "design": "SPP_1",
+  "family": "H/B spinner + portal",
+  "primary": "spinner-based (mixed)",
+  "dims": "7x7",
+  "pieces": 15,
+  "fp": "5616045b9a16674cf627f624edb7e75d793973a6adbbbb8cb3e44a4c73dbfe5a",
+  "mechanics": [
+   "spinner_cw",
+   "spinner_ccw",
+   "spinner_alt",
+   "portal"
+  ],
+  "idea": "a turn that changes the far side: a spinner's lane runs through the portal in one facing and straight out in another"
+ }
+}

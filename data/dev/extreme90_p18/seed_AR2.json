@@ -1,0 +1,51 @@
+{
+ "target": "EXTREME",
+ "facts": [],
+ "mechanic": "armor,magnet",
+ "idea": "the magnet brings the rammer: a pull moves a block into the lane of a shell - or into a lane where it is only in the way",
+ "family": "D/C rammer + magnet",
+ "map": [
+  ". . . . . . .",
+  ". . . . . . .",
+  ". . . . . . .",
+  "Y<* . . B> . G^= .",
+  ". . . . . . .",
+  ". . . . . . .",
+  ". . . . . . ."
+ ],
+ "frozen": [
+  [
+   3,
+   0
+  ],
+  [
+   3,
+   3
+  ],
+  [
+   3,
+   5
+  ]
+ ],
+ "max_positions": 2000,
+ "piece_free": 13,
+ "max_pieces": 17,
+ "shortcut_weight": 80,
+ "coverage_weight": 25,
+ "late_weight": 20,
+ "endgame_weight": 20,
+ "length_weight": 1.0,
+ "length_cap": 18,
+ "pressure_weight": 1.5,
+ "palette": "arrows",
+ "suffixes": [
+  "=",
+  "*"
+ ],
+ "suffix_rate": 0.3,
+ "crates_max": 0,
+ "seed": 183,
+ "size": "medium",
+ "max_solve_nodes": 400,
+ "redesign": "round 3: a monotone mechanic (lock / gate / shell / portal) cannot create a losing move with plain arrows; paired with a non-monotone one (switch flip / magnet pull)"
+}

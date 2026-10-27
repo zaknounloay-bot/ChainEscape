@@ -1,0 +1,26 @@
+{
+ "N31": {
+  "closest_known": "N2",
+  "overlap": 0.26,
+  "closest_new": "N32",
+  "closest_new_overlap": 0.33
+ },
+ "N32": {
+  "closest_known": "N24",
+  "overlap": 0.26,
+  "closest_new": "N31",
+  "closest_new_overlap": 0.33
+ },
+ "N33": {
+  "closest_known": "N26",
+  "overlap": 0.26,
+  "closest_new": "N31",
+  "closest_new_overlap": 0.18
+ },
+ "N34": {
+  "closest_known": "N29",
+  "overlap": 0.39,
+  "closest_new": "N33",
+  "closest_new_overlap": 0.12
+ }
+}

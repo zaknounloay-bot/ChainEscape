@@ -62,7 +62,7 @@ func _boards() -> void:
 		"every prototype board matches its fingerprint; TA is only an internal reference, never a new puzzle")
 	var o: Array = Ta90Prototype.ORDER90
 	_check(o.size() == 13 and o.slice(0, 3) == ["N1", "N2", "N3"] and o.all(func(b): return not Ta90TimeAttack.BOARDS90[b].get("reference", false))
-		and o.all(func(b): return b == "N%d" % (o.find(b) + 1)) and Ta90TimeAttack.BOARDS90.keys().filter(func(b): return not (Extreme90Bank.BANK.has(b) or Extreme90Review.NEW17.has(b)) or o.has(b)).size() == 14,
+		and o.all(func(b): return b == "N%d" % (o.find(b) + 1)) and Ta90TimeAttack.BOARDS90.keys().filter(func(b): return not (Extreme90Bank.BANK.has(b) or Extreme90Review.NEW17.has(b) or Extreme90P18.NEW18.has(b)) or o.has(b)).size() == 14,
 		"the collection: N1-N3 (Phase 14) and N4-N13 (Phase 15), key N<k> = PUZZLE k, every one a HUMAN-REVIEW CANDIDATE; TA the only reference")
 	var fps := {}
 	for b in Ta90TimeAttack.BOARDS90:

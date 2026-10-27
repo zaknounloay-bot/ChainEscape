@@ -23,8 +23,34 @@ const CAP := 600000
 ## explore(); every reachable position (capped).
 static func explore(s: Solver) -> Dictionary:
 	var memo := {"win": {}, "long": {}, "capped": false}
+	if s._crate_n > 0:
+		memo["edges"] = {}
 	_win(s, memo)
+	if s._crate_n > 0:
+		_fixpoint(memo)
 	return memo
+
+
+## Phase 18: Movable pushes are the only reversible moves, so only a board
+## with crates has cycles - and on a cycle _win's provisional "false" (the
+## position still being explored) could be memoised as a loss. With crates the
+## explored graph is kept and wins are propagated to a fixpoint (a position
+## wins if any move from it reaches a win or a clear board). Boards without
+## crates are explored exactly as before.
+static func _fixpoint(memo: Dictionary) -> void:
+	var w: Dictionary = memo["win"]
+	var e: Dictionary = memo["edges"]
+	var changed := true
+	while changed:
+		changed = false
+		for k in e:
+			if w[k]:
+				continue
+			for c in e[k]:
+				if c == "" or w.get(c, false):
+					w[k] = true
+					changed = true
+					break
 
 
 static func _win(s: Solver, memo: Dictionary) -> bool:
@@ -39,11 +65,16 @@ static func _win(s: Solver, memo: Dictionary) -> bool:
 		return false
 	w[key] = false
 	var any := false
+	var kids := []
 	for mv in s._distinct_legal():
 		s._do(mv)
+		if memo.has("edges"):
+			kids.append("" if s._alive_count == s._crate_n else s._key())  # "" = a clear board
 		any = _win(s, memo) or any
 		s._undo_move(mv)
 	w[key] = any
+	if memo.has("edges"):
+		memo["edges"][key] = kids
 	return any
 
 
@@ -55,6 +86,10 @@ static func longest(s: Solver, memo: Dictionary) -> int:
 	var l: Dictionary = memo["long"]
 	if l.has(key):
 		return l[key]
+	# Phase 18: a crate board can cycle; a position already on the current
+	# line counts 0 (no infinite recursion). Without crates: as before.
+	if s._crate_n > 0:
+		l[key] = 0
 	var best := 0
 	for mv in s._distinct_legal():
 		s._do(mv)

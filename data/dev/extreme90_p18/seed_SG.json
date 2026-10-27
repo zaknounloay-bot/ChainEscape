@@ -1,0 +1,54 @@
+{
+ "target": "EXTREME",
+ "facts": [],
+ "mechanic": "switch,gate",
+ "idea": "two stages: a gate opens only when its keys are gone, and the switch that turns the keys around must fire between them",
+ "family": "E switch / gate stages",
+ "map": [
+  ". . . . . . .",
+  ". Bv&A . . Rv+B . .",
+  ". . . . . . .",
+  ". G> . XB . . .",
+  ". . . . . . .",
+  ". . Y^%A . . . .",
+  ". . . . . . ."
+ ],
+ "frozen": [
+  [
+   1,
+   1
+  ],
+  [
+   1,
+   4
+  ],
+  [
+   3,
+   1
+  ],
+  [
+   3,
+   3
+  ],
+  [
+   5,
+   2
+  ]
+ ],
+ "max_positions": 3000,
+ "piece_free": 18,
+ "max_pieces": 22,
+ "shortcut_weight": 80,
+ "coverage_weight": 25,
+ "late_weight": 20,
+ "endgame_weight": 20,
+ "length_weight": 1.0,
+ "length_cap": 22,
+ "pressure_weight": 1.5,
+ "palette": "arrows",
+ "crates_max": 0,
+ "crate_rate": 0.15,
+ "seed": 18,
+ "size": "large",
+ "max_solve_nodes": 300
+}

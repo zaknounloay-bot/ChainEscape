@@ -257,3 +257,10 @@ MVP, Challenge a Friend and campaign timing code untouched. The only
 runtime change is a `BuildFlags`-gated developer hook in
 `game_manager.gd` plus new `BOARDS90` entries. Nothing pushed, merged,
 deployed or uploaded.
+
+## Phase 18 (follow-up)
+
+The Phase 17 playtests archived N25 and N28 from the active selection and
+kept N24 as provisional (N26, N27, N29, N30 strong). They stay here, on
+`?extreme90p17=1`, unchanged. The active selection lives on
+`?extreme90p18=1` — see `docs/extreme90_phase18.md`.

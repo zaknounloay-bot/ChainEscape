@@ -1,0 +1,257 @@
+{
+ "MF_1": {
+  "map": [
+   ". . Gv G< P< P< .",
+   ". . . . . . .",
+   ". R>&A M . . . .",
+   ". . B> . M . .",
+   ". . . B^ R> B> R>",
+   ". . . . . . .",
+   ". . . . Y^%A B^ ."
+  ],
+  "target": "EXTREME",
+  "facts": [],
+  "mechanic": "movable,switch",
+  "idea": "push, then be turned around: a flip target clears a lane by pushing the crate, and can only leave once the switch reverses it - the switch must not go first",
+  "family": "A/E movable + switch",
+  "max_positions": 2000
+ },
+ "MF_2": {
+  "map": [
+   ". . Gv G< P< P< .",
+   ". . Pv . . . .",
+   ". R>&A M . . . .",
+   ". . B> . M . .",
+   ". . . B^ R> B> .",
+   ". . . . . P^ .",
+   ". . . . Y^%A . ."
+  ],
+  "target": "EXTREME",
+  "facts": [],
+  "mechanic": "movable,switch",
+  "idea": "push, then be turned around: a flip target clears a lane by pushing the crate, and can only leave once the switch reverses it - the switch must not go first",
+  "family": "A/E movable + switch",
+  "max_positions": 2000
+ },
+ "MF_3": {
+  "map": [
+   ". . Gv G< P< P< .",
+   ". . . . . . .",
+   ". R>&A M . . . .",
+   ". . B> . M . .",
+   ". . . B^ R> B> .",
+   ". . . . . . .",
+   ". . . . Y^%A B^ ."
+  ],
+  "target": "EXTREME",
+  "facts": [],
+  "mechanic": "movable,switch",
+  "idea": "push, then be turned around: a flip target clears a lane by pushing the crate, and can only leave once the switch reverses it - the switch must not go first",
+  "family": "A/E movable + switch",
+  "max_positions": 2000
+ },
+ "MG_1": {
+  "map": [
+   "Rv B<* . . R> Bv* .",
+   ". R> Y> . . . .",
+   "R<* Bv* Rv* P<* G^* . .",
+   "Y<* . . B^ . G>* .",
+   ". . . R^* . P<* G^",
+   ". . . . . . .",
+   ". . . . . . ."
+  ],
+  "target": "EXTREME",
+  "facts": [],
+  "mechanic": "magnet",
+  "idea": "the pull decides who is in the way: the magnet drags a plain block into a lane another block still needs",
+  "family": "C magnet relocation",
+  "max_positions": 2000
+ },
+ "MG_2": {
+  "map": [
+   "Rv B<* . . R> Bv* .",
+   ". R> Y> . . . .",
+   "R<* Bv* Rv* P<* G^* . .",
+   "Y<* . . B^ . G>* .",
+   ". . . R^* . P<* G^*",
+   ". . . . . . .",
+   ". . . . . . ."
+  ],
+  "target": "EXTREME",
+  "facts": [],
+  "mechanic": "magnet",
+  "idea": "the pull decides who is in the way: the magnet drags a plain block into a lane another block still needs",
+  "family": "C magnet relocation",
+  "max_positions": 2000
+ },
+ "MG_3": {
+  "map": [
+   "Rv . . . R> Bv* .",
+   ". R> Y> . . . .",
+   "R<* Bv* Rv* P<* G^* . .",
+   "Y<* . . B^ . G>* .",
+   ". . . R^* . P<* G^",
+   ". . . . . . .",
+   ". . . . . . ."
+  ],
+  "target": "EXTREME",
+  "facts": [],
+  "mechanic": "magnet",
+  "idea": "the pull decides who is in the way: the magnet drags a plain block into a lane another block still needs",
+  "family": "C magnet relocation",
+  "max_positions": 2000
+ },
+ "AR2_1": {
+  "map": [
+   ". . . . P<* G>= Pv=",
+   ". . . Pv= P^* Y<* Gv*",
+   "Rv . G^ . R>* . .",
+   "Y<* . Y^ B> G^ G^= .",
+   ". . . . . . .",
+   ". . . . . Rv* .",
+   ". . . . . . ."
+  ],
+  "target": "EXTREME",
+  "facts": [],
+  "mechanic": "armor,magnet",
+  "idea": "the magnet brings the rammer: a pull moves a block into the lane of a shell - or into a lane where it is only in the way",
+  "family": "D/C rammer + magnet",
+  "max_positions": 2000
+ },
+ "AR2_2": {
+  "map": [
+   ". . . . P<* G>= Pv=",
+   ". . . Pv= P^* Y<* Gv*",
+   "Rv* . G^ . R>* . .",
+   "Y<* . Y^ B> G^ G^= .",
+   ". . . . . . .",
+   ". . . . . Rv* .",
+   ". . . . . . ."
+  ],
+  "target": "EXTREME",
+  "facts": [],
+  "mechanic": "armor,magnet",
+  "idea": "the magnet brings the rammer: a pull moves a block into the lane of a shell - or into a lane where it is only in the way",
+  "family": "D/C rammer + magnet",
+  "max_positions": 2000
+ },
+ "AR2_3": {
+  "map": [
+   ". . . . P<* G>= Pv=",
+   ". . . . P^* Y<* Gv*",
+   "Rv . G^ . R>* . .",
+   "Y<* . Y^ B> G^ G^= .",
+   ". . . . . . .",
+   ". . . . . Rv* .",
+   ". . . . . . ."
+  ],
+  "target": "EXTREME",
+  "facts": [],
+  "mechanic": "armor,magnet",
+  "idea": "the magnet brings the rammer: a pull moves a block into the lane of a shell - or into a lane where it is only in the way",
+  "family": "D/C rammer + magnet",
+  "max_positions": 2000
+ },
+ "SPC_1": {
+  "map": [
+   ". . . . B^ . .",
+   ". . . Gv G^ . .",
+   ". B< R>@ M . . .",
+   ". . . B<@~ . . .",
+   ". G^ P<@~ Y>@- . . .",
+   "Pv@- . . . Y^ . .",
+   ". . G^@~ . R<@- . ."
+  ],
+  "target": "EXTREME",
+  "facts": [],
+  "mechanic": "movable",
+  "idea": "push before you turn: a spinner must launch the crate out of a lane before a neighbour's departure turns it away - and the crate's new cell must not be in anyone's way",
+  "family": "H/A spinner + crate",
+  "max_positions": 2000
+ },
+ "SPC_2": {
+  "map": [
+   ". . . . B^ . .",
+   ". . . Gv G^ . .",
+   ". B< R>@ M . . .",
+   ". . . B<@~ . . .",
+   ". G^ P<@~ Y>@- . . .",
+   "P< . . . Y^ . .",
+   ". . G^@~ . R<@- . ."
+  ],
+  "target": "EXTREME",
+  "facts": [],
+  "mechanic": "movable",
+  "idea": "push before you turn: a spinner must launch the crate out of a lane before a neighbour's departure turns it away - and the crate's new cell must not be in anyone's way",
+  "family": "H/A spinner + crate",
+  "max_positions": 2000
+ },
+ "SPC_3": {
+  "map": [
+   ". . . . B^ . .",
+   ". . . Gv G^ . .",
+   ". B< R>@ M . . .",
+   ". . . B<@~ . . .",
+   ". Gv@ P<@~ Y>@- . . .",
+   ". . . . Y^ . .",
+   ". . G^@~ . R<@- . ."
+  ],
+  "target": "EXTREME",
+  "facts": [],
+  "mechanic": "movable",
+  "idea": "push before you turn: a spinner must launch the crate out of a lane before a neighbour's departure turns it away - and the crate's new cell must not be in anyone's way",
+  "family": "H/A spinner + crate",
+  "max_positions": 2000
+ },
+ "SPP_1": {
+  "map": [
+   ". . . . . . .",
+   ". . . Gv . Gv@- .",
+   "Y>@~ OA . R<@ G^ . .",
+   "R^@- P^@- . . . . .",
+   ". Y<@ . Y^@ B^@~ Gv@~ .",
+   ". Yv@~ Rv@~ Rv@- Pv@~ OA .",
+   ". . . . . . ."
+  ],
+  "target": "EXTREME",
+  "facts": [],
+  "mechanic": "portal",
+  "idea": "a turn that changes the far side: a spinner's lane runs through the portal in one facing and straight out in another",
+  "family": "H/B spinner + portal",
+  "max_positions": 2000
+ },
+ "SPP_2": {
+  "map": [
+   ". . . . . . .",
+   ". . . Gv . . .",
+   "Y>@~ OA . R<@ G^ . .",
+   "R^@- P^@- . . . . .",
+   ". Y<@ . Y^@ B^@~ Gv@~ .",
+   ". Yv@~ Rv@~ Rv@- Pv@~ OA .",
+   ". . . . . . ."
+  ],
+  "target": "EXTREME",
+  "facts": [],
+  "mechanic": "portal",
+  "idea": "a turn that changes the far side: a spinner's lane runs through the portal in one facing and straight out in another",
+  "family": "H/B spinner + portal",
+  "max_positions": 2000
+ },
+ "SPP_3": {
+  "map": [
+   ". . . . . . .",
+   ". . . Gv . G>@~ .",
+   "Y>@~ OA . R<@ G^ . .",
+   "R^@- P^@- . . . . .",
+   ". Y<@ . Y^@ B^@~ Gv@~ .",
+   ". Yv@~ Rv@~ Rv@- Pv@~ OA .",
+   ". . . . . . ."
+  ],
+  "target": "EXTREME",
+  "facts": [],
+  "mechanic": "portal",
+  "idea": "a turn that changes the far side: a spinner's lane runs through the portal in one facing and straight out in another",
+  "family": "H/B spinner + portal",
+  "max_positions": 2000
+ }
+}

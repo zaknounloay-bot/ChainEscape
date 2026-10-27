@@ -1,0 +1,36 @@
+{
+ "MG_3e": {
+  "map": [
+   "Rv . . . R> Bv .",
+   ". R> Y> . . . .",
+   "R<* Bv* Rv* P<* G^ . .",
+   "Y<* . . B^ . G>* .",
+   ". . . R^ . P<* G^",
+   ". . . . . . .",
+   ". . . . . . ."
+  ],
+  "target": "EXTREME",
+  "facts": [],
+  "mechanic": "magnet",
+  "idea": "the pull decides who is in the way: the magnet drags a plain block into a lane another block still needs",
+  "family": "C magnet relocation",
+  "max_positions": 2000
+ },
+ "AR2_1e": {
+  "map": [
+   ". . . . P<* G>= Pv=",
+   ". . . Pv= P^* Y< Gv*",
+   "Rv . G^ . R>* . .",
+   "Y<* . Y^ B> G^ G^= .",
+   ". . . . . . .",
+   ". . . . . Rv* .",
+   ". . . . . . ."
+  ],
+  "target": "EXTREME",
+  "facts": [],
+  "mechanic": "armor,magnet",
+  "idea": "the magnet brings the rammer: a pull moves a block into the lane of a shell - or into a lane where it is only in the way",
+  "family": "D/C rammer + magnet",
+  "max_positions": 2000
+ }
+}

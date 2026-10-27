@@ -1,0 +1,182 @@
+{
+ "format": "ce-ta90-proto",
+ "v": 1,
+ "test": "ta90_n33",
+ "assist": {
+  "undo": 3,
+  "show_a_move": 0,
+  "hammer": 0
+ },
+ "note": "Development only. Phase 18 EXTREME candidate (?extreme90p18=1); never shared, never production. HUMAN-REVIEW CANDIDATE: technically validated, strategic quality unconfirmed by people.",
+ "boards": [
+  {
+   "id": "N33",
+   "accepted": true,
+   "label": "HUMAN-REVIEW CANDIDATE - EXPERIMENTAL, HUMAN DIFFICULTY UNVALIDATED",
+   "variant": "N33",
+   "design": "18SPC_1",
+   "family": "H/A spinner + crate",
+   "primary": "spinner-based (mixed)",
+   "target": "EXTREME (a design target, not a rating; never shown to players)",
+   "idea": "push before you turn: a spinner must launch the crate out of a lane before a neighbour's departure turns it away - and the crate's new cell must not be in anyone's way",
+   "source": "hand-drawn idea core (data/dev/extreme90_p18/cores.json), grown by the bounded constructive search (tools/ta90_search.gd, Phase 18 palette), checked by tools/ta90_design.gd and tools/xb90_filler.gd (Phase 18)",
+   "fingerprint": "2846f6a5cab3cb3d51bad78b307bf0d6a980aa7cf591ded097a8d1e1fb796f75",
+   "mechanics": [
+    "spinner_cw",
+    "spinner_ccw",
+    "spinner_alt",
+    "movable"
+   ],
+   "puzzle": {
+    "format": "ce-puzzle",
+    "v": 1,
+    "rules": 1,
+    "rows": 7,
+    "cols": 7,
+    "map": [
+     ". . . . B^ . .",
+     ". . . Gv G^ . .",
+     ". B< R>@ M . . .",
+     ". . . B<@~ . . .",
+     ". G^ P<@~ Y>@- . . .",
+     "Pv@- . . . Y^ . .",
+     ". . G^@~ . R<@- . ."
+    ]
+   },
+   "design_report": {
+    "A": {
+     "fingerprint": "2846f6a5cab3cb3d51bad78b307bf0d6a980aa7cf591ded097a8d1e1fb796f75",
+     "hint_nodes": [
+      351,
+      1165
+     ],
+     "parity": [
+      0,
+      0
+     ],
+     "portals": 0,
+     "position_cap": 2000,
+     "positions": 915,
+     "replay": true,
+     "solution": 18,
+     "solve_ms": 10.3,
+     "timeup_worst_ms": 32.8,
+     "timeup_worst_nodes": 1165,
+     "winnable": 185
+    },
+    "B": {
+     "coverage": 0.83,
+     "decision_steps": 15,
+     "distinct_mistakes": 5,
+     "endgame_decision": true,
+     "last_decision": 15,
+     "late": 0.83,
+     "line": [
+      "r0c4^ [x3]",
+      "r1c4^ [x3]",
+      "r3c3< [x4]",
+      "r5c0v [x3]",
+      "r1c3v push [x3]",
+      "r2c2> [x2]",
+      "r2c1< [x1]",
+      "r4c1^ [x1]",
+      "r4c2^ [x1]",
+      "r4c3< [x1]",
+      "r6c2^ [x1]",
+      "r1c3v push [x2]",
+      "r1c3v push [x2]",
+      "r1c3v push [x2]",
+      "r6c4< push [x1]",
+      "r1c3v",
+      "r5c4^",
+      "r6c4v"
+     ],
+     "losing_per_step": [
+      3,
+      3,
+      4,
+      3,
+      3,
+      2,
+      1,
+      1,
+      1,
+      1,
+      1,
+      2,
+      2,
+      2,
+      1,
+      0,
+      0,
+      0
+     ],
+     "matters_movable": true,
+     "mistakes": [
+      "r2c1<",
+      "r2c2> push",
+      "r4c3>",
+      "r5c4^",
+      "r6c4<"
+     ],
+     "shortcut": 0,
+     "spinner_dependence": "unsolvable without it",
+     "without_movable": "without it: 6 decision steps, 2 distinct mistakes (with it: 15, 5)"
+    },
+    "C": {
+     "decisions_k4_6_8": [
+      12,
+      10,
+      9
+     ],
+     "deepest": 18,
+     "greedy": {
+      "look2": 0,
+      "look4": 0,
+      "min_turn": 0,
+      "mobility": 0,
+      "safe": 0
+     },
+     "hidden_k6_8": [
+      22,
+      20
+     ],
+     "learner": {
+      "look4": 6,
+      "look6": 3
+     },
+     "look6_greedy": 0,
+     "opening": "3 / 6",
+     "pressure": {
+      "advances": 0,
+      "calm_prefix": 3,
+      "flips": 0,
+      "multi_turned": 1,
+      "prediction_share": 0.22,
+      "pulls": 0,
+      "rams": 0,
+      "signals": 3,
+      "spinners_turned": 3,
+      "trap_delay_median": 10,
+      "turns": 4,
+      "undo_proof": 0.83
+     },
+     "win_share": 0.202
+    },
+    "filler": {
+     "distinct": 5,
+     "pieces_tested": 14,
+     "steps": 15,
+     "trivial": [],
+     "trivial_removals": 0
+    },
+    "similarity": {
+     "closest_known": "N26",
+     "overlap": 0.26,
+     "closest_new": "N31",
+     "closest_new_overlap": 0.18
+    }
+   }
+  }
+ ]
+}

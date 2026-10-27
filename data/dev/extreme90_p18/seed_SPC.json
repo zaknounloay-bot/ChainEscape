@@ -1,0 +1,54 @@
+{
+ "target": "EXTREME",
+ "facts": [],
+ "mechanic": "movable",
+ "idea": "push before you turn: a spinner must launch the crate out of a lane before a neighbour's departure turns it away - and the crate's new cell must not be in anyone's way",
+ "family": "H/A spinner + crate",
+ "map": [
+  ". . . . . . .",
+  ". . . Gv . . .",
+  ". B< R>@ M . . .",
+  ". . . . . . .",
+  ". . . . . . .",
+  ". . . . Y^ . .",
+  ". . . . . . ."
+ ],
+ "frozen": [
+  [
+   1,
+   3
+  ],
+  [
+   2,
+   1
+  ],
+  [
+   2,
+   2
+  ],
+  [
+   2,
+   3
+  ],
+  [
+   5,
+   4
+  ]
+ ],
+ "max_positions": 2000,
+ "piece_free": 13,
+ "max_pieces": 17,
+ "shortcut_weight": 80,
+ "coverage_weight": 25,
+ "late_weight": 20,
+ "endgame_weight": 20,
+ "length_weight": 1.0,
+ "length_cap": 18,
+ "pressure_weight": 1.5,
+ "palette": "all",
+ "crates_max": 2,
+ "crate_rate": 0.15,
+ "seed": 185,
+ "size": "medium",
+ "max_solve_nodes": 400
+}

@@ -23,7 +23,8 @@ const TA90_RULES := {"version": "ta90-v1", "limit_ms": 90000, "undo": 3, "show_a
 ## collection (docs/ta90_collection.md). Key N<k> is shown as PUZZLE k;
 ## neutral names, no difficulty shown. N14-N23: the Phase 16 EXTREME bank
 ## candidates (docs/extreme90_bank.md), played only in ?extreme90=1. N24-N30: the
-## Phase 17 candidates (docs/extreme90_phase17.md), played only in ?extreme90p17=1. TA: the validated 120-second board, used ONLY as an internal
+## Phase 17 candidates (docs/extreme90_phase17.md), played only in ?extreme90p17=1. N31-N34:
+## the Phase 18 candidates (docs/extreme90_phase18.md), played only in ?extreme90p18=1. TA: the validated 120-second board, used ONLY as an internal
 ## technical reference for the clock and the music (never listed as a new
 ## puzzle).
 const BOARDS90 := {
@@ -57,6 +58,10 @@ const BOARDS90 := {
 	"N28": {"data": "res://data/dev/ta90_n28.json", "fp": "01e190ffd12506befa5f26347eac15fa8714b85fc929010c350e662ee3ba704b"},
 	"N29": {"data": "res://data/dev/ta90_n29.json", "fp": "c3ba04c3fe248df1b882ae09bb48afc9aa24b0efd345f28b0ec59b1a27d9a75a"},
 	"N30": {"data": "res://data/dev/ta90_n30.json", "fp": "fffe88195b3a60e013d29e687872efc7bd3fa66b2146f900c964bc37aa031bdd"},
+	"N31": {"data": "res://data/dev/ta90_n31.json", "fp": "81fde18027c093943a6414373fbbbc452517689c9d6d3350553c6d5bd67a5f8b"},
+	"N32": {"data": "res://data/dev/ta90_n32.json", "fp": "bb36f7d5fea3359b009cfbc854d221e51d0d4705a140a97c6bd7d8bf2aa09e24"},
+	"N33": {"data": "res://data/dev/ta90_n33.json", "fp": "2846f6a5cab3cb3d51bad78b307bf0d6a980aa7cf591ded097a8d1e1fb796f75"},
+	"N34": {"data": "res://data/dev/ta90_n34.json", "fp": "5616045b9a16674cf627f624edb7e75d793973a6adbbbb8cb3e44a4c73dbfe5a"},
 	"TA": {"data": "res://data/dev/extreme16_a.json", "fp": "a28e22f0a1a216ba4ac701ff549e7d212ce1fe83ae2d8e3678065da555b730cf", "reference": true},
 }
 const P90_TIMED_Q := [
@@ -318,6 +323,35 @@ func _show_offer() -> void:
 	super._show_offer()
 	if music:
 		music.stop_music()
+
+
+## Phase 18: the position at TIME UP, replayed to decide where the untimed
+## continuation starts. A board with Movable crates or portals replays every
+## move as the play screen dispatches it (escape, Sequence advance, push,
+## ram) on a model WITH its portals - otherwise a push or a portal escape
+## would read as illegal and the continuation would silently start fresh.
+## Every other board keeps BlindTimeAttack's replay exactly (docs/extreme90_phase18.md).
+func _replayed(moves: Array) -> BoardModel:
+	var rec: Dictionary = boards.get(bid(), {})
+	var level := PuzzleDefinition.from_dict(rec.get("puzzle", {})).to_level() if not rec.is_empty() else null
+	if level == null or (level.portals.is_empty() and not level.blocks.any(func(b): return b.is_crate())):
+		return super._replayed(moves)
+	var m := BoardModel.new()
+	m.setup(level.rows, level.columns, level.blocks)
+	m.set_portals(level.portals)
+	for id in moves:
+		match m.move_state(int(id)):
+			"ok":
+				m.remove(int(id))
+			"advance":
+				m.advance(int(id))
+			"push":
+				m.push(int(id))
+			"ram":
+				m.ram(int(id))
+			_:
+				return null
+	return m
 
 
 func _start_run() -> void:

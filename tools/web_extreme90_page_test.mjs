@@ -18,6 +18,8 @@
 //   Phase 17: --entry=extreme90p17 runs the same flows on the Phase 17
 //   selection (?extreme90p17=1: xb17 storage, ce-xb17 export, chainEscapeXb17)
 //   and also checks ?extreme90=1's storage (xb90) is never written.
+//   Phase 18: --entry=extreme90p18 (xb18, ce-xb18, chainEscapeXb18): neither
+//   xb90 nor xb17 storage written.
 // Chromium is not iPhone Safari (see tools/web_ta90_page_test.mjs).
 import http from 'node:http';
 import fs from 'node:fs';
@@ -36,8 +38,9 @@ const benchOut = (process.argv.find((a) => a.startsWith('--bench-out=')) || '').
 const playerRoot = (process.argv.find((a) => a.startsWith('--player=')) || '').slice(9);
 const PORT = 8840, W = 375, H = 667;  // iPhone SE
 const ENTRY = (process.argv.find((a) => a.startsWith('--entry=')) || '--entry=extreme90').slice(8);
-const P17 = ENTRY === 'extreme90p17';
-const ST = P17 ? 'xb17' : 'xb90', FMT = 'ce-' + ST, PUB = P17 ? 'chainEscapeXb17' : 'chainEscapeXb90';
+const P17 = ENTRY === 'extreme90p17' || ENTRY === 'extreme90p18';  // a later selection: the earlier entries' storage must stay untouched
+const ST = { extreme90: 'xb90', extreme90p17: 'xb17', extreme90p18: 'xb18' }[ENTRY], FMT = 'ce-' + ST, PUB = 'chainEscape' + ST[0].toUpperCase() + ST.slice(1);
+const OLDER = { extreme90: [], extreme90p17: ['xb90'], extreme90p18: ['xb90', 'xb17'] }[ENTRY];
 const LSB = (b) => `chain_escape_${ST}_${b.toLowerCase()}_state`;
 const FILL = { green: [0x1e, 0x7b, 0x34], orange: [0xc2, 0x41, 0x0c], red: [0xb9, 0x1c, 0x1c] };
 const types = { '.html': 'text/html', '.js': 'text/javascript', '.wasm': 'application/wasm', '.pck': 'application/octet-stream', '.png': 'image/png' };
@@ -224,7 +227,7 @@ try {
   }
   check(Object.keys(benchMs).length === bank.length && Object.values(benchMs).every((x) => x <= 250), `WebAssembly: a full solve (the TIME UP check) per board ${JSON.stringify(benchMs)} ms`);
   console.log('BENCH ' + JSON.stringify(benchMs));
-  const ta90Keys = await a.page.evaluate((p17) => Object.keys(localStorage).filter((k) => k.startsWith('chain_escape_ta90_') || k.startsWith('chain_escape_tapilot') || (p17 && k.startsWith('chain_escape_xb90'))), P17);
+  const ta90Keys = await a.page.evaluate((older) => Object.keys(localStorage).filter((k) => k.startsWith('chain_escape_ta90_') || k.startsWith('chain_escape_tapilot') || older.some((o) => k.startsWith('chain_escape_' + o))), OLDER);
   check(ta90Keys.length === 0, `?ta90=1 / the 120-second pilot storage never written ${JSON.stringify(ta90Keys)}`);
   allErrors.push(...a.errors); allExternal.push(...a.external);
   await ctx.close();

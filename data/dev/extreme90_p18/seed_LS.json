@@ -1,0 +1,52 @@
+{
+ "target": "EXTREME",
+ "facts": [],
+ "mechanic": "lock,sequence",
+ "idea": "the key must turn before it can leave: a Sequence block is the only red key - its advance changes which lane it needs",
+ "family": "F lock / key / sequence",
+ "map": [
+  ". . . . . . .",
+  ". . R>:v . . . .",
+  ". . . . . . .",
+  ". . . G^#R . . .",
+  ". . . . . . .",
+  ". . . . . . .",
+  ". . . . . . ."
+ ],
+ "frozen": [
+  [
+   1,
+   2
+  ],
+  [
+   3,
+   3
+  ]
+ ],
+ "max_positions": 2000,
+ "piece_free": 10,
+ "max_pieces": 14,
+ "shortcut_weight": 80,
+ "coverage_weight": 25,
+ "late_weight": 20,
+ "endgame_weight": 20,
+ "length_weight": 1.0,
+ "length_cap": 18,
+ "pressure_weight": 1.5,
+ "palette": "arrows",
+ "suffixes": [
+  "#R",
+  "#G",
+  "#B",
+  ":^",
+  ":v",
+  ":<",
+  ":>"
+ ],
+ "suffix_rate": 0.3,
+ "crates_max": 0,
+ "crate_rate": 0.15,
+ "seed": 181,
+ "size": "compact",
+ "max_solve_nodes": 400
+}

@@ -1,0 +1,18 @@
+{
+ "source": "family playtest of the Phase 17 candidates on a real iPhone (first exposure, one experienced player; small-sample observations, not validated difficulty labels). The automatic timed outcome is the authoritative success / failure record.",
+ "boards": {
+  "N24": {"outcome": "COMPLETED", "time_s": 51.83, "attempts": 3, "difficulty": "HARD", "enjoy": 5, "another": "YES", "decision": "provisional"},
+  "N25": {"outcome": "COMPLETED", "time_s": 46.84, "attempts": 3, "difficulty": "MEDIUM", "enjoy": 5, "another": "YES", "decision": "archived", "note": "a short second run was an intentional early exit and does not affect the rating"},
+  "N26": {"outcome": "TIME UP", "attempts": 3, "difficulty": "VERY HARD", "enjoy": 5, "another": "YES", "decision": "strong"},
+  "N27": {"outcome": "TIME UP", "attempts": 6, "difficulty": "VERY HARD", "enjoy": 5, "another": "YES", "decision": "strong"},
+  "N28": {"outcome": "COMPLETED", "time_s": 33.44, "attempts": 2, "difficulty": "MEDIUM", "enjoy": 5, "another": "YES", "decision": "archived"},
+  "N29": {"outcome": "TIME UP", "attempts": 5, "difficulty": "VERY HARD", "enjoy": 5, "another": "YES", "decision": "strong"},
+  "N30": {"outcome": "TIME UP", "attempts": 8, "difficulty": "VERY HARD", "enjoy": 5, "another": "YES", "decision": "strong"}
+ },
+ "selection_after": {
+  "core": ["N3", "N5", "N7", "N11", "N13"],
+  "strong": ["N14", "N15", "N16", "N18", "N21", "N26", "N27", "N29", "N30"],
+  "provisional": ["N23", "N24"],
+  "archived": ["N17", "N19", "N20", "N22", "N25", "N28"]
+ }
+}

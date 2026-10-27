@@ -1,0 +1,54 @@
+{
+ "target": "EXTREME",
+ "facts": [],
+ "mechanic": "movable,switch",
+ "idea": "push, then be turned around: a flip target clears a lane by pushing the crate, and can only leave once the switch reverses it - the switch must not go first",
+ "family": "A/E movable + switch",
+ "map": [
+  ". . Gv . . . .",
+  ". . . . . . .",
+  ". R>&A M . . . .",
+  ". . . . . . .",
+  ". . . B^ . . .",
+  ". . . . . . .",
+  ". . . . Y^%A . ."
+ ],
+ "frozen": [
+  [
+   0,
+   2
+  ],
+  [
+   2,
+   1
+  ],
+  [
+   2,
+   2
+  ],
+  [
+   4,
+   3
+  ],
+  [
+   6,
+   4
+  ]
+ ],
+ "max_positions": 2000,
+ "piece_free": 13,
+ "max_pieces": 17,
+ "shortcut_weight": 80,
+ "coverage_weight": 25,
+ "late_weight": 20,
+ "endgame_weight": 20,
+ "length_weight": 1.0,
+ "length_cap": 18,
+ "pressure_weight": 1.5,
+ "palette": "arrows",
+ "crates_max": 2,
+ "crate_rate": 0.15,
+ "seed": 18,
+ "size": "medium",
+ "max_solve_nodes": 400
+}

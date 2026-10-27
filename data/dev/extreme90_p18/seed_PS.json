@@ -1,0 +1,54 @@
+{
+ "target": "EXTREME",
+ "facts": [],
+ "mechanic": "portal,switch",
+ "idea": "reversed through the portal: a flipped block's new lane runs through the portal to the far side - fire the switch before or after that side is clear",
+ "family": "B/E portal + switch",
+ "map": [
+  ". . . . . . .",
+  ". . . . . . .",
+  ". . OA . R>&A . .",
+  ". . . . . . .",
+  ". . . . . . .",
+  ". . . . OA . .",
+  ". . . . Y^%A . ."
+ ],
+ "frozen": [
+  [
+   2,
+   2
+  ],
+  [
+   2,
+   4
+  ],
+  [
+   5,
+   4
+  ],
+  [
+   6,
+   4
+  ]
+ ],
+ "max_positions": 2000,
+ "piece_free": 13,
+ "max_pieces": 17,
+ "shortcut_weight": 80,
+ "coverage_weight": 25,
+ "late_weight": 20,
+ "endgame_weight": 20,
+ "length_weight": 1.0,
+ "length_cap": 18,
+ "pressure_weight": 1.5,
+ "palette": "arrows",
+ "suffixes": [
+  "&A"
+ ],
+ "suffix_rate": 0.3,
+ "crates_max": 0,
+ "seed": 183,
+ "size": "medium",
+ "max_solve_nodes": 400,
+ "redesign": "round 3: a monotone mechanic (lock / gate / shell / portal) cannot create a losing move with plain arrows; paired with a non-monotone one (switch flip / magnet pull)"
+}
