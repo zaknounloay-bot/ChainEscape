@@ -1,0 +1,37 @@
+{
+ "A1p": {
+  "closest_known": "N13",
+  "overlap": 0.42,
+  "closest_new_overlap": 0.35
+ },
+ "D1p": {
+  "closest_known": "N15",
+  "overlap": 0.37,
+  "closest_new_overlap": 0.33
+ },
+ "J1": {
+  "closest_known": "N22",
+  "overlap": 0.29,
+  "closest_new_overlap": 0.36
+ },
+ "E3": {
+  "closest_known": "N5",
+  "overlap": 0.42,
+  "closest_new_overlap": 0.31
+ },
+ "G1": {
+  "closest_known": "N14",
+  "overlap": 0.42,
+  "closest_new_overlap": 0.4
+ },
+ "H1": {
+  "closest_known": "N5",
+  "overlap": 0.35,
+  "closest_new_overlap": 0.41
+ },
+ "B2b": {
+  "closest_known": "N5",
+  "overlap": 0.42,
+  "closest_new_overlap": 0.41
+ }
+}

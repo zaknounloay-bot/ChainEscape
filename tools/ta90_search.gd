@@ -19,6 +19,8 @@ extends "res://tools/ta90_design.gd"
 ##   Phase 15 (all default to the Phase 14 behaviour): "piece_free": 8 (pieces
 ##   without a size penalty), "position_weight": 0.004, "coverage_weight" /
 ##   "late_weight": 0 (sustained risk), "length_weight" / "length_cap": 0,
+##   "pressure_weight" (Phase 17, 0 by default): rank by multi-turned spinners
+##   and late-showing mistakes (ta90_design.gd pressure()),
 ##   "max_solve_nodes" (Phase 16, optional): reject boards whose opening solve
 ##   needs more Solver nodes (keeps large boards inside the TIME UP gate),
 ##   "endgame_weight": 4 (the bonus for a decision in the last third),
@@ -205,10 +207,17 @@ func _score(map: Array) -> Dictionary:
 	var sl := float(maxi(1, sol.size()))
 	sc += float(_spec.get("coverage_weight", 0.0)) * (dec["decision_steps"] / sl) + float(_spec.get("late_weight", 0.0)) * (dec["last_decision"] / sl)
 	sc += float(_spec.get("length_weight", 0.0)) * mini(sol.size(), int(_spec.get("length_cap", 0)))
+	# Phase 17 (0 by default): the human-calibrated pressure diagnostics as a
+	# RANKING term - multi-turned spinners and late-showing mistakes.
+	var pr := {}
+	if float(_spec.get("pressure_weight", 0.0)) > 0.0:
+		pr = pressure(level, s, memo, sol)
+		sc += float(_spec["pressure_weight"]) * (mini(pr["multi_turned"], 5) + 0.5 * mini(pr["trap_delay_median"], 9))
 	return {"map": map, "score": snappedf(sc, 0.01), "pieces": pieces, "positions": win.size(), "solution": sol.size(),
 		"distinct": dec["distinct_mistakes"], "steps": dec["decision_steps"], "endgame": dec["endgame_decision"], "thirds": thirds,
 		"matters": "%d/%d" % [matters, mechs.size()], "shortcut": snappedf(shortcut, 0.001), "per_step": lps,
-		"coverage": snappedf(dec["decision_steps"] / sl, 0.01), "late": snappedf(dec["last_decision"] / sl, 0.01)}
+		"coverage": snappedf(dec["decision_steps"] / sl, 0.01), "late": snappedf(dec["last_decision"] / sl, 0.01),
+		"multi_turned": pr.get("multi_turned", -1), "trap_delay": pr.get("trap_delay_median", -1)}
 
 
 func _line(r: Dictionary) -> String:

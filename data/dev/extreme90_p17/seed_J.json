@@ -1,0 +1,52 @@
+{
+ "target": "EXTREME",
+ "facts": [
+  "moved_then_turned"
+ ],
+ "mechanic": "magnet,alt",
+ "idea": "pull into parity: a magnet pulls an alternating spinner into a three-neighbour slot - the parity of turns after the pull decides its exit",
+ "map": [
+  ". . . . . . .",
+  ". Rv . . . . .",
+  ". . . . . Gv .",
+  ". Y<* . . . P^@~ .",
+  ". B< . . . . .",
+  ". . . . . . .",
+  ". . . . . . ."
+ ],
+ "frozen": [
+  [
+   1,
+   1
+  ],
+  [
+   2,
+   5
+  ],
+  [
+   3,
+   1
+  ],
+  [
+   3,
+   5
+  ],
+  [
+   4,
+   1
+  ]
+ ],
+ "max_positions": 3000,
+ "piece_free": 20,
+ "max_pieces": 25,
+ "shortcut_weight": 80,
+ "coverage_weight": 25,
+ "late_weight": 20,
+ "endgame_weight": 20,
+ "length_weight": 1.0,
+ "length_cap": 22,
+ "pressure_weight": 3.0,
+ "seed": 17,
+ "size": "large",
+ "max_solve_nodes": 300
+}

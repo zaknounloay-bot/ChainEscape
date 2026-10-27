@@ -1,0 +1,61 @@
+{
+ "A1p": {
+  "distinct": 6,
+  "pieces_tested": 23,
+  "steps": 20,
+  "trivial": [],
+  "trivial_removals": 0
+ },
+ "B2b": {
+  "distinct": 6,
+  "pieces_tested": 17,
+  "steps": 15,
+  "trivial": [],
+  "trivial_removals": 0
+ },
+ "C2b": {
+  "distinct": 5,
+  "pieces_tested": 17,
+  "steps": 14,
+  "trivial": [
+   "r2c3 G<@*",
+   "r5c2 R>@-"
+  ],
+  "trivial_removals": 2
+ },
+ "D1p": {
+  "distinct": 6,
+  "pieces_tested": 19,
+  "steps": 16,
+  "trivial": [],
+  "trivial_removals": 0
+ },
+ "E3": {
+  "distinct": 7,
+  "pieces_tested": 16,
+  "steps": 13,
+  "trivial": [],
+  "trivial_removals": 0
+ },
+ "G1": {
+  "distinct": 6,
+  "pieces_tested": 13,
+  "steps": 13,
+  "trivial": [],
+  "trivial_removals": 0
+ },
+ "H1": {
+  "distinct": 5,
+  "pieces_tested": 17,
+  "steps": 15,
+  "trivial": [],
+  "trivial_removals": 0
+ },
+ "J1": {
+  "distinct": 6,
+  "pieces_tested": 22,
+  "steps": 20,
+  "trivial": [],
+  "trivial_removals": 0
+ }
+}

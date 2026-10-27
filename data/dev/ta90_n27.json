@@ -1,0 +1,176 @@
+{
+ "format": "ce-ta90-proto",
+ "v": 1,
+ "test": "ta90_n27",
+ "assist": {
+  "undo": 3,
+  "show_a_move": 0,
+  "hammer": 0
+ },
+ "note": "Development only. Phase 17 EXTREME candidate (?extreme90p17=1); never shared, never production. HUMAN-REVIEW CANDIDATE: technically validated, strategic quality unconfirmed by people.",
+ "boards": [
+  {
+   "id": "N27",
+   "accepted": true,
+   "label": "HUMAN-REVIEW CANDIDATE - EXPERIMENTAL, HUMAN DIFFICULTY UNVALIDATED",
+   "variant": "N27",
+   "design": "17E3",
+   "size_class": "medium",
+   "target": "EXTREME (a design target, not a rating; never shown to players)",
+   "idea": "pull away: a magnet pulls a spinner out of a neighbourhood whose departures would turn it the wrong way",
+   "source": "hand-drawn idea core (data/dev/extreme90_p17/cores.json), grown by the bounded constructive search (tools/ta90_search.gd, pressure_weight), checked by tools/ta90_design.gd and tools/xb90_filler.gd (Phase 17)",
+   "fingerprint": "1c4e8da7efa3442424d7418910c7352fea905efb8f968aa18ee2a4c6d7c178e1",
+   "mechanics": [
+    "spinner_cw",
+    "spinner_ccw",
+    "spinner_alt",
+    "magnet"
+   ],
+   "puzzle": {
+    "format": "ce-puzzle",
+    "v": 1,
+    "rules": 1,
+    "rows": 7,
+    "cols": 7,
+    "map": [
+     "B< P^@ . P< . . .",
+     "R<@ . R>@ Bv@- R^@- Bv .",
+     "Bv@- Y<* Pv@ Pv@~ . G^@ Y<",
+     ". B^@- . . . Rv .",
+     ". . . . . . .",
+     ". . . . . . .",
+     ". . . . . . ."
+    ]
+   },
+   "design_report": {
+    "A": {
+     "fingerprint": "1c4e8da7efa3442424d7418910c7352fea905efb8f968aa18ee2a4c6d7c178e1",
+     "hint_nodes": [
+      396,
+      282
+     ],
+     "parity": [
+      0,
+      0
+     ],
+     "position_cap": 1500,
+     "positions": 1028,
+     "replay": true,
+     "solution": 16,
+     "solve_ms": 20.7,
+     "timeup_worst_ms": 33.8,
+     "timeup_worst_nodes": 710,
+     "winnable": 95
+    },
+    "B": {
+     "coverage": 0.81,
+     "decision_steps": 13,
+     "distinct_mistakes": 7,
+     "endgame_decision": true,
+     "last_decision": 14,
+     "late": 0.88,
+     "line": [
+      "r0c1^ [x4]",
+      "r0c0< [x3]",
+      "r0c3< [x3]",
+      "r2c0v [x3]",
+      "r2c2v [x3]",
+      "r1c2v [x2]",
+      "r1c3^ [x2]",
+      "r2c3v [x1]",
+      "r2c1<",
+      "r3c5v [x1]",
+      "r1c5v [x1]",
+      "r1c4v [x1]",
+      "r1c0> [x1]",
+      "r2c1^ [x1]",
+      "r2c6<",
+      "r3c1v"
+     ],
+     "losing_per_step": [
+      4,
+      3,
+      3,
+      3,
+      3,
+      2,
+      2,
+      1,
+      0,
+      1,
+      1,
+      1,
+      1,
+      1,
+      0,
+      0
+     ],
+     "matters_magnet": true,
+     "mistakes": [
+      "r0c0<",
+      "r1c0<",
+      "r1c4^",
+      "r2c3v",
+      "r1c0^",
+      "r2c1<",
+      "r3c1<"
+     ],
+     "shortcut": 0.01,
+     "without_magnet": "unsolvable without it"
+    },
+    "C": {
+     "decisions_k4_6_8": [
+      8,
+      6,
+      6
+     ],
+     "deepest": 14,
+     "greedy": {
+      "look2": 0,
+      "look4": 0.008,
+      "min_turn": 0,
+      "mobility": 0.01,
+      "safe": 0.005
+     },
+     "hidden_k6_8": [
+      17,
+      12
+     ],
+     "learner": {
+      "look4": 13,
+      "look6": 6
+     },
+     "look6_greedy": 0.075,
+     "opening": "4 / 8",
+     "pressure": {
+      "advances": 0,
+      "calm_prefix": 1,
+      "flips": 0,
+      "multi_turned": 5,
+      "prediction_share": 0.56,
+      "pulls": 1,
+      "rams": 0,
+      "signals": 3,
+      "spinners_turned": 6,
+      "trap_delay_median": 7,
+      "turns": 11,
+      "undo_proof": 0.81
+     },
+     "win_share": 0.092
+    },
+    "filler": {
+     "distinct": 7,
+     "pieces_tested": 16,
+     "steps": 13,
+     "trivial": [],
+     "trivial_removals": 0
+    },
+    "similarity": {
+     "closest_known": "N5",
+     "overlap": 0.42,
+     "closest_new_overlap": 0.31
+    }
+   }
+  }
+ ]
+}

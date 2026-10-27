@@ -1,0 +1,190 @@
+{
+ "format": "ce-ta90-proto",
+ "v": 1,
+ "test": "ta90_n26",
+ "assist": {
+  "undo": 3,
+  "show_a_move": 0,
+  "hammer": 0
+ },
+ "note": "Development only. Phase 17 EXTREME candidate (?extreme90p17=1); never shared, never production. HUMAN-REVIEW CANDIDATE: technically validated, strategic quality unconfirmed by people.",
+ "boards": [
+  {
+   "id": "N26",
+   "accepted": true,
+   "label": "HUMAN-REVIEW CANDIDATE - EXPERIMENTAL, HUMAN DIFFICULTY UNVALIDATED",
+   "variant": "N26",
+   "design": "17J1",
+   "size_class": "large",
+   "target": "EXTREME (a design target, not a rating; never shown to players)",
+   "idea": "pull into parity: a magnet pulls an alternating spinner into a three-neighbour slot - the parity of turns after the pull decides its exit",
+   "source": "hand-drawn idea core (data/dev/extreme90_p17/cores.json), grown by the bounded constructive search (tools/ta90_search.gd, pressure_weight), checked by tools/ta90_design.gd and tools/xb90_filler.gd (Phase 17)",
+   "fingerprint": "995326ce4c6ac4e8825f90a31c94165b89bd58c303883433c1f444b56418b7d9",
+   "mechanics": [
+    "spinner_cw",
+    "spinner_ccw",
+    "spinner_alt",
+    "magnet"
+   ],
+   "puzzle": {
+    "format": "ce-puzzle",
+    "v": 1,
+    "rules": 1,
+    "rows": 7,
+    "cols": 7,
+    "map": [
+     ". Rv@ . . . . .",
+     "R<@- Rv . . Y<@- Pv@- G<@~",
+     ". B^@ P^@~ . R>@- Gv Rv@~",
+     "Y^@ Y<* Yv@~ . . P^@~ .",
+     "Pv B< . R>@- . . Y^@-",
+     ". Yv . . . . Y<@-",
+     ". P<@~ . . . . ."
+    ]
+   },
+   "design_report": {
+    "A": {
+     "fingerprint": "995326ce4c6ac4e8825f90a31c94165b89bd58c303883433c1f444b56418b7d9",
+     "hint_nodes": [
+      14,
+      74
+     ],
+     "parity": [
+      0,
+      0
+     ],
+     "position_cap": 3000,
+     "positions": 466,
+     "replay": true,
+     "solution": 22,
+     "solve_ms": 15.5,
+     "timeup_worst_ms": 8.2,
+     "timeup_worst_nodes": 118,
+     "winnable": 152
+    },
+    "B": {
+     "coverage": 0.91,
+     "decision_steps": 20,
+     "distinct_mistakes": 6,
+     "endgame_decision": true,
+     "idea_moved_then_turned": true,
+     "last_decision": 20,
+     "late": 0.91,
+     "line": [
+      "r1c0< [x2]",
+      "r6c1< [x2]",
+      "r5c1v [x2]",
+      "r3c0^ [x3]",
+      "r4c0v [x3]",
+      "r3c2v [x4]",
+      "r3c1< [x2]",
+      "r2c5v [x1]",
+      "r4c1< [x1]",
+      "r3c1> [x1]",
+      "r2c1v [x1]",
+      "r2c2^ [x1]",
+      "r1c1v [x1]",
+      "r0c1< [x1]",
+      "r1c4< [x1]",
+      "r2c4< [x1]",
+      "r1c5^ [x1]",
+      "r2c6< [x2]",
+      "r1c6< [x1]",
+      "r4c6^ [x1]",
+      "r4c3>",
+      "r5c6v"
+     ],
+     "losing_per_step": [
+      2,
+      2,
+      2,
+      3,
+      3,
+      4,
+      2,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      2,
+      1,
+      1,
+      0,
+      0
+     ],
+     "matters_alt": true,
+     "matters_magnet": true,
+     "mistakes": [
+      "r2c2^",
+      "r4c0v",
+      "r5c6<",
+      "r3c1<",
+      "r4c1<",
+      "r1c6^"
+     ],
+     "shortcut": 0,
+     "without_alt": "without it: 20 decision steps, 5 distinct mistakes (with it: 20, 6)",
+     "without_magnet": "unsolvable without it"
+    },
+    "C": {
+     "decisions_k4_6_8": [
+      16,
+      14,
+      12
+     ],
+     "deepest": 17,
+     "greedy": {
+      "look2": 0,
+      "look4": 0,
+      "min_turn": 0,
+      "mobility": 0,
+      "safe": 0
+     },
+     "hidden_k6_8": [
+      21,
+      18
+     ],
+     "learner": {
+      "look4": 7,
+      "look6": 7
+     },
+     "look6_greedy": 0.017,
+     "opening": "3 / 5",
+     "pressure": {
+      "advances": 0,
+      "calm_prefix": 3,
+      "flips": 0,
+      "multi_turned": 5,
+      "prediction_share": 0.5,
+      "pulls": 1,
+      "rams": 0,
+      "signals": 4,
+      "spinners_turned": 9,
+      "trap_delay_median": 9,
+      "turns": 14,
+      "undo_proof": 0.78
+     },
+     "win_share": 0.326
+    },
+    "filler": {
+     "distinct": 6,
+     "pieces_tested": 22,
+     "steps": 20,
+     "trivial": [],
+     "trivial_removals": 0
+    },
+    "similarity": {
+     "closest_known": "N22",
+     "overlap": 0.29,
+     "closest_new_overlap": 0.36
+    }
+   }
+  }
+ ]
+}

@@ -15,6 +15,9 @@
 //   COPY ALL RESULTS: one ce-xb90 bundle with every board's internal id and
 //   fingerprint; ?ta90=1's storage never written.
 //   --player: the player build ignores ?extreme90=1.
+//   Phase 17: --entry=extreme90p17 runs the same flows on the Phase 17
+//   selection (?extreme90p17=1: xb17 storage, ce-xb17 export, chainEscapeXb17)
+//   and also checks ?extreme90=1's storage (xb90) is never written.
 // Chromium is not iPhone Safari (see tools/web_ta90_page_test.mjs).
 import http from 'node:http';
 import fs from 'node:fs';
@@ -32,7 +35,10 @@ const shots = (process.argv.find((a) => a.startsWith('--shots=')) || '').slice(8
 const benchOut = (process.argv.find((a) => a.startsWith('--bench-out=')) || '').slice(12);
 const playerRoot = (process.argv.find((a) => a.startsWith('--player=')) || '').slice(9);
 const PORT = 8840, W = 375, H = 667;  // iPhone SE
-const LSB = (b) => `chain_escape_xb90_${b.toLowerCase()}_state`;
+const ENTRY = (process.argv.find((a) => a.startsWith('--entry=')) || '--entry=extreme90').slice(8);
+const P17 = ENTRY === 'extreme90p17';
+const ST = P17 ? 'xb17' : 'xb90', FMT = 'ce-' + ST, PUB = P17 ? 'chainEscapeXb17' : 'chainEscapeXb90';
+const LSB = (b) => `chain_escape_${ST}_${b.toLowerCase()}_state`;
 const FILL = { green: [0x1e, 0x7b, 0x34], orange: [0xc2, 0x41, 0x0c], red: [0xb9, 0x1c, 0x1c] };
 const types = { '.html': 'text/html', '.js': 'text/javascript', '.wasm': 'application/wasm', '.pck': 'application/octet-stream', '.png': 'image/png' };
 const serve = (dir) => (req, res) => {
@@ -97,7 +103,7 @@ async function session(context, label) {
   });
   const cdp = await context.newCDPSession(page);
   const get = (n) => () => page.evaluate((k) => window[k] || null, n).catch(() => null);
-  const s = { page, errors, external, hub: get('chainEscapeXb90'), mus: get('chainEscapeStageMusic'), aud: get('chainEscapeAudio'), vt: get('chainEscapeVhTest'), play: get('chainEscapeSocialPlay'), ta: get('chainEscapeTimeAttack'), cd: get('chainEscapeCountdown') };
+  const s = { page, errors, external, hub: get(PUB), mus: get('chainEscapeStageMusic'), aud: get('chainEscapeAudio'), vt: get('chainEscapeVhTest'), play: get('chainEscapeSocialPlay'), ta: get('chainEscapeTimeAttack'), cd: get('chainEscapeCountdown') };
   s.waitFor = async (g, pred, what, ms = 60000) => {
     const end = Date.now() + ms; let v = null;
     while (Date.now() < end) { v = await g(); if (v && pred(v)) return v; await sleep(100); }
@@ -137,7 +143,7 @@ async function session(context, label) {
 
 const ctxOpts = { viewport: { width: W, height: H }, deviceScaleFactor: 2, isMobile: true, hasTouch: true };
 const allErrors = [], allExternal = [];
-const url = `http://127.0.0.1:${PORT}/index.html?extreme90=1`;
+const url = `http://127.0.0.1:${PORT}/index.html?${ENTRY}=1`;
 const skipToSelect = async (s) => {
   for (let k = 0; k < 40; k++) {
     if ((await s.hub()).view === 'SELECT') return true;
@@ -154,7 +160,7 @@ try {
   const a = await session(ctx, 'run 1');
   await a.page.goto(url + '&bench=1');
   let h = await a.waitFor(a.hub, (v) => v.view === 'WELCOME' && v.buttons.PilotStart, 'welcome', 120000);
-  check(await a.noOverflow() && await a.hubFits(), '?extreme90=1: the welcome screen; no overflow; buttons on screen');
+  check(await a.noOverflow() && await a.hubFits(), `?${ENTRY}=1: the welcome screen; no overflow; buttons on screen`);
   await a.shot('X1_welcome');
   await a.tapHub('PilotStart', 'WELCOME');
   await a.tapHub('Familiar_PLAYED_A_LITTLE', 'FAMILIARITY');
@@ -218,7 +224,7 @@ try {
   }
   check(Object.keys(benchMs).length === bank.length && Object.values(benchMs).every((x) => x <= 250), `WebAssembly: a full solve (the TIME UP check) per board ${JSON.stringify(benchMs)} ms`);
   console.log('BENCH ' + JSON.stringify(benchMs));
-  const ta90Keys = await a.page.evaluate(() => Object.keys(localStorage).filter((k) => k.startsWith('chain_escape_ta90_') || k.startsWith('chain_escape_tapilot')));
+  const ta90Keys = await a.page.evaluate((p17) => Object.keys(localStorage).filter((k) => k.startsWith('chain_escape_ta90_') || k.startsWith('chain_escape_tapilot') || (p17 && k.startsWith('chain_escape_xb90'))), P17);
   check(ta90Keys.length === 0, `?ta90=1 / the 120-second pilot storage never written ${JSON.stringify(ta90Keys)}`);
   allErrors.push(...a.errors); allExternal.push(...a.external);
   await ctx.close();
@@ -267,9 +273,9 @@ try {
     console.log('BUNDLE ' + JSON.stringify(bundle ? { format: bundle.format, rules: bundle.rules && bundle.rules.version, run0: r && { board: r.board, timed: r.timed_outcome, untimed: r.untimed_success }, keys: Object.keys(bundle.boards), nums: Object.values(bundle.boards).map((x) => x.puzzle) } : null));
     check(bundle && bundle.questionnaire === 'xb90-short-v1' && h2.order.every((b) => Array.isArray(bundle.boards[b].mechanics) && bundle.boards[b].mechanics.length > 0)
       && r && r.timed_answers && Object.keys(r.timed_answers).length === 0 && r.timed_outcome === 'TIME UP', 'export: questionnaire version, each board\'s mechanics; the skipped run has no answers and keeps its TIME UP outcome');
-    check(bundle && bundle.format === 'ce-xb90' && bundle.rules.version === 'ta90-v1' && r && r.board === b0 && r.timed_outcome === 'TIME UP' && r.untimed_success
+    check(bundle && bundle.format === FMT && bundle.rules.version === 'ta90-v1' && r && r.board === b0 && r.timed_outcome === 'TIME UP' && r.untimed_success
       && Object.keys(bundle.boards).length === h2.order.length && h2.order.every((b, i) => bundle.boards[b].puzzle === i + 1 && /^[0-9a-f]{64}$/.test(bundle.boards[b].fingerprint)),
-      'COPY ALL RESULTS: one ce-xb90 bundle - every board under its internal id with its fingerprint and challenge number; the run kept TIME UP and the untimed solve apart');
+      `COPY ALL RESULTS: one ${FMT} bundle - every board under its internal id with its fingerprint and challenge number; the run kept TIME UP and the untimed solve apart` + (P17 ? ` (selection ${bundle && bundle.selection}, N23 ${bundle && bundle.boards.N23 && bundle.boards.N23.group})` : ''));
     allErrors.push(...d.errors); allExternal.push(...d.external);
     await c2.close();
   }
@@ -278,10 +284,10 @@ try {
   if (server2) {
     const c3 = await browser.newContext(ctxOpts);
     const pg = await c3.newPage();
-    await pg.goto(`http://127.0.0.1:${PORT + 1}/index.html?extreme90=1`);
+    await pg.goto(`http://127.0.0.1:${PORT + 1}/index.html?${ENTRY}=1`);
     await sleep(25000);
-    const seen = await pg.evaluate(() => ({ hub: !!window.chainEscapeXb90, music: !!window.chainEscapeStageMusic, keys: Object.keys(localStorage).filter((k) => k.includes('xb90')) }));
-    check(!seen.hub && !seen.music && seen.keys.length === 0, `the player build ignores ?extreme90=1 ${JSON.stringify(seen)}`);
+    const seen = await pg.evaluate(([PUBN, STN]) => ({ hub: !!window[PUBN], music: !!window.chainEscapeStageMusic, keys: Object.keys(localStorage).filter((k) => k.includes(STN)) }), [PUB, ST]);
+    check(!seen.hub && !seen.music && seen.keys.length === 0, `the player build ignores ?${ENTRY}=1 ${JSON.stringify(seen)}`);
     await c3.close();
   }
   check(allErrors.length === 0, 'no page errors ' + JSON.stringify(allErrors.slice(0, 3)));

@@ -1,0 +1,98 @@
+{
+ "N24": {
+  "design": "A1p",
+  "size": "large",
+  "dims": "7x7",
+  "pieces": 23,
+  "fp": "c01585766042da0d0292a8eb3be280d1fa2b2d98537549d98e13f4b03043db7d",
+  "mechanics": [
+   "spinner_cw",
+   "spinner_ccw",
+   "spinner_alt"
+  ],
+  "idea": "domino: three spinners in a row turn each other as they leave - the order of departures decides every direction"
+ },
+ "N25": {
+  "design": "D1p",
+  "size": "large",
+  "dims": "7x7",
+  "pieces": 20,
+  "fp": "c1b4d6f3bb6c9ba4cc2c0881bf1c62d75d4c416f9f6b9766103e057ebe20a1c0",
+  "mechanics": [
+   "spinner_cw",
+   "spinner_ccw",
+   "spinner_alt",
+   "gate"
+  ],
+  "idea": "silent gate: the spinner beside the gate must leave through it unturned - any neighbour leaving first turns it into a deadlock"
+ },
+ "N26": {
+  "design": "J1",
+  "size": "large",
+  "dims": "7x7",
+  "pieces": 22,
+  "fp": "995326ce4c6ac4e8825f90a31c94165b89bd58c303883433c1f444b56418b7d9",
+  "mechanics": [
+   "spinner_cw",
+   "spinner_ccw",
+   "spinner_alt",
+   "magnet"
+  ],
+  "idea": "pull into parity: a magnet pulls an alternating spinner into a three-neighbour slot - the parity of turns after the pull decides its exit"
+ },
+ "N27": {
+  "design": "E3",
+  "size": "medium",
+  "dims": "7x7",
+  "pieces": 16,
+  "fp": "1c4e8da7efa3442424d7418910c7352fea905efb8f968aa18ee2a4c6d7c178e1",
+  "mechanics": [
+   "spinner_cw",
+   "spinner_ccw",
+   "spinner_alt",
+   "magnet"
+  ],
+  "idea": "pull away: a magnet pulls a spinner out of a neighbourhood whose departures would turn it the wrong way"
+ },
+ "N28": {
+  "design": "G1",
+  "size": "compact",
+  "dims": "7x7",
+  "pieces": 13,
+  "fp": "01e190ffd12506befa5f26347eac15fa8714b85fc929010c350e662ee3ba704b",
+  "mechanics": [
+   "spinner_cw",
+   "spinner_alt",
+   "spinner_pattern",
+   "sequence"
+  ],
+  "idea": "advances on a rhythm: two Sequence blocks advance next to a pattern spinner - each advance moves its cw-cw-ccw cycle on"
+ },
+ "N29": {
+  "design": "H1",
+  "size": "medium",
+  "dims": "6x6",
+  "pieces": 17,
+  "fp": "c3ba04c3fe248df1b882ae09bb48afc9aa24b0efd345f28b0ec59b1a27d9a75a",
+  "mechanics": [
+   "spinner_cw",
+   "spinner_ccw",
+   "spinner_alt"
+  ],
+  "idea": "alternating chain: two adjacent alternating spinners turn each other back and forth"
+ },
+ "N30": {
+  "design": "B2b",
+  "size": "medium",
+  "dims": "6x6",
+  "pieces": 17,
+  "fp": "fffe88195b3a60e013d29e687872efc7bd3fa66b2146f900c964bc37aa031bdd",
+  "mechanics": [
+   "spinner_cw",
+   "spinner_ccw",
+   "spinner_alt",
+   "lock"
+  ],
+  "idea": "parity key: the only purple key is an alternating spinner; it must leave after the right parity of turns to unlock"
+ }
+}

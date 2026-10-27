@@ -1,0 +1,182 @@
+{
+ "format": "ce-ta90-proto",
+ "v": 1,
+ "test": "ta90_n25",
+ "assist": {
+  "undo": 3,
+  "show_a_move": 0,
+  "hammer": 0
+ },
+ "note": "Development only. Phase 17 EXTREME candidate (?extreme90p17=1); never shared, never production. HUMAN-REVIEW CANDIDATE: technically validated, strategic quality unconfirmed by people.",
+ "boards": [
+  {
+   "id": "N25",
+   "accepted": true,
+   "label": "HUMAN-REVIEW CANDIDATE - EXPERIMENTAL, HUMAN DIFFICULTY UNVALIDATED",
+   "variant": "N25",
+   "design": "17D1p",
+   "size_class": "large",
+   "target": "EXTREME (a design target, not a rating; never shown to players)",
+   "idea": "silent gate: the spinner beside the gate must leave through it unturned - any neighbour leaving first turns it into a deadlock",
+   "source": "hand-drawn idea core (data/dev/extreme90_p17/cores.json), grown by the bounded constructive search (tools/ta90_search.gd, pressure_weight), checked by tools/ta90_design.gd and tools/xb90_filler.gd (Phase 17)",
+   "fingerprint": "c1b4d6f3bb6c9ba4cc2c0881bf1c62d75d4c416f9f6b9766103e057ebe20a1c0",
+   "mechanics": [
+    "spinner_cw",
+    "spinner_ccw",
+    "spinner_alt",
+    "gate"
+   ],
+   "puzzle": {
+    "format": "ce-puzzle",
+    "v": 1,
+    "rules": 1,
+    "rows": 7,
+    "cols": 7,
+    "map": [
+     ". . Bv@~ . . . .",
+     "Y^@~ . . . . . .",
+     ". Y>@ Rv@- B> . . .",
+     ". . R> G>@ XA Yv@ P>",
+     "P^@ G^@- . Y< . P>@~ P<@-",
+     "R<@~ Pv@- . P<@ . . .",
+     "B^+A . . P^ . . ."
+    ]
+   },
+   "design_report": {
+    "A": {
+     "fingerprint": "c1b4d6f3bb6c9ba4cc2c0881bf1c62d75d4c416f9f6b9766103e057ebe20a1c0",
+     "hint_nodes": [
+      225,
+      76
+     ],
+     "parity": [
+      0,
+      0
+     ],
+     "position_cap": 3000,
+     "positions": 607,
+     "replay": true,
+     "solution": 19,
+     "solve_ms": 20.1,
+     "timeup_worst_ms": 18,
+     "timeup_worst_nodes": 286,
+     "winnable": 136
+    },
+    "B": {
+     "coverage": 0.84,
+     "decision_steps": 16,
+     "distinct_mistakes": 6,
+     "endgame_decision": true,
+     "idea_gate_through": true,
+     "last_decision": 16,
+     "late": 0.84,
+     "line": [
+      "r1c0^ [x2]",
+      "r3c6> [x2]",
+      "r4c0^ [x2]",
+      "r4c6v [x3]",
+      "r4c5v [x3]",
+      "r3c5^ [x3]",
+      "r5c1v [x3]",
+      "r4c1v [x1]",
+      "r5c0< [x2]",
+      "r5c3< [x2]",
+      "r6c0^ [x2]",
+      "r3c3> [x2]",
+      "r4c3< [x1]",
+      "r2c3> [x1]",
+      "r6c3^ [x1]",
+      "r2c2> [x1]",
+      "r2c1v",
+      "r3c2>",
+      "r0c2v"
+     ],
+     "losing_per_step": [
+      2,
+      2,
+      2,
+      3,
+      3,
+      3,
+      3,
+      1,
+      2,
+      2,
+      2,
+      2,
+      1,
+      1,
+      1,
+      1,
+      0,
+      0,
+      0
+     ],
+     "matters_gate": true,
+     "mistakes": [
+      "r2c3>",
+      "r5c0<",
+      "r4c1<",
+      "r5c0^",
+      "r4c3<",
+      "r3c2>"
+     ],
+     "shortcut": 0.04,
+     "without_gate": "without it: 16 decision steps, 5 distinct mistakes (with it: 16, 6)"
+    },
+    "C": {
+     "decisions_k4_6_8": [
+      11,
+      9,
+      7
+     ],
+     "deepest": 15,
+     "greedy": {
+      "look2": 0.02,
+      "look4": 0.033,
+      "min_turn": 0.04,
+      "mobility": 0,
+      "safe": 0.005
+     },
+     "hidden_k6_8": [
+      19,
+      15
+     ],
+     "learner": {
+      "look4": 1,
+      "look6": 1
+     },
+     "look6_greedy": 0.058,
+     "opening": "3 / 5",
+     "pressure": {
+      "advances": 0,
+      "calm_prefix": 1,
+      "flips": 0,
+      "multi_turned": 3,
+      "prediction_share": 0.37,
+      "pulls": 0,
+      "rams": 0,
+      "signals": 4,
+      "spinners_turned": 7,
+      "trap_delay_median": 7,
+      "turns": 10,
+      "undo_proof": 0.81
+     },
+     "win_share": 0.224
+    },
+    "filler": {
+     "distinct": 6,
+     "pieces_tested": 19,
+     "steps": 16,
+     "trivial": [],
+     "trivial_removals": 0
+    },
+    "similarity": {
+     "closest_known": "N15",
+     "overlap": 0.37,
+     "closest_new_overlap": 0.33
+    }
+   }
+  }
+ ]
+}

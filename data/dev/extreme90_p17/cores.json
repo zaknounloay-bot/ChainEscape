@@ -1,0 +1,133 @@
+{
+ "core_A": {
+  "target": "EXTREME",
+  "facts": [],
+  "mechanic": "",
+  "max_positions": 3000,
+  "idea": "domino: three spinners in a row turn each other as they leave - the order of departures decides every direction",
+  "map": [
+   ". . . . . .",
+   ". Yv Gv Rv . .",
+   "Pv B^@ R^@- G^@ Y> .",
+   ". . Bv . . .",
+   ". . . . . .",
+   ". . . . . ."
+  ]
+ },
+ "core_B": {
+  "target": "EXTREME",
+  "facts": [],
+  "mechanic": "alt,lock",
+  "max_positions": 3000,
+  "idea": "parity key: the only purple key is an alternating spinner; it must leave after the right parity of turns to unlock",
+  "map": [
+   ". . . . . .",
+   ". . Rv . . .",
+   ". B> P^@~ Gv . .",
+   ". . R<#P . . .",
+   ". . . . . .",
+   ". . . . . ."
+  ]
+ },
+ "core_C": {
+  "target": "EXTREME",
+  "facts": [],
+  "mechanic": "pattern,gate",
+  "max_positions": 3000,
+  "idea": "count to two, not three: a pattern spinner (cw, cw, ccw) needs exactly two turns; the gate opens without turning it",
+  "map": [
+   ". . . . . . .",
+   ". . . Rv . . .",
+   ". . B< G^@* XA . .",
+   ". . . Yv . . .",
+   ". . . . . . .",
+   ". . . . . . .",
+   "P^+A . . . . . ."
+  ]
+ },
+ "core_D": {
+  "target": "EXTREME",
+  "facts": [
+   "gate_through"
+  ],
+  "mechanic": "gate",
+  "max_positions": 3000,
+  "idea": "silent gate: the spinner beside the gate must leave through it unturned - any neighbour leaving first turns it into a deadlock",
+  "map": [
+   ". . . . . . .",
+   ". . . . . . .",
+   ". . . B> . . .",
+   ". . R> G>@ XA . .",
+   ". . . Y< . . .",
+   ". . . . . . .",
+   "B^+A . . P^ . . ."
+  ]
+ },
+ "core_E": {
+  "target": "EXTREME",
+  "facts": [],
+  "mechanic": "magnet",
+  "max_positions": 3000,
+  "idea": "pull away: a magnet pulls a spinner out of a neighbourhood whose departures would turn it the wrong way",
+  "map": [
+   ". . . . . . .",
+   ". . . . . Bv .",
+   ". Y<* . . . G^@ Y<",
+   ". . . . . Rv .",
+   ". . . . . . .",
+   ". . . . . . .",
+   ". . . . . . ."
+  ]
+ },
+ "core_G": {
+  "target": "EXTREME",
+  "facts": [
+   "advance_turn"
+  ],
+  "mechanic": "sequence,pattern",
+  "max_positions": 3000,
+  "idea": "advances on a rhythm: two Sequence blocks advance next to a pattern spinner - each advance moves its cw-cw-ccw cycle on",
+  "map": [
+   ". . . . . . .",
+   ". . . . . . .",
+   ". . . Gv . . .",
+   ". . B<:v R^@* P>:^ . .",
+   ". . . . . . .",
+   ". . . . . . .",
+   ". . . . . . ."
+  ]
+ },
+ "core_H": {
+  "target": "EXTREME",
+  "facts": [],
+  "mechanic": "alt",
+  "max_positions": 3000,
+  "idea": "alternating chain: two adjacent alternating spinners turn each other back and forth",
+  "map": [
+   ". . . . . .",
+   ". R< G> . . .",
+   ". B^@~ P^@~ Y< . .",
+   ". Gv . . . .",
+   ". . . . . .",
+   ". . . . . ."
+  ]
+ },
+ "core_J": {
+  "target": "EXTREME",
+  "facts": [
+   "moved_then_turned"
+  ],
+  "mechanic": "magnet,alt",
+  "max_positions": 3000,
+  "idea": "pull into parity: a magnet pulls an alternating spinner into a three-neighbour slot - the parity of turns after the pull decides its exit",
+  "map": [
+   ". . . . . . .",
+   ". Rv . . . . .",
+   ". . . . . Gv .",
+   ". Y<* . . . P^@~ .",
+   ". B< . . . . .",
+   ". . . . . . .",
+   ". . . . . . ."
+  ]
+ }
+}

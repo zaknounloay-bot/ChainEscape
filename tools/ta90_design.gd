@@ -189,6 +189,9 @@ func report(name: String, spec: Dictionary) -> Dictionary:
 	r["C"]["deepest"] = m["deepest"]
 	r["C"]["opening"] = m["opening"]
 	r["C"]["win_share"] = snappedf(m["win_share"], 0.001)
+	# Phase 17: the human-calibrated pressure diagnostics (docs/extreme90_phase17.md;
+	# ranking only, never a rejection).
+	r["C"]["pressure"] = pressure(level, s, memo, sol)
 	r["C"]["look6_greedy"] = snappedf(PROBE.policy_win(s, "look6", 120, 31), 0.001)
 	if not quick:
 		var ex := expert_gates(level, true)
@@ -357,3 +360,88 @@ func _counterfactual(map: Array, mech: String, dec: Dictionary) -> Dictionary:
 static func _strip(t: String, mark: String) -> String:
 	var i := t.find(mark)
 	return t if i < 0 else t.substr(0, i) + t.substr(i + 2)
+
+
+## Phase 17 (category C, ranking only): what the family playtests suggested
+## matters - multi-turned spinners along the solution, how late a mistake
+## shows (UNDO x3 fixes the quick ones), the calm prefix (trivial removals),
+## the solution length - with their composite "pressure" count (signals met
+## out of 4: multi_turned >= 3, trap delay median >= 7, solution >= 18,
+## positions >= 450). Calibrated on ONE player's first runs of 10 boards:
+## never a gate (it fails N16 and the reference N3).
+func pressure(level: LevelData, s: Solver, memo: Dictionary, sol: Array) -> Dictionary:
+	var win: Dictionary = memo["win"]
+	var done := []
+	while true:
+		var calm := s._distinct_legal().filter(func(mv): return not PROBE.risky(s, mv))
+		if calm.is_empty():
+			break
+		s._do(calm[0])
+		done.append(calm[0])
+	var calm_prefix := done.size()
+	for i in range(done.size() - 1, -1, -1):
+		s._undo_move(done[i])
+	var delays := []
+	for mv in sol:
+		for o in s._distinct_legal():
+			s._do(o)
+			if s._alive_count != s._crate_n and not win.get(s._key(), false):
+				delays.append(EXPERT.longest(s, memo))
+			s._undo_move(o)
+		s._do(mv)
+	for i in range(sol.size() - 1, -1, -1):
+		s._undo_move(sol[i])
+	delays.sort()
+	var r := _load(level, sol)
+	r["calm_prefix"] = calm_prefix
+	r["trap_delay_median"] = delays[delays.size() / 2] if not delays.is_empty() else 0
+	r["undo_proof"] = snappedf(float(delays.filter(func(x): return x > 3).size()) / maxf(delays.size(), 1), 0.01)
+	r["signals"] = int(r["multi_turned"] >= 3) + int(r["trap_delay_median"] >= 7) + int(sol.size() >= 18) + int(win.size() >= 450)
+	return r
+
+
+func _load(level: LevelData, sol: Array) -> Dictionary:
+	var m := EVENTS6.model_of(level)
+	var turns := 0
+	var per := {}
+	var flips := 0
+	var pulls := 0
+	var rams := 0
+	var advances := 0
+	var predict := 0
+	for mv in sol:
+		var id: int = mv & Solver.ID_MASK
+		var st := m.move_state(id)
+		var changed := 0
+		match st:
+			"ok":
+				var turned: Array = m.remove(id)
+				turns += turned.size()
+				changed += turned.size()
+				for t in turned:
+					per[t] = per.get(t, 0) + 1
+				flips += m.last_flipped.size()
+				changed += m.last_flipped.size()
+				if not m.last_pull.is_empty():
+					pulls += 1
+					changed += 1
+			"advance":
+				var turned2: Array = m.advance(id)
+				advances += 1
+				turns += turned2.size()
+				changed += 1 + turned2.size()
+				for t in turned2:
+					per[t] = per.get(t, 0) + 1
+			"ram":
+				m.ram(id)
+				rams += 1
+				changed += 1
+			"push":
+				m.push(id)
+		if changed > 0:
+			predict += 1
+	return {"turns": turns, "spinners_turned": per.size(), "multi_turned": per.values().filter(func(x): return x >= 2).size(),
+		"flips": flips, "pulls": pulls, "rams": rams, "advances": advances,
+		"prediction_share": snappedf(float(predict) / maxf(sol.size(), 1), 0.01)}
+
+

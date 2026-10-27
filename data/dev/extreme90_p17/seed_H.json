@@ -1,0 +1,52 @@
+{
+ "target": "EXTREME",
+ "facts": [],
+ "mechanic": "alt",
+ "idea": "alternating chain: two adjacent alternating spinners turn each other back and forth",
+ "map": [
+  ". . . . . .",
+  ". R< G> . . .",
+  ". B^@~ P^@~ Y< . .",
+  ". Gv . . . .",
+  ". . . . . .",
+  ". . . . . ."
+ ],
+ "frozen": [
+  [
+   1,
+   1
+  ],
+  [
+   1,
+   2
+  ],
+  [
+   2,
+   1
+  ],
+  [
+   2,
+   2
+  ],
+  [
+   2,
+   3
+  ],
+  [
+   3,
+   1
+  ]
+ ],
+ "max_positions": 1500,
+ "piece_free": 13,
+ "max_pieces": 17,
+ "shortcut_weight": 80,
+ "coverage_weight": 25,
+ "late_weight": 20,
+ "endgame_weight": 20,
+ "length_weight": 1.0,
+ "length_cap": 18,
+ "pressure_weight": 3.0,
+ "seed": 17,
+ "size": "medium"
+}

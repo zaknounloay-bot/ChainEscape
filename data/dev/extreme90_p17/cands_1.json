@@ -1,0 +1,398 @@
+{
+ "A1": {
+  "map": [
+   ". Pv@~ Y>@- B<@- Y<@~ . .",
+   ". Yv Gv Rv . . .",
+   "Pv B^@ R^@- G^@ Y> Pv@~ Pv",
+   ". . Bv B^@ G< . .",
+   ". Y<@~ P>@~ . . . .",
+   ". Y^@- . B<@ R<@~ . .",
+   ". . . Bv@ G>@- . ."
+  ],
+  "target": "EXTREME",
+  "facts": [],
+  "mechanic": "",
+  "idea": "domino: three spinners in a row turn each other as they leave - the order of departures decides every direction",
+  "max_positions": 3000
+ },
+ "A2": {
+  "map": [
+   ". Pv@~ Y>@- B<@- Y<@~ . .",
+   ". Yv Gv Rv Rv@~ . .",
+   "Pv B^@ R^@- G^@ Y> Pv@~ Pv",
+   ". . Bv B^@ G< . .",
+   ". Y<@~ P>@~ . . . .",
+   ". Y^@- . B<@ R<@~ . .",
+   ". . . Bv@ G>@- . ."
+  ],
+  "target": "EXTREME",
+  "facts": [],
+  "mechanic": "",
+  "idea": "domino: three spinners in a row turn each other as they leave - the order of departures decides every direction",
+  "max_positions": 3000
+ },
+ "A3": {
+  "map": [
+   ". Pv@~ Y>@- B<@- Y<@~ . .",
+   ". Yv Gv Rv Rv@~ . .",
+   "Pv B^@ R^@- G^@ Y> Pv@~ Pv",
+   ". . Bv B^@ G< . .",
+   ". Y<@ P>@~ . . . .",
+   ". Y^@- . B<@ R<@~ . .",
+   ". . . Bv@ G>@- . ."
+  ],
+  "target": "EXTREME",
+  "facts": [],
+  "mechanic": "",
+  "idea": "domino: three spinners in a row turn each other as they leave - the order of departures decides every direction",
+  "max_positions": 3000
+ },
+ "D1": {
+  "map": [
+   ". . Bv@~ . . . .",
+   "Y^@~ . P<@- . . . .",
+   ". Y>@ Rv@- B> . . .",
+   ". . R> G>@ XA Yv@ P>",
+   "P^@ G^@- . Y< . P>@~ P<@-",
+   "R<@~ Pv@- . P<@ . . .",
+   "B^+A . . P^ . . ."
+  ],
+  "target": "EXTREME",
+  "facts": [
+   "gate_through"
+  ],
+  "mechanic": "gate",
+  "idea": "silent gate: the spinner beside the gate must leave through it unturned - any neighbour leaving first turns it into a deadlock",
+  "max_positions": 3000
+ },
+ "D2": {
+  "map": [
+   ". . . . . . .",
+   "Y^@~ . P<@- Gv@~ . . .",
+   ". Y>@ Rv@- B> . . .",
+   ". . R> G>@ XA Yv@ P>",
+   "P<@- G^@- . Y< . P>@~ P<@-",
+   "R<@~ Pv@- . P<@ . . .",
+   "B^+A . G> P^ . . ."
+  ],
+  "target": "EXTREME",
+  "facts": [
+   "gate_through"
+  ],
+  "mechanic": "gate",
+  "idea": "silent gate: the spinner beside the gate must leave through it unturned - any neighbour leaving first turns it into a deadlock",
+  "max_positions": 3000
+ },
+ "D3": {
+  "map": [
+   ". . . . . . .",
+   "Y^@~ . P<@- . . . .",
+   ". Y>@ Rv@- B> . . R<@",
+   ". . R> G>@ XA Yv@ P>",
+   "P<@- G^@- . Y< . P>@~ P<@-",
+   "R<@~ Pv@- . P<@ . . .",
+   "B^+A . G> P^ . . ."
+  ],
+  "target": "EXTREME",
+  "facts": [
+   "gate_through"
+  ],
+  "mechanic": "gate",
+  "idea": "silent gate: the spinner beside the gate must leave through it unturned - any neighbour leaving first turns it into a deadlock",
+  "max_positions": 3000
+ },
+ "J1": {
+  "map": [
+   ". Rv@ . . . . .",
+   "R<@- Rv . . Y<@- Pv@- G<@~",
+   ". B^@ P^@~ . R>@- Gv Rv@~",
+   "Y^@ Y<* Yv@~ . . P^@~ .",
+   "Pv B< . R>@- . . Y^@-",
+   ". Yv . . . . Y<@-",
+   ". P<@~ . . . . ."
+  ],
+  "target": "EXTREME",
+  "facts": [
+   "moved_then_turned"
+  ],
+  "mechanic": "magnet,alt",
+  "idea": "pull into parity: a magnet pulls an alternating spinner into a three-neighbour slot - the parity of turns after the pull decides its exit",
+  "max_positions": 3000
+ },
+ "J2": {
+  "map": [
+   ". Rv@ . . . . .",
+   "R<@- Rv . . Y<@- Pv@- G<@~",
+   ". B^@ P^@~ . R>@- Gv Rv@~",
+   "Y^@ Y<* Yv@~ . . P^@~ .",
+   "Pv B< . R>@- . . Y^@-",
+   ". Yv . . . . Y<@-",
+   ". P<@ . . . . ."
+  ],
+  "target": "EXTREME",
+  "facts": [
+   "moved_then_turned"
+  ],
+  "mechanic": "magnet,alt",
+  "idea": "pull into parity: a magnet pulls an alternating spinner into a three-neighbour slot - the parity of turns after the pull decides its exit",
+  "max_positions": 3000
+ },
+ "J3": {
+  "map": [
+   ". Rv@ . . . . .",
+   "R<@- Rv . . Y<@- Pv@- G<@~",
+   ". B^@ P^@~ . R>@- Gv Rv@~",
+   "Y^@ Y<* Yv@~ . . P^@~ .",
+   "Pv B< . R>@- . . Y^@-",
+   ". . . . . . Y<@-",
+   ". P>@ . . . . ."
+  ],
+  "target": "EXTREME",
+  "facts": [
+   "moved_then_turned"
+  ],
+  "mechanic": "magnet,alt",
+  "idea": "pull into parity: a magnet pulls an alternating spinner into a three-neighbour slot - the parity of turns after the pull decides its exit",
+  "max_positions": 3000
+ },
+ "C1": {
+  "map": [
+   ". . . . . . .",
+   ". . . Rv . . .",
+   "B^@ G^@- B< G^@* XA . .",
+   "B< G<@- . Yv Pv@~ . .",
+   "Y<@~ . . Y<@ . . .",
+   "R<@- . . Y<@- . . .",
+   "P^+A R^@~ . . . Y<@- ."
+  ],
+  "target": "EXTREME",
+  "facts": [],
+  "mechanic": "pattern,gate",
+  "idea": "count to two, not three: a pattern spinner (cw, cw, ccw) needs exactly two turns; the gate opens without turning it",
+  "max_positions": 1500
+ },
+ "C2": {
+  "map": [
+   ". . . . . . .",
+   ". . . Rv . . .",
+   "B^@ G^@- B< G^@* XA . .",
+   "B< G<@- . Yv Pv@ . .",
+   "Y<@~ . . Y<@ . . .",
+   "R<@- . . Y<@- . . .",
+   "P^+A R^@~ . . . Y<@- ."
+  ],
+  "target": "EXTREME",
+  "facts": [],
+  "mechanic": "pattern,gate",
+  "idea": "count to two, not three: a pattern spinner (cw, cw, ccw) needs exactly two turns; the gate opens without turning it",
+  "max_positions": 1500
+ },
+ "C3": {
+  "map": [
+   ". . . . . . .",
+   ". . . Rv . . .",
+   "B^@ G^@- B< G^@* XA . .",
+   "B< G<@- . Yv . . .",
+   "Y<@~ . . Y<@ . . .",
+   "R<@- . . Yv@- . . .",
+   "P^+A R^@~ . . . Y<@- ."
+  ],
+  "target": "EXTREME",
+  "facts": [],
+  "mechanic": "pattern,gate",
+  "idea": "count to two, not three: a pattern spinner (cw, cw, ccw) needs exactly two turns; the gate opens without turning it",
+  "max_positions": 1500
+ },
+ "B1": {
+  "map": [
+   ". Y<@- R>@~ Y<@~ . .",
+   ". Pv@~ Rv . B^@~ G<@~",
+   ". B> P^@~ Gv Bv@ .",
+   ". . R<#P . . Y<@~",
+   ". . . . . .",
+   ". . . . . ."
+  ],
+  "target": "EXTREME",
+  "facts": [],
+  "mechanic": "alt,lock",
+  "idea": "parity key: the only purple key is an alternating spinner; it must leave after the right parity of turns to unlock",
+  "max_positions": 1500
+ },
+ "B2": {
+  "map": [
+   ". Y<@- R>@~ Y<@~ . .",
+   ". Pv@~ Rv . B^@~ G<@",
+   ". B> P^@~ Gv Bv@ .",
+   ". . R<#P . . Y<@~",
+   ". . . . . .",
+   ". . . . . ."
+  ],
+  "target": "EXTREME",
+  "facts": [],
+  "mechanic": "alt,lock",
+  "idea": "parity key: the only purple key is an alternating spinner; it must leave after the right parity of turns to unlock",
+  "max_positions": 1500
+ },
+ "B3": {
+  "map": [
+   ". Y<@- R>@~ Y<@~ . .",
+   ". Pv@~ Rv . B^@~ G<",
+   ". B> P^@~ Gv Bv@~ .",
+   ". . R<#P . . .",
+   ". . . . . .",
+   ". . . . . ."
+  ],
+  "target": "EXTREME",
+  "facts": [],
+  "mechanic": "alt,lock",
+  "idea": "parity key: the only purple key is an alternating spinner; it must leave after the right parity of turns to unlock",
+  "max_positions": 1500
+ },
+ "E1": {
+  "map": [
+   "B< P< . P< . . .",
+   "R<@ . R>@ B^@~ R^@- Bv .",
+   "Bv@- Y<* Pv@- Pv@~ . G^@ Y<",
+   ". B^@- . . . Rv .",
+   ". . . . . . .",
+   ". . . . . . .",
+   ". . . . . G>@ ."
+  ],
+  "target": "EXTREME",
+  "facts": [],
+  "mechanic": "magnet",
+  "idea": "pull away: a magnet pulls a spinner out of a neighbourhood whose departures would turn it the wrong way",
+  "max_positions": 1500
+ },
+ "E2": {
+  "map": [
+   "B< P< . P<@~ . . .",
+   "R<@ . R>@ B^@~ R^@- Bv .",
+   "Bv@- Y<* Pv@- Pv@~ . G^@ Y<",
+   ". B^@- . . . Rv .",
+   ". . . . . . .",
+   ". . . . . . .",
+   ". . . . . G>@ ."
+  ],
+  "target": "EXTREME",
+  "facts": [],
+  "mechanic": "magnet",
+  "idea": "pull away: a magnet pulls a spinner out of a neighbourhood whose departures would turn it the wrong way",
+  "max_positions": 1500
+ },
+ "E3": {
+  "map": [
+   "B< P^@ . P< . . .",
+   "R<@ . R>@ Bv@- R^@- Bv .",
+   "Bv@- Y<* Pv@ Pv@~ . G^@ Y<",
+   ". B^@- . . . Rv .",
+   ". . . . . . .",
+   ". . . . . . .",
+   ". . . . . . ."
+  ],
+  "target": "EXTREME",
+  "facts": [],
+  "mechanic": "magnet",
+  "idea": "pull away: a magnet pulls a spinner out of a neighbourhood whose departures would turn it the wrong way",
+  "max_positions": 1500
+ },
+ "G1": {
+  "map": [
+   ". P>@~ . . . . .",
+   ". G>@ . . . . .",
+   ". P<@ . Gv Gv@~ . .",
+   ". P<@ B<:v R^@* P>:^ . .",
+   ". G^@~ Gv@ Rv@~ Rv . .",
+   ". . . . . . .",
+   ". . . . . . ."
+  ],
+  "target": "EXTREME",
+  "facts": [
+   "advance_turn"
+  ],
+  "mechanic": "sequence,pattern",
+  "idea": "advances on a rhythm: two Sequence blocks advance next to a pattern spinner - each advance moves its cw-cw-ccw cycle on",
+  "max_positions": 1500
+ },
+ "G2": {
+  "map": [
+   ". P>@ . . . . .",
+   ". G>@ . . . . .",
+   ". P<@ . Gv Gv@~ . .",
+   ". P<@ B<:v R^@* P>:^ . .",
+   ". G^@~ Gv@ Rv@~ Rv . .",
+   ". . . . . . .",
+   ". . . . . . ."
+  ],
+  "target": "EXTREME",
+  "facts": [
+   "advance_turn"
+  ],
+  "mechanic": "sequence,pattern",
+  "idea": "advances on a rhythm: two Sequence blocks advance next to a pattern spinner - each advance moves its cw-cw-ccw cycle on",
+  "max_positions": 1500
+ },
+ "G3": {
+  "map": [
+   ". P>@~ . . . . .",
+   ". G>@ . . . . .",
+   ". P<@ . Gv Gv@~ . .",
+   ". P<@ B<:v R^@* P>:^ . .",
+   ". G^@~ Gv@ Rv@~ . . .",
+   ". . . . . . .",
+   ". . . . . . ."
+  ],
+  "target": "EXTREME",
+  "facts": [
+   "advance_turn"
+  ],
+  "mechanic": "sequence,pattern",
+  "idea": "advances on a rhythm: two Sequence blocks advance next to a pattern spinner - each advance moves its cw-cw-ccw cycle on",
+  "max_positions": 1500
+ },
+ "H1": {
+  "map": [
+   ". G>@~ . . . .",
+   ". R< G> . R^@- Pv@~",
+   ". B^@~ P^@~ Y< Bv@- .",
+   ". Gv B^@ . . .",
+   ". Rv@ . Y<@~ B^@~ .",
+   ". . P< Gv@- B^@- ."
+  ],
+  "target": "EXTREME",
+  "facts": [],
+  "mechanic": "alt",
+  "idea": "alternating chain: two adjacent alternating spinners turn each other back and forth",
+  "max_positions": 1500
+ },
+ "H2": {
+  "map": [
+   ". G>@ . . . .",
+   ". R< G> . R^@- Pv@~",
+   ". B^@~ P^@~ Y< Bv@- .",
+   ". Gv B^@ . . .",
+   ". Rv@ . Y<@~ B^@~ .",
+   ". . P< Gv@- B^@- ."
+  ],
+  "target": "EXTREME",
+  "facts": [],
+  "mechanic": "alt",
+  "idea": "alternating chain: two adjacent alternating spinners turn each other back and forth",
+  "max_positions": 1500
+ },
+ "H3": {
+  "map": [
+   ". G>@ . . . .",
+   ". R< G> . R^@- Pv@~",
+   ". B^@~ P^@~ Y< Bv@- .",
+   ". Gv B^@ . . .",
+   ". . . Y<@~ B^@~ .",
+   ". . P< Gv@- B^@- ."
+  ],
+  "target": "EXTREME",
+  "facts": [],
+  "mechanic": "alt",
+  "idea": "alternating chain: two adjacent alternating spinners turn each other back and forth",
+  "max_positions": 1500
+ }
+}

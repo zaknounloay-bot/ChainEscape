@@ -1,0 +1,50 @@
+{
+ "target": "EXTREME",
+ "facts": [],
+ "mechanic": "pattern",
+ "idea": "count the pattern: the pattern spinner (cw, cw, ccw) is surrounded by three leavers; which neighbours leave before it decides its facing - only one count lets it out",
+ "map": [
+  ". . . . . . .",
+  ". . . R^ . . .",
+  ". . B< G<@* Y> . .",
+  ". . . Pv . . .",
+  ". . . . . . .",
+  ". . . . . . .",
+  ". . . . . . ."
+ ],
+ "frozen": [
+  [
+   1,
+   3
+  ],
+  [
+   2,
+   2
+  ],
+  [
+   2,
+   3
+  ],
+  [
+   2,
+   4
+  ],
+  [
+   3,
+   3
+  ]
+ ],
+ "max_positions": 1500,
+ "piece_free": 13,
+ "max_pieces": 17,
+ "shortcut_weight": 80,
+ "coverage_weight": 25,
+ "late_weight": 20,
+ "endgame_weight": 20,
+ "length_weight": 1.0,
+ "length_cap": 18,
+ "pressure_weight": 3.0,
+ "seed": 31,
+ "size": "medium",
+ "redesign": "C round 2: the gate let the pattern be decoration; the gate removed, the pattern spinner made the hub"
+}

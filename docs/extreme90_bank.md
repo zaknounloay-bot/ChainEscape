@@ -207,3 +207,13 @@ Questionnaire fatigue was reduced. After each tested challenge, **whatever the o
   - The export also carries the questionnaire version and each board's mechanics.
 - **Scope:** the page change is opt-in (`Ta90TimeAttack.short_q`, set by `Extreme90Bank.short_questions()`). `?ta90=1` still asks its own questions, and every earlier record stays readable and unchanged. The rules, puzzles, fingerprints, timer and music are unchanged.
 - **Older bank records** (Phase 16) keep their 8-answer `timed.answers` and post-play `puzzle_answers`. The two sets are told apart by `answers_set`.
+
+## Phase 17 (follow-up)
+
+The family playtests archived N17, N19, N20 and N22 from the active
+selection (they stay here, on `?extreme90=1`, with their data,
+fingerprints and records). The active selection — CORE, N14, N15, N16,
+N18, N21, N23 (provisional) and the Phase 17 candidates N24–N30 — lives on
+its own developer entry, `?extreme90p17=1` (storage `xb17`, export
+`ce-xb17`). See `docs/extreme90_phase17.md`. This page, its storage and
+its `ce-xb90` export are unchanged.

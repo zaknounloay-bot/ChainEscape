@@ -1,0 +1,49 @@
+{
+ "target": "EXTREME",
+ "facts": [],
+ "mechanic": "alt,lock",
+ "idea": "parity key: the only purple key is an alternating spinner; it must leave after the right parity of turns to unlock",
+ "map": [
+  ". . . . . .",
+  ". . Rv . . .",
+  ". B> P^@~ Gv . .",
+  ". . R<#P . . .",
+  ". . . . . .",
+  ". . . . . ."
+ ],
+ "frozen": [
+  [
+   1,
+   2
+  ],
+  [
+   2,
+   1
+  ],
+  [
+   2,
+   2
+  ],
+  [
+   2,
+   3
+  ],
+  [
+   3,
+   2
+  ]
+ ],
+ "max_positions": 1500,
+ "piece_free": 13,
+ "max_pieces": 17,
+ "shortcut_weight": 80,
+ "coverage_weight": 25,
+ "late_weight": 20,
+ "endgame_weight": 20,
+ "length_weight": 1.0,
+ "length_cap": 18,
+ "pressure_weight": 3.0,
+ "seed": 29,
+ "size": "medium",
+ "redesign": "B round 2: compact budget gave only 3 distinct mistakes; medium budget, new seed"
+}

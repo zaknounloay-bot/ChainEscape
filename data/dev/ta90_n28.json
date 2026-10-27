@@ -1,0 +1,176 @@
+{
+ "format": "ce-ta90-proto",
+ "v": 1,
+ "test": "ta90_n28",
+ "assist": {
+  "undo": 3,
+  "show_a_move": 0,
+  "hammer": 0
+ },
+ "note": "Development only. Phase 17 EXTREME candidate (?extreme90p17=1); never shared, never production. HUMAN-REVIEW CANDIDATE: technically validated, strategic quality unconfirmed by people.",
+ "boards": [
+  {
+   "id": "N28",
+   "accepted": true,
+   "label": "HUMAN-REVIEW CANDIDATE - EXPERIMENTAL, HUMAN DIFFICULTY UNVALIDATED",
+   "variant": "N28",
+   "design": "17G1",
+   "size_class": "compact",
+   "target": "EXTREME (a design target, not a rating; never shown to players)",
+   "idea": "advances on a rhythm: two Sequence blocks advance next to a pattern spinner - each advance moves its cw-cw-ccw cycle on",
+   "source": "hand-drawn idea core (data/dev/extreme90_p17/cores.json), grown by the bounded constructive search (tools/ta90_search.gd, pressure_weight), checked by tools/ta90_design.gd and tools/xb90_filler.gd (Phase 17)",
+   "fingerprint": "01e190ffd12506befa5f26347eac15fa8714b85fc929010c350e662ee3ba704b",
+   "mechanics": [
+    "spinner_cw",
+    "spinner_alt",
+    "spinner_pattern",
+    "sequence"
+   ],
+   "puzzle": {
+    "format": "ce-puzzle",
+    "v": 1,
+    "rules": 1,
+    "rows": 7,
+    "cols": 7,
+    "map": [
+     ". P>@~ . . . . .",
+     ". G>@ . . . . .",
+     ". P<@ . Gv Gv@~ . .",
+     ". P<@ B<:v R^@* P>:^ . .",
+     ". G^@~ Gv@ Rv@~ Rv . .",
+     ". . . . . . .",
+     ". . . . . . ."
+    ]
+   },
+   "design_report": {
+    "A": {
+     "fingerprint": "01e190ffd12506befa5f26347eac15fa8714b85fc929010c350e662ee3ba704b",
+     "hint_nodes": [
+      63,
+      153
+     ],
+     "parity": [
+      0,
+      0
+     ],
+     "position_cap": 1500,
+     "positions": 470,
+     "replay": true,
+     "solution": 15,
+     "solve_ms": 4.8,
+     "timeup_worst_ms": 25.6,
+     "timeup_worst_nodes": 303,
+     "winnable": 81
+    },
+    "B": {
+     "coverage": 0.87,
+     "decision_steps": 13,
+     "distinct_mistakes": 6,
+     "endgame_decision": true,
+     "idea_advance_turn": true,
+     "last_decision": 13,
+     "late": 0.87,
+     "line": [
+      "r0c1> [x4]",
+      "r2c1< [x3]",
+      "r1c1< [x2]",
+      "r3c1^ [x2]",
+      "r4c2v [x3]",
+      "r4c1^ [x1]",
+      "r3c2< advance [x1]",
+      "r4c3< [x2]",
+      "r3c3v [x2]",
+      "r4c4v [x1]",
+      "r3c2v [x1]",
+      "r2c3v [x1]",
+      "r2c4< [x1]",
+      "r3c4> advance",
+      "r3c4^"
+     ],
+     "losing_per_step": [
+      4,
+      3,
+      2,
+      2,
+      3,
+      1,
+      1,
+      2,
+      2,
+      1,
+      1,
+      1,
+      1,
+      0,
+      0
+     ],
+     "matters_pattern": true,
+     "matters_sequence": true,
+     "mistakes": [
+      "r1c1>",
+      "r3c1<",
+      "r3c4> advance",
+      "r4c3v",
+      "r3c2< advance",
+      "r3c2v"
+     ],
+     "shortcut": 0.035,
+     "without_pattern": "without it: 13 decision steps, 5 distinct mistakes (with it: 13, 6)",
+     "without_sequence": "without it: 4 decision steps, 3 distinct mistakes (with it: 13, 6)"
+    },
+    "C": {
+     "decisions_k4_6_8": [
+      9,
+      7,
+      5
+     ],
+     "deepest": 13,
+     "greedy": {
+      "look2": 0.015,
+      "look4": 0,
+      "min_turn": 0.035,
+      "mobility": 0,
+      "safe": 0.01
+     },
+     "hidden_k6_8": [
+      16,
+      12
+     ],
+     "learner": {
+      "look4": 3,
+      "look6": 2
+     },
+     "look6_greedy": 0.033,
+     "opening": "4 / 8",
+     "pressure": {
+      "advances": 2,
+      "calm_prefix": 0,
+      "flips": 0,
+      "multi_turned": 3,
+      "prediction_share": 0.53,
+      "pulls": 0,
+      "rams": 0,
+      "signals": 3,
+      "spinners_turned": 6,
+      "trap_delay_median": 8,
+      "turns": 9,
+      "undo_proof": 0.83
+     },
+     "win_share": 0.172
+    },
+    "filler": {
+     "distinct": 6,
+     "pieces_tested": 13,
+     "steps": 13,
+     "trivial": [],
+     "trivial_removals": 0
+    },
+    "similarity": {
+     "closest_known": "N14",
+     "overlap": 0.42,
+     "closest_new_overlap": 0.4
+    }
+   }
+  }
+ ]
+}

@@ -1,0 +1,49 @@
+{
+ "target": "EXTREME",
+ "facts": [],
+ "mechanic": "magnet",
+ "idea": "pull away: a magnet pulls a spinner out of a neighbourhood whose departures would turn it the wrong way",
+ "map": [
+  ". . . . . . .",
+  ". . . . . Bv .",
+  ". Y<* . . . G^@ Y<",
+  ". . . . . Rv .",
+  ". . . . . . .",
+  ". . . . . . .",
+  ". . . . . . ."
+ ],
+ "frozen": [
+  [
+   1,
+   5
+  ],
+  [
+   2,
+   1
+  ],
+  [
+   2,
+   5
+  ],
+  [
+   2,
+   6
+  ],
+  [
+   3,
+   5
+  ]
+ ],
+ "max_positions": 1500,
+ "piece_free": 13,
+ "max_pieces": 17,
+ "shortcut_weight": 80,
+ "coverage_weight": 25,
+ "late_weight": 20,
+ "endgame_weight": 20,
+ "length_weight": 1.0,
+ "length_cap": 18,
+ "pressure_weight": 3.0,
+ "seed": 17,
+ "size": "medium"
+}

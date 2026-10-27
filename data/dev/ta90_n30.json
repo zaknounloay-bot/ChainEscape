@@ -1,0 +1,178 @@
+{
+ "format": "ce-ta90-proto",
+ "v": 1,
+ "test": "ta90_n30",
+ "assist": {
+  "undo": 3,
+  "show_a_move": 0,
+  "hammer": 0
+ },
+ "note": "Development only. Phase 17 EXTREME candidate (?extreme90p17=1); never shared, never production. HUMAN-REVIEW CANDIDATE: technically validated, strategic quality unconfirmed by people.",
+ "boards": [
+  {
+   "id": "N30",
+   "accepted": true,
+   "label": "HUMAN-REVIEW CANDIDATE - EXPERIMENTAL, HUMAN DIFFICULTY UNVALIDATED",
+   "variant": "N30",
+   "design": "17B2b",
+   "size_class": "medium",
+   "target": "EXTREME (a design target, not a rating; never shown to players)",
+   "idea": "parity key: the only purple key is an alternating spinner; it must leave after the right parity of turns to unlock",
+   "source": "hand-drawn idea core (data/dev/extreme90_p17/cores.json), grown by the bounded constructive search (tools/ta90_search.gd, pressure_weight), checked by tools/ta90_design.gd and tools/xb90_filler.gd (Phase 17)",
+   "fingerprint": "fffe88195b3a60e013d29e687872efc7bd3fa66b2146f900c964bc37aa031bdd",
+   "mechanics": [
+    "spinner_cw",
+    "spinner_ccw",
+    "spinner_alt",
+    "lock"
+   ],
+   "puzzle": {
+    "format": "ce-puzzle",
+    "v": 1,
+    "rules": 1,
+    "rows": 6,
+    "cols": 6,
+    "map": [
+     ". Yv@- . . . .",
+     ". B^@~ Rv P>@ P^@- B>@",
+     ". B> P^@~ Gv Bv@ Y^@-",
+     "R^@ P<@~ R<#P . . .",
+     "R<@ P>@- . . . .",
+     "B^ . . . . ."
+    ]
+   },
+   "design_report": {
+    "A": {
+     "fingerprint": "fffe88195b3a60e013d29e687872efc7bd3fa66b2146f900c964bc37aa031bdd",
+     "hint_nodes": [
+      75,
+      19
+     ],
+     "parity": [
+      0,
+      0
+     ],
+     "position_cap": 1500,
+     "positions": 443,
+     "replay": true,
+     "solution": 17,
+     "solve_ms": 8.2,
+     "timeup_worst_ms": 6.6,
+     "timeup_worst_nodes": 107,
+     "winnable": 161
+    },
+    "B": {
+     "coverage": 0.88,
+     "decision_steps": 15,
+     "distinct_mistakes": 6,
+     "endgame_decision": true,
+     "last_decision": 15,
+     "late": 0.88,
+     "line": [
+      "r1c5> [x3]",
+      "r2c4v [x2]",
+      "r2c5v [x2]",
+      "r2c3v [x2]",
+      "r2c2> [x2]",
+      "r1c3v [x3]",
+      "r1c4> [x2]",
+      "r3c0^ [x2]",
+      "r4c1> [x2]",
+      "r3c1< [x1]",
+      "r3c2< [x1]",
+      "r4c0> [x1]",
+      "r5c0^ [x1]",
+      "r1c2v [x1]",
+      "r1c1> [x1]",
+      "r0c1>",
+      "r2c1>"
+     ],
+     "losing_per_step": [
+      3,
+      2,
+      2,
+      2,
+      2,
+      3,
+      2,
+      2,
+      2,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      0,
+      0
+     ],
+     "matters_alt": true,
+     "matters_lock": true,
+     "mistakes": [
+      "r1c4^",
+      "r2c3v",
+      "r4c0<",
+      "r1c4v",
+      "r2c1>",
+      "r4c0^"
+     ],
+     "shortcut": 0.117,
+     "without_alt": "without it: 10 decision steps, 5 distinct mistakes (with it: 15, 6)",
+     "without_lock": "without it: 15 decision steps, 5 distinct mistakes (with it: 15, 6)"
+    },
+    "C": {
+     "decisions_k4_6_8": [
+      10,
+      9,
+      5
+     ],
+     "deepest": 10,
+     "greedy": {
+      "look2": 0.08,
+      "look4": 0.117,
+      "min_turn": 0.015,
+      "mobility": 0,
+      "safe": 0.01
+     },
+     "hidden_k6_8": [
+      15,
+      5
+     ],
+     "learner": {
+      "look4": 0,
+      "look6": 0
+     },
+     "look6_greedy": 0.283,
+     "opening": "4 / 7",
+     "pressure": {
+      "advances": 0,
+      "calm_prefix": 0,
+      "flips": 0,
+      "multi_turned": 4,
+      "prediction_share": 0.47,
+      "pulls": 0,
+      "rams": 0,
+      "signals": 1,
+      "spinners_turned": 8,
+      "trap_delay_median": 6,
+      "turns": 13,
+      "undo_proof": 0.69
+     },
+     "win_share": 0.363
+    },
+    "filler": {
+     "distinct": 6,
+     "pieces_tested": 17,
+     "steps": 15,
+     "trivial": [],
+     "trivial_removals": 0
+    },
+    "similarity": {
+     "closest_known": "N5",
+     "overlap": 0.42,
+     "closest_new_overlap": 0.41
+    }
+   }
+  }
+ ]
+}
