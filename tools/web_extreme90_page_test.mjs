@@ -192,8 +192,8 @@ try {
   if (PREV) {
     const main = Object.keys(h.buttons).filter((n) => n.startsWith('Puzzle_')).sort();
     check(nNew === 2 && h.primary.join(',') === bank.slice(0, nNew).join(',') && h.previous.join(',') === bank.slice(nNew).join(',')
-      && main.join(',') === 'Puzzle_1,Puzzle_2' && !h.scroll.length && h.buttons.PreviousChallenges && h.buttons.CopyResults && h.buttons.HowItWorks,
-      `CHOOSE A CHALLENGE: ONLY the new boards (${h.primary.join(', ')} = CHALLENGE 1-${nNew}), no scrolling; PREVIOUS CHALLENGES, COPY ALL RESULTS, HOW IT WORKS on screen`);
+      && main.join(',') === 'Puzzle_1,Puzzle_2' && !h.scroll.length && h.buttons.PreviousChallenges && h.buttons.CopyResults && h.buttons.HowItWorks && /^DEV BUILD p19-/.test(h.build),
+      `CHOOSE A CHALLENGE: ONLY the new boards (${h.primary.join(', ')} = CHALLENGE 1-${nNew}), no scrolling; PREVIOUS CHALLENGES, COPY ALL RESULTS, HOW IT WORKS on screen; "${h.build}"`);
     await a.shot('X2_select');
     tiles = bank.slice(0, nNew).map((_, i) => h.rects['Puzzle_' + (i + 1)]);
     // The optional PREVIOUS CHALLENGES screen: every earlier tile scrolls into view.
@@ -329,7 +329,7 @@ try {
     check(bundle && bundle.format === FMT && bundle.rules.version === 'ta90-v1' && r && r.board === b0 && r.timed_outcome === 'TIME UP' && r.untimed_success
       && Object.keys(bundle.boards).length === h2.order.length && h2.order.every((b, i) => bundle.boards[b].puzzle === i + 1 && /^[0-9a-f]{64}$/.test(bundle.boards[b].fingerprint)),
       `COPY ALL RESULTS: one ${FMT} bundle - every board under its internal id with its fingerprint and challenge number; the run kept TIME UP and the untimed solve apart` + (P17 ? ` (selection ${bundle && bundle.selection}, N23 ${bundle && bundle.boards.N23 && bundle.boards.N23.group})` : ''));
-    if (PREV) check(bundle && bundle.selection === 'xb19-v2' && bundle.new.join(',') === h2.primary.join(',') && h2.order.every((b) => bundle.boards[b].list === (h2.primary.includes(b) ? 'new' : 'previous')),
+    if (PREV) check(bundle && bundle.selection === 'xb19-v2' && 'DEV BUILD ' + bundle.build === h2.build && bundle.new.join(',') === h2.primary.join(',') && h2.order.every((b) => bundle.boards[b].list === (h2.primary.includes(b) ? 'new' : 'previous')),
       `export: the new boards named (${bundle && bundle.new}), every board's list (new / previous) under its real id`);
     allErrors.push(...d.errors); allExternal.push(...d.external);
     await c2.close();

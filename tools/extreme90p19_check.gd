@@ -117,6 +117,9 @@ func _select_screen() -> void:
 		and more != null and vis.encloses(more.get_global_rect()) and vis.encloses(h._copy.get_global_rect()) and vis.encloses(main.find_child("HowItWorks", true, false).get_global_rect()),
 		"CHOOSE A CHALLENGE: ONLY the new boards (CHALLENGE 1-%d = %s, found as the boards not on the previous list), no scrolling; PREVIOUS CHALLENGES, COPY ALL RESULTS and HOW IT WORKS on the iPhone SE screen" % [nn, ", ".join(Extreme90P19.NEW19)])
 	_check(hidden, "no internal group, id or difficulty shown (N23's provisional status stays internal)")
+	var bid: Label = main.find_child("BuildId", true, false)
+	_check(bid != null and bid.text == "DEV BUILD " + Extreme90P19.BUILD19 and vis.encloses(bid.get_global_rect()) and h.bundle()["build"] == Extreme90P19.BUILD19,
+		"the developer build id (%s) shown on CHOOSE A CHALLENGE and in the export" % Extreme90P19.BUILD19)
 	(more as Button).pressed.emit()
 	await _frames(2)
 	var pv: Control = h._pages[Ta90Prototype.View.PREVIOUS]

@@ -221,3 +221,38 @@ Not run again (the change does not reach them; they passed on the Phase 19
 build): the browser `?tapilot`, timing, stime and ttime pages.
 
 Browser tests are headless Chromium at iPhone SE size, not a real iPhone.
+
+## QA3 — deployment investigation and build identifier
+
+Real-iPhone report on `html-classic.itch.zone/html/20096816/…?extreme90p19=1`:
+the old layout (22 tiles, "Newest: CHALLENGE 21-22"). Findings:
+
+- The QA2 ZIP was correct. Its `index.pck` file table and decompressed
+  bytecode contain the new hub (`PREVIOUS CHALLENGES`, `PreviousScroll`,
+  `PreviousBack`) and `xb19-v2`, and no "Newest" line. The first Phase 19 ZIP
+  contains `Newest: CHALLENGE` and `xb19-v1`: the iPhone showed exactly that
+  build.
+- No service worker (PWA off). Godot loads `index.pck` by a fixed name with no
+  version suffix, so `?v=` on the page URL refreshes `index.html` only.
+- The deployed files could not be fetched from this environment (itch.io is
+  blocked by its network policy). The symptom therefore points to the old
+  ZIP still being the upload at that itch.io address, or a cached `index.pck`
+  — not to the build.
+
+Added: a developer-only build id, `DEV BUILD p19-qa3-20261028`, in small text
+under the buttons on CHOOSE A CHALLENGE (`Ta90Prototype.build_label()`, empty
+by default, so no other page changes), and `build` in the ce-xb19 export.
+The ZIP also carries `BUILD_ID.txt`.
+
+New browser test `tools/web_extreme90_p19_upgrade_test.mjs` (one origin, one
+localStorage): N3 and N35 solved on the OLD build; then the NEW build shows
+its build id and only N35 / N36, N35 still "Solved", N3 (CHALLENGE 3) still
+"Solved" on PREVIOUS CHALLENGES, both records byte-for-byte unchanged, and
+N36's new result added beside them; the export lists every run under its
+real id and fingerprint — 9 / 9.
+
+QA3 on the fresh export: Extreme90p19Check 124, Extreme90p18Check 111,
+Extreme90p17Check 97, Extreme90Check 91, Ta90Check 91; browser
+`?extreme90p19=1` 62 / 62, `?extreme90p18=1` 55 / 55, upgrade 9 / 9, friend
+(player) build 25 / 25 with 0 `data/dev` files. Headless Chromium at
+iPhone SE size, not a real iPhone.

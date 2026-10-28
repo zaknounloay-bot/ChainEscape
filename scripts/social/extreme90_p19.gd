@@ -20,6 +20,8 @@ const P19_STATE_PATH := "user://xb19_hub.json"
 const P19_LS_KEY := "chain_escape_xb19_hub"
 const SELECTION19 := "xb19-v2"  # v2: new boards first (CHALLENGE 1-2), the previous ones after
 const NEW19 := ["N35", "N36"]
+## Developer build identifier (shown small on CHOOSE A CHALLENGE, in the export).
+const BUILD19 := "p19-qa3-20261028"
 
 
 static func p19_requested() -> bool:
@@ -47,6 +49,10 @@ static func group19(k: String) -> String:
 
 func board_order() -> Array:
 	return selection19()
+
+
+func build_label() -> String:
+	return "DEV BUILD " + BUILD19
 
 
 ## Already tested in earlier phases: the PREVIOUS CHALLENGES screen.
@@ -94,4 +100,5 @@ func bundle() -> Dictionary:
 		b["boards"][k]["group"] = group19(k)
 		b["boards"][k]["list"] = "previous" if previous_boards().has(k) else "new"
 	b["new"] = new_boards()
+	b["build"] = BUILD19
 	return b

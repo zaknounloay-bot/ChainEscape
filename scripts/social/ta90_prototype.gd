@@ -143,6 +143,12 @@ func previous_boards() -> Array:
 	return []
 
 
+## A small developer-only build identifier under the selection buttons, so a
+## tester can see which build loaded (default none).
+func build_label() -> String:
+	return ""
+
+
 ## The primary screen's boards: every board not on the previous list.
 func new_boards() -> Array:
 	var prev := previous_boards()
@@ -443,6 +449,11 @@ func _build() -> void:
 	how.custom_minimum_size = Vector2(0, 68 if cmp else 80)
 	how.pressed.connect(func(): _show(View.WELCOME))
 	s.add_child(how)
+	if build_label() != "":
+		var bid := _label(build_label(), 16, 700)
+		bid.name = "BuildId"
+		bid.add_theme_color_override("font_color", Palette.TEXT_SOFT)
+		s.add_child(bid)
 	_pages[View.SELECT] = s
 	if not prev.is_empty():
 		# PREVIOUS CHALLENGES: already tested; replay any, or none.
@@ -568,7 +579,7 @@ func _publish() -> void:
 		"familiarity": state.get("familiarity", ""), "current": state.get("current", ""), "session": state.get("session", ""), "copy_status": _copy_status.text,
 		"content_bottom": snappedf(_pages[view].get_combined_minimum_size().y / vis.y, 0.0001) if view != View.PUZZLE else -1.0,
 		"scroll": [_scrolls[view].scroll_vertical, int(_scrolls[view].get_v_scroll_bar().max_value - _scrolls[view].size.y)] if _scrolls.has(view) else [],
-		"primary": new_boards(), "previous": previous_boards()})
+		"primary": new_boards(), "previous": previous_boards(), "build": build_label()})
 
 
 ## The campaign music bus stays silent while the prototype is open (the
