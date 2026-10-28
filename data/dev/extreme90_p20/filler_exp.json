@@ -1,0 +1,16 @@
+{
+ "AS2_v20_s1": {
+  "distinct": 6,
+  "pieces_tested": 15,
+  "steps": 17,
+  "trivial": [],
+  "trivial_removals": 0
+ },
+ "PX2_v20_s2": {
+  "distinct": 5,
+  "pieces_tested": 17,
+  "steps": 13,
+  "trivial": [],
+  "trivial_removals": 0
+ }
+}

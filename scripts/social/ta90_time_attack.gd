@@ -25,7 +25,8 @@ const TA90_RULES := {"version": "ta90-v1", "limit_ms": 90000, "undo": 3, "show_a
 ## candidates (docs/extreme90_bank.md), played only in ?extreme90=1. N24-N30: the
 ## Phase 17 candidates (docs/extreme90_phase17.md), played only in ?extreme90p17=1. N31-N34:
 ## the Phase 18 candidates (docs/extreme90_phase18.md), played only in ?extreme90p18=1. N35-N36:
-## the Phase 19 candidates (docs/extreme90_phase19.md), ?extreme90p19=1 only. TA: the validated 120-second board, used ONLY as an internal
+## the Phase 19 candidates (docs/extreme90_phase19.md), ?extreme90p19=1 only. N37-N38: the
+## Phase 20 candidates (docs/extreme90_phase20.md), ?extreme90p20=1 only. TA: the validated 120-second board, used ONLY as an internal
 ## technical reference for the clock and the music (never listed as a new
 ## puzzle).
 const BOARDS90 := {
@@ -65,6 +66,8 @@ const BOARDS90 := {
 	"N34": {"data": "res://data/dev/ta90_n34.json", "fp": "5616045b9a16674cf627f624edb7e75d793973a6adbbbb8cb3e44a4c73dbfe5a"},
 	"N35": {"data": "res://data/dev/ta90_n35.json", "fp": "3e6a96041ad6e090b24ea50696b7436ff8819b14d5c73d5974ae5b9121d6adc2"},
 	"N36": {"data": "res://data/dev/ta90_n36.json", "fp": "0ce35e1d021d6a7e0496c5439836e429c769a321f5bce1638484edea380971c6"},
+	"N37": {"data": "res://data/dev/ta90_n37.json", "fp": "49d72b9a320cbb9253335c61b01a2f88311125d88f12f19f2a12ccf8ecfce9f4"},
+	"N38": {"data": "res://data/dev/ta90_n38.json", "fp": "960fb50bdff4b2a3cf405c9b6906e260a4dd3bb6b1458628720e136c0c9ba552"},
 	"TA": {"data": "res://data/dev/extreme16_a.json", "fp": "a28e22f0a1a216ba4ac701ff549e7d212ce1fe83ae2d8e3678065da555b730cf", "reference": true},
 }
 const P90_TIMED_Q := [
@@ -359,6 +362,20 @@ func _show_offer() -> void:
 	_save_state()
 	if music:
 		music.stop_music()
+
+
+## Phase 20: a ram two blocks could have made can't be told from the board
+## alone (VhHumanTest.infer_tap logs -1); log it with the block the player
+## touched, so the exact TIME UP continuation can replay it and keep the UNDO
+## history. The replay still checks the rebuilt board (else the captured board
+## is restored, as before).
+func _log_action(sig: Array, now: int) -> void:
+	var n: int = _current.get("log", []).size()
+	super._log_action(sig, now)
+	var log: Array = _current.get("log", [])
+	if log.size() > n and log[-1][1] == "m" and int(log[-1][2]) < 0 and _last_tap >= 0 \
+			and log[-1].size() > 3 and typeof(log[-1][3]) == TYPE_DICTIONARY and int(log[-1][3].get("ram", 0)) > 0:
+		log[-1][2] = _last_tap
 
 
 ## The board at 0:00, captured before the timed record is frozen.

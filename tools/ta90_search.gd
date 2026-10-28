@@ -28,7 +28,11 @@ extends "res://tools/ta90_design.gd"
 ##   Phase 18: "palette": "arrows" (grow with plain arrows only - no spinner
 ##   ever added to a non-spinner core) | "all" (default); "crates_max" /
 ##   "crate_rate": the search may also add Movable crates ("M") up to that
-##   count (default 0); Phase 19: "suffix_max": {"*": 3} caps each mark.}
+##   count (default 0); Phase 19: "suffix_max": {"*": 3} caps each mark.
+##   Phase 20: --ops=v20 (or "operators": "v20"; default off - the earlier
+##   generator's edits and scores, unchanged) turns on the strategic operators below, and
+##   every run counts its QUALIFYING boards (the fixed EXTREME search targets,
+##   _qualifies) - the yield measure of docs/extreme90_phase20.md.}
 
 const TOKENS := ["^", "v", "<", ">", "^@", "v@", "<@", ">@", "^@-", "v@-", "<@-", ">@-", "^@~", "v@~", "<@~", ">@~"]
 const PALETTE := ["R", "G", "B", "Y", "P"]
@@ -38,6 +42,8 @@ var _seen := {}
 var _frozen := {}
 var _spec := {}
 var _evals := 0
+var _v20 := false
+var _qual := {}  # Phase 20: qualifying boards seen (map key -> brief)
 
 
 func _initialize() -> void:
@@ -52,6 +58,8 @@ func _initialize() -> void:
 	for rc in _spec.get("frozen", []):
 		_frozen[Vector2i(int(rc[1]), int(rc[0]))] = true
 	_rng.seed = int(x_args.get("seed", str(_spec.get("seed", 1))))
+	_v20 = str(x_args.get("ops", _spec.get("operators", ""))) == "v20"
+	print("generator: %s" % ("v20 (strategic operators)" if _v20 else "baseline"))
 	var t_end := Time.get_ticks_msec() + int(float(x_args.get("minutes", "10")) * 60000.0)
 	var batch := int(x_args.get("batch", "40"))
 	var beam_n := int(x_args.get("beam", "5"))
@@ -103,7 +111,8 @@ func _initialize() -> void:
 	if x_args.has("out"):
 		var f := FileAccess.open(str(x_args["out"]), FileAccess.WRITE)
 		f.store_string(JSON.stringify({"best": best, "beam": beam, "log": log, "evaluated": _evals, "rounds": round,
-			"stopped": "patience" if stale >= patience else "time"}, " "))
+			"stopped": "patience" if stale >= patience else "time", "generator": "v20" if _v20 else "baseline",
+			"qualifying": _qual.values(), "seconds": snappedf((Time.get_ticks_msec() - t_end) / 1000.0 + float(x_args.get("minutes", "10")) * 60.0, 0.1)}, " "))
 		f.close()
 	quit()
 
@@ -123,6 +132,10 @@ func _edit(map: Array) -> Array:
 				pieces.append(Vector2i(c, r))
 			if g[r][c] == "." and _interacts(g, r, c):
 				spots.append(Vector2i(c, r))
+	if _v20:
+		var e := _edit20(g, pieces, spots)
+		if not e.is_empty():
+			return e
 	var kind := _rng.randi_range(0, 9)
 	var maxp := int(_spec.get("max_pieces", 12))
 	var toks := _tokens()
@@ -256,6 +269,9 @@ func _score(map: Array) -> Dictionary:
 	for k in POLICIES:
 		shortcut = maxf(shortcut, PROBE.policy_win(s, k, 40, 31))
 	var pieces := _pieces(map)
+	# Phase 20: how often two or more risky moves are open at once along the
+	# line (a calm-first player then still has an order to get wrong).
+	var conc := _concurrency(s, sol)
 	var sc: float = 4.0 * mini(dec["distinct_mistakes"], need["distinct"] + 2) + 1.5 * mini(dec["decision_steps"], need["steps"] + 3) \
 		+ 3.0 * (thirds[0] + thirds[1] + thirds[2]) + (float(_spec.get("endgame_weight", 4.0)) if dec["endgame_decision"] else 0.0) \
 		+ 6.0 * matters - 8.0 * (mechs.size() - matters) \
@@ -271,11 +287,146 @@ func _score(map: Array) -> Dictionary:
 	if float(_spec.get("pressure_weight", 0.0)) > 0.0:
 		pr = pressure(level, s, memo, sol)
 		sc += float(_spec["pressure_weight"]) * (mini(pr["multi_turned"], 5) + 0.5 * mini(pr["trap_delay_median"], 9))
+	if _v20:
+		sc += float(_spec.get("concurrency_weight", 12.0)) * conc
+	var out := _result(map, sc, pieces, win, sol, dec, thirds, matters, mechs, shortcut, lps, sl, pr, conc)
+	if _qualifies(out, need, mechs.size()):
+		_qual[key] = _brief(out, -1).merged({"map": map, "solution": out["solution"], "coverage": out["coverage"], "late": out["late"]})
+	return out
+
+
+func _result(map: Array, sc: float, pieces: int, win: Dictionary, sol: Array, dec: Dictionary, thirds: Array, matters: int, mechs,
+		shortcut: float, lps: Array, sl: float, pr: Dictionary, conc: float) -> Dictionary:
 	return {"map": map, "score": snappedf(sc, 0.01), "pieces": pieces, "positions": win.size(), "solution": sol.size(),
 		"distinct": dec["distinct_mistakes"], "steps": dec["decision_steps"], "endgame": dec["endgame_decision"], "thirds": thirds,
 		"matters": "%d/%d" % [matters, mechs.size()], "shortcut": snappedf(shortcut, 0.001), "per_step": lps,
 		"coverage": snappedf(dec["decision_steps"] / sl, 0.01), "late": snappedf(dec["last_decision"] / sl, 0.01),
-		"multi_turned": pr.get("multi_turned", -1), "trap_delay": pr.get("trap_delay_median", -1)}
+		"multi_turned": pr.get("multi_turned", -1), "trap_delay": pr.get("trap_delay_median", -1), "concurrency": snappedf(conc, 0.01)}
+
+
+## Phase 20: the share of the Solver line's steps with >= 2 risky legal moves.
+func _concurrency(s: Solver, sol: Array) -> float:
+	var multi := 0
+	for mv in sol:
+		var n := 0
+		for o in s._distinct_legal():
+			n += int(PROBE.risky(s, o))
+		multi += int(n >= 2)
+		s._do(mv)
+	for i in range(sol.size() - 1, -1, -1):
+		s._undo_move(sol[i])
+	return float(multi) / maxf(sol.size(), 1)
+
+
+## Phase 20: the search-level EXTREME targets (NEED, fixed before the
+## experiment): the board would pass category B's numbers (the full report
+## still decides).
+func _qualifies(r: Dictionary, need: Dictionary, n_mechs: int) -> bool:
+	return r["distinct"] >= int(need["distinct"]) and r["steps"] >= int(need["steps"]) and (r["endgame"] or not need["endgame"]) \
+		and r["coverage"] >= float(need.get("coverage", 0.0)) and r["late"] >= float(need.get("late", 0.0)) \
+		and r["solution"] >= int(need.get("min_solution", 0)) and r["shortcut"] <= float(need.get("shortcut", SHORTCUT_MAX)) \
+		and r["matters"] == "%d/%d" % [n_mechs, n_mechs]
+
+
+## Phase 20 strategic operators (--ops=v20), or [] to fall back to the earlier
+## edit. 1. ACTOR (actor_rate, default 0.3): add a risky actor of the core's
+## OWN mechanics - another switch of an existing group (at most 2 per group),
+## one of the spec's marks (flip target, shell, magnet, lock, link; caps
+## kept), a crate (crates_max) - on a plain piece or a new one. 2. MARKS ARE
+## REVERSIBLE: a non-frozen marked piece can be removed, unmarked, or turned
+## with its mark kept (before Phase 20 a mark, once added, stayed for good).
+## 3. FOCUSED PLACEMENT: new pieces go mostly (focus_rate, 0.7) into the rows
+## / columns of risky actors (switches, crates, shells, magnets, flip targets).
+func _edit20(g: Array, plain: Array, spots: Array) -> Array:
+	var marked := []
+	var focus := []
+	for r in g.size():
+		for c in g[0].size():
+			var t := str(g[r][c])
+			if t != "." and not _frozen.has(Vector2i(c, r)) and not _editable(t) and not t.begins_with("X"):
+				marked.append(Vector2i(c, r))
+	for at in spots:
+		if _in_actor_lane(g, at):
+			focus.append(at)
+	var maxp := int(_spec.get("max_pieces", 12))
+	var roll := _rng.randf()
+	if roll < float(_spec.get("actor_rate", 0.3)):
+		return _actor(g, plain, focus if not focus.is_empty() else spots, maxp)
+	if roll < float(_spec.get("actor_rate", 0.3)) + 0.15 and not marked.is_empty():
+		var at: Vector2i = marked[_rng.randi_range(0, marked.size() - 1)]
+		var t := str(g[at.y][at.x])
+		var k := _rng.randi_range(0, 2)
+		if k == 0:
+			g[at.y][at.x] = "."
+		elif k == 1 and t != "M":
+			g[at.y][at.x] = t.substr(0, 2)  # unmark: colour + arrow
+		elif t != "M":
+			g[at.y][at.x] = t[0] + TOKENS[_rng.randi_range(0, 3)] + t.substr(2)  # turn, mark kept
+		else:
+			return []
+		return _join(g)
+	# Otherwise the earlier edit, with new pieces placed in actor lanes first.
+	if not focus.is_empty() and _rng.randf() < float(_spec.get("focus_rate", 0.7)) and _pieces(_join(g)) < maxp and _rng.randf() < 0.5:
+		var at: Vector2i = focus[_rng.randi_range(0, focus.size() - 1)]
+		var col: String = PALETTE[_rng.randi_range(0, PALETTE.size() - 1)]
+		var toks := _tokens()
+		g[at.y][at.x] = col + toks[_rng.randi_range(0, toks.size() - 1)] + _suffix(col, g)
+		return _join(g)
+	return []
+
+
+func _actor(g: Array, plain: Array, spots: Array, maxp: int) -> Array:
+	var kinds := []
+	var groups := {}
+	for row in g:
+		for t in row:
+			var i := str(t).find("%")
+			if i >= 0:
+				groups[str(t).substr(i + 1, 1)] = true
+	for grp in groups:
+		if _marked(g, "%" + grp) < 2:
+			kinds.append("%" + grp)
+	var cap: Dictionary = _spec.get("suffix_max", {})
+	for x in _spec.get("suffixes", []):
+		if not cap.has(x) or _marked(g, x) < int(cap[x]):
+			kinds.append(str(x))
+	if int(_spec.get("crates_max", 0)) > _count(g, "M"):
+		kinds.append("M")
+	if kinds.is_empty():
+		return []
+	var kind: String = kinds[_rng.randi_range(0, kinds.size() - 1)]
+	var on_plain := not plain.is_empty() and kind != "M" and _rng.randf() < 0.5
+	if not on_plain and (spots.is_empty() or _pieces(_join(g)) >= maxp):
+		return []
+	var at: Vector2i = plain[_rng.randi_range(0, plain.size() - 1)] if on_plain else spots[_rng.randi_range(0, spots.size() - 1)]
+	if kind == "M":
+		g[at.y][at.x] = "M"
+		return _join(g)
+	var col: String = str(g[at.y][at.x])[0] if on_plain else PALETTE[_rng.randi_range(0, PALETTE.size() - 1)]
+	if kind.begins_with("#") and kind.substr(1) == col:
+		return []
+	var arrow: String = str(g[at.y][at.x])[1] if on_plain else TOKENS[_rng.randi_range(0, 3)]
+	g[at.y][at.x] = col + arrow + kind
+	return _join(g)
+
+
+## A cell in the row / column of a risky actor (or of a piece it acts on).
+func _in_actor_lane(g: Array, at: Vector2i) -> bool:
+	for r in g.size():
+		for c in g[0].size():
+			if r != at.y and c != at.x:
+				continue
+			var t := str(g[r][c])
+			if t == "M" or t.contains("%") or t.contains("&") or t.contains("=") or (t.ends_with("*") and not t.contains("@")):
+				return true
+	return false
+
+
+static func _join(g: Array) -> Array:
+	var out := []
+	for row in g:
+		out.append(" ".join(row))
+	return out
 
 
 func _line(r: Dictionary) -> String:

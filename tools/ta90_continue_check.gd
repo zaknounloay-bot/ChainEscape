@@ -17,7 +17,7 @@ extends "res://tools/extreme90p18_check.gd"
 ## logged; a reload during the untimed game comes back to the same board.
 
 const BOARDS_ALL := ["N3", "N5", "N7", "N11", "N13", "N14", "N15", "N16", "N18", "N21", "N26", "N27", "N29", "N30",
-	"N23", "N24", "N31", "N32", "N33", "N34", "N35", "N36"]
+	"N23", "N24", "N31", "N32", "N33", "N34", "N35", "N36", "N37", "N38"]
 var results := {}
 
 
@@ -62,6 +62,13 @@ static func state_of(m: BoardModel) -> Array:
 	return out
 
 
+## A tap as a player makes it: the touched block noted first (as the page's
+## input handler does, Phase 20), then the play screen's tap.
+static func _touch(p: Ta90TimeAttack, id: int) -> void:
+	p._last_tap = id
+	p.play.tap_block(id)
+
+
 ## A move that loses from the current position (legal, the board can no
 ## longer be cleared after it), or -1.
 func _losing_move(m: BoardModel) -> int:
@@ -87,17 +94,17 @@ func _case(b: String, mode: String) -> void:
 	var k := maxi(1, sol.size() * 2 / 5)
 	if mode == "undo_restart":
 		for i in mini(2, sol.size()):
-			p.play.tap_block(sol[i])
+			_touch(p, sol[i])
 			await _wait(0.05)
 		p.play.restart()
 		await _frames(2)
 	for i in k:
-		p.play.tap_block(sol[i])
+		_touch(p, sol[i])
 		await _wait(0.05)
 	if mode == "undo_restart":
 		p.play.undo()
 		await _frames(2)
-		p.play.tap_block(sol[k - 1])
+		_touch(p, sol[k - 1])
 		await _wait(0.05)
 	if mode == "lost_tap":
 		# A move the log could not attribute (infer_tap -> -1): the replay
@@ -153,7 +160,7 @@ func _untimed_flows(b: String, lost_tap: bool = false) -> void:
 	var p := await _start(h, b)
 	var sol := _solution(b)
 	for i in sol.size() / 2:
-		p.play.tap_block(sol[i])
+		_touch(p, sol[i])
 		await _wait(0.05)
 	await _wait(0.3)
 	if lost_tap:

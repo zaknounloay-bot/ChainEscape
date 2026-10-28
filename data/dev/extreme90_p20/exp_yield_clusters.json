@@ -1,0 +1,66 @@
+{
+ "AS2_base_s1": {
+  "raw": 0,
+  "clusters": 0
+ },
+ "AS2_base_s2": {
+  "raw": 0,
+  "clusters": 0
+ },
+ "AS2_v20_s1": {
+  "raw": 731,
+  "clusters": 16
+ },
+ "AS2_v20_s2": {
+  "raw": 185,
+  "clusters": 6
+ },
+ "MG3_base_s1": {
+  "raw": 0,
+  "clusters": 0
+ },
+ "MG3_base_s2": {
+  "raw": 0,
+  "clusters": 0
+ },
+ "MG3_v20_s1": {
+  "raw": 0,
+  "clusters": 0
+ },
+ "MG3_v20_s2": {
+  "raw": 0,
+  "clusters": 0
+ },
+ "PX2_base_s1": {
+  "raw": 430,
+  "clusters": 13
+ },
+ "PX2_base_s2": {
+  "raw": 0,
+  "clusters": 0
+ },
+ "PX2_v20_s1": {
+  "raw": 261,
+  "clusters": 12
+ },
+ "PX2_v20_s2": {
+  "raw": 223,
+  "clusters": 7
+ },
+ "SG4_base_s1": {
+  "raw": 0,
+  "clusters": 0
+ },
+ "SG4_base_s2": {
+  "raw": 0,
+  "clusters": 0
+ },
+ "SG4_v20_s1": {
+  "raw": 0,
+  "clusters": 0
+ },
+ "SG4_v20_s2": {
+  "raw": 0,
+  "clusters": 0
+ }
+}

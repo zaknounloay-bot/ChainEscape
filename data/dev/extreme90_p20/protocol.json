@@ -1,0 +1,14 @@
+{
+ "fixed_before_running": "2026-10-28",
+ "question": "Does the v20 generator (--ops=v20) find EXTREME boards in families where the Phase 19 generator stalled?",
+ "families": {"PX2": "Portal-first (portal + crate + two switches)", "SG4": "Switch / Gate", "AS2": "Rammer / Armor (+ switches)", "MG3": "Magnet - REFERENCE only"},
+ "cores": "the Phase 19 seed files, unchanged (copied to seed_<family>.json)",
+ "arms": {"baseline": "tools/ta90_search.gd without --ops", "v20": "tools/ta90_search.gd --ops=v20"},
+ "rng_seeds": [1, 2],
+ "budget": {"minutes": 12, "batch": 40, "beam": 5, "patience": 8},
+ "hardware": "this container, 4 cores; each wave = one family, its 4 runs (2 arms x 2 seeds) in parallel, so both arms share the same load",
+ "qualifying_board": "search-level EXTREME targets (ta90_design.gd NEED.EXTREME, unchanged): distinct >= 4, decision steps >= 8, an endgame decision, coverage >= 0.60, late >= 0.75, solution >= 13, greedy shortcut <= 0.20, every listed mechanic matters; positions within the seed's max_positions, opening solve within max_solve_nodes",
+ "measures": ["qualifying boards (yield)", "best board: distinct, steps, shortcut, mechanic essentiality, positions", "evaluated boards and seconds (search cost)", "full A/B report on the best qualifying board per weak family and arm: Category A pass, TIME UP worst ms, similarity to the bank"],
+ "meaningful_benefit": "v20 yields at least one qualifying board that passes the full Category A and B report in at least 2 of the 3 weak families (PX2, SG4, AS2), in a family where the baseline yields none or fewer - judged on these runs only; thresholds are not changed after the results",
+ "new_boards_only_if": "meaningful_benefit holds; then at most 4, each passing Category A and B, not a variant of an existing board"
+}

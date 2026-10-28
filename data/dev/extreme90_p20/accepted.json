@@ -1,0 +1,36 @@
+{
+ "accepted": {
+  "N37": {
+   "design": "PX2_v20_s2",
+   "family": "Portal-first (portal + crate + switches)",
+   "fingerprint": "49d72b9a320cbb9253335c61b01a2f88311125d88f12f19f2a12ccf8ecfce9f4"
+  },
+  "N38": {
+   "design": "AS2_v20_s1",
+   "family": "Rammer / Armor (+ switches)",
+   "fingerprint": "960fb50bdff4b2a3cf405c9b6906e260a4dd3bb6b1458628720e136c0c9ba552"
+  }
+ },
+ "not_taken": {
+  "SG5_v20_s2": {
+   "verdict_report": "HUMAN-REVIEW CANDIDATE",
+   "decision": "not taken",
+   "why": "the gate is close to decoration (without it: 14 decision steps, 3 distinct mistakes - the same steps, one mistake fewer), shortcut 0.16 near the 0.20 cap, look6 greedy 0.29: a Switch/Gate board that is in practice a switch board"
+  },
+  "PX2_v20_s1": {
+   "verdict_report": "HUMAN-REVIEW CANDIDATE",
+   "decision": "not taken",
+   "why": "the closest to an existing board (N35, 0.38) and the weakest portal dependence (without the portal: 4 of 5 distinct mistakes kept); a variant of N37's family"
+  },
+  "PX2_base_s1": {
+   "verdict_report": "HUMAN-REVIEW CANDIDATE",
+   "decision": "not taken",
+   "why": "same core as N37 (overlap 0.48 with it); shortcut 0.15 and look6 greedy 0.26 against N37's 0.05 / 0.09"
+  },
+  "AS2_v20_s2": {
+   "verdict_report": "HUMAN-REVIEW CANDIDATE",
+   "decision": "not taken",
+   "why": "same core as N38 (overlap 0.55): a variant; 4 distinct mistakes against N38's 6"
+  }
+ }
+}

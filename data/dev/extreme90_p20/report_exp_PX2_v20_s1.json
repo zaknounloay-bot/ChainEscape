@@ -1,0 +1,136 @@
+{
+ "PX2_v20_s1": {
+  "A": {
+   "fingerprint": "3af12159c9c5388db2cfb747a08de001957605ee4ecb079f44f2dccfe7b71500",
+   "hint_nodes": [
+    277,
+    649
+   ],
+   "parity": [
+    0,
+    0
+   ],
+   "portals": 2,
+   "position_cap": 1500,
+   "positions": 445,
+   "replay": true,
+   "solution": 16,
+   "solve_ms": 6.8,
+   "timeup_worst_ms": 21.2,
+   "timeup_worst_nodes": 649,
+   "winnable": 39
+  },
+  "B": {
+   "coverage": 0.88,
+   "decision_steps": 14,
+   "distinct_mistakes": 5,
+   "endgame_decision": true,
+   "last_decision": 15,
+   "late": 0.94,
+   "line": [
+    "r1c6^ [x2]",
+    "r1c3> [x2]",
+    "r1c1> [x2]",
+    "r1c0> [x2]",
+    "r3c0^ [x2]",
+    "r6c0^ [x2]",
+    "r0c5^ [x2]",
+    "r2c1< [x3]",
+    "r5c5^ [x3]",
+    "r6c5^ [x3]",
+    "r5c6< push [x3]",
+    "r0c2v [x2]",
+    "r5c6< push [x2]",
+    "r4c1^",
+    "r5c6> [x1]",
+    "r6c3v"
+   ],
+   "losing_per_step": [
+    2,
+    2,
+    2,
+    2,
+    2,
+    2,
+    2,
+    3,
+    3,
+    3,
+    3,
+    2,
+    2,
+    0,
+    1,
+    0
+   ],
+   "matters_movable": true,
+   "matters_portal": true,
+   "matters_switch": true,
+   "mistakes": [
+    "r0c2v push",
+    "r6c3v",
+    "r5c5^",
+    "r4c1^",
+    "r4c1^ push"
+   ],
+   "shortcut": 0.017,
+   "without_movable": "without it: 0 decision steps, 0 distinct mistakes (with it: 14, 5)",
+   "without_portal": "without it: 9 decision steps, 4 distinct mistakes (with it: 14, 5)",
+   "without_switch": "unsolvable without it"
+  },
+  "C": {
+   "decisions_k4_6_8": [
+    12,
+    11,
+    9
+   ],
+   "deepest": 19,
+   "greedy": {
+    "look2": 0.005,
+    "look4": 0.017,
+    "min_turn": 0.005,
+    "mobility": 0,
+    "safe": 0.005
+   },
+   "hidden_k6_8": [
+    26,
+    20
+   ],
+   "learner": {
+    "look4": 1,
+    "look6": 1
+   },
+   "look6_greedy": 0.017,
+   "opening": "1 / 3",
+   "pressure": {
+    "advances": 0,
+    "calm_prefix": 5,
+    "flips": 3,
+    "multi_turned": 0,
+    "prediction_share": 0.13,
+    "pulls": 0,
+    "rams": 0,
+    "signals": 1,
+    "spinners_turned": 0,
+    "trap_delay_median": 10,
+    "turns": 0,
+    "undo_proof": 0.9
+   },
+   "win_share": 0.088
+  },
+  "map": [
+   ". . Gv . . Rv&A .",
+   "B> P> . R> . . B^",
+   ". B>&A M OA . . .",
+   "Y^&A . . . . . .",
+   ". Y^%B . . . . .",
+   ". . . . OA Y^%A R<&B",
+   "P^%A . . Gv%B . Y^ ."
+  ],
+  "name": "PX2_v20_s1",
+  "target": "EXTREME",
+  "verdict": "HUMAN-REVIEW CANDIDATE",
+  "why_a": [],
+  "why_b": []
+ }
+}

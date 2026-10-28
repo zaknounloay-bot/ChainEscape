@@ -1,0 +1,164 @@
+{
+ "format": "ce-ta90-proto",
+ "v": 1,
+ "test": "ta90_n38",
+ "assist": {
+  "undo": 3,
+  "show_a_move": 0,
+  "hammer": 0
+ },
+ "note": "Development only. Phase 20 EXTREME candidate (?extreme90p20=1); never shared, never production. HUMAN-REVIEW CANDIDATE: technically validated, strategic quality unconfirmed by people.",
+ "boards": [
+  {
+   "id": "N38",
+   "accepted": true,
+   "label": "HUMAN-REVIEW CANDIDATE - EXPERIMENTAL, HUMAN DIFFICULTY UNVALIDATED",
+   "variant": "N38",
+   "design": "20AS2_v20_s1",
+   "family": "E rammer / armor (two rammers, two switch groups)",
+   "primary": "non-spinner, non-magnet",
+   "target": "EXTREME (a design target, not a rating; never shown to players)",
+   "idea": "two rammers, five shells, two reversal groups: each rammer cracks the shell in front, must stay, and is turned around to crack the one behind; with two switch pieces per group, which reversal fires first decides which shells can still be reached",
+   "source": "hand-drawn idea core (data/dev/extreme90_p19/cores.json, core_AS2), grown by the Phase 20 generator (tools/ta90_search.gd --ops=v20: actor operators, reversible marks, focused placement, concurrency term) in the controlled experiment (data/dev/extreme90_p20/protocol.json), checked by tools/ta90_design.gd and tools/xb90_filler.gd",
+   "fingerprint": "960fb50bdff4b2a3cf405c9b6906e260a4dd3bb6b1458628720e136c0c9ba552",
+   "mechanics": [
+    "switch",
+    "armor"
+   ],
+   "puzzle": {
+    "format": "ce-puzzle",
+    "v": 1,
+    "rules": 1,
+    "rows": 7,
+    "cols": 7,
+    "map": [
+     ". . . . . . .",
+     ". . . . . . .",
+     "G<= Y^&A B>&A . Y^= . .",
+     "G^&B G^= G^&B . . . .",
+     ". . . . . . .",
+     ". . P^= . R<&B . Gv=",
+     "Y^%B Y>%A P^%B . B^ P^%A ."
+    ]
+   },
+   "design_report": {
+    "A": {
+     "fingerprint": "960fb50bdff4b2a3cf405c9b6906e260a4dd3bb6b1458628720e136c0c9ba552",
+     "hint_nodes": [
+      115,
+      41
+     ],
+     "parity": [
+      0,
+      0
+     ],
+     "portals": 0,
+     "position_cap": 2000,
+     "positions": 862,
+     "replay": true,
+     "solution": 20,
+     "solve_ms": 6.6,
+     "timeup_worst_ms": 4.6,
+     "timeup_worst_nodes": 135,
+     "winnable": 170
+    },
+    "B": {
+     "coverage": 0.85,
+     "decision_steps": 17,
+     "distinct_mistakes": 6,
+     "endgame_decision": true,
+     "last_decision": 17,
+     "late": 0.85,
+     "losing_per_step": [
+      2,
+      2,
+      2,
+      2,
+      2,
+      2,
+      1,
+      2,
+      1,
+      2,
+      2,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      0,
+      0,
+      0
+     ],
+     "matters_armor": true,
+     "matters_switch": true,
+     "mistakes": [
+      "r2c1^",
+      "r6c5^",
+      "r6c0^",
+      "r5c4<",
+      "r6c2^",
+      "r6c1>"
+     ],
+     "shortcut": 0.055,
+     "without_armor": "without it: 6 decision steps, 2 distinct mistakes (with it: 17, 6)",
+     "without_switch": "unsolvable without it"
+    },
+    "C": {
+     "decisions_k4_6_8": [
+      14,
+      12,
+      10
+     ],
+     "deepest": 18,
+     "greedy": {
+      "look2": 0.05,
+      "look4": 0.033,
+      "min_turn": 0.055,
+      "mobility": 0,
+      "safe": 0.055
+     },
+     "hidden_k6_8": [
+      21,
+      16
+     ],
+     "learner": {
+      "look4": 2,
+      "look6": 2
+     },
+     "look6_greedy": 0.075,
+     "opening": "4 / 6",
+     "pressure": {
+      "advances": 0,
+      "calm_prefix": 5,
+      "flips": 3,
+      "multi_turned": 0,
+      "prediction_share": 0.4,
+      "pulls": 0,
+      "rams": 5,
+      "signals": 3,
+      "spinners_turned": 0,
+      "trap_delay_median": 9,
+      "turns": 0,
+      "undo_proof": 0.88
+     },
+     "win_share": 0.197
+    },
+    "filler": {
+     "distinct": 6,
+     "pieces_tested": 15,
+     "steps": 17,
+     "trivial": [],
+     "trivial_removals": 0
+    },
+    "similarity": {
+     "closest_known": "N36",
+     "overlap": 0.33,
+     "closest_new": "N37",
+     "closest_new_overlap": 0.25
+    }
+   }
+  }
+ ]
+}

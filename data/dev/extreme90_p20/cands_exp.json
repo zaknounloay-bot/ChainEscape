@@ -1,0 +1,92 @@
+{
+ "PX2_base_s1": {
+  "map": [
+   "G^&B . Gv . . R< .",
+   ". . . . . . .",
+   ". B>&A M OA . Y^ .",
+   "Rv&B . P<&A . . G^ P<",
+   ". . . . . . .",
+   ". . . . OA . R<&B",
+   "P^%A . . Gv%B . Y^ P^"
+  ],
+  "target": "EXTREME",
+  "mechanic": "portal,movable,switch",
+  "max_positions": 1500,
+  "facts": []
+ },
+ "PX2_v20_s1": {
+  "map": [
+   ". . Gv . . Rv&A .",
+   "B> P> . R> . . B^",
+   ". B>&A M OA . . .",
+   "Y^&A . . . . . .",
+   ". Y^%B . . . . .",
+   ". . . . OA Y^%A R<&B",
+   "P^%A . . Gv%B . Y^ ."
+  ],
+  "target": "EXTREME",
+  "mechanic": "portal,movable,switch",
+  "max_positions": 1500,
+  "facts": []
+ },
+ "PX2_v20_s2": {
+  "map": [
+   "G<&A . Gv . . . .",
+   "Y^ . . . . . .",
+   ". B>&A M OA . P^%A .",
+   ". . . . . . .",
+   ". . Pv . . . .",
+   "B^ . . . OA Gv&A R<&B",
+   "P^%A G< R<%B Gv%B . Y^ ."
+  ],
+  "target": "EXTREME",
+  "mechanic": "portal,movable,switch",
+  "max_positions": 1500,
+  "facts": []
+ },
+ "AS2_v20_s1": {
+  "map": [
+   ". . . . . . .",
+   ". . . . . . .",
+   "G<= Y^&A B>&A . Y^= . .",
+   "G^&B G^= G^&B . . . .",
+   ". . . . . . .",
+   ". . P^= . R<&B . Gv=",
+   "Y^%B Y>%A P^%B . B^ P^%A ."
+  ],
+  "target": "EXTREME",
+  "mechanic": "armor,switch",
+  "max_positions": 2000,
+  "facts": []
+ },
+ "AS2_v20_s2": {
+  "map": [
+   ". . . . . . .",
+   ". . . . . . .",
+   "G<= Pv= B>&A G> Y^= . .",
+   ". G> . . Yv%B . .",
+   "P<&B . . . . . .",
+   ". . P^= G^&A R<&B . Gv=",
+   "Y^%B G>&B . P< . P^%A ."
+  ],
+  "target": "EXTREME",
+  "mechanic": "armor,switch",
+  "max_positions": 2000,
+  "facts": []
+ },
+ "SG5_v20_s2": {
+  "map": [
+   "Pv&B . Bv+C . . . R^%B",
+   ". B> . . Y>%A . .",
+   ". . Gv&A . . . .",
+   ". XC . Gv%B R>&A . Y<",
+   ". B^ . . . . .",
+   "Y^&B Y^&B . . . . R<",
+   ". R^ . G>&A . P^%A ."
+  ],
+  "target": "EXTREME",
+  "mechanic": "switch,gate",
+  "max_positions": 1500,
+  "facts": []
+ }
+}

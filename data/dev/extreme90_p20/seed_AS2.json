@@ -1,0 +1,78 @@
+{
+ "target": "EXTREME",
+ "facts": [],
+ "mechanic": "armor,switch",
+ "idea": "two rammers, four shells, two reversals: each rammer cracks the shell in front, must stay, and is turned around to crack the one behind - and one switch can only fire once the other pair is done",
+ "family": "E rammer / armor (two rammers, two switches)",
+ "map": [
+  ". . . . . . .",
+  ". . . . . . .",
+  "G<= . B>&A . Y^= . .",
+  ". . . . . . .",
+  ". . . . . . .",
+  ". . P^= . R<&B . Gv=",
+  "Y^%B . . . . P^%A ."
+ ],
+ "frozen": [
+  [
+   2,
+   0
+  ],
+  [
+   2,
+   2
+  ],
+  [
+   2,
+   4
+  ],
+  [
+   5,
+   2
+  ],
+  [
+   5,
+   4
+  ],
+  [
+   5,
+   6
+  ],
+  [
+   6,
+   0
+  ],
+  [
+   6,
+   5
+  ]
+ ],
+ "max_positions": 2000,
+ "piece_free": 13,
+ "max_pieces": 17,
+ "shortcut_weight": 80,
+ "coverage_weight": 25,
+ "late_weight": 20,
+ "endgame_weight": 20,
+ "length_weight": 1.0,
+ "length_cap": 18,
+ "pressure_weight": 1.5,
+ "palette": "arrows",
+ "suffixes": [
+  "=",
+  "&A",
+  "&B"
+ ],
+ "suffix_rate": 0.3,
+ "suffix_max": {
+  "*": 3,
+  "=": 5,
+  "&A": 3,
+  "&B": 3
+ },
+ "crates_max": 0,
+ "seed": 192,
+ "size": "medium",
+ "max_solve_nodes": 300,
+ "redesign": "round 1 (AS: one rammer, one switch) reached 1 distinct mistake with a 70% shortcut; two rammer / switch pairs, the second switch's lane opened only by the first pair"
+}

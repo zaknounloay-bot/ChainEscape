@@ -1,0 +1,529 @@
+{
+ "p18_AR": {
+  "map": [
+   ". . . R^= . . .",
+   ". R^= P^= Y<= . . .",
+   ". B> B^ Y^= Bv= Gv= .",
+   ". . . . . . .",
+   ". . . . . P>= .",
+   ". . . . . . .",
+   ". . . . . . ."
+  ],
+  "mechanic": "armor"
+ },
+ "p18_AR2": {
+  "map": [
+   ". . . . P<* G>= Pv=",
+   ". . . Pv= P^* Y<* Gv*",
+   "Rv . G^ . R>* . .",
+   "Y<* . Y^ B> G^ G^= .",
+   ". . . . . . .",
+   ". . . . . Rv* .",
+   ". . . . . . ."
+  ],
+  "mechanic": "armor,magnet"
+ },
+ "p18_LS": {
+  "map": [
+   ". . R^:v . . G<:> .",
+   ". Y^:< R>:v . . . .",
+   ". . . . . P^:> B^#G",
+   ". . . G^#R . P^:v Y<:<",
+   ". . . . . . R>:<",
+   ". . . . . . .",
+   ". . . . . . ."
+  ],
+  "mechanic": "lock,sequence"
+ },
+ "p18_LS2": {
+  "map": [
+   "R^ R^&A . . . . .",
+   "R< Gv#R . . . . .",
+   "R^ . G< R< . . .",
+   "R^ R>&A . G^ . B< .",
+   ". . . R^ . . .",
+   ". . . R^ . R< .",
+   "G<#R Yv&A . . Y^%A . ."
+  ],
+  "mechanic": "lock,switch"
+ },
+ "p18_MF": {
+  "map": [
+   ". . Gv G< P< P< .",
+   ". . . . . . .",
+   ". R>&A M . . . .",
+   ". . B> . M . .",
+   ". . . B^ R> B> R>",
+   ". . . . . . .",
+   ". . . . Y^%A B^ ."
+  ],
+  "mechanic": "movable,switch"
+ },
+ "p18_MG": {
+  "map": [
+   "Rv B<* . . R> Bv* .",
+   ". R> Y> . . . .",
+   "R<* Bv* Rv* P<* G^* . .",
+   "Y<* . . B^ . G>* .",
+   ". . . R^* . P<* G^",
+   ". . . . . . .",
+   ". . . . . . ."
+  ],
+  "mechanic": "magnet"
+ },
+ "p18_MS": {
+  "map": [
+   "Y^ P< G< Gv . . .",
+   "M . . . . . .",
+   ". . B>:^ M R> P> .",
+   ". . Gv . . . .",
+   ". . . . Y^ . .",
+   ". . . . R^ . Y<",
+   ". . P> . G> Y> R^"
+  ],
+  "mechanic": "movable,sequence"
+ },
+ "p18_MS2": {
+  "map": [
+   ". . . Gv G^:> Gv:^ .",
+   ". P>:> G^:> . B^:> Y>:> P>",
+   ". . B>:^ M . . .",
+   ". . . . . . .",
+   "Pv:v . M . . . .",
+   "Y> G>:^ . P>:> R^ . .",
+   ". B^:< . B<:< . . ."
+  ],
+  "mechanic": "movable,sequence"
+ },
+ "p18_MX1": {
+  "map": [
+   "Bv B<&A . . . . G<&A",
+   ". Gv&A G> . . . B^",
+   ". . . . . . .",
+   "Y<* Y^ . R> Yv&A Rv&A .",
+   ". G< . . Y>* . .",
+   ". Pv* . R< R< . .",
+   ". . . P^%A . . ."
+  ],
+  "mechanic": "magnet,switch"
+ },
+ "p18_MX2": {
+  "map": [
+   ". B> Gv . . . .",
+   ". . Gv . . . .",
+   ". R>&A M . . Bv&B .",
+   ". . . P> . . .",
+   ". . . B^ P< . Y<",
+   ". . . . . . .",
+   ". . . . Y^%A P<%B ."
+  ],
+  "mechanic": "movable,switch"
+ },
+ "p18_MX2b": {
+  "map": [
+   ". Bv&A Gv B>&B G> B>&B B>&B",
+   ". . . . Y^ . .",
+   ". R>&A M . . Bv&B .",
+   ". . . . R^&A . .",
+   ". M Y> B^ R^ . .",
+   ". . . . . R>&A .",
+   ". . . . Y^%A P<%B M"
+  ],
+  "mechanic": "movable,switch"
+ },
+ "p18_MX3": {
+  "map": [
+   "P<#Y . . . B> B> Rv",
+   ". . R<#G . R^ . Pv",
+   "R<* Gv . G> . . .",
+   ". . . Yv B< . B<",
+   ". . . . R<* . Bv#G",
+   ". Y< P< R< Y^ Bv#R .",
+   "P<* . . . Y^ . ."
+  ],
+  "mechanic": "magnet,lock"
+ },
+ "p18_PG2": {
+  "map": [
+   "Y> P> . Pv . . .",
+   ". . . . . . .",
+   ". . . XA . . .",
+   ". G>+A Bv G> . OA G<",
+   ". P^ . . . Y< .",
+   ". OA Y> . G> Bv Y^+A",
+   ". . . . . B<+A ."
+  ],
+  "mechanic": "portal,gate"
+ },
+ "p18_PM": {
+  "map": [
+   ". P<:^ G^:^ B<:< . . Y<:<",
+   ". . . . . . .",
+   ". B>:v M OA . . B^:^",
+   ". P>:< . Bv:v . . .",
+   ". . . . . . .",
+   ". . . . . OA P^",
+   ". . G^ G>:> B>:> P>:v Y^"
+  ],
+  "mechanic": "portal,movable,sequence"
+ },
+ "p18_PR": {
+  "map": [
+   ". . . Yv G< G< Y<",
+   ". . . Gv . . .",
+   "R> Y> OA . . G^ .",
+   ". . . . . B^ R<",
+   ". . . Rv R> . G^",
+   ". Rv . P< OA B> Y>",
+   "P^ B< . . . . ."
+  ],
+  "mechanic": "portal"
+ },
+ "p18_PS": {
+  "map": [
+   ". Bv . B< R< Y< G<",
+   ". Rv . . . R^ .",
+   ". Pv OA . R>&A B^ Y^&A",
+   ". P>&A . . . . .",
+   ". Gv . . . . .",
+   ". . R^ . OA . .",
+   ". . . . Y^%A . ."
+  ],
+  "mechanic": "portal,switch"
+ },
+ "p18_SG": {
+  "map": [
+   ". . . Rv . . .",
+   ". Bv&A P> . Rv+B . .",
+   "R> G^ . Pv Gv . .",
+   ". G> P^ XB . . .",
+   ". P^ B^ Yv B> Yv Pv",
+   ". G^ Y^%A . . G> .",
+   ". P^ . G< . . ."
+  ],
+  "mechanic": "switch,gate"
+ },
+ "p18_SG2": {
+  "map": [
+   ". Rv . . . P> P^",
+   ". Bv&A . . Rv+B . P>",
+   ". . . . Gv+B B>+B Y^",
+   ". G> . XB Rv . G^",
+   ". . . Yv&A Gv P>+B Y^+B",
+   ". . Y^%A P>+B R> Y^ B^",
+   ". . . . . . ."
+  ],
+  "mechanic": "switch,gate"
+ },
+ "p18_SPC": {
+  "map": [
+   ". . . . B^ . .",
+   ". . . Gv G^ . .",
+   ". B< R>@ M . . .",
+   ". . . B<@~ . . .",
+   ". G^ P<@~ Y>@- . . .",
+   "Pv@- . . . Y^ . .",
+   ". . G^@~ . R<@- . ."
+  ],
+  "mechanic": "movable"
+ },
+ "p18_SPP": {
+  "map": [
+   ". . . . . . .",
+   ". . . Gv . Gv@- .",
+   "Y>@~ OA . R<@ G^ . .",
+   "R^@- P^@- . . . . .",
+   ". Y<@ . Y^@ B^@~ Gv@~ .",
+   ". Yv@~ Rv@~ Rv@- Pv@~ OA .",
+   ". . . . . . ."
+  ],
+  "mechanic": "portal"
+ },
+ "p19_AS": {
+  "map": [
+   ". Bv . P^ R< . .",
+   ". B>&A . Yv . . .",
+   "G<= Y<&A B>&A . Y^= Bv= .",
+   ". . . . . . .",
+   ". . . . . . .",
+   ". . . . . . .",
+   ". . . Rv . . P^%A"
+  ],
+  "mechanic": "armor,switch"
+ },
+ "p19_AS2": {
+  "map": [
+   ". . . . . Bv&B .",
+   ". . G> . . B>&B .",
+   "G<= G^= B>&A . Y^= . .",
+   "R^ . . . . . .",
+   ". . . . . Y^ .",
+   ". . P^= . R<&B . Gv=",
+   "Y^%B . . . . P^%A Bv&A"
+  ],
+  "mechanic": "armor,switch"
+ },
+ "p19_MAS": {
+  "map": [
+   ". Y> . . . Gv Rv",
+   ". . . . Yv . .",
+   ". Y^= . . R>&A M Bv&A",
+   ". . . . Rv&A . Y>=",
+   "G<= G^ . . R< . .",
+   ". . . . Rv= . .",
+   "P^%A . . . . . ."
+  ],
+  "mechanic": "movable,switch,armor"
+ },
+ "p19_MAS2": {
+  "map": [
+   ". R^= . . . Gv .",
+   ". . . . . . B^&A",
+   ". Y^= . . R>&A M P^=",
+   ". Y^ . . . . B<&A",
+   "G> B<&B . . . . .",
+   ". G>= . . . B>&B P^",
+   "P^%A Yv&B . . . . G^%B"
+  ],
+  "mechanic": "movable,switch,armor"
+ },
+ "p19_MF2": {
+  "map": [
+   ". . . . . Gv .",
+   "Y> Pv . . . . P>&A",
+   "R>&B . . . R>&A M .",
+   ". . . . Rv P< .",
+   ". B<&B R< P< R< . .",
+   ". Bv . . . . .",
+   "Y^%A R> . . . . P^%B"
+  ],
+  "mechanic": "movable,switch"
+ },
+ "p19_MG2": {
+  "map": [
+   ". . R^ Gv#R Rv#B . B>",
+   ". . G<* . . Gv R<",
+   "Bv . . . . . .",
+   "R<* . Y^* B> . . B^",
+   "R> . B^ . . . Pv",
+   ". . . . . . .",
+   ". . . . . . ."
+  ],
+  "mechanic": "magnet,lock"
+ },
+ "p19_MG3": {
+  "map": [
+   "Gv . . G^ . Gv P>*",
+   ". . . B^ . . B^",
+   "B<#R . . . . . .",
+   "R<* . . P^ P>#R . Y^",
+   ". . . R> . . Y^",
+   ". . . Gv . . B>*",
+   ". . . G<#R . . Y^"
+  ],
+  "mechanic": "magnet"
+ },
+ "p19_MG3b": {
+  "map": [
+   "Gv G<* . B> . . .",
+   ". . . . . . .",
+   ". . Yv P< . B< .",
+   "R<* . . P^ . G^ .",
+   ". . . . . . Y^",
+   ". . Rv Gv B^ Yv B>*",
+   ". . R> . . . Y^"
+  ],
+  "mechanic": "magnet"
+ },
+ "p19_MX4": {
+  "map": [
+   "Gv . . Bv Gv&A . .",
+   ". . . R> . Y^ Pv",
+   ". . . Pv&A . . Y>*",
+   "R<* . . . Y^ . .",
+   ". . . B> . Y^ .",
+   ". R>&A . . . . Y<",
+   ". . . Bv* P< P^%A ."
+  ],
+  "mechanic": "magnet,switch"
+ },
+ "p19_PX": {
+  "map": [
+   ". . Gv . . Y< B<",
+   ". . . . . . .",
+   ". B>&A M OA . Bv&A .",
+   ". . Gv . . . .",
+   ". Pv&A P< . . B> R^",
+   ". . . . OA R> .",
+   "P^%A . . . . Y^ P^"
+  ],
+  "mechanic": "portal,movable,switch"
+ },
+ "p19_PX2": {
+  "map": [
+   ". . Gv . . . .",
+   ". . . . . . .",
+   ". B>&A M OA . G< .",
+   "Y> . G>&B . . . .",
+   ". . . . . . .",
+   "P^ . Y^&A . OA G^ R<&B",
+   "P^%A P>&A R<&B Gv%B . Y^ ."
+  ],
+  "mechanic": "portal,movable,switch"
+ },
+ "p19_SG3": {
+  "map": [
+   ". R^ . . . . .",
+   ". Rv&A B>&A Rv . Gv&B .",
+   ". G^&B . . . . .",
+   ". Y^+C . XC . P^ .",
+   ". . . Rv&A . . .",
+   "B>%A . . . . . .",
+   ". . . R< . . Pv%B"
+  ],
+  "mechanic": "switch,gate"
+ },
+ "p19_SG4": {
+  "map": [
+   ". Yv&A Bv+C . . . Rv%B",
+   ". . B>+C . . . .",
+   ". . Gv&A . . . .",
+   "B<+C XC . B< R>&A . Y<",
+   "G^ P< P<&B . . . B<+C",
+   ". Y^&B . . . . .",
+   ". R^ . . . P^%A ."
+  ],
+  "mechanic": "switch,gate"
+ },
+ "p19_SQX": {
+  "map": [
+   ". . . Rv . . G^:>",
+   ". P>:< R>:> . . . Rv*",
+   ". R>:> B>:^ . . . .",
+   "Y<* . Bv:v B>:^ . . .",
+   ". B^:v R>:< . . . .",
+   ". . . Pv* . . .",
+   ". . . . . . ."
+  ],
+  "mechanic": "sequence,magnet"
+ },
+ "p19_SQX2": {
+  "map": [
+   ". . G<:^ Rv . . .",
+   ". . . . . . .",
+   "G<:< . . . . . .",
+   "Y<* . Pv* B>:^ . . .",
+   "Y^:> . . . . . G^:^",
+   "G^:^ G<:^ . . . R<:^ .",
+   ". . . G^:< . G^:^ P>*"
+  ],
+  "mechanic": "sequence,magnet"
+ },
+ "bank_N3": {
+  "map": [
+   "G^%A Gv@- . . Y<@- .",
+   "B>@ . B<@- . . Y>",
+   ". . Y> B<&A+A Y^@- Yv@",
+   "R> . . . . .",
+   "G>@- . XA . . .",
+   ". . R^ . . ."
+  ],
+  "mechanic": "spinner_cw,spinner_ccw,switch,gate"
+ },
+ "bank_N16": {
+  "map": [
+   "Y<@~ . . Yv Y^@- B> .",
+   "P>@ . Rv@- . . G<@~ P>",
+   ". . . XA . . .",
+   "P^@ B<&B . Rv B^@- G^+A= .",
+   "B^ . . . . . .",
+   "R<@- . . . . . .",
+   "P^%B . . . . . ."
+  ],
+  "mechanic": "spinner_cw,spinner_ccw,spinner_alt,switch,gate,armor"
+ },
+ "bank_N21": {
+  "map": [
+   ". . . . . . .",
+   ". . . . . . .",
+   "Y< Yv@ . Yv P>@ . Gv",
+   ". . G^@ R^@#B Y^@~ Y^@~ P>@",
+   ". P^@~ Gv@- B<:v . . Y>@~",
+   ". . . G>@~ G<@~ . Y^@~",
+   ". . . G> G>@- . R^@~"
+  ],
+  "mechanic": "spinner_cw,spinner_ccw,spinner_alt,lock,sequence"
+ },
+ "bank_N31": {
+  "map": [
+   "Rv . . . R> Bv .",
+   ". R> Y> . . . .",
+   "R<* Bv* Rv* P<* G^ . .",
+   "Y<* . . B^ . G>* .",
+   ". . . R^ . P<* G^",
+   ". . . . . . .",
+   ". . . . . . ."
+  ],
+  "mechanic": "magnet"
+ },
+ "bank_N32": {
+  "map": [
+   ". . . . P<* G>= Pv=",
+   ". . . Pv= P^* Y< Gv*",
+   "Rv . G^ . R>* . .",
+   "Y<* . Y^ B> G^ G^= .",
+   ". . . . . . .",
+   ". . . . . Rv* .",
+   ". . . . . . ."
+  ],
+  "mechanic": "armor,magnet"
+ },
+ "bank_N33": {
+  "map": [
+   ". . . . B^ . .",
+   ". . . Gv G^ . .",
+   ". B< R>@ M . . .",
+   ". . . B<@~ . . .",
+   ". G^ P<@~ Y>@- . . .",
+   "Pv@- . . . Y^ . .",
+   ". . G^@~ . R<@- . ."
+  ],
+  "mechanic": "spinner_cw,spinner_ccw,spinner_alt,movable"
+ },
+ "bank_N34": {
+  "map": [
+   ". . . . . . .",
+   ". . . Gv . Gv@- .",
+   "Y>@~ OA . R<@ G^ . .",
+   "R^@- P^@- . . . . .",
+   ". Y<@ . Y^@ B^@~ Gv@~ .",
+   ". Yv@~ Rv@~ Rv@- Pv@~ OA .",
+   ". . . . . . ."
+  ],
+  "mechanic": "spinner_cw,spinner_ccw,spinner_alt,portal"
+ },
+ "bank_N35": {
+  "map": [
+   ". R^= . . . Gv .",
+   ". B> . . . . B^&A",
+   ". Y^= . . R>&A M P^=",
+   ". Y^ . . . R<&B B<&A",
+   "G> B<&B . . . . .",
+   ". G>= . . . . .",
+   "P^%A Yv&B . . . . G^%B"
+  ],
+  "mechanic": "switch,armor,movable"
+ },
+ "bank_N36": {
+  "map": [
+   "Gv . . Bv Gv&A . .",
+   ". . . R> . Y^ Pv",
+   ". . . Pv&A . . Y>*",
+   "R<* . . . Y^ . .",
+   ". . . B> . Y^ .",
+   ". R>&A . . . . Y<",
+   ". . . Bv* P< P^%A ."
+  ],
+  "mechanic": "switch,magnet"
+ }
+}
