@@ -1,0 +1,157 @@
+{
+ "format": "ce-ta90-proto",
+ "v": 1,
+ "test": "ta90_n46",
+ "assist": {
+  "undo": 3,
+  "show_a_move": 0,
+  "hammer": 0
+ },
+ "note": "Development only. Phase 21 EXTREME candidate (?extreme90p21=1); never shared, never production. HUMAN-REVIEW CANDIDATE: technically validated, strategic quality unconfirmed by people.",
+ "boards": [
+  {
+   "id": "N46",
+   "accepted": true,
+   "label": "HUMAN-REVIEW CANDIDATE - EXPERIMENTAL, HUMAN DIFFICULTY UNVALIDATED",
+   "variant": "N46",
+   "design": "21MAG_p18MG_s12_1",
+   "family": "C magnet relocation",
+   "primary": "magnet",
+   "target": "EXTREME (a design target, not a rating; never shown to players)",
+   "idea": "the pull decides who is in the way: each magnet drags a plain block into a lane another block still needs",
+   "source": "existing idea core data/dev/extreme90_p18/seed_MG.json (data/dev/extreme90_p21/seed_MAG_p18MG.json), grown by tools/ta90_search.gd --ops=v20 in the Phase 21 bounded search (data/dev/extreme90_p21/protocol.json), checked by tools/ta90_design.gd and tools/xb90_filler.gd",
+   "fingerprint": "7e721e1513c712d2cac3f05688e0bfcdbfcab3716a950049a3693ff461d896ca",
+   "mechanics": [
+    "magnet"
+   ],
+   "puzzle": {
+    "format": "ce-puzzle",
+    "v": 1,
+    "rules": 1,
+    "rows": 7,
+    "cols": 7,
+    "map": [
+     "Rv . . . Yv* . .",
+     ". R>* . G^* Y>* . .",
+     ". Y<* . Bv* . . Y>*",
+     "Y<* Y^ . B^ G< G>* P^*",
+     "B<* R^* . . . . .",
+     ". P^* . . . . .",
+     ". . . . . . ."
+    ]
+   },
+   "design_report": {
+    "A": {
+     "fingerprint": "7e721e1513c712d2cac3f05688e0bfcdbfcab3716a950049a3693ff461d896ca",
+     "hint_nodes": [
+      441,
+      0
+     ],
+     "parity": [
+      0,
+      0
+     ],
+     "portals": 0,
+     "position_cap": 2000,
+     "positions": 462,
+     "replay": true,
+     "solution": 17,
+     "solve_ms": 3.3,
+     "timeup_worst_ms": 17.9,
+     "timeup_worst_nodes": 441,
+     "winnable": 53
+    },
+    "B": {
+     "coverage": 0.88,
+     "decision_steps": 15,
+     "distinct_mistakes": 5,
+     "endgame_decision": true,
+     "last_decision": 15,
+     "late": 0.88,
+     "losing_per_step": [
+      5,
+      2,
+      2,
+      2,
+      2,
+      2,
+      2,
+      2,
+      2,
+      2,
+      2,
+      1,
+      1,
+      1,
+      1,
+      0,
+      0
+     ],
+     "matters_magnet": true,
+     "mistakes": [
+      "r1c4>",
+      "r2c1<",
+      "r2c6>",
+      "r3c0<",
+      "r4c0<"
+     ],
+     "shortcut": 0.095,
+     "without_magnet": "unsolvable without it"
+    },
+    "C": {
+     "decisions_k4_6_8": [
+      11,
+      9,
+      7
+     ],
+     "deepest": 15,
+     "greedy": {
+      "look2": 0,
+      "look4": 0,
+      "min_turn": 0,
+      "mobility": 0.095,
+      "safe": 0
+     },
+     "hidden_k6_8": [
+      20,
+      15
+     ],
+     "learner": {
+      "look4": 16,
+      "look6": 16
+     },
+     "look6_greedy": 0,
+     "opening": "1 / 6",
+     "pressure": {
+      "advances": 0,
+      "calm_prefix": 0,
+      "flips": 0,
+      "multi_turned": 0,
+      "prediction_share": 0.41,
+      "pulls": 7,
+      "rams": 0,
+      "signals": 2,
+      "spinners_turned": 0,
+      "trap_delay_median": 8,
+      "turns": 0,
+      "undo_proof": 0.83
+     },
+     "win_share": 0.115
+    },
+    "filler": {
+     "distinct": 5,
+     "pieces_tested": 17,
+     "steps": 15,
+     "trivial": [],
+     "trivial_removals": 0
+    },
+    "similarity": {
+     "closest_known": "N32",
+     "overlap": 0.38,
+     "closest_new": "N39",
+     "closest_new_overlap": 0.39
+    }
+   }
+  }
+ ]
+}

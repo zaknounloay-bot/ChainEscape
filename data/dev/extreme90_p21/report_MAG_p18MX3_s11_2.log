@@ -1,0 +1,18 @@
+Godot Engine v4.3.stable.official.77dcf97d8 - https://godotengine.org
+
+known boards: 9498
+known boards incl. T1-T5 and the demos: 9498; played boards for the near-copy guard: 333
+
+=== MAG_p18MX3_s11_2 (target EXTREME, 20 pieces) ===
+   . . Pv#G Rv Y< . B<
+   R^ . . G>* . . .
+   R<* . Yv G> . Pv .
+   R>#Y . Y>#G . . . .
+   . G^ Rv#G Yv* B<* . Bv#G
+   . . B<#G . . . .
+   P<* . . . Y^ . .
+   solution: r1c0^ [x4], r1c3> [x3], r2c5v [x3], r2c3> [x3], r4c1^ [x2], r3c2> [x2], r5c2< [x2], r4c2v [x2], r2c2v [x2], r0c2v [x1], r2c0< [x1], r4c3v [x1], r4c3v [x1], r0c4< [x2], r0c6< [x2], r4c6v [x2], r4c4< [x1], r6c4^ [x1], r3c0>, r6c0<
+   A {"fingerprint":"3d4cc3dab1da92d2ef672d8d39a4cce7f858a05a5519a17bef2e2a8a27caca41","hint_nodes":[443,0],"parity":[0,0],"portals":0,"position_cap":3000,"positions":647,"replay":true,"solution":20,"solve_ms":7.2,"timeup_worst_ms":17,"timeup_worst_nodes":443,"winnable":120}
+   B {"coverage":0.9,"decision_steps":18,"distinct_mistakes":5,"endgame_decision":true,"last_decision":18,"late":0.9,"line(see above)":["r1c0^ [x4]","r1c3> [x3]","r2c5v [x3]","r2c3> [x3]","r4c1^ [x2]","r3c2> [x2]","r5c2< [x2]","r4c2v [x2]","r2c2v [x2]","r0c2v [x1]","r2c0< [x1]","r4c3v [x1]","r4c3v [x1]","r0c4< [x2]","r0c6< [x2]","r4c6v [x2]","r4c4< [x1]","r6c4^ [x1]","r3c0>","r6c0<"],"losing_per_step":[4,3,3,3,2,2,2,2,2,1,1,1,1,2,2,2,1,1,0,0],"matters_lock":true,"matters_magnet":true,"mistakes":["r1c3>","r2c0<","r4c3v","r6c0<","r4c4<"],"shortcut":0.055,"without_lock":"without it: 18 decision steps, 4 distinct mistakes (with it: 18, 5)","without_magnet":"without it: 0 decision steps, 0 distinct mistakes (with it: 18, 5)"}
+   C {"decisions_k4_6_8":[14,12,10],"deepest":18,"greedy":{"look2":0,"look4":0,"min_turn":0,"mobility":0.055,"safe":0},"hidden_k6_8":[23,20],"learner":{"look4":3,"look6":3},"look6_greedy":0,"opening":"3 / 7","pressure":{"advances":0,"calm_prefix":0,"flips":0,"multi_turned":0,"prediction_share":0.05,"pulls":1,"rams":0,"signals":3,"spinners_turned":0,"trap_delay_median":9,"turns":0,"undo_proof":0.8},"win_share":0.185}
+   VERDICT: HUMAN-REVIEW CANDIDATE

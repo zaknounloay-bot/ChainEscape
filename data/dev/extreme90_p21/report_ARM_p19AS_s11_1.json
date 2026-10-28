@@ -1,0 +1,135 @@
+{
+ "ARM_p19AS_s11_1": {
+  "A": {
+   "fingerprint": "f3531d7f7261b38effb7fd532fea36e1e27c1a96d8c837099d0e28a93cced400",
+   "hint_nodes": [
+    30,
+    15
+   ],
+   "parity": [
+    0,
+    0
+   ],
+   "portals": 0,
+   "position_cap": 2000,
+   "positions": 279,
+   "replay": true,
+   "solution": 17,
+   "solve_ms": 1.7,
+   "timeup_worst_ms": 1.1,
+   "timeup_worst_nodes": 43,
+   "winnable": 98
+  },
+  "B": {
+   "coverage": 0.82,
+   "decision_steps": 14,
+   "distinct_mistakes": 4,
+   "endgame_decision": true,
+   "last_decision": 14,
+   "late": 0.82,
+   "line": [
+    "r1c4< [x1]",
+    "r2c2> ram [x1]",
+    "r2c4^ [x1]",
+    "r5c4^ [x2]",
+    "r6c1< [x3]",
+    "r5c1v [x2]",
+    "r5c5< [x2]",
+    "r5c6< [x2]",
+    "r4c1v [x2]",
+    "r6c4^ [x2]",
+    "r2c2< ram [x1]",
+    "r2c0< [x1]",
+    "r2c2< [x1]",
+    "r4c2^ ram [x1]",
+    "r0c2>",
+    "r4c2^",
+    "r6c6^"
+   ],
+   "losing_per_step": [
+    1,
+    1,
+    1,
+    2,
+    3,
+    2,
+    2,
+    2,
+    2,
+    2,
+    1,
+    1,
+    1,
+    1,
+    0,
+    0,
+    0
+   ],
+   "matters_armor": true,
+   "matters_switch": true,
+   "mistakes": [
+    "r4c2v",
+    "r2c2>",
+    "r6c4^",
+    "r6c6^"
+   ],
+   "shortcut": 0.125,
+   "without_armor": "without it: 1 decision steps, 1 distinct mistakes (with it: 14, 4)",
+   "without_switch": "unsolvable without it"
+  },
+  "C": {
+   "decisions_k4_6_8": [
+    10,
+    9,
+    7
+   ],
+   "deepest": 15,
+   "greedy": {
+    "look2": 0.055,
+    "look4": 0.125,
+    "min_turn": 0.055,
+    "mobility": 0,
+    "safe": 0.055
+   },
+   "hidden_k6_8": [
+    16,
+    11
+   ],
+   "learner": {
+    "look4": 2,
+    "look6": 0
+   },
+   "look6_greedy": 0.308,
+   "opening": "4 / 5",
+   "pressure": {
+    "advances": 0,
+    "calm_prefix": 4,
+    "flips": 2,
+    "multi_turned": 0,
+    "prediction_share": 0.24,
+    "pulls": 0,
+    "rams": 3,
+    "signals": 1,
+    "spinners_turned": 0,
+    "trap_delay_median": 8,
+    "turns": 0,
+    "undo_proof": 0.82
+   },
+   "win_share": 0.351
+  },
+  "map": [
+   ". . Y>= . . . .",
+   ". . . . G< . .",
+   "G<= . B>&A . Y^= . .",
+   ". . . . . . .",
+   ". Yv Bv&A . . . .",
+   ". Pv . . R^ P< Y<",
+   ". Y<&A . . B^%A . P^%A"
+  ],
+  "name": "ARM_p19AS_s11_1",
+  "target": "EXTREME",
+  "verdict": "HUMAN-REVIEW CANDIDATE",
+  "why_a": [],
+  "why_b": []
+ }
+}

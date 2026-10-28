@@ -24,7 +24,8 @@
 //   new boards (CHALLENGE 1-2); the earlier ones are on the optional PREVIOUS
 //   CHALLENGES screen (a scrolling list, BACK), each still played by touch.
 //   Phase 20: --entry=extreme90p20 (xb20; the new boards N37 / N38 first, the
-//   Phase 19 page's 22 boards on PREVIOUS CHALLENGES).
+//   Phase 19 page's 22 boards on PREVIOUS CHALLENGES). Phase 21: --entry=extreme90p21
+//   (xb21; N39-N47 first, the Phase 20 page's 24 boards on PREVIOUS CHALLENGES).
 // Chromium is not iPhone Safari (see tools/web_ta90_page_test.mjs).
 import http from 'node:http';
 import fs from 'node:fs';
@@ -43,10 +44,10 @@ const benchOut = (process.argv.find((a) => a.startsWith('--bench-out=')) || '').
 const playerRoot = (process.argv.find((a) => a.startsWith('--player=')) || '').slice(9);
 const PORT = 8840, W = 375, H = 667;  // iPhone SE
 const ENTRY = (process.argv.find((a) => a.startsWith('--entry=')) || '--entry=extreme90').slice(8);
-const P17 = ENTRY === 'extreme90p17' || ENTRY === 'extreme90p18' || ENTRY === 'extreme90p19' || ENTRY === 'extreme90p20';  // a later selection: the earlier entries' storage must stay untouched
-const ST = { extreme90: 'xb90', extreme90p17: 'xb17', extreme90p18: 'xb18', extreme90p19: 'xb19', extreme90p20: 'xb20' }[ENTRY], FMT = 'ce-' + ST, PUB = 'chainEscape' + ST[0].toUpperCase() + ST.slice(1);
-const OLDER = { extreme90: [], extreme90p17: ['xb90'], extreme90p18: ['xb90', 'xb17'], extreme90p19: ['xb90', 'xb17', 'xb18'], extreme90p20: ['xb90', 'xb17', 'xb18', 'xb19'] }[ENTRY];
-const PREV = ENTRY === 'extreme90p19' || ENTRY === 'extreme90p20';  // Phase 19: new boards only on the primary screen; the rest on PREVIOUS CHALLENGES (scrolls)
+const P17 = ENTRY === 'extreme90p17' || ENTRY === 'extreme90p18' || ENTRY === 'extreme90p19' || ENTRY === 'extreme90p20' || ENTRY === 'extreme90p21';  // a later selection: the earlier entries' storage must stay untouched
+const ST = { extreme90: 'xb90', extreme90p17: 'xb17', extreme90p18: 'xb18', extreme90p19: 'xb19', extreme90p20: 'xb20', extreme90p21: 'xb21' }[ENTRY], FMT = 'ce-' + ST, PUB = 'chainEscape' + ST[0].toUpperCase() + ST.slice(1);
+const OLDER = { extreme90: [], extreme90p17: ['xb90'], extreme90p18: ['xb90', 'xb17'], extreme90p19: ['xb90', 'xb17', 'xb18'], extreme90p20: ['xb90', 'xb17', 'xb18', 'xb19'], extreme90p21: ['xb90', 'xb17', 'xb18', 'xb19', 'xb20'] }[ENTRY];
+const PREV = ['extreme90p19', 'extreme90p20', 'extreme90p21'].includes(ENTRY);  // Phase 19: new boards only on the primary screen; the rest on PREVIOUS CHALLENGES (scrolls)
 const LSB = (b) => `chain_escape_${ST}_${b.toLowerCase()}_state`;
 const FILL = { green: [0x1e, 0x7b, 0x34], orange: [0xc2, 0x41, 0x0c], red: [0xb9, 0x1c, 0x1c] };
 const types = { '.html': 'text/html', '.js': 'text/javascript', '.wasm': 'application/wasm', '.pck': 'application/octet-stream', '.png': 'image/png' };
@@ -193,15 +194,16 @@ try {
   let tiles = bank.map((_, i) => h.rects['Puzzle_' + (i + 1)]);
   if (PREV) {
     const main = Object.keys(h.buttons).filter((n) => n.startsWith('Puzzle_')).sort();
-    check(nNew === 2 && h.primary.join(',') === bank.slice(0, nNew).join(',') && h.previous.join(',') === bank.slice(nNew).join(',')
-      && main.join(',') === 'Puzzle_1,Puzzle_2' && !h.scroll.length && h.buttons.PreviousChallenges && h.buttons.CopyResults && h.buttons.HowItWorks && /^DEV BUILD p\d+-/.test(h.build),
+    const NEWN = { extreme90p19: 2, extreme90p20: 2, extreme90p21: 9 }[ENTRY];
+    check(nNew === NEWN && h.primary.join(',') === bank.slice(0, nNew).join(',') && h.previous.join(',') === bank.slice(nNew).join(',')
+      && main.join(',') === Array.from({ length: nNew }, (_, i) => 'Puzzle_' + (i + 1)).sort().join(',') && !h.scroll.length && h.buttons.PreviousChallenges && h.buttons.CopyResults && h.buttons.HowItWorks && /^DEV BUILD p\d+-/.test(h.build),
       `CHOOSE A CHALLENGE: ONLY the new boards (${h.primary.join(', ')} = CHALLENGE 1-${nNew}), no scrolling; PREVIOUS CHALLENGES, COPY ALL RESULTS, HOW IT WORKS on screen; "${h.build}"`);
     await a.shot('X2_select');
     tiles = bank.slice(0, nNew).map((_, i) => h.rects['Puzzle_' + (i + 1)]);
     // The optional PREVIOUS CHALLENGES screen: every earlier tile scrolls into view.
     await a.tapHub('PreviousChallenges', 'SELECT');
     let pv = await a.waitFor(a.hub, (v) => v.view === 'PREVIOUS' && v.buttons.PreviousBack, 'previous');
-    const noNew = !pv.buttons.Puzzle_1 && !pv.buttons.Puzzle_2;
+    const noNew = Array.from({ length: nNew }, (_, i) => 'Puzzle_' + (i + 1)).every((n) => !pv.buttons[n]);
     await a.shot('X2b_previous');
     for (let i = nNew; i < bank.length; i++) {
       await a.reveal('Puzzle_' + (i + 1));
@@ -331,7 +333,7 @@ try {
     check(bundle && bundle.format === FMT && bundle.rules.version === 'ta90-v1' && r && r.board === b0 && r.timed_outcome === 'TIME UP' && r.untimed_success
       && Object.keys(bundle.boards).length === h2.order.length && h2.order.every((b, i) => bundle.boards[b].puzzle === i + 1 && /^[0-9a-f]{64}$/.test(bundle.boards[b].fingerprint)),
       `COPY ALL RESULTS: one ${FMT} bundle - every board under its internal id with its fingerprint and challenge number; the run kept TIME UP and the untimed solve apart` + (P17 ? ` (selection ${bundle && bundle.selection}, N23 ${bundle && bundle.boards.N23 && bundle.boards.N23.group})` : ''));
-    if (PREV) check(bundle && bundle.selection === (ENTRY === 'extreme90p20' ? 'xb20-v1' : 'xb19-v2') && 'DEV BUILD ' + bundle.build === h2.build && bundle.new.join(',') === h2.primary.join(',') && h2.order.every((b) => bundle.boards[b].list === (h2.primary.includes(b) ? 'new' : 'previous')),
+    if (PREV) check(bundle && bundle.selection === ({ extreme90p20: 'xb20-v1', extreme90p21: 'xb21-v1' }[ENTRY] || 'xb19-v2') && 'DEV BUILD ' + bundle.build === h2.build && bundle.new.join(',') === h2.primary.join(',') && h2.order.every((b) => bundle.boards[b].list === (h2.primary.includes(b) ? 'new' : 'previous')),
       `export: the new boards named (${bundle && bundle.new}), every board's list (new / previous) under its real id`);
     allErrors.push(...d.errors); allExternal.push(...d.external);
     await c2.close();

@@ -1,0 +1,70 @@
+{
+ "target": "EXTREME",
+ "facts": [],
+ "mechanic": "sequence,magnet",
+ "idea": "advance or be pulled: Sequence blocks turn when tapped with a clear lane, magnets drag them elsewhere - the order decides where their second arrows point",
+ "family": "F mixed (Sequence + two magnets)",
+ "map": [
+  ". . . Rv . . .",
+  ". . . . . . .",
+  ". . . . . . .",
+  "Y<* . . B>:^ . . .",
+  ". . . . . . .",
+  ". . . . . . .",
+  ". . . G^:< . . P>*"
+ ],
+ "frozen": [
+  [
+   0,
+   3
+  ],
+  [
+   3,
+   0
+  ],
+  [
+   3,
+   3
+  ],
+  [
+   6,
+   3
+  ],
+  [
+   6,
+   6
+  ]
+ ],
+ "max_positions": 2000,
+ "piece_free": 13,
+ "max_pieces": 17,
+ "shortcut_weight": 80,
+ "coverage_weight": 25,
+ "late_weight": 20,
+ "endgame_weight": 20,
+ "length_weight": 1.0,
+ "length_cap": 18,
+ "pressure_weight": 1.5,
+ "palette": "arrows",
+ "suffixes": [
+  ":^",
+  ":v",
+  ":<",
+  ":>",
+  "*"
+ ],
+ "suffix_rate": 0.3,
+ "suffix_max": {
+  "*": 3,
+  "=": 5,
+  "&A": 3,
+  "&B": 3
+ },
+ "crates_max": 0,
+ "seed": 192,
+ "size": "medium",
+ "max_solve_nodes": 300,
+ "redesign": "round 1 (SQX) reached 2 distinct mistakes; a second magnet and Sequence block",
+ "phase21_source": "data/dev/extreme90_p19/seed_SQX2.json",
+ "phase21_family": "sequence"
+}

@@ -1,0 +1,148 @@
+{
+ "SEQ_bankH2_s11_1": {
+  "A": {
+   "fingerprint": "a7f4400fb9e44439560d590b0a10ea5aeaa734890cd186d3fc7b21650aed86fb",
+   "hint_nodes": [
+    48,
+    37
+   ],
+   "parity": [
+    0,
+    0
+   ],
+   "portals": 0,
+   "position_cap": 3000,
+   "positions": 298,
+   "replay": true,
+   "solution": 22,
+   "solve_ms": 3.4,
+   "timeup_worst_ms": 2.3,
+   "timeup_worst_nodes": 49,
+   "winnable": 101
+  },
+  "B": {
+   "coverage": 0.91,
+   "decision_steps": 20,
+   "distinct_mistakes": 6,
+   "endgame_decision": true,
+   "last_decision": 20,
+   "late": 0.91,
+   "line": [
+    "r0c6^ [x1]",
+    "r0c5> [x1]",
+    "r0c4^ [x2]",
+    "r1c4^ [x2]",
+    "r1c5^ [x2]",
+    "r1c2> [x2]",
+    "r2c1^ [x3]",
+    "r2c2^ [x2]",
+    "r4c1^ [x2]",
+    "r4c0< [x2]",
+    "r4c2< [x2]",
+    "r3c2< [x1]",
+    "r4c3< advance [x1]",
+    "r4c4> [x1]",
+    "r5c2^ [x1]",
+    "r5c3> [x1]",
+    "r5c0> [x1]",
+    "r2c0v [x1]",
+    "r4c3v [x1]",
+    "r3c3< [x1]",
+    "r2c3v",
+    "r3c4^"
+   ],
+   "losing_per_step": [
+    1,
+    1,
+    2,
+    2,
+    2,
+    2,
+    3,
+    2,
+    2,
+    2,
+    2,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    0,
+    0
+   ],
+   "matters_lock": true,
+   "matters_sequence": true,
+   "mistakes": [
+    "r3c2<",
+    "r1c5^",
+    "r3c4^",
+    "r2c2^",
+    "r3c2^",
+    "r3c4>"
+   ],
+   "shortcut": 0,
+   "spinner_dependence": "unsolvable without it",
+   "without_lock": "without it: 14 decision steps, 4 distinct mistakes (with it: 20, 6)",
+   "without_sequence": "without it: 13 decision steps, 4 distinct mistakes (with it: 20, 6)"
+  },
+  "C": {
+   "decisions_k4_6_8": [
+    16,
+    14,
+    12
+   ],
+   "deepest": 16,
+   "greedy": {
+    "look2": 0,
+    "look4": 0,
+    "min_turn": 0,
+    "mobility": 0,
+    "safe": 0
+   },
+   "hidden_k6_8": [
+    19,
+    14
+   ],
+   "learner": {
+    "look4": 1,
+    "look6": 1
+   },
+   "look6_greedy": 0.025,
+   "opening": "2 / 3",
+   "pressure": {
+    "advances": 1,
+    "calm_prefix": 1,
+    "flips": 0,
+    "multi_turned": 4,
+    "prediction_share": 0.59,
+    "pulls": 0,
+    "rams": 0,
+    "signals": 3,
+    "spinners_turned": 11,
+    "trap_delay_median": 7,
+    "turns": 16,
+    "undo_proof": 0.77
+   },
+   "win_share": 0.339
+  },
+  "map": [
+   ". . . . G>@- Y> G^@-",
+   ". . Y>@- . R>@- P^ .",
+   "P>@ Y^@ R^ Yv . . .",
+   ". . Y<@~ R^@#B P^@~ . .",
+   "R^@- Y^@~ Gv@~ B<:v P^@~ . .",
+   "G^@~ . G^ P<@ . . .",
+   ". . . . . . ."
+  ],
+  "name": "SEQ_bankH2_s11_1",
+  "target": "EXTREME",
+  "verdict": "HUMAN-REVIEW CANDIDATE",
+  "why_a": [],
+  "why_b": []
+ }
+}

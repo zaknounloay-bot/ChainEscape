@@ -1,0 +1,155 @@
+{
+ "format": "ce-ta90-proto",
+ "v": 1,
+ "test": "ta90_n42",
+ "assist": {
+  "undo": 3,
+  "show_a_move": 0,
+  "hammer": 0
+ },
+ "note": "Development only. Phase 21 EXTREME candidate (?extreme90p21=1); never shared, never production. HUMAN-REVIEW CANDIDATE: technically validated, strategic quality unconfirmed by people.",
+ "boards": [
+  {
+   "id": "N42",
+   "accepted": true,
+   "label": "HUMAN-REVIEW CANDIDATE - EXPERIMENTAL, HUMAN DIFFICULTY UNVALIDATED",
+   "variant": "N42",
+   "design": "21SWI_bankA_s11_1",
+   "family": "C switch + spinners",
+   "primary": "spinner",
+   "target": "EXTREME (a design target, not a rating; never shown to players)",
+   "idea": "between two switches: two switch pieces flip the same target, which must leave between the two firings - while the spinners around it decide when its lane is open",
+   "source": "existing idea core data/dev/extreme90_bank/seed_A.json (data/dev/extreme90_p21/seed_SWI_bankA.json), grown by tools/ta90_search.gd --ops=v20 in the Phase 21 bounded search (data/dev/extreme90_p21/protocol.json), checked by tools/ta90_design.gd and tools/xb90_filler.gd",
+   "fingerprint": "2e61400846791306d990e0cfd677249c688ba3f9b19caa49f6e6c4ab2102b056",
+   "mechanics": [
+    "spinner",
+    "switch"
+   ],
+   "puzzle": {
+    "format": "ce-puzzle",
+    "v": 1,
+    "rules": 1,
+    "rows": 6,
+    "cols": 6,
+    "map": [
+     ". G^ . . . .",
+     "Y^@~ P^%A . P<@~ Rv@~ .",
+     "R^@ B<@~ B>&A . R< .",
+     ". R>@- . . . .",
+     "Y<@ B>@- . . Y>%A .",
+     "B>@ . . . . ."
+    ]
+   },
+   "design_report": {
+    "A": {
+     "fingerprint": "2e61400846791306d990e0cfd677249c688ba3f9b19caa49f6e6c4ab2102b056",
+     "hint_nodes": [
+      7,
+      42
+     ],
+     "parity": [
+      0,
+      0
+     ],
+     "portals": 0,
+     "position_cap": 3000,
+     "positions": 372,
+     "replay": true,
+     "solution": 14,
+     "solve_ms": 0.8,
+     "timeup_worst_ms": 4.5,
+     "timeup_worst_nodes": 147,
+     "winnable": 91
+    },
+    "B": {
+     "coverage": 0.86,
+     "decision_steps": 12,
+     "distinct_mistakes": 5,
+     "endgame_decision": true,
+     "last_decision": 12,
+     "late": 0.86,
+     "losing_per_step": [
+      3,
+      4,
+      3,
+      3,
+      3,
+      3,
+      2,
+      3,
+      1,
+      1,
+      1,
+      1,
+      0,
+      0
+     ],
+     "matters_switch": true,
+     "mistakes": [
+      "r3c1>",
+      "r4c4>",
+      "r5c0>",
+      "r1c1^",
+      "r4c1^"
+     ],
+     "shortcut": 0.017,
+     "spinner_dependence": "without it: 2 decision steps, 1 distinct mistakes (with it: 12, 5)",
+     "without_switch": "unsolvable without it"
+    },
+    "C": {
+     "decisions_k4_6_8": [
+      8,
+      6,
+      4
+     ],
+     "deepest": 12,
+     "greedy": {
+      "look2": 0.015,
+      "look4": 0.017,
+      "min_turn": 0,
+      "mobility": 0,
+      "safe": 0.01
+     },
+     "hidden_k6_8": [
+      17,
+      10
+     ],
+     "learner": {
+      "look4": 4,
+      "look6": 3
+     },
+     "look6_greedy": 0.075,
+     "opening": "3 / 6",
+     "pressure": {
+      "advances": 0,
+      "calm_prefix": 1,
+      "flips": 1,
+      "multi_turned": 2,
+      "prediction_share": 0.43,
+      "pulls": 0,
+      "rams": 0,
+      "signals": 0,
+      "spinners_turned": 6,
+      "trap_delay_median": 6,
+      "turns": 8,
+      "undo_proof": 0.86
+     },
+     "win_share": 0.245
+    },
+    "filler": {
+     "distinct": 5,
+     "pieces_tested": 14,
+     "steps": 12,
+     "trivial": [],
+     "trivial_removals": 0
+    },
+    "similarity": {
+     "closest_known": "N29",
+     "overlap": 0.3,
+     "closest_new": "N47",
+     "closest_new_overlap": 0.26
+    }
+   }
+  }
+ ]
+}

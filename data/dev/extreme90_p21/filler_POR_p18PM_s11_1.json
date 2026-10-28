@@ -1,0 +1,11 @@
+{
+ "POR_p18PM_s11_1": {
+  "distinct": 4,
+  "pieces_tested": 17,
+  "steps": 23,
+  "trivial": [
+   "r1c3 M"
+  ],
+  "trivial_removals": 1
+ }
+}

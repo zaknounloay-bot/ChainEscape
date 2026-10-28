@@ -1,0 +1,168 @@
+{
+ "format": "ce-ta90-proto",
+ "v": 1,
+ "test": "ta90_n45",
+ "assist": {
+  "undo": 3,
+  "show_a_move": 0,
+  "hammer": 0
+ },
+ "note": "Development only. Phase 21 EXTREME candidate (?extreme90p21=1); never shared, never production. HUMAN-REVIEW CANDIDATE: technically validated, strategic quality unconfirmed by people.",
+ "boards": [
+  {
+   "id": "N45",
+   "accepted": true,
+   "label": "HUMAN-REVIEW CANDIDATE - EXPERIMENTAL, HUMAN DIFFICULTY UNVALIDATED",
+   "variant": "N45",
+   "design": "21SEQ_bankH2_s11_1",
+   "family": "Sequence + lock + spinners",
+   "primary": "spinner",
+   "target": "EXTREME (a design target, not a rating; never shown to players)",
+   "idea": "a key that leaves in two steps: the Sequence key's advance turns the locked spinner without unlocking it; its escape unlocks and turns it again",
+   "source": "existing idea core data/dev/extreme90_bank/seed_H2.json (data/dev/extreme90_p21/seed_SEQ_bankH2.json), grown by tools/ta90_search.gd --ops=v20 in the Phase 21 bounded search (data/dev/extreme90_p21/protocol.json), checked by tools/ta90_design.gd and tools/xb90_filler.gd",
+   "fingerprint": "a7f4400fb9e44439560d590b0a10ea5aeaa734890cd186d3fc7b21650aed86fb",
+   "mechanics": [
+    "spinner",
+    "sequence",
+    "lock"
+   ],
+   "puzzle": {
+    "format": "ce-puzzle",
+    "v": 1,
+    "rules": 1,
+    "rows": 7,
+    "cols": 7,
+    "map": [
+     ". . . . G>@- Y> G^@-",
+     ". . Y>@- . R>@- P^ .",
+     "P>@ Y^@ R^ Yv . . .",
+     ". . Y<@~ R^@#B P^@~ . .",
+     "R^@- Y^@~ Gv@~ B<:v P^@~ . .",
+     "G^@~ . G^ P<@ . . .",
+     ". . . . . . ."
+    ]
+   },
+   "design_report": {
+    "A": {
+     "fingerprint": "a7f4400fb9e44439560d590b0a10ea5aeaa734890cd186d3fc7b21650aed86fb",
+     "hint_nodes": [
+      48,
+      37
+     ],
+     "parity": [
+      0,
+      0
+     ],
+     "portals": 0,
+     "position_cap": 3000,
+     "positions": 298,
+     "replay": true,
+     "solution": 22,
+     "solve_ms": 3.4,
+     "timeup_worst_ms": 2.3,
+     "timeup_worst_nodes": 49,
+     "winnable": 101
+    },
+    "B": {
+     "coverage": 0.91,
+     "decision_steps": 20,
+     "distinct_mistakes": 6,
+     "endgame_decision": true,
+     "last_decision": 20,
+     "late": 0.91,
+     "losing_per_step": [
+      1,
+      1,
+      2,
+      2,
+      2,
+      2,
+      3,
+      2,
+      2,
+      2,
+      2,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      0,
+      0
+     ],
+     "matters_lock": true,
+     "matters_sequence": true,
+     "mistakes": [
+      "r3c2<",
+      "r1c5^",
+      "r3c4^",
+      "r2c2^",
+      "r3c2^",
+      "r3c4>"
+     ],
+     "shortcut": 0,
+     "spinner_dependence": "unsolvable without it",
+     "without_lock": "without it: 14 decision steps, 4 distinct mistakes (with it: 20, 6)",
+     "without_sequence": "without it: 13 decision steps, 4 distinct mistakes (with it: 20, 6)"
+    },
+    "C": {
+     "decisions_k4_6_8": [
+      16,
+      14,
+      12
+     ],
+     "deepest": 16,
+     "greedy": {
+      "look2": 0,
+      "look4": 0,
+      "min_turn": 0,
+      "mobility": 0,
+      "safe": 0
+     },
+     "hidden_k6_8": [
+      19,
+      14
+     ],
+     "learner": {
+      "look4": 1,
+      "look6": 1
+     },
+     "look6_greedy": 0.025,
+     "opening": "2 / 3",
+     "pressure": {
+      "advances": 1,
+      "calm_prefix": 1,
+      "flips": 0,
+      "multi_turned": 4,
+      "prediction_share": 0.59,
+      "pulls": 0,
+      "rams": 0,
+      "signals": 3,
+      "spinners_turned": 11,
+      "trap_delay_median": 7,
+      "turns": 16,
+      "undo_proof": 0.77
+     },
+     "win_share": 0.339
+    },
+    "filler": {
+     "distinct": 6,
+     "pieces_tested": 21,
+     "steps": 20,
+     "trivial": [],
+     "trivial_removals": 0
+    },
+    "similarity": {
+     "closest_known": "N21",
+     "overlap": 0.39,
+     "closest_new": "N42",
+     "closest_new_overlap": 0.27
+    }
+   }
+  }
+ ]
+}

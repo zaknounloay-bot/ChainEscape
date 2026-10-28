@@ -1,0 +1,133 @@
+{
+ "SEQ_p17G_s11_1": {
+  "A": {
+   "fingerprint": "79ef8747e5b9aba58840bc05b7ba6d2b3f654b554fd7f91cdef1b279c3221faa",
+   "hint_nodes": [
+    231,
+    241
+   ],
+   "parity": [
+    0,
+    0
+   ],
+   "portals": 0,
+   "position_cap": 1500,
+   "positions": 833,
+   "replay": true,
+   "solution": 15,
+   "solve_ms": 10,
+   "timeup_worst_ms": 23.5,
+   "timeup_worst_nodes": 623,
+   "winnable": 145
+  },
+  "B": {
+   "coverage": 0.87,
+   "decision_steps": 13,
+   "distinct_mistakes": 5,
+   "endgame_decision": true,
+   "last_decision": 13,
+   "late": 0.87,
+   "line": [
+    "r0c0^ [x3]",
+    "r0c4^ [x3]",
+    "r0c6v [x2]",
+    "r0c5^ [x2]",
+    "r0c2> [x2]",
+    "r0c1v [x1]",
+    "r2c2^ [x1]",
+    "r3c2< advance [x1]",
+    "r4c3< [x2]",
+    "r3c3v [x2]",
+    "r3c2v [x1]",
+    "r2c3v [x1]",
+    "r2c4< [x1]",
+    "r3c4> advance",
+    "r3c4^"
+   ],
+   "losing_per_step": [
+    3,
+    3,
+    2,
+    2,
+    2,
+    1,
+    1,
+    1,
+    2,
+    2,
+    1,
+    1,
+    1,
+    0,
+    0
+   ],
+   "matters_pattern": true,
+   "matters_sequence": true,
+   "mistakes": [
+    "r0c1v",
+    "r0c5v",
+    "r3c4> advance",
+    "r0c1<",
+    "r3c2v"
+   ],
+   "shortcut": 0.06,
+   "spinner_dependence": "unsolvable without it",
+   "without_pattern": "without it: 13 decision steps, 4 distinct mistakes (with it: 13, 5)",
+   "without_sequence": "without it: 5 decision steps, 3 distinct mistakes (with it: 13, 5)"
+  },
+  "C": {
+   "decisions_k4_6_8": [
+    9,
+    7,
+    5
+   ],
+   "deepest": 13,
+   "greedy": {
+    "look2": 0.025,
+    "look4": 0.042,
+    "min_turn": 0.06,
+    "mobility": 0,
+    "safe": 0.01
+   },
+   "hidden_k6_8": [
+    14,
+    10
+   ],
+   "learner": {
+    "look4": 4,
+    "look6": 4
+   },
+   "look6_greedy": 0.108,
+   "opening": "5 / 8",
+   "pressure": {
+    "advances": 2,
+    "calm_prefix": 0,
+    "flips": 0,
+    "multi_turned": 3,
+    "prediction_share": 0.53,
+    "pulls": 0,
+    "rams": 0,
+    "signals": 3,
+    "spinners_turned": 4,
+    "trap_delay_median": 7,
+    "turns": 7,
+    "undo_proof": 0.77
+   },
+   "win_share": 0.174
+  },
+  "map": [
+   "B^@~ Gv@~ Y>@~ . Y^ Gv@ Gv@~",
+   ". . . . . . .",
+   ". . G^ Gv Pv@~ . .",
+   ". . B<:v R^@* P>:^ . .",
+   ". . . G<@~ . . .",
+   ". . . . . . .",
+   ". . . . . . ."
+  ],
+  "name": "SEQ_p17G_s11_1",
+  "target": "EXTREME",
+  "verdict": "HUMAN-REVIEW CANDIDATE",
+  "why_a": [],
+  "why_b": []
+ }
+}

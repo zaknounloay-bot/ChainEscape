@@ -1,0 +1,13 @@
+{'key': 'POR_p18PM_s11_1', 'stage': 'report', 'decision': 'rejected', 'why': "filler: 1 trivial removals ['r1c3 M']"}
+{'key': 'ARM_p18AR2_s11_1', 'stage': 'report', 'decision': 'ACCEPTED', 'why': ''}
+{'key': 'SWI_bankD_s11_1', 'stage': 'report', 'decision': 'rejected', 'why': 'gate marginal (without it: 15 decision steps, 6 distinct mistakes (with it: 14, 6))'}
+{'key': 'MAG_p18MX3_s11_2', 'stage': 'report', 'decision': 'rejected', 'why': 'lock marginal (without it: 18 decision steps, 4 distinct mistakes (with it: 18, 5))'}
+{'key': 'SPI_p17H_s11_1', 'stage': 'report', 'decision': 'rejected', 'why': "filler: 1 trivial removals ['r2c2 P^@~']"}
+{'key': 'SEQ_p17G_s11_1', 'stage': 'report', 'decision': 'rejected', 'why': 'pattern marginal (without it: 13 decision steps, 4 distinct mistakes (with it: 13, 5))'}
+{'key': 'POR_p18SPP_s11_1', 'stage': 'report', 'decision': 'ACCEPTED', 'why': ''}
+{'key': 'ARM_p19AS_s11_1', 'stage': 'report', 'decision': 'ACCEPTED', 'why': ''}
+{'key': 'SWI_bankA_s11_1', 'stage': 'report', 'decision': 'ACCEPTED', 'why': ''}
+{'key': 'SPI_bankB_s11_1', 'stage': 'report', 'decision': 'ACCEPTED', 'why': ''}
+{'key': 'SEQ_p18MS2_s11_1', 'stage': 'report', 'decision': 'ACCEPTED', 'why': ''}
+{'key': 'SEQ_bankH2_s11_1', 'stage': 'report', 'decision': 'ACCEPTED', 'why': ''}
+accepted 7, reports 12

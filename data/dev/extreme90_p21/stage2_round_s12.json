@@ -1,0 +1,708 @@
+{
+ "pool": [
+  {
+   "key": "ARM_p18AR2_s12_1",
+   "core": "ARM_p18AR2",
+   "family": "armor",
+   "map": [
+    ". . . . R^= Y^* .",
+    ". . . . . . .",
+    ". B>* P< . Y>* . .",
+    "Y<* . Gv* B> P^= G^= .",
+    ". . . . . . .",
+    ". . Bv= G>* . . .",
+    ". . Bv= . . . ."
+   ],
+   "score": 141.03,
+   "search": {
+    "distinct": 4,
+    "steps": 15,
+    "shortcut": 0.075,
+    "positions": 655,
+    "pieces": 13
+   },
+   "closest": {
+    "known": "N32",
+    "overlap": 0.45,
+    "pool": "SEQ_p18MS2_s12_1",
+    "pool_overlap": 0.29
+   }
+  },
+  {
+   "key": "MAG_p17E_s12_1",
+   "core": "MAG_p17E",
+   "family": "magnet",
+   "map": [
+    ". . . . . . Rv@-",
+    ". R^@ B<@~ Y^@ . Bv .",
+    ". Y<* B^@~ R^@~ . G^@ Y<",
+    ". Rv@ Y>@~ Pv@ . Rv .",
+    ". . . . . . .",
+    ". R^@ R<@ . . . .",
+    ". G< . . . . ."
+   ],
+   "score": 164.53,
+   "search": {
+    "distinct": 6,
+    "steps": 15,
+    "shortcut": 0,
+    "positions": 717,
+    "pieces": 17
+   },
+   "closest": {
+    "known": "N27",
+    "overlap": 0.43,
+    "pool": "SPI_p17A_s12_1",
+    "pool_overlap": 0.29
+   }
+  },
+  {
+   "key": "MAG_p17E_s12_2",
+   "core": "MAG_p17E",
+   "family": "magnet",
+   "map": [
+    ". . . . . . .",
+    ". . B<@~ Y^@ . Bv R<@-",
+    ". Y<* B^@~ Rv@- . G^@ Y<",
+    ". Rv@ Y>@~ Pv@ . Rv .",
+    ". . . . . . .",
+    ". R^@~ R<@ . . R>@ .",
+    ". G> . . . . ."
+   ],
+   "score": 164.47,
+   "search": {
+    "distinct": 6,
+    "steps": 15,
+    "shortcut": 0,
+    "positions": 730,
+    "pieces": 17
+   },
+   "closest": {
+    "known": "N27",
+    "overlap": 0.43,
+    "pool": "SPI_p17A_s12_1",
+    "pool_overlap": 0.28
+   }
+  },
+  {
+   "key": "MAG_p18MG_s12_1",
+   "core": "MAG_p18MG",
+   "family": "magnet",
+   "map": [
+    "Rv . . . Yv* . .",
+    ". R>* . G^* Y>* . .",
+    ". Y<* . Bv* . . Y>*",
+    "Y<* Y^ . B^ G< G>* P^*",
+    "B<* R^* . . . . .",
+    ". P^* . . . . .",
+    ". . . . . . ."
+   ],
+   "score": 140.15,
+   "search": {
+    "distinct": 5,
+    "steps": 15,
+    "shortcut": 0.05,
+    "positions": 462,
+    "pieces": 17
+   },
+   "closest": {
+    "known": "ARM_p18AR2_s11_1",
+    "overlap": 0.39,
+    "pool": "SEQ_p18MS2_s12_1",
+    "pool_overlap": 0.36
+   }
+  },
+  {
+   "key": "MAG_p18MG_s12_2",
+   "core": "MAG_p18MG",
+   "family": "magnet",
+   "map": [
+    "Rv . . . Yv* . .",
+    ". R>* . G^* Y>* . .",
+    ". Y<* . Bv* . Gv* Y>*",
+    "Y<* Y^* . B^ G> . P^*",
+    "B<* R^* . . . . .",
+    ". . . . . . .",
+    ". . . . . . ."
+   ],
+   "score": 139.54,
+   "search": {
+    "distinct": 5,
+    "steps": 14,
+    "shortcut": 0,
+    "positions": 696,
+    "pieces": 16
+   },
+   "closest": {
+    "known": "N31",
+    "overlap": 0.39,
+    "pool": "MAG_p18MG_s12_1",
+    "pool_overlap": 0.83
+   }
+  },
+  {
+   "key": "MAG_p18MX1_s12_1",
+   "core": "MAG_p18MX1",
+   "family": "magnet",
+   "map": [
+    ". . . . . . .",
+    "Rv%A Gv&A . . . Bv .",
+    ". B<* . . P^ . Y<*",
+    "Y<* G^ . R> G> Y> Gv*",
+    ". . . . . . .",
+    "Y<* . . Y^ . . .",
+    "Pv&A . . P^%A . Y<&A ."
+   ],
+   "score": 146.95,
+   "search": {
+    "distinct": 5,
+    "steps": 15,
+    "shortcut": 0,
+    "positions": 362,
+    "pieces": 17
+   },
+   "closest": {
+    "known": "ARM_p18AR2_s11_1",
+    "overlap": 0.45,
+    "pool": "SEQ_p18MS2_s12_1",
+    "pool_overlap": 0.33
+   }
+  },
+  {
+   "key": "MAG_p18MX1_s12_2",
+   "core": "MAG_p18MX1",
+   "family": "magnet",
+   "map": [
+    ". . . . . . .",
+    "Rv%A Gv&A Y> . . Rv* .",
+    ". B<* . . P^ . Y<*",
+    "Y<* G^ . R> Gv . Gv*",
+    ". . . . . . .",
+    "Y<* . . Y^ . . .",
+    "Pv&A . . P^%A . Y<&A ."
+   ],
+   "score": 146.46,
+   "search": {
+    "distinct": 5,
+    "steps": 15,
+    "shortcut": 0,
+    "positions": 483,
+    "pieces": 17
+   },
+   "closest": {
+    "known": "ARM_p18AR2_s11_1",
+    "overlap": 0.45,
+    "pool": "SEQ_p18MS2_s12_1",
+    "pool_overlap": 0.33
+   }
+  },
+  {
+   "key": "POR_p18PM_s12_1",
+   "core": "POR_p18PM",
+   "family": "portal",
+   "map": [
+    ". . M . . . .",
+    ". . Y<:v . . . .",
+    "R>:< B>:v M OA P<:< Y<:v B>:<",
+    ". . . . . . .",
+    ". . Y>:< . . . P^:>",
+    ". . R<:< . . OA .",
+    ". . R^:> . . . Y^"
+   ],
+   "score": 157.94,
+   "search": {
+    "distinct": 4,
+    "steps": 20,
+    "shortcut": 0.025,
+    "positions": 482,
+    "pieces": 15
+   },
+   "closest": {
+    "known": "N38",
+    "overlap": 0.32,
+    "pool": "SEQ_p18MS2_s12_1",
+    "pool_overlap": 0.21
+   }
+  },
+  {
+   "key": "POR_p18PM_s12_2",
+   "core": "POR_p18PM",
+   "family": "portal",
+   "map": [
+    ". . . . . . .",
+    ". . Y<:v . . . .",
+    "R>:< B>:v M OA P<:< Y< B<:<",
+    ". P<:v . . . . .",
+    ". . Y>:< . . . P^:>",
+    ". . R<:< . . OA .",
+    ". . R^:> . . . Y^"
+   ],
+   "score": 157.37,
+   "search": {
+    "distinct": 4,
+    "steps": 21,
+    "shortcut": 0,
+    "positions": 731,
+    "pieces": 15
+   },
+   "closest": {
+    "known": "N1",
+    "overlap": 0.35,
+    "pool": "POR_p18PM_s12_1",
+    "pool_overlap": 0.88
+   }
+  },
+  {
+   "key": "POR_p18SPP_s12_1",
+   "core": "POR_p18SPP",
+   "family": "portal",
+   "map": [
+    ". . . . . R>@- G^",
+    ". . . Gv@~ . G>@- B>@~",
+    ". OA . R<@ G^ . .",
+    ". . . . . . .",
+    ". . . . . . .",
+    "G<@ Y^@~ P^@ Gv . OA .",
+    "R^@ Rv@- P^@~ . B< . ."
+   ],
+   "score": 145.94,
+   "search": {
+    "distinct": 6,
+    "steps": 13,
+    "shortcut": 0,
+    "positions": 703,
+    "pieces": 17
+   },
+   "closest": {
+    "known": "POR_p18SPP_s11_1",
+    "overlap": 0.48,
+    "pool": "SPI_p17A_s12_1",
+    "pool_overlap": 0.23
+   }
+  },
+  {
+   "key": "POR_p18SPP_s12_2",
+   "core": "POR_p18SPP",
+   "family": "portal",
+   "map": [
+    ". . . . . R<@- G^",
+    ". . . Gv@~ . G>@- B^@",
+    ". OA . R<@ G^ P<@~ .",
+    ". . . . . . .",
+    ". . . . . . .",
+    "G<@ Y^@~ P^@ Gv@~ . OA .",
+    ". Rv@- P^@~ . B<@ . ."
+   ],
+   "score": 141.86,
+   "search": {
+    "distinct": 6,
+    "steps": 13,
+    "shortcut": 0,
+    "positions": 760,
+    "pieces": 17
+   },
+   "closest": {
+    "known": "POR_p18SPP_s11_1",
+    "overlap": 0.38,
+    "pool": "SPI_p17A_s12_1",
+    "pool_overlap": 0.23
+   }
+  },
+  {
+   "key": "POR_p19PX_s12_1",
+   "core": "POR_p19PX",
+   "family": "portal",
+   "map": [
+    "G< . Gv . . . .",
+    "P^ . . . . . .",
+    "Y^ B>&A M OA . . .",
+    ". . . . . . .",
+    ". . . . . . .",
+    ". . R<%A Y>&A OA R< .",
+    "P^%A R> B> P> G<&A Y^ ."
+   ],
+   "score": 162.1,
+   "search": {
+    "distinct": 6,
+    "steps": 17,
+    "shortcut": 0,
+    "positions": 395,
+    "pieces": 17
+   },
+   "closest": {
+    "known": "N37",
+    "overlap": 0.62,
+    "pool": "SPI_p17A_s12_1",
+    "pool_overlap": 0.13
+   }
+  },
+  {
+   "key": "POR_p19PX_s12_2",
+   "core": "POR_p19PX",
+   "family": "portal",
+   "map": [
+    "G^ . Gv Y< . . .",
+    "P^&A . . . . . .",
+    "Y^ B>&A M OA . . .",
+    ". . . . . . .",
+    ". . . . . . .",
+    ". . R<%A Y>&A OA R< .",
+    "P^%A R> B> P> . Y^ ."
+   ],
+   "score": 162.05,
+   "search": {
+    "distinct": 7,
+    "steps": 17,
+    "shortcut": 0,
+    "positions": 409,
+    "pieces": 17
+   },
+   "closest": {
+    "known": "N37",
+    "overlap": 0.62,
+    "pool": "SPI_p17A_s12_1",
+    "pool_overlap": 0.13
+   }
+  },
+  {
+   "key": "SEQ_p17G_s12_1",
+   "core": "SEQ_p17G",
+   "family": "sequence",
+   "map": [
+    ". . . . . P>@ .",
+    ". . . . Y<@- G>@- .",
+    ". . . Gv Y>@ Y>@~ .",
+    ". . B<:v R^@* P>:^ G>@- Bv@-",
+    ". . B^@~ Yv . . .",
+    ". . . . . . .",
+    ". . . . . . ."
+   ],
+   "score": 162.79,
+   "search": {
+    "distinct": 6,
+    "steps": 12,
+    "shortcut": 0,
+    "positions": 377,
+    "pieces": 13
+   },
+   "closest": {
+    "known": "N30",
+    "overlap": 0.53,
+    "pool": "SPI_p17A_s12_1",
+    "pool_overlap": 0.27
+   }
+  },
+  {
+   "key": "SEQ_p17G_s12_2",
+   "core": "SEQ_p17G",
+   "family": "sequence",
+   "map": [
+    ". . . . . P>@ .",
+    ". . . . Y<@- G>@- .",
+    ". . . Gv Y>@ Y>@~ .",
+    ". . B<:v R^@* P>:^ G>@- B>@-",
+    ". . . Yv@ . . Yv@~",
+    ". . . . . . .",
+    ". . . . . . ."
+   ],
+   "score": 160.12,
+   "search": {
+    "distinct": 6,
+    "steps": 12,
+    "shortcut": 0,
+    "positions": 669,
+    "pieces": 13
+   },
+   "closest": {
+    "known": "N28",
+    "overlap": 0.53,
+    "pool": "SPI_p17A_s12_1",
+    "pool_overlap": 0.31
+   }
+  },
+  {
+   "key": "SEQ_p18MS2_s12_1",
+   "core": "SEQ_p18MS2",
+   "family": "sequence",
+   "map": [
+    ". . . Gv . R^:> Pv:v",
+    ". . . Yv:< Bv:< . .",
+    "B>:^ . B>:^ M . Y^:> .",
+    ". . . Y>:> M G^:v .",
+    ". . . . . . .",
+    ". . . G>:> R^ . .",
+    ". . . Y^:v . . ."
+   ],
+   "score": 160.39,
+   "search": {
+    "distinct": 6,
+    "steps": 24,
+    "shortcut": 0,
+    "positions": 504,
+    "pieces": 15
+   },
+   "closest": {
+    "known": "N32",
+    "overlap": 0.36,
+    "pool": "SPI_p17A_s12_1",
+    "pool_overlap": 0.1
+   }
+  },
+  {
+   "key": "SEQ_p18MS2_s12_2",
+   "core": "SEQ_p18MS2",
+   "family": "sequence",
+   "map": [
+    ". . . Gv . R^:> Pv",
+    ". . . Yv:< Bv:< . Yv",
+    "B>:^ . B>:^ M . Y^:> Yv",
+    "M . . Y>:> M G^:v .",
+    ". . . . . . .",
+    ". . . G>:> R^ . .",
+    ". . . Y^:v . . ."
+   ],
+   "score": 160.28,
+   "search": {
+    "distinct": 6,
+    "steps": 25,
+    "shortcut": 0.025,
+    "positions": 526,
+    "pieces": 18
+   },
+   "closest": {
+    "known": "N32",
+    "overlap": 0.39,
+    "pool": "SEQ_p18MS2_s12_1",
+    "pool_overlap": 0.83
+   }
+  },
+  {
+   "key": "SPI_p17A_s12_1",
+   "core": "SPI_p17A",
+   "family": "spinner",
+   "map": [
+    "Gv@ . . . . G< .",
+    "B>@~ Yv Gv Rv . P^@~ .",
+    "Pv B^@ R^@- G^@ Y> . .",
+    "G<@~ P<@- Bv Y<@~ B^@ . .",
+    "G>@- Y< Y>@- . . . .",
+    "Yv@- Gv@ Bv@~ . . . .",
+    ". . G^@ . . . ."
+   ],
+   "score": 166.89,
+   "search": {
+    "distinct": 6,
+    "steps": 22,
+    "shortcut": 0,
+    "positions": 741,
+    "pieces": 24
+   },
+   "closest": {
+    "known": "N24",
+    "overlap": 0.36,
+    "pool": "",
+    "pool_overlap": 0
+   }
+  },
+  {
+   "key": "SPI_p17A_s12_2",
+   "core": "SPI_p17A",
+   "family": "spinner",
+   "map": [
+    "Gv . . . . G< .",
+    "B>@~ Yv Gv Rv . P^@ .",
+    "Pv B^@ R^@- G^@ Y> . Yv@",
+    "G<@ P<@- Bv Y<@~ B^@ . .",
+    "G>@- Y< Y>@- . . . .",
+    "Yv@- Gv@ Bv@~ . . . .",
+    ". . G^@ . . . ."
+   ],
+   "score": 166.04,
+   "search": {
+    "distinct": 6,
+    "steps": 23,
+    "shortcut": 0,
+    "positions": 851,
+    "pieces": 25
+   },
+   "closest": {
+    "known": "N24",
+    "overlap": 0.36,
+    "pool": "SPI_p17A_s12_1",
+    "pool_overlap": 0.92
+   }
+  },
+  {
+   "key": "SPI_p17H_s12_1",
+   "core": "SPI_p17H",
+   "family": "spinner",
+   "map": [
+    ". R<@- . . B<@~ .",
+    ". R< G> . G<@ Bv@~",
+    "G^@~ B^@~ P^@~ Y< P>@ .",
+    "Rv Gv R<@ G>@~ B^@- .",
+    ". . R^@- . . .",
+    ". . . . . ."
+   ],
+   "score": 162.3,
+   "search": {
+    "distinct": 6,
+    "steps": 15,
+    "shortcut": 0.2,
+    "positions": 697,
+    "pieces": 17
+   },
+   "closest": {
+    "known": "N29",
+    "overlap": 0.48,
+    "pool": "SPI_p17A_s12_1",
+    "pool_overlap": 0.37
+   }
+  },
+  {
+   "key": "SPI_p17H_s12_2",
+   "core": "SPI_p17H",
+   "family": "spinner",
+   "map": [
+    ". . . . B>@~ .",
+    ". R< G> R^@~ G<@ Bv@~",
+    "G^@~ B^@~ P^@~ Y< P>@ .",
+    "R<@- Gv R<@ G>@~ B^@- .",
+    ". . R^@- . . .",
+    ". . . . . ."
+   ],
+   "score": 160.81,
+   "search": {
+    "distinct": 6,
+    "steps": 15,
+    "shortcut": 0.05,
+    "positions": 994,
+    "pieces": 17
+   },
+   "closest": {
+    "known": "N24",
+    "overlap": 0.42,
+    "pool": "SPI_p17A_s12_1",
+    "pool_overlap": 0.37
+   }
+  },
+  {
+   "key": "SWI_bankA_s12_1",
+   "core": "SWI_bankA",
+   "family": "switch_gate",
+   "map": [
+    ". P<@ G^@~ . . Bv@",
+    "Gv@ P^%A . . . G>@-",
+    ". G>@ B>&A . R< R>",
+    ". . . . . .",
+    "G^ G>@~ . . Y>%A .",
+    ". G<@~ . . . ."
+   ],
+   "score": 120.63,
+   "search": {
+    "distinct": 4,
+    "steps": 11,
+    "shortcut": 0.075,
+    "positions": 535,
+    "pieces": 14
+   },
+   "closest": {
+    "known": "N20",
+    "overlap": 0.42,
+    "pool": "SPI_p17A_s12_1",
+    "pool_overlap": 0.21
+   }
+  },
+  {
+   "key": "SWI_bankA_s12_2",
+   "core": "SWI_bankA",
+   "family": "switch_gate",
+   "map": [
+    ". P<@ G^@~ . . Bv@",
+    "Gv@ P^%A . . . G<@",
+    ". G>@ B>&A . R< R>@-",
+    ". . . . . .",
+    "G^@- G>@~ . . Y>%A .",
+    ". Y>@~ . . . ."
+   ],
+   "score": 120.41,
+   "search": {
+    "distinct": 4,
+    "steps": 11,
+    "shortcut": 0.075,
+    "positions": 590,
+    "pieces": 14
+   },
+   "closest": {
+    "known": "SWI_bankA_s11_1",
+    "overlap": 0.42,
+    "pool": "SPI_p17A_s12_1",
+    "pool_overlap": 0.25
+   }
+  },
+  {
+   "key": "SWI_bankD_s12_1",
+   "core": "SWI_bankD",
+   "family": "switch_gate",
+   "map": [
+    ". . . Yv Y<@~ . .",
+    "Y<@~ . Yv@~ Gv . P^@- P^@~",
+    "R>@ . R> XA Rv@- Y>%B .",
+    ". B<&B . . Gv@~ G^+A= .",
+    ". . . . . . .",
+    ". . . . . . .",
+    "P^%B . . Gv@~ B>@~ . ."
+   ],
+   "score": 149.88,
+   "search": {
+    "distinct": 6,
+    "steps": 16,
+    "shortcut": 0,
+    "positions": 455,
+    "pieces": 18
+   },
+   "closest": {
+    "known": "N16",
+    "overlap": 0.42,
+    "pool": "SEQ_p18MS2_s12_1",
+    "pool_overlap": 0.21
+   }
+  },
+  {
+   "key": "SWI_bankD_s12_2",
+   "core": "SWI_bankD",
+   "family": "switch_gate",
+   "map": [
+    ". . . Yv Y<@~ . .",
+    "Y< . . Gv@- . P^@- P^@~",
+    "R>@ . R>@ XA Rv@- Y>%B .",
+    ". B<&B . P>@ Gv@~ G^+A= .",
+    ". . . . . . .",
+    ". . . . . . .",
+    "P^%B . . Gv@~ B>@~ . ."
+   ],
+   "score": 148.11,
+   "search": {
+    "distinct": 6,
+    "steps": 16,
+    "shortcut": 0,
+    "positions": 397,
+    "pieces": 18
+   },
+   "closest": {
+    "known": "N16",
+    "overlap": 0.33,
+    "pool": "SPI_p17A_s12_1",
+    "pool_overlap": 0.3
+   }
+  }
+ ],
+ "order": [
+  "POR_p18PM_s12_1",
+  "SWI_bankD_s12_2",
+  "MAG_p18MG_s12_1",
+  "SPI_p17A_s12_1",
+  "SEQ_p18MS2_s12_1",
+  "POR_p18SPP_s12_2"
+ ]
+}

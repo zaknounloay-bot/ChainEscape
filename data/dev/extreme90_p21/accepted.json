@@ -1,0 +1,155 @@
+{
+ "N39": {
+  "key": "ARM_p18AR2_s11_1",
+  "fp": "892e99ae1e7e527987e7770eb2d4f962dd98aca2940ad165653eeb85cbc03c39",
+  "family": "D/C rammer + magnet",
+  "mechanics": [
+   "armor",
+   "magnet"
+  ],
+  "closest_known": [
+   "N35",
+   0.39
+  ],
+  "closest_new": [
+   "N46",
+   0.39
+  ]
+ },
+ "N40": {
+  "key": "POR_p18SPP_s11_1",
+  "fp": "3533e6982f8833ff882134e4660a449f3e7fe0de49cc0ce629939fbd5ec5ef1f",
+  "family": "H/B spinner + portal",
+  "mechanics": [
+   "spinner",
+   "portal"
+  ],
+  "closest_known": [
+   "N34",
+   0.38
+  ],
+  "closest_new": [
+   "N47",
+   0.31
+  ]
+ },
+ "N41": {
+  "key": "ARM_p19AS_s11_1",
+  "fp": "f3531d7f7261b38effb7fd532fea36e1e27c1a96d8c837099d0e28a93cced400",
+  "family": "E rammer / armor + switch",
+  "mechanics": [
+   "armor",
+   "switch"
+  ],
+  "closest_known": [
+   "N35",
+   0.35
+  ],
+  "closest_new": [
+   "N46",
+   0.24
+  ]
+ },
+ "N42": {
+  "key": "SWI_bankA_s11_1",
+  "fp": "2e61400846791306d990e0cfd677249c688ba3f9b19caa49f6e6c4ab2102b056",
+  "family": "C switch + spinners",
+  "mechanics": [
+   "spinner",
+   "switch"
+  ],
+  "closest_known": [
+   "N29",
+   0.3
+  ],
+  "closest_new": [
+   "N47",
+   0.26
+  ]
+ },
+ "N43": {
+  "key": "SPI_bankB_s11_1",
+  "fp": "e31f26fbfd26e0ab66288c719b1b16ac33fcaf9fe7967fd8776d315cd0dfda33",
+  "family": "spinner pattern + armor",
+  "mechanics": [
+   "spinner",
+   "pattern",
+   "armor"
+  ],
+  "closest_known": [
+   "N30",
+   0.38
+  ],
+  "closest_new": [
+   "N47",
+   0.22
+  ]
+ },
+ "N44": {
+  "key": "SEQ_p18MS2_s11_1",
+  "fp": "b9ce007c67c1f51e1727b18ca41db8eb32f25f15d5802a7e9c30ab2018bf79fc",
+  "family": "A/F movable + Sequence",
+  "mechanics": [
+   "movable",
+   "sequence"
+  ],
+  "closest_known": [
+   "N31",
+   0.36
+  ],
+  "closest_new": [
+   "N46",
+   0.31
+  ]
+ },
+ "N45": {
+  "key": "SEQ_bankH2_s11_1",
+  "fp": "a7f4400fb9e44439560d590b0a10ea5aeaa734890cd186d3fc7b21650aed86fb",
+  "family": "Sequence + lock + spinners",
+  "mechanics": [
+   "spinner",
+   "sequence",
+   "lock"
+  ],
+  "closest_known": [
+   "N21",
+   0.39
+  ],
+  "closest_new": [
+   "N42",
+   0.27
+  ]
+ },
+ "N46": {
+  "key": "MAG_p18MG_s12_1",
+  "fp": "7e721e1513c712d2cac3f05688e0bfcdbfcab3716a950049a3693ff461d896ca",
+  "family": "C magnet relocation",
+  "mechanics": [
+   "magnet"
+  ],
+  "closest_known": [
+   "N32",
+   0.38
+  ],
+  "closest_new": [
+   "N39",
+   0.39
+  ]
+ },
+ "N47": {
+  "key": "SPI_p17A_s12_1",
+  "fp": "89ba0dbdcdcb5ded036f58c75e4e7b6ce54d7a4655443446ff4cf1065249fe05",
+  "family": "spinner domino",
+  "mechanics": [
+   "spinner"
+  ],
+  "closest_known": [
+   "N24",
+   0.36
+  ],
+  "closest_new": [
+   "N40",
+   0.31
+  ]
+ }
+}

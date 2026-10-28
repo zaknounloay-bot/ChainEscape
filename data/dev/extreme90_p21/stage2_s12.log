@@ -1,0 +1,5 @@
+{'key': 'POR_p18PM_s12_1', 'stage': 'report', 'decision': 'rejected', 'why': "filler: 1 trivial removals ['r0c2 M']"}
+{'key': 'SWI_bankD_s12_2', 'stage': 'report', 'decision': 'rejected', 'why': 'gate marginal (without it: 16 decision steps, 5 distinct mistakes (with it: 16, 6))'}
+{'key': 'MAG_p18MG_s12_1', 'stage': 'report', 'decision': 'ACCEPTED', 'why': ''}
+{'key': 'SPI_p17A_s12_1', 'stage': 'report', 'decision': 'ACCEPTED', 'why': ''}
+accepted 9, reports 16

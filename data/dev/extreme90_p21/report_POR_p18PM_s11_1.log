@@ -1,0 +1,18 @@
+Godot Engine v4.3.stable.official.77dcf97d8 - https://godotengine.org
+
+known boards: 9498
+known boards incl. T1-T5 and the demos: 9498; played boards for the near-copy guard: 333
+
+=== POR_p18PM_s11_1 (target EXTREME, 17 pieces) ===
+   . . Rv:^ . . R^:> .
+   . . . M . Y^:> .
+   B>:^ B>:v M OA . R^:^ B<:>
+   . . Y>:^ R^:v . Y^:^ .
+   . . . . . . B^:>
+   . . Yv:v . . OA .
+   . . . . . . Y^
+   solution: r0c5^ advance [x1], r0c5> [x1], r1c5^ advance [x1], r1c5> [x1], r2c5^ advance [x1], r2c5^ [x1], r3c5^ advance [x1], r3c5^ [x1], r3c3^ advance [x1], r3c3v [x1], r3c2> advance [x1], r5c2v advance [x1], r5c2v [x1], r2c6< advance [x1], r2c6> [x1], r4c6^ advance [x1], r4c6> [x1], r6c6^ [x1], r3c2^ push [x1], r2c1> advance [x1], r2c1v, r0c2v push [x1], r0c2^ [x1], r2c0> push [x1], r2c0^, r3c2^
+   A {"fingerprint":"43d386eecb115dc6e7fc36bdb38338e886222ad23c55bd4315b11406a32dbc53","hint_nodes":[48,557],"parity":[0,0],"portals":2,"position_cap":3000,"positions":713,"replay":true,"solution":26,"solve_ms":4,"timeup_worst_ms":20,"timeup_worst_nodes":567,"winnable":127}
+   B {"coverage":0.88,"decision_steps":23,"distinct_mistakes":4,"endgame_decision":true,"last_decision":24,"late":0.92,"line(see above)":["r0c5^ advance [x1]","r0c5> [x1]","r1c5^ advance [x1]","r1c5> [x1]","r2c5^ advance [x1]","r2c5^ [x1]","r3c5^ advance [x1]","r3c5^ [x1]","r3c3^ advance [x1]","r3c3v [x1]","r3c2> advance [x1]","r5c2v advance [x1]","r5c2v [x1]","r2c6< advance [x1]","r2c6> [x1]","r4c6^ advance [x1]","r4c6> [x1]","r6c6^ [x1]","r3c2^ push [x1]","r2c1> advance [x1]","r2c1v","r0c2v push [x1]","r0c2^ [x1]","r2c0> push [x1]","r2c0^","r3c2^"],"losing_per_step":[1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,1,1,1,0,0],"matters_movable":true,"matters_portal":true,"matters_sequence":true,"mistakes":["r2c1> push","r0c2v push","r2c0> advance","r3c2^ push"],"shortcut":0,"without_movable":"unsolvable without it","without_portal":"without it: 12 decision steps, 3 distinct mistakes (with it: 23, 4)","without_sequence":"unsolvable without it"}
+   C {"decisions_k4_6_8":[21,19,18],"deepest":26,"greedy":{"look2":0,"look4":0,"min_turn":0,"mobility":0,"safe":0},"hidden_k6_8":[19,18],"learner":{"look4":1,"look6":0},"look6_greedy":0.008,"opening":"2 / 3","pressure":{"advances":10,"calm_prefix":0,"flips":0,"multi_turned":0,"prediction_share":0.38,"pulls":0,"rams":0,"signals":3,"spinners_turned":0,"trap_delay_median":14,"turns":0,"undo_proof":0.91},"win_share":0.178}
+   VERDICT: HUMAN-REVIEW CANDIDATE

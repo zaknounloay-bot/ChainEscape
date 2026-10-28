@@ -1,0 +1,704 @@
+{
+ "accepted": [
+  {
+   "key": "ARM_p18AR2_s11_1",
+   "core": "ARM_p18AR2",
+   "family": "armor",
+   "map": [
+    "P>= Rv= Bv= R^= . P^* .",
+    "Y>= . . Y^* . . .",
+    ". . . . . . .",
+    "Y<* . . B> . G^= .",
+    ". . . . . . .",
+    ". Y<= Bv= Gv* . R<= .",
+    ". . R>= . . . ."
+   ],
+   "score": 143.16,
+   "search": {
+    "distinct": 4,
+    "steps": 22,
+    "shortcut": 0.025,
+    "positions": 962,
+    "pieces": 15
+   },
+   "closest": {
+    "known": "N35",
+    "overlap": 0.39,
+    "pool": "POR_p18PM_s11_1",
+    "pool_overlap": 0.24
+   },
+   "filler": {
+    "distinct": 4,
+    "pieces_tested": 15,
+    "steps": 22,
+    "trivial": [],
+    "trivial_removals": 0
+   },
+   "report": "data/dev/extreme90_p21/report_ARM_p18AR2_s11_1.json",
+   "fingerprint": "892e99ae1e7e527987e7770eb2d4f962dd98aca2940ad165653eeb85cbc03c39"
+  },
+  {
+   "key": "POR_p18SPP_s11_1",
+   "core": "POR_p18SPP",
+   "family": "portal",
+   "map": [
+    ". . . . B< . .",
+    ". . . Rv@- . . .",
+    ". OA . R<@ G^ . .",
+    "B^@~ B^@- . . . . .",
+    ". G<@- Rv@~ . . . .",
+    "Y>@~ Y>@ G^@- . . OA .",
+    "Y>@- . P^@ Pv@ P> . ."
+   ],
+   "score": 145.79,
+   "search": {
+    "distinct": 6,
+    "steps": 13,
+    "shortcut": 0,
+    "positions": 553,
+    "pieces": 17
+   },
+   "closest": {
+    "known": "N34",
+    "overlap": 0.38,
+    "pool": "SPI_p17H_s11_1",
+    "pool_overlap": 0.25
+   },
+   "filler": {
+    "distinct": 6,
+    "pieces_tested": 17,
+    "steps": 13,
+    "trivial": [],
+    "trivial_removals": 0
+   },
+   "report": "data/dev/extreme90_p21/report_POR_p18SPP_s11_1.json",
+   "fingerprint": "3533e6982f8833ff882134e4660a449f3e7fe0de49cc0ce629939fbd5ec5ef1f"
+  },
+  {
+   "key": "ARM_p19AS_s11_1",
+   "core": "ARM_p19AS",
+   "family": "armor",
+   "map": [
+    ". . Y>= . . . .",
+    ". . . . G< . .",
+    "G<= . B>&A . Y^= . .",
+    ". . . . . . .",
+    ". Yv Bv&A . . . .",
+    ". Pv . . R^ P< Y<",
+    ". Y<&A . . B^%A . P^%A"
+   ],
+   "score": 136.81,
+   "search": {
+    "distinct": 4,
+    "steps": 14,
+    "shortcut": 0.125,
+    "positions": 279,
+    "pieces": 14
+   },
+   "closest": {
+    "known": "N35",
+    "overlap": 0.35,
+    "pool": "MAG_p18MX3_s11_2",
+    "pool_overlap": 0.31
+   },
+   "filler": {
+    "distinct": 4,
+    "pieces_tested": 14,
+    "steps": 14,
+    "trivial": [],
+    "trivial_removals": 0
+   },
+   "report": "data/dev/extreme90_p21/report_ARM_p19AS_s11_1.json",
+   "fingerprint": "f3531d7f7261b38effb7fd532fea36e1e27c1a96d8c837099d0e28a93cced400"
+  },
+  {
+   "key": "SWI_bankA_s11_1",
+   "core": "SWI_bankA",
+   "family": "switch_gate",
+   "map": [
+    ". G^ . . . .",
+    "Y^@~ P^%A . P<@~ Rv@~ .",
+    "R^@ B<@~ B>&A . R< .",
+    ". R>@- . . . .",
+    "Y<@ B>@- . . Y>%A .",
+    "B>@ . . . . ."
+   ],
+   "score": 128.24,
+   "search": {
+    "distinct": 5,
+    "steps": 12,
+    "shortcut": 0,
+    "positions": 372,
+    "pieces": 14
+   },
+   "closest": {
+    "known": "N29",
+    "overlap": 0.3,
+    "pool": "SPI_p17H_s11_1",
+    "pool_overlap": 0.29
+   },
+   "filler": {
+    "distinct": 5,
+    "pieces_tested": 14,
+    "steps": 12,
+    "trivial": [],
+    "trivial_removals": 0
+   },
+   "report": "data/dev/extreme90_p21/report_SWI_bankA_s11_1.json",
+   "fingerprint": "2e61400846791306d990e0cfd677249c688ba3f9b19caa49f6e6c4ab2102b056"
+  },
+  {
+   "key": "SPI_bankB_s11_1",
+   "core": "SPI_bankB",
+   "family": "spinner",
+   "map": [
+    ". . B>@~ . . .",
+    ". . Y>@- . . .",
+    ". G>@~ B^ . Y<@~ .",
+    ". B< R^@* G^ R<@~ G^=",
+    ". . . . . .",
+    ". . G<= R> P^@ Gv@"
+   ],
+   "score": 140.39,
+   "search": {
+    "distinct": 5,
+    "steps": 14,
+    "shortcut": 0.025,
+    "positions": 397,
+    "pieces": 14
+   },
+   "closest": {
+    "known": "N30",
+    "overlap": 0.38,
+    "pool": "SEQ_bankH2_s11_1",
+    "pool_overlap": 0.22
+   },
+   "filler": {
+    "distinct": 5,
+    "pieces_tested": 14,
+    "steps": 14,
+    "trivial": [],
+    "trivial_removals": 0
+   },
+   "report": "data/dev/extreme90_p21/report_SPI_bankB_s11_1.json",
+   "fingerprint": "e31f26fbfd26e0ab66288c719b1b16ac33fcaf9fe7967fd8776d315cd0dfda33"
+  },
+  {
+   "key": "SEQ_p18MS2_s11_1",
+   "core": "SEQ_p18MS2",
+   "family": "sequence",
+   "map": [
+    "B<:^ . . Gv . . .",
+    "P^:^ . R<:< . B<:^ . Y>:^",
+    "M B>:v B>:^ M . . .",
+    "B^:< . . Y>:< R>:^ . Y^:v",
+    ". . . G^:> . . .",
+    ". . . R^:< R^ . .",
+    ". . . G^:v . . ."
+   ],
+   "score": 153.36,
+   "search": {
+    "distinct": 5,
+    "steps": 29,
+    "shortcut": 0,
+    "positions": 958,
+    "pieces": 18
+   },
+   "closest": {
+    "known": "N31",
+    "overlap": 0.36,
+    "pool": "POR_p18PM_s11_1",
+    "pool_overlap": 0.21
+   },
+   "filler": {
+    "distinct": 5,
+    "pieces_tested": 18,
+    "steps": 29,
+    "trivial": [],
+    "trivial_removals": 0
+   },
+   "report": "data/dev/extreme90_p21/report_SEQ_p18MS2_s11_1.json",
+   "fingerprint": "b9ce007c67c1f51e1727b18ca41db8eb32f25f15d5802a7e9c30ab2018bf79fc"
+  },
+  {
+   "key": "SEQ_bankH2_s11_1",
+   "core": "SEQ_bankH2",
+   "family": "sequence",
+   "map": [
+    ". . . . G>@- Y> G^@-",
+    ". . Y>@- . R>@- P^ .",
+    "P>@ Y^@ R^ Yv . . .",
+    ". . Y<@~ R^@#B P^@~ . .",
+    "R^@- Y^@~ Gv@~ B<:v P^@~ . .",
+    "G^@~ . G^ P<@ . . .",
+    ". . . . . . ."
+   ],
+   "score": 152.98,
+   "search": {
+    "distinct": 6,
+    "steps": 20,
+    "shortcut": 0,
+    "positions": 298,
+    "pieces": 21
+   },
+   "closest": {
+    "known": "N21",
+    "overlap": 0.39,
+    "pool": "SEQ_p17G_s11_1",
+    "pool_overlap": 0.33
+   },
+   "filler": {
+    "distinct": 6,
+    "pieces_tested": 21,
+    "steps": 20,
+    "trivial": [],
+    "trivial_removals": 0
+   },
+   "report": "data/dev/extreme90_p21/report_SEQ_bankH2_s11_1.json",
+   "fingerprint": "a7f4400fb9e44439560d590b0a10ea5aeaa734890cd186d3fc7b21650aed86fb"
+  },
+  {
+   "key": "MAG_p18MG_s12_1",
+   "core": "MAG_p18MG",
+   "family": "magnet",
+   "map": [
+    "Rv . . . Yv* . .",
+    ". R>* . G^* Y>* . .",
+    ". Y<* . Bv* . . Y>*",
+    "Y<* Y^ . B^ G< G>* P^*",
+    "B<* R^* . . . . .",
+    ". P^* . . . . .",
+    ". . . . . . ."
+   ],
+   "score": 140.15,
+   "search": {
+    "distinct": 5,
+    "steps": 15,
+    "shortcut": 0.05,
+    "positions": 462,
+    "pieces": 17
+   },
+   "closest": {
+    "known": "ARM_p18AR2_s11_1",
+    "overlap": 0.39,
+    "pool": "SEQ_p18MS2_s12_1",
+    "pool_overlap": 0.36
+   },
+   "filler": {
+    "distinct": 5,
+    "pieces_tested": 17,
+    "steps": 15,
+    "trivial": [],
+    "trivial_removals": 0
+   },
+   "report": "data/dev/extreme90_p21/report_MAG_p18MG_s12_1.json",
+   "fingerprint": "7e721e1513c712d2cac3f05688e0bfcdbfcab3716a950049a3693ff461d896ca"
+  },
+  {
+   "key": "SPI_p17A_s12_1",
+   "core": "SPI_p17A",
+   "family": "spinner",
+   "map": [
+    "Gv@ . . . . G< .",
+    "B>@~ Yv Gv Rv . P^@~ .",
+    "Pv B^@ R^@- G^@ Y> . .",
+    "G<@~ P<@- Bv Y<@~ B^@ . .",
+    "G>@- Y< Y>@- . . . .",
+    "Yv@- Gv@ Bv@~ . . . .",
+    ". . G^@ . . . ."
+   ],
+   "score": 166.89,
+   "search": {
+    "distinct": 6,
+    "steps": 22,
+    "shortcut": 0,
+    "positions": 741,
+    "pieces": 24
+   },
+   "closest": {
+    "known": "N24",
+    "overlap": 0.36,
+    "pool": "",
+    "pool_overlap": 0
+   },
+   "filler": {
+    "distinct": 6,
+    "pieces_tested": 24,
+    "steps": 22,
+    "trivial": [],
+    "trivial_removals": 0
+   },
+   "report": "data/dev/extreme90_p21/report_SPI_p17A_s12_1.json",
+   "fingerprint": "89ba0dbdcdcb5ded036f58c75e4e7b6ce54d7a4655443446ff4cf1065249fe05"
+  }
+ ],
+ "reports": 16,
+ "log": [
+  {
+   "key": "SPI_p17A_s11_1",
+   "stage": "prefilter",
+   "decision": "dropped",
+   "why": "overlap 0.50 with N24"
+  },
+  {
+   "key": "SPI_p17A_s11_2",
+   "stage": "prefilter",
+   "decision": "dropped",
+   "why": "overlap 0.50 with N24"
+  },
+  {
+   "key": "MAG_p17E_s11_1",
+   "stage": "prefilter",
+   "decision": "dropped",
+   "why": "overlap 0.78 with N27"
+  },
+  {
+   "key": "MAG_p17E_s11_2",
+   "stage": "prefilter",
+   "decision": "dropped",
+   "why": "overlap 0.68 with N27"
+  },
+  {
+   "key": "POR_p18PM_s11_2",
+   "stage": "prefilter",
+   "decision": "dropped",
+   "why": "overlap 0.79 with the better candidate POR_p18PM_s11_1"
+  },
+  {
+   "key": "SPI_p17H_s11_2",
+   "stage": "prefilter",
+   "decision": "dropped",
+   "why": "overlap 0.42 with N29"
+  },
+  {
+   "key": "SEQ_p18MS2_s11_2",
+   "stage": "prefilter",
+   "decision": "dropped",
+   "why": "overlap 0.89 with the better candidate SEQ_p18MS2_s11_1"
+  },
+  {
+   "key": "SEQ_bankH2_s11_2",
+   "stage": "prefilter",
+   "decision": "dropped",
+   "why": "overlap 0.91 with the better candidate SEQ_bankH2_s11_1"
+  },
+  {
+   "key": "MAG_p18MX3_s11_1",
+   "stage": "prefilter",
+   "decision": "dropped",
+   "why": "overlap 0.40 with N38"
+  },
+  {
+   "key": "SEQ_p17G_s11_2",
+   "stage": "prefilter",
+   "decision": "dropped",
+   "why": "overlap 0.45 with N15"
+  },
+  {
+   "key": "SPI_p17C2_s11_1",
+   "stage": "prefilter",
+   "decision": "dropped",
+   "why": "overlap 0.42 with N34"
+  },
+  {
+   "key": "SPI_p17C2_s11_2",
+   "stage": "prefilter",
+   "decision": "dropped",
+   "why": "overlap 0.42 with N30"
+  },
+  {
+   "key": "SWI_bankD_s11_2",
+   "stage": "prefilter",
+   "decision": "dropped",
+   "why": "overlap 0.84 with the better candidate SWI_bankD_s11_1"
+  },
+  {
+   "key": "POR_p18SPP_s11_2",
+   "stage": "prefilter",
+   "decision": "dropped",
+   "why": "overlap 0.94 with the better candidate POR_p18SPP_s11_1"
+  },
+  {
+   "key": "POR_p19PX_s11_1",
+   "stage": "prefilter",
+   "decision": "dropped",
+   "why": "overlap 0.42 with N37"
+  },
+  {
+   "key": "POR_p19PX_s11_2",
+   "stage": "prefilter",
+   "decision": "dropped",
+   "why": "overlap 0.43 with N37"
+  },
+  {
+   "key": "ARM_p18AR2_s11_2",
+   "stage": "prefilter",
+   "decision": "dropped",
+   "why": "overlap 0.41 with N35"
+  },
+  {
+   "key": "MAG_p18MX1_s11_1",
+   "stage": "prefilter",
+   "decision": "dropped",
+   "why": "overlap 0.42 with the better candidate SEQ_p18MS2_s11_1"
+  },
+  {
+   "key": "MAG_p18MX1_s11_2",
+   "stage": "prefilter",
+   "decision": "dropped",
+   "why": "overlap 0.40 with the better candidate SEQ_p18MS2_s11_1"
+  },
+  {
+   "key": "SPI_bankB_s11_2",
+   "stage": "prefilter",
+   "decision": "dropped",
+   "why": "overlap 0.73 with the better candidate SPI_bankB_s11_1"
+  },
+  {
+   "key": "MAG_p18MG_s11_1",
+   "stage": "prefilter",
+   "decision": "dropped",
+   "why": "overlap 0.50 with N32"
+  },
+  {
+   "key": "ARM_p19AS_s11_2",
+   "stage": "prefilter",
+   "decision": "dropped",
+   "why": "overlap 0.87 with the better candidate ARM_p19AS_s11_1"
+  },
+  {
+   "key": "MAG_p18MG_s11_2",
+   "stage": "prefilter",
+   "decision": "dropped",
+   "why": "overlap 0.52 with N32"
+  },
+  {
+   "key": "SWI_bankA_s11_2",
+   "stage": "prefilter",
+   "decision": "dropped",
+   "why": "overlap 0.40 with N20"
+  },
+  {
+   "key": "POR_p18PM_s11_1",
+   "stage": "report",
+   "decision": "rejected",
+   "why": "filler: 1 trivial removals ['r1c3 M']"
+  },
+  {
+   "key": "ARM_p18AR2_s11_1",
+   "stage": "report",
+   "decision": "ACCEPTED",
+   "why": ""
+  },
+  {
+   "key": "SWI_bankD_s11_1",
+   "stage": "report",
+   "decision": "rejected",
+   "why": "gate marginal (without it: 15 decision steps, 6 distinct mistakes (with it: 14, 6))"
+  },
+  {
+   "key": "MAG_p18MX3_s11_2",
+   "stage": "report",
+   "decision": "rejected",
+   "why": "lock marginal (without it: 18 decision steps, 4 distinct mistakes (with it: 18, 5))"
+  },
+  {
+   "key": "SPI_p17H_s11_1",
+   "stage": "report",
+   "decision": "rejected",
+   "why": "filler: 1 trivial removals ['r2c2 P^@~']"
+  },
+  {
+   "key": "SEQ_p17G_s11_1",
+   "stage": "report",
+   "decision": "rejected",
+   "why": "pattern marginal (without it: 13 decision steps, 4 distinct mistakes (with it: 13, 5))"
+  },
+  {
+   "key": "POR_p18SPP_s11_1",
+   "stage": "report",
+   "decision": "ACCEPTED",
+   "why": ""
+  },
+  {
+   "key": "ARM_p19AS_s11_1",
+   "stage": "report",
+   "decision": "ACCEPTED",
+   "why": ""
+  },
+  {
+   "key": "SWI_bankA_s11_1",
+   "stage": "report",
+   "decision": "ACCEPTED",
+   "why": ""
+  },
+  {
+   "key": "SPI_bankB_s11_1",
+   "stage": "report",
+   "decision": "ACCEPTED",
+   "why": ""
+  },
+  {
+   "key": "SEQ_p18MS2_s11_1",
+   "stage": "report",
+   "decision": "ACCEPTED",
+   "why": ""
+  },
+  {
+   "key": "SEQ_bankH2_s11_1",
+   "stage": "report",
+   "decision": "ACCEPTED",
+   "why": ""
+  },
+  {
+   "key": "SPI_p17A_s12_2",
+   "stage": "prefilter",
+   "decision": "dropped",
+   "why": "overlap 0.92 with the better candidate SPI_p17A_s12_1"
+  },
+  {
+   "key": "MAG_p17E_s12_1",
+   "stage": "prefilter",
+   "decision": "dropped",
+   "why": "overlap 0.43 with N27"
+  },
+  {
+   "key": "MAG_p17E_s12_2",
+   "stage": "prefilter",
+   "decision": "dropped",
+   "why": "overlap 0.43 with N27"
+  },
+  {
+   "key": "SEQ_p17G_s12_1",
+   "stage": "prefilter",
+   "decision": "dropped",
+   "why": "overlap 0.53 with N30"
+  },
+  {
+   "key": "SPI_p17H_s12_1",
+   "stage": "prefilter",
+   "decision": "dropped",
+   "why": "overlap 0.48 with N29"
+  },
+  {
+   "key": "POR_p19PX_s12_1",
+   "stage": "prefilter",
+   "decision": "dropped",
+   "why": "overlap 0.62 with N37"
+  },
+  {
+   "key": "POR_p19PX_s12_2",
+   "stage": "prefilter",
+   "decision": "dropped",
+   "why": "overlap 0.62 with N37"
+  },
+  {
+   "key": "SPI_p17H_s12_2",
+   "stage": "prefilter",
+   "decision": "dropped",
+   "why": "overlap 0.42 with N24"
+  },
+  {
+   "key": "SEQ_p18MS2_s12_2",
+   "stage": "prefilter",
+   "decision": "dropped",
+   "why": "overlap 0.83 with the better candidate SEQ_p18MS2_s12_1"
+  },
+  {
+   "key": "SEQ_p17G_s12_2",
+   "stage": "prefilter",
+   "decision": "dropped",
+   "why": "overlap 0.53 with N28"
+  },
+  {
+   "key": "POR_p18PM_s12_2",
+   "stage": "prefilter",
+   "decision": "dropped",
+   "why": "overlap 0.88 with the better candidate POR_p18PM_s12_1"
+  },
+  {
+   "key": "SWI_bankD_s12_1",
+   "stage": "prefilter",
+   "decision": "dropped",
+   "why": "overlap 0.42 with N16"
+  },
+  {
+   "key": "MAG_p18MX1_s12_1",
+   "stage": "prefilter",
+   "decision": "dropped",
+   "why": "overlap 0.45 with ARM_p18AR2_s11_1"
+  },
+  {
+   "key": "MAG_p18MX1_s12_2",
+   "stage": "prefilter",
+   "decision": "dropped",
+   "why": "overlap 0.45 with ARM_p18AR2_s11_1"
+  },
+  {
+   "key": "POR_p18SPP_s12_1",
+   "stage": "prefilter",
+   "decision": "dropped",
+   "why": "overlap 0.48 with POR_p18SPP_s11_1"
+  },
+  {
+   "key": "ARM_p18AR2_s12_1",
+   "stage": "prefilter",
+   "decision": "dropped",
+   "why": "overlap 0.45 with N32"
+  },
+  {
+   "key": "MAG_p18MG_s12_2",
+   "stage": "prefilter",
+   "decision": "dropped",
+   "why": "overlap 0.83 with the better candidate MAG_p18MG_s12_1"
+  },
+  {
+   "key": "SWI_bankA_s12_1",
+   "stage": "prefilter",
+   "decision": "dropped",
+   "why": "overlap 0.42 with N20"
+  },
+  {
+   "key": "SWI_bankA_s12_2",
+   "stage": "prefilter",
+   "decision": "dropped",
+   "why": "overlap 0.42 with SWI_bankA_s11_1"
+  },
+  {
+   "key": "POR_p18PM_s12_1",
+   "stage": "report",
+   "decision": "rejected",
+   "why": "filler: 1 trivial removals ['r0c2 M']"
+  },
+  {
+   "key": "SWI_bankD_s12_2",
+   "stage": "report",
+   "decision": "rejected",
+   "why": "gate marginal (without it: 16 decision steps, 5 distinct mistakes (with it: 16, 6))"
+  },
+  {
+   "key": "MAG_p18MG_s12_1",
+   "stage": "report",
+   "decision": "ACCEPTED",
+   "why": ""
+  },
+  {
+   "key": "SPI_p17A_s12_1",
+   "stage": "report",
+   "decision": "ACCEPTED",
+   "why": ""
+  },
+  {
+   "key": "SEQ_p18MS2_s12_1",
+   "stage": "report",
+   "decision": "skipped",
+   "why": "a board of this core is already accepted"
+  },
+  {
+   "key": "POR_p18SPP_s12_2",
+   "stage": "report",
+   "decision": "skipped",
+   "why": "a board of this core is already accepted"
+  }
+ ]
+}

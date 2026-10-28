@@ -1,0 +1,9 @@
+{
+ "SPI_bankB_s11_1": {
+  "distinct": 5,
+  "pieces_tested": 14,
+  "steps": 14,
+  "trivial": [],
+  "trivial_removals": 0
+ }
+}

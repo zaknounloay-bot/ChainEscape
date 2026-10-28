@@ -1,0 +1,24 @@
+{
+ "fixed_before_generating": "2026-10-28 (before any Phase 21 search run)",
+ "goal": "5-10 new qualifying EXTREME boards (N39-N48); stop at 10 accepted or when the budget below is spent; never pad",
+ "generator": "tools/ta90_search.gd --ops=v20 (Phase 20), unchanged",
+ "cores": "24 existing cores in 6 families (cores.json; seed_<key>.json are copies of the earlier seeds; where max_solve_nodes was missing it is set to 600 - the Category A TIME UP gate stays the judge)",
+ "families": {"portal": ["POR_p19PX", "POR_p18PM", "POR_p18PS", "POR_p18SPP"], "armor": ["ARM_p19AS", "ARM_p18AR2", "ARM_p19MAS", "ARM_bankI2"],
+   "switch_gate": ["SWI_p20SG5", "SWI_p19SG3", "SWI_bankD", "SWI_bankA"], "magnet": ["MAG_p18MG", "MAG_p18MX1", "MAG_p18MX3", "MAG_p17E"],
+   "spinner": ["SPI_p17A", "SPI_p17H", "SPI_p17C2", "SPI_bankB"], "sequence": ["SEQ_p19SQX2", "SEQ_p18MS2", "SEQ_bankH2", "SEQ_p17G"]},
+ "search_budget": {"runs": 48, "per_run": {"minutes": 12, "batch": 40, "beam": 5, "patience": 8, "ops": "v20"},
+   "seeds": {"round 1": 11, "round 2": 12}, "parallel": 4,
+   "order": "round 1 = every core with seed 11 (6 waves of 4, families interleaved); stage 2 on its results; round 2 (seed 12) only if fewer than 10 boards were accepted"},
+ "stage2_candidates": "per run: up to 2 qualifying clusters (boards differing in <= 3 cells form one cluster), the top-scoring board of each; then dropped before any report if its occupancy overlap (the Phase 19/20 measure, best of 8 symmetries) is >= 0.40 with any bank board (N1-N38) or a candidate already accepted, or if an earlier-ranked candidate from the same core is already accepted",
+ "report_budget": "at most 40 full reports (tools/ta90_design.gd, one at a time on an otherwise idle machine, after the round's searches); reports go round-robin across families, best search score first within a family",
+ "acceptance (all must hold)": [
+   "ta90_design.gd verdict HUMAN-REVIEW CANDIDATE for target EXTREME (Category A and B, thresholds unchanged: parity 0/0, deterministic replay, solve <= 40 ms, TIME UP check <= 40 ms from every position; distinct >= 4, steps >= 8, endgame decision, coverage >= 0.60, late >= 0.75, solution >= 13, greedy shortcut <= 0.20, every listed mechanic matters, no near copy)",
+   "every listed mechanic ESSENTIAL, not marginal: without it the board is unsolvable, or loses >= 2 distinct mistakes, or >= 3 decision steps (Phase 20's judgement made a rule)",
+   "no filler: 0 trivial removals (tools/xb90_filler.gd)",
+   "not a variant: overlap < 0.40 with every bank board and every accepted Phase 21 board; at most 1 accepted board per core",
+   "diversity cap: at most 3 accepted boards per family",
+   "exact TIME UP continuation incl. UNDO right after continuing (Ta90ContinueCheck --boards)",
+   "browser: WebAssembly TIME UP check within the page test's limit, iPhone SE layout"
+ ],
+ "never": ["re-measure a borderline timing", "change a threshold after seeing results", "edit an accepted board"]
+}

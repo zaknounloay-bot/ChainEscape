@@ -17,7 +17,8 @@ extends "res://tools/extreme90p18_check.gd"
 ## logged; a reload during the untimed game comes back to the same board.
 
 const BOARDS_ALL := ["N3", "N5", "N7", "N11", "N13", "N14", "N15", "N16", "N18", "N21", "N26", "N27", "N29", "N30",
-	"N23", "N24", "N31", "N32", "N33", "N34", "N35", "N36", "N37", "N38"]
+	"N23", "N24", "N31", "N32", "N33", "N34", "N35", "N36", "N37", "N38",
+	"N39", "N40", "N41", "N42", "N43", "N44", "N45", "N46", "N47"]
 var results := {}
 
 

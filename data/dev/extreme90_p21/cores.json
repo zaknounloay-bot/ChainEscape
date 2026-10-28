@@ -1,0 +1,162 @@
+{
+ "POR_p19PX": {
+  "family": "portal",
+  "source": "data/dev/extreme90_p19/seed_PX.json",
+  "mechanic": "portal,movable,switch",
+  "notes": []
+ },
+ "POR_p18PM": {
+  "family": "portal",
+  "source": "data/dev/extreme90_p18/seed_PM.json",
+  "mechanic": "portal,movable,sequence",
+  "notes": []
+ },
+ "POR_p18PS": {
+  "family": "portal",
+  "source": "data/dev/extreme90_p18/seed_PS.json",
+  "mechanic": "portal,switch",
+  "notes": []
+ },
+ "POR_p18SPP": {
+  "family": "portal",
+  "source": "data/dev/extreme90_p18/seed_SPP.json",
+  "mechanic": "portal",
+  "notes": []
+ },
+ "ARM_p19AS": {
+  "family": "armor",
+  "source": "data/dev/extreme90_p19/seed_AS.json",
+  "mechanic": "armor,switch",
+  "notes": []
+ },
+ "ARM_p18AR2": {
+  "family": "armor",
+  "source": "data/dev/extreme90_p18/seed_AR2.json",
+  "mechanic": "armor,magnet",
+  "notes": []
+ },
+ "ARM_p19MAS": {
+  "family": "armor",
+  "source": "data/dev/extreme90_p19/seed_MAS.json",
+  "mechanic": "movable,switch,armor",
+  "notes": []
+ },
+ "ARM_bankI2": {
+  "family": "armor",
+  "source": "data/dev/extreme90_bank/seed_I2.json",
+  "mechanic": "armor",
+  "notes": [
+   "max_solve_nodes 600 added (the Category A TIME UP gate stays the judge)"
+  ]
+ },
+ "SWI_p20SG5": {
+  "family": "switch_gate",
+  "source": "data/dev/extreme90_p20/seed_SG5.json",
+  "mechanic": "switch,gate",
+  "notes": []
+ },
+ "SWI_p19SG3": {
+  "family": "switch_gate",
+  "source": "data/dev/extreme90_p19/seed_SG3.json",
+  "mechanic": "switch,gate",
+  "notes": []
+ },
+ "SWI_bankD": {
+  "family": "switch_gate",
+  "source": "data/dev/extreme90_bank/seed_D.json",
+  "mechanic": "switch,armor,gate",
+  "notes": [
+   "max_solve_nodes 600 added (the Category A TIME UP gate stays the judge)"
+  ]
+ },
+ "SWI_bankA": {
+  "family": "switch_gate",
+  "source": "data/dev/extreme90_bank/seed_A.json",
+  "mechanic": "switch",
+  "notes": [
+   "max_solve_nodes 600 added (the Category A TIME UP gate stays the judge)"
+  ]
+ },
+ "MAG_p18MG": {
+  "family": "magnet",
+  "source": "data/dev/extreme90_p18/seed_MG.json",
+  "mechanic": "magnet",
+  "notes": []
+ },
+ "MAG_p18MX1": {
+  "family": "magnet",
+  "source": "data/dev/extreme90_p18/seed_MX1.json",
+  "mechanic": "magnet,switch",
+  "notes": []
+ },
+ "MAG_p18MX3": {
+  "family": "magnet",
+  "source": "data/dev/extreme90_p18/seed_MX3.json",
+  "mechanic": "magnet,lock",
+  "notes": []
+ },
+ "MAG_p17E": {
+  "family": "magnet",
+  "source": "data/dev/extreme90_p17/seed_E.json",
+  "mechanic": "magnet",
+  "notes": [
+   "max_solve_nodes 600 added (the Category A TIME UP gate stays the judge)"
+  ]
+ },
+ "SPI_p17A": {
+  "family": "spinner",
+  "source": "data/dev/extreme90_p17/seed_A.json",
+  "mechanic": "",
+  "notes": []
+ },
+ "SPI_p17H": {
+  "family": "spinner",
+  "source": "data/dev/extreme90_p17/seed_H.json",
+  "mechanic": "alt",
+  "notes": [
+   "max_solve_nodes 600 added (the Category A TIME UP gate stays the judge)"
+  ]
+ },
+ "SPI_p17C2": {
+  "family": "spinner",
+  "source": "data/dev/extreme90_p17/seed_C2.json",
+  "mechanic": "pattern",
+  "notes": [
+   "max_solve_nodes 600 added (the Category A TIME UP gate stays the judge)"
+  ]
+ },
+ "SPI_bankB": {
+  "family": "spinner",
+  "source": "data/dev/extreme90_bank/seed_B.json",
+  "mechanic": "pattern,armor",
+  "notes": [
+   "max_solve_nodes 600 added (the Category A TIME UP gate stays the judge)"
+  ]
+ },
+ "SEQ_p19SQX2": {
+  "family": "sequence",
+  "source": "data/dev/extreme90_p19/seed_SQX2.json",
+  "mechanic": "sequence,magnet",
+  "notes": []
+ },
+ "SEQ_p18MS2": {
+  "family": "sequence",
+  "source": "data/dev/extreme90_p18/seed_MS2.json",
+  "mechanic": "movable,sequence",
+  "notes": []
+ },
+ "SEQ_bankH2": {
+  "family": "sequence",
+  "source": "data/dev/extreme90_bank/seed_H2.json",
+  "mechanic": "sequence,lock",
+  "notes": []
+ },
+ "SEQ_p17G": {
+  "family": "sequence",
+  "source": "data/dev/extreme90_p17/seed_G.json",
+  "mechanic": "sequence,pattern",
+  "notes": [
+   "max_solve_nodes 600 added (the Category A TIME UP gate stays the judge)"
+  ]
+ }
+}

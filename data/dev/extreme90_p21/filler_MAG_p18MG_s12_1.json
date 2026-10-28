@@ -1,0 +1,9 @@
+{
+ "MAG_p18MG_s12_1": {
+  "distinct": 5,
+  "pieces_tested": 17,
+  "steps": 15,
+  "trivial": [],
+  "trivial_removals": 0
+ }
+}

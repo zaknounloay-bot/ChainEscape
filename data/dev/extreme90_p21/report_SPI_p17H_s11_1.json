@@ -1,0 +1,134 @@
+{
+ "SPI_p17H_s11_1": {
+  "A": {
+   "fingerprint": "9d4b24affa91de78427f36365b1e477a1d69e2c476e48b2d1cc175e8e9d416a2",
+   "hint_nodes": [
+    24,
+    250
+   ],
+   "parity": [
+    0,
+    0
+   ],
+   "portals": 0,
+   "position_cap": 1500,
+   "positions": 894,
+   "replay": true,
+   "solution": 17,
+   "solve_ms": 1.5,
+   "timeup_worst_ms": 11,
+   "timeup_worst_nodes": 250,
+   "winnable": 145
+  },
+  "B": {
+   "coverage": 0.82,
+   "decision_steps": 14,
+   "distinct_mistakes": 5,
+   "endgame_decision": true,
+   "last_decision": 14,
+   "late": 0.82,
+   "line": [
+    "r3c5> [x4]",
+    "r3c4> [x4]",
+    "r0c0^ [x4]",
+    "r0c2^ [x3]",
+    "r0c1^ [x3]",
+    "r0c4< [x2]",
+    "r1c1< [x2]",
+    "r1c5v [x2]",
+    "r0c5v [x1]",
+    "r1c4v [x1]",
+    "r1c3> [x1]",
+    "r1c2> [x1]",
+    "r2c0^ [x1]",
+    "r2c1^ [x1]",
+    "r2c2^",
+    "r2c3<",
+    "r3c1v"
+   ],
+   "losing_per_step": [
+    4,
+    4,
+    4,
+    3,
+    3,
+    2,
+    2,
+    2,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    0,
+    0,
+    0
+   ],
+   "matters_alt": true,
+   "mistakes": [
+    "r0c1^",
+    "r0c5^",
+    "r1c1<",
+    "r3c1v",
+    "r0c5<"
+   ],
+   "shortcut": 0.05,
+   "spinner_dependence": "without it: 0 decision steps, 0 distinct mistakes (with it: 14, 5)",
+   "without_alt": "without it: 8 decision steps, 3 distinct mistakes (with it: 14, 5)"
+  },
+  "C": {
+   "decisions_k4_6_8": [
+    11,
+    9,
+    7
+   ],
+   "deepest": 15,
+   "greedy": {
+    "look2": 0.02,
+    "look4": 0.05,
+    "min_turn": 0.045,
+    "mobility": 0.04,
+    "safe": 0.015
+   },
+   "hidden_k6_8": [
+    22,
+    16
+   ],
+   "learner": {
+    "look4": 4,
+    "look6": 4
+   },
+   "look6_greedy": 0.083,
+   "opening": "3 / 7",
+   "pressure": {
+    "advances": 0,
+    "calm_prefix": 2,
+    "flips": 0,
+    "multi_turned": 5,
+    "prediction_share": 0.47,
+    "pulls": 0,
+    "rams": 0,
+    "signals": 3,
+    "spinners_turned": 5,
+    "trap_delay_median": 8,
+    "turns": 10,
+    "undo_proof": 0.87
+   },
+   "win_share": 0.162
+  },
+  "map": [
+   "R^@ P^@~ Y^@~ . B<@ G^@-",
+   ". R< G> Y> R^@- Rv@",
+   "Y^@~ B^@~ P^@~ Y< . .",
+   ". Gv . . G> P>@-",
+   ". . . . . .",
+   ". . . . . ."
+  ],
+  "name": "SPI_p17H_s11_1",
+  "target": "EXTREME",
+  "verdict": "HUMAN-REVIEW CANDIDATE",
+  "why_a": [],
+  "why_b": []
+ }
+}

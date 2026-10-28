@@ -1,0 +1,159 @@
+{
+ "format": "ce-ta90-proto",
+ "v": 1,
+ "test": "ta90_n41",
+ "assist": {
+  "undo": 3,
+  "show_a_move": 0,
+  "hammer": 0
+ },
+ "note": "Development only. Phase 21 EXTREME candidate (?extreme90p21=1); never shared, never production. HUMAN-REVIEW CANDIDATE: technically validated, strategic quality unconfirmed by people.",
+ "boards": [
+  {
+   "id": "N41",
+   "accepted": true,
+   "label": "HUMAN-REVIEW CANDIDATE - EXPERIMENTAL, HUMAN DIFFICULTY UNVALIDATED",
+   "variant": "N41",
+   "design": "21ARM_p19AS_s11_1",
+   "family": "E rammer / armor + switch",
+   "primary": "non-spinner, non-magnet",
+   "target": "EXTREME (a design target, not a rating; never shown to players)",
+   "idea": "one rammer, two shells, one reversal group (two switch pieces): crack the shell in front, stay, be turned round to crack the one behind - leave or turn early and a shell stays",
+   "source": "existing idea core data/dev/extreme90_p19/seed_AS.json (data/dev/extreme90_p21/seed_ARM_p19AS.json), grown by tools/ta90_search.gd --ops=v20 in the Phase 21 bounded search (data/dev/extreme90_p21/protocol.json), checked by tools/ta90_design.gd and tools/xb90_filler.gd",
+   "fingerprint": "f3531d7f7261b38effb7fd532fea36e1e27c1a96d8c837099d0e28a93cced400",
+   "mechanics": [
+    "armor",
+    "switch"
+   ],
+   "puzzle": {
+    "format": "ce-puzzle",
+    "v": 1,
+    "rules": 1,
+    "rows": 7,
+    "cols": 7,
+    "map": [
+     ". . Y>= . . . .",
+     ". . . . G< . .",
+     "G<= . B>&A . Y^= . .",
+     ". . . . . . .",
+     ". Yv Bv&A . . . .",
+     ". Pv . . R^ P< Y<",
+     ". Y<&A . . B^%A . P^%A"
+    ]
+   },
+   "design_report": {
+    "A": {
+     "fingerprint": "f3531d7f7261b38effb7fd532fea36e1e27c1a96d8c837099d0e28a93cced400",
+     "hint_nodes": [
+      30,
+      15
+     ],
+     "parity": [
+      0,
+      0
+     ],
+     "portals": 0,
+     "position_cap": 2000,
+     "positions": 279,
+     "replay": true,
+     "solution": 17,
+     "solve_ms": 1.7,
+     "timeup_worst_ms": 1.1,
+     "timeup_worst_nodes": 43,
+     "winnable": 98
+    },
+    "B": {
+     "coverage": 0.82,
+     "decision_steps": 14,
+     "distinct_mistakes": 4,
+     "endgame_decision": true,
+     "last_decision": 14,
+     "late": 0.82,
+     "losing_per_step": [
+      1,
+      1,
+      1,
+      2,
+      3,
+      2,
+      2,
+      2,
+      2,
+      2,
+      1,
+      1,
+      1,
+      1,
+      0,
+      0,
+      0
+     ],
+     "matters_armor": true,
+     "matters_switch": true,
+     "mistakes": [
+      "r4c2v",
+      "r2c2>",
+      "r6c4^",
+      "r6c6^"
+     ],
+     "shortcut": 0.125,
+     "without_armor": "without it: 1 decision steps, 1 distinct mistakes (with it: 14, 4)",
+     "without_switch": "unsolvable without it"
+    },
+    "C": {
+     "decisions_k4_6_8": [
+      10,
+      9,
+      7
+     ],
+     "deepest": 15,
+     "greedy": {
+      "look2": 0.055,
+      "look4": 0.125,
+      "min_turn": 0.055,
+      "mobility": 0,
+      "safe": 0.055
+     },
+     "hidden_k6_8": [
+      16,
+      11
+     ],
+     "learner": {
+      "look4": 2,
+      "look6": 0
+     },
+     "look6_greedy": 0.308,
+     "opening": "4 / 5",
+     "pressure": {
+      "advances": 0,
+      "calm_prefix": 4,
+      "flips": 2,
+      "multi_turned": 0,
+      "prediction_share": 0.24,
+      "pulls": 0,
+      "rams": 3,
+      "signals": 1,
+      "spinners_turned": 0,
+      "trap_delay_median": 8,
+      "turns": 0,
+      "undo_proof": 0.82
+     },
+     "win_share": 0.351
+    },
+    "filler": {
+     "distinct": 4,
+     "pieces_tested": 14,
+     "steps": 14,
+     "trivial": [],
+     "trivial_removals": 0
+    },
+    "similarity": {
+     "closest_known": "N35",
+     "overlap": 0.35,
+     "closest_new": "N46",
+     "closest_new_overlap": 0.24
+    }
+   }
+  }
+ ]
+}

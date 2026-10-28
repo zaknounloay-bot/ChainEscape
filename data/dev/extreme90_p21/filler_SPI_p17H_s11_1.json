@@ -1,0 +1,11 @@
+{
+ "SPI_p17H_s11_1": {
+  "distinct": 5,
+  "pieces_tested": 17,
+  "steps": 14,
+  "trivial": [
+   "r2c2 P^@~"
+  ],
+  "trivial_removals": 1
+ }
+}

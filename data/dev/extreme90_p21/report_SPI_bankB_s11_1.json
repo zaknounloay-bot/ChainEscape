@@ -1,0 +1,134 @@
+{
+ "SPI_bankB_s11_1": {
+  "A": {
+   "fingerprint": "e31f26fbfd26e0ab66288c719b1b16ac33fcaf9fe7967fd8776d315cd0dfda33",
+   "hint_nodes": [
+    73,
+    119
+   ],
+   "parity": [
+    0,
+    0
+   ],
+   "portals": 0,
+   "position_cap": 3000,
+   "positions": 397,
+   "replay": true,
+   "solution": 16,
+   "solve_ms": 3.3,
+   "timeup_worst_ms": 7,
+   "timeup_worst_nodes": 193,
+   "winnable": 103
+  },
+  "B": {
+   "coverage": 0.88,
+   "decision_steps": 14,
+   "distinct_mistakes": 5,
+   "endgame_decision": true,
+   "last_decision": 14,
+   "late": 0.88,
+   "line": [
+    "r0c2> [x2]",
+    "r1c2^ [x1]",
+    "r3c1< [x2]",
+    "r2c1v [x2]",
+    "r2c2^ [x1]",
+    "r3c2v ram [x1]",
+    "r5c2< [x1]",
+    "r2c4< [x2]",
+    "r3c4^ [x2]",
+    "r3c3^ [x2]",
+    "r3c2> ram [x1]",
+    "r3c5^ [x1]",
+    "r3c2> [x1]",
+    "r5c5v [x1]",
+    "r5c4>",
+    "r5c3>"
+   ],
+   "losing_per_step": [
+    2,
+    1,
+    2,
+    2,
+    1,
+    1,
+    1,
+    2,
+    2,
+    2,
+    1,
+    1,
+    1,
+    1,
+    0,
+    0
+   ],
+   "matters_armor": true,
+   "matters_pattern": true,
+   "mistakes": [
+    "r1c2>",
+    "r3c3^",
+    "r2c2^",
+    "r3c2v",
+    "r5c4^"
+   ],
+   "shortcut": 0.01,
+   "spinner_dependence": "unsolvable without it",
+   "without_armor": "without it: 5 decision steps, 3 distinct mistakes (with it: 14, 5)",
+   "without_pattern": "unsolvable without it"
+  },
+  "C": {
+   "decisions_k4_6_8": [
+    10,
+    6,
+    5
+   ],
+   "deepest": 14,
+   "greedy": {
+    "look2": 0.01,
+    "look4": 0.008,
+    "min_turn": 0,
+    "mobility": 0,
+    "safe": 0.005
+   },
+   "hidden_k6_8": [
+    9,
+    7
+   ],
+   "learner": {
+    "look4": 4,
+    "look6": 4
+   },
+   "look6_greedy": 0.008,
+   "opening": "3 / 5",
+   "pressure": {
+    "advances": 0,
+    "calm_prefix": 0,
+    "flips": 0,
+    "multi_turned": 1,
+    "prediction_share": 0.5,
+    "pulls": 0,
+    "rams": 2,
+    "signals": 0,
+    "spinners_turned": 5,
+    "trap_delay_median": 5,
+    "turns": 7,
+    "undo_proof": 0.75
+   },
+   "win_share": 0.259
+  },
+  "map": [
+   ". . B>@~ . . .",
+   ". . Y>@- . . .",
+   ". G>@~ B^ . Y<@~ .",
+   ". B< R^@* G^ R<@~ G^=",
+   ". . . . . .",
+   ". . G<= R> P^@ Gv@"
+  ],
+  "name": "SPI_bankB_s11_1",
+  "target": "EXTREME",
+  "verdict": "HUMAN-REVIEW CANDIDATE",
+  "why_a": [],
+  "why_b": []
+ }
+}

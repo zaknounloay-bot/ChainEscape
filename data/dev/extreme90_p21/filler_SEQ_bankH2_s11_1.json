@@ -1,0 +1,9 @@
+{
+ "SEQ_bankH2_s11_1": {
+  "distinct": 6,
+  "pieces_tested": 21,
+  "steps": 20,
+  "trivial": [],
+  "trivial_removals": 0
+ }
+}
