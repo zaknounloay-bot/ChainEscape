@@ -115,18 +115,45 @@ No borderline timing was re-measured; no threshold changed.
 
 ## Step 8 — The Phase 19 developer selection (`?extreme90p19=1`)
 
-`Extreme90P19` (extends `Extreme90P18`): CHALLENGE 1–20 exactly as the
-Phase 18B selection (core, strong, provisional), CHALLENGE 21–22 = N35, N36.
-Its own storage `xb19_*` / `chain_escape_xb19_hub` and export `ce-xb19`
-(`selection: "xb19-v1"`, each board's id, fingerprint, mechanics and group
-— `phase19` for the new boards — and the archived ids).
+`Extreme90P19` (extends `Extreme90P18`). Its own storage `xb19_*` /
+`chain_escape_xb19_hub` and export `ce-xb19` (each board's id, fingerprint,
+mechanics and group — `phase19` for the new boards — and the archived ids).
+No locks; any challenge opens directly.
 
-The list now **scrolls**: full-size tiles (84 high, three to a row, the full
-"CHALLENGE n" label), the title, a neutral line "Newest: CHALLENGE 21-22
-(scroll down)" and both buttons (COPY ALL RESULTS, HOW IT WORKS) always on
-screen. Implemented as hub options whose defaults keep every earlier page
-exactly as it was (`select_scroll`, `select_note`). No locks; any
-challenge opens directly.
+### QA selection refinement (permanent rule)
+
+The primary testing screen of a new EXTREME development phase shows **only
+that phase's new puzzles**; testers never have to find, remember or scroll
+past boards an earlier phase already tested.
+
+| Screen | Contents |
+|---|---|
+| CHOOSE A CHALLENGE (primary) | CHALLENGE 1 = N35, CHALLENGE 2 = N36; then PREVIOUS CHALLENGES, COPY ALL RESULTS, HOW IT WORKS |
+| PREVIOUS CHALLENGES (optional) | CHALLENGE 3–22 = the Phase 18B selection (CORE, STRONG, N23 / N24 provisional) in its order, a scrolling list with BACK — for regression or voluntary replay |
+
+How it works (the smallest change, in the shared hub `Ta90Prototype`):
+
+- `previous_boards()` — the boards earlier phases already tested; default
+  empty, so `?ta90=1`, `?extreme90=1`, `?extreme90p17=1` and
+  `?extreme90p18=1` are exactly as before.
+- `new_boards()` — found automatically: every board of the page not on the
+  previous list. Phase 19: `previous_boards()` = the Phase 18B selection,
+  so the new boards are N35, N36. A later phase extends this page and sets
+  `previous_boards()` to this page's full list.
+- Challenge numbers follow the page order (new boards first, then the
+  previous ones), so no two tiles share a number. A board opened from
+  PREVIOUS CHALLENGES returns there; a new board returns to the primary
+  screen.
+- Every export records the real board id (the export's key and every
+  run's `board`), its fingerprint, its displayed challenge number and its
+  `list` (`new` / `previous`), plus `new: ["N35", "N36"]`. The selection
+  version is now `xb19-v2` (the numbering changed); the storage namespace
+  stays `xb19` (records are kept per board id, so nothing earlier is
+  overwritten). Earlier pages' storage and exports are untouched.
+- Board ids, definitions, fingerprints, gameplay, the Phase 18B exact
+  TIME UP continuation and the short questionnaire are unchanged.
+- The Phase 19 "Newest: CHALLENGE 21-22 (scroll down)" line is gone — no
+  longer needed.
 
 ## QA (final build)
 
@@ -166,3 +193,31 @@ opt-in hub accessors (`select_scroll`, `select_note`) whose defaults leave
 every existing page unchanged. No campaign level, Production code,
 Supabase, existing board definition, fingerprint or record changed. One
 local commit; nothing pushed, merged, deployed or uploaded.
+
+## QA — selection refinement (new boards only on the primary screen)
+
+Re-run on a fresh dev / player export after the change:
+
+| Suite | Result |
+|---|---|
+| Browser `?extreme90p19=1` (iPhone SE viewport) | 62 / 62 — the primary screen shows only CHALLENGE 1-2 (N35, N36), no scrolling; PREVIOUS CHALLENGES lists CHALLENGE 3-22 (every tile reached, BACK on screen, none of the new boards); every board played by touch, earlier boards return to PREVIOUS CHALLENGES; TIME UP + exact continuation; export names the new boards and every board's list under its real id |
+| Browser `?extreme90p18=1` / `?extreme90=1` / `?extreme90p17=1` / `?ta90=1` | 55 / 55, 45 / 45, 51 / 51, 55 / 55 (unchanged) |
+| Browser friend (player) build | 25 / 25; the player build contains 0 `data/dev` files |
+| Extreme90p19Check | 123 checks (primary screen, PREVIOUS CHALLENGES, BACK, return to the right list, export lists) |
+| Extreme90p18Check / Ta90ContinueCheck | 111 / 254 checks (88 cases, all resumed exactly) |
+| Headless regression (incl. Ta90Check, Extreme90Check, Extreme90p17Check, TaPilotCheck) | pass |
+| verify_levels | all 300 levels solvable, campaign rules pass |
+
+Pre-existing, unchanged: RecipientTest's 3 layout checks ("TOTAL SCORE left,
+coins right", en_US / he_IL / ar_SA).
+
+One assertion of the new browser check was corrected during the run: it
+assumed the PREVIOUS CHALLENGES list must scroll, but without the note and
+the COPY / HOW IT WORKS buttons its 20 tiles fit on the iPhone SE screen.
+The check now requires every tile to be reachable (as the headless check
+does); the re-run passed.
+
+Not run again (the change does not reach them; they passed on the Phase 19
+build): the browser `?tapilot`, timing, stime and ttime pages.
+
+Browser tests are headless Chromium at iPhone SE size, not a real iPhone.

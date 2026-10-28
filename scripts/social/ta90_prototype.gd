@@ -31,7 +31,7 @@ const ACCENT := Color("#1A9FE6")
 const ORDER90 := ["N1", "N2", "N3", "N4", "N5", "N6", "N7", "N8", "N9", "N10", "N11", "N12", "N13"]
 const WELCOME := "Clear a puzzle in 90 seconds, with music that follows the clock.\n\nPlay one puzzle, or more, in any order. Turn the music off any time with the MUSIC button.\n\nAfter each puzzle: a few quick questions (you can skip any of them).\n\nNo names, no accounts: your answers stay on this phone until you tap COPY ALL RESULTS and send them to us."
 
-enum View { WELCOME, FAMILIARITY, SELECT, PUZZLE }
+enum View { WELCOME, FAMILIARITY, SELECT, PUZZLE, PREVIOUS }
 
 var state: Dictionary = {}
 var view: int = View.WELCOME
@@ -41,7 +41,7 @@ var _pages: Dictionary = {}
 var _root: Control
 var _rows: Dictionary = {}  # board -> [button, status label]
 var _copy: PillButton
-var _scroll: ScrollContainer = null
+var _scrolls: Dictionary = {}  # view -> its scrolling challenge list
 var _copy_status: Label
 
 
@@ -133,6 +133,20 @@ func select_scroll() -> bool:
 
 func select_note() -> String:
 	return ""
+
+
+## Phase 19 QA rule: boards an earlier phase already tested. They are kept off
+## the primary screen (which shows only this phase's new boards) and listed on
+## a separate PREVIOUS CHALLENGES screen (replay / regression, never required).
+## Default none: one list, as before.
+func previous_boards() -> Array:
+	return []
+
+
+## The primary screen's boards: every board not on the previous list.
+func new_boards() -> Array:
+	var prev := previous_boards()
+	return order.filter(func(b): return not prev.has(b))
 
 
 ## A longer list: a tighter selection screen (smaller title, gaps and
@@ -246,6 +260,7 @@ func open_puzzle(board: String) -> void:
 
 
 func close_puzzle(show_select: bool = true) -> void:
+	var back := View.PREVIOUS if previous_boards().has(str(state.get("current", ""))) else View.SELECT
 	if page:
 		if page.play:
 			page.play.end()
@@ -254,7 +269,7 @@ func close_puzzle(show_select: bool = true) -> void:
 	if show_select:
 		state["current"] = ""
 		_save_state()
-		_show(View.SELECT)
+		_show(back)
 
 
 # --- Export -------------------------------------------------------------------------------
@@ -328,9 +343,10 @@ func _show(v: int) -> void:
 	_root.visible = v != View.PUZZLE
 	for k in _pages:
 		_pages[k].visible = k == v
-	if v == View.SELECT:
+	if v == View.SELECT or v == View.PREVIOUS:
 		for b in _rows:
 			_rows[b][1].text = _status(b) if Ta90TimeAttack.BOARDS90[b].get("reference", false) else short_status(b)
+	if v == View.SELECT:
 		_copy_status.text = ""
 		if OS.has_feature("web"):
 			SocialWeb.set_share(results_json(), "", "")
@@ -407,25 +423,67 @@ func _build() -> void:
 	# Phase 15: up to 15 puzzles on an iPhone SE without scrolling - a grid of
 	# compact tiles (PUZZLE n + a short status), three to a row; the reference
 	# (&ta90ref=1 only) keeps its own full-width, labelled row below.
+	var prev := previous_boards()
+	_grid(s, new_boards(), View.SELECT, select_scroll(), cmp)
+	if not prev.is_empty():
+		# Phase 19: earlier phases' boards on their own screen (optional).
+		var more := _button("PREVIOUS CHALLENGES", "PreviousChallenges", Palette.WHITE, Palette.TEXT)
+		more.custom_minimum_size = Vector2(0, 80)
+		more.pressed.connect(func():
+			AudioManager.play_ui_tap()
+			_show(View.PREVIOUS))
+		s.add_child(more)
+	_copy = _button("COPY ALL RESULTS", "CopyResults", ACCENT, Palette.WHITE)
+	if cmp:
+		_copy.custom_minimum_size = Vector2(0, 84)
+	s.add_child(_copy)  # the copy itself runs in the page script, inside the tap (iOS)
+	_copy_status = _label("", 18 if cmp else 22, 800)
+	s.add_child(_copy_status)
+	var how := _button("HOW IT WORKS", "HowItWorks", Palette.BACKGROUND, Palette.TEXT_SOFT)
+	how.custom_minimum_size = Vector2(0, 68 if cmp else 80)
+	how.pressed.connect(func(): _show(View.WELCOME))
+	s.add_child(how)
+	_pages[View.SELECT] = s
+	if not prev.is_empty():
+		# PREVIOUS CHALLENGES: already tested; replay any, or none.
+		var pv := _column()
+		pv.add_theme_constant_override("separation", 10)
+		pv.add_child(_label("PREVIOUS CHALLENGES", 40, 900))
+		pv.add_child(_label("Already tested. Replay any of them, or none.", 24, 700))
+		_grid(pv, prev, View.PREVIOUS, true, false)
+		var bk := _button("BACK", "PreviousBack", ACCENT, Palette.WHITE)
+		bk.pressed.connect(func():
+			AudioManager.play_ui_tap()
+			_show(View.SELECT))
+		pv.add_child(bk)
+		_pages[View.PREVIOUS] = pv
+
+
+## One screen's challenge tiles (CHALLENGE n keeps its place in `order`).
+func _grid(s: VBoxContainer, boards: Array, v: int, scroll: bool, cmp: bool) -> void:
+	# Phase 15: up to 15 puzzles on an iPhone SE without scrolling - a grid of
+	# compact tiles (PUZZLE n + a short status), three to a row; the reference
+	# (&ta90ref=1 only) keeps its own full-width, labelled row below.
 	var grid := GridContainer.new()
-	grid.name = "PuzzleGrid"
+	grid.name = "PuzzleGrid" if v == View.SELECT else "PreviousGrid"
 	grid.columns = grid_columns()
 	grid.add_theme_constant_override("h_separation", 12)
 	grid.add_theme_constant_override("v_separation", 6 if cmp else 10)
-	if select_scroll():
+	if scroll:
 		# Phase 19: a longer list scrolls inside its own area; the title and
-		# both buttons stay on screen.
-		_scroll = ScrollContainer.new()
-		_scroll.name = "PuzzleScroll"
-		_scroll.size_flags_vertical = Control.SIZE_EXPAND_FILL
-		_scroll.horizontal_scroll_mode = ScrollContainer.SCROLL_MODE_DISABLED
+		# the buttons stay on screen.
+		var sc := ScrollContainer.new()
+		sc.name = "PuzzleScroll" if v == View.SELECT else "PreviousScroll"
+		sc.size_flags_vertical = Control.SIZE_EXPAND_FILL
+		sc.horizontal_scroll_mode = ScrollContainer.SCROLL_MODE_DISABLED
 		grid.size_flags_horizontal = Control.SIZE_EXPAND_FILL
-		_scroll.add_child(grid)
-		s.add_child(_scroll)
-		_scroll.get_v_scroll_bar().value_changed.connect(func(_v): _publish.call_deferred())
+		sc.add_child(grid)
+		s.add_child(sc)
+		sc.get_v_scroll_bar().value_changed.connect(func(_v): _publish.call_deferred())
+		_scrolls[v] = sc
 	else:
 		s.add_child(grid)
-	for b in order:
+	for b in boards:
 		var ref: bool = Ta90TimeAttack.BOARDS90[b].get("reference", false)
 		var n := order.find(b) + 1
 		var btn: PillButton
@@ -452,17 +510,6 @@ func _build() -> void:
 			AudioManager.play_ui_tap()
 			open_puzzle(b))
 		_rows[b] = [btn, st]
-	_copy = _button("COPY ALL RESULTS", "CopyResults", ACCENT, Palette.WHITE)
-	if cmp:
-		_copy.custom_minimum_size = Vector2(0, 84)
-	s.add_child(_copy)  # the copy itself runs in the page script, inside the tap (iOS)
-	_copy_status = _label("", 18 if cmp else 22, 800)
-	s.add_child(_copy_status)
-	var how := _button("HOW IT WORKS", "HowItWorks", Palette.BACKGROUND, Palette.TEXT_SOFT)
-	how.custom_minimum_size = Vector2(0, 68 if cmp else 80)
-	how.pressed.connect(func(): _show(View.WELCOME))
-	s.add_child(how)
-	_pages[View.SELECT] = s
 
 
 func _column() -> VBoxContainer:
@@ -504,12 +551,13 @@ func _publish() -> void:
 	var buttons := {}
 	var rects := {}
 	if _root.visible:
-		var clip := _scroll.get_global_rect() if _scroll != null and view == View.SELECT else Rect2()
+		var sc: ScrollContainer = _scrolls.get(view)
+		var clip := sc.get_global_rect() if sc != null else Rect2()
 		for b in _pages[view].find_children("*", "BaseButton", true, false):
 			if b.is_visible_in_tree():
 				var r: Rect2 = b.get_global_rect()
 				# A tile scrolled out of its area is not on screen (not tappable).
-				if clip.size.x > 0 and _scroll.is_ancestor_of(b) and not clip.encloses(r):
+				if clip.size.x > 0 and sc.is_ancestor_of(b) and not clip.encloses(r):
 					continue
 				buttons[String(b.name)] = [snappedf(r.get_center().x / vis.x, 0.0001), snappedf(r.get_center().y / vis.y, 0.0001)]
 				rects[String(b.name)] = [snappedf(r.position.x / vis.x, 0.0001), snappedf(r.position.y / vis.y, 0.0001), snappedf(r.size.x / vis.x, 0.0001), snappedf(r.size.y / vis.y, 0.0001)]
@@ -519,7 +567,8 @@ func _publish() -> void:
 	WebBridge.publish(publish_name(), {"order": order, "music_on": state.get("music_on", true), "view": View.keys()[view], "buttons": buttons, "rects": rects, "statuses": statuses,
 		"familiarity": state.get("familiarity", ""), "current": state.get("current", ""), "session": state.get("session", ""), "copy_status": _copy_status.text,
 		"content_bottom": snappedf(_pages[view].get_combined_minimum_size().y / vis.y, 0.0001) if view != View.PUZZLE else -1.0,
-		"scroll": [_scroll.scroll_vertical, int(_scroll.get_v_scroll_bar().max_value - _scroll.size.y)] if _scroll != null else []})
+		"scroll": [_scrolls[view].scroll_vertical, int(_scrolls[view].get_v_scroll_bar().max_value - _scrolls[view].size.y)] if _scrolls.has(view) else [],
+		"primary": new_boards(), "previous": previous_boards()})
 
 
 ## The campaign music bus stays silent while the prototype is open (the

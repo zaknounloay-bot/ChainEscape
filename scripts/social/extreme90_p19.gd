@@ -3,18 +3,22 @@ extends Extreme90P18
 ## DEVELOPMENT ONLY (?extreme90p19=1): the Phase 19 EXTREME selection
 ## (docs/extreme90_phase19.md). ?extreme90=1, ?extreme90p17=1,
 ## ?extreme90p18=1 and ?ta90=1 are unchanged and stay the historical entries.
-## The active selection: CORE, the 13 strong human-review boards, N23 and N24
-## (PROVISIONAL, internal only - never shown), then the Phase 19 candidates;
-## neutral CHALLENGE 1..k, no difficulty shown, no locks. The list scrolls (full
-## size tiles), and a neutral line says which challenges are the newest. Its
-## own storage ("xb19_*", its own hub key) and export ("ce-xb19").
+## QA rule (Phase 19 refinement): the primary screen shows ONLY this phase's
+## new boards (CHALLENGE 1-2 = N35, N36). The boards earlier phases already
+## tested - CORE, the 13 strong boards, N23 and N24 (PROVISIONAL, internal
+## only - never shown) - sit on a separate, optional PREVIOUS CHALLENGES screen
+## (CHALLENGE 3..k, a scrolling list) for regression or replay. Neutral labels,
+## no difficulty shown, no locks. Its own storage ("xb19_*", its own hub key)
+## and export ("ce-xb19"), every run under its real board id.
+## A later phase extends this page: previous_boards() = this page's
+## board_order(), and its new boards are found as the rest.
 ## The 90 s rules, the exact TIME UP continuation (Phase 18B) and the SHORT
 ## questionnaire are the page's own (Ta90TimeAttack), unchanged.
 
 const P19_PARAM := "extreme90p19"
 const P19_STATE_PATH := "user://xb19_hub.json"
 const P19_LS_KEY := "chain_escape_xb19_hub"
-const SELECTION19 := "xb19-v1"
+const SELECTION19 := "xb19-v2"  # v2: new boards first (CHALLENGE 1-2), the previous ones after
 const NEW19 := ["N35", "N36"]
 
 
@@ -32,8 +36,9 @@ static func p19_requested() -> bool:
 	return where.contains(P19_PARAM + "=1") or where.contains(P19_PARAM + "=true")
 
 
+## In CHALLENGE order: the new boards, then the previous selection.
 static func selection19() -> Array:
-	return Extreme90P18.selection() + NEW19
+	return NEW19 + Extreme90P18.selection()
 
 
 static func group19(k: String) -> String:
@@ -42,6 +47,11 @@ static func group19(k: String) -> String:
 
 func board_order() -> Array:
 	return selection19()
+
+
+## Already tested in earlier phases: the PREVIOUS CHALLENGES screen.
+func previous_boards() -> Array:
+	return Extreme90P18.selection()
 
 
 func store() -> String:
@@ -76,22 +86,12 @@ func select_compact() -> bool:
 	return false
 
 
-func select_scroll() -> bool:
-	return true
-
-
-## Where the newest challenges are (neutral: no difficulty, no ids).
-func select_note() -> String:
-	if NEW19.is_empty():
-		return ""
-	var first := Extreme90P18.selection().size() + 1
-	return "Newest: CHALLENGE %d-%d (scroll down)" % [first, first + NEW19.size() - 1]
-
-
 func bundle() -> Dictionary:
 	var b := super.bundle()
 	b["selection"] = SELECTION19
 	b["archived"] = ARCHIVED
 	for k in b["boards"]:
 		b["boards"][k]["group"] = group19(k)
+		b["boards"][k]["list"] = "previous" if previous_boards().has(k) else "new"
+	b["new"] = new_boards()
 	return b

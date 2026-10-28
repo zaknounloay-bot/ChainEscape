@@ -1,7 +1,8 @@
 extends "res://tools/extreme90_check.gd"
 ## Phase 19 EXTREME selection (development only, ?extreme90p19=1): end-to-end
 ## checks of Extreme90P19 on the unchanged 90-second page (the Phase 18 check,
-## run on the Phase 19 page: its storage, export, groups and scrolling list).
+## run on the Phase 19 page: its storage, export, groups; the primary screen
+## with only the new boards, the optional PREVIOUS CHALLENGES screen).
 ##   godot --headless --path . res://tools/Extreme90p19Check.tscn
 ## The selection: CORE (exact Phase 14 / 15 fingerprints), the nine strong
 ## boards, N23 and N24 provisional (internal only) and the Phase 18
@@ -35,7 +36,7 @@ func _run() -> void:
 	await _select_screen()
 	for b in Extreme90P19.selection19():
 		await _solve17(b)
-	await _timeup17(Extreme90P19.selection19()[-1])
+	await _timeup17(Extreme90P19.NEW19[-1])
 	await _skip17(Extreme90P19.selection19()[0])
 	await _export17()
 	await _timeup_position18()
@@ -53,8 +54,10 @@ func _selection() -> void:
 	var same := true
 	for b in BASELINE:
 		same = same and Ta90TimeAttack.BOARDS90[b]["fp"] == BASELINE[b] and PuzzleDefinition.from_dict(_rec(b)["puzzle"]).fingerprint() == BASELINE[b]
-	_check(sel.slice(0, 5) == ["N3", "N5", "N7", "N11", "N13"] and same, "CORE first: N3, N5, N7, N11, N13 with their exact Phase 14 / 15 fingerprints")
-	_check(sel.slice(0, 20) == Extreme90P18.selection() and Extreme90P18.selection().size() == 20,
+	var nn: int = Extreme90P19.NEW19.size()
+	_check(sel.slice(0, nn) == Extreme90P19.NEW19 and sel.size() == nn + 20, "the Phase 19 boards first: CHALLENGE 1-%d = %s" % [nn, ", ".join(Extreme90P19.NEW19)])
+	_check(sel.slice(nn, nn + 5) == ["N3", "N5", "N7", "N11", "N13"] and same, "then CORE: N3, N5, N7, N11, N13 with their exact Phase 14 / 15 fingerprints")
+	_check(sel.slice(nn) == Extreme90P18.selection() and Extreme90P18.selection().size() == 20,
 		"then the Phase 18B selection unchanged: 13 strong (N31-N34 included), N23 and N24 provisional")
 	var groups := {}
 	for b in sel:
@@ -98,22 +101,55 @@ func _select_screen() -> void:
 	await _frames(2)
 	var vis := h.get_viewport().get_visible_rect()
 	var sel := Extreme90P19.selection19()
-	var n: int = sel.size()
+	var nn: int = Extreme90P19.NEW19.size()
+	var main: Control = h._pages[Ta90Prototype.View.SELECT]
 	var tiles_ok := true
 	var hidden := true
-	var sc0: ScrollContainer = h.find_child("PuzzleScroll", true, false)
-	for i in range(1, n + 1):
-		var t: Control = h.find_child("Puzzle_%d" % i, true, false)
-		if sc0 != null and t != null:
-			sc0.ensure_control_visible(t)
-			await _frames(1)
+	for i in range(1, nn + 1):
+		var t: Control = main.find_child("Puzzle_%d" % i, true, false)
 		tiles_ok = tiles_ok and t != null and t.text == "CHALLENGE %d" % i and vis.encloses(t.get_global_rect()) and t.size.y >= 80
 	for l in h.find_children("*", "Label", true, false) + h.find_children("*", "Button", true, false):
 		var tx: String = l.text.to_upper()
 		hidden = hidden and not tx.contains("PROVISIONAL") and not tx.contains("CORE") and not tx.contains("N23") and not tx.contains("EXTREME\n") or tx == "EXTREME\nTIME ATTACK"
-	_check(h.view == Ta90Prototype.View.SELECT and h.order == sel and tiles_ok and h.find_child("Puzzle_%d" % (n + 1), true, false) == null
-		and vis.encloses(h._copy.get_global_rect()), "CHOOSE A CHALLENGE: the selection only, CHALLENGE 1-%d, each reachable on screen, with COPY ALL RESULTS" % n)
+	var more: Control = main.find_child("PreviousChallenges", true, false)
+	_check(h.view == Ta90Prototype.View.SELECT and h.order == sel and h.new_boards() == Extreme90P19.NEW19 and tiles_ok
+		and main.find_child("Puzzle_%d" % (nn + 1), true, false) == null and main.find_child("PuzzleScroll", true, false) == null and main.find_child("SelectNote", true, false) == null
+		and more != null and vis.encloses(more.get_global_rect()) and vis.encloses(h._copy.get_global_rect()) and vis.encloses(main.find_child("HowItWorks", true, false).get_global_rect()),
+		"CHOOSE A CHALLENGE: ONLY the new boards (CHALLENGE 1-%d = %s, found as the boards not on the previous list), no scrolling; PREVIOUS CHALLENGES, COPY ALL RESULTS and HOW IT WORKS on the iPhone SE screen" % [nn, ", ".join(Extreme90P19.NEW19)])
 	_check(hidden, "no internal group, id or difficulty shown (N23's provisional status stays internal)")
+	(more as Button).pressed.emit()
+	await _frames(2)
+	var pv: Control = h._pages[Ta90Prototype.View.PREVIOUS]
+	var sc: ScrollContainer = pv.find_child("PreviousScroll", true, false)
+	var reach := true
+	for i in range(nn + 1, sel.size() + 1):
+		var t := pv.find_child("Puzzle_%d" % i, true, false) as Button
+		sc.ensure_control_visible(t)
+		await _frames(2)
+		var fits: bool = t.get_theme_font("font").get_string_size(t.text, HORIZONTAL_ALIGNMENT_LEFT, -1, t.get_theme_font_size("font_size")).x <= t.size.x - 24
+		reach = reach and t.text == "CHALLENGE %d" % i and sc.get_global_rect().encloses(t.get_global_rect()) and t.size.y >= 84 and fits
+	var bk: Control = pv.find_child("PreviousBack", true, false)
+	_check(h.view == Ta90Prototype.View.PREVIOUS and pv.visible and not main.visible and reach and vis.encloses(sc.get_global_rect()) and vis.encloses(bk.get_global_rect())
+		and pv.find_child("Puzzle_1", true, false) == null and h.previous_boards() == Extreme90P18.selection(),
+		"PREVIOUS CHALLENGES (optional): the %d earlier boards, CHALLENGE %d-%d, a scrolling list (84 high, full label), BACK on screen; none of the new boards" % [sel.size() - nn, nn + 1, sel.size()])
+	(bk as Button).pressed.emit()
+	await _frames(2)
+	_check(h.view == Ta90Prototype.View.SELECT and main.visible, "BACK: to the primary screen")
+	# A previous challenge opens directly (no lock) and returns to its own list.
+	(more as Button).pressed.emit()
+	await _frames(1)
+	h.open_puzzle(sel[nn])
+	await _frames(3)
+	var opened: bool = h.page != null and h.page.board_ok and h.view == Ta90Prototype.View.PUZZLE
+	h.close_puzzle(true)
+	await _frames(2)
+	var back_prev: bool = opened and h.view == Ta90Prototype.View.PREVIOUS
+	h.open_puzzle(sel[0])
+	await _frames(3)
+	h.close_puzzle(true)
+	await _frames(2)
+	_check(back_prev and h.view == Ta90Prototype.View.SELECT and str(h.state.get("current", "")) == "",
+		"%s (a previous challenge) opens at once, no lock, and leads back to PREVIOUS CHALLENGES; %s back to the primary screen" % [sel[nn], sel[0]])
 	await _close(h)
 	_check(not AudioServer.is_bus_mute(mbus), "closing the selection restores the campaign music bus")
 
@@ -216,7 +252,7 @@ func _export17() -> void:
 		groups_ok = groups_ok and g == Extreme90P19.group19(k) and bd["boards"][k]["fingerprint"] == Ta90TimeAttack.BOARDS90[k]["fp"] and not bd["boards"][k]["mechanics"].is_empty()
 	_check(bd["format"] == "ce-xb19" and bd["selection"] == Extreme90P19.SELECTION19 and bd["archived"] == Extreme90P18.ARCHIVED and bd["questionnaire"] == Ta90TimeAttack.SHORT_SET
 		and bd["boards"].keys().size() == Extreme90P19.selection19().size() and groups_ok and bd["boards"]["N23"]["group"] == "provisional",
-		"export ce-xb17: the selection version, each board's group (N23 provisional), the archived ids, the questionnaire version")
+		"export ce-xb19: the selection version (xb19-v2), each board's group (N23 provisional), the archived ids, the questionnaire version")
 	var js := JSON.stringify(bd)
 	var back = JSON.parse_string(js)
 	_check(typeof(back) == TYPE_DICTIONARY and back["boards"].keys().size() == bd["boards"].keys().size(), "the export is valid JSON and round-trips")
@@ -234,26 +270,11 @@ func _export17() -> void:
 	_check(pb["format"] == "ce-xb17" and pb["selection"] == "xb17-v1" and pb["boards"].keys().size() == 18 and pb["boards"]["N25"]["group"] == "phase17",
 		"?extreme90p17=1's export (ce-xb17) unchanged: all 18 Phase 17 boards, N25 / N28 still there")
 	await _close(p17)
-	var hg := await _hub()
-	(hg.find_child("PilotStart", true, false) as Button).pressed.emit()
-	await _frames(1)
-	var vis := hg.get_viewport().get_visible_rect()
-	var sc: ScrollContainer = hg.find_child("PuzzleScroll", true, false)
-	var n := Extreme90P19.selection19().size()
-	var how: Control = hg.find_child("HowItWorks", true, false)
-	var reach := true
-	for i in range(1, n + 1):
-		var t := hg.find_child("Puzzle_%d" % i, true, false) as Button
-		sc.ensure_control_visible(t)
-		await _frames(2)
-		var fits: bool = t.get_theme_font("font").get_string_size(t.text, HORIZONTAL_ALIGNMENT_LEFT, -1, t.get_theme_font_size("font_size")).x <= t.size.x - 24
-		reach = reach and t.text == "CHALLENGE %d" % i and sc.get_global_rect().encloses(t.get_global_rect()) and t.size.y >= 84 and fits
-	_check(sc != null and reach and vis.encloses(sc.get_global_rect()) and vis.encloses(hg._copy.get_global_rect()) and vis.encloses(how.get_global_rect()),
-		"CHOOSE A CHALLENGE: a scrolling list - every CHALLENGE 1-%d tile (84 high, full label) can be scrolled into view; title, COPY ALL RESULTS and HOW IT WORKS stay on the iPhone SE screen" % n)
-	var note: Label = hg.find_child("SelectNote", true, false)
-	_check(Extreme90P19.NEW19.is_empty() or (note != null and vis.encloses(note.get_global_rect()) and note.text.begins_with("Newest: CHALLENGE %d-%d" % [21, 20 + Extreme90P19.NEW19.size()])),
-		"the newest challenges are named above the list (no difficulty, no ids)")
-	await _close(hg)
+	var lists_ok := true
+	for k in bd["boards"]:
+		lists_ok = lists_ok and bd["boards"][k]["list"] == ("new" if Extreme90P19.NEW19.has(k) else "previous") and bd["boards"][k]["puzzle"] == Extreme90P19.selection19().find(k) + 1
+	_check(lists_ok and bd["new"] == Extreme90P19.NEW19 and bd["boards"]["N35"]["puzzle"] == 1 and bd["boards"]["N3"]["puzzle"] == Extreme90P19.NEW19.size() + 1,
+		"export: every board under its real id with its challenge number and its list (new / previous); the new boards named")
 
 
 ## Phase 18: TIME UP on a Movable / portal board after a push (or a portal

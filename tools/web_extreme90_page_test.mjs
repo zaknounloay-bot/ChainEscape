@@ -20,6 +20,9 @@
 //   and also checks ?extreme90=1's storage (xb90) is never written.
 //   Phase 18: --entry=extreme90p18 (xb18, ce-xb18, chainEscapeXb18): neither
 //   xb90 nor xb17 storage written.
+//   Phase 19: --entry=extreme90p19 (xb19): CHOOSE A CHALLENGE shows ONLY the
+//   new boards (CHALLENGE 1-2); the earlier ones are on the optional PREVIOUS
+//   CHALLENGES screen (a scrolling list, BACK), each still played by touch.
 // Chromium is not iPhone Safari (see tools/web_ta90_page_test.mjs).
 import http from 'node:http';
 import fs from 'node:fs';
@@ -41,7 +44,7 @@ const ENTRY = (process.argv.find((a) => a.startsWith('--entry=')) || '--entry=ex
 const P17 = ENTRY === 'extreme90p17' || ENTRY === 'extreme90p18' || ENTRY === 'extreme90p19';  // a later selection: the earlier entries' storage must stay untouched
 const ST = { extreme90: 'xb90', extreme90p17: 'xb17', extreme90p18: 'xb18', extreme90p19: 'xb19' }[ENTRY], FMT = 'ce-' + ST, PUB = 'chainEscape' + ST[0].toUpperCase() + ST.slice(1);
 const OLDER = { extreme90: [], extreme90p17: ['xb90'], extreme90p18: ['xb90', 'xb17'], extreme90p19: ['xb90', 'xb17', 'xb18'] }[ENTRY];
-const SCROLL = ENTRY === 'extreme90p19';  // Phase 19: the challenge list scrolls (only the tiles in view are published)
+const PREV = ENTRY === 'extreme90p19';  // Phase 19: new boards only on the primary screen; the rest on PREVIOUS CHALLENGES (scrolls)
 const LSB = (b) => `chain_escape_${ST}_${b.toLowerCase()}_state`;
 const FILL = { green: [0x1e, 0x7b, 0x34], orange: [0xc2, 0x41, 0x0c], red: [0xb9, 0x1c, 0x1c] };
 const types = { '.html': 'text/html', '.js': 'text/javascript', '.wasm': 'application/wasm', '.pck': 'application/octet-stream', '.png': 'image/png' };
@@ -184,30 +187,49 @@ try {
   await a.tapHub('Familiar_PLAYED_A_LITTLE', 'FAMILIARITY');
   h = await a.waitFor(a.hub, (v) => v.view === 'SELECT', 'select');
   const bank = h.order;
+  const nNew = PREV ? h.primary.length : bank.length;  // CHALLENGE 1..nNew on the primary screen
   let tiles = bank.map((_, i) => h.rects['Puzzle_' + (i + 1)]);
-  if (SCROLL) {
-    // Every tile can be scrolled into view (each checked where it is shown).
-    tiles = [];
-    for (let i = 0; i < bank.length; i++) {
+  if (PREV) {
+    const main = Object.keys(h.buttons).filter((n) => n.startsWith('Puzzle_')).sort();
+    check(nNew === 2 && h.primary.join(',') === bank.slice(0, nNew).join(',') && h.previous.join(',') === bank.slice(nNew).join(',')
+      && main.join(',') === 'Puzzle_1,Puzzle_2' && !h.scroll.length && h.buttons.PreviousChallenges && h.buttons.CopyResults && h.buttons.HowItWorks,
+      `CHOOSE A CHALLENGE: ONLY the new boards (${h.primary.join(', ')} = CHALLENGE 1-${nNew}), no scrolling; PREVIOUS CHALLENGES, COPY ALL RESULTS, HOW IT WORKS on screen`);
+    await a.shot('X2_select');
+    tiles = bank.slice(0, nNew).map((_, i) => h.rects['Puzzle_' + (i + 1)]);
+    // The optional PREVIOUS CHALLENGES screen: every earlier tile scrolls into view.
+    await a.tapHub('PreviousChallenges', 'SELECT');
+    let pv = await a.waitFor(a.hub, (v) => v.view === 'PREVIOUS' && v.buttons.PreviousBack, 'previous');
+    const noNew = !pv.buttons.Puzzle_1 && !pv.buttons.Puzzle_2;
+    await a.shot('X2b_previous');
+    for (let i = nNew; i < bank.length; i++) {
       await a.reveal('Puzzle_' + (i + 1));
       tiles.push((await a.hub()).rects['Puzzle_' + (i + 1)]);
     }
     for (let k = 0; k < 40; k++) { await a.page.mouse.move(W / 2, H * 0.5); await a.page.mouse.wheel(0, -400); await sleep(60); }
     await sleep(400);
-    h = await a.hub();
-    check(h.scroll && h.scroll.length === 2 && h.scroll[0] === 0 && h.scroll[1] > 0, `the challenge list scrolls (scrolled back to the top: ${JSON.stringify(h.scroll)})`);
+    pv = await a.hub();
+    // The list sits in a scroll area (it scrolls only if the tiles do not all fit).
+    check(noNew && pv.scroll && pv.scroll.length === 2 && pv.scroll[0] === 0 && await a.hubFits() && await a.noOverflow(),
+      `PREVIOUS CHALLENGES: CHALLENGE ${nNew + 1}-${bank.length}, every tile reached, in a scroll area (${JSON.stringify(pv.scroll)}); BACK on screen; none of the new boards`);
+    await a.tapHub('PreviousBack', 'PREVIOUS');
+    h = await a.waitFor(a.hub, (v) => v.view === 'SELECT', 'back to select');
   }
-  check(bank.slice(0, 5).join(',') === 'N3,N5,N7,N11,N13' && !bank.includes('TA') && tiles.every((r) => r && r[1] >= 0 && r[1] + r[3] <= 1.0001 && r[3] * H >= 40)
+  check(bank.slice(PREV ? nNew : 0, (PREV ? nNew : 0) + 5).join(',') === 'N3,N5,N7,N11,N13' && !bank.includes('TA') && tiles.length === bank.length && tiles.every((r) => r && r[1] >= 0 && r[1] + r[3] <= 1.0001 && r[3] * H >= 40)
     && !h.buttons['Puzzle_' + (bank.length + 1)] && await a.hubFits() && await a.noOverflow() && Object.values(h.statuses).every((t) => t === 'New'),
-    `CHOOSE A CHALLENGE: only the bank (${bank.join(', ')}), CHALLENGE 1-${bank.length} tiles ${SCROLL ? 'each reachable by scrolling, each on screen where shown' : 'all on the iPhone SE screen'}, no reference`);
-  await a.shot('X2_select');
+    `CHALLENGE tiles: ${bank.join(', ')}, CHALLENGE 1-${bank.length} ${PREV ? '(the earlier ones on PREVIOUS CHALLENGES, each reachable by scrolling)' : 'all on the iPhone SE screen'}, no reference`);
+  if (!PREV) await a.shot('X2_select');
   const benchMs = {};
   let unlocked = false;
   for (let i = 0; i < bank.length; i++) {
     const b = bank[i];
     await a.page.evaluate(() => { window.chainEscapeVhBench = null; });
-    if (SCROLL) await a.reveal('Puzzle_' + (i + 1));
-    await a.tapHub('Puzzle_' + (i + 1), 'SELECT', 1200);
+    // Phase 19: an earlier board is opened from PREVIOUS CHALLENGES (and returns there).
+    const home = PREV && i >= nNew ? 'PREVIOUS' : 'SELECT';
+    const cur = (await a.hub()).view;
+    if (cur !== home) await a.tapHub(home === 'PREVIOUS' ? 'PreviousChallenges' : 'PreviousBack', cur);
+    await a.waitFor(a.hub, (v) => v.view === home, home);
+    if (home === 'PREVIOUS') await a.reveal('Puzzle_' + (i + 1));
+    await a.tapHub('Puzzle_' + (i + 1), home, 1200);
     await a.waitFor(a.vt, (x) => x.screen === 'BRIEF' && x.buttons.BeginPuzzle, 'brief ' + b);
     const bench = await a.waitFor(() => a.page.evaluate(() => window.chainEscapeVhBench || null), (x) => x.done && x.results.length === 1 && x.results[0].id === b, 'bench ' + b, 60000);
     benchMs[b] = bench.results[0].verify_ms;
@@ -249,8 +271,8 @@ try {
         `${b}: the SHORT questionnaire by touch - difficulty (one per line), 1-5 in a row, YES / NO in a row, all on the iPhone SE screen; then straight back to the selection (no second set)`);
     } else {
       await a.tapVt('Think_SKIP', 'THINK', 900);
-      const back = await a.waitFor(a.hub, (x) => x.view === 'SELECT', 'select after SKIP', 15000).then(() => true).catch(() => false);
-      check(back, `${b}: one SKIP leaves the questionnaire; back to CHOOSE A CHALLENGE`);
+      const back = await a.waitFor(a.hub, (x) => x.view === home, 'select after SKIP', 15000).then(() => true).catch(() => false);
+      check(back, `${b}: one SKIP leaves the questionnaire; back to ${home === 'PREVIOUS' ? 'PREVIOUS CHALLENGES' : 'CHOOSE A CHALLENGE'}`);
     }
   }
   check(Object.keys(benchMs).length === bank.length && Object.values(benchMs).every((x) => x <= 250), `WebAssembly: a full solve (the TIME UP check) per board ${JSON.stringify(benchMs)} ms`);
@@ -307,6 +329,8 @@ try {
     check(bundle && bundle.format === FMT && bundle.rules.version === 'ta90-v1' && r && r.board === b0 && r.timed_outcome === 'TIME UP' && r.untimed_success
       && Object.keys(bundle.boards).length === h2.order.length && h2.order.every((b, i) => bundle.boards[b].puzzle === i + 1 && /^[0-9a-f]{64}$/.test(bundle.boards[b].fingerprint)),
       `COPY ALL RESULTS: one ${FMT} bundle - every board under its internal id with its fingerprint and challenge number; the run kept TIME UP and the untimed solve apart` + (P17 ? ` (selection ${bundle && bundle.selection}, N23 ${bundle && bundle.boards.N23 && bundle.boards.N23.group})` : ''));
+    if (PREV) check(bundle && bundle.selection === 'xb19-v2' && bundle.new.join(',') === h2.primary.join(',') && h2.order.every((b) => bundle.boards[b].list === (h2.primary.includes(b) ? 'new' : 'previous')),
+      `export: the new boards named (${bundle && bundle.new}), every board's list (new / previous) under its real id`);
     allErrors.push(...d.errors); allExternal.push(...d.external);
     await c2.close();
   }
