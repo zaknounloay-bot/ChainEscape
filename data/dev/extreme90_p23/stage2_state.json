@@ -1,0 +1,82 @@
+{
+ "accepted": [],
+ "reports": 2,
+ "log": [
+  {
+   "key": "K2_PORTALRAM_s21_1",
+   "stage": "report",
+   "decision": "rejected",
+   "why": "filler: 1 trivial removals ['r2c1 P^']"
+  },
+  {
+   "key": "K4_TOGGLE_s22_2",
+   "stage": "prefilter",
+   "decision": "dropped",
+   "why": "overlap 0.41 with N38"
+  },
+  {
+   "key": "K4_TOGGLE_s22_1",
+   "stage": "report",
+   "decision": "ACCEPTED",
+   "why": ""
+  },
+  {
+   "key": "K4_TOGGLE_s22_1",
+   "stage": "core check (protocol rule 5, by hand)",
+   "decision": "rejected",
+   "why": "core dependency bypassed: the core's rammer R r1c5 leaves at step 3 of the Solver's line before any switch fires; the core shell G r1c6 is cracked instead by the added G r3c6 (step 7, 'r3c6^ ram'). The toggle idea (ram between two firings) never happens - the board is a switch-timing / ram board of the N38 / N41 kind (overlap 0.39 with N32, 0.41 between its own sibling and N38)."
+  },
+  {
+   "key": "K4_TOGGLE_s22c_1",
+   "stage": "prefilter",
+   "decision": "dropped",
+   "why": "overlap 0.42 with N49"
+  },
+  {
+   "key": "K4_TOGGLE_s22c_2",
+   "stage": "prefilter",
+   "decision": "dropped",
+   "why": "overlap 0.43 with N32"
+  }
+ ],
+ "rejected_core_check": [
+  {
+   "key": "K4_TOGGLE_s22_1",
+   "core": "K4_TOGGLE",
+   "family": "lastram",
+   "map": [
+    ". . . . . . .",
+    ". . . . . R<&A G^=",
+    "R< . . Y< P<&A G^ R<",
+    "G>= . . . Y^&A B>&A G^",
+    ". . . . B>= Y> R^",
+    ". . . . . . .",
+    "Pv%A . . . Yv%A . ."
+   ],
+   "score": 140.56,
+   "search": {
+    "distinct": 4,
+    "steps": 16,
+    "shortcut": 0.05,
+    "positions": 399,
+    "pieces": 16
+   },
+   "closest": {
+    "known": "N32",
+    "overlap": 0.39,
+    "pool": "",
+    "pool_overlap": 0
+   },
+   "filler": {
+    "distinct": 4,
+    "pieces_tested": 16,
+    "steps": 16,
+    "trivial": [],
+    "trivial_removals": 0
+   },
+   "report": "data/dev/extreme90_p23/report_K4_TOGGLE_s22_1.json",
+   "fingerprint": "3b88c20b7a1ab27c107670a8492e19cf262d8f4ef56e6a0c00884606e847cce4",
+   "rejected_after_report": true
+  }
+ ]
+}

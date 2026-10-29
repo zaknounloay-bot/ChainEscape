@@ -1,0 +1,120 @@
+{
+ "K1_LASTRAM": {
+  "distinct_block": 2,
+  "distinct_label": 2,
+  "greedy": {
+   "look2": 0.267,
+   "look4": 1,
+   "min_turn": 0.15,
+   "mobility": 0.483,
+   "safe": 0.15
+  },
+  "losing_calm": 0,
+  "losing_risky": 4,
+  "multi_risky_share": 0.5,
+  "positions": 20,
+  "risky_per_step": [
+   3,
+   2,
+   2,
+   0,
+   0,
+   0
+  ],
+  "solution": 6
+ },
+ "K2_PORTALRAM": {
+  "distinct_block": 1,
+  "distinct_label": 1,
+  "greedy": {
+   "look2": 1,
+   "look4": 1,
+   "min_turn": 0.517,
+   "mobility": 0.517,
+   "safe": 0.517
+  },
+  "losing_calm": 0,
+  "losing_risky": 1,
+  "multi_risky_share": 0.25,
+  "positions": 6,
+  "risky_per_step": [
+   2,
+   0,
+   0,
+   0
+  ],
+  "solution": 4
+ },
+ "K3_RELAY": {
+  "distinct_block": 1,
+  "distinct_label": 1,
+  "greedy": {
+   "look2": 1,
+   "look4": 1,
+   "min_turn": 0,
+   "mobility": 0.517,
+   "safe": 0.517
+  },
+  "losing_calm": 0,
+  "losing_risky": 1,
+  "multi_risky_share": 0.13,
+  "positions": 16,
+  "risky_per_step": [
+   2,
+   0,
+   0,
+   1,
+   0,
+   0,
+   0,
+   0
+  ],
+  "solution": 8
+ },
+ "K4_TOGGLE": {
+  "distinct_block": 2,
+  "distinct_label": 2,
+  "greedy": {
+   "look2": 0.65,
+   "look4": 1,
+   "min_turn": 0.65,
+   "mobility": 0.65,
+   "safe": 0.65
+  },
+  "losing_calm": 0,
+  "losing_risky": 2,
+  "multi_risky_share": 0.2,
+  "positions": 17,
+  "risky_per_step": [
+   3,
+   1,
+   1,
+   1,
+   1
+  ],
+  "solution": 5
+ },
+ "K5_SPINCOUNT": {
+  "distinct_block": 2,
+  "distinct_label": 2,
+  "greedy": {
+   "look2": 0.683,
+   "look4": 1,
+   "min_turn": 0,
+   "mobility": 0.683,
+   "safe": 0.683
+  },
+  "losing_calm": 0,
+  "losing_risky": 2,
+  "multi_risky_share": 0.2,
+  "positions": 18,
+  "risky_per_step": [
+   3,
+   1,
+   1,
+   1,
+   0
+  ],
+  "solution": 5
+ }
+}

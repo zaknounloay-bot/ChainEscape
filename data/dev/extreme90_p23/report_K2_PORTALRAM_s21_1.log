@@ -1,0 +1,18 @@
+Godot Engine v4.3.stable.official.77dcf97d8 - https://godotengine.org
+
+known boards: 25806
+known boards incl. T1-T5 and the demos: 25806; played boards for the near-copy guard: 333
+
+=== K2_PORTALRAM_s21_1 (target EXTREME, 16 pieces) ===
+   . . . . . . .
+   . B<&A Gv OA . . R>&A
+   . P^ R> . . . Y^
+   . . . . . . .
+   . Rv= Pv&A G^&A OA Y^= .
+   . P<= Bv . . B>%A .
+   Gv%A . . . . . .
+   solution: r5c2v [x4], r4c2v [x4], r4c3^ [x2], r5c5> [x2], r1c6< ram [x1], r4c1v ram [x1], r5c1< [x1], r4c1v [x1], r1c6< [x1], r2c6^ [x1], r2c2> [x1], r1c2v [x1], r1c1> ram [x1], r4c5^, r1c1>, r2c1^, r6c0v
+   A {"fingerprint":"9d607b05ee99564e026b1fc6ade4d52576a4f32f28a836f8451dcaf533cb6383","hint_nodes":[69,33],"parity":[0,0],"portals":2,"position_cap":2000,"positions":461,"replay":true,"solution":17,"solve_ms":12,"timeup_worst_ms":6.2,"timeup_worst_nodes":131,"winnable":39}
+   B {"coverage":0.76,"decision_steps":13,"distinct_mistakes":4,"endgame_decision":true,"last_decision":13,"late":0.76,"line(see above)":["r5c2v [x4]","r4c2v [x4]","r4c3^ [x2]","r5c5> [x2]","r1c6< ram [x1]","r4c1v ram [x1]","r5c1< [x1]","r4c1v [x1]","r1c6< [x1]","r2c6^ [x1]","r2c2> [x1]","r1c2v [x1]","r1c1> ram [x1]","r4c5^","r1c1>","r2c1^","r6c0v"],"losing_per_step":[4,4,2,2,1,1,1,1,1,1,1,1,1,0,0,0,0],"matters_armor":true,"matters_portal":true,"matters_switch":true,"mistakes":["r1c1<","r1c6>","r5c5>","r6c0v"],"shortcut":0.017,"without_armor":"without it: 0 decision steps, 0 distinct mistakes (with it: 13, 4)","without_portal":"unsolvable without it","without_switch":"unsolvable without it"}
+   C {"decisions_k4_6_8":[11,9,6],"deepest":15,"greedy":{"look2":0.015,"look4":0.017,"min_turn":0.015,"mobility":0,"safe":0.015},"hidden_k6_8":[17,14],"learner":{"look4":3,"look6":3},"look6_greedy":0.025,"opening":"2 / 6","pressure":{"advances":0,"calm_prefix":1,"flips":2,"multi_turned":0,"prediction_share":0.24,"pulls":0,"rams":3,"signals":2,"spinners_turned":0,"trap_delay_median":9,"turns":0,"undo_proof":0.9},"win_share":0.085}
+   VERDICT: HUMAN-REVIEW CANDIDATE

@@ -1,0 +1,3118 @@
+{
+"tool": "tools/ta90_corecheck.gd --cell=r1c5 (K4 core rammer R)",
+"summary": "343 / 519 qualifying boards preserve the core",
+"q000": {
+"core_ram": true,
+"core_trap": true,
+"distinct": 4,
+"preserved": true
+},
+"q001": {
+"core_ram": true,
+"core_trap": true,
+"distinct": 4,
+"preserved": true
+},
+"q002": {
+"core_ram": true,
+"core_trap": true,
+"distinct": 4,
+"preserved": true
+},
+"q003": {
+"core_ram": true,
+"core_trap": true,
+"distinct": 4,
+"preserved": true
+},
+"q004": {
+"core_ram": true,
+"core_trap": true,
+"distinct": 4,
+"preserved": true
+},
+"q005": {
+"core_ram": true,
+"core_trap": true,
+"distinct": 4,
+"preserved": true
+},
+"q006": {
+"core_ram": true,
+"core_trap": true,
+"distinct": 4,
+"preserved": true
+},
+"q007": {
+"core_ram": true,
+"core_trap": true,
+"distinct": 4,
+"preserved": true
+},
+"q008": {
+"core_ram": true,
+"core_trap": true,
+"distinct": 4,
+"preserved": true
+},
+"q009": {
+"core_ram": true,
+"core_trap": true,
+"distinct": 4,
+"preserved": true
+},
+"q010": {
+"core_ram": true,
+"core_trap": true,
+"distinct": 4,
+"preserved": true
+},
+"q011": {
+"core_ram": true,
+"core_trap": true,
+"distinct": 4,
+"preserved": true
+},
+"q012": {
+"core_ram": true,
+"core_trap": true,
+"distinct": 4,
+"preserved": true
+},
+"q013": {
+"core_ram": true,
+"core_trap": true,
+"distinct": 4,
+"preserved": true
+},
+"q014": {
+"core_ram": true,
+"core_trap": true,
+"distinct": 4,
+"preserved": true
+},
+"q015": {
+"core_ram": true,
+"core_trap": true,
+"distinct": 4,
+"preserved": true
+},
+"q016": {
+"core_ram": true,
+"core_trap": true,
+"distinct": 4,
+"preserved": true
+},
+"q017": {
+"core_ram": true,
+"core_trap": true,
+"distinct": 4,
+"preserved": true
+},
+"q018": {
+"core_ram": true,
+"core_trap": true,
+"distinct": 4,
+"preserved": true
+},
+"q019": {
+"core_ram": true,
+"core_trap": true,
+"distinct": 4,
+"preserved": true
+},
+"q020": {
+"core_ram": true,
+"core_trap": true,
+"distinct": 4,
+"preserved": true
+},
+"q021": {
+"core_ram": true,
+"core_trap": true,
+"distinct": 4,
+"preserved": true
+},
+"q022": {
+"core_ram": true,
+"core_trap": true,
+"distinct": 4,
+"preserved": true
+},
+"q023": {
+"core_ram": true,
+"core_trap": true,
+"distinct": 4,
+"preserved": true
+},
+"q024": {
+"core_ram": true,
+"core_trap": true,
+"distinct": 4,
+"preserved": true
+},
+"q025": {
+"core_ram": true,
+"core_trap": true,
+"distinct": 4,
+"preserved": true
+},
+"q026": {
+"core_ram": true,
+"core_trap": true,
+"distinct": 4,
+"preserved": true
+},
+"q027": {
+"core_ram": true,
+"core_trap": true,
+"distinct": 4,
+"preserved": true
+},
+"q028": {
+"core_ram": true,
+"core_trap": true,
+"distinct": 4,
+"preserved": true
+},
+"q029": {
+"core_ram": true,
+"core_trap": true,
+"distinct": 4,
+"preserved": true
+},
+"q030": {
+"core_ram": true,
+"core_trap": true,
+"distinct": 4,
+"preserved": true
+},
+"q031": {
+"core_ram": true,
+"core_trap": true,
+"distinct": 4,
+"preserved": true
+},
+"q032": {
+"core_ram": true,
+"core_trap": true,
+"distinct": 4,
+"preserved": true
+},
+"q033": {
+"core_ram": true,
+"core_trap": true,
+"distinct": 4,
+"preserved": true
+},
+"q034": {
+"core_ram": true,
+"core_trap": true,
+"distinct": 4,
+"preserved": true
+},
+"q035": {
+"core_ram": true,
+"core_trap": true,
+"distinct": 4,
+"preserved": true
+},
+"q036": {
+"core_ram": true,
+"core_trap": true,
+"distinct": 4,
+"preserved": true
+},
+"q037": {
+"core_ram": true,
+"core_trap": true,
+"distinct": 4,
+"preserved": true
+},
+"q038": {
+"core_ram": true,
+"core_trap": true,
+"distinct": 4,
+"preserved": true
+},
+"q039": {
+"core_ram": true,
+"core_trap": true,
+"distinct": 4,
+"preserved": true
+},
+"q040": {
+"core_ram": true,
+"core_trap": true,
+"distinct": 4,
+"preserved": true
+},
+"q041": {
+"core_ram": true,
+"core_trap": true,
+"distinct": 4,
+"preserved": true
+},
+"q042": {
+"core_ram": true,
+"core_trap": true,
+"distinct": 4,
+"preserved": true
+},
+"q043": {
+"core_ram": true,
+"core_trap": true,
+"distinct": 4,
+"preserved": true
+},
+"q044": {
+"core_ram": true,
+"core_trap": true,
+"distinct": 4,
+"preserved": true
+},
+"q045": {
+"core_ram": true,
+"core_trap": true,
+"distinct": 4,
+"preserved": true
+},
+"q046": {
+"core_ram": true,
+"core_trap": true,
+"distinct": 4,
+"preserved": true
+},
+"q047": {
+"core_ram": true,
+"core_trap": true,
+"distinct": 4,
+"preserved": true
+},
+"q048": {
+"core_ram": true,
+"core_trap": true,
+"distinct": 4,
+"preserved": true
+},
+"q049": {
+"core_ram": true,
+"core_trap": true,
+"distinct": 4,
+"preserved": true
+},
+"q050": {
+"core_ram": true,
+"core_trap": true,
+"distinct": 4,
+"preserved": true
+},
+"q051": {
+"core_ram": true,
+"core_trap": true,
+"distinct": 4,
+"preserved": true
+},
+"q052": {
+"core_ram": true,
+"core_trap": true,
+"distinct": 4,
+"preserved": true
+},
+"q053": {
+"core_ram": true,
+"core_trap": true,
+"distinct": 4,
+"preserved": true
+},
+"q054": {
+"core_ram": true,
+"core_trap": true,
+"distinct": 4,
+"preserved": true
+},
+"q055": {
+"core_ram": true,
+"core_trap": true,
+"distinct": 4,
+"preserved": true
+},
+"q056": {
+"core_ram": true,
+"core_trap": true,
+"distinct": 4,
+"preserved": true
+},
+"q057": {
+"core_ram": true,
+"core_trap": true,
+"distinct": 4,
+"preserved": true
+},
+"q058": {
+"core_ram": true,
+"core_trap": true,
+"distinct": 4,
+"preserved": true
+},
+"q059": {
+"core_ram": true,
+"core_trap": true,
+"distinct": 4,
+"preserved": true
+},
+"q060": {
+"core_ram": true,
+"core_trap": true,
+"distinct": 4,
+"preserved": true
+},
+"q061": {
+"core_ram": true,
+"core_trap": true,
+"distinct": 4,
+"preserved": true
+},
+"q062": {
+"core_ram": true,
+"core_trap": true,
+"distinct": 4,
+"preserved": true
+},
+"q063": {
+"core_ram": true,
+"core_trap": true,
+"distinct": 4,
+"preserved": true
+},
+"q064": {
+"core_ram": true,
+"core_trap": true,
+"distinct": 4,
+"preserved": true
+},
+"q065": {
+"core_ram": true,
+"core_trap": true,
+"distinct": 4,
+"preserved": true
+},
+"q066": {
+"core_ram": true,
+"core_trap": true,
+"distinct": 4,
+"preserved": true
+},
+"q067": {
+"core_ram": true,
+"core_trap": true,
+"distinct": 4,
+"preserved": true
+},
+"q068": {
+"core_ram": true,
+"core_trap": true,
+"distinct": 4,
+"preserved": true
+},
+"q069": {
+"core_ram": true,
+"core_trap": true,
+"distinct": 4,
+"preserved": true
+},
+"q070": {
+"core_ram": true,
+"core_trap": true,
+"distinct": 4,
+"preserved": true
+},
+"q071": {
+"core_ram": true,
+"core_trap": true,
+"distinct": 4,
+"preserved": true
+},
+"q072": {
+"core_ram": true,
+"core_trap": true,
+"distinct": 4,
+"preserved": true
+},
+"q073": {
+"core_ram": true,
+"core_trap": true,
+"distinct": 4,
+"preserved": true
+},
+"q074": {
+"core_ram": true,
+"core_trap": true,
+"distinct": 4,
+"preserved": true
+},
+"q075": {
+"core_ram": true,
+"core_trap": true,
+"distinct": 4,
+"preserved": true
+},
+"q076": {
+"core_ram": true,
+"core_trap": true,
+"distinct": 4,
+"preserved": true
+},
+"q077": {
+"core_ram": true,
+"core_trap": true,
+"distinct": 4,
+"preserved": true
+},
+"q078": {
+"core_ram": true,
+"core_trap": true,
+"distinct": 4,
+"preserved": true
+},
+"q079": {
+"core_ram": true,
+"core_trap": true,
+"distinct": 4,
+"preserved": true
+},
+"q080": {
+"core_ram": true,
+"core_trap": true,
+"distinct": 4,
+"preserved": true
+},
+"q081": {
+"core_ram": true,
+"core_trap": true,
+"distinct": 4,
+"preserved": true
+},
+"q082": {
+"core_ram": true,
+"core_trap": true,
+"distinct": 4,
+"preserved": true
+},
+"q083": {
+"core_ram": true,
+"core_trap": true,
+"distinct": 4,
+"preserved": true
+},
+"q084": {
+"core_ram": true,
+"core_trap": true,
+"distinct": 4,
+"preserved": true
+},
+"q085": {
+"core_ram": true,
+"core_trap": true,
+"distinct": 4,
+"preserved": true
+},
+"q086": {
+"core_ram": true,
+"core_trap": true,
+"distinct": 4,
+"preserved": true
+},
+"q087": {
+"core_ram": true,
+"core_trap": true,
+"distinct": 4,
+"preserved": true
+},
+"q088": {
+"core_ram": true,
+"core_trap": true,
+"distinct": 4,
+"preserved": true
+},
+"q089": {
+"core_ram": true,
+"core_trap": true,
+"distinct": 4,
+"preserved": true
+},
+"q090": {
+"core_ram": true,
+"core_trap": true,
+"distinct": 4,
+"preserved": true
+},
+"q091": {
+"core_ram": true,
+"core_trap": true,
+"distinct": 4,
+"preserved": true
+},
+"q092": {
+"core_ram": true,
+"core_trap": true,
+"distinct": 4,
+"preserved": true
+},
+"q093": {
+"core_ram": true,
+"core_trap": true,
+"distinct": 4,
+"preserved": true
+},
+"q094": {
+"core_ram": true,
+"core_trap": true,
+"distinct": 4,
+"preserved": true
+},
+"q095": {
+"core_ram": true,
+"core_trap": true,
+"distinct": 4,
+"preserved": true
+},
+"q096": {
+"core_ram": true,
+"core_trap": true,
+"distinct": 4,
+"preserved": true
+},
+"q097": {
+"core_ram": true,
+"core_trap": true,
+"distinct": 4,
+"preserved": true
+},
+"q098": {
+"core_ram": true,
+"core_trap": true,
+"distinct": 4,
+"preserved": true
+},
+"q099": {
+"core_ram": true,
+"core_trap": true,
+"distinct": 4,
+"preserved": true
+},
+"q100": {
+"core_ram": true,
+"core_trap": true,
+"distinct": 4,
+"preserved": true
+},
+"q101": {
+"core_ram": true,
+"core_trap": true,
+"distinct": 4,
+"preserved": true
+},
+"q102": {
+"core_ram": true,
+"core_trap": true,
+"distinct": 4,
+"preserved": true
+},
+"q103": {
+"core_ram": true,
+"core_trap": true,
+"distinct": 4,
+"preserved": true
+},
+"q104": {
+"core_ram": true,
+"core_trap": true,
+"distinct": 4,
+"preserved": true
+},
+"q105": {
+"core_ram": true,
+"core_trap": true,
+"distinct": 4,
+"preserved": true
+},
+"q106": {
+"core_ram": true,
+"core_trap": true,
+"distinct": 4,
+"preserved": true
+},
+"q107": {
+"core_ram": true,
+"core_trap": true,
+"distinct": 4,
+"preserved": true
+},
+"q108": {
+"core_ram": true,
+"core_trap": true,
+"distinct": 4,
+"preserved": true
+},
+"q109": {
+"core_ram": true,
+"core_trap": true,
+"distinct": 4,
+"preserved": true
+},
+"q110": {
+"core_ram": true,
+"core_trap": true,
+"distinct": 4,
+"preserved": true
+},
+"q111": {
+"core_ram": true,
+"core_trap": true,
+"distinct": 4,
+"preserved": true
+},
+"q112": {
+"core_ram": true,
+"core_trap": true,
+"distinct": 4,
+"preserved": true
+},
+"q113": {
+"core_ram": true,
+"core_trap": true,
+"distinct": 4,
+"preserved": true
+},
+"q114": {
+"core_ram": true,
+"core_trap": true,
+"distinct": 4,
+"preserved": true
+},
+"q115": {
+"core_ram": true,
+"core_trap": true,
+"distinct": 4,
+"preserved": true
+},
+"q116": {
+"core_ram": true,
+"core_trap": true,
+"distinct": 4,
+"preserved": true
+},
+"q117": {
+"core_ram": true,
+"core_trap": true,
+"distinct": 4,
+"preserved": true
+},
+"q118": {
+"core_ram": true,
+"core_trap": true,
+"distinct": 4,
+"preserved": true
+},
+"q119": {
+"core_ram": true,
+"core_trap": true,
+"distinct": 4,
+"preserved": true
+},
+"q120": {
+"core_ram": true,
+"core_trap": true,
+"distinct": 4,
+"preserved": true
+},
+"q121": {
+"core_ram": true,
+"core_trap": true,
+"distinct": 4,
+"preserved": true
+},
+"q122": {
+"core_ram": true,
+"core_trap": true,
+"distinct": 4,
+"preserved": true
+},
+"q123": {
+"core_ram": true,
+"core_trap": true,
+"distinct": 4,
+"preserved": true
+},
+"q124": {
+"core_ram": true,
+"core_trap": true,
+"distinct": 4,
+"preserved": true
+},
+"q125": {
+"core_ram": true,
+"core_trap": true,
+"distinct": 4,
+"preserved": true
+},
+"q126": {
+"core_ram": true,
+"core_trap": true,
+"distinct": 4,
+"preserved": true
+},
+"q127": {
+"core_ram": true,
+"core_trap": true,
+"distinct": 4,
+"preserved": true
+},
+"q128": {
+"core_ram": true,
+"core_trap": true,
+"distinct": 4,
+"preserved": true
+},
+"q129": {
+"core_ram": true,
+"core_trap": true,
+"distinct": 4,
+"preserved": true
+},
+"q130": {
+"core_ram": true,
+"core_trap": true,
+"distinct": 4,
+"preserved": true
+},
+"q131": {
+"core_ram": true,
+"core_trap": true,
+"distinct": 4,
+"preserved": true
+},
+"q132": {
+"core_ram": true,
+"core_trap": true,
+"distinct": 4,
+"preserved": true
+},
+"q133": {
+"core_ram": true,
+"core_trap": true,
+"distinct": 4,
+"preserved": true
+},
+"q134": {
+"core_ram": true,
+"core_trap": true,
+"distinct": 4,
+"preserved": true
+},
+"q135": {
+"core_ram": true,
+"core_trap": true,
+"distinct": 4,
+"preserved": true
+},
+"q136": {
+"core_ram": true,
+"core_trap": true,
+"distinct": 4,
+"preserved": true
+},
+"q137": {
+"core_ram": true,
+"core_trap": true,
+"distinct": 4,
+"preserved": true
+},
+"q138": {
+"core_ram": true,
+"core_trap": true,
+"distinct": 4,
+"preserved": true
+},
+"q139": {
+"core_ram": true,
+"core_trap": true,
+"distinct": 4,
+"preserved": true
+},
+"q140": {
+"core_ram": true,
+"core_trap": true,
+"distinct": 4,
+"preserved": true
+},
+"q141": {
+"core_ram": true,
+"core_trap": true,
+"distinct": 4,
+"preserved": true
+},
+"q142": {
+"core_ram": true,
+"core_trap": true,
+"distinct": 4,
+"preserved": true
+},
+"q143": {
+"core_ram": true,
+"core_trap": true,
+"distinct": 4,
+"preserved": true
+},
+"q144": {
+"core_ram": true,
+"core_trap": true,
+"distinct": 4,
+"preserved": true
+},
+"q145": {
+"core_ram": true,
+"core_trap": true,
+"distinct": 4,
+"preserved": true
+},
+"q146": {
+"core_ram": true,
+"core_trap": true,
+"distinct": 4,
+"preserved": true
+},
+"q147": {
+"core_ram": true,
+"core_trap": true,
+"distinct": 4,
+"preserved": true
+},
+"q148": {
+"core_ram": true,
+"core_trap": true,
+"distinct": 4,
+"preserved": true
+},
+"q149": {
+"core_ram": true,
+"core_trap": true,
+"distinct": 4,
+"preserved": true
+},
+"q150": {
+"core_ram": true,
+"core_trap": true,
+"distinct": 4,
+"preserved": true
+},
+"q151": {
+"core_ram": true,
+"core_trap": true,
+"distinct": 4,
+"preserved": true
+},
+"q152": {
+"core_ram": true,
+"core_trap": true,
+"distinct": 4,
+"preserved": true
+},
+"q153": {
+"core_ram": true,
+"core_trap": true,
+"distinct": 4,
+"preserved": true
+},
+"q154": {
+"core_ram": true,
+"core_trap": true,
+"distinct": 4,
+"preserved": true
+},
+"q155": {
+"core_ram": true,
+"core_trap": true,
+"distinct": 4,
+"preserved": true
+},
+"q156": {
+"core_ram": true,
+"core_trap": true,
+"distinct": 4,
+"preserved": true
+},
+"q157": {
+"core_ram": true,
+"core_trap": true,
+"distinct": 4,
+"preserved": true
+},
+"q158": {
+"core_ram": true,
+"core_trap": true,
+"distinct": 4,
+"preserved": true
+},
+"q159": {
+"core_ram": true,
+"core_trap": true,
+"distinct": 4,
+"preserved": true
+},
+"q160": {
+"core_ram": true,
+"core_trap": true,
+"distinct": 4,
+"preserved": true
+},
+"q161": {
+"core_ram": true,
+"core_trap": true,
+"distinct": 4,
+"preserved": true
+},
+"q162": {
+"core_ram": true,
+"core_trap": true,
+"distinct": 4,
+"preserved": true
+},
+"q163": {
+"core_ram": true,
+"core_trap": true,
+"distinct": 4,
+"preserved": true
+},
+"q164": {
+"core_ram": true,
+"core_trap": true,
+"distinct": 4,
+"preserved": true
+},
+"q165": {
+"core_ram": true,
+"core_trap": true,
+"distinct": 4,
+"preserved": true
+},
+"q166": {
+"core_ram": true,
+"core_trap": true,
+"distinct": 4,
+"preserved": true
+},
+"q167": {
+"core_ram": true,
+"core_trap": true,
+"distinct": 4,
+"preserved": true
+},
+"q168": {
+"core_ram": true,
+"core_trap": true,
+"distinct": 4,
+"preserved": true
+},
+"q169": {
+"core_ram": true,
+"core_trap": true,
+"distinct": 4,
+"preserved": true
+},
+"q170": {
+"core_ram": true,
+"core_trap": true,
+"distinct": 4,
+"preserved": true
+},
+"q171": {
+"core_ram": true,
+"core_trap": true,
+"distinct": 4,
+"preserved": true
+},
+"q172": {
+"core_ram": true,
+"core_trap": true,
+"distinct": 4,
+"preserved": true
+},
+"q173": {
+"core_ram": true,
+"core_trap": true,
+"distinct": 4,
+"preserved": true
+},
+"q174": {
+"core_ram": true,
+"core_trap": true,
+"distinct": 4,
+"preserved": true
+},
+"q175": {
+"core_ram": true,
+"core_trap": true,
+"distinct": 4,
+"preserved": true
+},
+"q176": {
+"core_ram": true,
+"core_trap": true,
+"distinct": 4,
+"preserved": true
+},
+"q177": {
+"core_ram": true,
+"core_trap": true,
+"distinct": 4,
+"preserved": true
+},
+"q178": {
+"core_ram": true,
+"core_trap": true,
+"distinct": 4,
+"preserved": true
+},
+"q179": {
+"core_ram": true,
+"core_trap": true,
+"distinct": 4,
+"preserved": true
+},
+"q180": {
+"core_ram": true,
+"core_trap": true,
+"distinct": 4,
+"preserved": true
+},
+"q181": {
+"core_ram": true,
+"core_trap": true,
+"distinct": 4,
+"preserved": true
+},
+"q182": {
+"core_ram": true,
+"core_trap": true,
+"distinct": 4,
+"preserved": true
+},
+"q183": {
+"core_ram": true,
+"core_trap": true,
+"distinct": 4,
+"preserved": true
+},
+"q184": {
+"core_ram": true,
+"core_trap": true,
+"distinct": 4,
+"preserved": true
+},
+"q185": {
+"core_ram": true,
+"core_trap": true,
+"distinct": 4,
+"preserved": true
+},
+"q186": {
+"core_ram": true,
+"core_trap": true,
+"distinct": 4,
+"preserved": true
+},
+"q187": {
+"core_ram": true,
+"core_trap": true,
+"distinct": 4,
+"preserved": true
+},
+"q188": {
+"core_ram": true,
+"core_trap": true,
+"distinct": 4,
+"preserved": true
+},
+"q189": {
+"core_ram": true,
+"core_trap": true,
+"distinct": 4,
+"preserved": true
+},
+"q190": {
+"core_ram": true,
+"core_trap": true,
+"distinct": 4,
+"preserved": true
+},
+"q191": {
+"core_ram": true,
+"core_trap": true,
+"distinct": 4,
+"preserved": true
+},
+"q192": {
+"core_ram": true,
+"core_trap": true,
+"distinct": 4,
+"preserved": true
+},
+"q193": {
+"core_ram": true,
+"core_trap": true,
+"distinct": 4,
+"preserved": true
+},
+"q194": {
+"core_ram": true,
+"core_trap": true,
+"distinct": 4,
+"preserved": true
+},
+"q195": {
+"core_ram": true,
+"core_trap": true,
+"distinct": 4,
+"preserved": true
+},
+"q196": {
+"core_ram": true,
+"core_trap": true,
+"distinct": 4,
+"preserved": true
+},
+"q197": {
+"core_ram": true,
+"core_trap": true,
+"distinct": 4,
+"preserved": true
+},
+"q198": {
+"core_ram": true,
+"core_trap": true,
+"distinct": 4,
+"preserved": true
+},
+"q199": {
+"core_ram": true,
+"core_trap": true,
+"distinct": 4,
+"preserved": true
+},
+"q200": {
+"core_ram": true,
+"core_trap": true,
+"distinct": 4,
+"preserved": true
+},
+"q201": {
+"core_ram": true,
+"core_trap": true,
+"distinct": 4,
+"preserved": true
+},
+"q202": {
+"core_ram": true,
+"core_trap": true,
+"distinct": 4,
+"preserved": true
+},
+"q203": {
+"core_ram": true,
+"core_trap": true,
+"distinct": 4,
+"preserved": true
+},
+"q204": {
+"core_ram": true,
+"core_trap": true,
+"distinct": 4,
+"preserved": true
+},
+"q205": {
+"core_ram": true,
+"core_trap": true,
+"distinct": 4,
+"preserved": true
+},
+"q206": {
+"core_ram": true,
+"core_trap": true,
+"distinct": 4,
+"preserved": true
+},
+"q207": {
+"core_ram": true,
+"core_trap": true,
+"distinct": 4,
+"preserved": true
+},
+"q208": {
+"core_ram": true,
+"core_trap": true,
+"distinct": 4,
+"preserved": true
+},
+"q209": {
+"core_ram": true,
+"core_trap": true,
+"distinct": 4,
+"preserved": true
+},
+"q210": {
+"core_ram": true,
+"core_trap": true,
+"distinct": 4,
+"preserved": true
+},
+"q211": {
+"core_ram": true,
+"core_trap": true,
+"distinct": 4,
+"preserved": true
+},
+"q212": {
+"core_ram": true,
+"core_trap": true,
+"distinct": 4,
+"preserved": true
+},
+"q213": {
+"core_ram": true,
+"core_trap": true,
+"distinct": 4,
+"preserved": true
+},
+"q214": {
+"core_ram": true,
+"core_trap": true,
+"distinct": 4,
+"preserved": true
+},
+"q215": {
+"core_ram": true,
+"core_trap": true,
+"distinct": 4,
+"preserved": true
+},
+"q216": {
+"core_ram": true,
+"core_trap": true,
+"distinct": 4,
+"preserved": true
+},
+"q217": {
+"core_ram": true,
+"core_trap": true,
+"distinct": 4,
+"preserved": true
+},
+"q218": {
+"core_ram": true,
+"core_trap": true,
+"distinct": 4,
+"preserved": true
+},
+"q219": {
+"core_ram": true,
+"core_trap": true,
+"distinct": 4,
+"preserved": true
+},
+"q220": {
+"core_ram": true,
+"core_trap": true,
+"distinct": 4,
+"preserved": true
+},
+"q221": {
+"core_ram": true,
+"core_trap": true,
+"distinct": 4,
+"preserved": true
+},
+"q222": {
+"core_ram": true,
+"core_trap": true,
+"distinct": 4,
+"preserved": true
+},
+"q223": {
+"core_ram": true,
+"core_trap": true,
+"distinct": 4,
+"preserved": true
+},
+"q224": {
+"core_ram": true,
+"core_trap": true,
+"distinct": 4,
+"preserved": true
+},
+"q225": {
+"core_ram": true,
+"core_trap": true,
+"distinct": 4,
+"preserved": true
+},
+"q226": {
+"core_ram": true,
+"core_trap": true,
+"distinct": 4,
+"preserved": true
+},
+"q227": {
+"core_ram": true,
+"core_trap": true,
+"distinct": 4,
+"preserved": true
+},
+"q228": {
+"core_ram": true,
+"core_trap": true,
+"distinct": 4,
+"preserved": true
+},
+"q229": {
+"core_ram": true,
+"core_trap": true,
+"distinct": 4,
+"preserved": true
+},
+"q230": {
+"core_ram": true,
+"core_trap": true,
+"distinct": 4,
+"preserved": true
+},
+"q231": {
+"core_ram": true,
+"core_trap": true,
+"distinct": 4,
+"preserved": true
+},
+"q232": {
+"core_ram": true,
+"core_trap": true,
+"distinct": 4,
+"preserved": true
+},
+"q233": {
+"core_ram": true,
+"core_trap": true,
+"distinct": 4,
+"preserved": true
+},
+"q234": {
+"core_ram": true,
+"core_trap": true,
+"distinct": 4,
+"preserved": true
+},
+"q235": {
+"core_ram": true,
+"core_trap": true,
+"distinct": 4,
+"preserved": true
+},
+"q236": {
+"core_ram": true,
+"core_trap": true,
+"distinct": 4,
+"preserved": true
+},
+"q237": {
+"core_ram": true,
+"core_trap": true,
+"distinct": 4,
+"preserved": true
+},
+"q238": {
+"core_ram": true,
+"core_trap": true,
+"distinct": 4,
+"preserved": true
+},
+"q239": {
+"core_ram": true,
+"core_trap": true,
+"distinct": 4,
+"preserved": true
+},
+"q240": {
+"core_ram": true,
+"core_trap": true,
+"distinct": 4,
+"preserved": true
+},
+"q241": {
+"core_ram": true,
+"core_trap": true,
+"distinct": 4,
+"preserved": true
+},
+"q242": {
+"core_ram": true,
+"core_trap": true,
+"distinct": 4,
+"preserved": true
+},
+"q243": {
+"core_ram": true,
+"core_trap": true,
+"distinct": 4,
+"preserved": true
+},
+"q244": {
+"core_ram": true,
+"core_trap": true,
+"distinct": 4,
+"preserved": true
+},
+"q245": {
+"core_ram": true,
+"core_trap": true,
+"distinct": 4,
+"preserved": true
+},
+"q246": {
+"core_ram": true,
+"core_trap": true,
+"distinct": 4,
+"preserved": true
+},
+"q247": {
+"core_ram": true,
+"core_trap": true,
+"distinct": 4,
+"preserved": true
+},
+"q248": {
+"core_ram": true,
+"core_trap": true,
+"distinct": 4,
+"preserved": true
+},
+"q249": {
+"core_ram": true,
+"core_trap": true,
+"distinct": 4,
+"preserved": true
+},
+"q250": {
+"core_ram": true,
+"core_trap": true,
+"distinct": 4,
+"preserved": true
+},
+"q251": {
+"core_ram": true,
+"core_trap": true,
+"distinct": 4,
+"preserved": true
+},
+"q252": {
+"core_ram": true,
+"core_trap": true,
+"distinct": 4,
+"preserved": true
+},
+"q253": {
+"core_ram": true,
+"core_trap": true,
+"distinct": 4,
+"preserved": true
+},
+"q254": {
+"core_ram": true,
+"core_trap": true,
+"distinct": 4,
+"preserved": true
+},
+"q255": {
+"core_ram": true,
+"core_trap": true,
+"distinct": 4,
+"preserved": true
+},
+"q256": {
+"core_ram": true,
+"core_trap": true,
+"distinct": 4,
+"preserved": true
+},
+"q257": {
+"core_ram": true,
+"core_trap": true,
+"distinct": 4,
+"preserved": true
+},
+"q258": {
+"core_ram": true,
+"core_trap": true,
+"distinct": 4,
+"preserved": true
+},
+"q259": {
+"core_ram": true,
+"core_trap": true,
+"distinct": 4,
+"preserved": true
+},
+"q260": {
+"core_ram": true,
+"core_trap": true,
+"distinct": 4,
+"preserved": true
+},
+"q261": {
+"core_ram": true,
+"core_trap": true,
+"distinct": 4,
+"preserved": true
+},
+"q262": {
+"core_ram": true,
+"core_trap": true,
+"distinct": 4,
+"preserved": true
+},
+"q263": {
+"core_ram": true,
+"core_trap": true,
+"distinct": 4,
+"preserved": true
+},
+"q264": {
+"core_ram": true,
+"core_trap": true,
+"distinct": 4,
+"preserved": true
+},
+"q265": {
+"core_ram": true,
+"core_trap": true,
+"distinct": 4,
+"preserved": true
+},
+"q266": {
+"core_ram": true,
+"core_trap": true,
+"distinct": 4,
+"preserved": true
+},
+"q267": {
+"core_ram": true,
+"core_trap": true,
+"distinct": 4,
+"preserved": true
+},
+"q268": {
+"core_ram": true,
+"core_trap": true,
+"distinct": 4,
+"preserved": true
+},
+"q269": {
+"core_ram": true,
+"core_trap": true,
+"distinct": 4,
+"preserved": true
+},
+"q270": {
+"core_ram": true,
+"core_trap": true,
+"distinct": 4,
+"preserved": true
+},
+"q271": {
+"core_ram": true,
+"core_trap": true,
+"distinct": 4,
+"preserved": true
+},
+"q272": {
+"core_ram": true,
+"core_trap": true,
+"distinct": 4,
+"preserved": true
+},
+"q273": {
+"core_ram": true,
+"core_trap": true,
+"distinct": 4,
+"preserved": true
+},
+"q274": {
+"core_ram": true,
+"core_trap": true,
+"distinct": 4,
+"preserved": true
+},
+"q275": {
+"core_ram": true,
+"core_trap": true,
+"distinct": 4,
+"preserved": true
+},
+"q276": {
+"core_ram": true,
+"core_trap": true,
+"distinct": 4,
+"preserved": true
+},
+"q277": {
+"core_ram": true,
+"core_trap": true,
+"distinct": 4,
+"preserved": true
+},
+"q278": {
+"core_ram": true,
+"core_trap": true,
+"distinct": 4,
+"preserved": true
+},
+"q279": {
+"core_ram": true,
+"core_trap": true,
+"distinct": 4,
+"preserved": true
+},
+"q280": {
+"core_ram": true,
+"core_trap": true,
+"distinct": 4,
+"preserved": true
+},
+"q281": {
+"core_ram": true,
+"core_trap": true,
+"distinct": 4,
+"preserved": true
+},
+"q282": {
+"core_ram": true,
+"core_trap": true,
+"distinct": 4,
+"preserved": true
+},
+"q283": {
+"core_ram": true,
+"core_trap": true,
+"distinct": 4,
+"preserved": true
+},
+"q284": {
+"core_ram": true,
+"core_trap": true,
+"distinct": 4,
+"preserved": true
+},
+"q285": {
+"core_ram": true,
+"core_trap": true,
+"distinct": 4,
+"preserved": true
+},
+"q286": {
+"core_ram": true,
+"core_trap": true,
+"distinct": 4,
+"preserved": true
+},
+"q287": {
+"core_ram": true,
+"core_trap": true,
+"distinct": 4,
+"preserved": true
+},
+"q288": {
+"core_ram": true,
+"core_trap": true,
+"distinct": 4,
+"preserved": true
+},
+"q289": {
+"core_ram": true,
+"core_trap": true,
+"distinct": 4,
+"preserved": true
+},
+"q290": {
+"core_ram": true,
+"core_trap": true,
+"distinct": 4,
+"preserved": true
+},
+"q291": {
+"core_ram": true,
+"core_trap": true,
+"distinct": 4,
+"preserved": true
+},
+"q292": {
+"core_ram": true,
+"core_trap": true,
+"distinct": 4,
+"preserved": true
+},
+"q293": {
+"core_ram": true,
+"core_trap": true,
+"distinct": 4,
+"preserved": true
+},
+"q294": {
+"core_ram": true,
+"core_trap": true,
+"distinct": 4,
+"preserved": true
+},
+"q295": {
+"core_ram": true,
+"core_trap": true,
+"distinct": 4,
+"preserved": true
+},
+"q296": {
+"core_ram": true,
+"core_trap": true,
+"distinct": 4,
+"preserved": true
+},
+"q297": {
+"core_ram": true,
+"core_trap": true,
+"distinct": 4,
+"preserved": true
+},
+"q298": {
+"core_ram": true,
+"core_trap": true,
+"distinct": 4,
+"preserved": true
+},
+"q299": {
+"core_ram": true,
+"core_trap": true,
+"distinct": 4,
+"preserved": true
+},
+"q300": {
+"core_ram": true,
+"core_trap": true,
+"distinct": 4,
+"preserved": true
+},
+"q301": {
+"core_ram": true,
+"core_trap": true,
+"distinct": 4,
+"preserved": true
+},
+"q302": {
+"core_ram": true,
+"core_trap": true,
+"distinct": 4,
+"preserved": true
+},
+"q303": {
+"core_ram": true,
+"core_trap": true,
+"distinct": 4,
+"preserved": true
+},
+"q304": {
+"core_ram": true,
+"core_trap": true,
+"distinct": 4,
+"preserved": true
+},
+"q305": {
+"core_ram": true,
+"core_trap": true,
+"distinct": 4,
+"preserved": true
+},
+"q306": {
+"core_ram": true,
+"core_trap": true,
+"distinct": 4,
+"preserved": true
+},
+"q307": {
+"core_ram": true,
+"core_trap": true,
+"distinct": 4,
+"preserved": true
+},
+"q308": {
+"core_ram": true,
+"core_trap": true,
+"distinct": 4,
+"preserved": true
+},
+"q309": {
+"core_ram": true,
+"core_trap": true,
+"distinct": 4,
+"preserved": true
+},
+"q310": {
+"core_ram": true,
+"core_trap": true,
+"distinct": 4,
+"preserved": true
+},
+"q311": {
+"core_ram": true,
+"core_trap": true,
+"distinct": 4,
+"preserved": true
+},
+"q312": {
+"core_ram": true,
+"core_trap": true,
+"distinct": 4,
+"preserved": true
+},
+"q313": {
+"core_ram": true,
+"core_trap": true,
+"distinct": 4,
+"preserved": true
+},
+"q314": {
+"core_ram": true,
+"core_trap": true,
+"distinct": 4,
+"preserved": true
+},
+"q315": {
+"core_ram": true,
+"core_trap": true,
+"distinct": 4,
+"preserved": true
+},
+"q316": {
+"core_ram": true,
+"core_trap": true,
+"distinct": 4,
+"preserved": true
+},
+"q317": {
+"core_ram": true,
+"core_trap": true,
+"distinct": 4,
+"preserved": true
+},
+"q318": {
+"core_ram": true,
+"core_trap": true,
+"distinct": 4,
+"preserved": true
+},
+"q319": {
+"core_ram": true,
+"core_trap": true,
+"distinct": 4,
+"preserved": true
+},
+"q320": {
+"core_ram": false,
+"core_trap": false,
+"distinct": 4,
+"preserved": false
+},
+"q321": {
+"core_ram": true,
+"core_trap": true,
+"distinct": 4,
+"preserved": true
+},
+"q322": {
+"core_ram": true,
+"core_trap": true,
+"distinct": 4,
+"preserved": true
+},
+"q323": {
+"core_ram": true,
+"core_trap": true,
+"distinct": 4,
+"preserved": true
+},
+"q324": {
+"core_ram": true,
+"core_trap": true,
+"distinct": 4,
+"preserved": true
+},
+"q325": {
+"core_ram": true,
+"core_trap": true,
+"distinct": 4,
+"preserved": true
+},
+"q326": {
+"core_ram": true,
+"core_trap": true,
+"distinct": 4,
+"preserved": true
+},
+"q327": {
+"core_ram": true,
+"core_trap": true,
+"distinct": 4,
+"preserved": true
+},
+"q328": {
+"core_ram": true,
+"core_trap": true,
+"distinct": 4,
+"preserved": true
+},
+"q329": {
+"core_ram": true,
+"core_trap": true,
+"distinct": 4,
+"preserved": true
+},
+"q330": {
+"core_ram": true,
+"core_trap": true,
+"distinct": 4,
+"preserved": true
+},
+"q331": {
+"core_ram": false,
+"core_trap": false,
+"distinct": 4,
+"preserved": false
+},
+"q332": {
+"core_ram": false,
+"core_trap": false,
+"distinct": 4,
+"preserved": false
+},
+"q333": {
+"core_ram": true,
+"core_trap": true,
+"distinct": 4,
+"preserved": true
+},
+"q334": {
+"core_ram": true,
+"core_trap": true,
+"distinct": 4,
+"preserved": true
+},
+"q335": {
+"core_ram": true,
+"core_trap": true,
+"distinct": 4,
+"preserved": true
+},
+"q336": {
+"core_ram": true,
+"core_trap": true,
+"distinct": 4,
+"preserved": true
+},
+"q337": {
+"core_ram": true,
+"core_trap": true,
+"distinct": 4,
+"preserved": true
+},
+"q338": {
+"core_ram": true,
+"core_trap": true,
+"distinct": 4,
+"preserved": true
+},
+"q339": {
+"core_ram": true,
+"core_trap": true,
+"distinct": 4,
+"preserved": true
+},
+"q340": {
+"core_ram": true,
+"core_trap": true,
+"distinct": 4,
+"preserved": true
+},
+"q341": {
+"core_ram": true,
+"core_trap": true,
+"distinct": 4,
+"preserved": true
+},
+"q342": {
+"core_ram": true,
+"core_trap": true,
+"distinct": 4,
+"preserved": true
+},
+"q343": {
+"core_ram": true,
+"core_trap": true,
+"distinct": 4,
+"preserved": true
+},
+"q344": {
+"core_ram": false,
+"core_trap": false,
+"distinct": 4,
+"preserved": false
+},
+"q345": {
+"core_ram": false,
+"core_trap": false,
+"distinct": 4,
+"preserved": false
+},
+"q346": {
+"core_ram": false,
+"core_trap": false,
+"distinct": 4,
+"preserved": false
+},
+"q347": {
+"core_ram": false,
+"core_trap": false,
+"distinct": 4,
+"preserved": false
+},
+"q348": {
+"core_ram": false,
+"core_trap": false,
+"distinct": 4,
+"preserved": false
+},
+"q349": {
+"core_ram": false,
+"core_trap": false,
+"distinct": 4,
+"preserved": false
+},
+"q350": {
+"core_ram": false,
+"core_trap": false,
+"distinct": 4,
+"preserved": false
+},
+"q351": {
+"core_ram": false,
+"core_trap": false,
+"distinct": 4,
+"preserved": false
+},
+"q352": {
+"core_ram": false,
+"core_trap": false,
+"distinct": 4,
+"preserved": false
+},
+"q353": {
+"core_ram": false,
+"core_trap": false,
+"distinct": 4,
+"preserved": false
+},
+"q354": {
+"core_ram": true,
+"core_trap": true,
+"distinct": 4,
+"preserved": true
+},
+"q355": {
+"core_ram": false,
+"core_trap": false,
+"distinct": 4,
+"preserved": false
+},
+"q356": {
+"core_ram": false,
+"core_trap": false,
+"distinct": 4,
+"preserved": false
+},
+"q357": {
+"core_ram": false,
+"core_trap": false,
+"distinct": 4,
+"preserved": false
+},
+"q358": {
+"core_ram": false,
+"core_trap": false,
+"distinct": 4,
+"preserved": false
+},
+"q359": {
+"core_ram": false,
+"core_trap": false,
+"distinct": 4,
+"preserved": false
+},
+"q360": {
+"core_ram": false,
+"core_trap": false,
+"distinct": 4,
+"preserved": false
+},
+"q361": {
+"core_ram": false,
+"core_trap": false,
+"distinct": 4,
+"preserved": false
+},
+"q362": {
+"core_ram": false,
+"core_trap": false,
+"distinct": 4,
+"preserved": false
+},
+"q363": {
+"core_ram": false,
+"core_trap": false,
+"distinct": 4,
+"preserved": false
+},
+"q364": {
+"core_ram": false,
+"core_trap": false,
+"distinct": 4,
+"preserved": false
+},
+"q365": {
+"core_ram": false,
+"core_trap": false,
+"distinct": 4,
+"preserved": false
+},
+"q366": {
+"core_ram": true,
+"core_trap": true,
+"distinct": 4,
+"preserved": true
+},
+"q367": {
+"core_ram": false,
+"core_trap": false,
+"distinct": 4,
+"preserved": false
+},
+"q368": {
+"core_ram": false,
+"core_trap": false,
+"distinct": 4,
+"preserved": false
+},
+"q369": {
+"core_ram": false,
+"core_trap": false,
+"distinct": 4,
+"preserved": false
+},
+"q370": {
+"core_ram": false,
+"core_trap": false,
+"distinct": 4,
+"preserved": false
+},
+"q371": {
+"core_ram": false,
+"core_trap": false,
+"distinct": 4,
+"preserved": false
+},
+"q372": {
+"core_ram": false,
+"core_trap": false,
+"distinct": 4,
+"preserved": false
+},
+"q373": {
+"core_ram": false,
+"core_trap": false,
+"distinct": 4,
+"preserved": false
+},
+"q374": {
+"core_ram": false,
+"core_trap": false,
+"distinct": 4,
+"preserved": false
+},
+"q375": {
+"core_ram": false,
+"core_trap": false,
+"distinct": 4,
+"preserved": false
+},
+"q376": {
+"core_ram": false,
+"core_trap": false,
+"distinct": 4,
+"preserved": false
+},
+"q377": {
+"core_ram": false,
+"core_trap": false,
+"distinct": 4,
+"preserved": false
+},
+"q378": {
+"core_ram": false,
+"core_trap": false,
+"distinct": 4,
+"preserved": false
+},
+"q379": {
+"core_ram": false,
+"core_trap": false,
+"distinct": 4,
+"preserved": false
+},
+"q380": {
+"core_ram": false,
+"core_trap": false,
+"distinct": 4,
+"preserved": false
+},
+"q381": {
+"core_ram": false,
+"core_trap": false,
+"distinct": 4,
+"preserved": false
+},
+"q382": {
+"core_ram": false,
+"core_trap": false,
+"distinct": 4,
+"preserved": false
+},
+"q383": {
+"core_ram": false,
+"core_trap": false,
+"distinct": 4,
+"preserved": false
+},
+"q384": {
+"core_ram": false,
+"core_trap": false,
+"distinct": 4,
+"preserved": false
+},
+"q385": {
+"core_ram": false,
+"core_trap": false,
+"distinct": 4,
+"preserved": false
+},
+"q386": {
+"core_ram": false,
+"core_trap": false,
+"distinct": 4,
+"preserved": false
+},
+"q387": {
+"core_ram": false,
+"core_trap": false,
+"distinct": 4,
+"preserved": false
+},
+"q388": {
+"core_ram": false,
+"core_trap": false,
+"distinct": 4,
+"preserved": false
+},
+"q389": {
+"core_ram": false,
+"core_trap": false,
+"distinct": 4,
+"preserved": false
+},
+"q390": {
+"core_ram": false,
+"core_trap": false,
+"distinct": 4,
+"preserved": false
+},
+"q391": {
+"core_ram": false,
+"core_trap": false,
+"distinct": 4,
+"preserved": false
+},
+"q392": {
+"core_ram": false,
+"core_trap": false,
+"distinct": 4,
+"preserved": false
+},
+"q393": {
+"core_ram": false,
+"core_trap": false,
+"distinct": 4,
+"preserved": false
+},
+"q394": {
+"core_ram": false,
+"core_trap": false,
+"distinct": 4,
+"preserved": false
+},
+"q395": {
+"core_ram": false,
+"core_trap": false,
+"distinct": 4,
+"preserved": false
+},
+"q396": {
+"core_ram": false,
+"core_trap": false,
+"distinct": 4,
+"preserved": false
+},
+"q397": {
+"core_ram": false,
+"core_trap": false,
+"distinct": 4,
+"preserved": false
+},
+"q398": {
+"core_ram": false,
+"core_trap": false,
+"distinct": 4,
+"preserved": false
+},
+"q399": {
+"core_ram": false,
+"core_trap": false,
+"distinct": 4,
+"preserved": false
+},
+"q400": {
+"core_ram": false,
+"core_trap": false,
+"distinct": 4,
+"preserved": false
+},
+"q401": {
+"core_ram": false,
+"core_trap": false,
+"distinct": 4,
+"preserved": false
+},
+"q402": {
+"core_ram": false,
+"core_trap": false,
+"distinct": 4,
+"preserved": false
+},
+"q403": {
+"core_ram": false,
+"core_trap": false,
+"distinct": 4,
+"preserved": false
+},
+"q404": {
+"core_ram": false,
+"core_trap": false,
+"distinct": 4,
+"preserved": false
+},
+"q405": {
+"core_ram": false,
+"core_trap": false,
+"distinct": 4,
+"preserved": false
+},
+"q406": {
+"core_ram": false,
+"core_trap": false,
+"distinct": 4,
+"preserved": false
+},
+"q407": {
+"core_ram": false,
+"core_trap": false,
+"distinct": 4,
+"preserved": false
+},
+"q408": {
+"core_ram": false,
+"core_trap": false,
+"distinct": 4,
+"preserved": false
+},
+"q409": {
+"core_ram": false,
+"core_trap": false,
+"distinct": 4,
+"preserved": false
+},
+"q410": {
+"core_ram": false,
+"core_trap": false,
+"distinct": 4,
+"preserved": false
+},
+"q411": {
+"core_ram": false,
+"core_trap": false,
+"distinct": 4,
+"preserved": false
+},
+"q412": {
+"core_ram": false,
+"core_trap": false,
+"distinct": 4,
+"preserved": false
+},
+"q413": {
+"core_ram": false,
+"core_trap": false,
+"distinct": 4,
+"preserved": false
+},
+"q414": {
+"core_ram": false,
+"core_trap": false,
+"distinct": 4,
+"preserved": false
+},
+"q415": {
+"core_ram": false,
+"core_trap": false,
+"distinct": 4,
+"preserved": false
+},
+"q416": {
+"core_ram": false,
+"core_trap": false,
+"distinct": 4,
+"preserved": false
+},
+"q417": {
+"core_ram": false,
+"core_trap": false,
+"distinct": 4,
+"preserved": false
+},
+"q418": {
+"core_ram": false,
+"core_trap": false,
+"distinct": 4,
+"preserved": false
+},
+"q419": {
+"core_ram": false,
+"core_trap": false,
+"distinct": 4,
+"preserved": false
+},
+"q420": {
+"core_ram": false,
+"core_trap": false,
+"distinct": 4,
+"preserved": false
+},
+"q421": {
+"core_ram": false,
+"core_trap": false,
+"distinct": 4,
+"preserved": false
+},
+"q422": {
+"core_ram": false,
+"core_trap": false,
+"distinct": 4,
+"preserved": false
+},
+"q423": {
+"core_ram": false,
+"core_trap": false,
+"distinct": 4,
+"preserved": false
+},
+"q424": {
+"core_ram": false,
+"core_trap": false,
+"distinct": 4,
+"preserved": false
+},
+"q425": {
+"core_ram": false,
+"core_trap": false,
+"distinct": 4,
+"preserved": false
+},
+"q426": {
+"core_ram": false,
+"core_trap": false,
+"distinct": 4,
+"preserved": false
+},
+"q427": {
+"core_ram": false,
+"core_trap": false,
+"distinct": 4,
+"preserved": false
+},
+"q428": {
+"core_ram": false,
+"core_trap": false,
+"distinct": 4,
+"preserved": false
+},
+"q429": {
+"core_ram": false,
+"core_trap": false,
+"distinct": 4,
+"preserved": false
+},
+"q430": {
+"core_ram": false,
+"core_trap": false,
+"distinct": 4,
+"preserved": false
+},
+"q431": {
+"core_ram": false,
+"core_trap": false,
+"distinct": 4,
+"preserved": false
+},
+"q432": {
+"core_ram": false,
+"core_trap": false,
+"distinct": 4,
+"preserved": false
+},
+"q433": {
+"core_ram": false,
+"core_trap": false,
+"distinct": 4,
+"preserved": false
+},
+"q434": {
+"core_ram": false,
+"core_trap": false,
+"distinct": 4,
+"preserved": false
+},
+"q435": {
+"core_ram": false,
+"core_trap": false,
+"distinct": 4,
+"preserved": false
+},
+"q436": {
+"core_ram": false,
+"core_trap": false,
+"distinct": 4,
+"preserved": false
+},
+"q437": {
+"core_ram": false,
+"core_trap": false,
+"distinct": 4,
+"preserved": false
+},
+"q438": {
+"core_ram": false,
+"core_trap": false,
+"distinct": 4,
+"preserved": false
+},
+"q439": {
+"core_ram": false,
+"core_trap": false,
+"distinct": 4,
+"preserved": false
+},
+"q440": {
+"core_ram": false,
+"core_trap": false,
+"distinct": 4,
+"preserved": false
+},
+"q441": {
+"core_ram": false,
+"core_trap": false,
+"distinct": 4,
+"preserved": false
+},
+"q442": {
+"core_ram": false,
+"core_trap": false,
+"distinct": 4,
+"preserved": false
+},
+"q443": {
+"core_ram": false,
+"core_trap": false,
+"distinct": 4,
+"preserved": false
+},
+"q444": {
+"core_ram": false,
+"core_trap": false,
+"distinct": 4,
+"preserved": false
+},
+"q445": {
+"core_ram": false,
+"core_trap": false,
+"distinct": 4,
+"preserved": false
+},
+"q446": {
+"core_ram": false,
+"core_trap": false,
+"distinct": 4,
+"preserved": false
+},
+"q447": {
+"core_ram": false,
+"core_trap": false,
+"distinct": 4,
+"preserved": false
+},
+"q448": {
+"core_ram": false,
+"core_trap": false,
+"distinct": 4,
+"preserved": false
+},
+"q449": {
+"core_ram": false,
+"core_trap": false,
+"distinct": 4,
+"preserved": false
+},
+"q450": {
+"core_ram": false,
+"core_trap": false,
+"distinct": 4,
+"preserved": false
+},
+"q451": {
+"core_ram": false,
+"core_trap": false,
+"distinct": 4,
+"preserved": false
+},
+"q452": {
+"core_ram": false,
+"core_trap": false,
+"distinct": 4,
+"preserved": false
+},
+"q453": {
+"core_ram": false,
+"core_trap": false,
+"distinct": 4,
+"preserved": false
+},
+"q454": {
+"core_ram": false,
+"core_trap": false,
+"distinct": 4,
+"preserved": false
+},
+"q455": {
+"core_ram": false,
+"core_trap": false,
+"distinct": 4,
+"preserved": false
+},
+"q456": {
+"core_ram": false,
+"core_trap": false,
+"distinct": 4,
+"preserved": false
+},
+"q457": {
+"core_ram": false,
+"core_trap": false,
+"distinct": 4,
+"preserved": false
+},
+"q458": {
+"core_ram": false,
+"core_trap": false,
+"distinct": 4,
+"preserved": false
+},
+"q459": {
+"core_ram": false,
+"core_trap": false,
+"distinct": 4,
+"preserved": false
+},
+"q460": {
+"core_ram": false,
+"core_trap": false,
+"distinct": 4,
+"preserved": false
+},
+"q461": {
+"core_ram": false,
+"core_trap": false,
+"distinct": 4,
+"preserved": false
+},
+"q462": {
+"core_ram": false,
+"core_trap": false,
+"distinct": 4,
+"preserved": false
+},
+"q463": {
+"core_ram": false,
+"core_trap": false,
+"distinct": 4,
+"preserved": false
+},
+"q464": {
+"core_ram": false,
+"core_trap": false,
+"distinct": 4,
+"preserved": false
+},
+"q465": {
+"core_ram": false,
+"core_trap": false,
+"distinct": 4,
+"preserved": false
+},
+"q466": {
+"core_ram": false,
+"core_trap": false,
+"distinct": 4,
+"preserved": false
+},
+"q467": {
+"core_ram": false,
+"core_trap": false,
+"distinct": 4,
+"preserved": false
+},
+"q468": {
+"core_ram": false,
+"core_trap": false,
+"distinct": 4,
+"preserved": false
+},
+"q469": {
+"core_ram": false,
+"core_trap": false,
+"distinct": 4,
+"preserved": false
+},
+"q470": {
+"core_ram": false,
+"core_trap": false,
+"distinct": 4,
+"preserved": false
+},
+"q471": {
+"core_ram": false,
+"core_trap": false,
+"distinct": 4,
+"preserved": false
+},
+"q472": {
+"core_ram": false,
+"core_trap": false,
+"distinct": 4,
+"preserved": false
+},
+"q473": {
+"core_ram": false,
+"core_trap": false,
+"distinct": 4,
+"preserved": false
+},
+"q474": {
+"core_ram": false,
+"core_trap": false,
+"distinct": 4,
+"preserved": false
+},
+"q475": {
+"core_ram": false,
+"core_trap": false,
+"distinct": 4,
+"preserved": false
+},
+"q476": {
+"core_ram": false,
+"core_trap": false,
+"distinct": 4,
+"preserved": false
+},
+"q477": {
+"core_ram": false,
+"core_trap": false,
+"distinct": 4,
+"preserved": false
+},
+"q478": {
+"core_ram": false,
+"core_trap": false,
+"distinct": 4,
+"preserved": false
+},
+"q479": {
+"core_ram": false,
+"core_trap": false,
+"distinct": 4,
+"preserved": false
+},
+"q480": {
+"core_ram": false,
+"core_trap": false,
+"distinct": 4,
+"preserved": false
+},
+"q481": {
+"core_ram": false,
+"core_trap": false,
+"distinct": 4,
+"preserved": false
+},
+"q482": {
+"core_ram": false,
+"core_trap": false,
+"distinct": 4,
+"preserved": false
+},
+"q483": {
+"core_ram": false,
+"core_trap": false,
+"distinct": 4,
+"preserved": false
+},
+"q484": {
+"core_ram": false,
+"core_trap": false,
+"distinct": 4,
+"preserved": false
+},
+"q485": {
+"core_ram": false,
+"core_trap": false,
+"distinct": 4,
+"preserved": false
+},
+"q486": {
+"core_ram": false,
+"core_trap": false,
+"distinct": 4,
+"preserved": false
+},
+"q487": {
+"core_ram": false,
+"core_trap": false,
+"distinct": 4,
+"preserved": false
+},
+"q488": {
+"core_ram": false,
+"core_trap": false,
+"distinct": 4,
+"preserved": false
+},
+"q489": {
+"core_ram": false,
+"core_trap": false,
+"distinct": 4,
+"preserved": false
+},
+"q490": {
+"core_ram": false,
+"core_trap": false,
+"distinct": 4,
+"preserved": false
+},
+"q491": {
+"core_ram": false,
+"core_trap": false,
+"distinct": 4,
+"preserved": false
+},
+"q492": {
+"core_ram": false,
+"core_trap": false,
+"distinct": 4,
+"preserved": false
+},
+"q493": {
+"core_ram": false,
+"core_trap": false,
+"distinct": 4,
+"preserved": false
+},
+"q494": {
+"core_ram": false,
+"core_trap": false,
+"distinct": 4,
+"preserved": false
+},
+"q495": {
+"core_ram": false,
+"core_trap": false,
+"distinct": 4,
+"preserved": false
+},
+"q496": {
+"core_ram": false,
+"core_trap": false,
+"distinct": 4,
+"preserved": false
+},
+"q497": {
+"core_ram": false,
+"core_trap": false,
+"distinct": 4,
+"preserved": false
+},
+"q498": {
+"core_ram": false,
+"core_trap": false,
+"distinct": 4,
+"preserved": false
+},
+"q499": {
+"core_ram": false,
+"core_trap": false,
+"distinct": 4,
+"preserved": false
+},
+"q500": {
+"core_ram": false,
+"core_trap": false,
+"distinct": 4,
+"preserved": false
+},
+"q501": {
+"core_ram": false,
+"core_trap": false,
+"distinct": 4,
+"preserved": false
+},
+"q502": {
+"core_ram": false,
+"core_trap": false,
+"distinct": 4,
+"preserved": false
+},
+"q503": {
+"core_ram": false,
+"core_trap": false,
+"distinct": 4,
+"preserved": false
+},
+"q504": {
+"core_ram": false,
+"core_trap": false,
+"distinct": 4,
+"preserved": false
+},
+"q505": {
+"core_ram": false,
+"core_trap": false,
+"distinct": 4,
+"preserved": false
+},
+"q506": {
+"core_ram": false,
+"core_trap": false,
+"distinct": 4,
+"preserved": false
+},
+"q507": {
+"core_ram": false,
+"core_trap": false,
+"distinct": 4,
+"preserved": false
+},
+"q508": {
+"core_ram": false,
+"core_trap": false,
+"distinct": 4,
+"preserved": false
+},
+"q509": {
+"core_ram": false,
+"core_trap": false,
+"distinct": 4,
+"preserved": false
+},
+"q510": {
+"core_ram": false,
+"core_trap": false,
+"distinct": 4,
+"preserved": false
+},
+"q511": {
+"core_ram": false,
+"core_trap": false,
+"distinct": 4,
+"preserved": false
+},
+"q512": {
+"core_ram": false,
+"core_trap": false,
+"distinct": 4,
+"preserved": false
+},
+"q513": {
+"core_ram": false,
+"core_trap": false,
+"distinct": 4,
+"preserved": false
+},
+"q514": {
+"core_ram": false,
+"core_trap": false,
+"distinct": 4,
+"preserved": false
+},
+"q515": {
+"core_ram": false,
+"core_trap": false,
+"distinct": 4,
+"preserved": false
+},
+"q516": {
+"core_ram": false,
+"core_trap": false,
+"distinct": 4,
+"preserved": false
+},
+"q517": {
+"core_ram": false,
+"core_trap": false,
+"distinct": 4,
+"preserved": false
+},
+"q518": {
+"core_ram": false,
+"core_trap": false,
+"distinct": 4,
+"preserved": false
+}
+}

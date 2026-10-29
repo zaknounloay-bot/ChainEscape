@@ -1,0 +1,17 @@
+{
+ "K2_PORTALRAM_s21_1": {
+  "map": [
+   ". . . . . . .",
+   ". B<&A Gv OA . . R>&A",
+   ". P^ R> . . . Y^",
+   ". . . . . . .",
+   ". Rv= Pv&A G^&A OA Y^= .",
+   ". P<= Bv . . B>%A .",
+   "Gv%A . . . . . ."
+  ],
+  "target": "EXTREME",
+  "facts": [],
+  "mechanic": "portal,armor,switch",
+  "max_positions": 2000
+ }
+}

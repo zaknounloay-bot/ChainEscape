@@ -348,3 +348,20 @@ Personal Best, Social / Challenge a Friend, Production or Supabase change;
 no earlier board, id, definition, fingerprint or record changed. New tools:
 `tools/extreme90_round.sh`, `tools/extreme90_stage2.py` (Phase 21's drivers,
 now committed), the Phase 22 check and the browser-test entry.
+
+## Phase 22 human results (recorded in Phase 23)
+
+Two sessions on N48–N51, recorded in `data/dev/extreme90_p22/human_p22.json`
+(not established as independent testers):
+
+| Board | Session 1 | Session 2 | Decision |
+|---|---|---|---|
+| N48 | EXTREME, TIME UP, 4 attempts | VERY HARD, GAVE UP ~86.7 s, 3 attempts | strong provisional |
+| N49 | VERY HARD, ~79.5 s, 2 attempts | VERY HARD, TIME UP, 5 attempts | strong provisional |
+| N50 | EASY, ~25.4 s, 1 attempt | HARD, ~25.2 s, 1 attempt | downgraded |
+| N51 | EXTREME, TIME UP, 3 attempts | VERY HARD, TIME UP, 3 attempts | strong provisional |
+
+The session-2 TIME UPs on N49 and N51 ended with winnable_at_timeup =
+false and an untimed STOPPED. This is the designed dead-end behaviour, not
+a defect: docs/extreme90_phase23.md, part J. Boards and fingerprints are
+unchanged.

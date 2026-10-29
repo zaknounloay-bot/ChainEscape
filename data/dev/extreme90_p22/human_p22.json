@@ -1,0 +1,67 @@
+{
+ "source": "Phase 23 brief: N48-N51 played in two sessions on the same board fingerprints. The brief does not establish that the sessions were independent testers; treated as two sessions, not two independent evaluations. Small sample, not validated difficulty labels.",
+ "recorded": "2026-10-29",
+ "sessions": {
+  "1": {
+   "N48": {
+    "rating": "EXTREME",
+    "outcome": "TIME UP",
+    "time_s": 90,
+    "attempts": 4
+   },
+   "N49": {
+    "rating": "VERY HARD",
+    "outcome": "COMPLETED",
+    "time_s": 79.5,
+    "attempts": 2
+   },
+   "N50": {
+    "rating": "EASY",
+    "outcome": "COMPLETED",
+    "time_s": 25.4,
+    "attempts": 1
+   },
+   "N51": {
+    "rating": "EXTREME",
+    "outcome": "TIME UP",
+    "time_s": 90,
+    "attempts": 3
+   }
+  },
+  "2": {
+   "N48": {
+    "rating": "VERY HARD",
+    "outcome": "GAVE UP",
+    "time_s": 86.7,
+    "attempts": 3
+   },
+   "N49": {
+    "rating": "VERY HARD",
+    "outcome": "TIME UP",
+    "time_s": 90,
+    "attempts": 5,
+    "note": "winnable_at_timeup = false; untimed continuation STOPPED"
+   },
+   "N50": {
+    "rating": "HARD",
+    "outcome": "COMPLETED",
+    "time_s": 25.2,
+    "attempts": 1
+   },
+   "N51": {
+    "rating": "VERY HARD",
+    "outcome": "TIME UP",
+    "time_s": 90,
+    "attempts": 3,
+    "note": "winnable_at_timeup = false; untimed continuation STOPPED"
+   }
+  }
+ },
+ "decisions": {
+  "N48": "strong provisional candidate (EXTREME / VERY HARD); check conceptual similarity to N39",
+  "N49": "strong provisional candidate (VERY HARD / VERY HARD)",
+  "N50": "downgraded (EASY / HARD) - not counted as EXTREME; record kept",
+  "N51": "strong provisional candidate (EXTREME / VERY HARD); check conceptual similarity to N37"
+ },
+ "note": "Not fully human-validated EXTREME. Boards, ids and fingerprints unchanged."
+}

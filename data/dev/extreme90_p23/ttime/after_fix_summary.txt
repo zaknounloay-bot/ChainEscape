@@ -1,0 +1,7 @@
+web22 run 1 exit=0 ::   (6 pixel samples took 17.1 s) PASS 0:30-0:11: RED on screen, warning icon, weight 900; a gentle pulse (luma 54-61, never above the resting 61) 
+web21 run 1 exit=0 ::   (6 pixel samples took 16.7 s) PASS 0:30-0:11: RED on screen, warning icon, weight 900; a gentle pulse (luma 56-61, never above the resting 61) 
+web22 run 2 exit=0 ::   (6 pixel samples took 17.1 s) PASS 0:30-0:11: RED on screen, warning icon, weight 900; a gentle pulse (luma 54-61, never above the resting 61) 
+web21 run 2 exit=0 ::   (6 pixel samples took 16.1 s) PASS 0:30-0:11: RED on screen, warning icon, weight 900; a gentle pulse (luma 54-61, never above the resting 61) 
+web22 run 3 exit=0 ::   (6 pixel samples took 18.1 s) PASS 0:30-0:11: RED on screen, warning icon, weight 900; a gentle pulse (luma 54-61, never above the resting 61) 
+web21 run 3 exit=0 ::   (6 pixel samples took 16.7 s) PASS 0:30-0:11: RED on screen, warning icon, weight 900; a gentle pulse (luma 55-61, never above the resting 61) 
+DONE

@@ -1,0 +1,11 @@
+{
+ "K2_PORTALRAM_s21_1": {
+  "distinct": 4,
+  "pieces_tested": 16,
+  "steps": 13,
+  "trivial": [
+   "r2c1 P^"
+  ],
+  "trivial_removals": 1
+ }
+}

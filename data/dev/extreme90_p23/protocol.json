@@ -1,0 +1,66 @@
+{
+ "fixed_before_generating": "2026-10-29 (before any Phase 23 search run)",
+ "goal": "5-10 new technically qualified EXTREME boards from 5 NEW logical cores (N52 on); never pad; the 24 earlier cores are not used",
+ "generator": "tools/ta90_search.gd --ops=v20 (Phase 20), unchanged",
+ "cores": "5 new cores (core_probe.json, seed_<key>.json); every core cell frozen; the generator only adds and moves free blocks and the listed marks",
+ "families": {
+  "lastram": [
+   "K1_LASTRAM",
+   "K4_TOGGLE"
+  ],
+  "portalram": [
+   "K2_PORTALRAM"
+  ],
+  "relay": [
+   "K3_RELAY"
+  ],
+  "spincount": [
+   "K5_SPINCOUNT"
+  ]
+ },
+ "search_budget": {
+  "runs": "10, plus at most 5 more",
+  "per_run": {
+   "minutes": 12,
+   "batch": 40,
+   "beam": 5,
+   "patience": 8,
+   "ops": "v20"
+  },
+  "seeds": {
+   "round 1": 21,
+   "round 2": 22,
+   "round 3": 23
+  },
+  "parallel": 4,
+  "order": "round 1 = every core with seed 21; stage 2; round 2 = every core with seed 22; stage 2; round 3 (seed 23) ONLY for cores with no accepted board, and only if fewer than 5 boards are accepted after round 2",
+  "why this budget": "Phase 22 spent 48 runs to get 4 boards, and 55 of its 69 candidates died at the overlap pre-filter because the 24 old cores sit next to the bank. New cores should not hit that wall, so the question is whether they qualify at all: 2 seeds per core (10 runs, ~50 min wall clock) answers it per core, and one extra seed for cores that fail is the most a core gets. The 48-run budget is not reused: it bought cores already saturated."
+ },
+ "stage2_candidates": "unchanged (tools/extreme90_stage2.py): per run up to 2 qualifying clusters (<= 3 cells apart = one cluster), top-scoring board of each; dropped before any report if overlap (occupancy, best of 8 symmetries) >= 0.40 with ANY bank board (N1-N51) or an accepted Phase 23 board, or with a better-ranked candidate of the round",
+ "report_budget": "at most 20 full reports (tools/ta90_design.gd, one at a time, idle machine), round-robin across families",
+ "acceptance (all must hold)": [
+  "ta90_design.gd verdict HUMAN-REVIEW CANDIDATE for target EXTREME (Category A AND B, thresholds unchanged)",
+  "every listed mechanic ESSENTIAL: without it unsolvable, or >= 2 distinct mistakes fewer, or >= 3 decision steps fewer",
+  "no filler: 0 trivial removals (tools/xb90_filler.gd)",
+  "overlap < 0.40 with every bank board and every accepted Phase 23 board; at most 1 accepted board per CORE; at most 3 per family",
+  "the core's critical dependency must survive in the accepted board (checked by hand against core_probe.json and recorded: the frozen cells guarantee the cells, the report's counterfactuals show the mechanics still matter)",
+  "exact TIME UP continuation incl. UNDO right after continuing, and the dead-end TIME UP check (Ta90ContinueCheck / Ta90DeadendCheck --boards)",
+  "browser: WebAssembly TIME UP check within the page test's limit, iPhone SE layout"
+ ],
+ "human-fit features": "tools/ta90_humanfit.gd is diagnostic only: reported for every candidate, never used to accept or reject (no new cutoff)",
+ "never": [
+  "re-measure a borderline timing",
+  "change a threshold after seeing results",
+  "edit an accepted board",
+  "use one of the 24 earlier cores"
+ ],
+ "report_budget_max": 20,
+ "amendments": [
+  {
+   "when": "2026-10-29, after round 3, before any further report",
+   "what": "protocol rule 5 (the core dependency must survive) is applied BEFORE stage-2 candidate selection, by tools/ta90_corecheck.gd (the core rammer rams on the Solver line AND leaving with it is a distinct losing move); stage 2 then takes up to 2 clusters per run from the preserving boards, exactly as before",
+   "why": "the top-scoring K4 cluster (K4_TOGGLE_s22_1) bypassed its core and was rejected by rule 5 after its report; a check of all 519 qualifying K4 boards of that run shows 343 keep the core - picking by score alone selected the bypass. Rule 5 was meant to define what a candidate of a core IS; applying it first changes no threshold, adds no search run and keeps the 2-cluster and 20-report limits.",
+   "applies_to": "runs with qualifying boards: only run_K4_TOGGLE_s22 (every other Phase 23 run had 0 qualifying boards)"
+  }
+ ]
+}

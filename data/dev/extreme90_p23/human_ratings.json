@@ -1,0 +1,123 @@
+{
+ "source": "collected from docs/extreme90_phase17.md (N14-N23), data/dev/extreme90_p18/human_p17.json, human_p18.json, docs/extreme90_phase20.md (N35/N36), data/dev/extreme90_p21/human_p21.json, data/dev/extreme90_p22/human_p22.json",
+ "caveat": "family players on real iPhones, small samples, sessions not established as independent; P21 boards rated jointly (one assessment); ordinal scale EASY 0, MEDIUM 1, HARD 2, VERY HARD 3, EXTREME 4 used only for a descriptive rank study",
+ "scale": {
+  "EASY": 0,
+  "MEDIUM": 1,
+  "HARD": 2,
+  "VERY HARD": 3,
+  "EXTREME": 4
+ },
+ "ratings": {
+  "N14": [
+   "EXTREME"
+  ],
+  "N15": [
+   "EXTREME"
+  ],
+  "N16": [
+   "VERY HARD"
+  ],
+  "N18": [
+   "EXTREME"
+  ],
+  "N21": [
+   "EXTREME"
+  ],
+  "N23": [
+   "VERY HARD"
+  ],
+  "N17": [
+   "MEDIUM"
+  ],
+  "N19": [
+   "MEDIUM"
+  ],
+  "N20": [
+   "EASY"
+  ],
+  "N22": [
+   "EASY"
+  ],
+  "N24": [
+   "HARD"
+  ],
+  "N25": [
+   "MEDIUM"
+  ],
+  "N26": [
+   "VERY HARD"
+  ],
+  "N27": [
+   "VERY HARD"
+  ],
+  "N28": [
+   "MEDIUM"
+  ],
+  "N29": [
+   "VERY HARD"
+  ],
+  "N30": [
+   "VERY HARD"
+  ],
+  "N31": [
+   "EXTREME",
+   "EXTREME",
+   "VERY HARD"
+  ],
+  "N32": [
+   "EXTREME",
+   "EXTREME",
+   "HARD"
+  ],
+  "N33": [
+   "EXTREME",
+   "EXTREME",
+   "VERY HARD"
+  ],
+  "N34": [
+   "HARD",
+   "VERY HARD",
+   "VERY HARD"
+  ],
+  "N35": [
+   "EXTREME",
+   "VERY HARD"
+  ],
+  "N36": [
+   "VERY HARD",
+   "VERY HARD"
+  ],
+  "N41": [
+   "EASY"
+  ],
+  "N46": [
+   "MEDIUM"
+  ],
+  "N48": [
+   "EXTREME",
+   "VERY HARD"
+  ],
+  "N49": [
+   "VERY HARD",
+   "VERY HARD"
+  ],
+  "N50": [
+   "EASY",
+   "HARD"
+  ],
+  "N51": [
+   "EXTREME",
+   "VERY HARD"
+  ]
+ },
+ "promising_no_rating": [
+  "N39",
+  "N40",
+  "N42",
+  "N43",
+  "N44",
+  "N45",
+  "N47"
+ ]
+}

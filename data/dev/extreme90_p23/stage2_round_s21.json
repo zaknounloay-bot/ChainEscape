@@ -1,0 +1,35 @@
+{
+ "pool": [
+  {
+   "key": "K2_PORTALRAM_s21_1",
+   "core": "K2_PORTALRAM",
+   "family": "portalram",
+   "map": [
+    ". . . . . . .",
+    ". B<&A Gv OA . . R>&A",
+    ". P^ R> . . . Y^",
+    ". . . . . . .",
+    ". Rv= Pv&A G^&A OA Y^= .",
+    ". P<= Bv . . B>%A .",
+    "Gv%A . . . . . ."
+   ],
+   "score": 137.35,
+   "search": {
+    "distinct": 4,
+    "steps": 13,
+    "shortcut": 0.025,
+    "positions": 461,
+    "pieces": 16
+   },
+   "closest": {
+    "known": "N41",
+    "overlap": 0.38,
+    "pool": "",
+    "pool_overlap": 0
+   }
+  }
+ ],
+ "order": [
+  "K2_PORTALRAM_s21_1"
+ ]
+}

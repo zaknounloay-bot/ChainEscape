@@ -209,10 +209,24 @@ try {
   check((c.text === '0:31' && c.stage === 'orange') || (c.text === '0:30' && c.stage === 'red'), `the 0:30 threshold: ${c.text} is ${c.stage}`);
   c = await atStage((v) => v.stage === 'red' && !v.final && v.text <= '0:28', 'red', 10000);
   // The pulse, from pixels: it varies, and is never lighter than the resting red.
+  // One screenshot takes ~2.3-2.6 s headless - about TWO pulse periods (1.25 s) -
+  // so plain back-to-back samples can all land on one phase of the pulse
+  // (Phase 23, docs/extreme90_phase23.md, Part J). The samples are therefore
+  // staggered (every second one by a third of a period), and while the pulse is still the plain
+  // red one (before the last 10 s) a few more are taken if the first 6 show
+  // no variation. The requirement is unchanged: at least 6 samples, EVERY one
+  // red and never above the resting red + 6, and a span > 4. A static fill
+  // shows no span however often it is sampled.
   const reds = [];
   const redT0 = Date.now();
-  for (let i = 0; i < 6; i++) { const v = await a.cd(); reds.push(await a.fill(v)); await sleep(60); }
-  console.log(`  (6 pixel samples took ${((Date.now() - redT0) / 1000).toFixed(1)} s)`);
+  const span = () => { const l = reds.map(luma); return Math.max(...l) - Math.min(...l); };
+  for (let i = 0; i < 10; i++) {
+    const v = await a.cd();
+    if (i >= 6 && (span() > 4 || v.stage !== 'red' || v.final)) break;
+    reds.push(await a.fill(v));
+    await sleep(60 + 417 * (i % 2));
+  }
+  console.log(`  (${reds.length} pixel samples took ${((Date.now() - redT0) / 1000).toFixed(1)} s)`);
   const lumas = reds.map(luma);
   check(c.stage === 'red' && c.icon === 'red' && c.weight === 900 && reds.every((x) => x[0] > x[1] + 60 && x[0] > x[2] + 60) && Math.max(...lumas) <= luma(FILL.red) + 6 && Math.max(...lumas) - Math.min(...lumas) > 4,
     `0:30-0:11: RED on screen, warning icon, weight 900; a gentle pulse (luma ${Math.min(...lumas).toFixed(0)}-${Math.max(...lumas).toFixed(0)}, never above the resting ${luma(FILL.red).toFixed(0)})`);

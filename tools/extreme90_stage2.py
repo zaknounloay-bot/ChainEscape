@@ -8,7 +8,7 @@ D = sys.argv[1].rstrip('/')
 G = sys.argv[3] if len(sys.argv) > 3 else 'godot'
 P = json.load(open(D + '/protocol.json'))
 FAM = {k: f for f, ks in P['families'].items() for k in ks}
-SIM_MAX, REPORTS_MAX, ACCEPT_MAX, PER_FAMILY = 0.40, 40, 10, 3
+SIM_MAX, REPORTS_MAX, ACCEPT_MAX, PER_FAMILY = 0.40, int(P.get('report_budget_max', 40)), 10, 3  # Phase 23: 20 reports
 STATE = D + '/stage2_state.json'
 
 
@@ -81,6 +81,14 @@ def main(seed):
     for f in sorted(glob.glob(f'{D}/run_*_s{seed}.json')):
         core = os.path.basename(f)[4:-len(f'_s{seed}.json')]
         j = json.load(open(f))
+        tag = ''
+        # Phase 23 amendment: with <dir>/corecheck_<core>_s<seed>.json (tools/ta90_corecheck.gd),
+        # only boards that still carry the core's dependency are candidates (keys get a 'c').
+        cc = f'{D}/corecheck_{core}_s{seed}.json'
+        if os.path.exists(cc):
+            keep = json.load(open(cc))
+            j['qualifying'] = [q for i, q in enumerate(j.get('qualifying', [])) if keep.get('q%03d' % i, {}).get('preserved')]
+            tag = 'c'
         reps = []
         for q in sorted(j.get('qualifying', []), key=lambda x: -x['score']):
             if all(diff(q['map'], r['map']) > 3 for r in reps):
@@ -88,7 +96,7 @@ def main(seed):
             if len(reps) == 2:
                 break
         for i, q in enumerate(reps):
-            pool.append({'key': f'{core}_s{seed}_{i + 1}', 'core': core, 'family': FAM[core], 'map': q['map'], 'score': q['score'],
+            pool.append({'key': f'{core}_s{seed}{tag}_{i + 1}', 'core': core, 'family': FAM[core], 'map': q['map'], 'score': q['score'],
                          'search': {k: q.get(k) for k in ('distinct', 'steps', 'shortcut', 'positions', 'pieces')}})
     # 2. similarity pre-filter (bank, accepted, better-ranked pool boards)
     kept = []
@@ -118,7 +126,7 @@ def main(seed):
     # 4. reports and acceptance
     for c in order:
         if len(st['accepted']) >= ACCEPT_MAX or st['reports'] >= REPORTS_MAX:
-            st['log'].append({'key': c['key'], 'stage': 'report', 'decision': 'not reached', 'why': 'stopping rule (10 accepted or 40 reports)'})
+            st['log'].append({'key': c['key'], 'stage': 'report', 'decision': 'not reached', 'why': 'stopping rule (%d accepted or %d reports)' % (ACCEPT_MAX, REPORTS_MAX)})
             continue
         accs = st['accepted']
         if any(a['core'] == c['core'] for a in accs):

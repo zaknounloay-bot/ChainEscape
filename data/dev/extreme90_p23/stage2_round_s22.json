@@ -1,0 +1,61 @@
+{
+ "pool": [
+  {
+   "key": "K4_TOGGLE_s22c_1",
+   "core": "K4_TOGGLE",
+   "family": "lastram",
+   "map": [
+    ". . . . . . .",
+    ". . . . . R<&A G^=",
+    "R< R< G< . P< G^ R<",
+    "Gv= . . . Y^&A B>&A .",
+    ". . . . Bv= . .",
+    ". . . . . . .",
+    "Pv%A . . . Yv%A . ."
+   ],
+   "score": 135.82,
+   "search": {
+    "distinct": 4,
+    "steps": 14,
+    "shortcut": 0.075,
+    "positions": 1264,
+    "pieces": 14
+   },
+   "closest": {
+    "known": "N49",
+    "overlap": 0.42,
+    "pool": "",
+    "pool_overlap": 0
+   }
+  },
+  {
+   "key": "K4_TOGGLE_s22c_2",
+   "core": "K4_TOGGLE",
+   "family": "lastram",
+   "map": [
+    ". . . . . . .",
+    ". . . . . R<&A G^=",
+    "R< . G< Y< P<&A G< R<",
+    "G>= . . . Y^&A B>&A .",
+    ". . . . B>= . .",
+    ". . . . . . .",
+    "Pv%A . . . Yv%A . ."
+   ],
+   "score": 135.71,
+   "search": {
+    "distinct": 4,
+    "steps": 14,
+    "shortcut": 0.1,
+    "positions": 1242,
+    "pieces": 14
+   },
+   "closest": {
+    "known": "N32",
+    "overlap": 0.43,
+    "pool": "",
+    "pool_overlap": 0
+   }
+  }
+ ],
+ "order": []
+}
