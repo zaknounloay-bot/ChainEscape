@@ -1,0 +1,569 @@
+{
+ "accepted": [
+  {
+   "key": "ARM_p18AR2_s13_1",
+   "core": "ARM_p18AR2",
+   "family": "armor",
+   "map": [
+    ". . . . . . .",
+    ". . . . Pv= R^* .",
+    "Rv= G^= . . G< . .",
+    "Y<* . . B> Yv* G^= .",
+    ". . . . . Pv* .",
+    "B>* G^= . . . G>* .",
+    "Rv* . . G<* . Y<* Gv="
+   ],
+   "score": 149.59,
+   "search": {
+    "distinct": 6,
+    "steps": 19,
+    "shortcut": 0,
+    "positions": 540,
+    "pieces": 17
+   },
+   "closest": {
+    "known": "N39",
+    "overlap": 0.39,
+    "pool": "SEQ_p18MS2_s13_1",
+    "pool_overlap": 0.38
+   },
+   "filler": {
+    "distinct": 6,
+    "pieces_tested": 17,
+    "steps": 19,
+    "trivial": [],
+    "trivial_removals": 0
+   },
+   "report": "data/dev/extreme90_p22/report_ARM_p18AR2_s13_1.json",
+   "fingerprint": "87f57a0e9a27afac445022e965f3e2f9e53cef379f9a799c360ff7def04fbe18"
+  },
+  {
+   "key": "POR_p18PM_s14_1",
+   "core": "POR_p18PM",
+   "family": "portal",
+   "map": [
+    ". R<:^ R^:v . . . .",
+    ". R^:^ B<:> . . . .",
+    "P>:v B>:v M OA . R< B<",
+    ". . . . . . .",
+    ". . Y^:< . . . Y^:<",
+    ". . R<:< . . OA .",
+    ". . . . . . Y^"
+   ],
+   "score": 157.73,
+   "search": {
+    "distinct": 5,
+    "steps": 19,
+    "shortcut": 0.05,
+    "positions": 877,
+    "pieces": 15
+   },
+   "closest": {
+    "known": "N41",
+    "overlap": 0.38,
+    "pool": "",
+    "pool_overlap": 0
+   },
+   "filler": {
+    "distinct": 5,
+    "pieces_tested": 15,
+    "steps": 19,
+    "trivial": [],
+    "trivial_removals": 0
+   },
+   "report": "data/dev/extreme90_p22/report_POR_p18PM_s14_1.json",
+   "fingerprint": "773dba8256092fb58f7e31bf4c9beeca3b27c84800de4e1540ae28f954bad6a8"
+  },
+  {
+   "key": "ARM_p19MAS_s14_2",
+   "core": "ARM_p19MAS",
+   "family": "armor",
+   "map": [
+    ". R> . . . Gv R^",
+    "P>&A . . . . B>= P^=",
+    ". Y^= . P< R>&A M .",
+    ". . . . . . .",
+    ". . . . . . .",
+    ". . . . . P>%A P^=",
+    "P^%A Y>&A . . . . ."
+   ],
+   "score": 150.46,
+   "search": {
+    "distinct": 4,
+    "steps": 17,
+    "shortcut": 0.125,
+    "positions": 673,
+    "pieces": 14
+   },
+   "closest": {
+    "known": "N35",
+    "overlap": 0.35,
+    "pool": "POR_p19PX_s14_1",
+    "pool_overlap": 0.25
+   },
+   "filler": {
+    "distinct": 4,
+    "pieces_tested": 14,
+    "steps": 17,
+    "trivial": [],
+    "trivial_removals": 0
+   },
+   "report": "data/dev/extreme90_p22/report_ARM_p19MAS_s14_2.json",
+   "fingerprint": "a9f453627f0b4c667ce31e01fab41093dd2f8cd9bdd0cc3489058db2661ee4ff"
+  },
+  {
+   "key": "POR_p19PX_s14_1",
+   "core": "POR_p19PX",
+   "family": "portal",
+   "map": [
+    ". . Gv . . Y< .",
+    ". Y> R> G> B> . .",
+    ". B>&A M OA . Bv&A .",
+    ". . . . . . .",
+    ". G^ G<%A . . B< .",
+    ". . . P>&A OA . .",
+    "P^%A . . . . Y^ ."
+   ],
+   "score": 153.94,
+   "search": {
+    "distinct": 5,
+    "steps": 16,
+    "shortcut": 0,
+    "positions": 311,
+    "pieces": 17
+   },
+   "closest": {
+    "known": "N37",
+    "overlap": 0.36,
+    "pool": "POR_p18PM_s14_1",
+    "pool_overlap": 0.33
+   },
+   "filler": {
+    "distinct": 5,
+    "pieces_tested": 17,
+    "steps": 16,
+    "trivial": [],
+    "trivial_removals": 0
+   },
+   "report": "data/dev/extreme90_p22/report_POR_p19PX_s14_1.json",
+   "fingerprint": "4ad502c26b6c21bfcd977e3a885e2d2ff8cbc734c2378415cd2029ea456e1e9a"
+  }
+ ],
+ "reports": 9,
+ "log": [
+  {
+   "key": "SPI_p17A_s13_1",
+   "stage": "prefilter",
+   "decision": "dropped",
+   "why": "overlap 0.47 with N47"
+  },
+  {
+   "key": "SPI_p17A_s13_2",
+   "stage": "prefilter",
+   "decision": "dropped",
+   "why": "overlap 0.50 with N47"
+  },
+  {
+   "key": "SPI_p17H_s13_1",
+   "stage": "prefilter",
+   "decision": "dropped",
+   "why": "overlap 0.42 with N29"
+  },
+  {
+   "key": "SPI_p17H_s13_2",
+   "stage": "prefilter",
+   "decision": "dropped",
+   "why": "overlap 0.44 with N5"
+  },
+  {
+   "key": "SEQ_p17G_s13_1",
+   "stage": "prefilter",
+   "decision": "dropped",
+   "why": "overlap 0.56 with N28"
+  },
+  {
+   "key": "SEQ_p18MS2_s13_2",
+   "stage": "prefilter",
+   "decision": "dropped",
+   "why": "overlap 0.89 with the better candidate SEQ_p18MS2_s13_1"
+  },
+  {
+   "key": "SEQ_p17G_s13_2",
+   "stage": "prefilter",
+   "decision": "dropped",
+   "why": "overlap 0.47 with N28"
+  },
+  {
+   "key": "POR_p19PX_s13_1",
+   "stage": "prefilter",
+   "decision": "dropped",
+   "why": "overlap 0.55 with N37"
+  },
+  {
+   "key": "POR_p19PX_s13_2",
+   "stage": "prefilter",
+   "decision": "dropped",
+   "why": "overlap 0.48 with N37"
+  },
+  {
+   "key": "MAG_p17E_s13_1",
+   "stage": "prefilter",
+   "decision": "dropped",
+   "why": "overlap 0.47 with N27"
+  },
+  {
+   "key": "SPI_p17C2_s13_2",
+   "stage": "prefilter",
+   "decision": "dropped",
+   "why": "overlap 0.88 with the better candidate SPI_p17C2_s13_1"
+  },
+  {
+   "key": "MAG_p17E_s13_2",
+   "stage": "prefilter",
+   "decision": "dropped",
+   "why": "overlap 0.53 with N27"
+  },
+  {
+   "key": "ARM_p19MAS_s13_1",
+   "stage": "prefilter",
+   "decision": "dropped",
+   "why": "overlap 0.41 with N35"
+  },
+  {
+   "key": "ARM_p19MAS_s13_2",
+   "stage": "prefilter",
+   "decision": "dropped",
+   "why": "overlap 0.41 with N35"
+  },
+  {
+   "key": "MAG_p18MX3_s13_1",
+   "stage": "prefilter",
+   "decision": "dropped",
+   "why": "overlap 0.41 with N31"
+  },
+  {
+   "key": "ARM_p18AR2_s13_2",
+   "stage": "prefilter",
+   "decision": "dropped",
+   "why": "overlap 0.94 with the better candidate ARM_p18AR2_s13_1"
+  },
+  {
+   "key": "MAG_p18MX3_s13_2",
+   "stage": "prefilter",
+   "decision": "dropped",
+   "why": "overlap 0.42 with N38"
+  },
+  {
+   "key": "SEQ_bankH2_s13_1",
+   "stage": "prefilter",
+   "decision": "dropped",
+   "why": "overlap 0.52 with N21"
+  },
+  {
+   "key": "SEQ_bankH2_s13_2",
+   "stage": "prefilter",
+   "decision": "dropped",
+   "why": "overlap 0.43 with N21"
+  },
+  {
+   "key": "MAG_p18MX1_s13_1",
+   "stage": "prefilter",
+   "decision": "dropped",
+   "why": "overlap 0.46 with N44"
+  },
+  {
+   "key": "MAG_p18MX1_s13_2",
+   "stage": "prefilter",
+   "decision": "dropped",
+   "why": "overlap 0.42 with N46"
+  },
+  {
+   "key": "MAG_p18MG_s13_1",
+   "stage": "prefilter",
+   "decision": "dropped",
+   "why": "overlap 0.45 with N38"
+  },
+  {
+   "key": "SWI_bankD_s13_2",
+   "stage": "prefilter",
+   "decision": "dropped",
+   "why": "overlap 0.70 with the better candidate SWI_bankD_s13_1"
+  },
+  {
+   "key": "POR_p18SPP_s13_1",
+   "stage": "prefilter",
+   "decision": "dropped",
+   "why": "overlap 0.43 with N34"
+  },
+  {
+   "key": "POR_p18SPP_s13_2",
+   "stage": "prefilter",
+   "decision": "dropped",
+   "why": "overlap 0.43 with N34"
+  },
+  {
+   "key": "MAG_p18MG_s13_2",
+   "stage": "prefilter",
+   "decision": "dropped",
+   "why": "overlap 0.45 with N32"
+  },
+  {
+   "key": "SPI_bankB_s13_1",
+   "stage": "prefilter",
+   "decision": "dropped",
+   "why": "overlap 0.47 with N43"
+  },
+  {
+   "key": "SPI_bankB_s13_2",
+   "stage": "prefilter",
+   "decision": "dropped",
+   "why": "overlap 0.47 with N43"
+  },
+  {
+   "key": "ARM_bankI2_s13_1",
+   "stage": "prefilter",
+   "decision": "dropped",
+   "why": "overlap 0.40 with N43"
+  },
+  {
+   "key": "ARM_bankI2_s13_2",
+   "stage": "prefilter",
+   "decision": "dropped",
+   "why": "overlap 0.40 with N43"
+  },
+  {
+   "key": "SWI_bankA_s13_1",
+   "stage": "prefilter",
+   "decision": "dropped",
+   "why": "overlap 0.40 with N42"
+  },
+  {
+   "key": "SWI_bankA_s13_2",
+   "stage": "prefilter",
+   "decision": "dropped",
+   "why": "overlap 0.40 with N42"
+  },
+  {
+   "key": "ARM_p18AR2_s13_1",
+   "stage": "report",
+   "decision": "ACCEPTED",
+   "why": ""
+  },
+  {
+   "key": "SWI_bankD_s13_1",
+   "stage": "report",
+   "decision": "rejected",
+   "why": "the TIME UP check takes 127.5 ms in its worst position (> 40)"
+  },
+  {
+   "key": "SPI_p17C2_s13_1",
+   "stage": "report",
+   "decision": "rejected",
+   "why": "solve 42.1 ms (> 40)"
+  },
+  {
+   "key": "SEQ_p18MS2_s13_1",
+   "stage": "report",
+   "decision": "rejected",
+   "why": "filler: 1 trivial removals ['r6c2 M']"
+  },
+  {
+   "key": "SPI_p17H_s14_1",
+   "stage": "prefilter",
+   "decision": "dropped",
+   "why": "overlap 0.48 with N29"
+  },
+  {
+   "key": "SPI_p17A_s14_1",
+   "stage": "prefilter",
+   "decision": "dropped",
+   "why": "overlap 0.47 with N47"
+  },
+  {
+   "key": "SPI_p17H_s14_2",
+   "stage": "prefilter",
+   "decision": "dropped",
+   "why": "overlap 0.48 with N29"
+  },
+  {
+   "key": "MAG_p17E_s14_1",
+   "stage": "prefilter",
+   "decision": "dropped",
+   "why": "overlap 0.55 with N27"
+  },
+  {
+   "key": "MAG_p17E_s14_2",
+   "stage": "prefilter",
+   "decision": "dropped",
+   "why": "overlap 0.65 with N27"
+  },
+  {
+   "key": "SPI_p17A_s14_2",
+   "stage": "prefilter",
+   "decision": "dropped",
+   "why": "overlap 0.44 with N47"
+  },
+  {
+   "key": "SEQ_p17G_s14_1",
+   "stage": "prefilter",
+   "decision": "dropped",
+   "why": "overlap 0.40 with N9"
+  },
+  {
+   "key": "POR_p18PM_s14_2",
+   "stage": "prefilter",
+   "decision": "dropped",
+   "why": "overlap 0.82 with the better candidate POR_p18PM_s14_1"
+  },
+  {
+   "key": "POR_p19PX_s14_2",
+   "stage": "prefilter",
+   "decision": "dropped",
+   "why": "overlap 0.42 with N37"
+  },
+  {
+   "key": "SEQ_p17G_s14_2",
+   "stage": "prefilter",
+   "decision": "dropped",
+   "why": "overlap 0.47 with N4"
+  },
+  {
+   "key": "ARM_p19MAS_s14_1",
+   "stage": "prefilter",
+   "decision": "dropped",
+   "why": "overlap 0.41 with N35"
+  },
+  {
+   "key": "ARM_p18AR2_s14_1",
+   "stage": "prefilter",
+   "decision": "dropped",
+   "why": "overlap 0.52 with N39"
+  },
+  {
+   "key": "POR_p18SPP_s14_1",
+   "stage": "prefilter",
+   "decision": "dropped",
+   "why": "overlap 0.48 with N34"
+  },
+  {
+   "key": "POR_p18SPP_s14_2",
+   "stage": "prefilter",
+   "decision": "dropped",
+   "why": "overlap 0.48 with N34"
+  },
+  {
+   "key": "SEQ_bankH2_s14_1",
+   "stage": "prefilter",
+   "decision": "dropped",
+   "why": "overlap 0.40 with N30"
+  },
+  {
+   "key": "ARM_p18AR2_s14_2",
+   "stage": "prefilter",
+   "decision": "dropped",
+   "why": "overlap 0.52 with N39"
+  },
+  {
+   "key": "SEQ_bankH2_s14_2",
+   "stage": "prefilter",
+   "decision": "dropped",
+   "why": "overlap 0.42 with N30"
+  },
+  {
+   "key": "SWI_bankD_s14_1",
+   "stage": "prefilter",
+   "decision": "dropped",
+   "why": "overlap 0.40 with N25"
+  },
+  {
+   "key": "MAG_p18MX1_s14_1",
+   "stage": "prefilter",
+   "decision": "dropped",
+   "why": "overlap 0.48 with N46"
+  },
+  {
+   "key": "MAG_p18MX1_s14_2",
+   "stage": "prefilter",
+   "decision": "dropped",
+   "why": "overlap 0.55 with N46"
+  },
+  {
+   "key": "ARM_bankI2_s14_1",
+   "stage": "prefilter",
+   "decision": "dropped",
+   "why": "overlap 0.42 with N17"
+  },
+  {
+   "key": "ARM_bankI2_s14_2",
+   "stage": "prefilter",
+   "decision": "dropped",
+   "why": "overlap 0.42 with N43"
+  },
+  {
+   "key": "SWI_bankA_s14_1",
+   "stage": "prefilter",
+   "decision": "dropped",
+   "why": "overlap 0.56 with N42"
+  },
+  {
+   "key": "SWI_bankA_s14_2",
+   "stage": "prefilter",
+   "decision": "dropped",
+   "why": "overlap 0.50 with N42"
+  },
+  {
+   "key": "SPI_bankB_s14_1",
+   "stage": "prefilter",
+   "decision": "dropped",
+   "why": "overlap 0.50 with N43"
+  },
+  {
+   "key": "MAG_p18MG_s14_1",
+   "stage": "prefilter",
+   "decision": "dropped",
+   "why": "overlap 0.50 with N32"
+  },
+  {
+   "key": "MAG_p18MG_s14_2",
+   "stage": "prefilter",
+   "decision": "dropped",
+   "why": "overlap 0.50 with N32"
+  },
+  {
+   "key": "SPI_bankB_s14_2",
+   "stage": "prefilter",
+   "decision": "dropped",
+   "why": "overlap 0.50 with N43"
+  },
+  {
+   "key": "POR_p18PM_s14_1",
+   "stage": "report",
+   "decision": "ACCEPTED",
+   "why": ""
+  },
+  {
+   "key": "ARM_p19MAS_s14_2",
+   "stage": "report",
+   "decision": "ACCEPTED",
+   "why": ""
+  },
+  {
+   "key": "SWI_bankD_s14_2",
+   "stage": "report",
+   "decision": "rejected",
+   "why": "the TIME UP check takes 64.5 ms in its worst position (> 40)"
+  },
+  {
+   "key": "POR_p19PX_s14_1",
+   "stage": "report",
+   "decision": "ACCEPTED",
+   "why": ""
+  },
+  {
+   "key": "SWI_p20SG5_s14_1",
+   "stage": "report",
+   "decision": "rejected",
+   "why": "a simple greedy player wins 38% (> 20%): a shortcut"
+  }
+ ]
+}

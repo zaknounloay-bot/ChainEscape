@@ -1,0 +1,6 @@
+{'key': 'POR_p18PM_s14_1', 'stage': 'report', 'decision': 'ACCEPTED', 'why': ''}
+{'key': 'ARM_p19MAS_s14_2', 'stage': 'report', 'decision': 'ACCEPTED', 'why': ''}
+{'key': 'SWI_bankD_s14_2', 'stage': 'report', 'decision': 'rejected', 'why': 'the TIME UP check takes 64.5 ms in its worst position (> 40)'}
+{'key': 'POR_p19PX_s14_1', 'stage': 'report', 'decision': 'ACCEPTED', 'why': ''}
+{'key': 'SWI_p20SG5_s14_1', 'stage': 'report', 'decision': 'rejected', 'why': 'a simple greedy player wins 38% (> 20%): a shortcut'}
+accepted 4, reports 9

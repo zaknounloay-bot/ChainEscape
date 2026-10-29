@@ -1,0 +1,163 @@
+{
+ "format": "ce-ta90-proto",
+ "v": 1,
+ "test": "ta90_n50",
+ "assist": {
+  "undo": 3,
+  "show_a_move": 0,
+  "hammer": 0
+ },
+ "note": "Development only. Phase 22 EXTREME candidate (?extreme90p22=1); never shared, never production. TECHNICALLY QUALIFIED (Category A and B): NOT human-approved; human difficulty unvalidated.",
+ "boards": [
+  {
+   "id": "N50",
+   "accepted": true,
+   "label": "TECHNICALLY QUALIFIED - HUMAN DIFFICULTY UNVALIDATED",
+   "variant": "N50",
+   "design": "22ARM_p19MAS_s14_2",
+   "family": "A/E crate + switch + armor",
+   "primary": "non-spinner, non-magnet",
+   "target": "EXTREME (a design target, not a rating; never shown to players)",
+   "idea": "push, turn, ram: a block pushes the crate out of a column, is turned around by its switch and must then crack the shell behind it - turn early and the crate stays, leave a shell and it is stuck (the idea N35 grew from, a different core)",
+   "source": "existing idea core data/dev/extreme90_p19/seed_MAS.json (data/dev/extreme90_p22/seed_ARM_p19MAS.json), RNG seed 14, grown by tools/ta90_search.gd --ops=v20 in the Phase 22 bounded search (data/dev/extreme90_p22/protocol.json = the Phase 21 protocol, new seeds), checked by tools/ta90_design.gd and tools/xb90_filler.gd",
+   "fingerprint": "a9f453627f0b4c667ce31e01fab41093dd2f8cd9bdd0cc3489058db2661ee4ff",
+   "mechanics": [
+    "movable",
+    "switch",
+    "armor"
+   ],
+   "puzzle": {
+    "format": "ce-puzzle",
+    "v": 1,
+    "rules": 1,
+    "rows": 7,
+    "cols": 7,
+    "map": [
+     ". R> . . . Gv R^",
+     "P>&A . . . . B>= P^=",
+     ". Y^= . P< R>&A M .",
+     ". . . . . . .",
+     ". . . . . . .",
+     ". . . . . P>%A P^=",
+     "P^%A Y>&A . . . . ."
+    ]
+   },
+   "design_report": {
+    "A": {
+     "fingerprint": "a9f453627f0b4c667ce31e01fab41093dd2f8cd9bdd0cc3489058db2661ee4ff",
+     "hint_nodes": [
+      136,
+      747
+     ],
+     "parity": [
+      0,
+      0
+     ],
+     "portals": 0,
+     "position_cap": 1500,
+     "positions": 673,
+     "replay": true,
+     "solution": 18,
+     "solve_ms": 5.6,
+     "timeup_worst_ms": 13.8,
+     "timeup_worst_nodes": 747,
+     "winnable": 169
+    },
+    "B": {
+     "coverage": 0.94,
+     "decision_steps": 17,
+     "distinct_mistakes": 4,
+     "endgame_decision": true,
+     "last_decision": 17,
+     "late": 0.94,
+     "losing_per_step": [
+      1,
+      1,
+      1,
+      1,
+      1,
+      2,
+      3,
+      3,
+      3,
+      3,
+      3,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      0
+     ],
+     "matters_armor": true,
+     "matters_movable": true,
+     "matters_switch": true,
+     "mistakes": [
+      "r2c4> push",
+      "r0c5v push",
+      "r6c0^",
+      "r5c5>"
+     ],
+     "shortcut": 0.095,
+     "without_armor": "without it: 13 decision steps, 4 distinct mistakes (with it: 17, 4)",
+     "without_movable": "without it: 0 decision steps, 0 distinct mistakes (with it: 17, 4)",
+     "without_switch": "unsolvable without it"
+    },
+    "C": {
+     "decisions_k4_6_8": [
+      13,
+      11,
+      10
+     ],
+     "deepest": 16,
+     "greedy": {
+      "look2": 0.095,
+      "look4": 0.092,
+      "min_turn": 0.095,
+      "mobility": 0,
+      "safe": 0.095
+     },
+     "hidden_k6_8": [
+      21,
+      16
+     ],
+     "learner": {
+      "look4": 2,
+      "look6": 2
+     },
+     "look6_greedy": 0.25,
+     "opening": "6 / 7",
+     "pressure": {
+      "advances": 0,
+      "calm_prefix": 10,
+      "flips": 1,
+      "multi_turned": 0,
+      "prediction_share": 0.28,
+      "pulls": 0,
+      "rams": 4,
+      "signals": 3,
+      "spinners_turned": 0,
+      "trap_delay_median": 10,
+      "turns": 0,
+      "undo_proof": 0.86
+     },
+     "win_share": 0.251
+    },
+    "filler": {
+     "distinct": 4,
+     "pieces_tested": 14,
+     "steps": 17,
+     "trivial": [],
+     "trivial_removals": 0
+    },
+    "similarity": {
+     "closest_known": "N35",
+     "overlap": 0.35,
+     "closest_new": "N51",
+     "closest_new_overlap": 0.25
+    }
+   }
+  }
+ ]
+}

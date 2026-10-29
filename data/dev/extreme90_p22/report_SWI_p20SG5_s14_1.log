@@ -1,0 +1,18 @@
+Godot Engine v4.3.stable.official.77dcf97d8 - https://godotengine.org
+
+known boards: 25774
+known boards incl. T1-T5 and the demos: 25774; played boards for the near-copy guard: 333
+
+=== SWI_p20SG5_s14_1 (target EXTREME, 17 pieces) ===
+   R>&A . Bv+C R<+C Yv&B . R^%B
+   G^%A . . . . . .
+   . . Gv&A . . . Yv
+   Y>&B XC . . R>&A . Y<
+   . . . . . . .
+   . Y^&B . . . . .
+   . R^ . . B< P^%A G<%B
+   solution: r2c2v [x2], r0c2v [x1], r6c5^ [x1], r0c0< [x1], r0c3< [x2], r5c1^ [x2], r6c1^ [x1], r6c4< [x1], r0c6^ [x1], r0c4^ [x2], r3c0< [x2], r3c4< [x1], r3c6<, r1c0^, r6c6<, r2c6v
+   A {"fingerprint":"5934e90055eb9139ffe5b76ae9f3e06079487de29933e5ff2966786ea9b86189","hint_nodes":[8,5],"parity":[0,0],"portals":0,"position_cap":1500,"positions":171,"replay":true,"solution":16,"solve_ms":1.4,"timeup_worst_ms":0.5,"timeup_worst_nodes":8,"winnable":76}
+   B {"coverage":0.75,"decision_steps":12,"distinct_mistakes":4,"endgame_decision":true,"last_decision":12,"late":0.75,"line(see above)":["r2c2v [x2]","r0c2v [x1]","r6c5^ [x1]","r0c0< [x1]","r0c3< [x2]","r5c1^ [x2]","r6c1^ [x1]","r6c4< [x1]","r0c6^ [x1]","r0c4^ [x2]","r3c0< [x2]","r3c4< [x1]","r3c6<","r1c0^","r6c6<","r2c6v"],"losing_per_step":[2,1,1,1,2,2,1,1,1,2,2,1,0,0,0,0],"matters_gate":true,"matters_switch":true,"mistakes":["r0c6^","r6c5^","r1c0^","r6c6<"],"shortcut":0.385,"without_gate":"without it: 4 decision steps, 2 distinct mistakes (with it: 12, 4)","without_switch":"unsolvable without it"}
+   C {"decisions_k4_6_8":[9,7,4],"deepest":13,"greedy":{"look2":0.385,"look4":0.367,"min_turn":0.385,"mobility":0,"safe":0.385},"hidden_k6_8":[9,5],"learner":{"look4":1,"look6":1},"look6_greedy":0.483,"opening":"1 / 3","pressure":{"advances":0,"calm_prefix":2,"flips":4,"multi_turned":0,"prediction_share":0.13,"pulls":0,"rams":0,"signals":0,"spinners_turned":0,"trap_delay_median":6,"turns":0,"undo_proof":0.71},"win_share":0.444}
+   VERDICT: NEEDS WORK  -- a simple greedy player wins 38% (> 20%): a shortcut

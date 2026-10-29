@@ -1,0 +1,81 @@
+{
+ "N48": {
+  "key": "ARM_p18AR2_s13_1",
+  "core": "ARM_p18AR2",
+  "seed": 13,
+  "fp": "87f57a0e9a27afac445022e965f3e2f9e53cef379f9a799c360ff7def04fbe18",
+  "family": "D/C rammer + magnet",
+  "mechanics": [
+   "armor",
+   "magnet"
+  ],
+  "closest_known": [
+   "N39",
+   0.39
+  ],
+  "closest_new": [
+   "N50",
+   0.25
+  ]
+ },
+ "N49": {
+  "key": "POR_p18PM_s14_1",
+  "core": "POR_p18PM",
+  "seed": 14,
+  "fp": "773dba8256092fb58f7e31bf4c9beeca3b27c84800de4e1540ae28f954bad6a8",
+  "family": "B/A portal + movable + Sequence",
+  "mechanics": [
+   "portal",
+   "movable",
+   "sequence"
+  ],
+  "closest_known": [
+   "N41",
+   0.38
+  ],
+  "closest_new": [
+   "N51",
+   0.33
+  ]
+ },
+ "N50": {
+  "key": "ARM_p19MAS_s14_2",
+  "core": "ARM_p19MAS",
+  "seed": 14,
+  "fp": "a9f453627f0b4c667ce31e01fab41093dd2f8cd9bdd0cc3489058db2661ee4ff",
+  "family": "A/E crate + switch + armor",
+  "mechanics": [
+   "movable",
+   "switch",
+   "armor"
+  ],
+  "closest_known": [
+   "N35",
+   0.35
+  ],
+  "closest_new": [
+   "N51",
+   0.25
+  ]
+ },
+ "N51": {
+  "key": "POR_p19PX_s14_1",
+  "core": "POR_p19PX",
+  "seed": 14,
+  "fp": "4ad502c26b6c21bfcd977e3a885e2d2ff8cbc734c2378415cd2029ea456e1e9a",
+  "family": "B portal-first (portal + crate + switch)",
+  "mechanics": [
+   "portal",
+   "movable",
+   "switch"
+  ],
+  "closest_known": [
+   "N37",
+   0.36
+  ],
+  "closest_new": [
+   "N49",
+   0.33
+  ]
+ }
+}

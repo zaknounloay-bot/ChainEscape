@@ -1,0 +1,144 @@
+{
+ "SWI_bankD_s13_1": {
+  "A": {
+   "fingerprint": "8f5aadaf0b2594d47ae9a38bf6b91d653d7595127fc6e11f36d7ebd921e31032",
+   "hint_nodes": [
+    63,
+    758
+   ],
+   "parity": [
+    0,
+    0
+   ],
+   "portals": 0,
+   "position_cap": 3000,
+   "positions": 2178,
+   "replay": true,
+   "solution": 18,
+   "solve_ms": 4.4,
+   "timeup_worst_ms": 127.5,
+   "timeup_worst_nodes": 2649,
+   "winnable": 270
+  },
+  "B": {
+   "coverage": 0.78,
+   "decision_steps": 14,
+   "distinct_mistakes": 6,
+   "endgame_decision": true,
+   "last_decision": 15,
+   "late": 0.83,
+   "line": [
+    "r1c0> [x3]",
+    "r2c0< [x2]",
+    "r2c5> [x2]",
+    "r4c2^ [x2]",
+    "r5c1v [x3]",
+    "r5c2^ [x2]",
+    "r6c4v [x2]",
+    "r5c4< [x2]",
+    "r3c4v [x1]",
+    "r3c3v [x1]",
+    "r3c1> ram [x1]",
+    "r3c5^",
+    "r5c5v [x1]",
+    "r0c3v [x1]",
+    "r2c1> [x1]",
+    "r3c1>",
+    "r4c1^",
+    "r6c0^"
+   ],
+   "losing_per_step": [
+    3,
+    2,
+    2,
+    2,
+    3,
+    2,
+    2,
+    2,
+    1,
+    1,
+    1,
+    0,
+    1,
+    1,
+    1,
+    0,
+    0,
+    0
+   ],
+   "matters_armor": true,
+   "matters_gate": true,
+   "matters_switch": true,
+   "mistakes": [
+    "r2c0<",
+    "r3c1<",
+    "r5c5>",
+    "r6c0^",
+    "r5c2^",
+    "r3c1>"
+   ],
+   "shortcut": 0.035,
+   "spinner_dependence": "without it: 0 decision steps, 0 distinct mistakes (with it: 14, 6)",
+   "without_armor": "without it: 1 decision steps, 1 distinct mistakes (with it: 14, 6)",
+   "without_gate": "without it: 13 decision steps, 5 distinct mistakes (with it: 14, 6)",
+   "without_switch": "unsolvable without it"
+  },
+  "C": {
+   "decisions_k4_6_8": [
+    9,
+    7,
+    5
+   ],
+   "deepest": 16,
+   "greedy": {
+    "look2": 0.01,
+    "look4": 0.017,
+    "min_turn": 0,
+    "mobility": 0.035,
+    "safe": 0.015
+   },
+   "hidden_k6_8": [
+    15,
+    11
+   ],
+   "learner": {
+    "look4": 2,
+    "look6": 2
+   },
+   "look6_greedy": 0.017,
+   "opening": "6 / 9",
+   "pressure": {
+    "advances": 0,
+    "calm_prefix": 0,
+    "flips": 1,
+    "multi_turned": 0,
+    "prediction_share": 0.28,
+    "pulls": 0,
+    "rams": 1,
+    "signals": 3,
+    "spinners_turned": 4,
+    "trap_delay_median": 7,
+    "turns": 4,
+    "undo_proof": 0.75
+   },
+   "win_share": 0.124
+  },
+  "map": [
+   ". . . Yv . . .",
+   "R>@~ . . . . . .",
+   "Y<%B B^@ . XA . Y>@- .",
+   ". B<&B . P>@ Rv@- G^+A= .",
+   ". Y^ Y^@- . . . .",
+   ". Pv@- R^ . Pv@ Y>@ .",
+   "P^%B . . . Rv@ . ."
+  ],
+  "name": "SWI_bankD_s13_1",
+  "target": "EXTREME",
+  "verdict": "REJECTED",
+  "why_a": [
+   "the TIME UP check takes 127.5 ms in its worst position (> 40)"
+  ],
+  "why_b": []
+ }
+}

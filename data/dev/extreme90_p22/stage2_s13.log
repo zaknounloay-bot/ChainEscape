@@ -1,0 +1,5 @@
+{'key': 'ARM_p18AR2_s13_1', 'stage': 'report', 'decision': 'ACCEPTED', 'why': ''}
+{'key': 'SWI_bankD_s13_1', 'stage': 'report', 'decision': 'rejected', 'why': 'the TIME UP check takes 127.5 ms in its worst position (> 40)'}
+{'key': 'SPI_p17C2_s13_1', 'stage': 'report', 'decision': 'rejected', 'why': 'solve 42.1 ms (> 40)'}
+{'key': 'SEQ_p18MS2_s13_1', 'stage': 'report', 'decision': 'rejected', 'why': "filler: 1 trivial removals ['r6c2 M']"}
+accepted 1, reports 4

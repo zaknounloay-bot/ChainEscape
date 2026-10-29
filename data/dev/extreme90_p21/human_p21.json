@@ -1,0 +1,45 @@
+{
+ "source": "Phase 22 brief: the user and his older son solved N39-N47 together on a real iPhone and agreed on one assessment per board. ONE JOINT HUMAN EVALUATION - not two independent blind tests. Small-sample observation, not a validated difficulty label.",
+ "recorded": "2026-10-29",
+ "boards": {
+  "N39": {
+   "assessment": "PROMISING",
+   "decision": "provisional EXTREME candidate"
+  },
+  "N40": {
+   "assessment": "PROMISING",
+   "decision": "provisional EXTREME candidate"
+  },
+  "N41": {
+   "assessment": "TOO EASY",
+   "rated": "EASY",
+   "decision": "downgraded - not counted as EXTREME"
+  },
+  "N42": {
+   "assessment": "PROMISING",
+   "decision": "provisional EXTREME candidate"
+  },
+  "N43": {
+   "assessment": "PROMISING",
+   "decision": "provisional EXTREME candidate"
+  },
+  "N44": {
+   "assessment": "PROMISING",
+   "decision": "provisional EXTREME candidate"
+  },
+  "N45": {
+   "assessment": "PROMISING",
+   "decision": "provisional EXTREME candidate"
+  },
+  "N46": {
+   "assessment": "TOO EASY",
+   "rated": "MEDIUM",
+   "decision": "downgraded - not counted as EXTREME"
+  },
+  "N47": {
+   "assessment": "PROMISING",
+   "decision": "provisional EXTREME candidate"
+  }
+ },
+ "note": "Boards, ids and fingerprints unchanged. The automated diagnostics did not predict both downgrades: N41 had the weakest diagnostics of the batch (look-6 greedy 0.31), but N46 had look-6 greedy 0.00 and 16 / 16 learner dead ends - the highest of the batch - and was still rated MEDIUM."
+}

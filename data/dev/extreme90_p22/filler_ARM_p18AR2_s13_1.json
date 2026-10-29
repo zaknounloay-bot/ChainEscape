@@ -1,0 +1,9 @@
+{
+ "ARM_p18AR2_s13_1": {
+  "distinct": 6,
+  "pieces_tested": 17,
+  "steps": 19,
+  "trivial": [],
+  "trivial_removals": 0
+ }
+}

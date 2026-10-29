@@ -1,0 +1,63 @@
+{
+ "target": "EXTREME",
+ "facts": [],
+ "mechanic": "portal,movable,sequence",
+ "idea": "the crate goes through the portal: a push sends it to the far side of the board, where it blocks a different lane - who must leave before, and who can only leave after",
+ "family": "B/A portal + movable + sequence",
+ "map": [
+  ". . . . . . .",
+  ". . . . . . .",
+  ". B>:v M OA . . .",
+  ". . . . . . .",
+  ". . . . . . .",
+  ". . . . . OA .",
+  ". . . . . . Y^"
+ ],
+ "frozen": [
+  [
+   2,
+   1
+  ],
+  [
+   2,
+   2
+  ],
+  [
+   2,
+   3
+  ],
+  [
+   5,
+   5
+  ],
+  [
+   6,
+   6
+  ]
+ ],
+ "max_positions": 3000,
+ "piece_free": 17,
+ "max_pieces": 21,
+ "shortcut_weight": 80,
+ "coverage_weight": 25,
+ "late_weight": 20,
+ "endgame_weight": 20,
+ "length_weight": 1.0,
+ "length_cap": 22,
+ "pressure_weight": 1.5,
+ "palette": "arrows",
+ "suffixes": [
+  ":^",
+  ":v",
+  ":<",
+  ":>"
+ ],
+ "suffix_rate": 0.3,
+ "crates_max": 2,
+ "crate_rate": 0.15,
+ "seed": 181,
+ "size": "large",
+ "max_solve_nodes": 300,
+ "phase21_source": "data/dev/extreme90_p18/seed_PM.json",
+ "phase21_family": "portal"
+}

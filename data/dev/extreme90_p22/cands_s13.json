@@ -1,0 +1,62 @@
+{
+ "ARM_p18AR2_s13_1": {
+  "map": [
+   ". . . . . . .",
+   ". . . . Pv= R^* .",
+   "Rv= G^= . . G< . .",
+   "Y<* . . B> Yv* G^= .",
+   ". . . . . Pv* .",
+   "B>* G^= . . . G>* .",
+   "Rv* . . G<* . Y<* Gv="
+  ],
+  "target": "EXTREME",
+  "facts": [],
+  "mechanic": "armor,magnet",
+  "max_positions": 2000
+ },
+ "SWI_bankD_s13_1": {
+  "map": [
+   ". . . Yv . . .",
+   "R>@~ . . . . . .",
+   "Y<%B B^@ . XA . Y>@- .",
+   ". B<&B . P>@ Rv@- G^+A= .",
+   ". Y^ Y^@- . . . .",
+   ". Pv@- R^ . Pv@ Y>@ .",
+   "P^%B . . . Rv@ . ."
+  ],
+  "target": "EXTREME",
+  "facts": [],
+  "mechanic": "switch,armor,gate",
+  "max_positions": 3000
+ },
+ "SPI_p17C2_s13_1": {
+  "map": [
+   ". . Bv . G< . .",
+   ". . . R^ G<@ . G<@",
+   ". . B< G<@* Y> . .",
+   ". . Y^@ Pv P<@ . P<@~",
+   ". . G<@~ R>@- . . .",
+   ". . P<@ Pv@~ . . .",
+   ". . R<@~ . . . ."
+  ],
+  "target": "EXTREME",
+  "facts": [],
+  "mechanic": "pattern",
+  "max_positions": 1500
+ },
+ "SEQ_p18MS2_s13_1": {
+  "map": [
+   ". . . Gv Gv:< B>:> Y>:^",
+   ". . . . . R^:< .",
+   ". B>:< B>:^ M . R^:^ .",
+   ". . . R> P>:> Y^:> .",
+   ". . . R>:< . . .",
+   ". . . P^:< R^ . .",
+   ". . M . . . ."
+  ],
+  "target": "EXTREME",
+  "facts": [],
+  "mechanic": "movable,sequence",
+  "max_positions": 3000
+ }
+}

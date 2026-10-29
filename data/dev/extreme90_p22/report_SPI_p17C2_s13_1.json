@@ -1,0 +1,138 @@
+{
+ "SPI_p17C2_s13_1": {
+  "A": {
+   "fingerprint": "e984cc26626044232b097cc0064f7aec3a3eb56823416d82794aa71422625561",
+   "hint_nodes": [
+    227,
+    62
+   ],
+   "parity": [
+    0,
+    0
+   ],
+   "portals": 0,
+   "position_cap": 1500,
+   "positions": 743,
+   "replay": true,
+   "solution": 17,
+   "solve_ms": 42.1,
+   "timeup_worst_ms": 23.4,
+   "timeup_worst_nodes": 442,
+   "winnable": 85
+  },
+  "B": {
+   "coverage": 0.88,
+   "decision_steps": 15,
+   "distinct_mistakes": 6,
+   "endgame_decision": true,
+   "last_decision": 15,
+   "late": 0.88,
+   "line": [
+    "r2c2< [x4]",
+    "r4c2< [x4]",
+    "r5c3v [x2]",
+    "r4c3< [x3]",
+    "r6c2< [x4]",
+    "r5c2v [x3]",
+    "r3c2v [x3]",
+    "r0c2v [x3]",
+    "r0c4< [x3]",
+    "r1c4^ [x3]",
+    "r1c3^ [x1]",
+    "r1c6< [x1]",
+    "r2c4> [x1]",
+    "r2c3^ [x1]",
+    "r3c4^ [x1]",
+    "r3c3v",
+    "r3c6<"
+   ],
+   "losing_per_step": [
+    4,
+    4,
+    2,
+    3,
+    4,
+    3,
+    3,
+    3,
+    3,
+    3,
+    1,
+    1,
+    1,
+    1,
+    1,
+    0,
+    0
+   ],
+   "matters_pattern": true,
+   "mistakes": [
+    "r1c3^",
+    "r2c4>",
+    "r4c3>",
+    "r5c2<",
+    "r5c2>",
+    "r3c3v"
+   ],
+   "shortcut": 0,
+   "spinner_dependence": "unsolvable without it",
+   "without_pattern": "without it: 14 decision steps, 6 distinct mistakes (with it: 15, 6)"
+  },
+  "C": {
+   "decisions_k4_6_8": [
+    11,
+    9,
+    7
+   ],
+   "deepest": 13,
+   "greedy": {
+    "look2": 0,
+    "look4": 0,
+    "min_turn": 0,
+    "mobility": 0,
+    "safe": 0
+   },
+   "hidden_k6_8": [
+    24,
+    17
+   ],
+   "learner": {
+    "look4": 8,
+    "look6": 2
+   },
+   "look6_greedy": 0.033,
+   "opening": "4 / 8",
+   "pressure": {
+    "advances": 0,
+    "calm_prefix": 0,
+    "flips": 0,
+    "multi_turned": 4,
+    "prediction_share": 0.41,
+    "pulls": 0,
+    "rams": 0,
+    "signals": 3,
+    "spinners_turned": 6,
+    "trap_delay_median": 7,
+    "turns": 12,
+    "undo_proof": 0.84
+   },
+   "win_share": 0.114
+  },
+  "map": [
+   ". . Bv . G< . .",
+   ". . . R^ G<@ . G<@",
+   ". . B< G<@* Y> . .",
+   ". . Y^@ Pv P<@ . P<@~",
+   ". . G<@~ R>@- . . .",
+   ". . P<@ Pv@~ . . .",
+   ". . R<@~ . . . ."
+  ],
+  "name": "SPI_p17C2_s13_1",
+  "target": "EXTREME",
+  "verdict": "REJECTED",
+  "why_a": [
+   "solve 42.1 ms (> 40)"
+  ],
+  "why_b": []
+ }
+}

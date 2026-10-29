@@ -1,0 +1,9 @@
+{
+ "ARM_p19MAS_s14_2": {
+  "distinct": 4,
+  "pieces_tested": 14,
+  "steps": 17,
+  "trivial": [],
+  "trivial_removals": 0
+ }
+}

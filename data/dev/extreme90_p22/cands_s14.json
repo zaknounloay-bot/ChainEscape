@@ -1,0 +1,77 @@
+{
+ "POR_p18PM_s14_1": {
+  "map": [
+   ". R<:^ R^:v . . . .",
+   ". R^:^ B<:> . . . .",
+   "P>:v B>:v M OA . R< B<",
+   ". . . . . . .",
+   ". . Y^:< . . . Y^:<",
+   ". . R<:< . . OA .",
+   ". . . . . . Y^"
+  ],
+  "target": "EXTREME",
+  "facts": [],
+  "mechanic": "portal,movable,sequence",
+  "max_positions": 3000
+ },
+ "ARM_p19MAS_s14_2": {
+  "map": [
+   ". R> . . . Gv R^",
+   "P>&A . . . . B>= P^=",
+   ". Y^= . P< R>&A M .",
+   ". . . . . . .",
+   ". . . . . . .",
+   ". . . . . P>%A P^=",
+   "P^%A Y>&A . . . . ."
+  ],
+  "target": "EXTREME",
+  "facts": [],
+  "mechanic": "movable,switch,armor",
+  "max_positions": 1500
+ },
+ "SWI_bankD_s14_2": {
+  "map": [
+   ". . . Yv . . .",
+   ". . . . . . .",
+   ". . . XA . P^@- R>@-",
+   ". B<&B Gv%B . Yv@ G^+A= .",
+   "R^@~ . B<@- G>@- . . .",
+   "Y>@~ . P> G> . . .",
+   "P^%B . Rv@- . . B<@ ."
+  ],
+  "target": "EXTREME",
+  "facts": [],
+  "mechanic": "switch,armor,gate",
+  "max_positions": 3000
+ },
+ "POR_p19PX_s14_1": {
+  "map": [
+   ". . Gv . . Y< .",
+   ". Y> R> G> B> . .",
+   ". B>&A M OA . Bv&A .",
+   ". . . . . . .",
+   ". G^ G<%A . . B< .",
+   ". . . P>&A OA . .",
+   "P^%A . . . . Y^ ."
+  ],
+  "target": "EXTREME",
+  "facts": [],
+  "mechanic": "portal,movable,switch",
+  "max_positions": 1500
+ },
+ "SWI_p20SG5_s14_1": {
+  "map": [
+   "R>&A . Bv+C R<+C Yv&B . R^%B",
+   "G^%A . . . . . .",
+   ". . Gv&A . . . Yv",
+   "Y>&B XC . . R>&A . Y<",
+   ". . . . . . .",
+   ". Y^&B . . . . .",
+   ". R^ . . B< P^%A G<%B"
+  ],
+  "target": "EXTREME",
+  "facts": [],
+  "mechanic": "switch,gate",
+  "max_positions": 1500
+ }
+}

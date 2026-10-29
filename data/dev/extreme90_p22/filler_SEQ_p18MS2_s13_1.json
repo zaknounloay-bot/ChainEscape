@@ -1,0 +1,11 @@
+{
+ "SEQ_p18MS2_s13_1": {
+  "distinct": 6,
+  "pieces_tested": 16,
+  "steps": 23,
+  "trivial": [
+   "r6c2 M"
+  ],
+  "trivial_removals": 1
+ }
+}

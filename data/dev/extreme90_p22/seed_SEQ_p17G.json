@@ -1,0 +1,53 @@
+{
+ "target": "EXTREME",
+ "facts": [
+  "advance_turn"
+ ],
+ "mechanic": "sequence,pattern",
+ "idea": "advances on a rhythm: two Sequence blocks advance next to a pattern spinner - each advance moves its cw-cw-ccw cycle on",
+ "map": [
+  ". . . . . . .",
+  ". . . . . . .",
+  ". . . Gv . . .",
+  ". . B<:v R^@* P>:^ . .",
+  ". . . . . . .",
+  ". . . . . . .",
+  ". . . . . . ."
+ ],
+ "frozen": [
+  [
+   2,
+   3
+  ],
+  [
+   3,
+   2
+  ],
+  [
+   3,
+   3
+  ],
+  [
+   3,
+   4
+  ]
+ ],
+ "max_positions": 1500,
+ "piece_free": 10,
+ "max_pieces": 13,
+ "shortcut_weight": 80,
+ "coverage_weight": 25,
+ "late_weight": 20,
+ "endgame_weight": 20,
+ "length_weight": 1.0,
+ "length_cap": 18,
+ "pressure_weight": 3.0,
+ "seed": 17,
+ "size": "compact",
+ "max_solve_nodes": 600,
+ "phase21_source": "data/dev/extreme90_p17/seed_G.json",
+ "phase21_family": "sequence",
+ "phase21_notes": [
+  "max_solve_nodes 600 added (the Category A TIME UP gate stays the judge)"
+ ]
+}

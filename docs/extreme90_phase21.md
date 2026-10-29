@@ -308,3 +308,22 @@ Tools: the Phase 21 check, the browser test entry, `ta90_check` and
 `ta90_continue_check` board lists. The search tool is unchanged since Phase 20.
 
 One local commit; nothing pushed, merged, deployed or published.
+
+## Human review (recorded in Phase 22)
+
+The user and his older son solved N39–N47 together on a real iPhone and
+agreed on one assessment per board — **one joint evaluation**, not two
+independent tests (`data/dev/extreme90_p21/human_p21.json`).
+
+| Board | Assessment | Decision |
+|---|---|---|
+| N39, N40, N42, N43, N44, N45, N47 | PROMISING | provisional EXTREME candidates |
+| N41 | TOO EASY (rated EASY) | downgraded — not counted as EXTREME |
+| N46 | TOO EASY (rated MEDIUM) | downgraded — not counted as EXTREME |
+
+Boards, ids and fingerprints unchanged. What the diagnostics said: N41 had
+the weakest diagnostics of the batch (look-6 greedy 0.31) — consistent with
+EASY. N46 had look-6 greedy 0.00 and 16 / 16 learner dead ends, the highest
+of the batch, yet was rated MEDIUM: the automated difficulty estimates did
+not predict it (13 magnets may read as busy rather than hard). Technical
+qualification is a screen, not a difficulty verdict.
