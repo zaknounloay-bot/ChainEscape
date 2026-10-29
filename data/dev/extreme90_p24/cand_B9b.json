@@ -1,0 +1,17 @@
+{
+ "B9b": {
+  "map": [
+   ". . . Pv Rv . .",
+   "B^ . . . . . .",
+   "G>@ . . . . . .",
+   ". . . . . . B<",
+   ". . . M . . Y<",
+   ". . . . . . .",
+   ". . . Y^@ Rv . ."
+  ],
+  "target": "EXTREME",
+  "facts": [],
+  "mechanic": "movable",
+  "max_positions": 2000
+ }
+}

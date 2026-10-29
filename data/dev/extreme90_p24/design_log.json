@@ -1,0 +1,382 @@
+{
+ "note": "Phase 24 hand-design log (docs/extreme90_phase24.md). Every draft benched with tools/ta90_bench24.gd; full reports (tools/ta90_design.gd) where noted. Budget fixed before drafting: at most 8 revisions per prototype after its first draft; no generator run.",
+ "A": {
+  "structure": "pull-order cascade (magnet + armor + lock)",
+  "drafts": [
+   {
+    "id": "A1",
+    "map": [
+     ". . . Y^* . G^= .",
+     ". . . . . . .",
+     ". G^= . P< . . .",
+     ". . . . . . .",
+     ". . . B> . R^ .",
+     ". . . . . . .",
+     ". . . . . . ."
+    ],
+    "result": "bypassed: the blocker R^ r4c5 cracks the top shell from below; 1 distinct, greedy 100%"
+   },
+   {
+    "id": "A2",
+    "map": [
+     ". G^= . Y^* . . .",
+     ". . . . . . .",
+     ". . . . . . .",
+     ". Gv . Pv . . B>*",
+     ". . . . . . .",
+     ". . . R< . . Gv=",
+     ". . . . . . ."
+    ],
+    "result": "crossing allocation works: firing the top magnet first loses 6 moves later; 2 distinct, 9 moves, greedy 0.29"
+   },
+   {
+    "id": "A3",
+    "map": [
+     ". . Y^* . . G^= .",
+     ". . . . . . .",
+     ". . Pv . B< . R>*",
+     ". . . . . . .",
+     ". . Y> . . . .",
+     ". . . . . . Gv=",
+     ". G^= . . Bv* . ."
+    ],
+    "result": "three-magnet chain: 3 distinct, all deep (5-9), greedy 0.13; but every decision in the first 5 of 12 moves"
+   },
+   {
+    "id": "A4",
+    "map": [
+     ". . Y^* . . G^= .",
+     ". . . . . . .",
+     ". . Pv . B< . R>*",
+     ". . . . . . .",
+     ". . Y> . R> . P>*",
+     ". . . . . . Gv=",
+     ". G^= . . Bv* . ."
+    ],
+    "result": "fourth magnet in front: 4 distinct, greedy 0.03; coverage 0.50, late 0.50 (no endgame)"
+   },
+   {
+    "id": "A5",
+    "map": [
+     ". . R^#B . . . .",
+     ". . Y^* . . G^= .",
+     ". . Pv . B< . R>*",
+     ". . . . . . .",
+     ". . Y> . R> . P>*",
+     ". . . . . . Gv=",
+     ". G^= . . Bv* . ."
+    ],
+    "result": "blue lock delays the last stage: coverage 0.80, late 0.80, 15 moves; distinct fell to 3"
+   },
+   {
+    "id": "A6",
+    "map": [
+     ". . R^#B . . . .",
+     ". . Y^* . . G^= .",
+     ". . Pv . B< . R>*",
+     ". . . . . . .",
+     ". . Y> . R> G> P>*",
+     ". . . . . . Gv=",
+     ". G^= . . Bv* Yv* ."
+    ],
+    "result": "numbers pass (4 distinct) but BYPASSED: u escapes along row 4, the new front magnet is only a 'never touch' decoy - rejected by hand"
+   },
+   {
+    "id": "A7",
+    "map": [
+     ". . R^#B . . . .",
+     ". . Y^* . . G^= .",
+     ". . Pv . B< . R>*",
+     ". . . . . . .",
+     ". . Y> . R< G> P>*",
+     ". . . . . . Gv=",
+     ". G^= . . Bv* Yv* ."
+    ],
+    "result": "u faces left: bypass gone, but z can never escape -> coverage 0.24"
+   },
+   {
+    "id": "A8",
+    "map": [
+     ". . R^#B . . . G>=",
+     ". . Y^* . . G^= .",
+     ". . P^ . B< . R>*",
+     ". . Y> . . . .",
+     ". . . . Rv G> P>*",
+     ". . . . . . Gv=",
+     ". G^= . . Bv* Yv* ."
+    ],
+    "result": "redesign: z on its own row, x aims up at a fourth shell, u rams the column-6 shell; HUMAN-REVIEW CANDIDATE, 0 filler; overlap 0.43 with N38 (fails < 0.40)"
+   },
+   {
+    "id": "A9",
+    "map": [
+     "R^#B . . . . . G>=",
+     "Y^* . . G^= . . .",
+     "P^ . . . B< . R>*",
+     "Y> . . . . . .",
+     ". . . . Rv G> P>*",
+     ". . . . . . Gv=",
+     ". . G^= . Bv* Yv* ."
+    ],
+    "result": "the top stack moved to column 0, the left shell to r6c2, the top shell to r1c3 (logic unchanged): HUMAN-REVIEW CANDIDATE, 0 filler, overlap 0.33 (N36) -> N52"
+   }
+  ]
+ },
+ "B": {
+  "structure": "crate routing (movable + spinner pushers; armor in B3)",
+  "drafts": [
+   {
+    "id": "B1",
+    "map": [
+     ". . . . . . .",
+     "P<&A . OA . . . .",
+     ". . . . . . .",
+     ". . . . . . .",
+     ". . . . . . .",
+     ". . . . OA G<= .",
+     "Rv%A . . . . . Bv%A"
+    ],
+    "result": "a different idea (remote toggle-ram through a portal), set aside: switch-phase reasoning of the N20 / N42 kind"
+   },
+   {
+    "id": "B2",
+    "map": [
+     ". . . . . . .",
+     "P> . . . . G^= .",
+     ". . . . . . .",
+     ". . . M . . B<",
+     ". . . . . . .",
+     ". . . . . . .",
+     ". . . Y^@ Rv . ."
+    ],
+    "result": "crate core works: wrong pusher / early turner lose 4-7 moves later; 2 distinct, 7 moves"
+   },
+   {
+    "id": "B3",
+    "map": [
+     ". . . Pv Rv . .",
+     "B^ . . . . . .",
+     "G>@ . . . . . Y^=",
+     ". . . M . . B<",
+     ". . . . . . .",
+     ". . . . . . .",
+     ". . . Y^@ Rv . ."
+    ],
+    "result": "B passes on the bench (5 distinct, 10 steps, 13 moves, greedy 0); full report REJECTED: solve 40.7 ms, TIME UP 63.7 ms; armor marginal (9 steps, 5 distinct without it)"
+   },
+   {
+    "id": "B4",
+    "map": [
+     ". . . Pv Rv . .",
+     "B^ . . . . . .",
+     "G>@ . . . . . Y^",
+     ". . . M . . B<",
+     ". . . . . . .",
+     ". . . . . . .",
+     ". . . Y^@ Rv . ."
+    ],
+    "result": "armor dropped: 5 distinct, 1211 positions, 12 moves (< 13)"
+   },
+   {
+    "id": "B5",
+    "map": [
+     ". . . Pv Rv . .",
+     "B^ . . . . . .",
+     "G>@ . . . . . Y^",
+     ". . . M . . B<",
+     ". . . . . . .",
+     ". . . . P^ . .",
+     ". . . Y^@ Rv . ."
+    ],
+    "result": "unsolvable (P^ r5c4 and Pv r0c4 block each other)"
+   },
+   {
+    "id": "B6",
+    "map": [
+     ". . . Pv Rv . .",
+     "B^ . . . . . .",
+     "G>@ . . . . . Y^",
+     ". . . M . . B<",
+     ". . . . . . .",
+     ". . . . Pv . .",
+     ". . . Y^@ Rv . ."
+    ],
+    "result": "13 moves but 1673 positions; the added block is only a forced move"
+   },
+   {
+    "id": "B7",
+    "map": [
+     ". . . Pv Rv . .",
+     "B^ . . . . . .",
+     "G>@ . . . . . .",
+     ". . . M . . B<",
+     ". . . . . . .",
+     ". . . . . . .",
+     ". . . Y^@ Rv . ."
+    ],
+    "result": "free edge block removed: 740 positions, 5 distinct, 11 moves"
+   },
+   {
+    "id": "B8",
+    "map": [
+     ". . . Pv Rv . .",
+     "B^ . . . . . .",
+     "G>@ . . . . . .",
+     ". . . M . . B<",
+     ". . . . . . Y<",
+     ". . . . . . .",
+     ". . . Y^@ Rv . ."
+    ],
+    "result": "row-4 block: 1699 positions, 12 moves (it just leaves first)"
+   },
+   {
+    "id": "B9a",
+    "map": [
+     ". . . Pv Rv . .",
+     "B^ . . . . . .",
+     "G>@ . . . . . .",
+     ". . . . . . .",
+     ". . . M . . B<",
+     ". . . . . . .",
+     ". . . Y^@ Rv . ."
+    ],
+    "result": "down-then-up route: 726 positions, 5 distinct, 9 steps, greedy 0; Category A passes (solve 17.4 ms, TIME UP 24.1 ms) but 12 moves (< 13) -> NEEDS WORK"
+   },
+   {
+    "id": "B9b",
+    "map": [
+     ". . . Pv Rv . .",
+     "B^ . . . . . .",
+     "G>@ . . . . . .",
+     ". . . . . . B<",
+     ". . . M . . Y<",
+     ". . . . . . .",
+     ". . . Y^@ Rv . ."
+    ],
+    "result": "13 moves, 5 distinct, B passes; REJECTED: solve 60.7 ms, TIME UP 92.1 ms"
+   },
+   {
+    "id": "B10",
+    "map": [
+     ". . . Pv Rv . .",
+     "B^ . . . . . .",
+     "G>@ . . . . . .",
+     "Rv . . . . . .",
+     ". . . M . . B<",
+     ". . . . . . .",
+     ". . . Y^@ Rv . ."
+    ],
+    "result": "second turner changes the logic (T becomes a down-pusher); 12 moves, 1747 positions. Budget spent: B stops"
+   }
+  ]
+ },
+ "C": {
+  "structure": "switch structures: two dependency cycles (C1-C2), shared-key locked spinners (C3-C4), parity at unlock (C5-C8)",
+  "drafts": [
+   {
+    "id": "C1",
+    "map": [
+     ". . . . . . .",
+     ". . . . . . .",
+     ". . . . . . .",
+     "P<#R&A . G^+B= . G^+C= . Y<#R&A",
+     ". . . . . . .",
+     "XB . . . . . XC",
+     "R^&A Bv%A . . . Gv%A Rv&A"
+    ],
+    "result": "lane bypass: the right rammer cracks both shells along row 3"
+   },
+   {
+    "id": "C2",
+    "map": [
+     ". . . . . . .",
+     "P<#R&A . G^+B= . . . .",
+     ". . . . . . .",
+     ". . . . . . .",
+     "XB . . . . . .",
+     "R^&A . . . G^+C= . Y<#R&A",
+     ". Bv%A . . Gv%A XC R<&A"
+    ],
+    "result": "works as designed but shallow: 2 distinct, look-4 greedy 100%"
+   },
+   {
+    "id": "C3",
+    "map": [
+     ". . . . . . .",
+     ". . P^ . Y^ . .",
+     "G^= . R^@#P Y^ G^@#Y . Bv=",
+     ". . Pv . Yv . .",
+     ". . . . . . .",
+     ". . . . . . .",
+     ". . . . . . ."
+    ],
+    "result": "unsolvable: the right spinner can only be turned 3 times, it needs 1 (mod 4)"
+   },
+   {
+    "id": "C4",
+    "map": [
+     ". . . . . . .",
+     ". . P^ . Y^ . .",
+     "G^= . R^@#P Y^ Gv@#Y . Bv=",
+     ". . Pv . Yv . .",
+     ". . . . . . .",
+     ". . . . . . .",
+     ". . . . . . ."
+    ],
+    "result": "no losing move at all: a locked spinner can always wait for one more turn (an overshoot window would be the N12 / N14 counting pattern)"
+   },
+   {
+    "id": "C5",
+    "map": [
+     ". . . . . . .",
+     "P<#R&A . . G^= . . .",
+     ". . . . . . .",
+     ". . . . . . Rv",
+     ". . . . . . .",
+     ". . . . Gv= . Y<#B&A",
+     "Rv%A . . Bv . . Bv%A"
+    ],
+    "result": "unsolvable (the red key was walled in by the blue-locked rammer)"
+   },
+   {
+    "id": "C6",
+    "map": [
+     ". . . . . . .",
+     "P<#R&A . . G^= . . .",
+     ". . . . . . .",
+     ". . . . . Rv .",
+     ". . . . . . .",
+     ". . . . Gv= . Y<#B&A",
+     "Rv%A . . Bv . . Bv%A"
+    ],
+    "result": "parity at unlock works (wrong firing order loses 4-7 moves later) but 1 distinct"
+   },
+   {
+    "id": "C7",
+    "map": [
+     ". . . . . . .",
+     "P<#R&A . . P^= . . .",
+     ". . . . . Rv .",
+     "G>#Y&A . . . P^= . .",
+     ". . . . . . .",
+     ". . . . Pv= . G<#B&A",
+     "Rv%A . Yv%A Bv . . Bv%A"
+    ],
+    "result": "three switches, three locks: 2 distinct, coverage 0.50, greedy 0.275 - a rammer can always wait for the next firing"
+   },
+   {
+    "id": "C8",
+    "map": [
+     ". . . . . . .",
+     "P<#R&A . . P^= . . .",
+     ". . . . . Rv&A .",
+     "G>#Y&A . . . P^= . .",
+     ". . . . . . .",
+     ". . . . Pv= . G<#B&A",
+     "Rv%A . Yv%A Bv . Y> Bv%A"
+    ],
+    "result": "key made a flip target too: 1 distinct, mobility greedy 100%. Budget spent: C stops"
+   }
+  ]
+ }
+}

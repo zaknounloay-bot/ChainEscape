@@ -1,0 +1,183 @@
+{
+ "format": "ce-ta90-proto",
+ "v": 1,
+ "test": "ta90_n52",
+ "assist": {
+  "undo": 3,
+  "show_a_move": 0,
+  "hammer": 0
+ },
+ "note": "Development only. Phase 24 EXTREME prototype (?extreme90p24=1); never shared, never production. TECHNICALLY QUALIFIED (Category A and B): NOT human-approved; human difficulty unvalidated.",
+ "boards": [
+  {
+   "id": "N52",
+   "accepted": true,
+   "label": "TECHNICALLY QUALIFIED - HUMAN DIFFICULTY UNVALIDATED",
+   "variant": "N52",
+   "design": "P24_A9",
+   "family": "P24 reasoning-first: pull-order cascade (magnet + armor + lock)",
+   "primary": "magnet (allocation by firing order)",
+   "target": "EXTREME (a design target, not a rating; never shown to players)",
+   "idea": "five magnets each pull the FIRST block behind them; each pulled block is the only cracker of one shell, but the nearest block in a magnet's line is the wrong one, so the magnets must fire in a chain (front to back) that takes each wrong block away first; the last magnet is walled in by a blue lock and its deliveree (a free arrow on row 3) must not escape in the meantime",
+   "source": "designed by hand in Phase 24 (docs/extreme90_phase24.md, prototype A, drafts A1-A9); tools/ta90_bench24.gd, tools/ta90_design.gd and tools/xb90_filler.gd used only to verify; no generator run",
+   "fingerprint": "919ec171833d8d045ed9d0195f6d85c4fafd39b7e248d21a27c4145119866f86",
+   "mechanics": [
+    "magnet",
+    "armor",
+    "lock"
+   ],
+   "puzzle": {
+    "format": "ce-puzzle",
+    "v": 1,
+    "rules": 1,
+    "rows": 7,
+    "cols": 7,
+    "map": [
+     "R^#B . . . . . G>=",
+     "Y^* . . G^= . . .",
+     "P^ . . . B< . R>*",
+     "Y> . . . . . .",
+     ". . . . Rv G> P>*",
+     ". . . . . . Gv=",
+     ". . G^= . Bv* Yv* ."
+    ]
+   },
+   "design_report": {
+    "A": {
+     "fingerprint": "919ec171833d8d045ed9d0195f6d85c4fafd39b7e248d21a27c4145119866f86",
+     "hint_nodes": [
+      532,
+      0
+     ],
+     "parity": [
+      0,
+      0
+     ],
+     "portals": 0,
+     "position_cap": 2000,
+     "positions": 763,
+     "replay": true,
+     "solution": 19,
+     "solve_ms": 35.1,
+     "timeup_worst_ms": 22.1,
+     "timeup_worst_nodes": 720,
+     "winnable": 338
+    },
+    "B": {
+     "coverage": 0.84,
+     "decision_steps": 16,
+     "distinct_mistakes": 4,
+     "endgame_decision": true,
+     "last_decision": 16,
+     "late": 0.84,
+     "line": [
+      "r6c5v [x4]",
+      "r6c5> [x3]",
+      "r4c6> [x3]",
+      "r4c6v ram [x2]",
+      "r5c6v [x2]",
+      "r4c6v [x2]",
+      "r6c4v [x2]",
+      "r6c4< ram [x1]",
+      "r2c6> [x1]",
+      "r2c6^ ram [x1]",
+      "r0c6> [x1]",
+      "r2c6^ [x1]",
+      "r6c2^ [x1]",
+      "r6c4< [x1]",
+      "r0c0^ [x1]",
+      "r1c0^ [x1]",
+      "r1c0> ram",
+      "r1c3^",
+      "r1c0>"
+     ],
+     "losing_per_step": [
+      4,
+      3,
+      3,
+      2,
+      2,
+      2,
+      2,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      0,
+      0,
+      0
+     ],
+     "matters_armor": true,
+     "matters_lock": true,
+     "matters_magnet": true,
+     "mistakes": [
+      "r2c6>",
+      "r3c0>",
+      "r4c6>",
+      "r6c4v"
+     ],
+     "shortcut": 0.07,
+     "without_armor": "without it: 10 decision steps, 3 distinct mistakes (with it: 16, 4)",
+     "without_lock": "without it: 13 decision steps, 5 distinct mistakes (with it: 16, 4)",
+     "without_magnet": "unsolvable without it"
+    },
+    "C": {
+     "decisions_k4_6_8": [
+      13,
+      11,
+      9
+     ],
+     "deepest": 17,
+     "greedy": {
+      "look2": 0,
+      "look4": 0,
+      "min_turn": 0,
+      "mobility": 0.07,
+      "safe": 0
+     },
+     "hidden_k6_8": [
+      16,
+      10
+     ],
+     "learner": {
+      "look4": 1,
+      "look6": 1
+     },
+     "look6_greedy": 0.017,
+     "opening": "1 / 5",
+     "pressure": {
+      "advances": 0,
+      "calm_prefix": 0,
+      "flips": 0,
+      "multi_turned": 0,
+      "prediction_share": 0.47,
+      "pulls": 5,
+      "rams": 4,
+      "signals": 2,
+      "spinners_turned": 0,
+      "trap_delay_median": 6,
+      "turns": 0,
+      "undo_proof": 0.81
+     },
+     "win_share": 0.443
+    },
+    "filler": {
+     "distinct": 4,
+     "pieces_tested": 15,
+     "steps": 16,
+     "trivial": [],
+     "trivial_removals": 0
+    },
+    "similarity": {
+     "closest_known": "N36",
+     "overlap": 0.33
+    }
+   }
+  }
+ ]
+}

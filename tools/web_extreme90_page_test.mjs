@@ -27,6 +27,7 @@
 //   Phase 19 page's 22 boards on PREVIOUS CHALLENGES). Phase 21: --entry=extreme90p21
 //   (xb21; N39-N47 first, the Phase 20 page's 24 boards on PREVIOUS CHALLENGES).
 //   Phase 22: --entry=extreme90p22 (xb22; N48-N51 first, the Phase 21 page's 33 boards).
+//   Phase 24: --entry=extreme90p24 (xb24; N52 first, the Phase 22 page's 37 boards).
 // Chromium is not iPhone Safari (see tools/web_ta90_page_test.mjs).
 import http from 'node:http';
 import fs from 'node:fs';
@@ -45,10 +46,10 @@ const benchOut = (process.argv.find((a) => a.startsWith('--bench-out=')) || '').
 const playerRoot = (process.argv.find((a) => a.startsWith('--player=')) || '').slice(9);
 const PORT = 8840, W = 375, H = 667;  // iPhone SE
 const ENTRY = (process.argv.find((a) => a.startsWith('--entry=')) || '--entry=extreme90').slice(8);
-const P17 = ENTRY === 'extreme90p17' || ENTRY === 'extreme90p18' || ENTRY === 'extreme90p19' || ENTRY === 'extreme90p20' || ENTRY === 'extreme90p21' || ENTRY === 'extreme90p22';  // a later selection: the earlier entries' storage must stay untouched
-const ST = { extreme90: 'xb90', extreme90p17: 'xb17', extreme90p18: 'xb18', extreme90p19: 'xb19', extreme90p20: 'xb20', extreme90p21: 'xb21', extreme90p22: 'xb22' }[ENTRY], FMT = 'ce-' + ST, PUB = 'chainEscape' + ST[0].toUpperCase() + ST.slice(1);
-const OLDER = { extreme90: [], extreme90p17: ['xb90'], extreme90p18: ['xb90', 'xb17'], extreme90p19: ['xb90', 'xb17', 'xb18'], extreme90p20: ['xb90', 'xb17', 'xb18', 'xb19'], extreme90p21: ['xb90', 'xb17', 'xb18', 'xb19', 'xb20'], extreme90p22: ['xb90', 'xb17', 'xb18', 'xb19', 'xb20', 'xb21'] }[ENTRY];
-const PREV = ['extreme90p19', 'extreme90p20', 'extreme90p21', 'extreme90p22'].includes(ENTRY);  // Phase 19: new boards only on the primary screen; the rest on PREVIOUS CHALLENGES (scrolls)
+const P17 = ENTRY === 'extreme90p17' || ENTRY === 'extreme90p18' || ENTRY === 'extreme90p19' || ENTRY === 'extreme90p20' || ENTRY === 'extreme90p21' || ENTRY === 'extreme90p22' || ENTRY === 'extreme90p24';  // a later selection: the earlier entries' storage must stay untouched
+const ST = { extreme90: 'xb90', extreme90p17: 'xb17', extreme90p18: 'xb18', extreme90p19: 'xb19', extreme90p20: 'xb20', extreme90p21: 'xb21', extreme90p22: 'xb22', extreme90p24: 'xb24' }[ENTRY], FMT = 'ce-' + ST, PUB = 'chainEscape' + ST[0].toUpperCase() + ST.slice(1);
+const OLDER = { extreme90: [], extreme90p17: ['xb90'], extreme90p18: ['xb90', 'xb17'], extreme90p19: ['xb90', 'xb17', 'xb18'], extreme90p20: ['xb90', 'xb17', 'xb18', 'xb19'], extreme90p21: ['xb90', 'xb17', 'xb18', 'xb19', 'xb20'], extreme90p22: ['xb90', 'xb17', 'xb18', 'xb19', 'xb20', 'xb21'], extreme90p24: ['xb90', 'xb17', 'xb18', 'xb19', 'xb20', 'xb21', 'xb22'] }[ENTRY];
+const PREV = ['extreme90p19', 'extreme90p20', 'extreme90p21', 'extreme90p22', 'extreme90p24'].includes(ENTRY);  // Phase 19: new boards only on the primary screen; the rest on PREVIOUS CHALLENGES (scrolls)
 const LSB = (b) => `chain_escape_${ST}_${b.toLowerCase()}_state`;
 const FILL = { green: [0x1e, 0x7b, 0x34], orange: [0xc2, 0x41, 0x0c], red: [0xb9, 0x1c, 0x1c] };
 const types = { '.html': 'text/html', '.js': 'text/javascript', '.wasm': 'application/wasm', '.pck': 'application/octet-stream', '.png': 'image/png' };
@@ -195,7 +196,7 @@ try {
   let tiles = bank.map((_, i) => h.rects['Puzzle_' + (i + 1)]);
   if (PREV) {
     const main = Object.keys(h.buttons).filter((n) => n.startsWith('Puzzle_')).sort();
-    const NEWN = { extreme90p19: 2, extreme90p20: 2, extreme90p21: 9, extreme90p22: 4 }[ENTRY];
+    const NEWN = { extreme90p19: 2, extreme90p20: 2, extreme90p21: 9, extreme90p22: 4, extreme90p24: 1 }[ENTRY];
     check(nNew === NEWN && h.primary.join(',') === bank.slice(0, nNew).join(',') && h.previous.join(',') === bank.slice(nNew).join(',')
       && main.join(',') === Array.from({ length: nNew }, (_, i) => 'Puzzle_' + (i + 1)).sort().join(',') && !h.scroll.length && h.buttons.PreviousChallenges && h.buttons.CopyResults && h.buttons.HowItWorks && /^DEV BUILD p\d+-/.test(h.build),
       `CHOOSE A CHALLENGE: ONLY the new boards (${h.primary.join(', ')} = CHALLENGE 1-${nNew}), no scrolling; PREVIOUS CHALLENGES, COPY ALL RESULTS, HOW IT WORKS on screen; "${h.build}"`);
@@ -334,7 +335,7 @@ try {
     check(bundle && bundle.format === FMT && bundle.rules.version === 'ta90-v1' && r && r.board === b0 && r.timed_outcome === 'TIME UP' && r.untimed_success
       && Object.keys(bundle.boards).length === h2.order.length && h2.order.every((b, i) => bundle.boards[b].puzzle === i + 1 && /^[0-9a-f]{64}$/.test(bundle.boards[b].fingerprint)),
       `COPY ALL RESULTS: one ${FMT} bundle - every board under its internal id with its fingerprint and challenge number; the run kept TIME UP and the untimed solve apart` + (P17 ? ` (selection ${bundle && bundle.selection}, N23 ${bundle && bundle.boards.N23 && bundle.boards.N23.group})` : ''));
-    if (PREV) check(bundle && bundle.selection === ({ extreme90p20: 'xb20-v1', extreme90p21: 'xb21-v1', extreme90p22: 'xb22-v1' }[ENTRY] || 'xb19-v2') && 'DEV BUILD ' + bundle.build === h2.build && bundle.new.join(',') === h2.primary.join(',') && h2.order.every((b) => bundle.boards[b].list === (h2.primary.includes(b) ? 'new' : 'previous')),
+    if (PREV) check(bundle && bundle.selection === ({ extreme90p20: 'xb20-v1', extreme90p21: 'xb21-v1', extreme90p22: 'xb22-v1', extreme90p24: 'xb24-v1' }[ENTRY] || 'xb19-v2') && 'DEV BUILD ' + bundle.build === h2.build && bundle.new.join(',') === h2.primary.join(',') && h2.order.every((b) => bundle.boards[b].list === (h2.primary.includes(b) ? 'new' : 'previous')),
       `export: the new boards named (${bundle && bundle.new}), every board's list (new / previous) under its real id`);
     allErrors.push(...d.errors); allExternal.push(...d.external);
     await c2.close();

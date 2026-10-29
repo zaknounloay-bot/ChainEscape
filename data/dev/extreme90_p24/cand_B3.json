@@ -1,0 +1,17 @@
+{
+ "B3": {
+  "map": [
+   ". . . Pv Rv . .",
+   "B^ . . . . . .",
+   "G>@ . . . . . Y^=",
+   ". . . M . . B<",
+   ". . . . . . .",
+   ". . . . . . .",
+   ". . . Y^@ Rv . ."
+  ],
+  "target": "EXTREME",
+  "facts": [],
+  "mechanic": "movable,armor",
+  "max_positions": 2000
+ }
+}

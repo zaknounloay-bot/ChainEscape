@@ -1,0 +1,130 @@
+{
+ "B9b": {
+  "A": {
+   "fingerprint": "77ec7c9b298bf2c75314a06e47c4b28b05a5cdb5d41c0d29d400d1104fabf04a",
+   "hint_nodes": [
+    3180,
+    1583
+   ],
+   "parity": [
+    0,
+    0
+   ],
+   "portals": 0,
+   "position_cap": 2000,
+   "positions": 1699,
+   "replay": true,
+   "solution": 13,
+   "solve_ms": 60.7,
+   "timeup_worst_ms": 92.1,
+   "timeup_worst_nodes": 4183,
+   "winnable": 274
+  },
+  "B": {
+   "coverage": 0.77,
+   "decision_steps": 10,
+   "distinct_mistakes": 5,
+   "endgame_decision": true,
+   "last_decision": 10,
+   "late": 0.77,
+   "line": [
+    "r3c6< [x4]",
+    "r0c3v push [x4]",
+    "r4c6< [x3]",
+    "r6c3^ push [x3]",
+    "r6c3^ push [x3]",
+    "r6c3^ push [x3]",
+    "r6c4v [x1]",
+    "r0c4v [x2]",
+    "r6c3> [x2]",
+    "r2c0> push [x2]",
+    "r0c3v",
+    "r1c0^",
+    "r2c0v"
+   ],
+   "losing_per_step": [
+    4,
+    4,
+    3,
+    3,
+    3,
+    3,
+    1,
+    2,
+    2,
+    2,
+    0,
+    0,
+    0
+   ],
+   "matters_movable": true,
+   "mistakes": [
+    "r1c0^",
+    "r2c0>",
+    "r4c6< push",
+    "r6c4v",
+    "r0c3v push"
+   ],
+   "shortcut": 0,
+   "spinner_dependence": "unsolvable without it",
+   "without_movable": "without it: 0 decision steps, 0 distinct mistakes (with it: 10, 5)"
+  },
+  "C": {
+   "decisions_k4_6_8": [
+    10,
+    9,
+    7
+   ],
+   "deepest": 20,
+   "greedy": {
+    "look2": 0,
+    "look4": 0,
+    "min_turn": 0,
+    "mobility": 0,
+    "safe": 0
+   },
+   "hidden_k6_8": [
+    24,
+    17
+   ],
+   "learner": {
+    "look4": 4,
+    "look6": 4
+   },
+   "look6_greedy": 0,
+   "opening": "3 / 7",
+   "pressure": {
+    "advances": 0,
+    "calm_prefix": 3,
+    "flips": 0,
+    "multi_turned": 0,
+    "prediction_share": 0.15,
+    "pulls": 0,
+    "rams": 0,
+    "signals": 2,
+    "spinners_turned": 2,
+    "trap_delay_median": 11,
+    "turns": 2,
+    "undo_proof": 1
+   },
+   "win_share": 0.161
+  },
+  "map": [
+   ". . . Pv Rv . .",
+   "B^ . . . . . .",
+   "G>@ . . . . . .",
+   ". . . . . . B<",
+   ". . . M . . Y<",
+   ". . . . . . .",
+   ". . . Y^@ Rv . ."
+  ],
+  "name": "B9b",
+  "target": "EXTREME",
+  "verdict": "REJECTED",
+  "why_a": [
+   "solve 60.7 ms (> 40)",
+   "the TIME UP check takes 92.1 ms in its worst position (> 40)"
+  ],
+  "why_b": []
+ }
+}

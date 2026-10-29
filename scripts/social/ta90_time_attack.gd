@@ -28,7 +28,8 @@ const TA90_RULES := {"version": "ta90-v1", "limit_ms": 90000, "undo": 3, "show_a
 ## the Phase 19 candidates (docs/extreme90_phase19.md), ?extreme90p19=1 only. N37-N38: the
 ## Phase 20 candidates (docs/extreme90_phase20.md), ?extreme90p20=1 only. N39-N47: the
 ## Phase 21 candidates (docs/extreme90_phase21.md), ?extreme90p21=1 only. N48-N51: the
-## Phase 22 candidates (docs/extreme90_phase22.md), ?extreme90p22=1 only. TA: the validated 120-second board, used ONLY as an internal
+## Phase 22 candidates (docs/extreme90_phase22.md), ?extreme90p22=1 only. N52: the Phase 24
+## prototype (docs/extreme90_phase24.md), ?extreme90p24=1 only. TA: the validated 120-second board, used ONLY as an internal
 ## technical reference for the clock and the music (never listed as a new
 ## puzzle).
 const BOARDS90 := {
@@ -83,6 +84,7 @@ const BOARDS90 := {
 	"N49": {"data": "res://data/dev/ta90_n49.json", "fp": "773dba8256092fb58f7e31bf4c9beeca3b27c84800de4e1540ae28f954bad6a8"},
 	"N50": {"data": "res://data/dev/ta90_n50.json", "fp": "a9f453627f0b4c667ce31e01fab41093dd2f8cd9bdd0cc3489058db2661ee4ff"},
 	"N51": {"data": "res://data/dev/ta90_n51.json", "fp": "4ad502c26b6c21bfcd977e3a885e2d2ff8cbc734c2378415cd2029ea456e1e9a"},
+	"N52": {"data": "res://data/dev/ta90_n52.json", "fp": "919ec171833d8d045ed9d0195f6d85c4fafd39b7e248d21a27c4145119866f86"},
 	"TA": {"data": "res://data/dev/extreme16_a.json", "fp": "a28e22f0a1a216ba4ac701ff549e7d212ce1fe83ae2d8e3678065da555b730cf", "reference": true},
 }
 const P90_TIMED_Q := [

@@ -1,0 +1,127 @@
+{
+ "B9a": {
+  "A": {
+   "fingerprint": "5bc935f0fdf2d84590b2739c4f38eda0079fab7921326bd78eb3fbea0adf6bb9",
+   "hint_nodes": [
+    1240,
+    556
+   ],
+   "parity": [
+    0,
+    0
+   ],
+   "portals": 0,
+   "position_cap": 2000,
+   "positions": 726,
+   "replay": true,
+   "solution": 12,
+   "solve_ms": 17.4,
+   "timeup_worst_ms": 24.1,
+   "timeup_worst_nodes": 1770,
+   "winnable": 135
+  },
+  "B": {
+   "coverage": 0.75,
+   "decision_steps": 9,
+   "distinct_mistakes": 5,
+   "endgame_decision": true,
+   "last_decision": 9,
+   "late": 0.75,
+   "line": [
+    "r0c3v push [x4]",
+    "r4c6< [x3]",
+    "r6c3^ push [x3]",
+    "r6c3^ push [x3]",
+    "r6c3^ push [x3]",
+    "r6c4v [x1]",
+    "r0c4v [x2]",
+    "r6c3> [x2]",
+    "r2c0> push [x2]",
+    "r0c3v",
+    "r1c0^",
+    "r2c0v"
+   ],
+   "losing_per_step": [
+    4,
+    3,
+    3,
+    3,
+    3,
+    1,
+    2,
+    2,
+    2,
+    0,
+    0,
+    0
+   ],
+   "matters_movable": true,
+   "mistakes": [
+    "r1c0^",
+    "r2c0>",
+    "r4c6< push",
+    "r6c4v",
+    "r0c3v push"
+   ],
+   "shortcut": 0,
+   "spinner_dependence": "unsolvable without it",
+   "without_movable": "without it: 0 decision steps, 0 distinct mistakes (with it: 9, 5)"
+  },
+  "C": {
+   "decisions_k4_6_8": [
+    9,
+    8,
+    6
+   ],
+   "deepest": 17,
+   "greedy": {
+    "look2": 0,
+    "look4": 0,
+    "min_turn": 0,
+    "mobility": 0,
+    "safe": 0
+   },
+   "hidden_k6_8": [
+    20,
+    13
+   ],
+   "learner": {
+    "look4": 3,
+    "look6": 3
+   },
+   "look6_greedy": 0,
+   "opening": "2 / 6",
+   "pressure": {
+    "advances": 0,
+    "calm_prefix": 2,
+    "flips": 0,
+    "multi_turned": 0,
+    "prediction_share": 0.17,
+    "pulls": 0,
+    "rams": 0,
+    "signals": 2,
+    "spinners_turned": 2,
+    "trap_delay_median": 10,
+    "turns": 2,
+    "undo_proof": 1
+   },
+   "win_share": 0.186
+  },
+  "map": [
+   ". . . Pv Rv . .",
+   "B^ . . . . . .",
+   "G>@ . . . . . .",
+   ". . . . . . .",
+   ". . . M . . B<",
+   ". . . . . . .",
+   ". . . Y^@ Rv . ."
+  ],
+  "name": "B9a",
+  "target": "EXTREME",
+  "verdict": "NEEDS WORK",
+  "why_a": [],
+  "why_b": [
+   "a 12-move solution (< 13)"
+  ]
+ }
+}

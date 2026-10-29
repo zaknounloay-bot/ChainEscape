@@ -1,0 +1,17 @@
+{
+ "A8": {
+  "map": [
+   ". . R^#B . . . G>=",
+   ". . Y^* . . G^= .",
+   ". . P^ . B< . R>*",
+   ". . Y> . . . .",
+   ". . . . Rv G> P>*",
+   ". . . . . . Gv=",
+   ". G^= . . Bv* Yv* ."
+  ],
+  "target": "EXTREME",
+  "facts": [],
+  "mechanic": "magnet,armor,lock",
+  "max_positions": 2000
+ }
+}
