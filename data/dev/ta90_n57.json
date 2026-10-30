@@ -1,0 +1,172 @@
+{
+ "format": "ce-ta90-proto",
+ "v": 1,
+ "test": "ta90_n57",
+ "assist": {
+  "undo": 3,
+  "show_a_move": 0,
+  "hammer": 0
+ },
+ "note": "Development only. Phase 25 EXTREME candidate (?extreme90p25=1); never shared, never production. TECHNICALLY QUALIFIED (Category A and B): NOT human-approved; human difficulty unvalidated.",
+ "boards": [
+  {
+   "id": "N57",
+   "accepted": true,
+   "label": "TECHNICALLY QUALIFIED - HUMAN DIFFICULTY UNVALIDATED",
+   "variant": "N57",
+   "design": "P25_H1s31_c3t",
+   "family": "P25 crate route (crate + spinner pushers)",
+   "concept_group": "crate routing",
+   "primary": "movable, spinner",
+   "target": "EXTREME (a design target, not a rating; never shown to players)",
+   "idea": "the crate's route: pushed down first (to release a row), then up three times by one spinner and right once by another - each turner may leave only after its pusher is done, and two waiting blocks would push the crate the wrong way",
+   "source": "hybrid: hand core B9a (Phase 24, seed_H1_CRATEROUTE.json) frozen; blocks added by tools/ta90_search.gd --ops=v20, RNG seed 31; two generator blocks removed by hand as filler (r4c1, r6c1)",
+   "related_bank_concept": "N33 \"push before you turn\" (crate + spinner family)",
+   "fingerprint": "0bac175e88976f554e45f417b0b012ce6bd5beaabda6cd06bc4dc997ab8d46e1",
+   "mechanics": [
+    "movable",
+    "spinner"
+   ],
+   "puzzle": {
+    "format": "ce-puzzle",
+    "v": 1,
+    "rules": 1,
+    "rows": 7,
+    "cols": 7,
+    "map": [
+     ". . . Pv Rv . .",
+     "B^ . . . . . .",
+     "G>@ . . . . . .",
+     ". . . . . . .",
+     ". . R< M Y<@~ . B<",
+     ". . . . . . .",
+     ". . . Y^@ Rv . ."
+    ]
+   },
+   "design_report": {
+    "A": {
+     "fingerprint": "0bac175e88976f554e45f417b0b012ce6bd5beaabda6cd06bc4dc997ab8d46e1",
+     "hint_nodes": [
+      1949,
+      928
+     ],
+     "parity": [
+      0,
+      0
+     ],
+     "portals": 0,
+     "position_cap": 2000,
+     "positions": 1066,
+     "replay": true,
+     "solution": 14,
+     "solve_ms": 31.5,
+     "timeup_worst_ms": 29.4,
+     "timeup_worst_nodes": 1955,
+     "winnable": 211
+    },
+    "B": {
+     "coverage": 0.79,
+     "decision_steps": 11,
+     "distinct_mistakes": 5,
+     "endgame_decision": true,
+     "last_decision": 11,
+     "late": 0.79,
+     "line": [
+      "r4c2< [x3]",
+      "r0c3v push [x4]",
+      "r4c4< [x3]",
+      "r4c6< [x3]",
+      "r6c3^ push [x3]",
+      "r6c3^ push [x3]",
+      "r6c3^ push [x3]",
+      "r6c4v [x1]",
+      "r0c4v [x2]",
+      "r6c3> [x2]",
+      "r2c0> push [x2]",
+      "r0c3v",
+      "r1c0^",
+      "r2c0v"
+     ],
+     "losing_per_step": [
+      3,
+      4,
+      3,
+      3,
+      3,
+      3,
+      3,
+      1,
+      2,
+      2,
+      2,
+      0,
+      0,
+      0
+     ],
+     "matters_movable": true,
+     "mistakes": [
+      "r1c0^",
+      "r2c0>",
+      "r6c4v",
+      "r4c4< push",
+      "r0c3v push"
+     ],
+     "shortcut": 0,
+     "spinner_dependence": "unsolvable without it",
+     "without_movable": "without it: 0 decision steps, 0 distinct mistakes (with it: 11, 5)"
+    },
+    "C": {
+     "decisions_k4_6_8": [
+      11,
+      10,
+      8
+     ],
+     "deepest": 21,
+     "greedy": {
+      "look2": 0,
+      "look4": 0,
+      "min_turn": 0,
+      "mobility": 0,
+      "safe": 0
+     },
+     "hidden_k6_8": [
+      26,
+      18
+     ],
+     "learner": {
+      "look4": 4,
+      "look6": 4
+     },
+     "look6_greedy": 0,
+     "opening": "3 / 6",
+     "pressure": {
+      "advances": 0,
+      "calm_prefix": 3,
+      "flips": 0,
+      "multi_turned": 0,
+      "prediction_share": 0.14,
+      "pulls": 0,
+      "rams": 0,
+      "signals": 2,
+      "spinners_turned": 2,
+      "trap_delay_median": 11,
+      "turns": 2,
+      "undo_proof": 1
+     },
+     "win_share": 0.198
+    },
+    "filler": {
+     "distinct": 5,
+     "pieces_tested": 10,
+     "steps": 11,
+     "trivial": [],
+     "trivial_removals": 0
+    },
+    "similarity": {
+     "closest_known": "N52",
+     "overlap": 0.21
+    }
+   }
+  }
+ ]
+}

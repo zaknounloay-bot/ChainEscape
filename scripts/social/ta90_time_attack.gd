@@ -29,7 +29,8 @@ const TA90_RULES := {"version": "ta90-v1", "limit_ms": 90000, "undo": 3, "show_a
 ## Phase 20 candidates (docs/extreme90_phase20.md), ?extreme90p20=1 only. N39-N47: the
 ## Phase 21 candidates (docs/extreme90_phase21.md), ?extreme90p21=1 only. N48-N51: the
 ## Phase 22 candidates (docs/extreme90_phase22.md), ?extreme90p22=1 only. N52: the Phase 24
-## prototype (docs/extreme90_phase24.md), ?extreme90p24=1 only. TA: the validated 120-second board, used ONLY as an internal
+## prototype (docs/extreme90_phase24.md), ?extreme90p24=1 only. N53-N58: the Phase 25
+## candidates (docs/extreme90_phase25.md), ?extreme90p25=1 only. TA: the validated 120-second board, used ONLY as an internal
 ## technical reference for the clock and the music (never listed as a new
 ## puzzle).
 const BOARDS90 := {
@@ -85,6 +86,12 @@ const BOARDS90 := {
 	"N50": {"data": "res://data/dev/ta90_n50.json", "fp": "a9f453627f0b4c667ce31e01fab41093dd2f8cd9bdd0cc3489058db2661ee4ff"},
 	"N51": {"data": "res://data/dev/ta90_n51.json", "fp": "4ad502c26b6c21bfcd977e3a885e2d2ff8cbc734c2378415cd2029ea456e1e9a"},
 	"N52": {"data": "res://data/dev/ta90_n52.json", "fp": "919ec171833d8d045ed9d0195f6d85c4fafd39b7e248d21a27c4145119866f86"},
+	"N53": {"data": "res://data/dev/ta90_n53.json", "fp": "6a918b1b8bc895e302f0287a78bf2aded368f9a1d8dbc2c718eee0478dc7b5f9"},
+	"N54": {"data": "res://data/dev/ta90_n54.json", "fp": "aab13f09c929ea69aa25a0b17635d456de3a4ed852974dca324a2155eacbcc9c"},
+	"N55": {"data": "res://data/dev/ta90_n55.json", "fp": "10fd41a0c89bbb7a2865a8a0d04d72a55d15ec8e2a3118f6a96f40b2ec1e52ae"},
+	"N56": {"data": "res://data/dev/ta90_n56.json", "fp": "5d822d1425bb25830977fd12fa79f99b092c9e825e33ea33ecc2f8e6010f387b"},
+	"N57": {"data": "res://data/dev/ta90_n57.json", "fp": "0bac175e88976f554e45f417b0b012ce6bd5beaabda6cd06bc4dc997ab8d46e1"},
+	"N58": {"data": "res://data/dev/ta90_n58.json", "fp": "ddfb46c251b1a93b0dde87cc4f7af3de892c783eb1d90512d6c359a097ca39c1"},
 	"TA": {"data": "res://data/dev/extreme16_a.json", "fp": "a28e22f0a1a216ba4ac701ff549e7d212ce1fe83ae2d8e3678065da555b730cf", "reference": true},
 }
 const P90_TIMED_Q := [

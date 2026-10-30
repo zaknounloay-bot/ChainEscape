@@ -1,0 +1,184 @@
+{
+ "format": "ce-ta90-proto",
+ "v": 1,
+ "test": "ta90_n56",
+ "assist": {
+  "undo": 3,
+  "show_a_move": 0,
+  "hammer": 0
+ },
+ "note": "Development only. Phase 25 EXTREME candidate (?extreme90p25=1); never shared, never production. TECHNICALLY QUALIFIED (Category A and B): NOT human-approved; human difficulty unvalidated.",
+ "boards": [
+  {
+   "id": "N56",
+   "accepted": true,
+   "label": "TECHNICALLY QUALIFIED - HUMAN DIFFICULTY UNVALIDATED",
+   "variant": "N56",
+   "design": "P25_H10s41_c4",
+   "family": "P25 the turners are the brake (crate + gate + alternating spinner)",
+   "concept_group": "crate routing",
+   "primary": "movable, gate, spinner",
+   "target": "EXTREME (a design target, not a rating; never shown to players)",
+   "idea": "the turners are the brake: a gate stops the crate, and the gate's links are the alternating-spinner pusher's turners - the departures that open the gate also re-aim the pusher; added spinners push the crate on a longer route, and the pusher's third neighbour, the links and the pusher itself all have a wrong moment",
+   "source": "hybrid: hand core CG2 (seed_H10_BRAKE.json, designed in Phase 25) frozen; blocks added by tools/ta90_search.gd --ops=v20, RNG seed 41",
+   "related_bank_concept": "N33 \"push before you turn\" (crate + spinner family)",
+   "fingerprint": "5d822d1425bb25830977fd12fa79f99b092c9e825e33ea33ecc2f8e6010f387b",
+   "mechanics": [
+    "movable",
+    "gate",
+    "spinner"
+   ],
+   "puzzle": {
+    "format": "ce-puzzle",
+    "v": 1,
+    "rules": 1,
+    "rows": 7,
+    "cols": 7,
+    "map": [
+     ". Y>@~ . Gv . . .",
+     ". . . P^@~ . . .",
+     ". Y^+A . Yv@ . . .",
+     "B^ P>@~ . M XA . .",
+     ". Rv+A Gv@- G<@~ B< . .",
+     ". G>@ Pv@- R<@- . . .",
+     ". . . . . . ."
+    ]
+   },
+   "design_report": {
+    "A": {
+     "fingerprint": "5d822d1425bb25830977fd12fa79f99b092c9e825e33ea33ecc2f8e6010f387b",
+     "hint_nodes": [
+      243,
+      59
+     ],
+     "parity": [
+      0,
+      0
+     ],
+     "portals": 0,
+     "position_cap": 2000,
+     "positions": 190,
+     "replay": true,
+     "solution": 18,
+     "solve_ms": 7.6,
+     "timeup_worst_ms": 5.8,
+     "timeup_worst_nodes": 243,
+     "winnable": 51
+    },
+    "B": {
+     "coverage": 0.89,
+     "decision_steps": 16,
+     "distinct_mistakes": 6,
+     "endgame_decision": true,
+     "last_decision": 16,
+     "late": 0.89,
+     "line": [
+      "r5c2v [x1]",
+      "r5c1v [x1]",
+      "r4c1v [x1]",
+      "r4c2^ [x2]",
+      "r5c3v [x2]",
+      "r4c3< [x2]",
+      "r2c3v push [x3]",
+      "r4c4< push [x3]",
+      "r2c3v [x2]",
+      "r1c3> [x2]",
+      "r0c3v [x2]",
+      "r0c1> [x2]",
+      "r4c4< push [x3]",
+      "r3c1v push [x3]",
+      "r2c1^ [x1]",
+      "r3c1> [x1]",
+      "r3c0^",
+      "r4c4<"
+     ],
+     "losing_per_step": [
+      1,
+      1,
+      1,
+      2,
+      2,
+      2,
+      3,
+      3,
+      2,
+      2,
+      2,
+      2,
+      3,
+      3,
+      1,
+      1,
+      0,
+      0
+     ],
+     "matters_gate": true,
+     "matters_movable": true,
+     "mistakes": [
+      "r3c0^",
+      "r3c1v",
+      "r4c4<",
+      "r2c3v push",
+      "r2c1^",
+      "r4c4< push"
+     ],
+     "shortcut": 0,
+     "spinner_dependence": "unsolvable without it",
+     "without_gate": "without it: 2 decision steps, 1 distinct mistakes (with it: 16, 6)",
+     "without_movable": "without it: 0 decision steps, 0 distinct mistakes (with it: 16, 6)"
+    },
+    "C": {
+     "decisions_k4_6_8": [
+      14,
+      12,
+      10
+     ],
+     "deepest": 18,
+     "greedy": {
+      "look2": 0,
+      "look4": 0,
+      "min_turn": 0,
+      "mobility": 0,
+      "safe": 0
+     },
+     "hidden_k6_8": [
+      20,
+      16
+     ],
+     "learner": {
+      "look4": 3,
+      "look6": 1
+     },
+     "look6_greedy": 0,
+     "opening": "1 / 2",
+     "pressure": {
+      "advances": 0,
+      "calm_prefix": 0,
+      "flips": 0,
+      "multi_turned": 3,
+      "prediction_share": 0.33,
+      "pulls": 0,
+      "rams": 0,
+      "signals": 3,
+      "spinners_turned": 6,
+      "trap_delay_median": 8,
+      "turns": 9,
+      "undo_proof": 0.9
+     },
+     "win_share": 0.268
+    },
+    "filler": {
+     "distinct": 6,
+     "pieces_tested": 15,
+     "steps": 16,
+     "trivial": [],
+     "trivial_removals": 0
+    },
+    "similarity": {
+     "closest_known": "N21",
+     "overlap": 0.38
+    }
+   }
+  }
+ ]
+}

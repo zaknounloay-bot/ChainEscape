@@ -1,0 +1,34 @@
+{
+ "source": "Phase 25 brief: N52 tested independently by two experienced players (first exposure); one replay recorded separately.",
+ "recorded": "2026-10-29",
+ "board": "N52",
+ "fingerprint": "919ec171833d8d045ed9d0195f6d85c4fafd39b7e248d21a27c4145119866f86",
+ "first_exposure": {
+  "player_1": {
+   "rating": "EXTREME",
+   "timed_outcome": "TIME UP",
+   "time_s": 90,
+   "attempts": 4,
+   "enjoy": 5,
+   "untimed_continuation": "COMPLETED"
+  },
+  "player_2": {
+   "rating": "EXTREME",
+   "timed_outcome": "TIME UP",
+   "time_s": 90,
+   "attempts": 3
+  }
+ },
+ "replay": {
+  "player_2": {
+   "rating": "VERY HARD",
+   "timed_outcome": "COMPLETED",
+   "time_s": 40.2,
+   "attempts": 2,
+   "enjoy": 5,
+   "note": "a replay by a player who had already seen the board - NOT an independent first-exposure assessment"
+  }
+ },
+ "decision": "HUMAN-APPROVED EXTREME under the current internal acceptance policy (two independent first-exposure EXTREME ratings, both TIME UP)",
+ "caveat": "two players; small sample; not a statistically validated difficulty label"
+}

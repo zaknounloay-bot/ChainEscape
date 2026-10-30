@@ -1,0 +1,67 @@
+{
+ "target": "EXTREME",
+ "facts": [],
+ "mechanic": "gate,armor",
+ "idea": "P25 hand core GS2 (the gate's links aim the spinner): the spinner rammer's two neighbours are the gate's links - when the last one leaves the gate opens and the spinner has turned exactly twice, onto the shell behind the gate; its third neighbour must stay until after the ram (one turn too many), and after one turn the spinner could slip out",
+ "family": "P25 hybrid: links aim the spinner",
+ "map": [
+  ". . . . . . .",
+  ". . . . . . .",
+  ". . . Y^+A . . .",
+  ". . G^ R<@ . XA B^=",
+  ". . . Pv+A . . .",
+  ". . . . . . .",
+  ". . . . . . ."
+ ],
+ "frozen": [
+  [
+   2,
+   3
+  ],
+  [
+   3,
+   2
+  ],
+  [
+   3,
+   3
+  ],
+  [
+   3,
+   5
+  ],
+  [
+   3,
+   6
+  ],
+  [
+   4,
+   3
+  ]
+ ],
+ "max_positions": 2000,
+ "piece_free": 13,
+ "max_pieces": 17,
+ "shortcut_weight": 80,
+ "coverage_weight": 25,
+ "late_weight": 20,
+ "endgame_weight": 20,
+ "length_weight": 1.0,
+ "length_cap": 18,
+ "pressure_weight": 1.5,
+ "palette": "all",
+ "suffixes": [
+  "+A",
+  "="
+ ],
+ "suffix_rate": 0.3,
+ "suffix_max": {
+  "+A": 2,
+  "=": 2
+ },
+ "crates_max": 0,
+ "seed": 192,
+ "size": "medium",
+ "max_solve_nodes": 1500,
+ "phase25_core": "H8_LINKAIM"
+}

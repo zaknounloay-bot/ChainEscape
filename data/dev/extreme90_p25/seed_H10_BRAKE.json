@@ -1,0 +1,69 @@
+{
+ "target": "EXTREME",
+ "facts": [],
+ "mechanic": "movable,gate",
+ "idea": "P25 hand core CG2 (the turners are the brake): the gate stops the crate; the gate's two links are the alternating-spinner pusher's turners, so the departures that open the gate turn the pusher away and back - it faces the crate again just as the gate opens; its third neighbour must wait, and the block in column 3 must not push the crate down",
+ "family": "P25 hybrid: turners are the brake",
+ "map": [
+  ". . . Gv . . .",
+  ". . . . . . .",
+  ". Y^+A . . . . .",
+  "B^ P>@~ . M XA . .",
+  ". Rv+A . . . . .",
+  ". . . . . . .",
+  ". . . . . . ."
+ ],
+ "frozen": [
+  [
+   0,
+   3
+  ],
+  [
+   2,
+   1
+  ],
+  [
+   3,
+   0
+  ],
+  [
+   3,
+   1
+  ],
+  [
+   3,
+   3
+  ],
+  [
+   3,
+   4
+  ],
+  [
+   4,
+   1
+  ]
+ ],
+ "max_positions": 2000,
+ "piece_free": 13,
+ "max_pieces": 17,
+ "shortcut_weight": 80,
+ "coverage_weight": 25,
+ "late_weight": 20,
+ "endgame_weight": 20,
+ "length_weight": 1.0,
+ "length_cap": 18,
+ "pressure_weight": 1.5,
+ "palette": "all",
+ "suffixes": [
+  "+A"
+ ],
+ "suffix_rate": 0.3,
+ "suffix_max": {
+  "+A": 2
+ },
+ "crates_max": 0,
+ "seed": 192,
+ "size": "medium",
+ "max_solve_nodes": 1500,
+ "phase25_core": "H10_BRAKE"
+}

@@ -1,0 +1,203 @@
+[
+ {
+  "id": "N53",
+  "key": "H5s33_c2",
+  "fp": "6a918b1b8bc895e302f0287a78bf2aded368f9a1d8dbc2c718eee0478dc7b5f9",
+  "mech": "lock+armor+spinner",
+  "sol": 19,
+  "pos": 623,
+  "solve": 16.5,
+  "timeup": 25,
+  "dist": 4,
+  "steps": 15,
+  "eff": 15,
+  "cov": 0.79,
+  "late": 0.79,
+  "short": 0.08,
+  "look6": 0,
+  "filler": 0,
+  "ov": {
+   "closest_known": "N43",
+   "overlap": 0.3
+  },
+  "cf": {
+   "spinner_dependence": "unsolvable without it",
+   "without_armor": "without it: 8 decision steps, 1 distinct mistakes (with it: 15, 4)",
+   "without_lock": "without it: 9 decision steps, 2 distinct mistakes (with it: 15, 4)"
+  },
+  "mistakes": [
+   "r0c0^",
+   "r4c4v",
+   "r4c2v",
+   "r2c4^"
+  ]
+ },
+ {
+  "id": "N54",
+  "key": "H8s37_c4",
+  "fp": "aab13f09c929ea69aa25a0b17635d456de3a4ed852974dca324a2155eacbcc9c",
+  "mech": "gate+armor+spinner",
+  "sol": 17,
+  "pos": 393,
+  "solve": 5,
+  "timeup": 4.3,
+  "dist": 5,
+  "steps": 14,
+  "eff": 13,
+  "cov": 0.82,
+  "late": 0.82,
+  "short": 0.05,
+  "look6": 0.175,
+  "filler": 0,
+  "ov": {
+   "closest_known": "N25",
+   "overlap": 0.38
+  },
+  "cf": {
+   "spinner_dependence": "unsolvable without it",
+   "without_armor": "without it: 7 decision steps, 3 distinct mistakes (with it: 14, 5)",
+   "without_gate": "without it: 8 decision steps, 4 distinct mistakes (with it: 14, 5)"
+  },
+  "mistakes": [
+   "r4c2v",
+   "r4c0v",
+   "r2c3^",
+   "r3c2^",
+   "r3c3^"
+  ]
+ },
+ {
+  "id": "N55",
+  "key": "H9s39_c3",
+  "fp": "10fd41a0c89bbb7a2865a8a0d04d72a55d15ec8e2a3118f6a96f40b2ec1e52ae",
+  "mech": "switch+armor+spinner",
+  "sol": 17,
+  "pos": 186,
+  "solve": 1.9,
+  "timeup": 3.9,
+  "dist": 4,
+  "steps": 15,
+  "eff": 10,
+  "cov": 0.88,
+  "late": 0.88,
+  "short": 0.01,
+  "look6": 0.008,
+  "filler": 0,
+  "ov": {
+   "closest_known": "N21",
+   "overlap": 0.32
+  },
+  "cf": {
+   "spinner_dependence": "unsolvable without it",
+   "without_armor": "without it: 12 decision steps, 4 distinct mistakes (with it: 15, 4)",
+   "without_switch": "unsolvable without it"
+  },
+  "mistakes": [
+   "r4c3<",
+   "r0c3^",
+   "r2c3^",
+   "r3c5v"
+  ]
+ },
+ {
+  "id": "N56",
+  "key": "H10s41_c4",
+  "fp": "5d822d1425bb25830977fd12fa79f99b092c9e825e33ea33ecc2f8e6010f387b",
+  "mech": "movable+gate+spinner",
+  "sol": 18,
+  "pos": 190,
+  "solve": 7.6,
+  "timeup": 5.8,
+  "dist": 6,
+  "steps": 16,
+  "eff": 14,
+  "cov": 0.89,
+  "late": 0.89,
+  "short": 0,
+  "look6": 0,
+  "filler": 0,
+  "ov": {
+   "closest_known": "N21",
+   "overlap": 0.38
+  },
+  "cf": {
+   "spinner_dependence": "unsolvable without it",
+   "without_gate": "without it: 2 decision steps, 1 distinct mistakes (with it: 16, 6)",
+   "without_movable": "without it: 0 decision steps, 0 distinct mistakes (with it: 16, 6)"
+  },
+  "mistakes": [
+   "r3c0^",
+   "r3c1v",
+   "r4c4<",
+   "r2c3v push",
+   "r2c1^",
+   "r4c4< push"
+  ]
+ },
+ {
+  "id": "N57",
+  "key": "H1s31_c3t",
+  "fp": "0bac175e88976f554e45f417b0b012ce6bd5beaabda6cd06bc4dc997ab8d46e1",
+  "mech": "movable+spinner",
+  "sol": 14,
+  "pos": 1066,
+  "solve": 31.5,
+  "timeup": 29.4,
+  "dist": 5,
+  "steps": 11,
+  "eff": 11,
+  "cov": 0.79,
+  "late": 0.79,
+  "short": 0,
+  "look6": 0,
+  "filler": 0,
+  "ov": {
+   "closest_known": "N52",
+   "overlap": 0.21
+  },
+  "cf": {
+   "spinner_dependence": "unsolvable without it",
+   "without_movable": "without it: 0 decision steps, 0 distinct mistakes (with it: 11, 5)"
+  },
+  "mistakes": [
+   "r1c0^",
+   "r2c0>",
+   "r6c4v",
+   "r4c4< push",
+   "r0c3v push"
+  ]
+ },
+ {
+  "id": "N58",
+  "key": "Q1l",
+  "fp": "ddfb46c251b1a93b0dde87cc4f7af3de892c783eb1d90512d6c359a097ca39c1",
+  "mech": "movable+sequence",
+  "sol": 15,
+  "pos": 881,
+  "solve": 8.4,
+  "timeup": 9.8,
+  "dist": 5,
+  "steps": 13,
+  "eff": 13,
+  "cov": 0.87,
+  "late": 0.87,
+  "short": 0.145,
+  "look6": 0.05,
+  "filler": 0,
+  "ov": {
+   "closest_known": "N36",
+   "overlap": 0.32
+  },
+  "cf": {
+   "without_movable": "unsolvable without it",
+   "without_sequence": "unsolvable without it"
+  },
+  "mistakes": [
+   "r2c0> advance",
+   "r6c2^ advance",
+   "r3c6< push",
+   "r3c6< advance",
+   "r0c3v push"
+  ]
+ }
+]

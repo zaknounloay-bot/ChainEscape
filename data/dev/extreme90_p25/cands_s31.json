@@ -1,0 +1,17 @@
+{
+ "H1_CRATEROUTE_s31_1": {
+  "map": [
+   ". . . Pv Rv . .",
+   "B^ . . . . . .",
+   "G>@ . . Y> . . .",
+   ". G>@- . P<@~ . . .",
+   ". Yv@- . M . . B<",
+   ". . . . . . .",
+   ". B<@ . Y^@ Rv . B^"
+  ],
+  "target": "EXTREME",
+  "facts": [],
+  "mechanic": "movable",
+  "max_positions": 2000
+ }
+}

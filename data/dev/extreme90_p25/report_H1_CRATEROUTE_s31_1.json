@@ -1,0 +1,141 @@
+{
+ "H1_CRATEROUTE_s31_1": {
+  "A": {
+   "fingerprint": "31d740e392707cf98fb672bb87f361a2a4004b16c69261553ba1b154ce1156eb",
+   "hint_nodes": [
+    2477,
+    1497
+   ],
+   "parity": [
+    0,
+    0
+   ],
+   "portals": 0,
+   "position_cap": 2000,
+   "positions": 1152,
+   "replay": true,
+   "solution": 18,
+   "solve_ms": 46.9,
+   "timeup_worst_ms": 66,
+   "timeup_worst_nodes": 2477,
+   "winnable": 121
+  },
+  "B": {
+   "coverage": 0.83,
+   "decision_steps": 15,
+   "distinct_mistakes": 6,
+   "endgame_decision": true,
+   "last_decision": 15,
+   "late": 0.83,
+   "line": [
+    "r6c1< [x4]",
+    "r4c1v [x4]",
+    "r3c1^ [x4]",
+    "r3c3< [x4]",
+    "r2c3> [x3]",
+    "r0c3v push [x4]",
+    "r4c6< [x3]",
+    "r6c6^ [x3]",
+    "r6c3^ push [x3]",
+    "r6c3^ push [x3]",
+    "r6c3^ push [x3]",
+    "r6c4v [x1]",
+    "r0c4v [x2]",
+    "r6c3> [x2]",
+    "r2c0> push [x2]",
+    "r0c3v",
+    "r1c0^",
+    "r2c0v"
+   ],
+   "losing_per_step": [
+    4,
+    4,
+    4,
+    4,
+    3,
+    4,
+    3,
+    3,
+    3,
+    3,
+    3,
+    1,
+    2,
+    2,
+    2,
+    0,
+    0,
+    0
+   ],
+   "matters_movable": true,
+   "mistakes": [
+    "r1c0^",
+    "r2c3>",
+    "r4c6< push",
+    "r6c4v",
+    "r2c0>",
+    "r0c3v push"
+   ],
+   "shortcut": 0,
+   "spinner_dependence": "unsolvable without it",
+   "without_movable": "without it: 6 decision steps, 1 distinct mistakes (with it: 15, 6)"
+  },
+  "C": {
+   "decisions_k4_6_8": [
+    15,
+    13,
+    9
+   ],
+   "deepest": 23,
+   "greedy": {
+    "look2": 0,
+    "look4": 0,
+    "min_turn": 0,
+    "mobility": 0,
+    "safe": 0
+   },
+   "hidden_k6_8": [
+    40,
+    28
+   ],
+   "learner": {
+    "look4": 5,
+    "look6": 5
+   },
+   "look6_greedy": 0,
+   "opening": "1 / 5",
+   "pressure": {
+    "advances": 0,
+    "calm_prefix": 1,
+    "flips": 0,
+    "multi_turned": 0,
+    "prediction_share": 0.17,
+    "pulls": 0,
+    "rams": 0,
+    "signals": 3,
+    "spinners_turned": 3,
+    "trap_delay_median": 12,
+    "turns": 3,
+    "undo_proof": 1
+   },
+   "win_share": 0.105
+  },
+  "map": [
+   ". . . Pv Rv . .",
+   "B^ . . . . . .",
+   "G>@ . . Y> . . .",
+   ". G>@- . P<@~ . . .",
+   ". Yv@- . M . . B<",
+   ". . . . . . .",
+   ". B<@ . Y^@ Rv . B^"
+  ],
+  "name": "H1_CRATEROUTE_s31_1",
+  "target": "EXTREME",
+  "verdict": "REJECTED",
+  "why_a": [
+   "solve 46.9 ms (> 40)",
+   "the TIME UP check takes 66.0 ms in its worst position (> 40)"
+  ],
+  "why_b": []
+ }
+}

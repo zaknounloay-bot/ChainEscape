@@ -1,0 +1,62 @@
+{
+ "fixed_before_generating": "2026-10-29 (before any Phase 25 generator run)",
+ "role": "TARGETED REFINEMENT of hand-designed near-miss cores (docs/extreme90_phase25.md): every core cell frozen; the generator (tools/ta90_search.gd --ops=v20, unchanged) may only add blocks around it",
+ "families": {
+  "H10_BRAKE": [
+   "H10_BRAKE"
+  ]
+ },
+ "search_budget": {
+  "runs": 6,
+  "per_run": {
+   "minutes": 12,
+   "batch": 40,
+   "beam": 5,
+   "patience": 8,
+   "ops": "v20"
+  },
+  "seeds": {
+   "round 1": 31,
+   "round 2": 32
+  },
+  "parallel": 4
+ },
+ "report_budget_max": 12,
+ "acceptance": "the Phase 21 rules unchanged (Category A AND B, every mechanic essential, 0 filler, overlap < 0.40) PLUS a by-hand check that the core's dependency still drives the Solver's line (as Phase 23 rule 5), PLUS conceptual novelty against the bank",
+ "excluded": "Q1 (Sequence relay: N44 family) and A2 (magnet crossing: N52 family) are not used as cores",
+ "amendments": [
+  {
+   "when": "2026-10-29, after round 1 (seed 31) and before any report on the chosen boards",
+   "what": "within a run, candidate clusters are picked by solver cost (positions) first, then score, because Category A timing (TIME UP <= 40 ms) is a hard gate the search score ignores; up to 4 clusters per run are evaluated (tools/extreme90_eval25.py --full)",
+   "why": "the top-scoring H1 board (1152 positions) failed timing (solve 46.9 ms, TIME UP 66.0 ms) while 285 boards qualified, the cheapest at 394 positions",
+   "unchanged": "every threshold; the report budget (12)"
+  }
+ ],
+ "budget_extensions": [
+  {
+   "when": "2026-10-29, after rounds 31/32",
+   "what": "2 more hand cores (H5 shared key - designed in Phase 25; H6 = the Phase 23 K2 core), seeds 33 and 34: 4 runs",
+   "why": "H2 / H4 (switch cores) produced 0 qualifying boards in both rounds - stopped; one board per core counts, so more distinct cores are needed"
+  },
+  {
+   "when": "2026-10-29, after rounds 33/34",
+   "what": "hand core H7 (prisoner, designed in Phase 25), seeds 35 and 36: 2 runs",
+   "why": "H6 (portal) stopped: its only cheap board overlaps N31 0.41, seed 34 produced none"
+  },
+  {
+   "when": "2026-10-30, after rounds 35/36",
+   "what": "hand core H8 (links aim the spinner, designed in Phase 25), seeds 37 and 38: 2 runs",
+   "why": "one more distinct concept (gate + spinner + armor)"
+  },
+  {
+   "when": "2026-10-30, after rounds 37/38",
+   "what": "hand core H9 (the firing is the turn, designed in Phase 25), seeds 39 and 40: 2 runs",
+   "why": "H7 stopped (its lock becomes decoration once the filler key is removed); one more distinct concept"
+  },
+  {
+   "when": "2026-10-30, after rounds 39/40",
+   "what": "hand core H10 (the turners are the brake, designed in Phase 25), seeds 41 and 42: 2 runs",
+   "why": "one more distinct concept (crate + gate + alternating spinner)"
+  }
+ ]
+}

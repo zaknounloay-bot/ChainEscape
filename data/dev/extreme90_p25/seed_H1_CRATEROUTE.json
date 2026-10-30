@@ -1,0 +1,69 @@
+{
+ "target": "EXTREME",
+ "facts": [],
+ "mechanic": "movable",
+ "idea": "P24 B9a, hand-designed: a crate routed down by J, up three times by the spinner V, right once by the spinner T; each turner may leave only after its pusher is done; 12 moves, one short",
+ "family": "P25 hybrid: crate route (spinner pushers)",
+ "map": [
+  ". . . Pv Rv . .",
+  "B^ . . . . . .",
+  "G>@ . . . . . .",
+  ". . . . . . .",
+  ". . . M . . B<",
+  ". . . . . . .",
+  ". . . Y^@ Rv . ."
+ ],
+ "frozen": [
+  [
+   0,
+   3
+  ],
+  [
+   0,
+   4
+  ],
+  [
+   1,
+   0
+  ],
+  [
+   2,
+   0
+  ],
+  [
+   4,
+   3
+  ],
+  [
+   4,
+   6
+  ],
+  [
+   6,
+   3
+  ],
+  [
+   6,
+   4
+  ]
+ ],
+ "max_positions": 2000,
+ "piece_free": 13,
+ "max_pieces": 17,
+ "shortcut_weight": 80,
+ "coverage_weight": 25,
+ "late_weight": 20,
+ "endgame_weight": 20,
+ "length_weight": 1.0,
+ "length_cap": 18,
+ "pressure_weight": 1.5,
+ "palette": "all",
+ "suffixes": [],
+ "suffix_rate": 0.3,
+ "suffix_max": {},
+ "crates_max": 0,
+ "seed": 192,
+ "size": "medium",
+ "max_solve_nodes": 2500,
+ "phase25_core": "H1_CRATEROUTE"
+}

@@ -1,0 +1,140 @@
+{
+ "H5s33_c2": {
+  "A": {
+   "fingerprint": "6a918b1b8bc895e302f0287a78bf2aded368f9a1d8dbc2c718eee0478dc7b5f9",
+   "hint_nodes": [
+    221,
+    529
+   ],
+   "parity": [
+    0,
+    0
+   ],
+   "portals": 0,
+   "position_cap": 2000,
+   "positions": 623,
+   "replay": true,
+   "solution": 19,
+   "solve_ms": 16.5,
+   "timeup_worst_ms": 25,
+   "timeup_worst_nodes": 742,
+   "winnable": 178
+  },
+  "B": {
+   "coverage": 0.79,
+   "decision_steps": 15,
+   "distinct_mistakes": 4,
+   "endgame_decision": true,
+   "last_decision": 15,
+   "late": 0.79,
+   "line": [
+    "r2c2^ [x2]",
+    "r3c3v [x3]",
+    "r0c3v [x3]",
+    "r3c5v [x3]",
+    "r0c5v [x3]",
+    "r0c4> [x3]",
+    "r0c1> [x4]",
+    "r0c0> [x3]",
+    "r3c1^ [x3]",
+    "r3c2< ram [x3]",
+    "r3c0^ [x2]",
+    "r3c2< [x2]",
+    "r4c2v [x2]",
+    "r4c0v [x2]",
+    "r3c4> ram [x2]",
+    "r3c6v",
+    "r3c4>",
+    "r4c4v",
+    "r2c4^"
+   ],
+   "losing_per_step": [
+    2,
+    3,
+    3,
+    3,
+    3,
+    3,
+    4,
+    3,
+    3,
+    3,
+    2,
+    2,
+    2,
+    2,
+    2,
+    0,
+    0,
+    0,
+    0
+   ],
+   "matters_armor": true,
+   "matters_lock": true,
+   "mistakes": [
+    "r0c0^",
+    "r4c4v",
+    "r4c2v",
+    "r2c4^"
+   ],
+   "shortcut": 0.08,
+   "spinner_dependence": "unsolvable without it",
+   "without_armor": "without it: 8 decision steps, 1 distinct mistakes (with it: 15, 4)",
+   "without_lock": "without it: 9 decision steps, 2 distinct mistakes (with it: 15, 4)"
+  },
+  "C": {
+   "decisions_k4_6_8": [
+    13,
+    11,
+    9
+   ],
+   "deepest": 17,
+   "greedy": {
+    "look2": 0,
+    "look4": 0,
+    "min_turn": 0,
+    "mobility": 0.08,
+    "safe": 0
+   },
+   "hidden_k6_8": [
+    31,
+    24
+   ],
+   "learner": {
+    "look4": 11,
+    "look6": 11
+   },
+   "look6_greedy": 0,
+   "opening": "4 / 6",
+   "pressure": {
+    "advances": 0,
+    "calm_prefix": 0,
+    "flips": 0,
+    "multi_turned": 3,
+    "prediction_share": 0.53,
+    "pulls": 0,
+    "rams": 2,
+    "signals": 4,
+    "spinners_turned": 5,
+    "trap_delay_median": 9,
+    "turns": 9,
+    "undo_proof": 0.9
+   },
+   "win_share": 0.286
+  },
+  "map": [
+   "B^@ P>@ . Pv@~ R>@~ Pv .",
+   ". . . . . . .",
+   ". . G^ . R^ . .",
+   "B^= P^ R^@#P Yv G<@#Y Rv Bv=",
+   "Y>@ . Bv . Gv . .",
+   ". . . . . . .",
+   ". . . . . . ."
+  ],
+  "name": "H5s33_c2",
+  "target": "EXTREME",
+  "verdict": "HUMAN-REVIEW CANDIDATE",
+  "why_a": [],
+  "why_b": []
+ }
+}

@@ -1,0 +1,75 @@
+{
+ "target": "EXTREME",
+ "facts": [],
+ "mechanic": "switch,lock,armor",
+ "idea": "P24 C6, hand-designed: each switch piece is also the key of a lock, so the firing order fixes each locked rammer's facing when its lock opens",
+ "family": "P25 hybrid: parity at unlock",
+ "map": [
+  ". . . . . . .",
+  "P<#R&A . . G^= . . .",
+  ". . . . . . .",
+  ". . . . . Rv .",
+  ". . . . . . .",
+  ". . . . Gv= . Y<#B&A",
+  "Rv%A . . Bv . . Bv%A"
+ ],
+ "frozen": [
+  [
+   1,
+   0
+  ],
+  [
+   1,
+   3
+  ],
+  [
+   3,
+   5
+  ],
+  [
+   5,
+   4
+  ],
+  [
+   5,
+   6
+  ],
+  [
+   6,
+   0
+  ],
+  [
+   6,
+   3
+  ],
+  [
+   6,
+   6
+  ]
+ ],
+ "max_positions": 2000,
+ "piece_free": 13,
+ "max_pieces": 17,
+ "shortcut_weight": 80,
+ "coverage_weight": 25,
+ "late_weight": 20,
+ "endgame_weight": 20,
+ "length_weight": 1.0,
+ "length_cap": 18,
+ "pressure_weight": 1.5,
+ "palette": "arrows",
+ "suffixes": [
+  "&A",
+  "="
+ ],
+ "suffix_rate": 0.3,
+ "suffix_max": {
+  "&A": 3,
+  "=": 2
+ },
+ "crates_max": 0,
+ "seed": 192,
+ "size": "medium",
+ "max_solve_nodes": 600,
+ "phase25_core": "H2_PARITYLOCK"
+}

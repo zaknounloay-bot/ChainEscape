@@ -1,0 +1,77 @@
+{
+ "target": "EXTREME",
+ "facts": [],
+ "mechanic": "magnet,lock,armor",
+ "idea": "P25 hand core PR3 (the prisoner): a locked block cannot move but can be pulled; each prisoner must be pulled into its shell's row before its last key leaves, or it is freed where it stands with an open exit; the first prisoner is the second one's key",
+ "family": "P25 hybrid: prisoners",
+ "map": [
+  ". . . . . . Y^",
+  ". . . . . . .",
+  ". . . . . . .",
+  "R^* . . . B^= . .",
+  "Y< . . . . . G<=",
+  "P>#Y . . . . . .",
+  ". . . G^#P . . B>*"
+ ],
+ "frozen": [
+  [
+   0,
+   6
+  ],
+  [
+   3,
+   0
+  ],
+  [
+   3,
+   4
+  ],
+  [
+   4,
+   0
+  ],
+  [
+   4,
+   6
+  ],
+  [
+   5,
+   0
+  ],
+  [
+   6,
+   3
+  ],
+  [
+   6,
+   6
+  ]
+ ],
+ "max_positions": 2000,
+ "piece_free": 13,
+ "max_pieces": 17,
+ "shortcut_weight": 80,
+ "coverage_weight": 25,
+ "late_weight": 20,
+ "endgame_weight": 20,
+ "length_weight": 1.0,
+ "length_cap": 18,
+ "pressure_weight": 1.5,
+ "palette": "arrows",
+ "suffixes": [
+  "#Y",
+  "#P",
+  "="
+ ],
+ "suffix_rate": 0.3,
+ "suffix_max": {
+  "#Y": 1,
+  "#P": 1,
+  "=": 2
+ },
+ "crates_max": 0,
+ "seed": 192,
+ "size": "medium",
+ "max_solve_nodes": 1500,
+ "phase25_core": "H7_PRISONER"
+}

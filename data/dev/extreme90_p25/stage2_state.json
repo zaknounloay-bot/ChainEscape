@@ -1,0 +1,18 @@
+{
+ "accepted": [],
+ "reports": 1,
+ "log": [
+  {
+   "key": "H1_CRATEROUTE_s31_2",
+   "stage": "prefilter",
+   "decision": "dropped",
+   "why": "overlap 0.65 with the better candidate H1_CRATEROUTE_s31_1"
+  },
+  {
+   "key": "H1_CRATEROUTE_s31_1",
+   "stage": "report",
+   "decision": "rejected",
+   "why": "solve 46.9 ms (> 40); the TIME UP check takes 66.0 ms in its worst position (> 40)"
+  }
+ ]
+}

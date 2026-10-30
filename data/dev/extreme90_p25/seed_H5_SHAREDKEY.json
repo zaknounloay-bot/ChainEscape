@@ -1,0 +1,87 @@
+{
+ "target": "EXTREME",
+ "facts": [],
+ "mechanic": "lock,armor",
+ "idea": "P25 hand core SL2: two locked spinner rammers share one key K; K's departure turns both and opens the yellow lock; the left one must ram after exactly 3 of its 4 neighbours have gone, the right one after exactly 2 - one departure too many turns it past its shell",
+ "family": "P25 hybrid: shared key, two counts",
+ "map": [
+  ". . . . . . .",
+  ". . . . . . .",
+  ". . G^ . R^ . .",
+  "B^= P^ R^@#P Yv G<@#Y Rv Bv=",
+  ". . Bv . Gv . .",
+  ". . . . . . .",
+  ". . . . . . ."
+ ],
+ "frozen": [
+  [
+   2,
+   2
+  ],
+  [
+   2,
+   4
+  ],
+  [
+   3,
+   0
+  ],
+  [
+   3,
+   1
+  ],
+  [
+   3,
+   2
+  ],
+  [
+   3,
+   3
+  ],
+  [
+   3,
+   4
+  ],
+  [
+   3,
+   5
+  ],
+  [
+   3,
+   6
+  ],
+  [
+   4,
+   2
+  ],
+  [
+   4,
+   4
+  ]
+ ],
+ "max_positions": 2000,
+ "piece_free": 13,
+ "max_pieces": 17,
+ "shortcut_weight": 80,
+ "coverage_weight": 25,
+ "late_weight": 20,
+ "endgame_weight": 20,
+ "length_weight": 1.0,
+ "length_cap": 18,
+ "pressure_weight": 1.5,
+ "palette": "all",
+ "suffixes": [
+  "#P",
+  "#Y"
+ ],
+ "suffix_rate": 0.3,
+ "suffix_max": {
+  "#P": 1,
+  "#Y": 1
+ },
+ "crates_max": 0,
+ "seed": 192,
+ "size": "medium",
+ "max_solve_nodes": 1500,
+ "phase25_core": "H5_SHAREDKEY"
+}

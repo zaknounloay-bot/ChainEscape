@@ -1,0 +1,111 @@
+{
+ "note": "Phase 25 design log (docs/extreme90_phase25.md). Budget fixed before drafting: up to 8 substantive revisions per concept after its first draft; every draft benched with tools/ta90_bench24.gd; full checks by tools/extreme90_eval25.py.",
+ "concepts": {
+  "Q1": {
+   "name": "Sequence-pusher crate relay (movable + sequence)",
+   "drafts": [
+    {
+     "id": "Q1a",
+     "result": "core: tapping a Sequence pusher before the crate reaches its lane wastes its one push (4-6 moves later); 2 distinct, 7 moves"
+    },
+    {
+     "id": "Q1b",
+     "result": "unsolvable (P2 and P4 second arrows face each other on row 6)"
+    },
+    {
+     "id": "Q1c",
+     "result": "P4 exits outward: solvable, but the route stops after 2 pushes (P3, P4 idle)"
+    },
+    {
+     "id": "Q1d",
+     "result": "column-2 and row-2 blockers that would push the crate back: 4 distinct, greedy 0.017, 11 moves, late 0.64"
+    },
+    {
+     "id": "Q1e",
+     "result": "row-1 block: 12 moves, 8 steps; it just leaves first"
+    },
+    {
+     "id": "Q1f",
+     "result": "row-1 walled in by the column block: 5 distinct, 10 steps, coverage 0.83, late 0.83, greedy 0.04; 12 moves (< 13)"
+    },
+    {
+     "id": "Q1g",
+     "result": "unsolvable (two row-1 blocks facing each other)"
+    },
+    {
+     "id": "Q1h",
+     "result": "fifth push stage (U a Sequence pusher, K in column 3): 14 moves, 5 distinct; late 0.71, filler 2 (V r1c2, W r2c6)"
+    },
+    {
+     "id": "Q1i",
+     "result": "filler removed: 5 distinct, 9 steps, coverage 0.75, late 0.75, greedy 0.083, 12 moves (< 13)"
+    },
+    {
+     "id": "Q1j",
+     "result": "a free column-4 block: 13 moves but REJECTED - TIME UP 45.8 ms (> 40)"
+    },
+    {
+     "id": "Q1k",
+     "result": "K a Sequence block: it pushes the crate itself - the fifth stage is bypassed (3 distinct, greedy 0.41)"
+    },
+    {
+     "id": "Q1l",
+     "result": "H a Sequence block (one forced extra move): HUMAN-REVIEW CANDIDATE, 5 distinct, 13 steps, coverage 0.87, 15 moves, greedy 0.167, 0 filler, overlap 0.32, TIME UP 9.8 ms. NOT SELECTED: conceptual duplicate of N44 (the Sequence pusher: a push also advances the pusher's arrow; 'tapping early wastes the push' is one of N44's own mistakes)"
+    }
+   ],
+   "budget": "11 revisions - 3 over the budget of 8 (reported)",
+   "outcome": "Q1l kept as a PROVISIONAL candidate (re-examined: same mechanic insight as N44, new structure - a relay of one-shot pushers with a shuttle; judged by the standard applied to N52 vs N48; flagged as a novelty risk)"
+  },
+  "R1": {
+   "name": "rescue magnet (crate + magnet)",
+   "drafts": [
+    {
+     "id": "R1a",
+     "result": "IMPOSSIBLE under the current rules: a magnet must be a plain arrow on a board without portals, crates or hidden blocks (LevelManager validation) - the reason crate + magnet and magnet + portal never occur in the bank"
+    }
+   ],
+   "outcome": "stopped at the first draft (rule)"
+  },
+  "G1": {
+   "name": "crate brake and shuttle (movable + gate + switch + lock)",
+   "drafts": [
+    {
+     "id": "G1a",
+     "result": "trivial: the switch frees everyone, the crate never has to move"
+    },
+    {
+     "id": "G1b",
+     "result": "blockers on the crate's route are free from the start and simply leave first: 2 distinct, greedy 0.59"
+    },
+    {
+     "id": "G1c",
+     "result": "shuttle with a gate brake: one reversal lets the right pusher push the crate LEFT at once - the right-hand excursion is bypassed: 2 distinct"
+    }
+   ],
+   "outcome": "stopped after 3 drafts: every crate design needs a forcing element per waiting block; set aside for the hybrid path"
+  },
+  "H": {
+   "name": "hybrid targeted refinement (data/dev/extreme90_p25/protocol.json)",
+   "note": "hand-designed near-miss cores frozen cell for cell; tools/ta90_search.gd --ops=v20 unchanged adds blocks around them; candidates ranked by solver cost first (amendment); full checks by tools/extreme90_eval25.py; the core checked by hand on the Solver's line",
+   "cores": {
+    "H1_CRATEROUTE": "P24 B9a (crate route, spinner pushers): s31 285 qualifying, s32 96; cheapest clusters HUMAN-REVIEW but filler 1-2; trimming the filler raised the solver cost (the 'filler' blocks were walls keeping the search small): c1t/c2t/c4t over 40 ms, c3t passes (TIME UP 29.4 ms, 0 filler) -> SELECTED (one per concept)",
+    "H2_PARITYLOCK": "P24 C6 (parity at unlock): 0 qualifying in s31 / s32 - stopped (switch structures, as in Phase 24)",
+    "H4_TWOCYCLES": "P24 C2 (two cycles, one switch): 0 qualifying in s31 / s32 - stopped",
+    "H5_SHAREDKEY": "P25 SL2 (designed here; SL was unsolvable as first drawn): s33 157 qualifying, 3 of the 4 cheapest clusters pass with 0 filler; c2 SELECTED (15 effective decisions); s34 0",
+    "H6_PORTALRAM": "P23 K2 core: s33 5 qualifying, the only cheap one overlaps N31 0.41; s34 0 - stopped",
+    "H7_PRISONER": "P25 PR3 (designed here: PR1 bypassed by the key, PR2 a magnet facing the wrong way and a lane bypass): s35 277 qualifying (cheapest 197 positions), s36 0",
+    "H8_LINKAIM": "P25 GS2 (designed here; GS1 unsolvable - a link faced into the spinner)"
+   }
+  },
+  "SP": {
+   "name": "two-stage remote rammer (portal + armor + Sequence)",
+   "drafts": [
+    {
+     "id": "SP1",
+     "result": "no losing move at all: nothing can bring a target into a Sequence rammer's lane later, so there is no 'early tap' window"
+    }
+   ],
+   "outcome": "stopped at the first draft"
+  }
+ }
+}

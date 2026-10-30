@@ -1,0 +1,181 @@
+{
+ "format": "ce-ta90-proto",
+ "v": 1,
+ "test": "ta90_n54",
+ "assist": {
+  "undo": 3,
+  "show_a_move": 0,
+  "hammer": 0
+ },
+ "note": "Development only. Phase 25 EXTREME candidate (?extreme90p25=1); never shared, never production. TECHNICALLY QUALIFIED (Category A and B): NOT human-approved; human difficulty unvalidated.",
+ "boards": [
+  {
+   "id": "N54",
+   "accepted": true,
+   "label": "TECHNICALLY QUALIFIED - HUMAN DIFFICULTY UNVALIDATED",
+   "variant": "N54",
+   "design": "P25_H8s37_c4",
+   "family": "P25 links aim the spinner (spinner + gate + armor)",
+   "concept_group": "spinner aim",
+   "primary": "gate, armor, spinner",
+   "target": "EXTREME (a design target, not a rating; never shown to players)",
+   "idea": "the gate's links aim the spinner: the rammer's neighbours are the links of the gate that walls in its shell - the departures that open the gate turn it onto that shell; its third neighbour must stay until after the ram, and after one turn too few it could slip out",
+   "source": "hybrid: hand core GS2 (seed_H8_LINKAIM.json, designed in Phase 25) frozen; blocks added by tools/ta90_search.gd --ops=v20, RNG seed 37",
+   "related_bank_concept": "N25 \"silent gate\" (archived), N19 gate chain",
+   "fingerprint": "aab13f09c929ea69aa25a0b17635d456de3a4ed852974dca324a2155eacbcc9c",
+   "mechanics": [
+    "gate",
+    "armor",
+    "spinner"
+   ],
+   "puzzle": {
+    "format": "ce-puzzle",
+    "v": 1,
+    "rules": 1,
+    "rows": 7,
+    "cols": 7,
+    "map": [
+     ". . . G<@- . . .",
+     ". . . . . . .",
+     "Gv . B<@- Y^+A . . B<@-",
+     ". . G^ R<@ . XA B^=",
+     "Bv= B^@ Yv@~ Pv+A . . .",
+     ". Y^@- . P<@~ . . .",
+     ". . . B^@~ . . ."
+    ]
+   },
+   "design_report": {
+    "A": {
+     "fingerprint": "aab13f09c929ea69aa25a0b17635d456de3a4ed852974dca324a2155eacbcc9c",
+     "hint_nodes": [
+      151,
+      60
+     ],
+     "parity": [
+      0,
+      0
+     ],
+     "portals": 0,
+     "position_cap": 2000,
+     "positions": 393,
+     "replay": true,
+     "solution": 17,
+     "solve_ms": 5,
+     "timeup_worst_ms": 4.3,
+     "timeup_worst_nodes": 152,
+     "winnable": 145
+    },
+    "B": {
+     "coverage": 0.82,
+     "decision_steps": 14,
+     "distinct_mistakes": 5,
+     "endgame_decision": true,
+     "last_decision": 14,
+     "late": 0.82,
+     "line": [
+      "r2c0v ram [x1]",
+      "r0c3< [x2]",
+      "r4c1^ [x3]",
+      "r4c0v [x1]",
+      "r2c0v [x1]",
+      "r2c2< [x1]",
+      "r2c3^ [x1]",
+      "r2c6< [x2]",
+      "r4c2< [x2]",
+      "r5c1< [x2]",
+      "r5c3< [x2]",
+      "r6c3> [x2]",
+      "r4c3v [x2]",
+      "r3c3> ram [x1]",
+      "r3c6^",
+      "r3c3>",
+      "r3c2^"
+     ],
+     "losing_per_step": [
+      1,
+      2,
+      3,
+      1,
+      1,
+      1,
+      1,
+      2,
+      2,
+      2,
+      2,
+      2,
+      2,
+      1,
+      0,
+      0,
+      0
+     ],
+     "matters_armor": true,
+     "matters_gate": true,
+     "mistakes": [
+      "r4c2v",
+      "r4c0v",
+      "r2c3^",
+      "r3c2^",
+      "r3c3^"
+     ],
+     "shortcut": 0.05,
+     "spinner_dependence": "unsolvable without it",
+     "without_armor": "without it: 7 decision steps, 3 distinct mistakes (with it: 14, 5)",
+     "without_gate": "without it: 8 decision steps, 4 distinct mistakes (with it: 14, 5)"
+    },
+    "C": {
+     "decisions_k4_6_8": [
+      11,
+      9,
+      5
+     ],
+     "deepest": 10,
+     "greedy": {
+      "look2": 0.02,
+      "look4": 0.05,
+      "min_turn": 0,
+      "mobility": 0,
+      "safe": 0.015
+     },
+     "hidden_k6_8": [
+      14,
+      6
+     ],
+     "learner": {
+      "look4": 0,
+      "look6": 0
+     },
+     "look6_greedy": 0.175,
+     "opening": "3 / 4",
+     "pressure": {
+      "advances": 0,
+      "calm_prefix": 1,
+      "flips": 0,
+      "multi_turned": 1,
+      "prediction_share": 0.35,
+      "pulls": 0,
+      "rams": 2,
+      "signals": 0,
+      "spinners_turned": 4,
+      "trap_delay_median": 6,
+      "turns": 5,
+      "undo_proof": 0.78
+     },
+     "win_share": 0.369
+    },
+    "filler": {
+     "distinct": 5,
+     "pieces_tested": 15,
+     "steps": 14,
+     "trivial": [],
+     "trivial_removals": 0
+    },
+    "similarity": {
+     "closest_known": "N25",
+     "overlap": 0.38
+    }
+   }
+  }
+ ]
+}

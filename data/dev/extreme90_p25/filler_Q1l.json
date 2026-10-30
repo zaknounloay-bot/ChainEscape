@@ -1,0 +1,9 @@
+{
+ "Q1l": {
+  "distinct": 5,
+  "pieces_tested": 8,
+  "steps": 13,
+  "trivial": [],
+  "trivial_removals": 0
+ }
+}

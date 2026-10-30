@@ -1,0 +1,67 @@
+{
+ "target": "EXTREME",
+ "facts": [],
+ "mechanic": "switch,armor",
+ "idea": "P25 hand core SW2 (the firing is the turn): the switch piece is the spinner rammer's neighbour, so firing it both turns the rammer onto its shell and flips the shell away from it (a shell facing its rammer deadlocks) and frees the flip target standing in the rammer's lane; the rammer's other neighbour must stay until after the ram",
+ "family": "P25 hybrid: the firing is the turn",
+ "map": [
+  ". . . . . . .",
+  ". . . . . Rv .",
+  ". . . Y^%A . . .",
+  ". . . R^@ . P^&A B<&A=",
+  ". . . G<  . . .",
+  ". . . . . . .",
+  ". . . . . . ."
+ ],
+ "frozen": [
+  [
+   1,
+   5
+  ],
+  [
+   2,
+   3
+  ],
+  [
+   3,
+   3
+  ],
+  [
+   3,
+   5
+  ],
+  [
+   3,
+   6
+  ],
+  [
+   4,
+   3
+  ]
+ ],
+ "max_positions": 2000,
+ "piece_free": 13,
+ "max_pieces": 17,
+ "shortcut_weight": 80,
+ "coverage_weight": 25,
+ "late_weight": 20,
+ "endgame_weight": 20,
+ "length_weight": 1.0,
+ "length_cap": 18,
+ "pressure_weight": 1.5,
+ "palette": "all",
+ "suffixes": [
+  "&A",
+  "="
+ ],
+ "suffix_rate": 0.3,
+ "suffix_max": {
+  "&A": 3,
+  "=": 2
+ },
+ "crates_max": 0,
+ "seed": 192,
+ "size": "medium",
+ "max_solve_nodes": 1500,
+ "phase25_core": "H9_FIRETURN"
+}

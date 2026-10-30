@@ -1,0 +1,136 @@
+{
+ "H9s39_c3": {
+  "A": {
+   "fingerprint": "10fd41a0c89bbb7a2865a8a0d04d72a55d15ec8e2a3118f6a96f40b2ec1e52ae",
+   "hint_nodes": [
+    8,
+    57
+   ],
+   "parity": [
+    0,
+    0
+   ],
+   "portals": 0,
+   "position_cap": 2000,
+   "positions": 186,
+   "replay": true,
+   "solution": 17,
+   "solve_ms": 1.9,
+   "timeup_worst_ms": 3.9,
+   "timeup_worst_nodes": 57,
+   "winnable": 42
+  },
+  "B": {
+   "coverage": 0.88,
+   "decision_steps": 15,
+   "distinct_mistakes": 4,
+   "endgame_decision": true,
+   "last_decision": 15,
+   "late": 0.88,
+   "line": [
+    "r2c3^ ram [x1]",
+    "r0c0^ [x2]",
+    "r0c2< [x2]",
+    "r0c3^ [x1]",
+    "r1c2^ [x2]",
+    "r2c0v [x1]",
+    "r2c3^ [x1]",
+    "r2c2v [x2]",
+    "r2c5< [x2]",
+    "r3c5v [x1]",
+    "r1c5v [x1]",
+    "r3c3> ram [x1]",
+    "r3c6> [x1]",
+    "r1c0> [x1]",
+    "r3c3> [x1]",
+    "r4c3<",
+    "r6c3^"
+   ],
+   "losing_per_step": [
+    1,
+    2,
+    2,
+    1,
+    2,
+    1,
+    1,
+    2,
+    2,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    0,
+    0
+   ],
+   "matters_armor": true,
+   "matters_switch": true,
+   "mistakes": [
+    "r4c3<",
+    "r0c3^",
+    "r2c3^",
+    "r3c5v"
+   ],
+   "shortcut": 0.01,
+   "spinner_dependence": "unsolvable without it",
+   "without_armor": "without it: 12 decision steps, 4 distinct mistakes (with it: 15, 4)",
+   "without_switch": "unsolvable without it"
+  },
+  "C": {
+   "decisions_k4_6_8": [
+    9,
+    8,
+    5
+   ],
+   "deepest": 13,
+   "greedy": {
+    "look2": 0,
+    "look4": 0,
+    "min_turn": 0,
+    "mobility": 0.01,
+    "safe": 0
+   },
+   "hidden_k6_8": [
+    11,
+    7
+   ],
+   "learner": {
+    "look4": 2,
+    "look6": 2
+   },
+   "look6_greedy": 0.008,
+   "opening": "3 / 4",
+   "pressure": {
+    "advances": 0,
+    "calm_prefix": 1,
+    "flips": 2,
+    "multi_turned": 1,
+    "prediction_share": 0.24,
+    "pulls": 0,
+    "rams": 2,
+    "signals": 0,
+    "spinners_turned": 2,
+    "trap_delay_median": 6,
+    "turns": 3,
+    "undo_proof": 0.7
+   },
+   "win_share": 0.226
+  },
+  "map": [
+   "R^@~ . P<@- B^= . . .",
+   "G> . R^&A . . Rv .",
+   "Pv@- . P^@ Y^%A . G<@ .",
+   ". . . R^@ . P^&A B<&A=",
+   ". . . G< . . .",
+   ". . . . . . .",
+   ". . . G^@ . . ."
+  ],
+  "name": "H9s39_c3",
+  "target": "EXTREME",
+  "verdict": "HUMAN-REVIEW CANDIDATE",
+  "why_a": [],
+  "why_b": []
+ }
+}

@@ -1,0 +1,83 @@
+{
+ "target": "EXTREME",
+ "facts": [],
+ "mechanic": "switch,lock,gate,armor",
+ "idea": "P24 C2, hand-designed: two dependency cycles (lock waits for red, red waits for a gate, gate waits for the shell the locked block must crack), broken by the two firings of one switch group",
+ "family": "P25 hybrid: two cycles",
+ "map": [
+  ". . . . . . .",
+  "P<#R&A . G^+B= . . . .",
+  ". . . . . . .",
+  ". . . . . . .",
+  "XB . . . . . .",
+  "R^&A . . . G^+C= . Y<#R&A",
+  ". Bv%A . . Gv%A XC R<&A"
+ ],
+ "frozen": [
+  [
+   1,
+   0
+  ],
+  [
+   1,
+   2
+  ],
+  [
+   4,
+   0
+  ],
+  [
+   5,
+   0
+  ],
+  [
+   5,
+   4
+  ],
+  [
+   5,
+   6
+  ],
+  [
+   6,
+   1
+  ],
+  [
+   6,
+   4
+  ],
+  [
+   6,
+   5
+  ],
+  [
+   6,
+   6
+  ]
+ ],
+ "max_positions": 2000,
+ "piece_free": 13,
+ "max_pieces": 17,
+ "shortcut_weight": 80,
+ "coverage_weight": 25,
+ "late_weight": 20,
+ "endgame_weight": 20,
+ "length_weight": 1.0,
+ "length_cap": 18,
+ "pressure_weight": 1.5,
+ "palette": "arrows",
+ "suffixes": [
+  "&A",
+  "="
+ ],
+ "suffix_rate": 0.3,
+ "suffix_max": {
+  "&A": 3,
+  "=": 2
+ },
+ "crates_max": 0,
+ "seed": 192,
+ "size": "medium",
+ "max_solve_nodes": 600,
+ "phase25_core": "H4_TWOCYCLES"
+}

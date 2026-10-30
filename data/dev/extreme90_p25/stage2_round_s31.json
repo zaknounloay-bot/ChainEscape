@@ -1,0 +1,63 @@
+{
+ "pool": [
+  {
+   "key": "H1_CRATEROUTE_s31_1",
+   "core": "H1_CRATEROUTE",
+   "family": "H1_CRATEROUTE",
+   "map": [
+    ". . . Pv Rv . .",
+    "B^ . . . . . .",
+    "G>@ . . Y> . . .",
+    ". G>@- . P<@~ . . .",
+    ". Yv@- . M . . B<",
+    ". . . . . . .",
+    ". B<@ . Y^@ Rv . B^"
+   ],
+   "score": 143.88,
+   "search": {
+    "distinct": 6,
+    "steps": 15,
+    "shortcut": 0,
+    "positions": 1152,
+    "pieces": 14
+   },
+   "closest": {
+    "known": "N16",
+    "overlap": 0.32,
+    "pool": "",
+    "pool_overlap": 0
+   }
+  },
+  {
+   "key": "H1_CRATEROUTE_s31_2",
+   "core": "H1_CRATEROUTE",
+   "family": "H1_CRATEROUTE",
+   "map": [
+    ". . . Pv Rv . Y>",
+    "B^ . . . . . .",
+    "G>@ . . Y> . . G^@~",
+    ". . . P>@- . . .",
+    ". . . M B< . B<",
+    ". . . . . . .",
+    ". . . Y^@ Rv . B^"
+   ],
+   "score": 143.64,
+   "search": {
+    "distinct": 6,
+    "steps": 15,
+    "shortcut": 0,
+    "positions": 1210,
+    "pieces": 14
+   },
+   "closest": {
+    "known": "N52",
+    "overlap": 0.27,
+    "pool": "H1_CRATEROUTE_s31_1",
+    "pool_overlap": 0.65
+   }
+  }
+ ],
+ "order": [
+  "H1_CRATEROUTE_s31_1"
+ ]
+}

@@ -1,0 +1,9 @@
+{
+ "H1s31_c3t": {
+  "distinct": 5,
+  "pieces_tested": 10,
+  "steps": 11,
+  "trivial": [],
+  "trivial_removals": 0
+ }
+}
