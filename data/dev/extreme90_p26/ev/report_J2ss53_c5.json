@@ -1,0 +1,134 @@
+{
+ "J2ss53_c5": {
+  "A": {
+   "fingerprint": "e228aa99a081af5ac81d53fe2d80fe59d14d42bcc80ac6466addb65bf0973cdf",
+   "hint_nodes": [
+    40,
+    30
+   ],
+   "parity": [
+    0,
+    0
+   ],
+   "portals": 0,
+   "position_cap": 2000,
+   "positions": 203,
+   "replay": true,
+   "solution": 15,
+   "solve_ms": 5.2,
+   "timeup_worst_ms": 5.3,
+   "timeup_worst_nodes": 78,
+   "winnable": 30
+  },
+  "B": {
+   "coverage": 0.87,
+   "decision_steps": 13,
+   "distinct_mistakes": 6,
+   "endgame_decision": true,
+   "last_decision": 13,
+   "late": 0.87,
+   "line": [
+    "r1c2> [x4]",
+    "r2c1< [x5]",
+    "r1c1^ [x3]",
+    "r2c2< [x3]",
+    "r2c4< [x3]",
+    "r3c4> [x2]",
+    "r5c4^ [x2]",
+    "r5c5> [x1]",
+    "r5c3> [x1]",
+    "r5c2< [x1]",
+    "r3c3v [x1]",
+    "r3c2v [x1]",
+    "r3c1> [x1]",
+    "r6c6>",
+    "r4c0v"
+   ],
+   "losing_per_step": [
+    4,
+    5,
+    3,
+    3,
+    3,
+    2,
+    2,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    0,
+    0
+   ],
+   "matters_gate": true,
+   "matters_switch": true,
+   "mistakes": [
+    "r1c1^",
+    "r3c4>",
+    "r5c5^",
+    "r6c6>",
+    "r1c1>",
+    "r2c2^"
+   ],
+   "shortcut": 0.005,
+   "spinner_dependence": "without it: 14 decision steps, 1 distinct mistakes (with it: 13, 6)",
+   "without_gate": "without it: 10 decision steps, 3 distinct mistakes (with it: 13, 6)",
+   "without_switch": "unsolvable without it"
+  },
+  "C": {
+   "decisions_k4_6_8": [
+    10,
+    8,
+    6
+   ],
+   "deepest": 14,
+   "greedy": {
+    "look2": 0.005,
+    "look4": 0,
+    "min_turn": 0,
+    "mobility": 0,
+    "safe": 0
+   },
+   "hidden_k6_8": [
+    13,
+    7
+   ],
+   "learner": {
+    "look4": 3,
+    "look6": 2
+   },
+   "look6_greedy": 0.017,
+   "opening": "2 / 6",
+   "pressure": {
+    "advances": 0,
+    "calm_prefix": 0,
+    "flips": 1,
+    "multi_turned": 3,
+    "prediction_share": 0.47,
+    "pulls": 0,
+    "rams": 0,
+    "signals": 1,
+    "spinners_turned": 5,
+    "trap_delay_median": 5,
+    "turns": 8,
+    "undo_proof": 0.79
+   },
+   "win_share": 0.148
+  },
+  "map": [
+   ". . . . . . .",
+   ". P^@~+C R>@~ . . . .",
+   ". R<@-= G<@~ . Y<@- . .",
+   "XC B>&A+C B^@- Yv R> . .",
+   "R^&A+C . . . . . .",
+   ". . B^@- G> B^@- G^@ .",
+   ". . . . . . P>%A"
+  ],
+  "name": "J2ss53_c5",
+  "target": "EXTREME",
+  "verdict": "HUMAN-REVIEW CANDIDATE",
+  "why_a": [],
+  "why_b": []
+ }
+}

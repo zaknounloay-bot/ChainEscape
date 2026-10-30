@@ -1,0 +1,11 @@
+{
+ "J2ss53_o395": {
+  "distinct": 4,
+  "pieces_tested": 14,
+  "steps": 13,
+  "trivial": [
+   "r3c3 Yv"
+  ],
+  "trivial_removals": 1
+ }
+}

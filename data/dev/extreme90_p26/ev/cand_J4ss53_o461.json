@@ -1,0 +1,17 @@
+{
+ "J4ss53_o461": {
+  "map": [
+   ". . . B>= . . .",
+   ". . . R^* Rv . .",
+   ". . R< P> . . .",
+   ". . . Y^= . . .",
+   ". B<* . R^* . . .",
+   ". G>= . . . . .",
+   ". . . Yv G< . ."
+  ],
+  "target": "EXTREME",
+  "facts": [],
+  "mechanic": "magnet,armor",
+  "max_positions": 2000
+ }
+}

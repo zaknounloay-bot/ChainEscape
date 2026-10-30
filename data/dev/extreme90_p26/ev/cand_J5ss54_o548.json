@@ -1,0 +1,17 @@
+{
+ "J5ss54_o548": {
+  "map": [
+   ". . . . . . .",
+   ". . . . . P<@ R>@",
+   ". . . Gv%A . G^@ R^=",
+   ". Gv#Y . Y>&A Yv@~ B>@- .",
+   ". R^&A . B>@~ . G> G^",
+   ". . Y< R<@~ . . .",
+   ". . . . . . P>%A"
+  ],
+  "target": "EXTREME",
+  "facts": [],
+  "mechanic": "switch,lock",
+  "max_positions": 2000
+ }
+}

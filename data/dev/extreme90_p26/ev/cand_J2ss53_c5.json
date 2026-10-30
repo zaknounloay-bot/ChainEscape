@@ -1,0 +1,17 @@
+{
+ "J2ss53_c5": {
+  "map": [
+   ". . . . . . .",
+   ". P^@~+C R>@~ . . . .",
+   ". R<@-= G<@~ . Y<@- . .",
+   "XC B>&A+C B^@- Yv R> . .",
+   "R^&A+C . . . . . .",
+   ". . B^@- G> B^@- G^@ .",
+   ". . . . . . P>%A"
+  ],
+  "target": "EXTREME",
+  "facts": [],
+  "mechanic": "switch,gate",
+  "max_positions": 2000
+ }
+}

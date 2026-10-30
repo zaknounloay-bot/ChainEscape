@@ -1,0 +1,61 @@
+Godot Engine v4.3.stable.official.77dcf97d8 - https://godotengine.org
+
+SCRIPT ERROR: Invalid access of index '6' on a base object of type: 'Array'.
+          at: _rot (res://tools/vh_pilot4_canon.gd:101)
+SCRIPT ERROR: Out of bounds get index '0' (on base: 'Array')
+          at: _relabel (res://tools/vh_pilot4_canon.gd:141)
+SCRIPT ERROR: Out of bounds get index '0' (on base: 'Array')
+          at: _relabel (res://tools/vh_pilot4_canon.gd:141)
+SCRIPT ERROR: Out of bounds get index '0' (on base: 'Array')
+          at: _rot (res://tools/vh_pilot4_canon.gd:96)
+SCRIPT ERROR: Out of bounds get index '0' (on base: 'Array')
+          at: _relabel (res://tools/vh_pilot4_canon.gd:141)
+SCRIPT ERROR: Out of bounds get index '0' (on base: 'Array')
+          at: _relabel (res://tools/vh_pilot4_canon.gd:141)
+SCRIPT ERROR: Out of bounds get index '0' (on base: 'Array')
+          at: _rot (res://tools/vh_pilot4_canon.gd:96)
+SCRIPT ERROR: Out of bounds get index '0' (on base: 'Array')
+          at: _relabel (res://tools/vh_pilot4_canon.gd:141)
+SCRIPT ERROR: Out of bounds get index '0' (on base: 'Array')
+          at: _relabel (res://tools/vh_pilot4_canon.gd:141)
+SCRIPT ERROR: Out of bounds get index '0' (on base: 'Array')
+          at: _rot (res://tools/vh_pilot4_canon.gd:96)
+known boards: 33979
+known boards incl. T1-T5 and the demos: 33979; played boards for the near-copy guard: 333
+== J2ss54_o441: 441 positions, winnable true
+   1  r6c3> ram    lose: r3c6^(10) r5c3<(11) r6c6>(12)
+   2  r4c6>        lose: r3c6^(9) r6c6>(11)
+   3  r4c5>        lose: r3c6>(8) r6c6>(10)
+   4  r3c5^        lose: r3c6>(7) r4c3>(9) r6c6>(9)
+   5  r3c6^        lose: r4c3>(8) r6c6>(8)
+   6  r6c5^        lose: r4c3>(7) r6c6>(7)
+   7  r5c3<        lose: r4c3>(6) r6c6>(6)
+   8  r4c3>        lose: r6c6>(5)
+   9  r6c3v        lose: r6c6>(4)
+  10  r3c3v        lose: r6c6>(3)
+  11  r2c3<        lose: r6c6>(2)
+  12  r3c1>        lose: r6c6>(1)
+  13  r6c6>        lose: 
+  14  r4c0v        lose: 
+  greedy {"look2":0.01,"look4":0.03,"min_turn":0,"mobility":0.13,"safe":0.03}
+  features {"calm_prefix":1,"concurrency":0.57,"coverage":0.86,"deep_traps":5,"distinct":5,"effective_decisions":8,"learner4":2,"learner6":2,"look6":0.092,"pieces":14,"positions":441,"quick_fail_share":0.14,"safe_share":0.07,"shortcut":0.125,"solution":14,"steps":12,"trap_delay":8,"undo_proof":0.86}
+== J5ss54_o548: 548 positions, winnable true
+   1  r4c6^ ram    lose: r1c5<(5) r3c5>(12) r6c6>(13)
+   2  r1c6>        lose: r1c5<(4) r3c5>(11) r6c6>(12)
+   3  r2c6^        lose: r1c5^(9) r3c5>(10) r6c6>(11)
+   4  r4c6^        lose: r1c5^(8) r3c5>(9) r6c6>(10)
+   5  r2c5>        lose: r1c5^(7) r3c5>(8) r6c6>(9)
+   6  r1c5>        lose: r6c6>(8)
+   7  r3c4v        lose: r3c5^(6) r6c6>(7)
+   8  r4c5>        lose: r6c6>(6)
+   9  r3c5v        lose: r6c6>(5)
+  10  r4c3>        lose: r3c3>(4) r6c6>(4)
+  11  r3c3>        lose: r6c6>(3)
+  12  r5c2<        lose: 
+  13  r5c3<        lose: 
+  14  r2c3v        lose: 
+  15  r4c1v        lose: r6c6>(0)
+  16  r3c1v        lose: 
+  17  r6c6>        lose: 
+  greedy {"look2":0,"look4":0.01,"min_turn":0,"mobility":0,"safe":0}
+  features {"calm_prefix":1,"concurrency":0.76,"coverage":0.71,"deep_traps":6,"distinct":6,"effective_decisions":11,"learner4":4,"learner6":3,"look6":0.042,"pieces":16,"positions":548,"quick_fail_share":0.08,"safe_share":0.06,"shortcut":0.008,"solution":17,"steps":12,"trap_delay":8,"undo_proof":0.92}

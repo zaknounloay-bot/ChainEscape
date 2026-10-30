@@ -1,0 +1,17 @@
+{
+ "J1ss52_c1": {
+  "map": [
+   ". . . . . Y^ .",
+   ". . R> R> P> B^ .",
+   ". . Y^= R^* . Gv .",
+   ". . G^ B< . B< .",
+   ". . . B<* . Y> .",
+   ". . . P>= . . .",
+   ". . . . . B<= ."
+  ],
+  "target": "EXTREME",
+  "facts": [],
+  "mechanic": "magnet,armor",
+  "max_positions": 2000
+ }
+}

@@ -1,0 +1,11 @@
+{
+ "J2ss53_c5": {
+  "distinct": 6,
+  "pieces_tested": 15,
+  "steps": 13,
+  "trivial": [
+   "r4c0 R^&A+C"
+  ],
+  "trivial_removals": 1
+ }
+}

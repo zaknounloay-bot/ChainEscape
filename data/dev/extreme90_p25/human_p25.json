@@ -1,0 +1,116 @@
+{
+ "source": "Phase 26 brief: Phase 25 boards tested by two experienced players (player 1: the project owner; player 2: his son). Identities kept separate. Sessions are NOT assumed fully independent (same household; whether solutions or guidance were shared is not recorded).",
+ "recorded": "2026-10-30",
+ "independence": "not established - the two players may have shared solutions or guidance",
+ "boards": {
+  "N53": {
+   "player_1": {
+    "rating": "EXTREME",
+    "timed_outcome": "TIME UP",
+    "time_s": 90,
+    "attempts": 5,
+    "enjoy": 5
+   },
+   "player_2": {
+    "status": "NOT TESTED"
+   },
+   "classification": "STRONG PROVISIONAL",
+   "fingerprint": "6a918b1b8bc895e302f0287a78bf2aded368f9a1d8dbc2c718eee0478dc7b5f9"
+  },
+  "N54": {
+   "player_1": {
+    "rating": "MEDIUM",
+    "timed_outcome": "COMPLETED",
+    "time_s": 45.6,
+    "attempts": 3,
+    "enjoy": 5
+   },
+   "player_2": {
+    "status": "NOT TESTED"
+   },
+   "classification": "DOWNGRADED",
+   "fingerprint": "aab13f09c929ea69aa25a0b17635d456de3a4ed852974dca324a2155eacbcc9c"
+  },
+  "N55": {
+   "player_1": {
+    "rating": "VERY HARD",
+    "timed_outcome": "TIME UP",
+    "time_s": 90,
+    "attempts": 6,
+    "enjoy": 5
+   },
+   "player_2": {
+    "timed_outcome": "GAVE UP",
+    "time_s": 3.5,
+    "moves": 0,
+    "valid": false,
+    "note": "gave up after 3.5 s without a move - INVALID for difficulty assessment"
+   },
+   "classification": "STRONG PROVISIONAL",
+   "fingerprint": "10fd41a0c89bbb7a2865a8a0d04d72a55d15ec8e2a3118f6a96f40b2ec1e52ae"
+  },
+  "N56": {
+   "player_1": {
+    "rating": "EXTREME",
+    "timed_outcome": "TIME UP",
+    "time_s": 90,
+    "attempts": 4,
+    "enjoy": 5
+   },
+   "player_2": {
+    "rating": "VERY HARD",
+    "timed_outcome": "GAVE UP",
+    "time_s": 88.4,
+    "attempts": 5,
+    "enjoy": 4
+   },
+   "classification": "STRONG PROVISIONAL",
+   "fingerprint": "5d822d1425bb25830977fd12fa79f99b092c9e825e33ea33ecc2f8e6010f387b"
+  },
+  "N57": {
+   "player_1": {
+    "rating": "EASY",
+    "timed_outcome": "COMPLETED",
+    "time_s": 19.0,
+    "attempts": 1,
+    "enjoy": 5
+   },
+   "player_2": {
+    "first_run": {
+     "timed_outcome": "INTERRUPTED",
+     "moves": 0,
+     "valid": false
+    },
+    "second_run": {
+     "rating": "HARD",
+     "timed_outcome": "COMPLETED",
+     "time_s": 29.2,
+     "enjoy": 3
+    },
+    "note": "the second run is treated as the first USEFUL observation (the first had zero moves); it is not an independent replay difficulty benchmark"
+   },
+   "classification": "DOWNGRADED",
+   "fingerprint": "0bac175e88976f554e45f417b0b012ce6bd5beaabda6cd06bc4dc997ab8d46e1"
+  },
+  "N58": {
+   "player_1": {
+    "rating": "HARD",
+    "timed_outcome": "COMPLETED",
+    "time_s": 64.4,
+    "attempts": 3,
+    "enjoy": 5
+   },
+   "player_2": {
+    "rating": "HARD",
+    "timed_outcome": "COMPLETED",
+    "time_s": 32.4,
+    "attempts": 2,
+    "enjoy": 4
+   },
+   "classification": "DOWNGRADED",
+   "fingerprint": "ddfb46c251b1a93b0dde87cc4f7af3de892c783eb1d90512d6c359a097ca39c1"
+  }
+ },
+ "decision": "N53, N55, N56 STRONG PROVISIONAL (not counted toward the 50); N54, N57, N58 DOWNGRADED. No Phase 25 board is human-approved.",
+ "caveat": "two players, possibly not independent; small sample; not a statistically validated difficulty label"
+}

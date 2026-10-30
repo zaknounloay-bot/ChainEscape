@@ -1,0 +1,86 @@
+{
+ "J3sJ3_BOOMERANG_s53_c1": {
+  "map": [
+   ". . P<@- P>@- Y^@~ G>@~ .",
+   ". B^@ Y^@- Gv@~ . B^* .",
+   ". Gv= P>@ R^* . Y^= .",
+   ". . . P< . . .",
+   ". . . . . . .",
+   ". . B^@~= B<:> . . .",
+   ". . . . . . ."
+  ],
+  "mechanic": "magnet,sequence,armor",
+  "positions": 216,
+  "score": 155.27
+ },
+ "J3sJ3_BOOMERANG_s53_c2": {
+  "map": [
+   ". . P^@~ P>@- . G>@~ .",
+   ". . Y^@- Gv@~ . B^* .",
+   ". Gv= P>@ R^* . Y^= .",
+   ". . . P< . . .",
+   ". . . Y>@ . . .",
+   ". Bv= B^@ B<:> . . .",
+   ". . . . . . ."
+  ],
+  "mechanic": "magnet,sequence,armor",
+  "positions": 217,
+  "score": 149.97
+ },
+ "J3sJ3_BOOMERANG_s53_c3": {
+  "map": [
+   ". . P^@~ P>@- Y^@~ G>@~ .",
+   ". . Y^@- Gv@~ . B^* .",
+   ". Gv= P>@ R^* . Y^= .",
+   ". . . P< . . .",
+   ". . . . . . .",
+   ". Bv= B^ B<:> . . .",
+   ". . . . . . ."
+  ],
+  "mechanic": "magnet,sequence,armor",
+  "positions": 237,
+  "score": 152.71
+ },
+ "J3sJ3_BOOMERANG_s53_c4": {
+  "map": [
+   ". . P^@~ P>@- . G>@ .",
+   ". . Y^@- Gv@~ . B^* .",
+   ". Gv= P>@ R^* . Y^= .",
+   ". . . P< . . .",
+   ". . . Y>@ . . .",
+   ". . B^ B<:> . . .",
+   ". . . . . . ."
+  ],
+  "mechanic": "magnet,sequence,armor",
+  "positions": 243,
+  "score": 148.56
+ },
+ "J3sJ3_BOOMERANG_s53_c5": {
+  "map": [
+   ". . . . . . .",
+   ". . . . . B^* .",
+   ". Gv= . R^* . Y^= .",
+   ". . . P> . . .",
+   ". . . Y>@ . . .",
+   ". Bv= B^ B<:> . . .",
+   ". . . . . . ."
+  ],
+  "mechanic": "magnet,sequence,armor",
+  "positions": 243,
+  "score": 137.28
+ },
+ "J3sJ3_BOOMERANG_s53_c6": {
+  "map": [
+   ". . P^@~ P>@- Yv@- G>@~ .",
+   ". . Y^@- Gv@~ . B^* .",
+   ". Gv= P>@ R^* . Y^= .",
+   ". . . P< . . .",
+   ". . . . . . .",
+   ". Bv= B^ B<:> . R<@- .",
+   ". . . . . . ."
+  ],
+  "mechanic": "magnet,sequence,armor",
+  "positions": 252,
+  "score": 152.29
+ }
+}

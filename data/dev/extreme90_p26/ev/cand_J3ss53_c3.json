@@ -1,0 +1,17 @@
+{
+ "J3ss53_c3": {
+  "map": [
+   ". . P^@~ P>@- Y^@~ G>@~ .",
+   ". . Y^@- Gv@~ . B^* .",
+   ". Gv= P>@ R^* . Y^= .",
+   ". . . P< . . .",
+   ". . . . . . .",
+   ". Bv= B^ B<:> . . .",
+   ". . . . . . ."
+  ],
+  "target": "EXTREME",
+  "facts": [],
+  "mechanic": "magnet,sequence,armor",
+  "max_positions": 2000
+ }
+}

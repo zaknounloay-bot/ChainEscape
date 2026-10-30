@@ -1,0 +1,17 @@
+{
+ "J4ss53_c5": {
+  "map": [
+   ". . . . . . .",
+   ". P> . R^* Rv= . .",
+   ". R< . R< . . .",
+   ". . . Y^= . . Y<",
+   ". B<* . R^* . . P^",
+   ". G>= . B> R> . B^",
+   ". . . Yv . . ."
+  ],
+  "target": "EXTREME",
+  "facts": [],
+  "mechanic": "magnet,armor",
+  "max_positions": 2000
+ }
+}

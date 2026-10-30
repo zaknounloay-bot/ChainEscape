@@ -1,0 +1,131 @@
+{
+ "J2ss53_o395f": {
+  "A": {
+   "fingerprint": "c43e97e7473d60df204a31b21607c30a7e3fa93336766cd7d2a25dfade98aef2",
+   "hint_nodes": [
+    58,
+    107
+   ],
+   "parity": [
+    0,
+    0
+   ],
+   "portals": 0,
+   "position_cap": 2000,
+   "positions": 486,
+   "replay": true,
+   "solution": 14,
+   "solve_ms": 6.9,
+   "timeup_worst_ms": 13.7,
+   "timeup_worst_nodes": 340,
+   "winnable": 28
+  },
+  "B": {
+   "coverage": 0.93,
+   "decision_steps": 13,
+   "distinct_mistakes": 5,
+   "endgame_decision": true,
+   "last_decision": 13,
+   "late": 0.93,
+   "line": [
+    "r2c1< [x5]",
+    "r1c1> [x4]",
+    "r2c2^ [x4]",
+    "r2c4< [x4]",
+    "r3c4> [x3]",
+    "r3c1> [x3]",
+    "r5c1^ [x3]",
+    "r5c0> ram [x2]",
+    "r5c4^ [x2]",
+    "r5c5^ [x1]",
+    "r5c3> [x1]",
+    "r5c0> [x1]",
+    "r4c0v [x1]",
+    "r6c6>"
+   ],
+   "losing_per_step": [
+    5,
+    4,
+    4,
+    4,
+    3,
+    3,
+    3,
+    2,
+    2,
+    1,
+    1,
+    1,
+    1,
+    0
+   ],
+   "matters_gate": true,
+   "matters_switch": true,
+   "mistakes": [
+    "r1c1^",
+    "r3c4>",
+    "r5c0<",
+    "r5c5>",
+    "r6c6>"
+   ],
+   "shortcut": 0,
+   "spinner_dependence": "unsolvable without it",
+   "without_gate": "without it: 10 decision steps, 5 distinct mistakes (with it: 13, 5)",
+   "without_switch": "unsolvable without it"
+  },
+  "C": {
+   "decisions_k4_6_8": [
+    8,
+    6,
+    4
+   ],
+   "deepest": 12,
+   "greedy": {
+    "look2": 0,
+    "look4": 0,
+    "min_turn": 0,
+    "mobility": 0,
+    "safe": 0
+   },
+   "hidden_k6_8": [
+    19,
+    11
+   ],
+   "learner": {
+    "look4": 6,
+    "look6": 5
+   },
+   "look6_greedy": 0.008,
+   "opening": "1 / 6",
+   "pressure": {
+    "advances": 0,
+    "calm_prefix": 0,
+    "flips": 2,
+    "multi_turned": 0,
+    "prediction_share": 0.29,
+    "pulls": 0,
+    "rams": 1,
+    "signals": 1,
+    "spinners_turned": 3,
+    "trap_delay_median": 6,
+    "turns": 3,
+    "undo_proof": 0.74
+   },
+   "win_share": 0.058
+  },
+  "map": [
+   ". . . . . . .",
+   ". R^@ . . . . .",
+   ". R<@-= P>@- . Y<@- . .",
+   "XC B>&A+C . . R>+C . .",
+   "R^&A+C . . . . . .",
+   "P<&A Y^%A . G>= B^@- G>@- .",
+   ". . . . . . P>%A"
+  ],
+  "name": "J2ss53_o395f",
+  "target": "EXTREME",
+  "verdict": "HUMAN-REVIEW CANDIDATE",
+  "why_a": [],
+  "why_b": []
+ }
+}

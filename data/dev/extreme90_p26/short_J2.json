@@ -1,0 +1,86 @@
+{
+ "J2sJ2_SELFDEADLOCK_s53_c1": {
+  "map": [
+   ". . . . . . .",
+   ". . R^ . . . .",
+   ". R<@-= G>@- . Y<@- . .",
+   "XC B>&A+C B^@- Yv R> . .",
+   "R^&A+C . . . . . .",
+   ". . . G>= B^@- G>@- .",
+   ". . . . . . P>%A"
+  ],
+  "mechanic": "switch,gate",
+  "positions": 191,
+  "score": 138.31
+ },
+ "J2sJ2_SELFDEADLOCK_s53_c2": {
+  "map": [
+   ". . . . . . .",
+   ". . R>@ . . . .",
+   ". R<@-= G^ . Y<@- . .",
+   "XC B>&A+C . Yv R> . .",
+   "R^&A+C . . . . . .",
+   ". P^%A . G>= B^@- G>@- .",
+   ". . . P^@- . . P>%A"
+  ],
+  "mechanic": "switch,gate",
+  "positions": 195,
+  "score": 136.4
+ },
+ "J2sJ2_SELFDEADLOCK_s53_c3": {
+  "map": [
+   ". . . . . . .",
+   ". . R> . . . .",
+   ". R<@-= G>@- . Y<@- . .",
+   "XC B>&A+C B^@- Yv R> . .",
+   "R^&A+C . . . . . .",
+   ". . B^@- G>= B^@- G>@- .",
+   ". . . . . . P>%A"
+  ],
+  "mechanic": "switch,gate",
+  "positions": 197,
+  "score": 141.01
+ },
+ "J2sJ2_SELFDEADLOCK_s53_c4": {
+  "map": [
+   ". . . . . . .",
+   ". . R>@~ . . . .",
+   ". R<@-= G<@~ . Y<@- . .",
+   "XC B>&A+C B^@- Yv R> . .",
+   "R^&A+C . . . . . .",
+   ". . B^@- G>= B^@- G^@ .",
+   ". . . . . . P>%A"
+  ],
+  "mechanic": "switch,gate",
+  "positions": 197,
+  "score": 141.01
+ },
+ "J2sJ2_SELFDEADLOCK_s53_c5": {
+  "map": [
+   ". . . . . . .",
+   ". P^@~+C R>@~ . . . .",
+   ". R<@-= G<@~ . Y<@- . .",
+   "XC B>&A+C B^@- Yv R> . .",
+   "R^&A+C . . . . . .",
+   ". . B^@- G> B^@- G^@ .",
+   ". . . . . . P>%A"
+  ],
+  "mechanic": "switch,gate",
+  "positions": 203,
+  "score": 148.94
+ },
+ "J2sJ2_SELFDEADLOCK_s53_c6": {
+  "map": [
+   ". . . . . . .",
+   ". P^@~+C R>@~ . . . .",
+   ". R<@-= G<@~ . Y<@- . .",
+   "XC B>&A+C B^@- Yv R> . .",
+   "R^&A+C . . . . . .",
+   ". . B^@- G> B^@- G^&A .",
+   ". . . . . . P>%A"
+  ],
+  "mechanic": "switch,gate",
+  "positions": 203,
+  "score": 148.94
+ }
+}

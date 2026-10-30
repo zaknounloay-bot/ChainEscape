@@ -1,0 +1,59 @@
+{
+ "target": "EXTREME",
+ "facts": [],
+ "mechanic": "magnet,sequence,armor",
+ "idea": "P26 hand core G3a: a magnet pulls a first-stage Sequence block into the row of two shells - it rams the left one, advances (its arrow turns around) and rams the right one; advanced or moved before the pull it arrives facing one way only",
+ "family": "P26 relocated boomerang",
+ "map": [
+  ". . . . . . .",
+  ". . . . . . .",
+  ". Gv= . R^* . Y^= .",
+  ". . . . . . .",
+  ". . . . . . .",
+  ". . . B<:> . . .",
+  ". . . . . . ."
+ ],
+ "frozen": [
+  [
+   2,
+   1
+  ],
+  [
+   2,
+   3
+  ],
+  [
+   2,
+   5
+  ],
+  [
+   5,
+   3
+  ]
+ ],
+ "max_positions": 2000,
+ "piece_free": 13,
+ "max_pieces": 17,
+ "shortcut_weight": 80,
+ "coverage_weight": 25,
+ "late_weight": 20,
+ "endgame_weight": 20,
+ "length_weight": 1.0,
+ "length_cap": 18,
+ "pressure_weight": 1.5,
+ "palette": "all",
+ "suffixes": [
+  "*",
+  "="
+ ],
+ "suffix_rate": 0.3,
+ "suffix_max": {
+  "*": 2,
+  "=": 3
+ },
+ "crates_max": 0,
+ "seed": 192,
+ "size": "medium",
+ "max_solve_nodes": 1500,
+ "phase26_core": "J3_BOOMERANG"
+}

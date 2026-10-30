@@ -1,0 +1,338 @@
+{
+ "J1ss52_c1": {
+  "map": [
+   ". . . . . Y^ .",
+   ". . R> R> P> B^ .",
+   ". . Y^= R^* . Gv .",
+   ". . G^ B< . B< .",
+   ". . . B<* . Y> .",
+   ". . . P>= . . .",
+   ". . . . . B<= ."
+  ],
+  "mechanic": "magnet,armor",
+  "positions": 171,
+  "score": 140.74
+ },
+ "J1ss52_c2": {
+  "map": [
+   ". . . . . Y^ .",
+   ". . R> R> . B^ R^",
+   ". . Y^= R^* . Gv .",
+   ". . G^ B< . B< .",
+   ". . . B<* . Y> .",
+   ". . . P>= . . .",
+   ". . . . . B>= ."
+  ],
+  "mechanic": "magnet,armor",
+  "positions": 187,
+  "score": 140.68
+ },
+ "J1ss52_c3": {
+  "map": [
+   ". . . G^ . . .",
+   ". . G> R> . . .",
+   ". . Y^= R^* . Gv .",
+   ". . G^ B< . B< .",
+   ". . . B<* . Y> .",
+   ". . . P>= . . .",
+   ". . . . . B>= ."
+  ],
+  "mechanic": "magnet,armor",
+  "positions": 196,
+  "score": 137.57
+ },
+ "J1ss52_c4": {
+  "map": [
+   ". . . G^ . . .",
+   ". . R> R> . B^ .",
+   ". . Y^= R^* . Gv R<*",
+   ". . G^ B< . B< .",
+   ". . . B<* . Y> .",
+   ". . . P>= . . .",
+   ". . . . . B>= ."
+  ],
+  "mechanic": "magnet,armor",
+  "positions": 223,
+  "score": 137.37
+ },
+ "J1ss52_c5": {
+  "map": [
+   ". . . G^ . . .",
+   ". . R> R> Rv B^ .",
+   ". . Y^= R^* . Gv .",
+   ". . G^ B< . B< .",
+   ". . . B<* . Y> .",
+   ". . . P>= . . .",
+   ". . . . . B>= ."
+  ],
+  "mechanic": "magnet,armor",
+  "positions": 244,
+  "score": 140.45
+ },
+ "J1ss52_c6": {
+  "map": [
+   ". . . . . Y^ .",
+   ". . R> R> . B^ R^",
+   ". . Y^= R^* . Gv .",
+   ". . G^ B< . B< Y<",
+   ". . . B<* . Y> .",
+   ". . . P>= . . .",
+   ". . . . . B>= ."
+  ],
+  "mechanic": "magnet,armor",
+  "positions": 255,
+  "score": 140.65
+ },
+ "J2ss53_c1": {
+  "map": [
+   ". . . . . . .",
+   ". . R^ . . . .",
+   ". R<@-= G>@- . Y<@- . .",
+   "XC B>&A+C B^@- Yv R> . .",
+   "R^&A+C . . . . . .",
+   ". . . G>= B^@- G>@- .",
+   ". . . . . . P>%A"
+  ],
+  "mechanic": "switch,gate",
+  "positions": 191,
+  "score": 138.31
+ },
+ "J2ss53_c2": {
+  "map": [
+   ". . . . . . .",
+   ". . R>@ . . . .",
+   ". R<@-= G^ . Y<@- . .",
+   "XC B>&A+C . Yv R> . .",
+   "R^&A+C . . . . . .",
+   ". P^%A . G>= B^@- G>@- .",
+   ". . . P^@- . . P>%A"
+  ],
+  "mechanic": "switch,gate",
+  "positions": 195,
+  "score": 136.4
+ },
+ "J2ss53_c3": {
+  "map": [
+   ". . . . . . .",
+   ". . R> . . . .",
+   ". R<@-= G>@- . Y<@- . .",
+   "XC B>&A+C B^@- Yv R> . .",
+   "R^&A+C . . . . . .",
+   ". . B^@- G>= B^@- G>@- .",
+   ". . . . . . P>%A"
+  ],
+  "mechanic": "switch,gate",
+  "positions": 197,
+  "score": 141.01
+ },
+ "J2ss53_c4": {
+  "map": [
+   ". . . . . . .",
+   ". . R>@~ . . . .",
+   ". R<@-= G<@~ . Y<@- . .",
+   "XC B>&A+C B^@- Yv R> . .",
+   "R^&A+C . . . . . .",
+   ". . B^@- G>= B^@- G^@ .",
+   ". . . . . . P>%A"
+  ],
+  "mechanic": "switch,gate",
+  "positions": 197,
+  "score": 141.01
+ },
+ "J2ss53_c5": {
+  "map": [
+   ". . . . . . .",
+   ". P^@~+C R>@~ . . . .",
+   ". R<@-= G<@~ . Y<@- . .",
+   "XC B>&A+C B^@- Yv R> . .",
+   "R^&A+C . . . . . .",
+   ". . B^@- G> B^@- G^@ .",
+   ". . . . . . P>%A"
+  ],
+  "mechanic": "switch,gate",
+  "positions": 203,
+  "score": 148.94
+ },
+ "J2ss53_c6": {
+  "map": [
+   ". . . . . . .",
+   ". P^@~+C R>@~ . . . .",
+   ". R<@-= G<@~ . Y<@- . .",
+   "XC B>&A+C B^@- Yv R> . .",
+   "R^&A+C . . . . . .",
+   ". . B^@- G> B^@- G^&A .",
+   ". . . . . . P>%A"
+  ],
+  "mechanic": "switch,gate",
+  "positions": 203,
+  "score": 148.94
+ },
+ "J3ss53_c1": {
+  "map": [
+   ". . P<@- P>@- Y^@~ G>@~ .",
+   ". B^@ Y^@- Gv@~ . B^* .",
+   ". Gv= P>@ R^* . Y^= .",
+   ". . . P< . . .",
+   ". . . . . . .",
+   ". . B^@~= B<:> . . .",
+   ". . . . . . ."
+  ],
+  "mechanic": "magnet,sequence,armor",
+  "positions": 216,
+  "score": 155.27
+ },
+ "J3ss53_c2": {
+  "map": [
+   ". . P^@~ P>@- . G>@~ .",
+   ". . Y^@- Gv@~ . B^* .",
+   ". Gv= P>@ R^* . Y^= .",
+   ". . . P< . . .",
+   ". . . Y>@ . . .",
+   ". Bv= B^@ B<:> . . .",
+   ". . . . . . ."
+  ],
+  "mechanic": "magnet,sequence,armor",
+  "positions": 217,
+  "score": 149.97
+ },
+ "J3ss53_c3": {
+  "map": [
+   ". . P^@~ P>@- Y^@~ G>@~ .",
+   ". . Y^@- Gv@~ . B^* .",
+   ". Gv= P>@ R^* . Y^= .",
+   ". . . P< . . .",
+   ". . . . . . .",
+   ". Bv= B^ B<:> . . .",
+   ". . . . . . ."
+  ],
+  "mechanic": "magnet,sequence,armor",
+  "positions": 237,
+  "score": 152.71
+ },
+ "J3ss53_c4": {
+  "map": [
+   ". . P^@~ P>@- . G>@ .",
+   ". . Y^@- Gv@~ . B^* .",
+   ". Gv= P>@ R^* . Y^= .",
+   ". . . P< . . .",
+   ". . . Y>@ . . .",
+   ". . B^ B<:> . . .",
+   ". . . . . . ."
+  ],
+  "mechanic": "magnet,sequence,armor",
+  "positions": 243,
+  "score": 148.56
+ },
+ "J3ss53_c5": {
+  "map": [
+   ". . . . . . .",
+   ". . . . . B^* .",
+   ". Gv= . R^* . Y^= .",
+   ". . . P> . . .",
+   ". . . Y>@ . . .",
+   ". Bv= B^ B<:> . . .",
+   ". . . . . . ."
+  ],
+  "mechanic": "magnet,sequence,armor",
+  "positions": 243,
+  "score": 137.28
+ },
+ "J3ss53_c6": {
+  "map": [
+   ". . P^@~ P>@- Yv@- G>@~ .",
+   ". . Y^@- Gv@~ . B^* .",
+   ". Gv= P>@ R^* . Y^= .",
+   ". . . P< . . .",
+   ". . . . . . .",
+   ". Bv= B^ B<:> . R<@- .",
+   ". . . . . . ."
+  ],
+  "mechanic": "magnet,sequence,armor",
+  "positions": 252,
+  "score": 152.29
+ },
+ "J4ss53_c1": {
+  "map": [
+   ". B^ . Y< . . .",
+   ". P> . R^* Rv . .",
+   ". . . R< . . .",
+   ". . . Y^= . . .",
+   ". B<* . R^* . . .",
+   ". G>= . . . . .",
+   ". . . Yv . . ."
+  ],
+  "mechanic": "magnet,armor",
+  "positions": 162,
+  "score": 131.35
+ },
+ "J4ss53_c2": {
+  "map": [
+   ". B^ . . . . .",
+   ". P> . R^* . . .",
+   ". . . R< . . .",
+   ". . . Y^= . . .",
+   "Rv= B<* . R^* . . .",
+   ". G>= . . . . .",
+   ". . . Yv . . ."
+  ],
+  "mechanic": "magnet,armor",
+  "positions": 205,
+  "score": 130.78
+ },
+ "J4ss53_c3": {
+  "map": [
+   ". B^ . . . . .",
+   "B> P> . R^* Rv . .",
+   ". . . R< . . .",
+   ". . . Y^= . . .",
+   ". B<* . R^* . . .",
+   ". G>= . . . . .",
+   ". . . Yv . . ."
+  ],
+  "mechanic": "magnet,armor",
+  "positions": 219,
+  "score": 130.92
+ },
+ "J4ss53_c4": {
+  "map": [
+   ". . . B>= . . .",
+   ". . . R^* Rv . .",
+   ". . . P> . . .",
+   ". . . Y^= . . .",
+   ". B<* . R^* . . .",
+   ". G>= . . . . .",
+   ". . . Yv G< . ."
+  ],
+  "mechanic": "magnet,armor",
+  "positions": 230,
+  "score": 133.18
+ },
+ "J4ss53_c5": {
+  "map": [
+   ". . . . . . .",
+   ". P> . R^* Rv= . .",
+   ". R< . R< . . .",
+   ". . . Y^= . . Y<",
+   ". B<* . R^* . . P^",
+   ". G>= . B> R> . B^",
+   ". . . Yv . . ."
+  ],
+  "mechanic": "magnet,armor",
+  "positions": 255,
+  "score": 146.03
+ },
+ "J4ss53_c6": {
+  "map": [
+   ". . . Y^ . . .",
+   ". P> . R^* Rv= . .",
+   ". . . R< . . .",
+   ". . . Y^= . . Y<",
+   ". B<* . R^* . . P^",
+   ". G>= . B> R> . B^",
+   ". . . Yv . . ."
+  ],
+  "mechanic": "magnet,armor",
+  "positions": 255,
+  "score": 146.03
+ }
+}

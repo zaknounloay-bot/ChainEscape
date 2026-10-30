@@ -1,0 +1,11 @@
+{
+ "J2ss54_o441": {
+  "distinct": 5,
+  "pieces_tested": 13,
+  "steps": 12,
+  "trivial": [
+   "r4c0 R^&A+C"
+  ],
+  "trivial_removals": 1
+ }
+}

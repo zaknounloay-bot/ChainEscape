@@ -1,0 +1,63 @@
+{
+ "fixed_before_generating": "2026-10-30 (before any Phase 26 generator run)",
+ "role": "TARGETED REFINEMENT of hand-designed cores (docs/extreme90_phase26.md): core cells frozen; tools/ta90_search.gd --ops=v20 (unchanged) only adds blocks around them",
+ "families": {
+  "J1_MAGPULLMAG": [
+   "J1_MAGPULLMAG"
+  ],
+  "J2_SELFDEADLOCK": [
+   "J2_SELFDEADLOCK"
+  ],
+  "J3_BOOMERANG": [
+   "J3_BOOMERANG"
+  ],
+  "J4_RELAY": [
+   "J4_RELAY"
+  ],
+  "J5_KEYFACE": [
+   "J5_KEYFACE"
+  ]
+ },
+ "budget": {
+  "concepts": "8-10 proposals",
+  "revisions_per_concept": 8,
+  "generator_runs_max": 16,
+  "full_evaluations_max": 24,
+  "per_run": {
+   "minutes": 12,
+   "batch": 40,
+   "beam": 5,
+   "patience": 8,
+   "ops": "v20"
+  }
+ },
+ "selection": "per run, candidates picked by solver cost (positions) first, then score (Phase 25 amendment, kept); at most 2 full evaluations per run unless the budget allows more; one board per concept",
+ "acceptance": "Phase 21 rules unchanged (Category A AND B, every mechanic essential, 0 filler, overlap < 0.40) + by-hand core check on the Solver's line + conceptual novelty + the Phase 26 human-like shortcut audit (tools/ta90_humanlike26.gd, diagnostic: reject an obvious shortcut found by inspection)",
+ "excluded": "N52 magnet cascade, N44/N58 Sequence pushers, N33/N56/N57 crate-spinner, spinner-counting patterns; P25 H6 portal remote crack",
+ "seeds_rng": {
+  "round 1": 51,
+  "round 2": 52
+ },
+ "amendments": [
+  {
+   "when": "2026-10-30, after round 1 (seed 51) and before any report",
+   "what": "J2 and J3 grow with the full palette (spinners may be added around the frozen non-spinner core); J1 and J4 stay plain arrows (J1 seed 52 already reaches 6 distinct mistakes)",
+   "why": "seed 51: 0 qualifying boards on all three cores; on plain arrows each core repeats ONE losing move at many steps (distinct 2-3 < 4); hand enrichment (J1b, J2b, J3b) did not raise it",
+   "unchanged": "every threshold; the run budget (16); by-hand check that the frozen core still drives the Solver's line"
+  },
+  {
+   "when": "2026-10-30, after rounds 52/53, before any full evaluation",
+   "what": "among each run's 6 cheapest qualifying boards (<= 700 positions), the board sent to full evaluation is chosen by the Phase 26 diagnostics (tools/ta90_humanlike26.gd): deeper dependency depth, fewer safe opening moves, lower calm-player win chance; one board per concept first, a second only if the first fails",
+   "why": "Phase 25 showed that technical qualification does not predict human difficulty; the diagnostics rank, they reject nothing",
+   "unchanged": "every threshold and gate"
+  }
+ ],
+ "budget_extensions": [
+  {
+   "when": "2026-10-30, after rounds 52/53 and 7 full evaluations",
+   "what": "seed 54 for J2 (no valid board under 0.40 overlap in seed 53) and a lock form of the same reversal-deadlock shape (J5, hand core J5c) as its fallback - ONE board at most from the two",
+   "why": "J1 and J3 qualify; J4 qualifies technically but is J1's mechanism (M2 fired first pulls M1) - one concept, J1 kept; J2's valid boards all overlap N43 >= 0.40",
+   "unchanged": "16-run ceiling (runs 8 and 9 of 16), 24-evaluation ceiling"
+  }
+ ]
+}

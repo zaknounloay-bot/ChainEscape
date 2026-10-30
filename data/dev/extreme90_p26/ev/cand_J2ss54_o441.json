@@ -1,0 +1,17 @@
+{
+ "J2ss54_o441": {
+  "map": [
+   ". . . . . . .",
+   ". . . . . . .",
+   ". . . Pv@~ . . .",
+   "XC B>&A+C . Yv . Y>@- B^@~",
+   "R^&A+C . . P>+C . P^@ G>@",
+   ". . . G<@ . . .",
+   ". . . R>@ . B^= P>%A"
+  ],
+  "target": "EXTREME",
+  "facts": [],
+  "mechanic": "switch,gate",
+  "max_positions": 2000
+ }
+}
