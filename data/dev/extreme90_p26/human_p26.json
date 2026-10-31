@@ -1,0 +1,23 @@
+{
+ "source": "Phase 27 brief: Phase 26 boards rated by the project owner's testing (player difficulty ratings as stated in the brief). Only the facts given are recorded; attempts, times and the player's identity per board were not given.",
+ "recorded": "2026-10-30",
+ "boards": {
+  "N59": {
+   "rating": "EXTREME",
+   "timed_outcome": "TIME UP",
+   "fingerprint": "d54c92071ff4680382e64354247f12c8ce705173eb825fa541982f1a605f8683"
+  },
+  "N60": {
+   "rating": "MEDIUM",
+   "timed_outcome": "not stated",
+   "fingerprint": "593595bff375cf6066dcce92a1d97e463e7c534450620d2061cd1d2197be233b"
+  },
+  "N61": {
+   "rating": "VERY HARD",
+   "timed_outcome": "TIME UP",
+   "fingerprint": "52dab141f91a0947629d9d5e708606a151a10714769f5890d8378d099a75e5bc"
+  }
+ },
+ "phase26_diagnostic_flags_vs_outcome": "N60 was the board the Phase 26 audit flagged as weakest (mobility greedy 16.5%, look6 0.10) - rated MEDIUM; N61 flagged for few forced steps - rated VERY HARD; N59 flagged for a 4-move calm opening - rated EXTREME",
+ "caveat": "small sample, related players; not a statistically validated label"
+}

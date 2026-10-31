@@ -1,0 +1,138 @@
+{
+ "L4s62_494_1": {
+  "A": {
+   "fingerprint": "c4757a843f9ee69ab3b07f7115b08414a65d8403faa6c8d03db5729e03077cac",
+   "hint_nodes": [
+    225,
+    151
+   ],
+   "parity": [
+    0,
+    0
+   ],
+   "portals": 0,
+   "position_cap": 2000,
+   "positions": 494,
+   "replay": true,
+   "solution": 18,
+   "solve_ms": 9.2,
+   "timeup_worst_ms": 9.6,
+   "timeup_worst_nodes": 241,
+   "winnable": 275
+  },
+  "B": {
+   "coverage": 0.78,
+   "decision_steps": 14,
+   "distinct_mistakes": 4,
+   "endgame_decision": true,
+   "last_decision": 16,
+   "late": 0.89,
+   "line": [
+    "r0c5v ram [x1]",
+    "r6c5v [x1]",
+    "r4c0^ [x2]",
+    "r4c1< [x2]",
+    "r4c2< [x2]",
+    "r4c4< [x2]",
+    "r3c4> [x1]",
+    "r0c4v ram [x1]",
+    "r1c3^",
+    "r3c1>",
+    "r6c4> [x1]",
+    "r0c4v [x1]",
+    "r0c5< [x1]",
+    "r6c1v [x1]",
+    "r5c1< [x1]",
+    "r5c3> [x1]",
+    "r6c3>",
+    "r2c3v"
+   ],
+   "losing_per_step": [
+    1,
+    1,
+    2,
+    2,
+    2,
+    2,
+    1,
+    1,
+    0,
+    0,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    0,
+    0
+   ],
+   "matters_gate": true,
+   "matters_lock": true,
+   "mistakes": [
+    "r3c4>",
+    "r0c5v",
+    "r5c1^",
+    "r6c3>"
+   ],
+   "shortcut": 0.042,
+   "spinner_dependence": "without it: 0 decision steps, 0 distinct mistakes (with it: 14, 4)",
+   "without_gate": "without it: 15 decision steps, 4 distinct mistakes (with it: 14, 4)",
+   "without_lock": "without it: 0 decision steps, 0 distinct mistakes (with it: 14, 4)"
+  },
+  "C": {
+   "decisions_k4_6_8": [
+    8,
+    7,
+    5
+   ],
+   "deepest": 13,
+   "greedy": {
+    "look2": 0.035,
+    "look4": 0.042,
+    "min_turn": 0,
+    "mobility": 0,
+    "safe": 0.03
+   },
+   "hidden_k6_8": [
+    11,
+    8
+   ],
+   "learner": {
+    "look4": 2,
+    "look6": 2
+   },
+   "look6_greedy": 0.05,
+   "opening": "3 / 4",
+   "pressure": {
+    "advances": 0,
+    "calm_prefix": 2,
+    "flips": 0,
+    "multi_turned": 1,
+    "prediction_share": 0.28,
+    "pulls": 0,
+    "rams": 2,
+    "signals": 3,
+    "spinners_turned": 3,
+    "trap_delay_median": 7,
+    "turns": 4,
+    "undo_proof": 0.67
+   },
+   "win_share": 0.557
+  },
+  "map": [
+   ". . . XC Yv@~ Bv@~ .",
+   ". . . R^@~ . . .",
+   ". . . Gv . . .",
+   ". Pv@- . . B>+C . .",
+   "R^@~ Y<+C R<+C . R<@~ . .",
+   ". B>@- . G>@-#Y . . .",
+   ". Yv@- . B>#Y Y>= Bv= ."
+  ],
+  "name": "L4s62_494_1",
+  "target": "EXTREME",
+  "verdict": "HUMAN-REVIEW CANDIDATE",
+  "why_a": [],
+  "why_b": []
+ }
+}

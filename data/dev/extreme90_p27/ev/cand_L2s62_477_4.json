@@ -1,0 +1,17 @@
+{
+ "L2s62_477_4": {
+  "map": [
+   ". . . OA . . .",
+   ". . . Yv@ . . Pv=",
+   "B^@ P^ . R<@ Bv@~ . G<=",
+   "R> . . . Y<@~ G>@~ .",
+   ". . . R<@ B^ Gv@ .",
+   ". . . Y> . . G>=",
+   ". . . . . . OA"
+  ],
+  "target": "EXTREME",
+  "facts": [],
+  "mechanic": "portal,armor",
+  "max_positions": 2000
+ }
+}

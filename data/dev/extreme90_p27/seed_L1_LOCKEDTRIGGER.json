@@ -1,0 +1,61 @@
+{
+ "target": "EXTREME",
+ "facts": [],
+ "mechanic": "switch,lock",
+ "idea": "P27 hand core W2b: the locked trigger - switch piece W1 is locked by the yellow key, and the key stands face to face with it; only the second, free switch piece can reverse the key out of the face-off, and every target present at BOTH firings flips back again",
+ "family": "P27 locked trigger (switch + lock, two firings)",
+ "map": [
+  ". . . . . . .",
+  ". . . . . Bv&A .",
+  ". . . . . . .",
+  ". P>#Y%A . Y<&A . . .",
+  ". . . . . . .",
+  ". . . . . . .",
+  ". . . . . . G^%A"
+ ],
+ "frozen": [
+  [
+   1,
+   5
+  ],
+  [
+   3,
+   1
+  ],
+  [
+   3,
+   3
+  ],
+  [
+   6,
+   6
+  ]
+ ],
+ "max_positions": 2000,
+ "piece_free": 13,
+ "max_pieces": 17,
+ "shortcut_weight": 80,
+ "coverage_weight": 25,
+ "late_weight": 20,
+ "endgame_weight": 20,
+ "length_weight": 1.0,
+ "length_cap": 18,
+ "pressure_weight": 1.5,
+ "palette": "arrows",
+ "suffixes": [
+  "&A",
+  "#Y",
+  "="
+ ],
+ "suffix_rate": 0.3,
+ "suffix_max": {
+  "&A": 4,
+  "#Y": 2,
+  "=": 2
+ },
+ "crates_max": 0,
+ "seed": 192,
+ "size": "medium",
+ "max_solve_nodes": 1500,
+ "phase27_core": "L1_LOCKEDTRIGGER"
+}

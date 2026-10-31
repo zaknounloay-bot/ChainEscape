@@ -1,0 +1,53 @@
+{
+ "fixed_before_generating": "2026-10-30 (before any Phase 27 generator run)",
+ "role": "hand cores frozen; tools/ta90_search.gd --ops=v20 (unchanged) adds blocks around them (full palette, the Phase 26 amendment 1 setting)",
+ "families": {
+  "L1_LOCKEDTRIGGER": [
+   "L1_LOCKEDTRIGGER"
+  ],
+  "L2_PORTALRAM": [
+   "L2_PORTALRAM"
+  ],
+  "L3_SHELLEXIT": [
+   "L3_SHELLEXIT"
+  ],
+  "L4_KEYLINK": [
+   "L4_KEYLINK"
+  ],
+  "L5_BATTERINGRAM": [
+   "L5_BATTERINGRAM"
+  ],
+  "L6_TRIGGERLINK": [
+   "L6_TRIGGERLINK"
+  ]
+ },
+ "budget": {
+  "concepts": "8-10 proposals",
+  "revisions_per_concept": 8,
+  "generator_runs_max": 16,
+  "full_evaluations_max": 24,
+  "per_run": {
+   "minutes": 12,
+   "batch": 40,
+   "beam": 5,
+   "patience": 8,
+   "ops": "v20"
+  }
+ },
+ "selection": "per run: valid tokens only (tools/extreme90_tokens26.py), <= 700 positions, lowest bank overlap; then the Phase 26 diagnostics plus the two greedy measures humans tracked best (look6 greedy, mobility) - N60 (mobility 16.5%, look6 0.10) was rated MEDIUM",
+ "acceptance": "Phase 21 rules unchanged + core check on the Solver's line + conceptual novelty + human-like shortcut audit",
+ "excluded": "N52 magnet cascade, N53 shared-key counting, N56 crate/gate/spinner, N59 relocated magnet (and the J4 relay), N61 reversal deadlock (and J2), N44/N58 Sequence pushers, N60 relocated boomerang (MEDIUM)",
+ "seeds_rng": {
+  "round 1": 61,
+  "round 2": 62
+ },
+ "amendments": [
+  {
+   "when": "2026-10-30, after rounds 61/62",
+   "what": "L1 re-run (seed 64) with plain arrows only",
+   "why": "seeds 61/62: 205 of 207 qualifying L1 boards carry an engine-invalid token (a flip / lock / armor mark on a spinner) - the generator appends core suffixes to spinner tokens; plain arrows cannot produce that",
+   "unchanged": "every threshold; runs 9 of 16"
+  }
+ ],
+ "budget_extensions": []
+}

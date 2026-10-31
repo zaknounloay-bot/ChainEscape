@@ -1,0 +1,38 @@
+Godot Engine v4.3.stable.official.77dcf97d8 - https://godotengine.org
+
+SCRIPT ERROR: Invalid access of index '6' on a base object of type: 'Array'.
+          at: _rot (res://tools/vh_pilot4_canon.gd:101)
+SCRIPT ERROR: Out of bounds get index '0' (on base: 'Array')
+          at: _relabel (res://tools/vh_pilot4_canon.gd:141)
+SCRIPT ERROR: Out of bounds get index '0' (on base: 'Array')
+          at: _relabel (res://tools/vh_pilot4_canon.gd:141)
+SCRIPT ERROR: Out of bounds get index '0' (on base: 'Array')
+          at: _rot (res://tools/vh_pilot4_canon.gd:96)
+SCRIPT ERROR: Out of bounds get index '0' (on base: 'Array')
+          at: _relabel (res://tools/vh_pilot4_canon.gd:141)
+SCRIPT ERROR: Out of bounds get index '0' (on base: 'Array')
+          at: _relabel (res://tools/vh_pilot4_canon.gd:141)
+SCRIPT ERROR: Out of bounds get index '0' (on base: 'Array')
+          at: _rot (res://tools/vh_pilot4_canon.gd:96)
+SCRIPT ERROR: Out of bounds get index '0' (on base: 'Array')
+          at: _relabel (res://tools/vh_pilot4_canon.gd:141)
+SCRIPT ERROR: Out of bounds get index '0' (on base: 'Array')
+          at: _relabel (res://tools/vh_pilot4_canon.gd:141)
+SCRIPT ERROR: Out of bounds get index '0' (on base: 'Array')
+          at: _rot (res://tools/vh_pilot4_canon.gd:96)
+known boards: 36539
+known boards incl. T1-T5 and the demos: 36539; played boards for the near-copy guard: 333
+
+=== L5s63_441_4 (target EXTREME, 16 pieces) ===
+   . . . . . Yv@~ .
+   . . . Y< . R<@ R^
+   . . . P>@ . . .
+   . Y>:v . G^= Pv@ B^= .
+   B^ R^@ B< Y<@ . Pv= G^@-
+   . . . . . . .
+   . . . R^@- . . .
+   solution: r3c1> ram [x2], r2c3> [x2], r1c3< [x1], r1c5< [x2], r1c6^ [x1], r0c5< [x1], r3c4v [x1], r3c3^, r3c1> ram [x1], r3c5^ [x1], r3c1> advance [x1], r4c0^ [x1], r4c1v [x1], r3c1v [x1], r4c2< [x1], r4c3> ram, r4c6^ [x1], r4c5v, r4c3>, r6c3^
+   A {"fingerprint":"fa7144f3c8ba17d5df69c1405cd9b71d0844dfdb24918252fdf4c114fb3e6b57","hint_nodes":[31,57],"parity":[0,0],"portals":0,"position_cap":2000,"positions":441,"replay":true,"solution":20,"solve_ms":8,"timeup_worst_ms":7.5,"timeup_worst_nodes":178,"winnable":135}
+   B {"coverage":0.75,"decision_steps":15,"distinct_mistakes":5,"endgame_decision":true,"last_decision":17,"late":0.85,"line(see above)":["r3c1> ram [x2]","r2c3> [x2]","r1c3< [x1]","r1c5< [x2]","r1c6^ [x1]","r0c5< [x1]","r3c4v [x1]","r3c3^","r3c1> ram [x1]","r3c5^ [x1]","r3c1> advance [x1]","r4c0^ [x1]","r4c1v [x1]","r3c1v [x1]","r4c2< [x1]","r4c3> ram","r4c6^ [x1]","r4c5v","r4c3>","r6c3^"],"losing_per_step":[2,2,1,2,1,1,1,0,1,1,1,1,1,1,1,0,1,0,0,0],"matters_armor":true,"matters_sequence":true,"mistakes":["r1c3<","r1c6^","r3c3^","r4c3^","r4c5v"],"shortcut":0.017,"spinner_dependence":"unsolvable without it","without_armor":"without it: 4 decision steps, 2 distinct mistakes (with it: 15, 5)","without_sequence":"without it: 14 decision steps, 5 distinct mistakes (with it: 15, 5)"}
+   C {"decisions_k4_6_8":[13,9,5],"deepest":11,"greedy":{"look2":0.005,"look4":0.017,"min_turn":0,"mobility":0,"safe":0},"hidden_k6_8":[12,5],"learner":{"look4":1,"look6":0},"look6_greedy":0.075,"opening":"4 / 6","pressure":{"advances":1,"calm_prefix":1,"flips":0,"multi_turned":2,"prediction_share":0.4,"pulls":0,"rams":3,"signals":2,"spinners_turned":3,"trap_delay_median":7,"turns":5,"undo_proof":0.89},"win_share":0.306}
+   VERDICT: HUMAN-REVIEW CANDIDATE

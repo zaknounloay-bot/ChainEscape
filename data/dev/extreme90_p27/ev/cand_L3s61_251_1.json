@@ -1,0 +1,17 @@
+{
+ "L3s61_251_1": {
+  "map": [
+   ". . . . . . .",
+   ". Rv@~ . . P<= . .",
+   ". R> B^%A P>@- B<&A= Bv@- .",
+   ". B>@ . . R^@- . .",
+   ". . . . Gv&A . .",
+   ". . . . . . .",
+   ". . P>%A Yv@ R>&A G> R>="
+  ],
+  "target": "EXTREME",
+  "facts": [],
+  "mechanic": "switch,armor",
+  "max_positions": 2000
+ }
+}

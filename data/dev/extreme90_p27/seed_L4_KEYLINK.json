@@ -1,0 +1,61 @@
+{
+ "target": "EXTREME",
+ "facts": [],
+ "mechanic": "gate,lock",
+ "idea": "P27 hand core W5b: one departure, two releases - the yellow key is also the gate's last link, so its departure unlocks the prisoner and opens the gate at the same instant",
+ "family": "P27 key and link in one block (lock + gate)",
+ "map": [
+  ". . . XC . . .",
+  ". . . . . . .",
+  ". . . Gv . . .",
+  ". . . . . . .",
+  ". Y<+C . . . . .",
+  ". . . . . . .",
+  ". . . B>#Y . . ."
+ ],
+ "frozen": [
+  [
+   0,
+   3
+  ],
+  [
+   2,
+   3
+  ],
+  [
+   4,
+   1
+  ],
+  [
+   6,
+   3
+  ]
+ ],
+ "max_positions": 2000,
+ "piece_free": 13,
+ "max_pieces": 17,
+ "shortcut_weight": 80,
+ "coverage_weight": 25,
+ "late_weight": 20,
+ "endgame_weight": 20,
+ "length_weight": 1.0,
+ "length_cap": 18,
+ "pressure_weight": 1.5,
+ "palette": "all",
+ "suffixes": [
+  "+C",
+  "#Y",
+  "="
+ ],
+ "suffix_rate": 0.3,
+ "suffix_max": {
+  "+C": 3,
+  "#Y": 2,
+  "=": 2
+ },
+ "crates_max": 0,
+ "seed": 192,
+ "size": "medium",
+ "max_solve_nodes": 1500,
+ "phase27_core": "L4_KEYLINK"
+}

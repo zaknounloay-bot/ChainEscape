@@ -1,0 +1,17 @@
+{
+ "L6s65_631_5": {
+  "map": [
+   ". . Rv&A . . . .",
+   "Y^+C . R>@ Yv%A . . .",
+   "Y> . G<&A XC B>&A B^@- R^=",
+   ". . . P>= Gv@~ . .",
+   ". . . P<%A+C . . .",
+   ". . . . . . .",
+   "Yv@~ . . . Pv@ . R^+C"
+  ],
+  "target": "EXTREME",
+  "facts": [],
+  "mechanic": "switch,gate",
+  "max_positions": 2000
+ }
+}

@@ -1,0 +1,122 @@
+[
+ {
+  "coverage": 0.64,
+  "distinct": 4,
+  "endgame": true,
+  "evaluated": 254,
+  "late": 0.79,
+  "map": [
+   ". . . OA . . .",
+   ". . . . . . G<",
+   ". . . . P<@~ G< G<=",
+   ". . . . Y>@~ . .",
+   ". . . R<@ B^ . .",
+   ". . . Y> Yv= R>@- G>=",
+   ". . . . . . OA"
+  ],
+  "matters": "2/2",
+  "pieces": 13,
+  "positions": 415,
+  "round": -1,
+  "score": 127.14,
+  "shortcut": 0.15,
+  "solution": 14,
+  "steps": 9
+ },
+ {
+  "coverage": 0.62,
+  "distinct": 4,
+  "endgame": true,
+  "evaluated": 238,
+  "late": 0.77,
+  "map": [
+   ". . . OA . . .",
+   ". . . . . . .",
+   ". . . . P<@~ G< G<=",
+   ". . . . Y>@~ . .",
+   ". . . R<@ B^ . .",
+   ". . . Y> Yv= R>@- G>=",
+   ". . . . . . OA"
+  ],
+  "matters": "2/2",
+  "pieces": 12,
+  "positions": 211,
+  "round": -1,
+  "score": 123.71,
+  "shortcut": 0.2,
+  "solution": 13,
+  "steps": 8
+ },
+ {
+  "coverage": 0.81,
+  "distinct": 5,
+  "endgame": true,
+  "evaluated": 1459,
+  "late": 0.81,
+  "map": [
+   ". . . OA . . .",
+   ". . . . . . Pv=",
+   ". Pv . R<@ B^ . G<=",
+   "R> . . . Y<@~ G>@~ .",
+   ". . . R<@ B^ Gv@ .",
+   ". . . Y> . . G>=",
+   ". . . . . . OA"
+  ],
+  "matters": "2/2",
+  "pieces": 15,
+  "positions": 606,
+  "round": -1,
+  "score": 140.99,
+  "shortcut": 0.15,
+  "solution": 16,
+  "steps": 13
+ },
+ {
+  "coverage": 0.81,
+  "distinct": 4,
+  "endgame": true,
+  "evaluated": 627,
+  "late": 0.81,
+  "map": [
+   ". . . OA . . .",
+   ". . . . . . .",
+   "B^@ P^@- . R<@ B<@ . G<=",
+   "R> . . . Y<@~ Gv .",
+   ". . . R<@ B^ . .",
+   ". . . Y> Yv= . G>=",
+   ". . . . . . OA"
+  ],
+  "matters": "2/2",
+  "pieces": 15,
+  "positions": 288,
+  "round": -1,
+  "score": 136.36,
+  "shortcut": 0.2,
+  "solution": 16,
+  "steps": 13
+ },
+ {
+  "coverage": 0.83,
+  "distinct": 5,
+  "endgame": true,
+  "evaluated": 1263,
+  "late": 0.83,
+  "map": [
+   ". . . OA . . .",
+   ". . . Yv@ . . Pv=",
+   "B^@ P^ . R<@ Bv@~ . G<=",
+   "R> . . . Y<@~ G>@~ .",
+   ". . . R<@ B^ Gv@ .",
+   ". . . Y> . . G>=",
+   ". . . . . . OA"
+  ],
+  "matters": "2/2",
+  "pieces": 17,
+  "positions": 477,
+  "round": -1,
+  "score": 142.99,
+  "shortcut": 0.15,
+  "solution": 18,
+  "steps": 15
+ }
+]

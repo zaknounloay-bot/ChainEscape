@@ -1,0 +1,105 @@
+{
+ "note": "Phase 27 design log (docs/extreme90_phase27.md). Budget fixed before drafting: 8-10 concept proposals, <= 8 revisions per concept, <= 16 generator runs, <= 24 full evaluations. Drafts: d_round*.json; benched with tools/ta90_bench24.gd.",
+ "concepts": [
+  {
+   "id": "Q1",
+   "name": "rim seal: the crate parked on the key's row seals the key",
+   "mechanics": "crate + lock",
+   "drafts": [
+    "Q1a",
+    "Q1b"
+   ],
+   "decision": "INFEASIBLE: every pusher stays in the crate's line after a push, so the last pusher can leave only if its arrow changes (spinner / switch / Sequence) - without those a crate core is unsolvable (the reason every bank crate board has one)"
+  },
+  {
+   "id": "Q7",
+   "name": "the crate shields the shell",
+   "mechanics": "crate + armor",
+   "drafts": [
+    "Q7a"
+   ],
+   "decision": "INFEASIBLE: the same pusher fact"
+  },
+  {
+   "id": "MG",
+   "name": "the magnet as the gate's last link (its own departure opens the gate it pulls through)",
+   "mechanics": "magnet + gate",
+   "drafts": [],
+   "decision": "ENGINE-INVALID: a magnet must be a plain arrow (no link mark); the engine does apply gate opening before the pull, but the token is refused"
+  },
+  {
+   "id": "L1",
+   "name": "the locked trigger: the switch is locked by a key standing face to face with it; a second free switch piece reverses the key out",
+   "mechanics": "switch + lock",
+   "drafts": [
+    "W2a",
+    "W2b"
+   ],
+   "runs": "seeds 61, 62 (full palette), 64 (arrows)",
+   "decision": "STOPPED: 205 of 207 qualifying boards (seed 62) carry an engine-invalid token; seed 64 on plain arrows: 0 qualifying"
+  },
+  {
+   "id": "L2",
+   "name": "the remote ram: a spinner turned to face a portal cracks shells on the far side",
+   "mechanics": "spinner + portal + armor",
+   "drafts": [
+    "W4a",
+    "W4b",
+    "W4c"
+   ],
+   "runs": "seeds 61, 62",
+   "decision": "technically QUALIFIED (L2s62_477_4: 5 distinct, 18 moves, overlap 0.29) but REJECTED: conceptual relative of N34 / N40 (a turn sends the lane through the portal) and of the excluded K2 / H6 remote crack; look6 greedy 0.125 (above N60's 0.10, rated MEDIUM); seed 61 boards were shallow (dependency depth 3-5)"
+  },
+  {
+   "id": "L3",
+   "name": "the shell's exit: an armored flip target faces its own rammer; once cracked neither can move until the reversal turns the shell away",
+   "mechanics": "switch + armor (+ spinners)",
+   "drafts": [
+    "W6a"
+   ],
+   "runs": "seed 61",
+   "decision": "N62"
+  },
+  {
+   "id": "L4",
+   "name": "one departure, two releases: the key is also the gate's last link",
+   "mechanics": "lock + gate",
+   "drafts": [
+    "W5a",
+    "W5b"
+   ],
+   "runs": "seeds 61, 62",
+   "decision": "STOPPED: the best board (L4s62_494_1) passed only with 2 filler spinners that act as walls - removed, its greedy shortcut is 0.49; every other shortlisted board has win density 0.53-0.56 and greedy up to 0.20 (the N54 profile)"
+  },
+  {
+   "id": "L5",
+   "name": "the battering ram: a first-stage Sequence block rams every shell in its line; its advance turns its spinner neighbour",
+   "mechanics": "Sequence + armor",
+   "drafts": [
+    "BR1a"
+   ],
+   "runs": "seed 63",
+   "decision": "STOPPED: on all three evaluated boards the Sequence block is NOT essential (without it: 14-15 decision steps, the same 5 distinct mistakes) - the generator's spinners do the work; L5s63_441 also look6 0.233"
+  },
+  {
+   "id": "L6",
+   "name": "the trigger is the last link: the switch piece is also the gate's last link",
+   "mechanics": "switch + gate",
+   "drafts": [
+    "L6a",
+    "L6b"
+   ],
+   "runs": "seed 65",
+   "decision": "STOPPED: on all three evaluated boards the gate is NOT essential (without it: as many or more decision steps, the same distinct mistakes)"
+  },
+  {
+   "id": "L8",
+   "name": "the locked flip target: flipped while locked, two switch pieces",
+   "mechanics": "switch + lock",
+   "drafts": [
+    "L8a"
+   ],
+   "decision": "REJECTED before generation: the working form is 'leave between two firings' (N20 / N42)"
+  }
+ ]
+}

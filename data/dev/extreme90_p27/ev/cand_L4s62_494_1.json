@@ -1,0 +1,17 @@
+{
+ "L4s62_494_1": {
+  "map": [
+   ". . . XC Yv@~ Bv@~ .",
+   ". . . R^@~ . . .",
+   ". . . Gv . . .",
+   ". Pv@- . . B>+C . .",
+   "R^@~ Y<+C R<+C . R<@~ . .",
+   ". B>@- . G>@-#Y . . .",
+   ". Yv@- . B>#Y Y>= Bv= ."
+  ],
+  "target": "EXTREME",
+  "facts": [],
+  "mechanic": "gate,lock",
+  "max_positions": 2000
+ }
+}

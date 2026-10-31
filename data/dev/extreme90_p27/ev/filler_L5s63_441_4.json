@@ -1,0 +1,11 @@
+{
+ "L5s63_441_4": {
+  "distinct": 5,
+  "pieces_tested": 16,
+  "steps": 15,
+  "trivial": [
+   "r6c3 R^@-"
+  ],
+  "trivial_removals": 1
+ }
+}

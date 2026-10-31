@@ -1,0 +1,59 @@
+{
+ "target": "EXTREME",
+ "facts": [],
+ "mechanic": "switch,armor",
+ "idea": "P27 hand core W6a: the shell's exit - an armored flip target faces its own rammer (cracked, neither could move); the reversal turns it away, but the same reversal turns the other targets",
+ "family": "P27 the reversal frees the shell (switch + armor)",
+ "map": [
+  ". . . . . . .",
+  ". . . . . . .",
+  ". R> . . B<&A= . .",
+  ". . . . . . .",
+  ". . . . Gv&A . .",
+  ". . . . . . .",
+  ". . P>%A . . . ."
+ ],
+ "frozen": [
+  [
+   2,
+   1
+  ],
+  [
+   2,
+   4
+  ],
+  [
+   4,
+   4
+  ],
+  [
+   6,
+   2
+  ]
+ ],
+ "max_positions": 2000,
+ "piece_free": 13,
+ "max_pieces": 17,
+ "shortcut_weight": 80,
+ "coverage_weight": 25,
+ "late_weight": 20,
+ "endgame_weight": 20,
+ "length_weight": 1.0,
+ "length_cap": 18,
+ "pressure_weight": 1.5,
+ "palette": "all",
+ "suffixes": [
+  "&A",
+  "="
+ ],
+ "suffix_rate": 0.3,
+ "suffix_max": {
+  "&A": 4,
+  "=": 3
+ },
+ "crates_max": 0,
+ "seed": 192,
+ "size": "medium",
+ "max_solve_nodes": 1500,
+ "phase27_core": "L3_SHELLEXIT"
+}

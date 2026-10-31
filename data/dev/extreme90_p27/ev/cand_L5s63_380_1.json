@@ -1,0 +1,17 @@
+{
+ "L5s63_380_1": {
+  "map": [
+   ". . . . . Yv@ .",
+   ". . . Y^@- . R<@~ R^",
+   ". Pv . P>@ . . .",
+   ". Y>:v . G^= P^@- B^= .",
+   "B^@ R^@ B< Y<@ . Pv= G^@-",
+   ". . . . . . .",
+   ". . . . . . ."
+  ],
+  "target": "EXTREME",
+  "facts": [],
+  "mechanic": "sequence,armor",
+  "max_positions": 2000
+ }
+}

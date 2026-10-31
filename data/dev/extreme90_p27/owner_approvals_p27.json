@@ -1,0 +1,60 @@
+{
+ "source": "Phase 27 brief: explicit project-owner approval decisions, stored SEPARATELY from the recorded player difficulty ratings (human_p25.json, human_p26.json, which are unchanged)",
+ "recorded": "2026-10-30",
+ "approved_by_owner": {
+  "N53": {
+   "decision": "APPROVED",
+   "player_rating": "EXTREME, TIME UP (human_p25.json, player 1)",
+   "fingerprint": "6a918b1b8bc895e302f0287a78bf2aded368f9a1d8dbc2c718eee0478dc7b5f9"
+  },
+  "N55": {
+   "decision": "APPROVED",
+   "player_rating": "VERY HARD, TIME UP (human_p25.json, player 1; player 2's 3.5 s give-up without a move is invalid)",
+   "fingerprint": "10fd41a0c89bbb7a2865a8a0d04d72a55d15ec8e2a3118f6a96f40b2ec1e52ae"
+  },
+  "N56": {
+   "decision": "APPROVED",
+   "player_rating": "EXTREME (player 1, TIME UP) / VERY HARD (player 2, gave up at 88.4 s) - not completed",
+   "fingerprint": "5d822d1425bb25830977fd12fa79f99b092c9e825e33ea33ecc2f8e6010f387b"
+  },
+  "N59": {
+   "decision": "APPROVED",
+   "player_rating": "EXTREME, TIME UP (human_p26.json)",
+   "fingerprint": "d54c92071ff4680382e64354247f12c8ce705173eb825fa541982f1a605f8683"
+  },
+  "N61": {
+   "decision": "APPROVED",
+   "player_rating": "VERY HARD, TIME UP (human_p26.json)",
+   "fingerprint": "52dab141f91a0947629d9d5e708606a151a10714769f5890d8378d099a75e5bc"
+  }
+ },
+ "not_approved": {
+  "N54": {
+   "decision": "DOWNGRADED / NOT APPROVED",
+   "player_rating": "MEDIUM",
+   "fingerprint": "aab13f09c929ea69aa25a0b17635d456de3a4ed852974dca324a2155eacbcc9c"
+  },
+  "N57": {
+   "decision": "DOWNGRADED / NOT APPROVED",
+   "player_rating": "EASY / HARD",
+   "fingerprint": "0bac175e88976f554e45f417b0b012ce6bd5beaabda6cd06bc4dc997ab8d46e1"
+  },
+  "N58": {
+   "decision": "DOWNGRADED / NOT APPROVED",
+   "player_rating": "HARD / HARD",
+   "fingerprint": "ddfb46c251b1a93b0dde87cc4f7af3de892c783eb1d90512d6c359a097ca39c1"
+  },
+  "N60": {
+   "decision": "DOWNGRADED / NOT APPROVED",
+   "player_rating": "MEDIUM",
+   "fingerprint": "593595bff375cf6066dcce92a1d97e463e7c534450620d2061cd1d2197be233b"
+  }
+ },
+ "count": {
+  "approved_before": 23,
+  "approved_now": 28,
+  "target": 50,
+  "remaining": 22,
+  "reconciled": "23 (docs/extreme90_phase25.md section K) + N53, N55, N56, N59, N61 = 28; no difference"
+ }
+}

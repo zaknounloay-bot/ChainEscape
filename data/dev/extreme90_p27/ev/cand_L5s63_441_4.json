@@ -1,0 +1,17 @@
+{
+ "L5s63_441_4": {
+  "map": [
+   ". . . . . Yv@~ .",
+   ". . . Y< . R<@ R^",
+   ". . . P>@ . . .",
+   ". Y>:v . G^= Pv@ B^= .",
+   "B^ R^@ B< Y<@ . Pv= G^@-",
+   ". . . . . . .",
+   ". . . R^@- . . ."
+  ],
+  "target": "EXTREME",
+  "facts": [],
+  "mechanic": "sequence,armor",
+  "max_positions": 2000
+ }
+}

@@ -1,0 +1,122 @@
+[
+ {
+  "coverage": 0.8,
+  "distinct": 5,
+  "endgame": true,
+  "evaluated": 943,
+  "late": 0.8,
+  "map": [
+   ". . . . . . .",
+   ". . . . P<= . .",
+   ". R> B^%A P>@- B<&A= B^@- .",
+   ". . . . Gv@~ . .",
+   ". . . . Gv&A . .",
+   ". . . . . . .",
+   ". . P>%A Yv@ R>&A . R>="
+  ],
+  "matters": "2/2",
+  "pieces": 12,
+  "positions": 360,
+  "round": -1,
+  "score": 140.91,
+  "shortcut": 0.025,
+  "solution": 15,
+  "steps": 12
+ },
+ {
+  "coverage": 0.83,
+  "distinct": 5,
+  "endgame": true,
+  "evaluated": 1256,
+  "late": 0.83,
+  "map": [
+   ". . . . . . .",
+   ". Rv@~ . . P<= . .",
+   ". R> B^%A P>@- B<&A= Bv@- .",
+   ". B>@ . . R^@- . .",
+   ". . . . Gv&A . .",
+   ". . . . . . .",
+   ". . P>%A Yv@ R>&A G> R>="
+  ],
+  "matters": "2/2",
+  "pieces": 15,
+  "positions": 251,
+  "round": -1,
+  "score": 145.93,
+  "shortcut": 0.025,
+  "solution": 18,
+  "steps": 15
+ },
+ {
+  "coverage": 0.83,
+  "distinct": 5,
+  "endgame": true,
+  "evaluated": 868,
+  "late": 0.83,
+  "map": [
+   ". . . . . . .",
+   ". . . . P<= P^@~ .",
+   ". R> B^%A P>@- B<&A= B^@- Gv@-",
+   ". P>@ . . Gv@~ . .",
+   ". . . . Gv&A . .",
+   ". . . . . . .",
+   ". . P>%A Yv@ R>&A . R>="
+  ],
+  "matters": "2/2",
+  "pieces": 15,
+  "positions": 370,
+  "round": -1,
+  "score": 147.9,
+  "shortcut": 0,
+  "solution": 18,
+  "steps": 15
+ },
+ {
+  "coverage": 0.81,
+  "distinct": 6,
+  "endgame": true,
+  "evaluated": 863,
+  "late": 0.81,
+  "map": [
+   ". . . . . . .",
+   ". . . . P<= . .",
+   ". R> B^%A P>@- B<&A= B^@- G>@~",
+   ". . . . Gv@~ . .",
+   ". . . . Gv&A . .",
+   ". . . . . . .",
+   ". . P>%A Yv@ R>&A . R>="
+  ],
+  "matters": "2/2",
+  "pieces": 13,
+  "positions": 456,
+  "round": -1,
+  "score": 147.04,
+  "shortcut": 0.025,
+  "solution": 16,
+  "steps": 13
+ },
+ {
+  "coverage": 0.81,
+  "distinct": 6,
+  "endgame": true,
+  "evaluated": 835,
+  "late": 0.81,
+  "map": [
+   ". . . . . . .",
+   ". . . . P<= . .",
+   ". R> B^%A P>@- B<&A= B^@- Gv@-",
+   ". . . . Gv@~ . .",
+   ". . . . Gv&A . .",
+   ". . . . . . .",
+   ". . P>%A Yv@ R>&A . R>="
+  ],
+  "matters": "2/2",
+  "pieces": 13,
+  "positions": 516,
+  "round": -1,
+  "score": 146.8,
+  "shortcut": 0.025,
+  "solution": 16,
+  "steps": 13
+ }
+]

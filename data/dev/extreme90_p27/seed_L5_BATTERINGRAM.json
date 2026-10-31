@@ -1,0 +1,61 @@
+{
+ "target": "EXTREME",
+ "facts": [],
+ "mechanic": "sequence,armor",
+ "idea": "P27 hand core BR1a: the battering ram - a first-stage Sequence block rams every shell in its line (a ram never moves it); only when its lane runs clear can it advance, and the advance's return turns its spinner neighbour onto the last shell",
+ "family": "P27 battering ram (Sequence + armor)",
+ "map": [
+  ". . . . . . .",
+  ". . . . . . .",
+  ". . . . . . .",
+  ". Y>:v . G^= . B^= .",
+  ". R^@ . . . Pv= .",
+  ". . . . . . .",
+  ". . . . . . ."
+ ],
+ "frozen": [
+  [
+   3,
+   1
+  ],
+  [
+   3,
+   3
+  ],
+  [
+   3,
+   5
+  ],
+  [
+   4,
+   1
+  ],
+  [
+   4,
+   5
+  ]
+ ],
+ "max_positions": 2000,
+ "piece_free": 13,
+ "max_pieces": 17,
+ "shortcut_weight": 80,
+ "coverage_weight": 25,
+ "late_weight": 20,
+ "endgame_weight": 20,
+ "length_weight": 1.0,
+ "length_cap": 18,
+ "pressure_weight": 1.5,
+ "palette": "all",
+ "suffixes": [
+  "="
+ ],
+ "suffix_rate": 0.3,
+ "suffix_max": {
+  "=": 3
+ },
+ "crates_max": 0,
+ "seed": 192,
+ "size": "medium",
+ "max_solve_nodes": 1500,
+ "phase27_core": "L5_BATTERINGRAM"
+}
