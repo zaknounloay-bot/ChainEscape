@@ -1,0 +1,310 @@
+{
+ "summary": {
+  "runs": 19,
+  "runs_with_qualifying": 15,
+  "qualifying": 6364,
+  "invalid_token": 1790,
+  "invalid_token_rate": 0.281,
+  "valid_le700": 1725,
+  "valid_le700_overlap_lt040": 691,
+  "full_evaluations": 20,
+  "technically_clean": 6,
+  "fail_reasons": {
+   "filler": 6,
+   "overlap": 2,
+   "invalid token": 3,
+   "not essential": 8,
+   "bench floor (A/B pre-check)": 1
+  }
+ },
+ "runs": [
+  {
+   "run": "J1_MAGPULLMAG_s51",
+   "dir": "extreme90_p26",
+   "qualifying": 0,
+   "invalid_token": 0,
+   "valid_le700": 0,
+   "valid_le700_overlap_lt040": 0
+  },
+  {
+   "run": "J1_MAGPULLMAG_s52",
+   "dir": "extreme90_p26",
+   "qualifying": 479,
+   "invalid_token": 0,
+   "valid_le700": 141,
+   "valid_le700_overlap_lt040": 1
+  },
+  {
+   "run": "J2_SELFDEADLOCK_s51",
+   "dir": "extreme90_p26",
+   "qualifying": 0,
+   "invalid_token": 0,
+   "valid_le700": 0,
+   "valid_le700_overlap_lt040": 0
+  },
+  {
+   "run": "J2_SELFDEADLOCK_s53",
+   "dir": "extreme90_p26",
+   "qualifying": 686,
+   "invalid_token": 670,
+   "valid_le700": 8,
+   "valid_le700_overlap_lt040": 0
+  },
+  {
+   "run": "J2_SELFDEADLOCK_s54",
+   "dir": "extreme90_p26",
+   "qualifying": 586,
+   "invalid_token": 473,
+   "valid_le700": 13,
+   "valid_le700_overlap_lt040": 9
+  },
+  {
+   "run": "J3_BOOMERANG_s51",
+   "dir": "extreme90_p26",
+   "qualifying": 0,
+   "invalid_token": 0,
+   "valid_le700": 0,
+   "valid_le700_overlap_lt040": 0
+  },
+  {
+   "run": "J3_BOOMERANG_s53",
+   "dir": "extreme90_p26",
+   "qualifying": 640,
+   "invalid_token": 48,
+   "valid_le700": 308,
+   "valid_le700_overlap_lt040": 6
+  },
+  {
+   "run": "J4_RELAY_s53",
+   "dir": "extreme90_p26",
+   "qualifying": 397,
+   "invalid_token": 0,
+   "valid_le700": 187,
+   "valid_le700_overlap_lt040": 4
+  },
+  {
+   "run": "J5_KEYFACE_s54",
+   "dir": "extreme90_p26",
+   "qualifying": 519,
+   "invalid_token": 25,
+   "valid_le700": 177,
+   "valid_le700_overlap_lt040": 0
+  },
+  {
+   "run": "L1_LOCKEDTRIGGER_s61",
+   "dir": "extreme90_p27",
+   "qualifying": 12,
+   "invalid_token": 0,
+   "valid_le700": 0,
+   "valid_le700_overlap_lt040": 0
+  },
+  {
+   "run": "L1_LOCKEDTRIGGER_s62",
+   "dir": "extreme90_p27",
+   "qualifying": 207,
+   "invalid_token": 205,
+   "valid_le700": 0,
+   "valid_le700_overlap_lt040": 0
+  },
+  {
+   "run": "L1_LOCKEDTRIGGER_s64",
+   "dir": "extreme90_p27",
+   "qualifying": 0,
+   "invalid_token": 0,
+   "valid_le700": 0,
+   "valid_le700_overlap_lt040": 0
+  },
+  {
+   "run": "L2_PORTALRAM_s61",
+   "dir": "extreme90_p27",
+   "qualifying": 276,
+   "invalid_token": 2,
+   "valid_le700": 81,
+   "valid_le700_overlap_lt040": 81
+  },
+  {
+   "run": "L2_PORTALRAM_s62",
+   "dir": "extreme90_p27",
+   "qualifying": 562,
+   "invalid_token": 8,
+   "valid_le700": 91,
+   "valid_le700_overlap_lt040": 74
+  },
+  {
+   "run": "L3_SHELLEXIT_s61",
+   "dir": "extreme90_p27",
+   "qualifying": 585,
+   "invalid_token": 5,
+   "valid_le700": 188,
+   "valid_le700_overlap_lt040": 0
+  },
+  {
+   "run": "L4_KEYLINK_s61",
+   "dir": "extreme90_p27",
+   "qualifying": 63,
+   "invalid_token": 1,
+   "valid_le700": 13,
+   "valid_le700_overlap_lt040": 11
+  },
+  {
+   "run": "L4_KEYLINK_s62",
+   "dir": "extreme90_p27",
+   "qualifying": 342,
+   "invalid_token": 245,
+   "valid_le700": 37,
+   "valid_le700_overlap_lt040": 37
+  },
+  {
+   "run": "L5_BATTERINGRAM_s63",
+   "dir": "extreme90_p27",
+   "qualifying": 498,
+   "invalid_token": 0,
+   "valid_le700": 273,
+   "valid_le700_overlap_lt040": 273
+  },
+  {
+   "run": "L6_TRIGGERLINK_s65",
+   "dir": "extreme90_p27",
+   "qualifying": 512,
+   "invalid_token": 108,
+   "valid_le700": 208,
+   "valid_le700_overlap_lt040": 195
+  }
+ ],
+ "evaluations": [
+  {
+   "board": "J1ss52_c1",
+   "dir": "extreme90_p26",
+   "technical_fail": []
+  },
+  {
+   "board": "J2ss53_c5",
+   "dir": "extreme90_p26",
+   "technical_fail": [
+    "filler",
+    "overlap",
+    "invalid token"
+   ]
+  },
+  {
+   "board": "J2ss53_o395",
+   "dir": "extreme90_p26",
+   "technical_fail": [
+    "filler",
+    "invalid token"
+   ]
+  },
+  {
+   "board": "J2ss53_o395f",
+   "dir": "extreme90_p26",
+   "technical_fail": [
+    "invalid token"
+   ]
+  },
+  {
+   "board": "J2ss54_o441",
+   "dir": "extreme90_p26",
+   "technical_fail": [
+    "filler"
+   ]
+  },
+  {
+   "board": "J3ss53_c3",
+   "dir": "extreme90_p26",
+   "technical_fail": []
+  },
+  {
+   "board": "J4ss53_c5",
+   "dir": "extreme90_p26",
+   "technical_fail": [
+    "overlap"
+   ]
+  },
+  {
+   "board": "J4ss53_o461",
+   "dir": "extreme90_p26",
+   "technical_fail": []
+  },
+  {
+   "board": "J5ss54_o548",
+   "dir": "extreme90_p26",
+   "technical_fail": []
+  },
+  {
+   "board": "L2s62_477_4",
+   "dir": "extreme90_p27",
+   "technical_fail": []
+  },
+  {
+   "board": "L3s61_251_1",
+   "dir": "extreme90_p27",
+   "technical_fail": []
+  },
+  {
+   "board": "L4s62_494_1",
+   "dir": "extreme90_p27",
+   "technical_fail": [
+    "filler",
+    "not essential: without_gate"
+   ]
+  },
+  {
+   "board": "L4s62_494f",
+   "dir": "extreme90_p27",
+   "technical_fail": [
+    "bench floor (A/B pre-check)"
+   ]
+  },
+  {
+   "board": "L5s63_380_1",
+   "dir": "extreme90_p27",
+   "technical_fail": [
+    "not essential: without_sequence"
+   ]
+  },
+  {
+   "board": "L5s63_441_4",
+   "dir": "extreme90_p27",
+   "technical_fail": [
+    "filler",
+    "not essential: without_sequence"
+   ]
+  },
+  {
+   "board": "L5s63_441f",
+   "dir": "extreme90_p27",
+   "technical_fail": [
+    "not essential: without_sequence"
+   ]
+  },
+  {
+   "board": "L5s63_467_5",
+   "dir": "extreme90_p27",
+   "technical_fail": [
+    "filler",
+    "not essential: without_sequence"
+   ]
+  },
+  {
+   "board": "L6s65_304_0",
+   "dir": "extreme90_p27",
+   "technical_fail": [
+    "not essential: without_gate"
+   ]
+  },
+  {
+   "board": "L6s65_427_3",
+   "dir": "extreme90_p27",
+   "technical_fail": [
+    "not essential: without_gate"
+   ]
+  },
+  {
+   "board": "L6s65_631_5",
+   "dir": "extreme90_p27",
+   "technical_fail": [
+    "not essential: without_gate"
+   ]
+  }
+ ]
+}

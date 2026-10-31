@@ -1,0 +1,6 @@
+== P12_0: 605 positions, winnable true	  greedy {"look2":0,"look4":0,"min_turn":0,"mobility":0,"safe":0}
+== P12_1: 605 positions, winnable true	  greedy {"look2":0,"look4":0,"min_turn":0,"mobility":0,"safe":0}
+== P12_3: 647 positions, winnable true	  greedy {"look2":0,"look4":0,"min_turn":0,"mobility":0,"safe":0}
+== P12_4: 647 positions, winnable true	  greedy {"look2":0,"look4":0,"min_turn":0,"mobility":0,"safe":0}
+== P12_5: 647 positions, winnable true	  greedy {"look2":0,"look4":0,"min_turn":0,"mobility":0,"safe":0}
+== P12_6: 647 positions, winnable true	  greedy {"look2":0,"look4":0,"min_turn":0,"mobility":0,"safe":0}

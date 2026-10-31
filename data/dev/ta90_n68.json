@@ -1,0 +1,182 @@
+{
+ "format": "ce-ta90-proto",
+ "v": 1,
+ "test": "ta90_n68",
+ "assist": {
+  "undo": 3,
+  "show_a_move": 0,
+  "hammer": 0
+ },
+ "note": "Development only. Phase 28 EXTREME candidate (?extreme90p28=1); never shared, never production. TECHNICALLY QUALIFIED (Category A and B): NOT human-approved; human difficulty unvalidated.",
+ "boards": [
+  {
+   "id": "N68",
+   "accepted": true,
+   "label": "TECHNICALLY QUALIFIED - HUMAN UNTESTED",
+   "variant": "N68",
+   "design": "P28_P12_3",
+   "family": "P28 the shuttle and the door (crate + switch + lock)",
+   "concept_group": "crate x reversal x lock",
+   "primary": "movable, switch, lock, spinner",
+   "target": "EXTREME (a design target, not a rating; never shown to players)",
+   "idea": "the shuttle and the door: the crate sits in the key's lane; the key and a flip-target pusher shuttle it out, and the reversal is what lets the pushers leave the crate's line - the key's departure opens two locks",
+   "source": "hybrid: hand core frozen cell for cell (seed_P12_SHUTTLEDOOR.json, Phase 28); blocks added by tools/ta90_search.gd --ops=v20 with the Phase 28 pipeline (token guard, strict essentiality, spinners_max), RNG seed 81 (protocol.json); early screen tools/extreme90_screen28.py",
+   "related_bank_concept": "N35 / N50 (push, turn, ram: crate + switch), N33 (the crate's new cell must not be in anyone's way); crate + lock is not in the bank; closest occupancy N33 0.30",
+   "fingerprint": "b0427dddc6458f595c8658bd89e9f926b411b2dd837c34eb5c984452d152c0da",
+   "mechanics": [
+    "movable",
+    "switch",
+    "lock",
+    "spinner"
+   ],
+   "puzzle": {
+    "format": "ce-puzzle",
+    "v": 1,
+    "rules": 1,
+    "rows": 7,
+    "cols": 7,
+    "map": [
+     ". . . . . . .",
+     ". . B>#Y . . . .",
+     ". . . . P<@- Pv&A .",
+     "Y> . M Gv@~ . P>%A .",
+     "Bv#Y . G<&A . . . .",
+     ". . G^&A . . . Y<@-",
+     ". . . . . . P^%A"
+    ]
+   },
+   "design_report": {
+    "A": {
+     "fingerprint": "b0427dddc6458f595c8658bd89e9f926b411b2dd837c34eb5c984452d152c0da",
+     "hint_nodes": [
+      885,
+      181
+     ],
+     "parity": [
+      0,
+      0
+     ],
+     "portals": 0,
+     "position_cap": 2000,
+     "positions": 647,
+     "replay": true,
+     "solution": 15,
+     "solve_ms": 24.6,
+     "timeup_worst_ms": 21.6,
+     "timeup_worst_nodes": 893,
+     "winnable": 68
+    },
+    "B": {
+     "coverage": 0.93,
+     "decision_steps": 14,
+     "distinct_mistakes": 7,
+     "endgame_decision": true,
+     "last_decision": 14,
+     "late": 0.93,
+     "line": [
+      "r3c3v [x1]",
+      "r3c5> [x1]",
+      "r2c5^ [x2]",
+      "r5c2v [x2]",
+      "r5c6< [x2]",
+      "r3c0> push [x3]",
+      "r3c0> push [x3]",
+      "r2c4v push [x3]",
+      "r3c0> [x2]",
+      "r1c2> [x2]",
+      "r4c0v [x2]",
+      "r4c2> push [x2]",
+      "r2c4v [x1]",
+      "r6c6^ [x1]",
+      "r4c2<"
+     ],
+     "losing_per_step": [
+      1,
+      1,
+      2,
+      2,
+      2,
+      3,
+      3,
+      3,
+      2,
+      2,
+      2,
+      2,
+      1,
+      1,
+      0
+     ],
+     "matters_lock": true,
+     "matters_movable": true,
+     "matters_switch": true,
+     "mistakes": [
+      "r2c4<",
+      "r4c2>",
+      "r2c4v",
+      "r6c6^",
+      "r3c0> push",
+      "r2c4v push",
+      "r4c2> push"
+     ],
+     "shortcut": 0,
+     "spinner_dependence": "unsolvable without it",
+     "without_lock": "without it: 4 decision steps, 2 distinct mistakes (with it: 14, 7)",
+     "without_movable": "without it: 0 decision steps, 0 distinct mistakes (with it: 14, 7)",
+     "without_switch": "unsolvable without it"
+    },
+    "C": {
+     "decisions_k4_6_8": [
+      13,
+      10,
+      8
+     ],
+     "deepest": 17,
+     "greedy": {
+      "look2": 0,
+      "look4": 0,
+      "min_turn": 0,
+      "mobility": 0,
+      "safe": 0
+     },
+     "hidden_k6_8": [
+      20,
+      16
+     ],
+     "learner": {
+      "look4": 8,
+      "look6": 7
+     },
+     "look6_greedy": 0,
+     "opening": "2 / 3",
+     "pressure": {
+      "advances": 0,
+      "calm_prefix": 2,
+      "flips": 4,
+      "multi_turned": 0,
+      "prediction_share": 0.2,
+      "pulls": 0,
+      "rams": 0,
+      "signals": 2,
+      "spinners_turned": 1,
+      "trap_delay_median": 9,
+      "turns": 1,
+      "undo_proof": 0.93
+     },
+     "win_share": 0.105
+    },
+    "filler": {
+     "distinct": 7,
+     "pieces_tested": 12,
+     "steps": 14,
+     "trivial": [],
+     "trivial_removals": 0
+    },
+    "similarity": {
+     "closest_known": "N33",
+     "overlap": 0.3
+    }
+   }
+  }
+ ]
+}

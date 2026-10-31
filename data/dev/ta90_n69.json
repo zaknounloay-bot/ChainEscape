@@ -1,0 +1,178 @@
+{
+ "format": "ce-ta90-proto",
+ "v": 1,
+ "test": "ta90_n69",
+ "assist": {
+  "undo": 3,
+  "show_a_move": 0,
+  "hammer": 0
+ },
+ "note": "Development only. Phase 28 EXTREME candidate (?extreme90p28=1); never shared, never production. TECHNICALLY QUALIFIED (Category A and B): NOT human-approved; human difficulty unvalidated.",
+ "boards": [
+  {
+   "id": "N69",
+   "accepted": true,
+   "label": "TECHNICALLY QUALIFIED - HUMAN UNTESTED",
+   "variant": "N69",
+   "design": "P28_P13b_0",
+   "family": "P28 two walls in one row (crate + gate + switch)",
+   "concept_group": "crate x gate x reversal",
+   "primary": "movable, gate, switch, spinner",
+   "target": "EXTREME (a design target, not a rating; never shown to players)",
+   "idea": "two walls in one row: the row-3 spinner can only escape when both the crate and the gate are gone - the crate is pushed out by a flip target that then needs the reversal to leave its line, the gate opens with its last link",
+   "source": "hybrid: hand core frozen cell for cell (seed_P13_CRATEGATE.json, Phase 28); blocks added by tools/ta90_search.gd --ops=v20 with the Phase 28 pipeline (token guard, strict essentiality, spinners_max), RNG seed 82 (protocol.json); early screen tools/extreme90_screen28.py",
+   "related_bank_concept": "N56 (crate + gate + spinner: the gate stops the crate), N35 (crate + switch); closest occupancy N35 0.22",
+   "fingerprint": "a93aa6be7c312905cd87cedb2badf6561f59824e240dd7b8517cd51f16681d32",
+   "mechanics": [
+    "movable",
+    "gate",
+    "switch",
+    "spinner"
+   ],
+   "puzzle": {
+    "format": "ce-puzzle",
+    "v": 1,
+    "rules": 1,
+    "rows": 7,
+    "cols": 7,
+    "map": [
+     ". . . . . . R>",
+     ". Rv@~+C . . P<%A . R>@+C",
+     "Bv@- . . . . . R^",
+     "R>@- . . M XC . .",
+     "R>&A . . . . . .",
+     ". . . Y^&A . . .",
+     ". R>+C . . . . P^%A"
+    ]
+   },
+   "design_report": {
+    "A": {
+     "fingerprint": "a93aa6be7c312905cd87cedb2badf6561f59824e240dd7b8517cd51f16681d32",
+     "hint_nodes": [
+      413,
+      149
+     ],
+     "parity": [
+      0,
+      0
+     ],
+     "portals": 0,
+     "position_cap": 2000,
+     "positions": 249,
+     "replay": true,
+     "solution": 14,
+     "solve_ms": 24.3,
+     "timeup_worst_ms": 13.2,
+     "timeup_worst_nodes": 413,
+     "winnable": 34
+    },
+    "B": {
+     "coverage": 0.86,
+     "decision_steps": 12,
+     "distinct_mistakes": 5,
+     "endgame_decision": true,
+     "last_decision": 12,
+     "late": 0.86,
+     "line": [
+      "r1c6> [x2]",
+      "r0c6> [x1]",
+      "r2c6^ [x1]",
+      "r5c3^ push [x2]",
+      "r5c3^ push [x2]",
+      "r5c3^ push [x3]",
+      "r6c6^ [x1]",
+      "r5c3v [x1]",
+      "r6c1> [x1]",
+      "r1c1v [x1]",
+      "r1c4< [x1]",
+      "r3c0> [x1]",
+      "r2c0>",
+      "r4c0>"
+     ],
+     "losing_per_step": [
+      2,
+      1,
+      1,
+      2,
+      2,
+      3,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      0,
+      0
+     ],
+     "matters_gate": true,
+     "matters_movable": true,
+     "matters_switch": true,
+     "mistakes": [
+      "r0c6>",
+      "r4c0>",
+      "r6c6^",
+      "r1c4< push",
+      "r4c0<"
+     ],
+     "shortcut": 0.08,
+     "spinner_dependence": "without it: 2 decision steps, 1 distinct mistakes (with it: 12, 5)",
+     "without_gate": "without it: 9 decision steps, 6 distinct mistakes (with it: 12, 5)",
+     "without_movable": "without it: 9 decision steps, 3 distinct mistakes (with it: 12, 5)",
+     "without_switch": "unsolvable without it"
+    },
+    "C": {
+     "decisions_k4_6_8": [
+      8,
+      6,
+      6
+     ],
+     "deepest": 13,
+     "greedy": {
+      "look2": 0,
+      "look4": 0.025,
+      "min_turn": 0.08,
+      "mobility": 0,
+      "safe": 0.005
+     },
+     "hidden_k6_8": [
+      10,
+      9
+     ],
+     "learner": {
+      "look4": 4,
+      "look6": 2
+     },
+     "look6_greedy": 0.017,
+     "opening": "2 / 4",
+     "pressure": {
+      "advances": 0,
+      "calm_prefix": 3,
+      "flips": 3,
+      "multi_turned": 0,
+      "prediction_share": 0.21,
+      "pulls": 0,
+      "rams": 0,
+      "signals": 1,
+      "spinners_turned": 1,
+      "trap_delay_median": 8,
+      "turns": 1,
+      "undo_proof": 0.76
+     },
+     "win_share": 0.137
+    },
+    "filler": {
+     "distinct": 5,
+     "pieces_tested": 12,
+     "steps": 12,
+     "trivial": [],
+     "trivial_removals": 0
+    },
+    "similarity": {
+     "closest_known": "N35",
+     "overlap": 0.22
+    }
+   }
+  }
+ ]
+}

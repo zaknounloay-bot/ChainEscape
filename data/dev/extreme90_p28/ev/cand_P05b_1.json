@@ -1,0 +1,17 @@
+{
+ "P05b_1": {
+  "map": [
+   ". . . Y>@ . . .",
+   ". . . B> . . .",
+   ". G^= . Y^* Gv@- G^@-#Y Gv=",
+   ". . . . . . .",
+   ". . Y> R>#Y . . .",
+   ". B<@ R^ Bv* . . .",
+   ". Y> B^@~ . . . R>@-"
+  ],
+  "target": "EXTREME",
+  "facts": [],
+  "mechanic": "magnet,lock,armor",
+  "max_positions": 2000
+ }
+}

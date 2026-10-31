@@ -1,0 +1,70 @@
+{
+ "target": "EXTREME",
+ "facts": [],
+ "mechanic": "sequence,gate,armor",
+ "idea": "P28 hand core: the gate holds the boomerang: a first-stage Sequence block can ram or advance only once the gate in its lane opens",
+ "family": "P28 Sequence x gate",
+ "map": [
+  ". . . . . . .",
+  ". . . . . . .",
+  ". . . . . . .",
+  "Y>:< XC . G^= . . .",
+  ". . . . . . .",
+  ". R<+C . . . . .",
+  ". . . . . . ."
+ ],
+ "frozen": [
+  [
+   3,
+   0
+  ],
+  [
+   3,
+   1
+  ],
+  [
+   3,
+   3
+  ],
+  [
+   5,
+   1
+  ]
+ ],
+ "max_positions": 2000,
+ "piece_free": 13,
+ "max_pieces": 17,
+ "shortcut_weight": 80,
+ "coverage_weight": 25,
+ "late_weight": 20,
+ "endgame_weight": 20,
+ "length_weight": 1.0,
+ "length_cap": 18,
+ "pressure_weight": 1.5,
+ "palette": "all",
+ "suffixes": [
+  ":^",
+  ":v",
+  ":<",
+  ":>",
+  "+C",
+  "="
+ ],
+ "suffix_rate": 0.3,
+ "suffix_max": {
+  ":^": 1,
+  ":v": 1,
+  ":<": 1,
+  ":>": 1,
+  "+C": 3,
+  "=": 2
+ },
+ "crates_max": 0,
+ "seed": 192,
+ "size": "medium",
+ "max_solve_nodes": 1500,
+ "spinners_max": 4,
+ "strict_essential": true,
+ "token_guard": true,
+ "phase28_core": "P10_GATEBOOMERANG"
+}

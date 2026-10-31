@@ -1,0 +1,144 @@
+{
+ "P12_0": {
+  "distinct": 7,
+  "pieces_tested": 11,
+  "steps": 13,
+  "trivial": [],
+  "trivial_removals": 0
+ },
+ "P12_1": {
+  "distinct": 7,
+  "pieces_tested": 11,
+  "steps": 13,
+  "trivial": [],
+  "trivial_removals": 0
+ },
+ "P12_2": {
+  "distinct": 6,
+  "pieces_tested": 12,
+  "steps": 11,
+  "trivial": [
+   "r3c6 R<@~"
+  ],
+  "trivial_removals": 1
+ },
+ "P12_3": {
+  "distinct": 7,
+  "pieces_tested": 12,
+  "steps": 14,
+  "trivial": [],
+  "trivial_removals": 0
+ },
+ "P12_4": {
+  "distinct": 7,
+  "pieces_tested": 12,
+  "steps": 14,
+  "trivial": [],
+  "trivial_removals": 0
+ },
+ "P12_5": {
+  "distinct": 7,
+  "pieces_tested": 12,
+  "steps": 14,
+  "trivial": [],
+  "trivial_removals": 0
+ },
+ "P12_6": {
+  "distinct": 7,
+  "pieces_tested": 12,
+  "steps": 14,
+  "trivial": [],
+  "trivial_removals": 0
+ },
+ "P12_7": {
+  "distinct": 6,
+  "pieces_tested": 11,
+  "steps": 12,
+  "trivial": [
+   "r2c2 Y>@-",
+   "r4c0 Bv#Y"
+  ],
+  "trivial_removals": 2
+ },
+ "P13_0": {
+  "distinct": 4,
+  "pieces_tested": 16,
+  "steps": 13,
+  "trivial": [
+   "r4c2 B^@-",
+   "r4c3 R<@~"
+  ],
+  "trivial_removals": 2
+ },
+ "P13_1": {
+  "distinct": 5,
+  "pieces_tested": 16,
+  "steps": 12,
+  "trivial": [
+   "r1c6 G>",
+   "r4c2 B^@-",
+   "r4c3 R<@~"
+  ],
+  "trivial_removals": 3
+ },
+ "P13_2": {
+  "distinct": 5,
+  "pieces_tested": 16,
+  "steps": 12,
+  "trivial": [
+   "r4c2 B^@-",
+   "r4c3 R<@~"
+  ],
+  "trivial_removals": 2
+ },
+ "P13_3": {
+  "distinct": 4,
+  "pieces_tested": 14,
+  "steps": 11,
+  "trivial": [
+   "r4c2 B^@-",
+   "r4c3 R<@~"
+  ],
+  "trivial_removals": 2
+ },
+ "P13_4": {
+  "distinct": 5,
+  "pieces_tested": 15,
+  "steps": 12,
+  "trivial": [
+   "r4c2 B^@-",
+   "r4c3 R<@~"
+  ],
+  "trivial_removals": 2
+ },
+ "P13_5": {
+  "distinct": 5,
+  "pieces_tested": 15,
+  "steps": 12,
+  "trivial": [
+   "r4c2 B^@-",
+   "r4c3 R<@~"
+  ],
+  "trivial_removals": 2
+ },
+ "P13_6": {
+  "distinct": 5,
+  "pieces_tested": 15,
+  "steps": 12,
+  "trivial": [
+   "r4c2 B^@-",
+   "r4c3 R<@~"
+  ],
+  "trivial_removals": 2
+ },
+ "P13_7": {
+  "distinct": 5,
+  "pieces_tested": 15,
+  "steps": 12,
+  "trivial": [
+   "r4c2 B^@-",
+   "r4c3 R<@~"
+  ],
+  "trivial_removals": 2
+ }
+}

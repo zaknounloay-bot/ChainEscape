@@ -1,0 +1,2042 @@
+{
+ "P12_0": {
+  "A": {
+   "fingerprint": "349355c66a41f01b0709725ffb8e263090d37616c383cebcaeb981b5e7ba72fc",
+   "hint_nodes": [
+    839,
+    181
+   ],
+   "portals": 0,
+   "position_cap": 2000,
+   "positions": 605,
+   "replay": true,
+   "solution": 14,
+   "solve_ms": 17.7,
+   "timeup_worst_ms": 19.8,
+   "timeup_worst_nodes": 839,
+   "winnable": 61
+  },
+  "B": {
+   "coverage": 0.93,
+   "decision_steps": 13,
+   "distinct_mistakes": 7,
+   "endgame_decision": true,
+   "last_decision": 13,
+   "late": 0.93,
+   "line": [
+    "r3c5> [x1]",
+    "r2c5^ [x2]",
+    "r5c2v [x2]",
+    "r5c6< [x2]",
+    "r3c0> push [x3]",
+    "r3c0> push [x3]",
+    "r2c4v push [x3]",
+    "r3c0> [x2]",
+    "r1c2> [x2]",
+    "r4c0v [x2]",
+    "r4c2> push [x2]",
+    "r2c4v [x1]",
+    "r6c6^ [x1]",
+    "r4c2<"
+   ],
+   "losing_per_step": [
+    1,
+    2,
+    2,
+    2,
+    3,
+    3,
+    3,
+    2,
+    2,
+    2,
+    2,
+    1,
+    1,
+    0
+   ],
+   "matters_lock": true,
+   "matters_movable": true,
+   "matters_switch": true,
+   "mistakes": [
+    "r2c4<",
+    "r4c2>",
+    "r2c4v",
+    "r6c6^",
+    "r3c0> push",
+    "r2c4v push",
+    "r4c2> push"
+   ],
+   "shortcut": 0,
+   "spinner_dependence": "unsolvable without it",
+   "without_lock": "without it: 3 decision steps, 2 distinct mistakes (with it: 13, 7)",
+   "without_movable": "without it: 0 decision steps, 0 distinct mistakes (with it: 13, 7)",
+   "without_switch": "unsolvable without it"
+  },
+  "C": {
+   "decisions_k4_6_8": [
+    12,
+    9,
+    7
+   ],
+   "deepest": 16,
+   "greedy": {
+    "look2": 0,
+    "look4": 0,
+    "min_turn": 0,
+    "mobility": 0,
+    "safe": 0
+   },
+   "hidden_k6_8": [
+    19,
+    15
+   ],
+   "look6_greedy": 0,
+   "opening": "2 / 3",
+   "pressure": {
+    "advances": 0,
+    "calm_prefix": 1,
+    "flips": 4,
+    "multi_turned": 0,
+    "prediction_share": 0.21,
+    "pulls": 0,
+    "rams": 0,
+    "signals": 2,
+    "spinners_turned": 1,
+    "trap_delay_median": 9,
+    "turns": 1,
+    "undo_proof": 0.92
+   },
+   "win_share": 0.101
+  },
+  "map": [
+   ". . . . . . .",
+   ". . B>#Y . . . .",
+   ". . . . P<@- Pv&A .",
+   "Y> . M . . P>%A .",
+   "Bv#Y . G<&A . . . .",
+   ". . G^&A . . . Y<@-",
+   ". . . . . . P^%A"
+  ],
+  "name": "P12_0",
+  "target": "EXTREME",
+  "verdict": "NEEDS WORK",
+  "why_a": [],
+  "why_b": []
+ },
+ "P12_1": {
+  "A": {
+   "fingerprint": "a0c3c37f0244759404501bc0084fc775fc8abb4e220715bea569cbd8fc713ddf",
+   "hint_nodes": [
+    839,
+    181
+   ],
+   "portals": 0,
+   "position_cap": 2000,
+   "positions": 605,
+   "replay": true,
+   "solution": 14,
+   "solve_ms": 19,
+   "timeup_worst_ms": 16.9,
+   "timeup_worst_nodes": 839,
+   "winnable": 61
+  },
+  "B": {
+   "coverage": 0.93,
+   "decision_steps": 13,
+   "distinct_mistakes": 7,
+   "endgame_decision": true,
+   "last_decision": 13,
+   "late": 0.93,
+   "line": [
+    "r3c5> [x1]",
+    "r2c5^ [x2]",
+    "r5c2v [x2]",
+    "r5c6< [x2]",
+    "r3c0> push [x3]",
+    "r3c0> push [x3]",
+    "r2c4v push [x3]",
+    "r3c0> [x2]",
+    "r1c2> [x2]",
+    "r4c0v [x2]",
+    "r4c2> push [x2]",
+    "r2c4v [x1]",
+    "r6c6^ [x1]",
+    "r4c2<"
+   ],
+   "losing_per_step": [
+    1,
+    2,
+    2,
+    2,
+    3,
+    3,
+    3,
+    2,
+    2,
+    2,
+    2,
+    1,
+    1,
+    0
+   ],
+   "matters_lock": true,
+   "matters_movable": true,
+   "matters_switch": true,
+   "mistakes": [
+    "r2c4<",
+    "r4c2>",
+    "r2c4v",
+    "r6c6^",
+    "r3c0> push",
+    "r2c4v push",
+    "r4c2> push"
+   ],
+   "shortcut": 0,
+   "spinner_dependence": "unsolvable without it",
+   "without_lock": "without it: 3 decision steps, 2 distinct mistakes (with it: 13, 7)",
+   "without_movable": "without it: 0 decision steps, 0 distinct mistakes (with it: 13, 7)",
+   "without_switch": "unsolvable without it"
+  },
+  "C": {
+   "decisions_k4_6_8": [
+    12,
+    9,
+    7
+   ],
+   "deepest": 16,
+   "greedy": {
+    "look2": 0,
+    "look4": 0,
+    "min_turn": 0,
+    "mobility": 0,
+    "safe": 0
+   },
+   "hidden_k6_8": [
+    19,
+    15
+   ],
+   "look6_greedy": 0,
+   "opening": "2 / 3",
+   "pressure": {
+    "advances": 0,
+    "calm_prefix": 1,
+    "flips": 4,
+    "multi_turned": 0,
+    "prediction_share": 0.21,
+    "pulls": 0,
+    "rams": 0,
+    "signals": 2,
+    "spinners_turned": 1,
+    "trap_delay_median": 9,
+    "turns": 1,
+    "undo_proof": 0.92
+   },
+   "win_share": 0.101
+  },
+  "map": [
+   ". . . . . . .",
+   ". . B>#Y . . . .",
+   ". . . . P<@- Pv&A .",
+   "Y> . M . . P>%A .",
+   "Bv#Y . G<&A . . . .",
+   ". . G^&A . . . Y<@",
+   ". . . . . . P^%A"
+  ],
+  "name": "P12_1",
+  "target": "EXTREME",
+  "verdict": "NEEDS WORK",
+  "why_a": [],
+  "why_b": []
+ },
+ "P12_2": {
+  "A": {
+   "fingerprint": "6b6a0456308a16d276bfd263301cbd312c1542e43dc15d790a24a9c307b52e69",
+   "hint_nodes": [
+    623,
+    181
+   ],
+   "portals": 0,
+   "position_cap": 2000,
+   "positions": 698,
+   "replay": true,
+   "solution": 15,
+   "solve_ms": 12.9,
+   "timeup_worst_ms": 17,
+   "timeup_worst_nodes": 799,
+   "winnable": 127
+  },
+  "B": {
+   "coverage": 0.73,
+   "decision_steps": 11,
+   "distinct_mistakes": 6,
+   "endgame_decision": true,
+   "last_decision": 14,
+   "late": 0.93,
+   "line": [
+    "r4c6>",
+    "r3c6^",
+    "r3c5>",
+    "r2c5^ [x2]",
+    "r5c2v [x3]",
+    "r3c0> push [x3]",
+    "r3c0> push [x3]",
+    "r2c4v push [x3]",
+    "r3c0> [x2]",
+    "r1c2> [x2]",
+    "r4c0v [x2]",
+    "r4c2> push [x2]",
+    "r2c4v [x1]",
+    "r6c6^ [x1]",
+    "r4c2<"
+   ],
+   "losing_per_step": [
+    0,
+    0,
+    0,
+    2,
+    3,
+    3,
+    3,
+    3,
+    2,
+    2,
+    2,
+    2,
+    1,
+    1,
+    0
+   ],
+   "matters_lock": true,
+   "matters_movable": true,
+   "matters_switch": true,
+   "mistakes": [
+    "r4c2>",
+    "r6c6^",
+    "r2c4v",
+    "r3c0> push",
+    "r2c4v push",
+    "r4c2> push"
+   ],
+   "shortcut": 0,
+   "spinner_dependence": "unsolvable without it",
+   "without_lock": "without it: 7 decision steps, 3 distinct mistakes (with it: 11, 6)",
+   "without_movable": "without it: 0 decision steps, 0 distinct mistakes (with it: 11, 6)",
+   "without_switch": "unsolvable without it"
+  },
+  "C": {
+   "decisions_k4_6_8": [
+    10,
+    7,
+    5
+   ],
+   "deepest": 14,
+   "greedy": {
+    "look2": 0,
+    "look4": 0,
+    "min_turn": 0,
+    "mobility": 0,
+    "safe": 0
+   },
+   "hidden_k6_8": [
+    17,
+    13
+   ],
+   "look6_greedy": 0,
+   "opening": "2 / 2",
+   "pressure": {
+    "advances": 0,
+    "calm_prefix": 0,
+    "flips": 4,
+    "multi_turned": 0,
+    "prediction_share": 0.27,
+    "pulls": 0,
+    "rams": 0,
+    "signals": 2,
+    "spinners_turned": 2,
+    "trap_delay_median": 9,
+    "turns": 2,
+    "undo_proof": 0.92
+   },
+   "win_share": 0.182
+  },
+  "map": [
+   ". . . . . . .",
+   ". . B>#Y . . . .",
+   ". . . . P>@~ Pv&A .",
+   "Y> . M . . P>%A R<@~",
+   "Bv#Y . G<&A . . . R>@~",
+   ". . G^&A . . . .",
+   ". . . . . . P^%A"
+  ],
+  "name": "P12_2",
+  "target": "EXTREME",
+  "verdict": "NEEDS WORK",
+  "why_a": [],
+  "why_b": []
+ },
+ "P12_3": {
+  "A": {
+   "fingerprint": "b0427dddc6458f595c8658bd89e9f926b411b2dd837c34eb5c984452d152c0da",
+   "hint_nodes": [
+    885,
+    181
+   ],
+   "portals": 0,
+   "position_cap": 2000,
+   "positions": 647,
+   "replay": true,
+   "solution": 15,
+   "solve_ms": 19.5,
+   "timeup_worst_ms": 21.1,
+   "timeup_worst_nodes": 893,
+   "winnable": 68
+  },
+  "B": {
+   "coverage": 0.93,
+   "decision_steps": 14,
+   "distinct_mistakes": 7,
+   "endgame_decision": true,
+   "last_decision": 14,
+   "late": 0.93,
+   "line": [
+    "r3c3v [x1]",
+    "r3c5> [x1]",
+    "r2c5^ [x2]",
+    "r5c2v [x2]",
+    "r5c6< [x2]",
+    "r3c0> push [x3]",
+    "r3c0> push [x3]",
+    "r2c4v push [x3]",
+    "r3c0> [x2]",
+    "r1c2> [x2]",
+    "r4c0v [x2]",
+    "r4c2> push [x2]",
+    "r2c4v [x1]",
+    "r6c6^ [x1]",
+    "r4c2<"
+   ],
+   "losing_per_step": [
+    1,
+    1,
+    2,
+    2,
+    2,
+    3,
+    3,
+    3,
+    2,
+    2,
+    2,
+    2,
+    1,
+    1,
+    0
+   ],
+   "matters_lock": true,
+   "matters_movable": true,
+   "matters_switch": true,
+   "mistakes": [
+    "r2c4<",
+    "r4c2>",
+    "r2c4v",
+    "r6c6^",
+    "r3c0> push",
+    "r2c4v push",
+    "r4c2> push"
+   ],
+   "shortcut": 0,
+   "spinner_dependence": "unsolvable without it",
+   "without_lock": "without it: 4 decision steps, 2 distinct mistakes (with it: 14, 7)",
+   "without_movable": "without it: 0 decision steps, 0 distinct mistakes (with it: 14, 7)",
+   "without_switch": "unsolvable without it"
+  },
+  "C": {
+   "decisions_k4_6_8": [
+    13,
+    10,
+    8
+   ],
+   "deepest": 17,
+   "greedy": {
+    "look2": 0,
+    "look4": 0,
+    "min_turn": 0,
+    "mobility": 0,
+    "safe": 0
+   },
+   "hidden_k6_8": [
+    20,
+    16
+   ],
+   "look6_greedy": 0,
+   "opening": "2 / 3",
+   "pressure": {
+    "advances": 0,
+    "calm_prefix": 2,
+    "flips": 4,
+    "multi_turned": 0,
+    "prediction_share": 0.2,
+    "pulls": 0,
+    "rams": 0,
+    "signals": 2,
+    "spinners_turned": 1,
+    "trap_delay_median": 9,
+    "turns": 1,
+    "undo_proof": 0.93
+   },
+   "win_share": 0.105
+  },
+  "map": [
+   ". . . . . . .",
+   ". . B>#Y . . . .",
+   ". . . . P<@- Pv&A .",
+   "Y> . M Gv@~ . P>%A .",
+   "Bv#Y . G<&A . . . .",
+   ". . G^&A . . . Y<@-",
+   ". . . . . . P^%A"
+  ],
+  "name": "P12_3",
+  "target": "EXTREME",
+  "verdict": "NEEDS WORK",
+  "why_a": [],
+  "why_b": []
+ },
+ "P12_4": {
+  "A": {
+   "fingerprint": "0e1ff13040d2ef11457491f13c949414b7f14ae333a8c1cecdf28806cdb2d48e",
+   "hint_nodes": [
+    885,
+    181
+   ],
+   "portals": 0,
+   "position_cap": 2000,
+   "positions": 647,
+   "replay": true,
+   "solution": 15,
+   "solve_ms": 20,
+   "timeup_worst_ms": 19.8,
+   "timeup_worst_nodes": 893,
+   "winnable": 68
+  },
+  "B": {
+   "coverage": 0.93,
+   "decision_steps": 14,
+   "distinct_mistakes": 7,
+   "endgame_decision": true,
+   "last_decision": 14,
+   "late": 0.93,
+   "line": [
+    "r3c3v [x1]",
+    "r3c5> [x1]",
+    "r2c5^ [x2]",
+    "r5c2v [x2]",
+    "r5c6< [x2]",
+    "r3c0> push [x3]",
+    "r3c0> push [x3]",
+    "r2c4v push [x3]",
+    "r3c0> [x2]",
+    "r1c2> [x2]",
+    "r4c0v [x2]",
+    "r4c2> push [x2]",
+    "r2c4v [x1]",
+    "r6c6^ [x1]",
+    "r4c2<"
+   ],
+   "losing_per_step": [
+    1,
+    1,
+    2,
+    2,
+    2,
+    3,
+    3,
+    3,
+    2,
+    2,
+    2,
+    2,
+    1,
+    1,
+    0
+   ],
+   "matters_lock": true,
+   "matters_movable": true,
+   "matters_switch": true,
+   "mistakes": [
+    "r2c4<",
+    "r4c2>",
+    "r2c4v",
+    "r6c6^",
+    "r3c0> push",
+    "r2c4v push",
+    "r4c2> push"
+   ],
+   "shortcut": 0,
+   "spinner_dependence": "unsolvable without it",
+   "without_lock": "without it: 4 decision steps, 2 distinct mistakes (with it: 14, 7)",
+   "without_movable": "without it: 0 decision steps, 0 distinct mistakes (with it: 14, 7)",
+   "without_switch": "unsolvable without it"
+  },
+  "C": {
+   "decisions_k4_6_8": [
+    13,
+    10,
+    8
+   ],
+   "deepest": 17,
+   "greedy": {
+    "look2": 0,
+    "look4": 0,
+    "min_turn": 0,
+    "mobility": 0,
+    "safe": 0
+   },
+   "hidden_k6_8": [
+    20,
+    16
+   ],
+   "look6_greedy": 0,
+   "opening": "2 / 3",
+   "pressure": {
+    "advances": 0,
+    "calm_prefix": 2,
+    "flips": 4,
+    "multi_turned": 0,
+    "prediction_share": 0.2,
+    "pulls": 0,
+    "rams": 0,
+    "signals": 2,
+    "spinners_turned": 1,
+    "trap_delay_median": 9,
+    "turns": 1,
+    "undo_proof": 0.93
+   },
+   "win_share": 0.105
+  },
+  "map": [
+   ". . . . . . .",
+   ". . B>#Y . . . .",
+   ". . . . P<@- Pv&A .",
+   "Y> . M Gv@~ . P>%A .",
+   "Bv#Y . G<&A . . . .",
+   ". . G^&A . . . Y<@",
+   ". . . . . . P^%A"
+  ],
+  "name": "P12_4",
+  "target": "EXTREME",
+  "verdict": "NEEDS WORK",
+  "why_a": [],
+  "why_b": []
+ },
+ "P12_5": {
+  "A": {
+   "fingerprint": "3f4bac3d9266c9a8727f7e228740a0d447215c906bf8bb3dbcdb74b550863df5",
+   "hint_nodes": [
+    885,
+    181
+   ],
+   "portals": 0,
+   "position_cap": 2000,
+   "positions": 647,
+   "replay": true,
+   "solution": 15,
+   "solve_ms": 20.5,
+   "timeup_worst_ms": 19,
+   "timeup_worst_nodes": 893,
+   "winnable": 68
+  },
+  "B": {
+   "coverage": 0.93,
+   "decision_steps": 14,
+   "distinct_mistakes": 7,
+   "endgame_decision": true,
+   "last_decision": 14,
+   "late": 0.93,
+   "line": [
+    "r3c3^ [x1]",
+    "r3c5> [x1]",
+    "r2c5^ [x2]",
+    "r5c2v [x2]",
+    "r5c6< [x2]",
+    "r3c0> push [x3]",
+    "r3c0> push [x3]",
+    "r2c4v push [x3]",
+    "r3c0> [x2]",
+    "r1c2> [x2]",
+    "r4c0v [x2]",
+    "r4c2> push [x2]",
+    "r2c4v [x1]",
+    "r6c6^ [x1]",
+    "r4c2<"
+   ],
+   "losing_per_step": [
+    1,
+    1,
+    2,
+    2,
+    2,
+    3,
+    3,
+    3,
+    2,
+    2,
+    2,
+    2,
+    1,
+    1,
+    0
+   ],
+   "matters_lock": true,
+   "matters_movable": true,
+   "matters_switch": true,
+   "mistakes": [
+    "r2c4<",
+    "r4c2>",
+    "r2c4v",
+    "r6c6^",
+    "r3c0> push",
+    "r2c4v push",
+    "r4c2> push"
+   ],
+   "shortcut": 0,
+   "spinner_dependence": "unsolvable without it",
+   "without_lock": "without it: 4 decision steps, 2 distinct mistakes (with it: 14, 7)",
+   "without_movable": "without it: 0 decision steps, 0 distinct mistakes (with it: 14, 7)",
+   "without_switch": "unsolvable without it"
+  },
+  "C": {
+   "decisions_k4_6_8": [
+    13,
+    10,
+    8
+   ],
+   "deepest": 17,
+   "greedy": {
+    "look2": 0,
+    "look4": 0,
+    "min_turn": 0,
+    "mobility": 0,
+    "safe": 0
+   },
+   "hidden_k6_8": [
+    20,
+    16
+   ],
+   "look6_greedy": 0,
+   "opening": "2 / 3",
+   "pressure": {
+    "advances": 0,
+    "calm_prefix": 2,
+    "flips": 4,
+    "multi_turned": 0,
+    "prediction_share": 0.2,
+    "pulls": 0,
+    "rams": 0,
+    "signals": 2,
+    "spinners_turned": 1,
+    "trap_delay_median": 9,
+    "turns": 1,
+    "undo_proof": 0.93
+   },
+   "win_share": 0.105
+  },
+  "map": [
+   ". . . . . . .",
+   ". . B>#Y . . . .",
+   ". . . . P<@- Pv&A .",
+   "Y> . M G^@~ . P>%A .",
+   "Bv#Y . G<&A . . . .",
+   ". . G^&A . . . Y<@",
+   ". . . . . . P^%A"
+  ],
+  "name": "P12_5",
+  "target": "EXTREME",
+  "verdict": "NEEDS WORK",
+  "why_a": [],
+  "why_b": []
+ },
+ "P12_6": {
+  "A": {
+   "fingerprint": "8a852a38bb0eeee6c03bd182daac7f0297eb60d03fae3f7ce73a8ad41619aae3",
+   "hint_nodes": [
+    885,
+    181
+   ],
+   "portals": 0,
+   "position_cap": 2000,
+   "positions": 647,
+   "replay": true,
+   "solution": 15,
+   "solve_ms": 24.1,
+   "timeup_worst_ms": 20.2,
+   "timeup_worst_nodes": 893,
+   "winnable": 68
+  },
+  "B": {
+   "coverage": 0.93,
+   "decision_steps": 14,
+   "distinct_mistakes": 7,
+   "endgame_decision": true,
+   "last_decision": 14,
+   "late": 0.93,
+   "line": [
+    "r3c3v [x1]",
+    "r3c5> [x1]",
+    "r2c5^ [x2]",
+    "r5c2v [x2]",
+    "r5c6< [x2]",
+    "r3c0> push [x3]",
+    "r3c0> push [x3]",
+    "r2c4v push [x3]",
+    "r3c0> [x2]",
+    "r1c2> [x2]",
+    "r4c0v [x2]",
+    "r4c2> push [x2]",
+    "r2c4v [x1]",
+    "r6c6^ [x1]",
+    "r4c2<"
+   ],
+   "losing_per_step": [
+    1,
+    1,
+    2,
+    2,
+    2,
+    3,
+    3,
+    3,
+    2,
+    2,
+    2,
+    2,
+    1,
+    1,
+    0
+   ],
+   "matters_lock": true,
+   "matters_movable": true,
+   "matters_switch": true,
+   "mistakes": [
+    "r2c4<",
+    "r4c2>",
+    "r2c4v",
+    "r6c6^",
+    "r3c0> push",
+    "r2c4v push",
+    "r4c2> push"
+   ],
+   "shortcut": 0,
+   "spinner_dependence": "unsolvable without it",
+   "without_lock": "without it: 4 decision steps, 2 distinct mistakes (with it: 14, 7)",
+   "without_movable": "without it: 0 decision steps, 0 distinct mistakes (with it: 14, 7)",
+   "without_switch": "unsolvable without it"
+  },
+  "C": {
+   "decisions_k4_6_8": [
+    13,
+    10,
+    8
+   ],
+   "deepest": 17,
+   "greedy": {
+    "look2": 0,
+    "look4": 0,
+    "min_turn": 0,
+    "mobility": 0,
+    "safe": 0
+   },
+   "hidden_k6_8": [
+    20,
+    16
+   ],
+   "look6_greedy": 0,
+   "opening": "2 / 3",
+   "pressure": {
+    "advances": 0,
+    "calm_prefix": 2,
+    "flips": 4,
+    "multi_turned": 0,
+    "prediction_share": 0.2,
+    "pulls": 0,
+    "rams": 0,
+    "signals": 2,
+    "spinners_turned": 1,
+    "trap_delay_median": 9,
+    "turns": 1,
+    "undo_proof": 0.93
+   },
+   "win_share": 0.105
+  },
+  "map": [
+   ". . . . . . .",
+   ". . B>#Y . . . .",
+   ". . . . P<@- Pv&A .",
+   "Y> . M Gv@~ . P>%A .",
+   "Bv#Y . G<&A . . . .",
+   ". . G^&A . . . Y<@~",
+   ". . . . . . P^%A"
+  ],
+  "name": "P12_6",
+  "target": "EXTREME",
+  "verdict": "NEEDS WORK",
+  "why_a": [],
+  "why_b": []
+ },
+ "P12_7": {
+  "A": {
+   "fingerprint": "b6fec8df81b6ca269794b38fef302f1982a2ac53be800857d9a5d1e41a376244",
+   "hint_nodes": [
+    593,
+    168
+   ],
+   "portals": 0,
+   "position_cap": 2000,
+   "positions": 550,
+   "replay": true,
+   "solution": 14,
+   "solve_ms": 21,
+   "timeup_worst_ms": 12.5,
+   "timeup_worst_nodes": 593,
+   "winnable": 105
+  },
+  "B": {
+   "coverage": 0.86,
+   "decision_steps": 12,
+   "distinct_mistakes": 6,
+   "endgame_decision": true,
+   "last_decision": 13,
+   "late": 0.93,
+   "line": [
+    "r3c5>",
+    "r2c5^ [x2]",
+    "r5c2v [x3]",
+    "r3c0> push [x3]",
+    "r3c0> push [x3]",
+    "r2c4v push [x3]",
+    "r3c0> [x2]",
+    "r4c2> push [x2]",
+    "r2c4v [x1]",
+    "r2c2> [x1]",
+    "r1c2> [x1]",
+    "r4c0v [x1]",
+    "r6c6^ [x1]",
+    "r4c2<"
+   ],
+   "losing_per_step": [
+    0,
+    2,
+    3,
+    3,
+    3,
+    3,
+    2,
+    2,
+    1,
+    1,
+    1,
+    1,
+    1,
+    0
+   ],
+   "matters_lock": true,
+   "matters_movable": true,
+   "matters_switch": true,
+   "mistakes": [
+    "r4c2>",
+    "r6c6^",
+    "r2c4v",
+    "r3c0> push",
+    "r2c4v push",
+    "r4c2> push"
+   ],
+   "shortcut": 0,
+   "spinner_dependence": "unsolvable without it",
+   "without_lock": "without it: 6 decision steps, 3 distinct mistakes (with it: 12, 6)",
+   "without_movable": "without it: 0 decision steps, 0 distinct mistakes (with it: 12, 6)",
+   "without_switch": "unsolvable without it"
+  },
+  "C": {
+   "decisions_k4_6_8": [
+    11,
+    9,
+    7
+   ],
+   "deepest": 15,
+   "greedy": {
+    "look2": 0,
+    "look4": 0,
+    "min_turn": 0,
+    "mobility": 0,
+    "safe": 0
+   },
+   "hidden_k6_8": [
+    16,
+    11
+   ],
+   "look6_greedy": 0,
+   "opening": "3 / 3",
+   "pressure": {
+    "advances": 0,
+    "calm_prefix": 0,
+    "flips": 4,
+    "multi_turned": 0,
+    "prediction_share": 0.21,
+    "pulls": 0,
+    "rams": 0,
+    "signals": 2,
+    "spinners_turned": 1,
+    "trap_delay_median": 7,
+    "turns": 1,
+    "undo_proof": 0.87
+   },
+   "win_share": 0.191
+  },
+  "map": [
+   ". . . . . . .",
+   ". . B>#Y . . . .",
+   ". . Y>@- . P<@- Pv&A .",
+   "Y> . M . . P>%A .",
+   "Bv#Y . G<&A . . . .",
+   ". . G^&A . . . .",
+   ". . . . . . P^%A"
+  ],
+  "name": "P12_7",
+  "target": "EXTREME",
+  "verdict": "NEEDS WORK",
+  "why_a": [],
+  "why_b": []
+ },
+ "P13_0": {
+  "A": {
+   "fingerprint": "2211bf8a3d57a8576832710156242586a59bf0c2b1bfe9eff139c3e7ec438bb0",
+   "hint_nodes": [
+    178,
+    164
+   ],
+   "portals": 0,
+   "position_cap": 2000,
+   "positions": 337,
+   "replay": true,
+   "solution": 18,
+   "solve_ms": 6.2,
+   "timeup_worst_ms": 7.7,
+   "timeup_worst_nodes": 267,
+   "winnable": 102
+  },
+  "B": {
+   "coverage": 0.72,
+   "decision_steps": 13,
+   "distinct_mistakes": 4,
+   "endgame_decision": true,
+   "last_decision": 14,
+   "late": 0.78,
+   "line": [
+    "r3c0< [x1]",
+    "r4c0< [x1]",
+    "r5c2v [x1]",
+    "r4c2< [x1]",
+    "r6c5v [x1]",
+    "r6c6^",
+    "r5c3v [x1]",
+    "r4c3< [x1]",
+    "r6c1> [x2]",
+    "r2c3v push [x2]",
+    "r4c5< push [x2]",
+    "r2c3v [x1]",
+    "r0c3v [x1]",
+    "r4c5< push [x1]",
+    "r3c5^",
+    "r3c2>",
+    "r0c2v",
+    "r4c5v"
+   ],
+   "losing_per_step": [
+    1,
+    1,
+    1,
+    1,
+    1,
+    0,
+    1,
+    1,
+    2,
+    2,
+    2,
+    1,
+    1,
+    1,
+    0,
+    0,
+    0,
+    0
+   ],
+   "matters_gate": true,
+   "matters_movable": true,
+   "matters_switch": true,
+   "mistakes": [
+    "r6c6^",
+    "r3c5^",
+    "r4c5<",
+    "r2c3v push"
+   ],
+   "shortcut": 0,
+   "spinner_dependence": "unsolvable without it",
+   "without_gate": "without it: 9 decision steps, 4 distinct mistakes (with it: 13, 4)",
+   "without_movable": "without it: 0 decision steps, 0 distinct mistakes (with it: 13, 4)",
+   "without_switch": "unsolvable without it"
+  },
+  "C": {
+   "decisions_k4_6_8": [
+    12,
+    9,
+    8
+   ],
+   "deepest": 18,
+   "greedy": {
+    "look2": 0,
+    "look4": 0,
+    "min_turn": 0,
+    "mobility": 0,
+    "safe": 0
+   },
+   "hidden_k6_8": [
+    10,
+    9
+   ],
+   "look6_greedy": 0,
+   "opening": "3 / 4",
+   "pressure": {
+    "advances": 0,
+    "calm_prefix": 1,
+    "flips": 2,
+    "multi_turned": 1,
+    "prediction_share": 0.33,
+    "pulls": 0,
+    "rams": 0,
+    "signals": 2,
+    "spinners_turned": 4,
+    "trap_delay_median": 9,
+    "turns": 5,
+    "undo_proof": 0.88
+   },
+   "win_share": 0.303
+  },
+  "map": [
+   ". . Yv Gv . . .",
+   ". . . . . . .",
+   ". . . Yv+C . . .",
+   "B< . P>%A M XC Rv&A .",
+   "R^@- . B^@- R<@~ . B<@- .",
+   ". . Bv+C Y^&A . . .",
+   ". R>+C . . . Yv&A P^%A"
+  ],
+  "name": "P13_0",
+  "target": "EXTREME",
+  "verdict": "NEEDS WORK",
+  "why_a": [],
+  "why_b": []
+ },
+ "P13_1": {
+  "A": {
+   "fingerprint": "2fe929c006a77bdabad50111dd4b8b0311bf11d41c30cb225f4f674c8a4f8a8c",
+   "hint_nodes": [
+    467,
+    415
+   ],
+   "portals": 0,
+   "position_cap": 2000,
+   "positions": 656,
+   "replay": true,
+   "solution": 18,
+   "solve_ms": 13.5,
+   "timeup_worst_ms": 27.1,
+   "timeup_worst_nodes": 1207,
+   "winnable": 146
+  },
+  "B": {
+   "coverage": 0.67,
+   "decision_steps": 12,
+   "distinct_mistakes": 5,
+   "endgame_decision": true,
+   "last_decision": 14,
+   "late": 0.78,
+   "line": [
+    "r1c6>",
+    "r3c0< [x1]",
+    "r4c0< [x1]",
+    "r5c2v [x1]",
+    "r4c2< [x1]",
+    "r6c5v [x1]",
+    "r6c6^",
+    "r5c3v [x1]",
+    "r4c3< [x1]",
+    "r6c1> [x2]",
+    "r0c3v push [x3]",
+    "r4c5< push [x2]",
+    "r0c3v [x1]",
+    "r4c5< push [x1]",
+    "r3c5>",
+    "r3c2>",
+    "r0c2v",
+    "r4c5v"
+   ],
+   "losing_per_step": [
+    0,
+    1,
+    1,
+    1,
+    1,
+    1,
+    0,
+    1,
+    1,
+    2,
+    3,
+    2,
+    1,
+    1,
+    0,
+    0,
+    0,
+    0
+   ],
+   "matters_gate": true,
+   "matters_movable": true,
+   "matters_switch": true,
+   "mistakes": [
+    "r6c6^",
+    "r3c5>",
+    "r4c5<",
+    "r3c2> push",
+    "r0c3v push"
+   ],
+   "shortcut": 0,
+   "spinner_dependence": "unsolvable without it",
+   "without_gate": "without it: 7 decision steps, 4 distinct mistakes (with it: 12, 5)",
+   "without_movable": "without it: 2 decision steps, 1 distinct mistakes (with it: 12, 5)",
+   "without_switch": "unsolvable without it"
+  },
+  "C": {
+   "decisions_k4_6_8": [
+    12,
+    9,
+    8
+   ],
+   "deepest": 21,
+   "greedy": {
+    "look2": 0,
+    "look4": 0,
+    "min_turn": 0,
+    "mobility": 0,
+    "safe": 0
+   },
+   "hidden_k6_8": [
+    11,
+    9
+   ],
+   "look6_greedy": 0,
+   "opening": "4 / 4",
+   "pressure": {
+    "advances": 0,
+    "calm_prefix": 2,
+    "flips": 2,
+    "multi_turned": 1,
+    "prediction_share": 0.33,
+    "pulls": 0,
+    "rams": 0,
+    "signals": 3,
+    "spinners_turned": 4,
+    "trap_delay_median": 8,
+    "turns": 5,
+    "undo_proof": 1
+   },
+   "win_share": 0.223
+  },
+  "map": [
+   ". . Yv Gv . . .",
+   ". . . . . . G>",
+   ". . . . . . .",
+   "B<+C . P>%A M XC R<&A .",
+   "R^@- . B^@- R<@~ . B<@- .",
+   ". . Bv+C Y^&A . . .",
+   ". R>+C . . . Yv&A P^%A"
+  ],
+  "name": "P13_1",
+  "target": "EXTREME",
+  "verdict": "NEEDS WORK",
+  "why_a": [],
+  "why_b": []
+ },
+ "P13_2": {
+  "A": {
+   "fingerprint": "093015597cdec918db3252161413972f00ffd7d39c73e9e1eced97d32c79ef65",
+   "hint_nodes": [
+    408,
+    324
+   ],
+   "portals": 0,
+   "position_cap": 2000,
+   "positions": 695,
+   "replay": true,
+   "solution": 17,
+   "solve_ms": 12.9,
+   "timeup_worst_ms": 31.1,
+   "timeup_worst_nodes": 1412,
+   "winnable": 157
+  },
+  "B": {
+   "coverage": 0.71,
+   "decision_steps": 12,
+   "distinct_mistakes": 5,
+   "endgame_decision": true,
+   "last_decision": 13,
+   "late": 0.76,
+   "line": [
+    "r1c3> [x1]",
+    "r4c0^ [x1]",
+    "r5c2v [x1]",
+    "r4c2< [x1]",
+    "r6c5v [x1]",
+    "r6c6^",
+    "r5c3v [x1]",
+    "r4c3< [x1]",
+    "r6c1> [x2]",
+    "r2c1v [x3]",
+    "r2c3< [x3]",
+    "r0c3v push [x3]",
+    "r4c5< push [x2]",
+    "r0c3v",
+    "r3c5^",
+    "r3c2>",
+    "r4c5v"
+   ],
+   "losing_per_step": [
+    1,
+    1,
+    1,
+    1,
+    1,
+    0,
+    1,
+    1,
+    2,
+    3,
+    3,
+    3,
+    2,
+    0,
+    0,
+    0,
+    0
+   ],
+   "matters_gate": true,
+   "matters_movable": true,
+   "matters_switch": true,
+   "mistakes": [
+    "r6c6^",
+    "r3c5^",
+    "r4c5<",
+    "r3c2> push",
+    "r0c3v push"
+   ],
+   "shortcut": 0,
+   "spinner_dependence": "unsolvable without it",
+   "without_gate": "without it: 8 decision steps, 4 distinct mistakes (with it: 12, 5)",
+   "without_movable": "without it: 2 decision steps, 1 distinct mistakes (with it: 12, 5)",
+   "without_switch": "unsolvable without it"
+  },
+  "C": {
+   "decisions_k4_6_8": [
+    12,
+    10,
+    8
+   ],
+   "deepest": 17,
+   "greedy": {
+    "look2": 0,
+    "look4": 0,
+    "min_turn": 0,
+    "mobility": 0,
+    "safe": 0
+   },
+   "hidden_k6_8": [
+    15,
+    9
+   ],
+   "look6_greedy": 0,
+   "opening": "4 / 5",
+   "pressure": {
+    "advances": 0,
+    "calm_prefix": 3,
+    "flips": 2,
+    "multi_turned": 1,
+    "prediction_share": 0.29,
+    "pulls": 0,
+    "rams": 0,
+    "signals": 2,
+    "spinners_turned": 3,
+    "trap_delay_median": 7,
+    "turns": 4,
+    "undo_proof": 1
+   },
+   "win_share": 0.226
+  },
+  "map": [
+   ". . . Gv . . .",
+   ". . . B>+C . . .",
+   ". Yv . P< . . .",
+   ". . P>%A M XC Rv&A .",
+   "R^@- . B^@- R<@~ . B<@- .",
+   ". . Bv+C Y^&A . . .",
+   ". R>+C . . . Yv&A P^%A"
+  ],
+  "name": "P13_2",
+  "target": "EXTREME",
+  "verdict": "NEEDS WORK",
+  "why_a": [],
+  "why_b": []
+ },
+ "P13_3": {
+  "A": {
+   "fingerprint": "e0d4bc5571200bbf9f60e7fb46a3117fb6ebdffe1d710ce899ec5590d08b03df",
+   "hint_nodes": [
+    250,
+    531
+   ],
+   "portals": 0,
+   "position_cap": 2000,
+   "positions": 610,
+   "replay": true,
+   "solution": 16,
+   "solve_ms": 9.9,
+   "timeup_worst_ms": 17.6,
+   "timeup_worst_nodes": 813,
+   "winnable": 162
+  },
+  "B": {
+   "coverage": 0.69,
+   "decision_steps": 11,
+   "distinct_mistakes": 4,
+   "endgame_decision": true,
+   "last_decision": 12,
+   "late": 0.75,
+   "line": [
+    "r3c0< [x1]",
+    "r5c2v [x1]",
+    "r4c2< [x1]",
+    "r6c5v [x1]",
+    "r6c6^",
+    "r5c3v [x1]",
+    "r4c3< [x1]",
+    "r6c1> [x2]",
+    "r0c3v push [x2]",
+    "r4c5< push [x2]",
+    "r0c3v [x1]",
+    "r4c5< push [x1]",
+    "r3c5^",
+    "r3c2>",
+    "r0c2v",
+    "r4c5v"
+   ],
+   "losing_per_step": [
+    1,
+    1,
+    1,
+    1,
+    0,
+    1,
+    1,
+    2,
+    2,
+    2,
+    1,
+    1,
+    0,
+    0,
+    0,
+    0
+   ],
+   "matters_gate": true,
+   "matters_movable": true,
+   "matters_switch": true,
+   "mistakes": [
+    "r6c6^",
+    "r3c5^",
+    "r4c5<",
+    "r0c3v push"
+   ],
+   "shortcut": 0,
+   "spinner_dependence": "unsolvable without it",
+   "without_gate": "without it: 8 decision steps, 4 distinct mistakes (with it: 11, 4)",
+   "without_movable": "without it: 0 decision steps, 0 distinct mistakes (with it: 11, 4)",
+   "without_switch": "unsolvable without it"
+  },
+  "C": {
+   "decisions_k4_6_8": [
+    10,
+    7,
+    7
+   ],
+   "deepest": 20,
+   "greedy": {
+    "look2": 0,
+    "look4": 0,
+    "min_turn": 0,
+    "mobility": 0,
+    "safe": 0
+   },
+   "hidden_k6_8": [
+    8,
+    8
+   ],
+   "look6_greedy": 0,
+   "opening": "3 / 4",
+   "pressure": {
+    "advances": 0,
+    "calm_prefix": 2,
+    "flips": 2,
+    "multi_turned": 1,
+    "prediction_share": 0.31,
+    "pulls": 0,
+    "rams": 0,
+    "signals": 2,
+    "spinners_turned": 3,
+    "trap_delay_median": 8,
+    "turns": 4,
+    "undo_proof": 0.86
+   },
+   "win_share": 0.266
+  },
+  "map": [
+   ". . Yv Gv+C . . .",
+   ". . . . . . .",
+   ". . . . . . .",
+   "B< . P>%A M XC Rv&A .",
+   ". . B^@- R<@~ . B<@- .",
+   ". . Bv+C Y^&A . . .",
+   ". R>+C . . . Yv&A P^%A"
+  ],
+  "name": "P13_3",
+  "target": "EXTREME",
+  "verdict": "NEEDS WORK",
+  "why_a": [],
+  "why_b": []
+ },
+ "P13_4": {
+  "A": {
+   "fingerprint": "1a425dccc3dd6b94bff796fe9fbfd1e9b4c6724f1f4429edeba1e30781e5cb9c",
+   "hint_nodes": [
+    466,
+    415
+   ],
+   "portals": 0,
+   "position_cap": 2000,
+   "positions": 638,
+   "replay": true,
+   "solution": 17,
+   "solve_ms": 12.5,
+   "timeup_worst_ms": 27.3,
+   "timeup_worst_nodes": 1207,
+   "winnable": 128
+  },
+  "B": {
+   "coverage": 0.71,
+   "decision_steps": 12,
+   "distinct_mistakes": 5,
+   "endgame_decision": true,
+   "last_decision": 13,
+   "late": 0.76,
+   "line": [
+    "r3c0< [x1]",
+    "r4c0< [x1]",
+    "r5c2v [x1]",
+    "r4c2< [x1]",
+    "r6c5v [x1]",
+    "r6c6^",
+    "r5c3v [x1]",
+    "r4c3< [x1]",
+    "r6c1> [x2]",
+    "r0c3v push [x3]",
+    "r4c5< push [x2]",
+    "r0c3v [x1]",
+    "r4c5< push [x1]",
+    "r3c5^",
+    "r3c2>",
+    "r0c2v",
+    "r4c5v"
+   ],
+   "losing_per_step": [
+    1,
+    1,
+    1,
+    1,
+    1,
+    0,
+    1,
+    1,
+    2,
+    3,
+    2,
+    1,
+    1,
+    0,
+    0,
+    0,
+    0
+   ],
+   "matters_gate": true,
+   "matters_movable": true,
+   "matters_switch": true,
+   "mistakes": [
+    "r6c6^",
+    "r3c5^",
+    "r4c5<",
+    "r3c2> push",
+    "r0c3v push"
+   ],
+   "shortcut": 0,
+   "spinner_dependence": "unsolvable without it",
+   "without_gate": "without it: 8 decision steps, 4 distinct mistakes (with it: 12, 5)",
+   "without_movable": "without it: 2 decision steps, 1 distinct mistakes (with it: 12, 5)",
+   "without_switch": "unsolvable without it"
+  },
+  "C": {
+   "decisions_k4_6_8": [
+    12,
+    9,
+    8
+   ],
+   "deepest": 21,
+   "greedy": {
+    "look2": 0,
+    "look4": 0,
+    "min_turn": 0,
+    "mobility": 0,
+    "safe": 0
+   },
+   "hidden_k6_8": [
+    11,
+    9
+   ],
+   "look6_greedy": 0,
+   "opening": "3 / 4",
+   "pressure": {
+    "advances": 0,
+    "calm_prefix": 1,
+    "flips": 2,
+    "multi_turned": 1,
+    "prediction_share": 0.35,
+    "pulls": 0,
+    "rams": 0,
+    "signals": 2,
+    "spinners_turned": 4,
+    "trap_delay_median": 8,
+    "turns": 5,
+    "undo_proof": 1
+   },
+   "win_share": 0.201
+  },
+  "map": [
+   ". . Yv Gv . . .",
+   ". . . . . . .",
+   ". . . . . . .",
+   "B<+C . P>%A M XC Rv&A .",
+   "R^@- . B^@- R<@~ . B<@- .",
+   ". . Bv+C Y^&A . . .",
+   ". R>+C . . . Yv&A P^%A"
+  ],
+  "name": "P13_4",
+  "target": "EXTREME",
+  "verdict": "NEEDS WORK",
+  "why_a": [],
+  "why_b": []
+ },
+ "P13_5": {
+  "A": {
+   "fingerprint": "ba2382d2cfe17e0a06fa5c5f330bbb2011202b32da0198e663a472fe5ba48d53",
+   "hint_nodes": [
+    466,
+    415
+   ],
+   "portals": 0,
+   "position_cap": 2000,
+   "positions": 638,
+   "replay": true,
+   "solution": 17,
+   "solve_ms": 12.3,
+   "timeup_worst_ms": 26.9,
+   "timeup_worst_nodes": 1207,
+   "winnable": 128
+  },
+  "B": {
+   "coverage": 0.71,
+   "decision_steps": 12,
+   "distinct_mistakes": 5,
+   "endgame_decision": true,
+   "last_decision": 13,
+   "late": 0.76,
+   "line": [
+    "r3c0< [x1]",
+    "r4c0< [x1]",
+    "r5c2v [x1]",
+    "r4c2< [x1]",
+    "r6c5v [x1]",
+    "r6c6^",
+    "r5c3v [x1]",
+    "r4c3< [x1]",
+    "r6c1> [x2]",
+    "r0c3v push [x3]",
+    "r4c5< push [x2]",
+    "r0c3v [x1]",
+    "r4c5< push [x1]",
+    "r3c5>",
+    "r3c2>",
+    "r0c2v",
+    "r4c5v"
+   ],
+   "losing_per_step": [
+    1,
+    1,
+    1,
+    1,
+    1,
+    0,
+    1,
+    1,
+    2,
+    3,
+    2,
+    1,
+    1,
+    0,
+    0,
+    0,
+    0
+   ],
+   "matters_gate": true,
+   "matters_movable": true,
+   "matters_switch": true,
+   "mistakes": [
+    "r6c6^",
+    "r3c5>",
+    "r4c5<",
+    "r3c2> push",
+    "r0c3v push"
+   ],
+   "shortcut": 0,
+   "spinner_dependence": "unsolvable without it",
+   "without_gate": "without it: 7 decision steps, 4 distinct mistakes (with it: 12, 5)",
+   "without_movable": "without it: 2 decision steps, 1 distinct mistakes (with it: 12, 5)",
+   "without_switch": "unsolvable without it"
+  },
+  "C": {
+   "decisions_k4_6_8": [
+    12,
+    9,
+    8
+   ],
+   "deepest": 21,
+   "greedy": {
+    "look2": 0,
+    "look4": 0,
+    "min_turn": 0,
+    "mobility": 0,
+    "safe": 0
+   },
+   "hidden_k6_8": [
+    11,
+    9
+   ],
+   "look6_greedy": 0,
+   "opening": "3 / 4",
+   "pressure": {
+    "advances": 0,
+    "calm_prefix": 1,
+    "flips": 2,
+    "multi_turned": 1,
+    "prediction_share": 0.35,
+    "pulls": 0,
+    "rams": 0,
+    "signals": 2,
+    "spinners_turned": 4,
+    "trap_delay_median": 8,
+    "turns": 5,
+    "undo_proof": 1
+   },
+   "win_share": 0.201
+  },
+  "map": [
+   ". . Yv Gv . . .",
+   ". . . . . . .",
+   ". . . . . . .",
+   "B<+C . P>%A M XC R<&A .",
+   "R^@- . B^@- R<@~ . B<@- .",
+   ". . Bv+C Y^&A . . .",
+   ". R>+C . . . Yv&A P^%A"
+  ],
+  "name": "P13_5",
+  "target": "EXTREME",
+  "verdict": "NEEDS WORK",
+  "why_a": [],
+  "why_b": []
+ },
+ "P13_6": {
+  "A": {
+   "fingerprint": "f53a112fa7998726cffffd32e00aa0a5de27a0421f5cb8ebc3e5fda63dc357ca",
+   "hint_nodes": [
+    466,
+    415
+   ],
+   "portals": 0,
+   "position_cap": 2000,
+   "positions": 670,
+   "replay": true,
+   "solution": 17,
+   "solve_ms": 21.8,
+   "timeup_worst_ms": 29.4,
+   "timeup_worst_nodes": 1322,
+   "winnable": 128
+  },
+  "B": {
+   "coverage": 0.71,
+   "decision_steps": 12,
+   "distinct_mistakes": 5,
+   "endgame_decision": true,
+   "last_decision": 13,
+   "late": 0.76,
+   "line": [
+    "r3c0< [x1]",
+    "r4c0< [x1]",
+    "r5c2v [x1]",
+    "r4c2< [x1]",
+    "r6c5v [x1]",
+    "r6c6^",
+    "r5c3v [x1]",
+    "r4c3< [x1]",
+    "r6c1> [x2]",
+    "r0c3v push [x3]",
+    "r4c5< push [x2]",
+    "r0c3v [x1]",
+    "r4c5< push [x1]",
+    "r3c5^",
+    "r3c2>",
+    "r0c2v",
+    "r4c5v"
+   ],
+   "losing_per_step": [
+    1,
+    1,
+    1,
+    1,
+    1,
+    0,
+    1,
+    1,
+    2,
+    3,
+    2,
+    1,
+    1,
+    0,
+    0,
+    0,
+    0
+   ],
+   "matters_gate": true,
+   "matters_movable": true,
+   "matters_switch": true,
+   "mistakes": [
+    "r6c6^",
+    "r3c5^",
+    "r4c5<",
+    "r3c2> push",
+    "r0c3v push"
+   ],
+   "shortcut": 0,
+   "spinner_dependence": "unsolvable without it",
+   "without_gate": "without it: 8 decision steps, 4 distinct mistakes (with it: 12, 5)",
+   "without_movable": "without it: 2 decision steps, 1 distinct mistakes (with it: 12, 5)",
+   "without_switch": "unsolvable without it"
+  },
+  "C": {
+   "decisions_k4_6_8": [
+    12,
+    9,
+    8
+   ],
+   "deepest": 21,
+   "greedy": {
+    "look2": 0,
+    "look4": 0,
+    "min_turn": 0,
+    "mobility": 0,
+    "safe": 0
+   },
+   "hidden_k6_8": [
+    11,
+    9
+   ],
+   "look6_greedy": 0,
+   "opening": "3 / 4",
+   "pressure": {
+    "advances": 0,
+    "calm_prefix": 1,
+    "flips": 2,
+    "multi_turned": 1,
+    "prediction_share": 0.35,
+    "pulls": 0,
+    "rams": 0,
+    "signals": 2,
+    "spinners_turned": 4,
+    "trap_delay_median": 8,
+    "turns": 5,
+    "undo_proof": 1
+   },
+   "win_share": 0.191
+  },
+  "map": [
+   ". . Yv Gv . . .",
+   ". . . . . . .",
+   ". . . . . . .",
+   "B< . P>%A M XC Rv&A .",
+   "R^@- . B^@- R<@~ . B<@- .",
+   ". . Bv+C Y^&A . . .",
+   ". R>+C . . . Yv&A P^%A"
+  ],
+  "name": "P13_6",
+  "target": "EXTREME",
+  "verdict": "NEEDS WORK",
+  "why_a": [],
+  "why_b": []
+ },
+ "P13_7": {
+  "A": {
+   "fingerprint": "60547ca24f4fee1f11222090ea01459683c7842d00b8079df86414fea8824242",
+   "hint_nodes": [
+    466,
+    415
+   ],
+   "portals": 0,
+   "position_cap": 2000,
+   "positions": 670,
+   "replay": true,
+   "solution": 17,
+   "solve_ms": 12.7,
+   "timeup_worst_ms": 29,
+   "timeup_worst_nodes": 1322,
+   "winnable": 128
+  },
+  "B": {
+   "coverage": 0.71,
+   "decision_steps": 12,
+   "distinct_mistakes": 5,
+   "endgame_decision": true,
+   "last_decision": 13,
+   "late": 0.76,
+   "line": [
+    "r3c0< [x1]",
+    "r4c0< [x1]",
+    "r5c2v [x1]",
+    "r4c2< [x1]",
+    "r6c5v [x1]",
+    "r6c6^",
+    "r5c3v [x1]",
+    "r4c3< [x1]",
+    "r6c1> [x2]",
+    "r0c3v push [x3]",
+    "r4c5< push [x2]",
+    "r0c3v [x1]",
+    "r4c5< push [x1]",
+    "r3c5>",
+    "r3c2>",
+    "r0c2v",
+    "r4c5v"
+   ],
+   "losing_per_step": [
+    1,
+    1,
+    1,
+    1,
+    1,
+    0,
+    1,
+    1,
+    2,
+    3,
+    2,
+    1,
+    1,
+    0,
+    0,
+    0,
+    0
+   ],
+   "matters_gate": true,
+   "matters_movable": true,
+   "matters_switch": true,
+   "mistakes": [
+    "r6c6^",
+    "r3c5>",
+    "r4c5<",
+    "r3c2> push",
+    "r0c3v push"
+   ],
+   "shortcut": 0,
+   "spinner_dependence": "unsolvable without it",
+   "without_gate": "without it: 7 decision steps, 4 distinct mistakes (with it: 12, 5)",
+   "without_movable": "without it: 2 decision steps, 1 distinct mistakes (with it: 12, 5)",
+   "without_switch": "unsolvable without it"
+  },
+  "C": {
+   "decisions_k4_6_8": [
+    12,
+    9,
+    8
+   ],
+   "deepest": 21,
+   "greedy": {
+    "look2": 0,
+    "look4": 0,
+    "min_turn": 0,
+    "mobility": 0,
+    "safe": 0
+   },
+   "hidden_k6_8": [
+    11,
+    9
+   ],
+   "look6_greedy": 0,
+   "opening": "3 / 4",
+   "pressure": {
+    "advances": 0,
+    "calm_prefix": 1,
+    "flips": 2,
+    "multi_turned": 1,
+    "prediction_share": 0.35,
+    "pulls": 0,
+    "rams": 0,
+    "signals": 2,
+    "spinners_turned": 4,
+    "trap_delay_median": 8,
+    "turns": 5,
+    "undo_proof": 1
+   },
+   "win_share": 0.191
+  },
+  "map": [
+   ". . Yv Gv . . .",
+   ". . . . . . .",
+   ". . . . . . .",
+   "B< . P>%A M XC R<&A .",
+   "R^@- . B^@- R<@~ . B<@- .",
+   ". . Bv+C Y^&A . . .",
+   ". R>+C . . . Yv&A P^%A"
+  ],
+  "name": "P13_7",
+  "target": "EXTREME",
+  "verdict": "NEEDS WORK",
+  "why_a": [],
+  "why_b": []
+ }
+}

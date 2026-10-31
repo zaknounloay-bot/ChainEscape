@@ -1,0 +1,106 @@
+{
+ "P13b_0": {
+  "map": [
+   ". . . . . . R>",
+   ". Rv@~+C . . P<%A . R>@+C",
+   "Bv@- . . . . . R^",
+   "R>@- . . M XC . .",
+   "R>&A . . . . . .",
+   ". . . Y^&A . . .",
+   ". R>+C . . . . P^%A"
+  ],
+  "mechanic": "movable,gate,switch",
+  "positions": 249
+ },
+ "P13b_1": {
+  "map": [
+   ". . . . . . R>",
+   ". Rv@~+C . . . . .",
+   "Bv@- . . . R<&A . .",
+   "R>@- . . M XC . .",
+   "R>&A . . . . . .",
+   ". G> . Y^&A . . .",
+   ". R>+C . . . . P^%A"
+  ],
+  "mechanic": "movable,gate,switch",
+  "positions": 580
+ },
+ "P13b_2": {
+  "map": [
+   ". . . . . . Y>",
+   ". Rv@~+C . . P<%A . R>@+C",
+   "Bv@- . . . . . .",
+   "R>@- . . M XC . B>",
+   "R>&A . . . . . .",
+   ". B> . Y^&A . . .",
+   ". R>+C . . . . P^%A"
+  ],
+  "mechanic": "movable,gate,switch",
+  "positions": 243
+ },
+ "P13b_3": {
+  "map": [
+   ". . . . . . G<",
+   ". Rv@~+C . . P<%A . R>@+C",
+   "Bv@- . . . . . .",
+   "R>@- . . M XC . .",
+   "R>&A . . . . . .",
+   ". . . Y^&A . . .",
+   ". R>+C . . . . P^%A"
+  ],
+  "mechanic": "movable,gate,switch",
+  "positions": 261
+ },
+ "P13b_4": {
+  "map": [
+   ". . . . . . G<&A",
+   ". Rv@~+C . . P<%A . R>@+C",
+   "Bv@- . . . . . .",
+   "R>@- . . M XC . .",
+   "R>&A . . . . . .",
+   ". . . Y^&A . . .",
+   ". R>+C . . . . P^%A"
+  ],
+  "mechanic": "movable,gate,switch",
+  "positions": 261
+ },
+ "P13b_5": {
+  "map": [
+   ". . . B^&A . . G<",
+   ". Rv@~+C . . P< . R>@+C",
+   "Bv@- . . . . . .",
+   "R>@- . . M XC . .",
+   "R>&A . . . . . .",
+   ". . . Y^&A . . .",
+   ". R>+C . . . . P^%A"
+  ],
+  "mechanic": "movable,gate,switch",
+  "positions": 271
+ },
+ "P13b_6": {
+  "map": [
+   ". . . B^&A . . G<",
+   ". Rv@~+C . . P<%A . R>@+C",
+   "Bv@- . . . . . .",
+   "R>@- . . M XC . .",
+   "R>&A . . . . . .",
+   ". . . Y^&A . . .",
+   ". R>+C . . . . P^%A"
+  ],
+  "mechanic": "movable,gate,switch",
+  "positions": 277
+ },
+ "P13b_7": {
+  "map": [
+   ". . . . . . G<",
+   ". Rv@~+C . . P<%A . R>@+C",
+   "Bv@- . . . . . .",
+   "R>@- . . M XC . .",
+   "R>&A . . . . . .",
+   ". . . Y^&A G^ . .",
+   ". R>+C . . . . P^%A"
+  ],
+  "mechanic": "movable,gate,switch",
+  "positions": 347
+ }
+}

@@ -1,6 +1,6 @@
 {
  "note": "Authoritative EXTREME bank status after the Phase 27 owner decisions (development only). Records are never deleted; this manifest only classifies them.",
- "updated": "2026-10-30",
+ "updated": "2026-10-31",
  "owner_approved": [
   "N3",
   "N5",
@@ -29,7 +29,8 @@
   "N55",
   "N56",
   "N59",
-  "N61"
+  "N61",
+  "N62"
  ],
  "strong_provisional": [
   "N48",
@@ -48,7 +49,14 @@
   "N47"
  ],
  "technically_qualified_untested": [
-  "N62"
+  "N63",
+  "N64",
+  "N65",
+  "N66",
+  "N67",
+  "N68",
+  "N69",
+  "N70"
  ],
  "downgraded_or_archived": [
   "N50",
@@ -75,10 +83,10 @@
  ],
  "target": 50,
  "counts": {
-  "owner_approved": 28,
+  "owner_approved": 29,
   "strong_provisional": 3,
   "provisional": 9,
-  "technically_qualified_untested": 1,
+  "technically_qualified_untested": 8,
   "downgraded_or_archived": 21
  }
 }

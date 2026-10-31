@@ -1,0 +1,154 @@
+{
+ "P08_0f": {
+  "map": [
+   ". . . B> P> . .",
+   ". . . R>@ . . .",
+   ". . . . . . .",
+   "G< Y>:v . G^= . B^= .",
+   "Gv@- R^@ G< B<:< P^@ Pv= .",
+   ". . . . . . .",
+   ". B< . . . . ."
+  ],
+  "target": "EXTREME",
+  "facts": [],
+  "mechanic": "sequence,armor",
+  "max_positions": 2000,
+  "overlap": [
+   0.3,
+   "N10"
+  ]
+ },
+ "P08_1f": {
+  "map": [
+   ". . . B^ . . .",
+   ". . . R>@ . . .",
+   ". . . . . . .",
+   "G< Y>:v . G^= . B^= .",
+   "Gv@- R^@ . B<:< P^@ Pv= .",
+   ". . . . . . .",
+   ". B< . . . . ."
+  ],
+  "target": "EXTREME",
+  "facts": [],
+  "mechanic": "sequence,armor",
+  "max_positions": 2000,
+  "overlap": [
+   0.32,
+   "N44"
+  ]
+ },
+ "P08_2f": {
+  "map": [
+   ". . . B^ . . .",
+   ". . . R>@ . . .",
+   ". . . . . . .",
+   "G< Y>:v . G^= . B^= .",
+   "Gv@- R^@ . B<:< P^@ Pv= .",
+   ". . . . . . .",
+   ". Bv . . . . ."
+  ],
+  "target": "EXTREME",
+  "facts": [],
+  "mechanic": "sequence,armor",
+  "max_positions": 2000,
+  "overlap": [
+   0.32,
+   "N44"
+  ]
+ },
+ "P08_3f": {
+  "map": [
+   ". . . B^ . . .",
+   ". . . R>@ . . .",
+   ". . . . . . .",
+   "G< Y>:v . G^= . B^= .",
+   "Gv@- R^@ . B<:< P^@ Pv= .",
+   ". . . . . . .",
+   ". . . . . . ."
+  ],
+  "target": "EXTREME",
+  "facts": [],
+  "mechanic": "sequence,armor",
+  "max_positions": 2000,
+  "overlap": [
+   0.33,
+   "N10"
+  ]
+ },
+ "P08_4f": {
+  "map": [
+   ". . . B^ . . .",
+   ". . . R>@ . . .",
+   ". . . . . . .",
+   "G<:> Y>:v . G^= . B^= .",
+   "Gv@- R^@ . B<:< P^@ Pv= .",
+   ". . . . . . .",
+   ". . . . . . ."
+  ],
+  "target": "EXTREME",
+  "facts": [],
+  "mechanic": "sequence,armor",
+  "max_positions": 2000,
+  "overlap": [
+   0.33,
+   "N10"
+  ]
+ },
+ "P08_5f": {
+  "map": [
+   ". . . B^ . . .",
+   ". . . R>@ . . .",
+   ". . . . . . .",
+   "G< Y>:v Y^:^ G^= . B^= .",
+   "Gv@- R^@ . B<:< P^@ Pv= .",
+   ". . . . . . .",
+   ". . . . . . ."
+  ],
+  "target": "EXTREME",
+  "facts": [],
+  "mechanic": "sequence,armor",
+  "max_positions": 2000,
+  "overlap": [
+   0.33,
+   "N46"
+  ]
+ },
+ "P08_6f": {
+  "map": [
+   ". . . B^ . . .",
+   ". . . R>@ . . .",
+   ". . . . . . .",
+   "G<:> Y>:v Y^:^ G^= . B^= .",
+   "Gv@- R^@ . B<:< P^@ Pv= .",
+   ". . . . . . .",
+   ". . . . . . ."
+  ],
+  "target": "EXTREME",
+  "facts": [],
+  "mechanic": "sequence,armor",
+  "max_positions": 2000,
+  "overlap": [
+   0.33,
+   "N46"
+  ]
+ },
+ "P08_7f": {
+  "map": [
+   ". . . B^ . . .",
+   ". . . R>@ . . .",
+   ". . . . . . .",
+   "G<:> Y>:v Yv:^ G^= . B^= .",
+   "Gv@- R^@ . B<:< P^@ Pv= .",
+   ". . . . . . .",
+   ". . . . . . ."
+  ],
+  "target": "EXTREME",
+  "facts": [],
+  "mechanic": "sequence,armor",
+  "max_positions": 2000,
+  "overlap": [
+   0.33,
+   "N46"
+  ]
+ }
+}

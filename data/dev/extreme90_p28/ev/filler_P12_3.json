@@ -1,0 +1,9 @@
+{
+ "P12_3": {
+  "distinct": 7,
+  "pieces_tested": 12,
+  "steps": 14,
+  "trivial": [],
+  "trivial_removals": 0
+ }
+}

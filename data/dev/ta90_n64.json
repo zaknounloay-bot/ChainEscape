@@ -1,0 +1,184 @@
+{
+ "format": "ce-ta90-proto",
+ "v": 1,
+ "test": "ta90_n64",
+ "assist": {
+  "undo": 3,
+  "show_a_move": 0,
+  "hammer": 0
+ },
+ "note": "Development only. Phase 28 EXTREME candidate (?extreme90p28=1); never shared, never production. TECHNICALLY QUALIFIED (Category A and B): NOT human-approved; human difficulty unvalidated.",
+ "boards": [
+  {
+   "id": "N64",
+   "accepted": true,
+   "label": "TECHNICALLY QUALIFIED - HUMAN UNTESTED",
+   "variant": "N64",
+   "design": "P28_P03_3",
+   "family": "P28 the turned magnet (magnet + switch + armor)",
+   "concept_group": "magnet x reversal",
+   "primary": "magnet, switch, armor, spinner",
+   "target": "EXTREME (a design target, not a rating; never shown to players)",
+   "idea": "the turned magnet: the magnet is itself a flip target, so the reversal turns its pull line to the other side - which block it pulls, and so which spinner its departure and the arrival turn, depends on whether it fires before or after the switch",
+   "source": "hybrid: hand core frozen cell for cell (seed_P03_TURNEDMAGNET.json, Phase 28); blocks added by tools/ta90_search.gd --ops=v20 with the Phase 28 pipeline (token guard, strict essentiality, spinners_max), RNG seed 81 (protocol.json); early screen tools/extreme90_screen28.py",
+   "related_bank_concept": "N59 (a magnet moves a magnet's line by relocation; here a reversal turns it in place), N52 (pull order), N36 (magnet + switch face-to-face); no bank board has a magnet flip target; closest occupancy N39 0.33",
+   "fingerprint": "9816c00f2e2d7851c37df4bb6503dae237a4537f0312870f24ff21dd01f432c4",
+   "mechanics": [
+    "magnet",
+    "switch",
+    "armor",
+    "spinner"
+   ],
+   "puzzle": {
+    "format": "ce-puzzle",
+    "v": 1,
+    "rules": 1,
+    "rows": 7,
+    "cols": 7,
+    "map": [
+     ". Rv . . Y<&A Yv@~ B>=",
+     ". . . . . . .",
+     ". . . . . . .",
+     ". Gv . Y>&A* . R^ .",
+     ". . B<&A B<@ . . G^=",
+     "G<* . . B<= . R^ .",
+     ". . . . . . G^%A"
+    ]
+   },
+   "design_report": {
+    "A": {
+     "fingerprint": "9816c00f2e2d7851c37df4bb6503dae237a4537f0312870f24ff21dd01f432c4",
+     "hint_nodes": [
+      161,
+      34
+     ],
+     "parity": [
+      0,
+      0
+     ],
+     "portals": 0,
+     "position_cap": 2000,
+     "positions": 367,
+     "replay": true,
+     "solution": 17,
+     "solve_ms": 15.8,
+     "timeup_worst_ms": 11.3,
+     "timeup_worst_nodes": 262,
+     "winnable": 48
+    },
+    "B": {
+     "coverage": 0.76,
+     "decision_steps": 13,
+     "distinct_mistakes": 5,
+     "endgame_decision": true,
+     "last_decision": 13,
+     "late": 0.76,
+     "line": [
+      "r6c6^ ram [x1]",
+      "r4c6^ ram [x1]",
+      "r3c1v [x2]",
+      "r0c1v [x2]",
+      "r0c4< [x2]",
+      "r0c5< [x2]",
+      "r0c6> [x2]",
+      "r4c6^ [x2]",
+      "r4c2< [x3]",
+      "r6c6^ [x2]",
+      "r3c3< [x2]",
+      "r3c3^ [x2]",
+      "r4c3v ram [x1]",
+      "r5c0<",
+      "r4c3v",
+      "r5c0<",
+      "r5c5^"
+     ],
+     "losing_per_step": [
+      1,
+      1,
+      2,
+      2,
+      2,
+      2,
+      2,
+      2,
+      3,
+      2,
+      2,
+      2,
+      1,
+      0,
+      0,
+      0,
+      0
+     ],
+     "matters_armor": true,
+     "matters_magnet": true,
+     "matters_switch": true,
+     "mistakes": [
+      "r5c0<",
+      "r0c6>",
+      "r3c5^",
+      "r6c6^",
+      "r4c3>"
+     ],
+     "shortcut": 0,
+     "spinner_dependence": "unsolvable without it",
+     "without_armor": "without it: 4 decision steps, 1 distinct mistakes (with it: 13, 5)",
+     "without_magnet": "unsolvable without it",
+     "without_switch": "unsolvable without it"
+    },
+    "C": {
+     "decisions_k4_6_8": [
+      11,
+      9,
+      7
+     ],
+     "deepest": 15,
+     "greedy": {
+      "look2": 0,
+      "look4": 0,
+      "min_turn": 0,
+      "mobility": 0,
+      "safe": 0
+     },
+     "hidden_k6_8": [
+      17,
+      12
+     ],
+     "learner": {
+      "look4": 7,
+      "look6": 7
+     },
+     "look6_greedy": 0.033,
+     "opening": "3 / 4",
+     "pressure": {
+      "advances": 0,
+      "calm_prefix": 2,
+      "flips": 1,
+      "multi_turned": 1,
+      "prediction_share": 0.53,
+      "pulls": 2,
+      "rams": 3,
+      "signals": 1,
+      "spinners_turned": 2,
+      "trap_delay_median": 8,
+      "turns": 4,
+      "undo_proof": 0.88
+     },
+     "win_share": 0.131
+    },
+    "filler": {
+     "distinct": 5,
+     "pieces_tested": 14,
+     "steps": 13,
+     "trivial": [],
+     "trivial_removals": 0
+    },
+    "similarity": {
+     "closest_known": "N39",
+     "overlap": 0.33
+    }
+   }
+  }
+ ]
+}

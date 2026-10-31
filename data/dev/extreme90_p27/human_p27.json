@@ -1,0 +1,15 @@
+{
+ "source": "Phase 28 brief: N62 human result",
+ "recorded": "2026-10-31",
+ "boards": {
+  "N62": {
+   "exposure": "first",
+   "rating": "EXTREME",
+   "timed_outcome": "TIME UP",
+   "time_s": 90,
+   "enjoy": 5,
+   "fingerprint": "1710a002d011ba038f21bafc92364d3f5776ef480f7a1344cf3c1832a3de2a36"
+  }
+ },
+ "caveat": "one observation; not a statistically validated label"
+}

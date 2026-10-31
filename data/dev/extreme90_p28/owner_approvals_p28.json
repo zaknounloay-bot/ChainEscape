@@ -1,0 +1,18 @@
+{
+ "source": "Phase 28 brief: explicit project-owner approval, stored SEPARATELY from the player rating (extreme90_p27/human_p27.json)",
+ "recorded": "2026-10-31",
+ "approved_by_owner": {
+  "N62": {
+   "decision": "APPROVED",
+   "player_rating": "EXTREME, TIME UP, first exposure, enjoyment 5/5",
+   "fingerprint": "1710a002d011ba038f21bafc92364d3f5776ef480f7a1344cf3c1832a3de2a36"
+  }
+ },
+ "unchanged": "every earlier owner decision (extreme90_p27/owner_approvals_p27.json); N60 stays downgraded",
+ "count": {
+  "approved_before": 28,
+  "approved_now": 29,
+  "target": 50,
+  "remaining": 21
+ }
+}

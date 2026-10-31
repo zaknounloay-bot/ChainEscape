@@ -1,0 +1,17 @@
+{
+ "P01_2": {
+  "map": [
+   "P^@~ Y<@~ Yv@~ . . . B<",
+   "B< . R<+C . . . .",
+   "Y> . G<&A XC . . R^&A",
+   ". . . . . . .",
+   ". . . P<%A+C . Y<@- G^=",
+   ". . . G<%A . . .",
+   ". . . . . P^ R^+C"
+  ],
+  "target": "EXTREME",
+  "facts": [],
+  "mechanic": "switch,gate",
+  "max_positions": 2000
+ }
+}

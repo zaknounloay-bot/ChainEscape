@@ -1,0 +1,17 @@
+{
+ "P04_1": {
+  "map": [
+   ". . . . . . .",
+   ". . . . . . .",
+   "B>&A . B>&A . . . .",
+   ". . . B^* . Gv Bv",
+   "R^ . . G<@ P^&A B< Gv@~",
+   "Y>* R>&A . P<%A . Bv@- Yv@",
+   ". . . . . . ."
+  ],
+  "target": "EXTREME",
+  "facts": [],
+  "mechanic": "magnet,switch",
+  "max_positions": 2000
+ }
+}

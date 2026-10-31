@@ -1,0 +1,132 @@
+{
+ "P05b_0": {
+  "map": [
+   ". . . . . . .",
+   ". . . B>= . . .",
+   ". G<= . Y^* Gv@- G^@-#Y Gv=",
+   ". . . . . . .",
+   ". P<@- Y> R>#Y . . .",
+   ". B<@ R^@- Bv* . . .",
+   ". Y> G<@ . . . ."
+  ],
+  "mechanic": "magnet,lock,armor",
+  "positions": 438
+ },
+ "P05b_1": {
+  "map": [
+   ". . . Y>@ . . .",
+   ". . . B> . . .",
+   ". G^= . Y^* Gv@- G^@-#Y Gv=",
+   ". . . . . . .",
+   ". . Y> R>#Y . . .",
+   ". B<@ R^ Bv* . . .",
+   ". Y> B^@~ . . . R>@-"
+  ],
+  "mechanic": "magnet,lock,armor",
+  "positions": 564
+ },
+ "P05b_2": {
+  "map": [
+   ". . . Y>@ . . .",
+   ". . . B>= . . .",
+   ". G^= . Y^* Gv@- G^@-#Y Gv=",
+   ". . . . . . .",
+   ". . Y> R>#Y . . .",
+   ". B<@ R^ Bv* . . .",
+   ". Y> B^@~ . . . R>@-"
+  ],
+  "mechanic": "magnet,lock,armor",
+  "positions": 692
+ },
+ "P13b_0": {
+  "map": [
+   ". . . . . . R>",
+   ". Rv@~+C . . P<%A . R>@+C",
+   "Bv@- . . . . . R^",
+   "R>@- . . M XC . .",
+   "R>&A . . . . . .",
+   ". . . Y^&A . . .",
+   ". R>+C . . . . P^%A"
+  ],
+  "mechanic": "movable,gate,switch",
+  "positions": 249
+ },
+ "P13b_1": {
+  "map": [
+   ". . . . . . R>",
+   ". Rv@~+C . . . . .",
+   "Bv@- . . . R<&A . .",
+   "R>@- . . M XC . .",
+   "R>&A . . . . . .",
+   ". G> . Y^&A . . .",
+   ". R>+C . . . . P^%A"
+  ],
+  "mechanic": "movable,gate,switch",
+  "positions": 580
+ },
+ "P13b_2": {
+  "map": [
+   ". . . . . . Y>",
+   ". Rv@~+C . . P<%A . R>@+C",
+   "Bv@- . . . . . .",
+   "R>@- . . M XC . B>",
+   "R>&A . . . . . .",
+   ". B> . Y^&A . . .",
+   ". R>+C . . . . P^%A"
+  ],
+  "mechanic": "movable,gate,switch",
+  "positions": 243
+ },
+ "P13b_3": {
+  "map": [
+   ". . . . . . G<",
+   ". Rv@~+C . . P<%A . R>@+C",
+   "Bv@- . . . . . .",
+   "R>@- . . M XC . .",
+   "R>&A . . . . . .",
+   ". . . Y^&A . . .",
+   ". R>+C . . . . P^%A"
+  ],
+  "mechanic": "movable,gate,switch",
+  "positions": 261
+ },
+ "P13b_4": {
+  "map": [
+   ". . . . . . G<&A",
+   ". Rv@~+C . . P<%A . R>@+C",
+   "Bv@- . . . . . .",
+   "R>@- . . M XC . .",
+   "R>&A . . . . . .",
+   ". . . Y^&A . . .",
+   ". R>+C . . . . P^%A"
+  ],
+  "mechanic": "movable,gate,switch",
+  "positions": 261
+ },
+ "P13b_5": {
+  "map": [
+   ". . . B^&A . . G<",
+   ". Rv@~+C . . P< . R>@+C",
+   "Bv@- . . . . . .",
+   "R>@- . . M XC . .",
+   "R>&A . . . . . .",
+   ". . . Y^&A . . .",
+   ". R>+C . . . . P^%A"
+  ],
+  "mechanic": "movable,gate,switch",
+  "positions": 271
+ },
+ "P13b_6": {
+  "map": [
+   ". . . B^&A . . G<",
+   ". Rv@~+C . . P<%A . R>@+C",
+   "Bv@- . . . . . .",
+   "R>@- . . M XC . .",
+   "R>&A . . . . . .",
+   ". . . Y^&A . . .",
+   ". R>+C . . . . P^%A"
+  ],
+  "mechanic": "movable,gate,switch",
+  "positions": 277
+ }
+}

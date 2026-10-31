@@ -1,0 +1,17 @@
+{
+ "P03_3": {
+  "map": [
+   ". Rv . . Y<&A Yv@~ B>=",
+   ". . . . . . .",
+   ". . . . . . .",
+   ". Gv . Y>&A* . R^ .",
+   ". . B<&A B<@ . . G^=",
+   "G<* . . B<= . R^ .",
+   ". . . . . . G^%A"
+  ],
+  "target": "EXTREME",
+  "facts": [],
+  "mechanic": "magnet,switch,armor",
+  "max_positions": 2000
+ }
+}

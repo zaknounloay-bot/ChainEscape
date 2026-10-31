@@ -1,0 +1,17 @@
+{
+ "P02_0": {
+  "map": [
+   ". . . . . Yv@ .",
+   ". R<= . P^= . Bv&A .",
+   ". . . . . . .",
+   ". P>#Y%A . Y<&A G> Rv .",
+   ". R<@ B<#Y . . . .",
+   ". R<&A . Y<@ Y<@~ . .",
+   ". . . . G< G< G^%A"
+  ],
+  "target": "EXTREME",
+  "facts": [],
+  "mechanic": "switch,lock",
+  "max_positions": 2000
+ }
+}

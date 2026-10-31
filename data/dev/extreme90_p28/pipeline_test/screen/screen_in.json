@@ -1,0 +1,116 @@
+{
+ "L6t_163": {
+  "map": [
+   ". . . . . . .",
+   "B<= . . . . . .",
+   "Y> . G<&A XC . Y>= .",
+   ". . Rv&A . . . G<@~",
+   ". Rv Rv@- P<%A+C . . .",
+   ". . . G>%A . . .",
+   "G^&A . . . Pv+C P>&A R^+C"
+  ],
+  "target": "EXTREME",
+  "facts": [],
+  "mechanic": "switch,gate",
+  "max_positions": 2000,
+  "overlap": [
+   0.3,
+   "N59"
+  ]
+ },
+ "L6t_177": {
+  "map": [
+   ". . . . . . .",
+   "B<= . . . . . .",
+   "Y> . G<&A XC . . .",
+   ". . Rv&A . . . G<@~",
+   ". Rv Rv@- P<%A+C . . .",
+   ". . . G>%A . . .",
+   "G^&A . . . Pv+C P>@ R^+C"
+  ],
+  "target": "EXTREME",
+  "facts": [],
+  "mechanic": "switch,gate",
+  "max_positions": 2000,
+  "overlap": [
+   0.32,
+   "N38"
+  ]
+ },
+ "L6t_197": {
+  "map": [
+   ". . . . . . .",
+   "B<= . . . . . .",
+   "Y> . G<&A XC . Y>= .",
+   ". . Rv&A . . . G<@~",
+   ". Rv Rv@- P<%A+C . . .",
+   ". . . G>%A . . .",
+   "G^&A . . . Pv+C P>@ R^+C"
+  ],
+  "target": "EXTREME",
+  "facts": [],
+  "mechanic": "switch,gate",
+  "max_positions": 2000,
+  "overlap": [
+   0.3,
+   "N38"
+  ]
+ },
+ "L6t_201": {
+  "map": [
+   ". . . . . . .",
+   "B>= . . . . . .",
+   "Y> . G<&A XC . Y>= .",
+   ". . Rv&A . . . G<@~",
+   ". R< Rv@- P<%A+C . . .",
+   ". . . G>%A . . .",
+   "G^&A . . P^&A Pv+C . R^+C"
+  ],
+  "target": "EXTREME",
+  "facts": [],
+  "mechanic": "switch,gate",
+  "max_positions": 2000,
+  "overlap": [
+   0.36,
+   "N38"
+  ]
+ },
+ "L6t_207": {
+  "map": [
+   ". . . . . . .",
+   "B<= . . . . . .",
+   "Y> . G<&A XC . Y>= .",
+   ". . Rv&A . . Y>&A G<@~",
+   ". Rv Rv@- P<%A+C . . .",
+   ". . . G>%A . . .",
+   "G^&A . . . Pv+C P>@ R^+C"
+  ],
+  "target": "EXTREME",
+  "facts": [],
+  "mechanic": "switch,gate",
+  "max_positions": 2000,
+  "overlap": [
+   0.35,
+   "N11"
+  ]
+ },
+ "L6t_216": {
+  "map": [
+   ". . . . . . .",
+   "B<= . . . . . .",
+   "Y> . G<&A XC . Y>= .",
+   ". . Rv&A . . . G<@~",
+   ". Rv Rv@- P<%A+C . . .",
+   ". . . G>%A . . .",
+   "G^&A . . P^ Pv+C P>@ R^+C"
+  ],
+  "target": "EXTREME",
+  "facts": [],
+  "mechanic": "switch,gate",
+  "max_positions": 2000,
+  "overlap": [
+   0.35,
+   "N38"
+  ]
+ }
+}

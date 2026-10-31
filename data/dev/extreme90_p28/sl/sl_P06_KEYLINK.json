@@ -1,0 +1,106 @@
+{
+ "P06_0": {
+  "map": [
+   "G> . . XC . B^ Y>=",
+   ". . . . . . .",
+   ". . . Gv . P^ B>@~",
+   ". . . . . . R>#Y",
+   ". Y<+C . . Y<@~ . P>=",
+   ". . . Rv . . .",
+   "Yv@- Bv+C . B>#Y . Gv@~ G>+C"
+  ],
+  "mechanic": "gate,lock",
+  "positions": 526
+ },
+ "P06_1": {
+  "map": [
+   "G> . . XC . . Y>=",
+   ". . . . . . .",
+   ". . . Gv . P^ B>@~",
+   ". . . . . . R>#Y",
+   "Rv Y<+C . . . . P^=",
+   ". . . . . . G<@-",
+   "Yv@- Bv+C . B>#Y . Gv@~ G>+C"
+  ],
+  "mechanic": "gate,lock",
+  "positions": 637
+ },
+ "P06_2": {
+  "map": [
+   "G> . . XC . . Y>=",
+   ". . . . . . .",
+   ". . . Gv . P^ B>@~",
+   ". . . . . . R>#Y",
+   ". Y<+C . . Y<@~ R< P>=",
+   ". . . Rv . . .",
+   "Yv@- Bv+C . B>#Y . Gv@~ G>+C"
+  ],
+  "mechanic": "gate,lock",
+  "positions": 686
+ },
+ "P06_3": {
+  "map": [
+   "G> . . XC . . Y>=",
+   ". . . . . . .",
+   ". . . Gv . P^ B>@~",
+   ". . . . . . R>#Y",
+   "Rv Y<+C . . . . P^=",
+   ". . . . . . .",
+   "Yv@- Bv+C . B>#Y . Gv@~ G>+C"
+  ],
+  "mechanic": "gate,lock",
+  "positions": 231
+ },
+ "P06_4": {
+  "map": [
+   "G> . . XC . . Y>=",
+   ". . . . . . .",
+   ". . . Gv . P^ B>@~",
+   ". . . . . . R>#Y",
+   "Rv@ Y<+C . . . . Pv=",
+   ". . . . . . .",
+   "Yv@- Bv+C . B>#Y . Gv@~ G>+C"
+  ],
+  "mechanic": "gate,lock",
+  "positions": 262
+ },
+ "P06_5": {
+  "map": [
+   "G>@ . . XC . . Y>=",
+   ". . . . . . .",
+   ". . . Gv . P^ B>@~",
+   ". . . . . . R>#Y",
+   "Rv Y<+C . . Y< . P^=",
+   ". . . . . . .",
+   "Yv@- Bv+C . B>#Y . Gv@~ G>+C"
+  ],
+  "mechanic": "gate,lock",
+  "positions": 287
+ },
+ "P06_6": {
+  "map": [
+   "G> . . XC . . Y>=",
+   ". . . . . . .",
+   ". . . Gv . P^ B>@~",
+   ". . . Pv@~ . . R>#Y",
+   "Rv Y<+C . . Y< . P^=",
+   ". . . . . . .",
+   "Yv@- Bv+C . B>#Y . Gv@~ G>+C"
+  ],
+  "mechanic": "gate,lock",
+  "positions": 311
+ },
+ "P06_7": {
+  "map": [
+   "G> . . XC . . Y>=",
+   ". . . . . . .",
+   ". . . Gv . P^ B>@~",
+   ". . . . . . R>#Y",
+   "Rv Y<+C . Y<@- Y< . P^=",
+   ". . . . . . .",
+   "Yv@- Bv+C . B>#Y . Gv@~ G>+C"
+  ],
+  "mechanic": "gate,lock",
+  "positions": 343
+ }
+}

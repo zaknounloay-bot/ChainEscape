@@ -1,0 +1,110 @@
+{
+ "N63": {
+  "key": "P02_0",
+  "family": "P28 the locked trigger (switch + lock)",
+  "group": "reversal x lock",
+  "mechanics": [
+   "switch",
+   "lock",
+   "spinner"
+  ],
+  "idea": "the locked trigger: switch piece W1 is locked by the yellow key, and the key stands face to face with W1 - neither can move; only the second, free switch piece reverses the key out of the face-off, and its departure unlocks W1, whose firing reverses every target still on the board",
+  "related": "N23 (the switch is also the last key), N61 (key and lock under a reversal - there the reversal creates the deadlock, here it resolves one), N20 / N42 (two switch pieces); closest occupancy N39 0.36",
+  "source": "hybrid: hand core frozen cell for cell (seed_P02_LOCKEDTRIGGER.json, Phase 28); blocks added by tools/ta90_search.gd --ops=v20 with the Phase 28 pipeline (token guard, strict essentiality, spinners_max), RNG seed 81 (protocol.json); early screen tools/extreme90_screen28.py"
+ },
+ "N64": {
+  "key": "P03_3",
+  "family": "P28 the turned magnet (magnet + switch + armor)",
+  "group": "magnet x reversal",
+  "mechanics": [
+   "magnet",
+   "switch",
+   "armor",
+   "spinner"
+  ],
+  "idea": "the turned magnet: the magnet is itself a flip target, so the reversal turns its pull line to the other side - which block it pulls, and so which spinner its departure and the arrival turn, depends on whether it fires before or after the switch",
+  "related": "N59 (a magnet moves a magnet's line by relocation; here a reversal turns it in place), N52 (pull order), N36 (magnet + switch face-to-face); no bank board has a magnet flip target; closest occupancy N39 0.33",
+  "source": "hybrid: hand core frozen cell for cell (seed_P03_TURNEDMAGNET.json, Phase 28); blocks added by tools/ta90_search.gd --ops=v20 with the Phase 28 pipeline (token guard, strict essentiality, spinners_max), RNG seed 81 (protocol.json); early screen tools/extreme90_screen28.py"
+ },
+ "N65": {
+  "key": "P01_2",
+  "family": "P28 the reversed block waits at the gate (switch + gate)",
+  "group": "reversal x gate",
+  "mechanics": [
+   "switch",
+   "gate",
+   "spinner"
+  ],
+  "idea": "the reversal turns a block to face the gate, which opens only when the last link leaves - and the switch piece is itself one of the links; the second switch piece reverses everything back if fired before the reversed block is through",
+  "related": "N61 / Phase 26 J2 (a reversal and a waiting dependency; here the wait is temporary, never a deadlock), N16 (reversal + gate), N38 (two switch pieces); closest occupancy N52 0.32",
+  "source": "hybrid: hand core frozen cell for cell (seed_P01_TRIGGERLINK.json, Phase 28); blocks added by tools/ta90_search.gd --ops=v20 with the Phase 28 pipeline (token guard, strict essentiality, spinners_max), RNG seed 81 (protocol.json); early screen tools/extreme90_screen28.py"
+ },
+ "N66": {
+  "key": "P06_7",
+  "family": "P28 the key is also a link (lock + gate)",
+  "group": "lock x gate",
+  "mechanics": [
+   "lock",
+   "gate",
+   "spinner"
+  ],
+  "idea": "one departure, two releases: the yellow key is also a link of the gate that walls the long rammer lane - its departure unlocks the locked blocks and counts toward opening the gate, so who leaves before and after it decides both",
+  "related": "N22 (unlock, open, pull), N19 (gate chain), N53 (one key, two counts); closest occupancy N38 0.28",
+  "source": "hybrid: hand core frozen cell for cell (seed_P06_KEYLINK.json, Phase 28); blocks added by tools/ta90_search.gd --ops=v20 with the Phase 28 pipeline (token guard, strict essentiality, spinners_max), RNG seed 81 (protocol.json); early screen tools/extreme90_screen28.py"
+ },
+ "N67": {
+  "key": "P05b_1",
+  "family": "P28 pull the prisoner (magnet + lock + armor)",
+  "group": "magnet x lock",
+  "mechanics": [
+   "magnet",
+   "lock",
+   "armor",
+   "spinner"
+  ],
+  "idea": "pull the prisoner: a magnet pulls a LOCKED rammer into the row of its shell; it can strike only after the last yellow key has gone - and the magnet itself is one of those keys",
+  "related": "N52 (magnets deliver crackers; no lock on the cargo), N18 / N32 (the magnet brings the rammer), N59; closest occupancy N59 0.32",
+  "source": "hybrid: hand core frozen cell for cell (seed_P05_PRISONER.json, Phase 28); blocks added by tools/ta90_search.gd --ops=v20 with the Phase 28 pipeline (token guard, strict essentiality, spinners_max), RNG seed 82 (protocol.json); early screen tools/extreme90_screen28.py"
+ },
+ "N68": {
+  "key": "P12_3",
+  "family": "P28 the shuttle and the door (crate + switch + lock)",
+  "group": "crate x reversal x lock",
+  "mechanics": [
+   "movable",
+   "switch",
+   "lock",
+   "spinner"
+  ],
+  "idea": "the shuttle and the door: the crate sits in the key's lane; the key and a flip-target pusher shuttle it out, and the reversal is what lets the pushers leave the crate's line - the key's departure opens two locks",
+  "related": "N35 / N50 (push, turn, ram: crate + switch), N33 (the crate's new cell must not be in anyone's way); crate + lock is not in the bank; closest occupancy N33 0.30",
+  "source": "hybrid: hand core frozen cell for cell (seed_P12_SHUTTLEDOOR.json, Phase 28); blocks added by tools/ta90_search.gd --ops=v20 with the Phase 28 pipeline (token guard, strict essentiality, spinners_max), RNG seed 81 (protocol.json); early screen tools/extreme90_screen28.py"
+ },
+ "N69": {
+  "key": "P13b_0",
+  "family": "P28 two walls in one row (crate + gate + switch)",
+  "group": "crate x gate x reversal",
+  "mechanics": [
+   "movable",
+   "gate",
+   "switch",
+   "spinner"
+  ],
+  "idea": "two walls in one row: the row-3 spinner can only escape when both the crate and the gate are gone - the crate is pushed out by a flip target that then needs the reversal to leave its line, the gate opens with its last link",
+  "related": "N56 (crate + gate + spinner: the gate stops the crate), N35 (crate + switch); closest occupancy N35 0.22",
+  "source": "hybrid: hand core frozen cell for cell (seed_P13_CRATEGATE.json, Phase 28); blocks added by tools/ta90_search.gd --ops=v20 with the Phase 28 pipeline (token guard, strict essentiality, spinners_max), RNG seed 82 (protocol.json); early screen tools/extreme90_screen28.py"
+ },
+ "N70": {
+  "key": "P04_1",
+  "family": "P28 the relocated switch (magnet + switch)",
+  "group": "magnet x reversal",
+  "mechanics": [
+   "magnet",
+   "switch",
+   "spinner"
+  ],
+  "idea": "the relocated switch: the switch piece walls in the very block it reverses; only a magnet's pull moves the switch out of that lane - fired too early the magnet pulls something else",
+  "related": "N59 (magnet relocation of a trigger-like piece), N36 (magnet + switch); closest occupancy N43 0.29",
+  "source": "hybrid: hand core frozen cell for cell (seed_P04_RELOCSWITCH.json, Phase 28); blocks added by tools/ta90_search.gd --ops=v20 with the Phase 28 pipeline (token guard, strict essentiality, spinners_max), RNG seed 81 (protocol.json); early screen tools/extreme90_screen28.py"
+ }
+}

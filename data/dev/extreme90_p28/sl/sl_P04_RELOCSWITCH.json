@@ -1,0 +1,106 @@
+{
+ "P04_0": {
+  "map": [
+   ". P^ . . . . .",
+   ". . . . . . .",
+   "B>&A G^@- B> . . . .",
+   ". . . B^* . Gv&A Bv",
+   "R^ . . G<@ . B< Gv@~",
+   "Y>* R>&A . P<%A . Bv Yv@",
+   ". . . . . . ."
+  ],
+  "mechanic": "magnet,switch",
+  "positions": 221
+ },
+ "P04_1": {
+  "map": [
+   ". . . . . . .",
+   ". . . . . . .",
+   "B>&A . B>&A . . . .",
+   ". . . B^* . Gv Bv",
+   "R^ . . G<@ P^&A B< Gv@~",
+   "Y>* R>&A . P<%A . Bv@- Yv@",
+   ". . . . . . ."
+  ],
+  "mechanic": "magnet,switch",
+  "positions": 258
+ },
+ "P04_2": {
+  "map": [
+   ". . . . . . .",
+   ". . . . . . .",
+   "B>&A G^@- Bv . . . .",
+   "G<&A . . B^* . Gv .",
+   "R^ . . G<@ P^&A . Gv@~",
+   "Y>* R>&A . P<%A . . Yv@",
+   ". . . . . . ."
+  ],
+  "mechanic": "magnet,switch",
+  "positions": 390
+ },
+ "P04_3": {
+  "map": [
+   ". . . . . . .",
+   ". . . . . . .",
+   "B>&A G^@- B> . . . .",
+   ". . . B^* . Gv Bv",
+   "R^ . . G<@ . B< Gv@~",
+   "Y>* R>&A . P<%A . Bv Yv@",
+   ". . . . . . ."
+  ],
+  "mechanic": "magnet,switch",
+  "positions": 186
+ },
+ "P04_4": {
+  "map": [
+   ". . . . . . .",
+   ". . . . . . .",
+   "B> G^@- B> . . . .",
+   ". . . B^* . Gv Bv",
+   "R^ . . G<@ . B< Gv@~",
+   "Y>* R>&A . P<%A . Bv Yv@",
+   ". . . . . . ."
+  ],
+  "mechanic": "magnet,switch",
+  "positions": 186
+ },
+ "P04_5": {
+  "map": [
+   ". . . . . . .",
+   ". . . . . . .",
+   "B>&A G^@- B> . . . .",
+   ". . . B^* . Gv Bv",
+   "R^ . . G<@ . B< Gv@~",
+   "Y>* R>&A . P<%A . Bv&A Yv@",
+   ". . . . . . ."
+  ],
+  "mechanic": "magnet,switch",
+  "positions": 186
+ },
+ "P04_6": {
+  "map": [
+   ". . . . . . .",
+   ". . . . . . .",
+   "B>&A G^@- B> . . . .",
+   ". . . B^* . Gv&A Bv",
+   "R^ . . G<@ . B< Gv@~",
+   "Y>* R>&A . P<%A . Bv Yv@",
+   ". . . . . . ."
+  ],
+  "mechanic": "magnet,switch",
+  "positions": 197
+ },
+ "P04_7": {
+  "map": [
+   ". . . . . . .",
+   ". . . . . . .",
+   "B>&A . B>&A . . . .",
+   ". . . B^* . Gv .",
+   "R^ . . G<@ P^&A B< Gv@~",
+   "Y>* R>&A . P<%A . Bv@- Yv@",
+   ". . . . . . ."
+  ],
+  "mechanic": "magnet,switch",
+  "positions": 255
+ }
+}

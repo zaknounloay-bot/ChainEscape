@@ -1,0 +1,58 @@
+{
+ "target": "EXTREME",
+ "facts": [],
+ "mechanic": "magnet,switch",
+ "idea": "P28 hand core: the switch piece is walled in by the very block it must reverse; only a magnet can pull the switch into a free lane",
+ "family": "P28 magnet x reversal",
+ "map": [
+  ". . . . . . .",
+  ". . . . . . .",
+  ". . . . . . .",
+  ". . . B^* . . .",
+  ". . . . . . .",
+  ". R>&A . P<%A . . .",
+  ". . . . . . ."
+ ],
+ "frozen": [
+  [
+   3,
+   3
+  ],
+  [
+   5,
+   1
+  ],
+  [
+   5,
+   3
+  ]
+ ],
+ "max_positions": 2000,
+ "piece_free": 13,
+ "max_pieces": 17,
+ "shortcut_weight": 80,
+ "coverage_weight": 25,
+ "late_weight": 20,
+ "endgame_weight": 20,
+ "length_weight": 1.0,
+ "length_cap": 18,
+ "pressure_weight": 1.5,
+ "palette": "all",
+ "suffixes": [
+  "&A",
+  "*"
+ ],
+ "suffix_rate": 0.3,
+ "suffix_max": {
+  "&A": 4,
+  "*": 2
+ },
+ "crates_max": 0,
+ "seed": 192,
+ "size": "medium",
+ "max_solve_nodes": 1500,
+ "spinners_max": 4,
+ "strict_essential": true,
+ "token_guard": true,
+ "phase28_core": "P04_RELOCSWITCH"
+}

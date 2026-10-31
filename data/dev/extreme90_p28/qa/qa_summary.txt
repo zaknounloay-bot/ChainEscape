@@ -1,0 +1,49 @@
+export dev exit=0 new board: 8
+export player exit=0 data/dev files: 0
+web_p28 exit=0 :: WEB EXTREME90 TEST: PASSED (130/130)
+Extreme90p28Check exit=0 :: EXTREME90 P28 CHECK: PASSED (260 checks) 
+Extreme90p27Check exit=0 :: EXTREME90 P27 CHECK: PASSED (226 checks) 
+Extreme90p26Check exit=0 :: EXTREME90 P26 CHECK: PASSED (222 checks) 
+Extreme90p25Check exit=0 :: EXTREME90 P25 CHECK: PASSED (212 checks) 
+Extreme90p24Check exit=0 :: EXTREME90 P24 CHECK: PASSED (186 checks) 
+Extreme90p22Check exit=0 :: EXTREME90 P22 CHECK: PASSED (184 checks) 
+Extreme90p21Check exit=0 :: EXTREME90 P21 CHECK: PASSED (168 checks) 
+Extreme90p20Check exit=0 :: EXTREME90 P20 CHECK: PASSED (132 checks) 
+Extreme90p19Check exit=0 :: EXTREME90 P19 CHECK: PASSED (124 checks) 
+Extreme90p18Check exit=0 :: EXTREME90 P18 CHECK: PASSED (111 checks) 
+Ta90ContinueCheck exit=0 :: CONTINUE SUMMARY: 224 cases, 0 not resumed exactly:  TA90 CONTINUE CHECK: PASSED (628 checks) 
+PortalCheck exit=0 :: PORTAL CHECKS PASSED 
+MovableCheck exit=0 :: MOVABLE CHECKS PASSED 
+MagnetCheck exit=0 :: MAGNET CHECKS PASSED 
+Ta90DeadendCheck(N63-N70) exit=0 :: TA90 DEADEND CHECK: PASSED (56 checks)
+xb28_validate exit=0 :: XB28 VALIDATE CHECK: PASSED (3 checks)
+BATCH_A_DONE
+web_p27 exit=0 :: WEB EXTREME90 TEST: PASSED (114/114)
+web_p26 exit=0 :: WEB EXTREME90 TEST: PASSED (112/112)
+web_p25 exit=0 :: WEB EXTREME90 TEST: PASSED (106/106)
+web_p24 exit=0 :: WEB EXTREME90 TEST: PASSED (94/94)
+web_p22 exit=0 :: WEB EXTREME90 TEST: PASSED (92/92)
+web_p21 exit=1 :: WEB EXTREME90 TEST: FAILED (1/6)
+web_p20 exit=0 :: WEB EXTREME90 TEST: PASSED (66/66)
+web_p19 exit=0 :: WEB EXTREME90 TEST: PASSED (62/62)
+upgrade_p19 exit=0 :: WEB P19 UPGRADE TEST: PASSED (9/9)
+BATCH_B_DONE
+web_p18 exit=0 :: WEB EXTREME90 TEST: PASSED (55/55)
+extreme90_archive exit=0 :: WEB EXTREME90 TEST: PASSED (45/45)
+extreme90p17 exit=0 :: WEB EXTREME90 TEST: PASSED (51/51)
+ta90 exit=0 :: WEB TA90 TEST: PASSED (55/55)
+BATCH_C_DONE
+tapilot exit=0 :: WEB TAPILOT TEST: PASSED (28/28)
+timing exit=0 :: WEB TIMING TEST PASSED
+friend_build exit=0 :: 25/25 passed
+stime exit=0 :: WEB STIME PAGE TEST: PASSED (31/31)
+ttime_tta exit=0 :: WEB TTIME PAGE TEST tta: PASSED (32/32)
+verify_levels exit=0 :: ALL 300 LEVELS SOLVABLE AND PASS CAMPAIGN RULES
+BATCH_D_DONE
+  load before web_p21_rerun: 1.17 2.86 3.51
+web_p21_rerun exit=0 :: WEB EXTREME90 TEST: PASSED (84/84)
+  load before n68_timing_a: 1.18 3.11 3.71
+n68_timing_a exit=0 :: N68 TIMING: PASSED (20 measurements)
+  load before n68_timing_b: 1.14 2.49 3.30
+n68_timing_b exit=0 :: N68 TIMING: PASSED (20 measurements)
+BATCH_E_DONE

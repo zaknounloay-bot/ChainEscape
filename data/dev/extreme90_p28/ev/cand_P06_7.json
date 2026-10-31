@@ -1,0 +1,17 @@
+{
+ "P06_7": {
+  "map": [
+   "G> . . XC . . Y>=",
+   ". . . . . . .",
+   ". . . Gv . P^ B>@~",
+   ". . . . . . R>#Y",
+   "Rv Y<+C . Y<@- Y< . P^=",
+   ". . . . . . .",
+   "Yv@- Bv+C . B>#Y . Gv@~ G>+C"
+  ],
+  "target": "EXTREME",
+  "facts": [],
+  "mechanic": "gate,lock",
+  "max_positions": 2000
+ }
+}

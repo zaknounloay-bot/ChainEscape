@@ -1,0 +1,65 @@
+{
+ "target": "EXTREME",
+ "facts": [],
+ "mechanic": "switch,gate",
+ "idea": "P27 hand core L6b: one tap, two releases - the switch piece is also the gate's last link: fired last it opens the gate in the same instant it reverses the block facing the gate; fired while another link remains, the reversed block waits at a closed gate",
+ "family": "P27 the trigger is the last link (switch + gate)",
+ "map": [
+  ". . . . . . .",
+  ". . . . . . .",
+  "Y> . G<&A XC . . .",
+  ". . . . . . .",
+  ". . . P<%A+C . . .",
+  ". . . . . . .",
+  ". . . . . . R^+C"
+ ],
+ "frozen": [
+  [
+   2,
+   0
+  ],
+  [
+   2,
+   2
+  ],
+  [
+   2,
+   3
+  ],
+  [
+   4,
+   3
+  ],
+  [
+   6,
+   6
+  ]
+ ],
+ "max_positions": 2000,
+ "piece_free": 13,
+ "max_pieces": 17,
+ "shortcut_weight": 80,
+ "coverage_weight": 25,
+ "late_weight": 20,
+ "endgame_weight": 20,
+ "length_weight": 1.0,
+ "length_cap": 18,
+ "pressure_weight": 1.5,
+ "palette": "all",
+ "suffixes": [
+  "&A",
+  "+C",
+  "="
+ ],
+ "suffix_rate": 0.3,
+ "suffix_max": {
+  "&A": 4,
+  "+C": 3,
+  "=": 2
+ },
+ "crates_max": 0,
+ "seed": 192,
+ "size": "medium",
+ "max_solve_nodes": 1500,
+ "phase27_core": "L6_TRIGGERLINK"
+}

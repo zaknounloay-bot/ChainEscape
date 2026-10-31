@@ -1,0 +1,26 @@
+{
+ "J2ss53_o395": {
+  "result": "invalid token",
+  "detail": [
+   "r2c1 R<@-=: spinner with switch / flip / armor"
+  ]
+ },
+ "L5s63_380_1": {
+  "result": "not essential",
+  "detail": {
+   "without_sequence": "without it: 15 decision steps, 5 distinct mistakes (with it: 16, 5)"
+  }
+ },
+ "L6s65_304_0": {
+  "result": "not essential",
+  "detail": {
+   "without_gate": "without it: 12 decision steps, 5 distinct mistakes (with it: 11, 5)"
+  }
+ },
+ "L4s62_494_1": {
+  "result": "not essential",
+  "detail": {
+   "without_gate": "without it: 15 decision steps, 4 distinct mistakes (with it: 14, 4)"
+  }
+ }
+}

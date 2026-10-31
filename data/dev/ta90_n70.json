@@ -1,0 +1,177 @@
+{
+ "format": "ce-ta90-proto",
+ "v": 1,
+ "test": "ta90_n70",
+ "assist": {
+  "undo": 3,
+  "show_a_move": 0,
+  "hammer": 0
+ },
+ "note": "Development only. Phase 28 EXTREME candidate (?extreme90p28=1); never shared, never production. TECHNICALLY QUALIFIED (Category A and B): NOT human-approved; human difficulty unvalidated.",
+ "boards": [
+  {
+   "id": "N70",
+   "accepted": true,
+   "label": "TECHNICALLY QUALIFIED - HUMAN UNTESTED",
+   "variant": "N70",
+   "design": "P28_P04_1",
+   "family": "P28 the relocated switch (magnet + switch)",
+   "concept_group": "magnet x reversal",
+   "primary": "magnet, switch, spinner",
+   "target": "EXTREME (a design target, not a rating; never shown to players)",
+   "idea": "the relocated switch: the switch piece walls in the very block it reverses; only a magnet's pull moves the switch out of that lane - fired too early the magnet pulls something else",
+   "source": "hybrid: hand core frozen cell for cell (seed_P04_RELOCSWITCH.json, Phase 28); blocks added by tools/ta90_search.gd --ops=v20 with the Phase 28 pipeline (token guard, strict essentiality, spinners_max), RNG seed 81 (protocol.json); early screen tools/extreme90_screen28.py",
+   "related_bank_concept": "N59 (magnet relocation of a trigger-like piece), N36 (magnet + switch); closest occupancy N43 0.29",
+   "fingerprint": "5b1aa7335b91df64c600cfa40d7950e6bd5e7b1c649f2c0edc6b9ba2ab4e7bf6",
+   "mechanics": [
+    "magnet",
+    "switch",
+    "spinner"
+   ],
+   "puzzle": {
+    "format": "ce-puzzle",
+    "v": 1,
+    "rules": 1,
+    "rows": 7,
+    "cols": 7,
+    "map": [
+     ". . . . . . .",
+     ". . . . . . .",
+     "B>&A . B>&A . . . .",
+     ". . . B^* . Gv Bv",
+     "R^ . . G<@ P^&A B< Gv@~",
+     "Y>* R>&A . P<%A . Bv@- Yv@",
+     ". . . . . . ."
+    ]
+   },
+   "design_report": {
+    "A": {
+     "fingerprint": "5b1aa7335b91df64c600cfa40d7950e6bd5e7b1c649f2c0edc6b9ba2ab4e7bf6",
+     "hint_nodes": [
+      17,
+      13
+     ],
+     "parity": [
+      0,
+      0
+     ],
+     "portals": 0,
+     "position_cap": 2000,
+     "positions": 258,
+     "replay": true,
+     "solution": 15,
+     "solve_ms": 8.5,
+     "timeup_worst_ms": 7.1,
+     "timeup_worst_nodes": 70,
+     "winnable": 67
+    },
+    "B": {
+     "coverage": 0.87,
+     "decision_steps": 13,
+     "distinct_mistakes": 5,
+     "endgame_decision": true,
+     "last_decision": 13,
+     "late": 0.87,
+     "line": [
+      "r2c2> [x3]",
+      "r2c0> [x3]",
+      "r4c0^ [x3]",
+      "r4c3< [x3]",
+      "r4c4^ [x1]",
+      "r3c3^ [x2]",
+      "r5c6v [x3]",
+      "r5c5> [x2]",
+      "r4c5< [x1]",
+      "r3c5v [x1]",
+      "r4c6v [x1]",
+      "r3c6v [x1]",
+      "r5c1> [x1]",
+      "r5c0>",
+      "r3c3<"
+     ],
+     "losing_per_step": [
+      3,
+      3,
+      3,
+      3,
+      1,
+      2,
+      3,
+      2,
+      1,
+      1,
+      1,
+      1,
+      1,
+      0,
+      0
+     ],
+     "matters_magnet": true,
+     "matters_switch": true,
+     "mistakes": [
+      "r3c3^",
+      "r4c4^",
+      "r5c5v",
+      "r4c5<",
+      "r3c3<"
+     ],
+     "shortcut": 0.105,
+     "spinner_dependence": "without it: 10 decision steps, 2 distinct mistakes (with it: 13, 5)",
+     "without_magnet": "unsolvable without it",
+     "without_switch": "without it: 9 decision steps, 4 distinct mistakes (with it: 13, 5)"
+    },
+    "C": {
+     "decisions_k4_6_8": [
+      9,
+      6,
+      4
+     ],
+     "deepest": 12,
+     "greedy": {
+      "look2": 0.02,
+      "look4": 0.008,
+      "min_turn": 0,
+      "mobility": 0.105,
+      "safe": 0.015
+     },
+     "hidden_k6_8": [
+      14,
+      11
+     ],
+     "learner": {
+      "look4": 2,
+      "look6": 2
+     },
+     "look6_greedy": 0.05,
+     "opening": "2 / 5",
+     "pressure": {
+      "advances": 0,
+      "calm_prefix": 2,
+      "flips": 0,
+      "multi_turned": 1,
+      "prediction_share": 0.2,
+      "pulls": 1,
+      "rams": 0,
+      "signals": 0,
+      "spinners_turned": 2,
+      "trap_delay_median": 6,
+      "turns": 3,
+      "undo_proof": 0.8
+     },
+     "win_share": 0.26
+    },
+    "filler": {
+     "distinct": 5,
+     "pieces_tested": 15,
+     "steps": 13,
+     "trivial": [],
+     "trivial_removals": 0
+    },
+    "similarity": {
+     "closest_known": "N43",
+     "overlap": 0.29
+    }
+   }
+  }
+ ]
+}

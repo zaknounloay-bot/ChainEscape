@@ -1,0 +1,28 @@
+{
+ "P05b_1": {
+  "map": [
+   ". . . Y>@ . . .",
+   ". . . B> . . .",
+   ". G^= . Y^* Gv@- G^@-#Y Gv=",
+   ". . . . . . .",
+   ". . Y> R>#Y . . .",
+   ". B<@ R^ Bv* . . .",
+   ". Y> B^@~ . . . R>@-"
+  ],
+  "mechanic": "magnet,lock,armor",
+  "positions": 564
+ },
+ "P13b_0": {
+  "map": [
+   ". . . . . . R>",
+   ". Rv@~+C . . P<%A . R>@+C",
+   "Bv@- . . . . . R^",
+   "R>@- . . M XC . .",
+   "R>&A . . . . . .",
+   ". . . Y^&A . . .",
+   ". R>+C . . . . P^%A"
+  ],
+  "mechanic": "movable,gate,switch",
+  "positions": 249
+ }
+}

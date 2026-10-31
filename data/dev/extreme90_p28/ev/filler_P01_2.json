@@ -1,0 +1,9 @@
+{
+ "P01_2": {
+  "distinct": 5,
+  "pieces_tested": 15,
+  "steps": 14,
+  "trivial": [],
+  "trivial_removals": 0
+ }
+}

@@ -1,0 +1,38 @@
+{
+ "L6t_163": {
+  "result": "not essential",
+  "detail": {
+   "spinner_dependence": "without it: 12 decision steps, 3 distinct mistakes (with it: 12, 4)"
+  }
+ },
+ "L6t_177": {
+  "result": "not essential",
+  "detail": {
+   "spinner_dependence": "without it: 11 decision steps, 3 distinct mistakes (with it: 11, 4)"
+  }
+ },
+ "L6t_197": {
+  "result": "not essential",
+  "detail": {
+   "spinner_dependence": "without it: 13 decision steps, 3 distinct mistakes (with it: 13, 4)"
+  }
+ },
+ "L6t_201": {
+  "result": "not essential",
+  "detail": {
+   "spinner_dependence": "without it: 12 decision steps, 3 distinct mistakes (with it: 12, 4)"
+  }
+ },
+ "L6t_207": {
+  "result": "not essential",
+  "detail": {
+   "spinner_dependence": "without it: 14 decision steps, 3 distinct mistakes (with it: 14, 4)"
+  }
+ },
+ "L6t_216": {
+  "result": "not essential",
+  "detail": {
+   "spinner_dependence": "without it: 13 decision steps, 3 distinct mistakes (with it: 13, 4)"
+  }
+ }
+}

@@ -1,0 +1,106 @@
+{
+ "P02_0": {
+  "map": [
+   ". . . . . Yv@ .",
+   ". R<= . P^= . Bv&A .",
+   ". . . . . . .",
+   ". P>#Y%A . Y<&A G> Rv .",
+   ". R<@ B<#Y . . . .",
+   ". R<&A . Y<@ Y<@~ . .",
+   ". . . . G< G< G^%A"
+  ],
+  "mechanic": "switch,lock",
+  "positions": 255
+ },
+ "P03_3": {
+  "map": [
+   ". Rv . . Y<&A Yv@~ B>=",
+   ". . . . . . .",
+   ". . . . . . .",
+   ". Gv . Y>&A* . R^ .",
+   ". . B<&A B<@ . . G^=",
+   "G<* . . B<= . R^ .",
+   ". . . . . . G^%A"
+  ],
+  "mechanic": "magnet,switch,armor",
+  "positions": 367
+ },
+ "P01_2": {
+  "map": [
+   "P^@~ Y<@~ Yv@~ . . . B<",
+   "B< . R<+C . . . .",
+   "Y> . G<&A XC . . R^&A",
+   ". . . . . . .",
+   ". . . P<%A+C . Y<@- G^=",
+   ". . . G<%A . . .",
+   ". . . . . P^ R^+C"
+  ],
+  "mechanic": "switch,gate",
+  "positions": 347
+ },
+ "P06_7": {
+  "map": [
+   "G> . . XC . . Y>=",
+   ". . . . . . .",
+   ". . . Gv . P^ B>@~",
+   ". . . . . . R>#Y",
+   "Rv Y<+C . Y<@- Y< . P^=",
+   ". . . . . . .",
+   "Yv@- Bv+C . B>#Y . Gv@~ G>+C"
+  ],
+  "mechanic": "gate,lock",
+  "positions": 343
+ },
+ "P12_3": {
+  "map": [
+   ". . . . . . .",
+   ". . B>#Y . . . .",
+   ". . . . P<@- Pv&A .",
+   "Y> . M Gv@~ . P>%A .",
+   "Bv#Y . G<&A . . . .",
+   ". . G^&A . . . Y<@-",
+   ". . . . . . P^%A"
+  ],
+  "mechanic": "movable,switch,lock",
+  "positions": 647
+ },
+ "P13b_0": {
+  "map": [
+   ". . . . . . R>",
+   ". Rv@~+C . . P<%A . R>@+C",
+   "Bv@- . . . . . R^",
+   "R>@- . . M XC . .",
+   "R>&A . . . . . .",
+   ". . . Y^&A . . .",
+   ". R>+C . . . . P^%A"
+  ],
+  "mechanic": "movable,gate,switch",
+  "positions": 249
+ },
+ "P04_1": {
+  "map": [
+   ". . . . . . .",
+   ". . . . . . .",
+   "B>&A . B>&A . . . .",
+   ". . . B^* . Gv Bv",
+   "R^ . . G<@ P^&A B< Gv@~",
+   "Y>* R>&A . P<%A . Bv@- Yv@",
+   ". . . . . . ."
+  ],
+  "mechanic": "magnet,switch",
+  "positions": 258
+ },
+ "P05b_1": {
+  "map": [
+   ". . . Y>@ . . .",
+   ". . . B> . . .",
+   ". G^= . Y^* Gv@- G^@-#Y Gv=",
+   ". . . . . . .",
+   ". . Y> R>#Y . . .",
+   ". B<@ R^ Bv* . . .",
+   ". Y> B^@~ . . . R>@-"
+  ],
+  "mechanic": "magnet,lock,armor",
+  "positions": 564
+ }
+}

@@ -1,0 +1,284 @@
+{
+ "note": "Phase 28 concept funnel (docs/extreme90_phase28.md, section E): every proposal with its reasoning family, decided BEFORE generation; engine validity checked with tools/xb28_validate.gd rules",
+ "proposals": [
+  {
+   "id": "A1",
+   "family": "reversal (switch)",
+   "concept": "the shell's exit",
+   "decision": "rejected",
+   "reason": "is N62"
+  },
+  {
+   "id": "A2",
+   "family": "reversal (switch)",
+   "concept": "the trigger is the gate's last link",
+   "decision": "ADVANCED P01",
+   "reason": "Phase 27 L6 failed only on gate essentiality, a pipeline defect (weak 'matters' rule); 6/6 screened PASS in the pipeline test"
+  },
+  {
+   "id": "A3",
+   "family": "reversal (switch)",
+   "concept": "the locked trigger",
+   "decision": "ADVANCED P02",
+   "reason": "Phase 27 L1 failed only on invalid tokens (205/207); the guard removes them"
+  },
+  {
+   "id": "A4",
+   "family": "reversal x magnet",
+   "concept": "the turned magnet (a magnet that is a flip target reverses its pull line)",
+   "decision": "ADVANCED P03",
+   "reason": "new: the Phase 26-27 assumption 'magnets are plain' was wrong (level_manager._validate_magnets allows a flip target); no bank board has a magnet flip target"
+  },
+  {
+   "id": "A5",
+   "family": "reversal (switch)",
+   "concept": "the key turned to face its prisoner",
+   "decision": "rejected",
+   "reason": "is N61"
+  },
+  {
+   "id": "A6",
+   "family": "reversal (switch)",
+   "concept": "the drill turns around",
+   "decision": "rejected",
+   "reason": "N41 / N38"
+  },
+  {
+   "id": "A7",
+   "family": "reversal (switch)",
+   "concept": "a link turned into its own gate",
+   "decision": "rejected",
+   "reason": "N61's shape (Phase 26 J2)"
+  },
+  {
+   "id": "A8",
+   "family": "reversal (switch)",
+   "concept": "between two firings",
+   "decision": "rejected",
+   "reason": "N20 / N42"
+  },
+  {
+   "id": "B1",
+   "family": "magnet relocation",
+   "concept": "the magnet moves the magnet",
+   "decision": "rejected",
+   "reason": "is N59"
+  },
+  {
+   "id": "B2",
+   "family": "magnet relocation",
+   "concept": "two-hop relay",
+   "decision": "rejected",
+   "reason": "N59 relative (Phase 26 J4)"
+  },
+  {
+   "id": "B3",
+   "family": "magnet relocation",
+   "concept": "the relocated boomerang",
+   "decision": "rejected",
+   "reason": "is N60 (MEDIUM, not approved)"
+  },
+  {
+   "id": "B4",
+   "family": "magnet relocation",
+   "concept": "the relocated switch (the switch is walled in by its own target)",
+   "decision": "ADVANCED P04",
+   "reason": "no decision in Phase 26 G25 by hand; the walled-in switch makes the pull necessary"
+  },
+  {
+   "id": "B5",
+   "family": "magnet relocation",
+   "concept": "pull a gate link",
+   "decision": "rejected",
+   "reason": "a pull never changes a link's count"
+  },
+  {
+   "id": "B6",
+   "family": "magnet x lock",
+   "concept": "pull the prisoner to its shell",
+   "decision": "ADVANCED P05",
+   "reason": "Phase 25 PR failed on lock decoration; the strict generator rule now refuses decorative locks"
+  },
+  {
+   "id": "B7",
+   "family": "magnet",
+   "concept": "magnet cascade / pull order",
+   "decision": "rejected",
+   "reason": "is N52"
+  },
+  {
+   "id": "C1",
+   "family": "lock x gate",
+   "concept": "the key is also the gate's last link",
+   "decision": "ADVANCED P06",
+   "reason": "Phase 27 L4 failed on filler / human profile; re-tried under the new rule"
+  },
+  {
+   "id": "C2",
+   "family": "lock x switch",
+   "concept": "the locked flip target",
+   "decision": "rejected",
+   "reason": "N20 / N42"
+  },
+  {
+   "id": "C3",
+   "family": "lock x magnet",
+   "concept": "the magnet is the last key",
+   "decision": "rejected",
+   "reason": "lock decoration (Phase 26 G7)"
+  },
+  {
+   "id": "C4",
+   "family": "lock x armor",
+   "concept": "the armored key",
+   "decision": "ADVANCED P07",
+   "reason": "lock + armor without spinners is not in the bank"
+  },
+  {
+   "id": "C5",
+   "family": "lock x spinner",
+   "concept": "shared key, two counts",
+   "decision": "rejected",
+   "reason": "is N53"
+  },
+  {
+   "id": "C6",
+   "family": "lock x spinner",
+   "concept": "the key aims the lock / parity key",
+   "decision": "rejected",
+   "reason": "N15 / N30"
+  },
+  {
+   "id": "D1",
+   "family": "Sequence x armor",
+   "concept": "the battering ram",
+   "decision": "ADVANCED P08",
+   "reason": "Phase 27 L5 failed on Sequence essentiality (spinners took over); spinners now capped and counted"
+  },
+  {
+   "id": "D2",
+   "family": "portal x armor",
+   "concept": "the remote ram",
+   "decision": "rejected",
+   "reason": "N34 / N40 relative, K2 / H6 (Phase 27 L2)"
+  },
+  {
+   "id": "D3",
+   "family": "armor x gate",
+   "concept": "shell link cracked by a reversed rammer",
+   "decision": "rejected",
+   "reason": "N16"
+  },
+  {
+   "id": "D4",
+   "family": "armor",
+   "concept": "two rammers share a shell",
+   "decision": "rejected",
+   "reason": "a ram is never harmful - no losing move exists"
+  },
+  {
+   "id": "D5",
+   "family": "gate x armor",
+   "concept": "the gate guards the shell",
+   "decision": "ADVANCED P09",
+   "reason": "gate + armor without spinners is not in the bank"
+  },
+  {
+   "id": "E1",
+   "family": "Sequence",
+   "concept": "the Sequence key",
+   "decision": "rejected",
+   "reason": "N21 / N45"
+  },
+  {
+   "id": "E2",
+   "family": "Sequence x switch",
+   "concept": "a reversal changes the boomerang's lane",
+   "decision": "rejected",
+   "reason": "engine: a flip moves nothing, and Sequence blocks cannot be flip targets"
+  },
+  {
+   "id": "E3",
+   "family": "Sequence x gate",
+   "concept": "the gate holds the boomerang",
+   "decision": "ADVANCED P10",
+   "reason": "Sequence + gate is not in the bank"
+  },
+  {
+   "id": "E4",
+   "family": "Sequence x crate",
+   "concept": "the Sequence pusher",
+   "decision": "rejected",
+   "reason": "N44 / N58 (excluded family)"
+  },
+  {
+   "id": "F1",
+   "family": "portal x gate",
+   "concept": "the far gate",
+   "decision": "ADVANCED P11",
+   "reason": "portal + gate is not in the bank"
+  },
+  {
+   "id": "F2",
+   "family": "portal x switch",
+   "concept": "the flip sends the rammer through the portal",
+   "decision": "rejected",
+   "reason": "K2 / H6"
+  },
+  {
+   "id": "F3",
+   "family": "portal x spinner",
+   "concept": "a turn changes the far side",
+   "decision": "rejected",
+   "reason": "N34 / N40"
+  },
+  {
+   "id": "G1",
+   "family": "gate",
+   "concept": "gate chain",
+   "decision": "rejected",
+   "reason": "N19"
+  },
+  {
+   "id": "G2",
+   "family": "gate x spinner",
+   "concept": "silent gate / links aim the spinner",
+   "decision": "rejected",
+   "reason": "N25 / N54"
+  },
+  {
+   "id": "H1",
+   "family": "crate x reversal x lock",
+   "concept": "the shuttle and the door",
+   "decision": "ADVANCED P12",
+   "reason": "crate + lock is not in the bank; the reversal gives the last pusher its way out (the Phase 27 crate fact)"
+  },
+  {
+   "id": "H2",
+   "family": "crate x gate x reversal",
+   "concept": "the crate through the gate",
+   "decision": "ADVANCED P13",
+   "reason": "crate + gate without spinners is not in the bank"
+  },
+  {
+   "id": "H3",
+   "family": "crate x spinner",
+   "concept": "push before you turn / crate route / brake",
+   "decision": "rejected",
+   "reason": "N33 / N56 / N57 (excluded family)"
+  },
+  {
+   "id": "H4",
+   "family": "crate x lock",
+   "concept": "rim seal without a direction change",
+   "decision": "rejected",
+   "reason": "infeasible: the last pusher can never leave (Phase 27 Q1)"
+  }
+ ],
+ "counts": {
+  "proposals": 39,
+  "advanced": 13,
+  "rejected": 26,
+  "families": 28
+ }
+}

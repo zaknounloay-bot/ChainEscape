@@ -34,6 +34,7 @@ extends "res://tools/ta90_design.gd"
 ##   every run counts its QUALIFYING boards (the fixed EXTREME search targets,
 ##   _qualifies) - the yield measure of docs/extreme90_phase20.md.}
 
+const VALIDATE := preload("res://tools/xb28_validate.gd")
 const TOKENS := ["^", "v", "<", ">", "^@", "v@", "<@", ">@", "^@-", "v@-", "<@-", ">@-", "^@~", "v@~", "<@~", ">@~"]
 const PALETTE := ["R", "G", "B", "Y", "P"]
 
@@ -42,6 +43,7 @@ var _seen := {}
 var _frozen := {}
 var _spec := {}
 var _evals := 0
+var _invalid := 0  # Phase 28: generated boards refused by the token guard before solving
 var _v20 := false
 var _qual := {}  # Phase 20: qualifying boards seen (map key -> brief)
 
@@ -105,12 +107,12 @@ func _initialize() -> void:
 		else:
 			stale += 1
 		log.append(_brief(best, round))
-		print("round %d (%d evaluated, %.0f s): best %s" % [round, _evals, (Time.get_ticks_msec() - t_end) / 1000.0 + float(x_args.get("minutes", "10")) * 60.0, _line(best)])
+		print("round %d (%d evaluated, %d invalid refused, %.0f s): best %s" % [round, _evals, _invalid, (Time.get_ticks_msec() - t_end) / 1000.0 + float(x_args.get("minutes", "10")) * 60.0, _line(best)])
 	print("stopped after %d rounds: %s" % [round, "no improvement for %d rounds" % patience if stale >= patience else "time budget"])
 	print("BEST %s" % JSON.stringify(best["map"]))
 	if x_args.has("out"):
 		var f := FileAccess.open(str(x_args["out"]), FileAccess.WRITE)
-		f.store_string(JSON.stringify({"best": best, "beam": beam, "log": log, "evaluated": _evals, "rounds": round,
+		f.store_string(JSON.stringify({"best": best, "beam": beam, "log": log, "evaluated": _evals, "invalid_refused": _invalid, "rounds": round,
 			"stopped": "patience" if stale >= patience else "time", "generator": "v20" if _v20 else "baseline",
 			"qualifying": _qual.values(), "seconds": snappedf((Time.get_ticks_msec() - t_end) / 1000.0 + float(x_args.get("minutes", "10")) * 60.0, 0.1)}, " "))
 		f.close()
@@ -138,7 +140,7 @@ func _edit(map: Array) -> Array:
 			return e
 	var kind := _rng.randi_range(0, 9)
 	var maxp := int(_spec.get("max_pieces", 12))
-	var toks := _tokens()
+	var toks := _tokens(g)
 	if (kind < 5 or pieces.is_empty()) and not spots.is_empty() and _pieces(map) < maxp:
 		var at: Vector2i = spots[_rng.randi_range(0, spots.size() - 1)]
 		var crates: int = int(_spec.get("crates_max", 0))
@@ -146,11 +148,13 @@ func _edit(map: Array) -> Array:
 			g[at.y][at.x] = "M"
 		else:
 			var col: String = PALETTE[_rng.randi_range(0, PALETTE.size() - 1)]
-			g[at.y][at.x] = col + toks[_rng.randi_range(0, toks.size() - 1)] + _suffix(col, g)
+			var tk: String = toks[_rng.randi_range(0, toks.size() - 1)]
+			g[at.y][at.x] = col + tk + _suffix(col, g, tk)
 	elif kind < 8 and not pieces.is_empty():
 		var at: Vector2i = pieces[_rng.randi_range(0, pieces.size() - 1)]
 		var col: String = str(g[at.y][at.x])[0]
-		g[at.y][at.x] = col + toks[_rng.randi_range(0, toks.size() - 1)] + _suffix(col, g)
+		var tk: String = toks[_rng.randi_range(0, toks.size() - 1)]
+		g[at.y][at.x] = col + tk + _suffix(col, g, tk)
 	elif not pieces.is_empty():
 		var at: Vector2i = pieces[_rng.randi_range(0, pieces.size() - 1)]
 		g[at.y][at.x] = "."
@@ -165,8 +169,24 @@ func _edit(map: Array) -> Array:
 ## Phase 18: the tokens the search may place ("palette": "arrows" - plain
 ## arrows only, so a non-spinner core never grows spinners; "all" - TOKENS,
 ## the Phase 14-17 default).
-func _tokens() -> Array:
-	return TOKENS.slice(0, 4) if str(_spec.get("palette", "all")) == "arrows" else TOKENS
+## Phase 28: "spinners_max" (default: no cap) - once the board holds that many
+## spinners, new pieces are plain arrows only, so grown spinners cannot take
+## over the decisions of a non-spinner core (the Phase 27 rejections: the
+## core's gate / Sequence stopped being essential).
+func _tokens(g: Array = []) -> Array:
+	if str(_spec.get("palette", "all")) == "arrows":
+		return TOKENS.slice(0, 4)
+	if _spec.has("spinners_max") and _spinners(g) >= int(_spec["spinners_max"]):
+		return TOKENS.slice(0, 4)
+	return TOKENS
+
+
+static func _spinners(g: Array) -> int:
+	var n := 0
+	for row in g:
+		for t in row:
+			n += int(str(t).contains("@"))
+	return n
 
 
 ## Phase 18: "suffixes" (e.g. ["&A", "+B", "#R"]): a new or changed piece
@@ -178,13 +198,20 @@ func _tokens() -> Array:
 ## are refused by the engine anyway).
 ## Phase 19: "suffix_max" ({"*": 3, ...}) caps how many pieces may carry a
 ## mark (mechanic economy during the search: no magnet-crowded boards).
-func _suffix(col: String, g: Array = []) -> String:
+## Phase 28: the mark must also be legal on the token it is appended to
+## (tools/xb28_validate.gd): before Phase 28 a spinner token could take a flip
+## / switch / armor / magnet mark, which the parser repairs with an error
+## (28 % of the Phase 26-27 qualifying boards). "token_guard": false restores
+## the earlier behaviour.
+func _suffix(col: String, g: Array = [], tk: String = "") -> String:
 	var sx: Array = _spec.get("suffixes", [])
 	if sx.is_empty() or _rng.randf() >= float(_spec.get("suffix_rate", 0.25)):
 		return ""
 	var x := str(sx[_rng.randi_range(0, sx.size() - 1)])
 	var cap: Dictionary = _spec.get("suffix_max", {})
 	if cap.has(x) and _marked(g, x) >= int(cap[x]):
+		return ""
+	if bool(_spec.get("token_guard", true)) and tk != "" and not VALIDATE.allowed(col, tk, x):
 		return ""
 	return "" if x.begins_with("#") and x.substr(1) == col else x  # never locked by its own colour
 
@@ -235,6 +262,9 @@ func _score(map: Array) -> Dictionary:
 	if _seen.has(key):
 		return {}
 	_seen[key] = true
+	if bool(_spec.get("token_guard", true)) and not VALIDATE.board_problems(map).is_empty():
+		_invalid += 1  # Phase 28: refused before any solving
+		return {}
 	_evals += 1
 	var level := parse(map)
 	if level == null or not _intact(map, level):
@@ -261,9 +291,14 @@ func _score(map: Array) -> Dictionary:
 		if lps[i] > 0:
 			thirds[mini(2, i * 3 / maxi(1, lps.size()))] = 1
 	var matters := 0
-	var mechs := str(_spec.get("mechanic", "")).split(",", false)
+	var mechs := Array(str(_spec.get("mechanic", "")).split(",", false))
+	# Phase 28 (strict_essential): spinners on the board are a mechanic too -
+	# the acceptance rule checks them (B.spinner_dependence), so grown spinners
+	# must carry decisions, or the board does not qualify.
+	if bool(_spec.get("strict_essential", true)) and not mechs.has("spinners") and "|".join(map).contains("@"):
+		mechs.append("spinners")
 	for mech in mechs:
-		if _counterfactual(map, mech, dec)["matters"]:
+		if _essential(_counterfactual(map, mech, dec)):
 			matters += 1
 	var shortcut := 0.0
 	for k in POLICIES:
@@ -318,6 +353,24 @@ func _concurrency(s: Solver, sol: Array) -> float:
 	return float(multi) / maxf(sol.size(), 1)
 
 
+## Phase 28: "strict_essential" (default true) - a mechanic counts only under
+## the acceptance rule (docs/extreme90_phase21.md): the board is unsolvable
+## without it, or loses >= 2 distinct mistakes or >= 3 decision steps. Before
+## Phase 28 any change counted, so boards whose core mechanic the grown
+## spinners had made redundant still qualified (8 of the 20 Phase 26-27 full
+## evaluations). false restores the earlier rule.
+func _essential(cf: Dictionary) -> bool:
+	if not bool(_spec.get("strict_essential", true)):
+		return bool(cf["matters"])
+	if not cf["matters"]:
+		return false
+	var what := str(cf.get("what", ""))
+	var m := RegEx.create_from_string("without it: (\\d+) decision steps, (\\d+) distinct mistakes \\(with it: (\\d+), (\\d+)\\)").search(what)
+	if m == null:
+		return true  # unsolvable / falls apart without it
+	return int(m.get_string(4)) - int(m.get_string(2)) >= 2 or int(m.get_string(3)) - int(m.get_string(1)) >= 3
+
+
 ## Phase 20: the search-level EXTREME targets (NEED, fixed before the
 ## experiment): the board would pass category B's numbers (the full report
 ## still decides).
@@ -369,8 +422,9 @@ func _edit20(g: Array, plain: Array, spots: Array) -> Array:
 	if not focus.is_empty() and _rng.randf() < float(_spec.get("focus_rate", 0.7)) and _pieces(_join(g)) < maxp and _rng.randf() < 0.5:
 		var at: Vector2i = focus[_rng.randi_range(0, focus.size() - 1)]
 		var col: String = PALETTE[_rng.randi_range(0, PALETTE.size() - 1)]
-		var toks := _tokens()
-		g[at.y][at.x] = col + toks[_rng.randi_range(0, toks.size() - 1)] + _suffix(col, g)
+		var toks := _tokens(g)
+		var tk: String = toks[_rng.randi_range(0, toks.size() - 1)]
+		g[at.y][at.x] = col + tk + _suffix(col, g, tk)
 		return _join(g)
 	return []
 

@@ -1,0 +1,59 @@
+{
+ "L5s63_380_1": {
+  "map": [
+   ". . . . . Yv@ .",
+   ". . . Y^@- . R<@~ R^",
+   ". Pv . P>@ . . .",
+   ". Y>:v . G^= P^@- B^= .",
+   "B^@ R^@ B< Y<@ . Pv= G^@-",
+   ". . . . . . .",
+   ". . . . . . ."
+  ],
+  "target": "EXTREME",
+  "facts": [],
+  "mechanic": "sequence,armor",
+  "max_positions": 2000,
+  "overlap": [
+   0.29,
+   "N61"
+  ]
+ },
+ "L6s65_304_0": {
+  "map": [
+   ". . Rv&A . . . .",
+   ". Pv&A R^@~ Yv%A . . .",
+   "Y> . G<&A XC B>&A B^@- R^@~",
+   ". . . P>= Gv@~ . R>@~",
+   ". . . P<%A+C . . .",
+   ". . . . . . .",
+   ". . . . P>+C . R^+C"
+  ],
+  "target": "EXTREME",
+  "facts": [],
+  "mechanic": "switch,gate",
+  "max_positions": 2000,
+  "overlap": [
+   0.3,
+   "N45"
+  ]
+ },
+ "L4s62_494_1": {
+  "map": [
+   ". . . XC Yv@~ Bv@~ .",
+   ". . . R^@~ . . .",
+   ". . . Gv . . .",
+   ". Pv@- . . B>+C . .",
+   "R^@~ Y<+C R<+C . R<@~ . .",
+   ". B>@- . G>@-#Y . . .",
+   ". Yv@- . B>#Y Y>= Bv= ."
+  ],
+  "target": "EXTREME",
+  "facts": [],
+  "mechanic": "gate,lock",
+  "max_positions": 2000,
+  "overlap": [
+   0.3,
+   "N56"
+  ]
+ }
+}

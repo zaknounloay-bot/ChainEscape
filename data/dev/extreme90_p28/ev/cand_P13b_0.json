@@ -1,0 +1,17 @@
+{
+ "P13b_0": {
+  "map": [
+   ". . . . . . R>",
+   ". Rv@~+C . . P<%A . R>@+C",
+   "Bv@- . . . . . R^",
+   "R>@- . . M XC . .",
+   "R>&A . . . . . .",
+   ". . . Y^&A . . .",
+   ". R>+C . . . . P^%A"
+  ],
+  "target": "EXTREME",
+  "facts": [],
+  "mechanic": "movable,gate,switch",
+  "max_positions": 2000
+ }
+}

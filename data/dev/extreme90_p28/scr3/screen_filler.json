@@ -1,0 +1,81 @@
+{
+ "P05b_0": {
+  "distinct": 4,
+  "pieces_tested": 14,
+  "steps": 14,
+  "trivial": [],
+  "trivial_removals": 0
+ },
+ "P05b_1": {
+  "distinct": 4,
+  "pieces_tested": 15,
+  "steps": 14,
+  "trivial": [],
+  "trivial_removals": 0
+ },
+ "P05b_2": {
+  "distinct": 4,
+  "pieces_tested": 15,
+  "steps": 15,
+  "trivial": [],
+  "trivial_removals": 0
+ },
+ "P13b_0": {
+  "distinct": 5,
+  "pieces_tested": 12,
+  "steps": 12,
+  "trivial": [],
+  "trivial_removals": 0
+ },
+ "P13b_1": {
+  "distinct": 5,
+  "pieces_tested": 11,
+  "steps": 13,
+  "trivial": [],
+  "trivial_removals": 0
+ },
+ "P13b_2": {
+  "distinct": 5,
+  "pieces_tested": 13,
+  "steps": 13,
+  "trivial": [],
+  "trivial_removals": 0
+ },
+ "P13b_3": {
+  "distinct": 5,
+  "pieces_tested": 11,
+  "steps": 11,
+  "trivial": [],
+  "trivial_removals": 0
+ },
+ "P13b_4": {
+  "distinct": 5,
+  "pieces_tested": 11,
+  "steps": 11,
+  "trivial": [],
+  "trivial_removals": 0
+ },
+ "P13b_5": {
+  "distinct": 5,
+  "pieces_tested": 12,
+  "steps": 12,
+  "trivial": [],
+  "trivial_removals": 0
+ },
+ "P13b_6": {
+  "distinct": 5,
+  "pieces_tested": 12,
+  "steps": 12,
+  "trivial": [],
+  "trivial_removals": 0
+ },
+ "P13b_7": {
+  "distinct": 5,
+  "pieces_tested": 12,
+  "steps": 11,
+  "trivial": [
+   "r5c4 G^"
+  ],
+  "trivial_removals": 1
+ }
+}

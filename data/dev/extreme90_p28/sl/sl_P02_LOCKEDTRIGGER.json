@@ -1,0 +1,106 @@
+{
+ "P02_0": {
+  "map": [
+   ". . . . . Yv@ .",
+   ". R<= . P^= . Bv&A .",
+   ". . . . . . .",
+   ". P>#Y%A . Y<&A G> Rv .",
+   ". R<@ B<#Y . . . .",
+   ". R<&A . Y<@ Y<@~ . .",
+   ". . . . G< G< G^%A"
+  ],
+  "mechanic": "switch,lock",
+  "positions": 255
+ },
+ "P02_1": {
+  "map": [
+   ". . . . . Yv@ .",
+   ". R<= . P^= . Bv&A .",
+   ". . . . . . .",
+   ". P>#Y%A . Y<&A G> Rv&A .",
+   ". R<@ . . . . .",
+   ". R<&A P^#Y Y<@ Y<@~ . .",
+   ". . . Pv G< . G^%A"
+  ],
+  "mechanic": "switch,lock",
+  "positions": 566
+ },
+ "P02_2": {
+  "map": [
+   ". . . . . Yv@ .",
+   ". R<= . P^= . Bv&A .",
+   ". . . . . . G>",
+   ". P>#Y%A Rv#Y Y<&A . . .",
+   ". R<@ . . . Rv .",
+   ". R<&A . Y<@ Y<@~ . P>",
+   ". . . . G<&A . G^%A"
+  ],
+  "mechanic": "switch,lock",
+  "positions": 606
+ },
+ "P02_3": {
+  "map": [
+   ". . . . . Yv@ .",
+   ". R<= . P^= . Bv&A .",
+   ". . . . . . .",
+   ". P>#Y%A . Y<&A G> Rv .",
+   ". R<@ . . . . .",
+   ". R<&A . Y<@ Y<@~ . .",
+   ". . . . G< G< G^%A"
+  ],
+  "mechanic": "switch,lock",
+  "positions": 250
+ },
+ "P02_4": {
+  "map": [
+   ". . . . . Yv@ .",
+   ". R^= . P^= . Bv&A .",
+   ". . . . . . .",
+   ". P>#Y%A Rv Y<&A . . .",
+   ". R<@ . . . . .",
+   ". . . Y<@ Y<@~ B> .",
+   ". . Bv#Y Pv G< . G^%A"
+  ],
+  "mechanic": "switch,lock",
+  "positions": 464
+ },
+ "P02_5": {
+  "map": [
+   ". . . . . Yv .",
+   ". Rv= . P^= . Bv&A .",
+   ". . . P<@- . . .",
+   ". P>#Y%A . Y<&A . Rv .",
+   ". R<@ . . . . .",
+   ". R<&A . Y<@ Y<@~ . .",
+   ". . . . G< G< G^%A"
+  ],
+  "mechanic": "switch,lock",
+  "positions": 476
+ },
+ "P02_6": {
+  "map": [
+   ". . . . . Yv@ .",
+   ". R<= . P^= . Bv&A .",
+   ". . . . . . .",
+   ". P>#Y%A Rv#Y Y<&A . . .",
+   ". R<@ . . . . .",
+   ". R<&A . Y<@ Y<@~ . P>",
+   "B< . . . G<&A . G^%A"
+  ],
+  "mechanic": "switch,lock",
+  "positions": 578
+ },
+ "P02_7": {
+  "map": [
+   ". . . . . Yv@ .",
+   ". Rv= . P^= . Bv&A .",
+   ". . . . . . .",
+   ". P>#Y%A . Y<&A . Rv .",
+   ". R<@ . . . . .",
+   ". R<&A P^#Y Y<@ Y<@~ . .",
+   ". . . Pv G<&A . G^%A"
+  ],
+  "mechanic": "switch,lock",
+  "positions": 586
+ }
+}

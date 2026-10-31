@@ -1,0 +1,73 @@
+{
+ "fixed_before_generating": "2026-10-31 (before any Phase 28 generator run)",
+ "pipeline": "Phase 28 generator: token_guard (tools/xb28_validate.gd, before solving), strict_essential (the acceptance rule inside the search, spinners counted as a mechanic), spinners_max 4; then tools/extreme90_screen28.py (tokens, overlap, quick report, strict essentiality, filler) on each run's shortlist BEFORE any full evaluation",
+ "families": {
+  "P01_TRIGGERLINK": [
+   "P01_TRIGGERLINK"
+  ],
+  "P02_LOCKEDTRIGGER": [
+   "P02_LOCKEDTRIGGER"
+  ],
+  "P03_TURNEDMAGNET": [
+   "P03_TURNEDMAGNET"
+  ],
+  "P04_RELOCSWITCH": [
+   "P04_RELOCSWITCH"
+  ],
+  "P05_PRISONER": [
+   "P05_PRISONER"
+  ],
+  "P06_KEYLINK": [
+   "P06_KEYLINK"
+  ],
+  "P07_ARMOREDKEY": [
+   "P07_ARMOREDKEY"
+  ],
+  "P08_BATTERINGRAM": [
+   "P08_BATTERINGRAM"
+  ],
+  "P09_GATEGUARD": [
+   "P09_GATEGUARD"
+  ],
+  "P10_GATEBOOMERANG": [
+   "P10_GATEBOOMERANG"
+  ],
+  "P11_FARGATE": [
+   "P11_FARGATE"
+  ],
+  "P12_SHUTTLEDOOR": [
+   "P12_SHUTTLEDOOR"
+  ],
+  "P13_CRATEGATE": [
+   "P13_CRATEGATE"
+  ]
+ },
+ "budget": {
+  "initial": {
+   "generator_runs": 24,
+   "full_evaluations": 40
+  },
+  "per_run": {
+   "minutes": 12,
+   "batch": 40,
+   "beam": 5,
+   "patience": 8,
+   "ops": "v20"
+  },
+  "note": "early screens are counted separately (they are not full evaluations)"
+ },
+ "selection": "per concept at most one board; among screened PASS boards: human diagnostics (look6 greedy, mobility, dependency depth, win density) rank; then a full evaluation",
+ "seeds_rng": {
+  "round 1": 81,
+  "round 2": 82
+ },
+ "amendments": [
+  {
+   "when": "2026-10-31, after round 81 and 6 full evaluations",
+   "what": "focused round 82: P08 and P13 (new seed: their seed-81 boards depended on a filler wall), P05 with spinners_max 6 (0 qualifying in seed 81); P07, P09, P10, P11 stopped",
+   "why": "round 81: 6 of 13 cores gave qualified boards; P07 (lock + armor), P09 (gate + armor), P10 (Sequence + gate + armor), P11 (portal + gate) are MONOTONE mechanic sets - none of them can make a move irreversibly wrong, so every decision came from grown spinners and the strict rule refuses them (structural, not a seed problem)",
+   "unchanged": "every threshold; runs 14-16 of the initial 24"
+  }
+ ],
+ "budget_extensions": []
+}

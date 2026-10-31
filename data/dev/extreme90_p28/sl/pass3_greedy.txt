@@ -1,0 +1,10 @@
+== P05b_0: 438 positions, winnable true	  greedy {"look2":0.04,"look4":0.06,"min_turn":0.17,"mobility":0.05,"safe":0.06}
+== P05b_1: 564 positions, winnable true	  greedy {"look2":0.02,"look4":0.05,"min_turn":0,"mobility":0.08,"safe":0.02}
+== P05b_2: 692 positions, winnable true	  greedy {"look2":0,"look4":0.03,"min_turn":0,"mobility":0.08,"safe":0}
+== P13b_0: 249 positions, winnable true	  greedy {"look2":0,"look4":0.03,"min_turn":0.08,"mobility":0,"safe":0}
+== P13b_1: 580 positions, winnable true	  greedy {"look2":0.03,"look4":0.06,"min_turn":0.13,"mobility":0,"safe":0.02}
+== P13b_2: 243 positions, winnable true	  greedy {"look2":0.02,"look4":0.03,"min_turn":0.13,"mobility":0,"safe":0.01}
+== P13b_3: 261 positions, winnable true	  greedy {"look2":0.02,"look4":0.02,"min_turn":0.06,"mobility":0,"safe":0.01}
+== P13b_4: 261 positions, winnable true	  greedy {"look2":0.02,"look4":0.02,"min_turn":0.06,"mobility":0,"safe":0.01}
+== P13b_5: 271 positions, winnable true	  greedy {"look2":0.01,"look4":0.02,"min_turn":0.08,"mobility":0,"safe":0}
+== P13b_6: 277 positions, winnable true	  greedy {"look2":0,"look4":0.03,"min_turn":0.08,"mobility":0,"safe":0}
