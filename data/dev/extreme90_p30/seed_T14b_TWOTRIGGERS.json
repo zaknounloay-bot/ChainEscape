@@ -1,0 +1,59 @@
+{
+ "target": "EXTREME",
+ "facts": [],
+ "mechanic": "switch,armor",
+ "idea": "P30 hand core: two triggers, one group: two switch pieces fire the same reversal, so an armored target faces back after both - parity, and which shells are cracked when (round 302: rammer not frozen - round 301 boards made it a trivial removal; core_essential on)",
+ "family": "P30 T14b_TWOTRIGGERS",
+ "map": [
+  ". . . . . . .",
+  ". . . Bv . . .",
+  ". . . . . . .",
+  ". . . Y<&A= . . .",
+  ". . . . . . .",
+  ". . . . . . .",
+  "P^%A . . . . . G^%A"
+ ],
+ "frozen": [
+  [
+   3,
+   3
+  ],
+  [
+   6,
+   0
+  ],
+  [
+   6,
+   6
+  ]
+ ],
+ "max_positions": 2000,
+ "piece_free": 15,
+ "max_pieces": 19,
+ "shortcut_weight": 80,
+ "coverage_weight": 25,
+ "late_weight": 20,
+ "endgame_weight": 20,
+ "length_weight": 1.0,
+ "length_cap": 18,
+ "pressure_weight": 1.5,
+ "palette": "all",
+ "suffixes": [
+  "&A",
+  "="
+ ],
+ "suffix_rate": 0.45,
+ "suffix_max": {
+  "&A": 3,
+  "=": 3
+ },
+ "crates_max": 0,
+ "seed": 405,
+ "size": "medium",
+ "max_solve_nodes": 1500,
+ "spinners_max": 4,
+ "strict_essential": true,
+ "token_guard": true,
+ "phase30_core": "T14b_TWOTRIGGERS",
+ "core_essential": true
+}

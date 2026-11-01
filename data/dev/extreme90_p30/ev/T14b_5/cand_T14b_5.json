@@ -1,0 +1,17 @@
+{
+ "T14b_5": {
+  "map": [
+   "R^&A . . . . . Y>=",
+   "Y<@- . . B^&A . . .",
+   ". B^@ . . G< P^@ .",
+   ". . . Y<&A= . Y>@ .",
+   "G^ . . . . . R<",
+   ". . . . . . .",
+   "P^%A . . Rv= . B^ G^%A"
+  ],
+  "target": "EXTREME",
+  "facts": [],
+  "mechanic": "switch,armor",
+  "max_positions": 2000
+ }
+}

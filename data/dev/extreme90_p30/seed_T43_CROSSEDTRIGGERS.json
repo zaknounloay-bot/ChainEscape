@@ -1,0 +1,65 @@
+{
+ "target": "EXTREME",
+ "facts": [],
+ "mechanic": "switch",
+ "idea": "P30 hand core: crossed triggers: two switch groups; each group's switch piece is held by the OTHER group's flip target, so which reversal fires first decides which lanes open",
+ "family": "P30 T43_CROSSEDTRIGGERS",
+ "map": [
+  ". . . . . . .",
+  ". . . . . . .",
+  ". . . . . . .",
+  ". . R^&B . Y<&A . .",
+  ". . . . . . .",
+  ". . . . . . .",
+  ". . P^%A . G^%B . ."
+ ],
+ "frozen": [
+  [
+   3,
+   2
+  ],
+  [
+   3,
+   4
+  ],
+  [
+   6,
+   2
+  ],
+  [
+   6,
+   4
+  ]
+ ],
+ "max_positions": 2000,
+ "piece_free": 15,
+ "max_pieces": 19,
+ "shortcut_weight": 80,
+ "coverage_weight": 25,
+ "late_weight": 20,
+ "endgame_weight": 20,
+ "length_weight": 1.0,
+ "length_cap": 18,
+ "pressure_weight": 1.5,
+ "palette": "all",
+ "suffixes": [
+  "&A",
+  "&B",
+  "="
+ ],
+ "suffix_rate": 0.45,
+ "suffix_max": {
+  "&A": 3,
+  "&B": 3,
+  "=": 2
+ },
+ "crates_max": 0,
+ "seed": 340,
+ "size": "medium",
+ "max_solve_nodes": 1500,
+ "spinners_max": 4,
+ "strict_essential": true,
+ "token_guard": true,
+ "phase30_core": "T43_CROSSEDTRIGGERS",
+ "core_essential": true
+}

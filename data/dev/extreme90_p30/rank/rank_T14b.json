@@ -1,0 +1,305 @@
+{
+ "T14b_0": {
+  "dep_depth": 4,
+  "dep_pairs": 22,
+  "escapes": 12,
+  "first_deep_trap": 1,
+  "first_trap": 1,
+  "flags": [
+   "simple_strategy"
+  ],
+  "forced": 4,
+  "forced_share": 0.29,
+  "free": 10,
+  "gmax": 0.058,
+  "look6": 0.125,
+  "open_moves": 6,
+  "open_safe": 3,
+  "p_calm": 0.029,
+  "p_look1": 0.011,
+  "p_look2": 0.019,
+  "p_random": 0.011,
+  "positions": 419,
+  "rank_key": [
+   1,
+   0.473,
+   -4
+  ],
+  "solution": 14,
+  "win_density": 0.42,
+  "win_lines": 91644
+ },
+ "T14b_1": {
+  "dep_depth": 4,
+  "dep_pairs": 19,
+  "escapes": 11,
+  "first_deep_trap": 1,
+  "first_trap": 1,
+  "flags": [
+   "simple_strategy"
+  ],
+  "forced": 4,
+  "forced_share": 0.31,
+  "free": 9,
+  "gmax": 0.117,
+  "look6": 0.083,
+  "open_moves": 7,
+  "open_safe": 3,
+  "p_calm": 0.013,
+  "p_look1": 0.003,
+  "p_look2": 0.006,
+  "p_random": 0.003,
+  "positions": 433,
+  "rank_key": [
+   1,
+   0.33,
+   -4
+  ],
+  "solution": 13,
+  "win_density": 0.29,
+  "win_lines": 19240
+ },
+ "T14b_2": {
+  "dep_depth": 4,
+  "dep_pairs": 24,
+  "escapes": 12,
+  "first_deep_trap": 1,
+  "first_trap": 1,
+  "flags": [
+   "simple_strategy"
+  ],
+  "forced": 4,
+  "forced_share": 0.29,
+  "free": 10,
+  "gmax": 0.042,
+  "look6": 0.05,
+  "open_moves": 6,
+  "open_safe": 2,
+  "p_calm": 0.011,
+  "p_look1": 0.004,
+  "p_look2": 0.007,
+  "p_random": 0.004,
+  "positions": 449,
+  "rank_key": [
+   1,
+   0.202,
+   -4
+  ],
+  "solution": 14,
+  "win_density": 0.31,
+  "win_lines": 49042
+ },
+ "T14b_3": {
+  "dep_depth": 3,
+  "dep_pairs": 16,
+  "escapes": 11,
+  "first_deep_trap": 1,
+  "first_trap": 1,
+  "flags": [
+   "simple_strategy",
+   "shallow"
+  ],
+  "forced": 4,
+  "forced_share": 0.31,
+  "free": 9,
+  "gmax": 0.092,
+  "look6": 0.083,
+  "open_moves": 7,
+  "open_safe": 3,
+  "p_calm": 0.02,
+  "p_look1": 0.007,
+  "p_look2": 0.011,
+  "p_random": 0.007,
+  "positions": 687,
+  "rank_key": [
+   2,
+   0.375,
+   -3
+  ],
+  "solution": 13,
+  "win_density": 0.33,
+  "win_lines": 43918
+ },
+ "T14b_4": {
+  "dep_depth": 7,
+  "dep_pairs": 62,
+  "escapes": 16,
+  "first_deep_trap": 1,
+  "first_trap": 1,
+  "flags": [
+   "simple_strategy"
+  ],
+  "forced": 4,
+  "forced_share": 0.21,
+  "free": 15,
+  "gmax": 0.025,
+  "look6": 0.067,
+  "open_moves": 6,
+  "open_safe": 3,
+  "p_calm": 0.014,
+  "p_look1": 0.003,
+  "p_look2": 0.004,
+  "p_random": 0.003,
+  "positions": 791,
+  "rank_key": [
+   1,
+   0.232,
+   -7
+  ],
+  "solution": 19,
+  "win_density": 0.29,
+  "win_lines": 4550988
+ },
+ "T14b_5": {
+  "dep_depth": 6,
+  "dep_pairs": 39,
+  "escapes": 15,
+  "first_deep_trap": 1,
+  "first_trap": 1,
+  "flags": [
+   "simple_strategy"
+  ],
+  "forced": 4,
+  "forced_share": 0.22,
+  "free": 14,
+  "gmax": 0.05,
+  "look6": 0.067,
+  "open_moves": 6,
+  "open_safe": 3,
+  "p_calm": 0.019,
+  "p_look1": 0.007,
+  "p_look2": 0.01,
+  "p_random": 0.007,
+  "positions": 807,
+  "rank_key": [
+   1,
+   0.307,
+   -6
+  ],
+  "solution": 18,
+  "win_density": 0.45,
+  "win_lines": 11722500
+ },
+ "T14b_6": {
+  "dep_depth": 8,
+  "dep_pairs": 65,
+  "escapes": 16,
+  "first_deep_trap": 1,
+  "first_trap": 1,
+  "flags": [
+   "simple_strategy"
+  ],
+  "forced": 6,
+  "forced_share": 0.32,
+  "free": 13,
+  "gmax": 0.117,
+  "look6": 0.133,
+  "open_moves": 6,
+  "open_safe": 4,
+  "p_calm": 0.022,
+  "p_look1": 0.004,
+  "p_look2": 0.004,
+  "p_random": 0.004,
+  "positions": 857,
+  "rank_key": [
+   1,
+   0.47,
+   -8
+  ],
+  "solution": 19,
+  "win_density": 0.37,
+  "win_lines": 1413726
+ },
+ "T14b_7": {
+  "dep_depth": 4,
+  "dep_pairs": 24,
+  "escapes": 13,
+  "first_deep_trap": 1,
+  "first_trap": 1,
+  "flags": [
+   "simple_strategy"
+  ],
+  "forced": 4,
+  "forced_share": 0.27,
+  "free": 11,
+  "gmax": 0.033,
+  "look6": 0.058,
+  "open_moves": 7,
+  "open_safe": 3,
+  "p_calm": 0.011,
+  "p_look1": 0.004,
+  "p_look2": 0.006,
+  "p_random": 0.004,
+  "positions": 899,
+  "rank_key": [
+   1,
+   0.201,
+   -4
+  ],
+  "solution": 15,
+  "win_density": 0.31,
+  "win_lines": 735630
+ },
+ "T14b_8": {
+  "dep_depth": 3,
+  "dep_pairs": 17,
+  "escapes": 12,
+  "first_deep_trap": 1,
+  "first_trap": 1,
+  "flags": [
+   "simple_strategy",
+   "shallow"
+  ],
+  "forced": 4,
+  "forced_share": 0.29,
+  "free": 10,
+  "gmax": 0.075,
+  "look6": 0.108,
+  "open_moves": 7,
+  "open_safe": 4,
+  "p_calm": 0.023,
+  "p_look1": 0.008,
+  "p_look2": 0.013,
+  "p_random": 0.007,
+  "positions": 911,
+  "rank_key": [
+   2,
+   0.413,
+   -3
+  ],
+  "solution": 14,
+  "win_density": 0.35,
+  "win_lines": 225960
+ },
+ "T14b_9": {
+  "dep_depth": 3,
+  "dep_pairs": 17,
+  "escapes": 12,
+  "first_deep_trap": 1,
+  "first_trap": 1,
+  "flags": [
+   "simple_strategy",
+   "shallow"
+  ],
+  "forced": 4,
+  "forced_share": 0.29,
+  "free": 10,
+  "gmax": 0.092,
+  "look6": 0.1,
+  "open_moves": 7,
+  "open_safe": 4,
+  "p_calm": 0.02,
+  "p_look1": 0.008,
+  "p_look2": 0.013,
+  "p_random": 0.007,
+  "positions": 911,
+  "rank_key": [
+   2,
+   0.392,
+   -3
+  ],
+  "solution": 14,
+  "win_density": 0.35,
+  "win_lines": 225960
+ }
+}

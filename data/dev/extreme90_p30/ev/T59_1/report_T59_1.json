@@ -1,0 +1,134 @@
+{
+ "T59_1": {
+  "A": {
+   "fingerprint": "f35b05d5d80f17d6f660fbe2f7bb27fe11d2469077f40546eab9650e6f5f7353",
+   "hint_nodes": [
+    23,
+    391
+   ],
+   "parity": [
+    0,
+    0
+   ],
+   "portals": 0,
+   "position_cap": 2000,
+   "positions": 773,
+   "replay": true,
+   "solution": 16,
+   "solve_ms": 2,
+   "timeup_worst_ms": 26.9,
+   "timeup_worst_nodes": 785,
+   "winnable": 175
+  },
+  "B": {
+   "coverage": 0.81,
+   "decision_steps": 13,
+   "distinct_mistakes": 4,
+   "endgame_decision": true,
+   "last_decision": 13,
+   "late": 0.81,
+   "line": [
+    "r0c6^ [x2]",
+    "r6c6^ ram [x2]",
+    "r5c6^ [x2]",
+    "r1c3> [x3]",
+    "r2c0^ [x3]",
+    "r3c1< [x2]",
+    "r2c1v ram [x2]",
+    "r6c1v [x3]",
+    "r5c1> [x1]",
+    "r6c2v [x1]",
+    "r2c1v [x1]",
+    "r2c3< [x1]",
+    "r0c3v ram [x1]",
+    "r3c3<",
+    "r0c3v",
+    "r6c6^"
+   ],
+   "losing_per_step": [
+    2,
+    2,
+    2,
+    3,
+    3,
+    2,
+    2,
+    3,
+    1,
+    1,
+    1,
+    1,
+    1,
+    0,
+    0,
+    0
+   ],
+   "matters_armor": true,
+   "matters_switch": true,
+   "mistakes": [
+    "r2c1^",
+    "r6c2v",
+    "r6c6^",
+    "r5c1>"
+   ],
+   "shortcut": 0.083,
+   "spinner_dependence": "unsolvable without it",
+   "without_armor": "without it: 0 decision steps, 0 distinct mistakes (with it: 13, 4)",
+   "without_switch": "without it: 7 decision steps, 2 distinct mistakes (with it: 13, 4)"
+  },
+  "C": {
+   "decisions_k4_6_8": [
+    10,
+    8,
+    6
+   ],
+   "deepest": 14,
+   "greedy": {
+    "look2": 0.025,
+    "look4": 0.083,
+    "min_turn": 0,
+    "mobility": 0,
+    "safe": 0.03
+   },
+   "hidden_k6_8": [
+    18,
+    13
+   ],
+   "learner": {
+    "look4": 2,
+    "look6": 2
+   },
+   "look6_greedy": 0.158,
+   "opening": "6 / 8",
+   "pressure": {
+    "advances": 0,
+    "calm_prefix": 3,
+    "flips": 0,
+    "multi_turned": 1,
+    "prediction_share": 0.31,
+    "pulls": 0,
+    "rams": 3,
+    "signals": 2,
+    "spinners_turned": 1,
+    "trap_delay_median": 8,
+    "turns": 2,
+    "undo_proof": 0.88
+   },
+   "win_share": 0.226
+  },
+  "map": [
+   ". . . Gv&A . . Y^",
+   ". . . P>&A . . .",
+   "G^@ G^@ . B<&A . . .",
+   ". G< . Y<= . . .",
+   ". . . . . . .",
+   ". Y>= . . . . G^=",
+   ". Yv@- Yv . . . P^%A"
+  ],
+  "name": "T59_1",
+  "target": "EXTREME",
+  "verdict": "HUMAN-REVIEW CANDIDATE",
+  "why_a": [],
+  "why_b": []
+ }
+}

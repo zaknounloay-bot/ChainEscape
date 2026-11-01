@@ -1,0 +1,119 @@
+{
+ "T12r_1": {
+  "map": [
+   ". . . Gv&A . P>:v R>",
+   ". . . . . . .",
+   ". . . . . . .",
+   ". . . R>:^ . . G^",
+   ". . . . . . G>@~",
+   ". R> P> B>@- . Y>:> .",
+   "Y^ B<@ R< Gv:< . B<@~ P^%A"
+  ],
+  "mechanic": "sequence,switch",
+  "positions": 806
+ },
+ "T12r_2": {
+  "map": [
+   ". . . Gv&A . P>:v R>",
+   ". . . . . . .",
+   ". . . . . . .",
+   ". . . R>:^ . . G^",
+   ". . . . . . G>@~",
+   ". R> P> B>@- . Y>:> .",
+   "Y< B<@ R< Gv:< . B<@~ P^%A"
+  ],
+  "mechanic": "sequence,switch",
+  "positions": 806
+ },
+ "T12r_3": {
+  "map": [
+   ". . . Gv&A . P>:v R>",
+   ". . . . . . .",
+   ". . . . . . .",
+   ". . . R>:^ . . G^",
+   ". . . . . . G>@~",
+   ". R> P> . P>@ Y>:> .",
+   "Y^ B<@ R< Gv:< . B<@~ P^%A"
+  ],
+  "mechanic": "sequence,switch",
+  "positions": 874
+ },
+ "T12r_4": {
+  "map": [
+   ". . . Gv&A . P>:v R>",
+   ". . . . . . .",
+   ". . . . . . G<",
+   ". . . R>:^ . . G^",
+   ". . . . . . G>@~",
+   ". R> . B>@- . Y>:> .",
+   "Y< B<@ R< Gv:< . B<@~ P^%A"
+  ],
+  "mechanic": "sequence,switch",
+  "positions": 876
+ },
+ "T12r_5": {
+  "map": [
+   ". . . Gv&A . P>:v R>",
+   ". . . . . . .",
+   ". . . . . . .",
+   ". . . R>:^ . . G^",
+   ". . . . . . G^",
+   ". R> P^ B>@- . Y>:> .",
+   "Y^ B<@ R< Gv:< . B<@~ P^%A"
+  ],
+  "mechanic": "sequence,switch",
+  "positions": 991
+ },
+ "T12r_6": {
+  "map": [
+   ". . . Gv&A . P>:v R>",
+   ". . . . . . .",
+   ". . . . . . .",
+   ". . . R>:^ . . G^",
+   ". . . . . . G>@~",
+   ". R> . B>@- . Y>:> .",
+   "Y^ B<@ R< Gv:< . B<@~ P^%A"
+  ],
+  "mechanic": "sequence,switch",
+  "positions": 706
+ },
+ "T12r_7": {
+  "map": [
+   ". . . Gv&A . P>:v R>",
+   ". . . . . . .",
+   ". . . . . . .",
+   ". . . R>:^ . . G^",
+   ". . . . . . G>@~",
+   ". R> . B>@- . Y>:> .",
+   "Y< B<@ R< Gv:< . B<@~ P^%A"
+  ],
+  "mechanic": "sequence,switch",
+  "positions": 706
+ },
+ "T12r_8": {
+  "map": [
+   ". . . Gv&A . P>:v R>",
+   ". . . . . . .",
+   ". . . . . . .",
+   ". . . R>:^ . . G^",
+   ". . . . . . G>@~",
+   ". R> P> B>@- . Y>:> .",
+   "Y^ B<@ . Gv:< . B<@~ P^%A"
+  ],
+  "mechanic": "sequence,switch",
+  "positions": 756
+ },
+ "T12r_9": {
+  "map": [
+   ". . . Gv&A . P>:v R>",
+   ". . . . . . .",
+   ". . . . . . G<",
+   ". . . R>:^ . . G^",
+   ". . . . . . G>@~",
+   ". R> P> B>@- . Y>:> G^",
+   "Y^ B<@ R< Gv:< . B<@~ P^%A"
+  ],
+  "mechanic": "sequence,switch",
+  "positions": 562
+ }
+}

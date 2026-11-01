@@ -1,0 +1,5 @@
+START screen_T10 pid=8345
+START screen_T14 pid=8346
+DONE screen_T10 exit=0 80s
+DONE screen_T14 exit=0 96s
+ALL DONE

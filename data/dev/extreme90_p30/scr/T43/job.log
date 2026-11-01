@@ -1,0 +1,22 @@
+T43_0                  PASS           []
+T43_1                  PASS           []
+T43_2                  filler         ['r3c4 Y<&A']
+T43_3                  PASS           []
+T43_4                  PASS           []
+T43_5                  PASS           []
+T43_6                  PASS           []
+T43_7                  PASS           []
+T43_8                  PASS           []
+T43_9                  PASS           []
+SCREEN: 10 boards, 9 PASS
+T43_0                  PASS           PASS
+T43_1                  PASS           PASS
+T43_2                  filler         
+T43_3                  PASS           PASS
+T43_4                  PASS           PASS
+T43_5                  PASS           PASS
+T43_6                  PASS           PASS
+T43_7                  PASS           PASS
+T43_8                  PASS           PASS
+T43_9                  PASS           PASS
+SCREEN30: 10 boards, 9 PASS

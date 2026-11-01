@@ -1,0 +1,220 @@
+{
+ "note": "Phase 30 concept funnel (fixed before any Phase 30 generator run). Evidence used: owner decisions on 15 human-tested Phase 28-29 boards (6 approved).",
+ "proposals": [
+  {
+   "id": "T01",
+   "family": "magnet x reversal",
+   "concept": "the pulled trigger (a fixed magnet relocates the switch piece)",
+   "decision": "ADVANCED",
+   "reason": "magnet family has the best human record (N64, N72, N77 approved) - but this magnet is NOT a flip target: new structure"
+  },
+  {
+   "id": "T03",
+   "family": "magnet x lock",
+   "concept": "pull the key into its prisoner's column",
+   "decision": "ADVANCED",
+   "reason": "the key (not the prisoner - N67 MEDIUM) is pulled; risk: N67 / N72 family"
+  },
+  {
+   "id": "T05",
+   "family": "reversal x gate x armor",
+   "concept": "the armored link",
+   "decision": "ADVANCED",
+   "reason": "link + armor + reversal not in the bank (N62 shell's exit has no gate)"
+  },
+  {
+   "id": "T10",
+   "family": "reversal x lock chain",
+   "concept": "the key ladder (a locked flip-target middle key)",
+   "decision": "ADVANCED",
+   "reason": "two-step lock chain with a reversal on the middle key; N23 / N61 / N63 are single-lock"
+  },
+  {
+   "id": "T12",
+   "family": "Sequence x reversal",
+   "concept": "the boomerang guards the reversal",
+   "decision": "ADVANCED",
+   "reason": "Sequence + switch: the only existing-mechanic pair the bank has never used"
+  },
+  {
+   "id": "T14",
+   "family": "reversal parity x armor",
+   "concept": "two triggers, one group (parity)",
+   "decision": "ADVANCED",
+   "reason": "N75 (approved) has two switch pieces; here the parity itself is the idea; risk: N55 / N62 / N75 family"
+  },
+  {
+   "id": "T27",
+   "family": "reversal x gate",
+   "concept": "the trigger is the last link",
+   "decision": "ADVANCED",
+   "reason": "one move reverses and opens; N65 (EASY) was a reversed block waiting at a gate - different dependency"
+  },
+  {
+   "id": "U01",
+   "family": "turned magnet + fixed magnet",
+   "concept": "another turned-magnet board",
+   "decision": "rejected",
+   "reason": "three approved turned-magnet boards already (N64, N72, N77): near-duplicate risk"
+  },
+  {
+   "id": "U02",
+   "family": "two turned magnets",
+   "concept": "one switch, two turned magnets",
+   "decision": "rejected",
+   "reason": "is N76 (HARD, downgraded)"
+  },
+  {
+   "id": "U03",
+   "family": "crate x reversal",
+   "concept": "another crate shuttle",
+   "decision": "rejected",
+   "reason": "Phase 29 crate boards N71 / N73 / N74 all downgraded; N68 / N69 cover the family"
+  },
+  {
+   "id": "U04",
+   "family": "two crates in one column",
+   "concept": "R05 again",
+   "decision": "rejected",
+   "reason": "engine hint loop (Phase 29 withdrawal)"
+  },
+  {
+   "id": "U05",
+   "family": "magnet x gate",
+   "concept": "the pull stops at a closed gate",
+   "decision": "rejected",
+   "reason": "is N77's mechanism (the gate decides whether a side can be pulled)"
+  },
+  {
+   "id": "U06",
+   "family": "magnet x armor",
+   "concept": "the pulled shell",
+   "decision": "rejected",
+   "reason": "five magnet x armor boards in the bank (N39, N48, N59, N14, N18)"
+  },
+  {
+   "id": "U07",
+   "family": "locked switch",
+   "concept": "the locked trigger",
+   "decision": "rejected",
+   "reason": "is N63 (MEDIUM)"
+  },
+  {
+   "id": "U08",
+   "family": "switch is the last key",
+   "concept": "key = switch piece",
+   "decision": "rejected",
+   "reason": "is N23"
+  },
+  {
+   "id": "U09",
+   "family": "lock x spinner",
+   "concept": "the turning key",
+   "decision": "rejected",
+   "reason": "N53 family (shared key, two counts)"
+  },
+  {
+   "id": "U10",
+   "family": "magnet x Sequence",
+   "concept": "the relocated boomerang",
+   "decision": "rejected",
+   "reason": "is N60 (MEDIUM)"
+  },
+  {
+   "id": "U11",
+   "family": "magnet x spinner",
+   "concept": "the magnet's two effects (turn, then pull)",
+   "decision": "rejected",
+   "reason": "N26 / N27 / N9 family"
+  },
+  {
+   "id": "U12",
+   "family": "magnet x crate",
+   "concept": "the magnet pulls a crate",
+   "decision": "rejected",
+   "reason": "engine: a crate stops a pull, magnets are refused on crate boards"
+  },
+  {
+   "id": "U13",
+   "family": "magnet x hidden / portal",
+   "concept": "a pull reveals / teleports",
+   "decision": "rejected",
+   "reason": "engine: magnets are refused on hidden / portal boards"
+  },
+  {
+   "id": "U14",
+   "family": "crate x armor",
+   "concept": "the armored pusher",
+   "decision": "rejected",
+   "reason": "engine: armored blocks cannot ram, so cannot push"
+  },
+  {
+   "id": "U15",
+   "family": "crate x spinner",
+   "concept": "the turning pusher",
+   "decision": "rejected",
+   "reason": "Phase 29 R10: hand core unsolvable; no guessing at spinner rules"
+  },
+  {
+   "id": "U16",
+   "family": "lock x gate",
+   "concept": "the key is also a link",
+   "decision": "rejected",
+   "reason": "is N66 (borderline)"
+  },
+  {
+   "id": "U17",
+   "family": "monotone sets",
+   "concept": "lock + armor, gate + armor, Sequence + gate, portal + gate",
+   "decision": "rejected",
+   "reason": "no move can become irreversibly wrong (Phase 28)"
+  },
+  {
+   "id": "T30",
+   "family": "reversal x lock (two keys)",
+   "concept": "two keys, one reversal",
+   "decision": "ADVANCED (round 302)",
+   "reason": "one reversal decides two key exits at once; N61 (approved) turns one key"
+  },
+  {
+   "id": "T43",
+   "family": "reversal x reversal (two groups)",
+   "concept": "crossed triggers",
+   "decision": "ADVANCED (round 303)",
+   "reason": "two switch GROUPS gating each other; the bank has only same-group pairs (N20, N42, N75)"
+  },
+  {
+   "id": "T48",
+   "family": "Sequence x gate x reversal",
+   "concept": "the boomerang waits for the door",
+   "decision": "ADVANCED (round 303)",
+   "reason": "Sequence + gate alone is monotone; the reversal on the link adds the snapshot; T12r (Sequence guards the reversal) has no gate"
+  },
+  {
+   "id": "T57",
+   "family": "reversal x spinner",
+   "concept": "one escape, two effects",
+   "decision": "ADVANCED (round 304)",
+   "reason": "the switch escape's neighbour turn is the mechanism; risk: spinners are on most boards"
+  },
+  {
+   "id": "T59",
+   "family": "reversal x armor",
+   "concept": "the aimed ram",
+   "decision": "ADVANCED (round 304)",
+   "reason": "the reversal aims the only rammer; T14b (approved-family parity) is about facing, not cracking; risk: N62 / N55 family"
+  },
+  {
+   "id": "T61",
+   "family": "Sequence x armor x reversal",
+   "concept": "the boomerang cracks the shell",
+   "decision": "ADVANCED (round 305, last run)",
+   "reason": "the Sequence second-stage escape as the only ram; P08 (Phase 28) had no reversal; T12r guards a lane instead"
+  }
+ ],
+ "counts": {
+  "proposals": 30,
+  "advanced": 13,
+  "rejected": 17
+ }
+}

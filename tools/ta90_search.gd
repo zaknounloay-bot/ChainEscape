@@ -41,6 +41,7 @@ const PALETTE := ["R", "G", "B", "Y", "P"]
 var _rng := RandomNumberGenerator.new()
 var _seen := {}
 var _frozen := {}
+var _core_refused := 0  # Phase 30: qualifying boards refused because a core piece was filler
 var _spec := {}
 var _evals := 0
 var _invalid := 0  # Phase 28: generated boards refused by the token guard before solving
@@ -112,7 +113,7 @@ func _initialize() -> void:
 	print("BEST %s" % JSON.stringify(best["map"]))
 	if x_args.has("out"):
 		var f := FileAccess.open(str(x_args["out"]), FileAccess.WRITE)
-		f.store_string(JSON.stringify({"best": best, "beam": beam, "log": log, "evaluated": _evals, "invalid_refused": _invalid, "rounds": round,
+		f.store_string(JSON.stringify({"best": best, "beam": beam, "log": log, "evaluated": _evals, "invalid_refused": _invalid, "core_refused": _core_refused, "rounds": round,
 			"stopped": "patience" if stale >= patience else "time", "generator": "v20" if _v20 else "baseline",
 			"qualifying": _qual.values(), "seconds": snappedf((Time.get_ticks_msec() - t_end) / 1000.0 + float(x_args.get("minutes", "10")) * 60.0, 0.1)}, " "))
 		f.close()
@@ -325,9 +326,42 @@ func _score(map: Array) -> Dictionary:
 	if _v20:
 		sc += float(_spec.get("concurrency_weight", 12.0)) * conc
 	var out := _result(map, sc, pieces, win, sol, dec, thirds, matters, mechs, shortcut, lps, sl, pr, conc)
+	# Phase 30 (core_essential, off by default): a board whose frozen hand-core
+	# piece is a trivial removal (solvable without it, same decision steps and
+	# distinct mistakes - the xb90_filler rule) does not qualify: the core idea
+	# must carry decisions, not decorate the board.
+	if _qualifies(out, need, mechs.size()) and bool(_spec.get("core_essential", false)) and _core_trivial(map, dec):
+		_core_refused += 1
+		return out
 	if _qualifies(out, need, mechs.size()):
 		_qual[key] = _brief(out, -1).merged({"map": map, "solution": out["solution"], "coverage": out["coverage"], "late": out["late"]})
 	return out
+
+
+## Phase 30: true when some frozen core piece can be removed with the board
+## still solvable and the same decision steps and distinct mistakes.
+func _core_trivial(map: Array, dec: Dictionary) -> bool:
+	for at in _frozen:
+		var row: Array = Array(str(map[at.y]).split(" ", false))
+		if row[at.x] == "." or str(row[at.x]).begins_with("X"):
+			continue
+		row[at.x] = "."
+		var m2 := map.duplicate()
+		m2[at.y] = " ".join(row)
+		if not VALIDATE.board_problems(m2).is_empty():
+			continue
+		var lv := parse(m2)
+		if lv == null:
+			continue
+		var s2 := _solver(lv)
+		var memo2 := EXPERT.explore(s2)
+		var win2: Dictionary = memo2["win"]
+		if memo2["capped"] or not win2.get(s2._key(), false):
+			continue
+		var d2 := _decisions(s2, win2, s2.solve_moves())
+		if d2["decision_steps"] == dec["decision_steps"] and d2["distinct_mistakes"] == dec["distinct_mistakes"]:
+			return true
+	return false
 
 
 func _result(map: Array, sc: float, pieces: int, win: Dictionary, sol: Array, dec: Dictionary, thirds: Array, matters: int, mechs,

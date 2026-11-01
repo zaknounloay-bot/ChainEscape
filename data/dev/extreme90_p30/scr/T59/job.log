@@ -1,0 +1,22 @@
+T59_0                  filler         ['r2c4 P<']
+T59_1                  PASS           []
+T59_2                  filler         ['r0c1 P>&A']
+T59_3                  filler         ['r0c5 G<', 'r2c4 B<']
+T59_4                  PASS           []
+T59_5                  PASS           []
+T59_6                  PASS           []
+T59_7                  PASS           []
+T59_8                  PASS           []
+T59_9                  Category A/B   ['a simple greedy player wins 22% (> 20%): a shortcut']
+SCREEN: 10 boards, 6 PASS
+T59_0                  filler         
+T59_1                  PASS           PASS
+T59_2                  filler         
+T59_3                  filler         
+T59_4                  PASS           PASS
+T59_5                  PASS           PASS
+T59_6                  PASS           PASS
+T59_7                  PASS           PASS
+T59_8                  PASS           PASS
+T59_9                  Category A/B   
+SCREEN30: 10 boards, 6 PASS

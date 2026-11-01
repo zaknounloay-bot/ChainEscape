@@ -1,0 +1,17 @@
+START eval_T14b_4 pid=1230
+START eval_T14b_5 pid=1231
+DONE eval_T14b_5 exit=0 114s
+START eval_T12r_5 pid=1439
+DONE eval_T14b_4 exit=0 116s
+START eval_T12r_9 pid=1467
+DONE eval_T12r_9 exit=0 132s
+START eval_T43_6 pid=1657
+DONE eval_T12r_5 exit=0 150s
+START eval_T43_8 pid=1745
+DONE eval_T43_6 exit=0 118s
+START eval_T59_4 pid=1924
+DONE eval_T43_8 exit=0 126s
+START eval_T59_1 pid=2034
+DONE eval_T59_4 exit=0 112s
+DONE eval_T59_1 exit=0 116s
+ALL DONE

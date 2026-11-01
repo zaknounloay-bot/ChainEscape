@@ -1,0 +1,119 @@
+{
+ "fixed_before_generating": "2026-11-01 (before any Phase 30 generator run)",
+ "pipeline": "Phase 28 generator (token guard, strict essentiality incl. spinners, spinners_max) -> tools/extreme90_screen30.py (screen28 + hint-follow) -> advisory rank (tools/ta90_rank29.gd, ranking only) -> full evaluation (tools/extreme90_eval25.py, one out dir per board). All jobs through tools/extreme90_jobs30.py (PID / exit-code tracking; screens and evaluations never beside a generator).",
+ "gates": "unchanged (Category A and B, 40 ms solve and TIME UP, overlap < 0.40, 0 filler, strict essentiality, engine-valid tokens) + hint-follow progress",
+ "families": {
+  "T01_PULLEDTRIGGER": [
+   "T01_PULLEDTRIGGER"
+  ],
+  "T03_PULLTHEKEY": [
+   "T03_PULLTHEKEY"
+  ],
+  "T05_ARMOREDLINK": [
+   "T05_ARMOREDLINK"
+  ],
+  "T10_KEYLADDER": [
+   "T10_KEYLADDER"
+  ],
+  "T12_SEQTRIGGER": [
+   "T12_SEQTRIGGER"
+  ],
+  "T14_TWOTRIGGERS": [
+   "T14_TWOTRIGGERS"
+  ],
+  "T27_TRIGGERLINK": [
+   "T27_TRIGGERLINK"
+  ],
+  "T10b_LADDERBLOCK": [
+   "T10b_LADDERBLOCK"
+  ],
+  "T14b_TWOTRIGGERS": [
+   "T14b_TWOTRIGGERS"
+  ],
+  "T05r_ARMOREDLINK": [
+   "T05r_ARMOREDLINK"
+  ],
+  "T01r_PULLEDTRIGGER": [
+   "T01r_PULLEDTRIGGER"
+  ],
+  "T03r_PULLTHEKEY": [
+   "T03r_PULLTHEKEY"
+  ],
+  "T12r_SEQTRIGGER": [
+   "T12r_SEQTRIGGER"
+  ],
+  "T27r_TRIGGERLINK": [
+   "T27r_TRIGGERLINK"
+  ],
+  "T30_TWOKEYS": [
+   "T30_TWOKEYS"
+  ],
+  "T43_CROSSEDTRIGGERS": [
+   "T43_CROSSEDTRIGGERS"
+  ],
+  "T48_BOOMERANGDOOR": [
+   "T48_BOOMERANGDOOR"
+  ],
+  "T57_TWOEFFECTS": [
+   "T57_TWOEFFECTS"
+  ],
+  "T59_AIMEDRAM": [
+   "T59_AIMEDRAM"
+  ],
+  "T61_BOOMERANGRAM": [
+   "T61_BOOMERANGRAM"
+  ]
+ },
+ "budget": {
+  "initial": {
+   "generator_runs": 24,
+   "full_evaluations": 40
+  },
+  "per_run": {
+   "minutes": 12,
+   "batch": 40,
+   "beam": 5,
+   "patience": 8,
+   "ops": "v20"
+  }
+ },
+ "seeds_rng": {
+  "round 1": 301,
+  "round 2": 302,
+  "round 3": [
+   303,
+   304
+  ],
+  "round 4": [
+   305,
+   306
+  ],
+  "round 5": [
+   307
+  ]
+ },
+ "amendments": [
+  {
+   "when": "2026-11-01, after round 301 (7 runs) and its screens",
+   "what": "Round 301: T10 (74) and T14 (356) qualified but every board had a frozen CORE piece as a trivial removal (filler gate), the other 5 cores stalled at 3 distinct mistakes. Round 302 (focused refinement, the one allowed): new opt-in generator check core_essential (a qualifying board whose frozen core piece is a trivial removal does not qualify), max_pieces 19, piece_free 15, suffix_rate 0.45, patience 12; T10 core revised (T10b), rammers unfrozen (T14b, T05r), new concept T30. Gates unchanged."
+  },
+  {
+   "when": "2026-11-01, after round 302 and its screens",
+   "what": "Round 303: NEW concepts only (T43, T48), two RNG seeds each, within the initial 24-run budget (15 used). No further refinement of the failed cores. Same parameters as round 302 (core_essential on). Gates unchanged."
+  },
+  {
+   "when": "2026-11-01, after round 303",
+   "what": "Round 304: NEW concepts only (T57, T59), two RNG seeds each (19 -> 23 of 24 runs). Same parameters, core_essential on. Gates unchanged."
+  },
+  {
+   "when": "2026-11-01, after round 304",
+   "what": "Round 305: the last run of the 24 (one new concept, T61, RNG 307). Same parameters, core_essential on. Gates unchanged."
+  },
+  {
+   "when": "2026-11-01, Phase 31 audit (after Phase 30 generation, before the Phase 30 commit)",
+   "what": "ERRATUM: budget.per_run.ops says v20, but no Phase 30 generator command carried --ops=v20 (jobs_round30*.json), so every Phase 30 run used the baseline operators (run.json 'generator': 'baseline'). The board records and selection.json are corrected; boards, fingerprints and gates are unchanged.",
+   "why": "recorded facts must match the executed commands"
+  }
+ ],
+ "budget_extensions": []
+}

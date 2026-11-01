@@ -1,0 +1,200 @@
+{
+ "format": "ce-ta90-proto",
+ "v": 1,
+ "test": "ta90_n80",
+ "assist": {
+  "undo": 3,
+  "show_a_move": 0,
+  "hammer": 0
+ },
+ "note": "Development only. Phase 30 EXTREME candidate (?extreme90p30=1); never shared, never production. TECHNICALLY QUALIFIED (Category A and B): NOT human-approved; human difficulty unvalidated.",
+ "boards": [
+  {
+   "id": "N80",
+   "accepted": true,
+   "label": "TECHNICALLY QUALIFIED - HUMAN UNTESTED",
+   "variant": "N80",
+   "design": "P30_T12r_9",
+   "family": "P30 the boomerang guards the reversal (Sequence + switch)",
+   "concept_group": "Sequence x reversal",
+   "primary": "sequence, switch, spinner",
+   "target": "EXTREME (a design target, not a rating; never shown to players)",
+   "idea": "the boomerang guards the reversal: a Sequence block stands in the flip target's lane; its advance (a launch and return) needs a clear lane and changes its arrow, so the boomerang, the switch and the target must be ordered",
+   "source": "hybrid: hand core frozen cell for cell (seed_T12r_SEQTRIGGER.json, Phase 30); blocks added by tools/ta90_search.gd WITHOUT --ops=v20 (baseline operators - the flag was missing from every Phase 30 run command although protocol.json specified v20; found and corrected in the Phase 31 audit) with the Phase 28 pipeline + the Phase 30 core_essential check, RNG seed 302 (protocol.json); early screen tools/extreme90_screen30.py (incl. hint-follow); advisory rank tools/ta90_rank29.gd",
+   "related_bank_concept": "Sequence + switch is new to the bank; N5 / N21 / N45 (Sequence keys, no switch); closest occupancy N48 0.36",
+   "fingerprint": "4bda6a854708e656f816f2ce1c217eec47dffcdd8f3372b26eb9272766e665c9",
+   "mechanics": [
+    "sequence",
+    "switch",
+    "spinner"
+   ],
+   "puzzle": {
+    "format": "ce-puzzle",
+    "v": 1,
+    "rules": 1,
+    "rows": 7,
+    "cols": 7,
+    "map": [
+     ". . . Gv&A . P>:v R>",
+     ". . . . . . .",
+     ". . . . . . G<",
+     ". . . R>:^ . . G^",
+     ". . . . . . G>@~",
+     ". R> P> B>@- . Y>:> G^",
+     "Y^ B<@ R< Gv:< . B<@~ P^%A"
+    ]
+   },
+   "design_report": {
+    "A": {
+     "fingerprint": "4bda6a854708e656f816f2ce1c217eec47dffcdd8f3372b26eb9272766e665c9",
+     "hint_nodes": [
+      135,
+      80
+     ],
+     "parity": [
+      0,
+      0
+     ],
+     "portals": 0,
+     "position_cap": 2000,
+     "positions": 562,
+     "replay": true,
+     "solution": 22,
+     "solve_ms": 2.4,
+     "timeup_worst_ms": 26.2,
+     "timeup_worst_nodes": 192,
+     "winnable": 100
+    },
+    "B": {
+     "coverage": 0.82,
+     "decision_steps": 18,
+     "distinct_mistakes": 4,
+     "endgame_decision": true,
+     "last_decision": 18,
+     "late": 0.82,
+     "line": [
+      "r0c6> [x2]",
+      "r2c6< [x2]",
+      "r4c6> [x3]",
+      "r3c6^ [x2]",
+      "r5c6^ [x2]",
+      "r0c5> advance [x3]",
+      "r3c3> advance [x3]",
+      "r5c5> advance [x3]",
+      "r5c5> [x3]",
+      "r5c3> [x3]",
+      "r5c2> [x2]",
+      "r5c1> [x2]",
+      "r6c1^ [x2]",
+      "r6c0^ [x1]",
+      "r6c2< [x1]",
+      "r6c3v advance [x1]",
+      "r6c3< [x1]",
+      "r6c5< [x1]",
+      "r0c5v",
+      "r6c6^",
+      "r0c3^",
+      "r3c3^"
+     ],
+     "losing_per_step": [
+      2,
+      2,
+      3,
+      2,
+      2,
+      3,
+      3,
+      3,
+      3,
+      3,
+      2,
+      2,
+      2,
+      1,
+      1,
+      1,
+      1,
+      1,
+      0,
+      0,
+      0,
+      0
+     ],
+     "matters_sequence": true,
+     "matters_switch": true,
+     "mistakes": [
+      "r6c0^",
+      "r6c3v advance",
+      "r3c6^",
+      "r6c6^"
+     ],
+     "shortcut": 0.05,
+     "spinner_dependence": "without it: 0 decision steps, 0 distinct mistakes (with it: 18, 4)",
+     "without_sequence": "without it: 15 decision steps, 2 distinct mistakes (with it: 18, 4)",
+     "without_switch": "unsolvable without it"
+    },
+    "C": {
+     "decisions_k4_6_8": [
+      16,
+      14,
+      12
+     ],
+     "deepest": 20,
+     "greedy": {
+      "look2": 0.02,
+      "look4": 0.017,
+      "min_turn": 0.03,
+      "mobility": 0.05,
+      "safe": 0.015
+     },
+     "hidden_k6_8": [
+      30,
+      26
+     ],
+     "learner": {
+      "look4": 4,
+      "look6": 4
+     },
+     "look6_greedy": 0.025,
+     "opening": "3 / 5",
+     "pressure": {
+      "advances": 4,
+      "calm_prefix": 5,
+      "flips": 1,
+      "multi_turned": 1,
+      "prediction_share": 0.32,
+      "pulls": 0,
+      "rams": 0,
+      "signals": 3,
+      "spinners_turned": 2,
+      "trap_delay_median": 11,
+      "turns": 3,
+      "undo_proof": 0.95
+     },
+     "win_share": 0.178
+    },
+    "filler": {
+     "distinct": 4,
+     "pieces_tested": 18,
+     "steps": 18,
+     "trivial": [],
+     "trivial_removals": 0
+    },
+    "similarity": {
+     "closest_known": "N48",
+     "overlap": 0.36
+    },
+    "advisory_rank29": {
+     "flags": [
+      "simple_strategy"
+     ],
+     "gmax": 0.058,
+     "look6": 0.025,
+     "p_calm": 0.013,
+     "forced_share": 0.41,
+     "dep_depth": 13
+    }
+   }
+  }
+ ]
+}

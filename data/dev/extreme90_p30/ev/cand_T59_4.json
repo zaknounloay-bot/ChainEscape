@@ -1,0 +1,17 @@
+{
+ "T59_4": {
+  "map": [
+   ". . . Gv&A . . .",
+   ". . . P>&A . . .",
+   "G^@ G^@ R< B<&A . . .",
+   "Y^ G< . Y<= . . .",
+   ". . . . . . .",
+   ". Y>= . . Y> Rv@ G^=",
+   ". Yv@- . . . . P^%A"
+  ],
+  "target": "EXTREME",
+  "facts": [],
+  "mechanic": "switch,armor",
+  "max_positions": 2000
+ }
+}

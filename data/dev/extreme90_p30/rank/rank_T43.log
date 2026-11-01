@@ -1,0 +1,33 @@
+Godot Engine v4.3.stable.official.77dcf97d8 - https://godotengine.org
+
+SCRIPT ERROR: Invalid access of index '6' on a base object of type: 'Array'.
+          at: _rot (res://tools/vh_pilot4_canon.gd:101)
+SCRIPT ERROR: Out of bounds get index '0' (on base: 'Array')
+          at: _relabel (res://tools/vh_pilot4_canon.gd:141)
+SCRIPT ERROR: Out of bounds get index '0' (on base: 'Array')
+          at: _relabel (res://tools/vh_pilot4_canon.gd:141)
+SCRIPT ERROR: Out of bounds get index '0' (on base: 'Array')
+          at: _rot (res://tools/vh_pilot4_canon.gd:96)
+SCRIPT ERROR: Out of bounds get index '0' (on base: 'Array')
+          at: _relabel (res://tools/vh_pilot4_canon.gd:141)
+SCRIPT ERROR: Out of bounds get index '0' (on base: 'Array')
+          at: _relabel (res://tools/vh_pilot4_canon.gd:141)
+SCRIPT ERROR: Out of bounds get index '0' (on base: 'Array')
+          at: _rot (res://tools/vh_pilot4_canon.gd:96)
+SCRIPT ERROR: Out of bounds get index '0' (on base: 'Array')
+          at: _relabel (res://tools/vh_pilot4_canon.gd:141)
+SCRIPT ERROR: Out of bounds get index '0' (on base: 'Array')
+          at: _relabel (res://tools/vh_pilot4_canon.gd:141)
+SCRIPT ERROR: Out of bounds get index '0' (on base: 'Array')
+          at: _rot (res://tools/vh_pilot4_canon.gd:96)
+known boards: 43943
+known boards incl. T1-T5 and the demos: 43943; played boards for the near-copy guard: 333
+T43_0        flags ["simple_strategy"] gmax 0.033 look6 0.125 p_calm 0.005 forced 0.33 dep 10
+T43_1        flags ["simple_strategy"] gmax 0.025 look6 0.108 p_calm 0.005 forced 0.35 dep 9
+T43_3        flags [] gmax 0.008 look6 0.042 p_calm 0.003 forced 0.39 dep 9
+T43_4        flags [] gmax 0.017 look6 0.058 p_calm 0.002 forced 0.38 dep 9
+T43_5        flags [] gmax 0.008 look6 0.042 p_calm 0.002 forced 0.39 dep 9
+T43_6        flags [] gmax 0.000 look6 0.033 p_calm 0.003 forced 0.39 dep 9
+T43_7        flags [] gmax 0.017 look6 0.042 p_calm 0.006 forced 0.44 dep 8
+T43_8        flags [] gmax 0.017 look6 0.017 p_calm 0.003 forced 0.39 dep 9
+T43_9        flags [] gmax 0.008 look6 0.067 p_calm 0.003 forced 0.47 dep 9

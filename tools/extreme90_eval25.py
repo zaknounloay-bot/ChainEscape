@@ -32,7 +32,9 @@ def godot(args, log):
 
 drafts = json.load(open(SRC))
 known = bank()
-txt = godot(['res://tools/ta90_bench24.gd', '--', '--file=' + SRC], OUT + '/bench.log')
+# Phase 30: one bench log per drafts file (Phase 29: two evaluations sharing an
+# out dir read each other's shared bench.log - a board then read as unsolvable).
+txt = godot(['res://tools/ta90_bench24.gd', '--', '--file=' + SRC], OUT + '/bench_%s.log' % os.path.splitext(os.path.basename(SRC))[0])
 feat, head = {}, {}
 for m in re.finditer(r'== (\S+): (\d+) positions(?: \(CAPPED\))?, winnable (\w+)', txt):
     head[m.group(1)] = (int(m.group(2)), m.group(3) == 'true')

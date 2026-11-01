@@ -1,0 +1,17 @@
+{
+ "T61_1": {
+  "map": [
+   ". . . . . . .",
+   ". . . R>:v . . R^",
+   ". . . . . P<@- Y^:<",
+   ". . . Y<&A= . G>= B^@",
+   ". . . . . . .",
+   ". Y>:> . . . . .",
+   ". B<@ . . B<:^ . P^%A"
+  ],
+  "target": "EXTREME",
+  "facts": [],
+  "mechanic": "sequence,switch,armor",
+  "max_positions": 2000
+ }
+}

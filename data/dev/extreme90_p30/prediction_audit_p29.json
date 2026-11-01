@@ -1,0 +1,130 @@
+{
+ "rows": [
+  {
+   "id": "N71",
+   "src": "P29_R09_4",
+   "approved": false,
+   "human": "EASY",
+   "flags": [],
+   "p_calm": 0,
+   "gmax": 0,
+   "look6": 0,
+   "forced": 0.18,
+   "dep": 11,
+   "dist": 6,
+   "steps": 14,
+   "sol": 17,
+   "pos": 882
+  },
+  {
+   "id": "N72",
+   "src": "P29_R02b_4",
+   "approved": true,
+   "human": "EXTREME",
+   "flags": [],
+   "p_calm": 0,
+   "gmax": 0,
+   "look6": 0,
+   "forced": 0.44,
+   "dep": 12,
+   "dist": 6,
+   "steps": 15,
+   "sol": 18,
+   "pos": 290
+  },
+  {
+   "id": "N73",
+   "src": "P29_R06_5",
+   "approved": false,
+   "human": "HARD",
+   "flags": [],
+   "p_calm": 0.006,
+   "gmax": 0.042,
+   "look6": 0.025,
+   "forced": 0.53,
+   "dep": 9,
+   "dist": 6,
+   "steps": 14,
+   "sol": 15,
+   "pos": 458
+  },
+  {
+   "id": "N74",
+   "src": "P29_R03_0",
+   "approved": false,
+   "human": "MEDIUM",
+   "flags": [
+    "simple_strategy"
+   ],
+   "p_calm": 0.019,
+   "gmax": 0.008,
+   "look6": 0.075,
+   "forced": 0.21,
+   "dep": 6,
+   "dist": 6,
+   "steps": 12,
+   "sol": 14,
+   "pos": 695
+  },
+  {
+   "id": "N75",
+   "src": "P29_R04_0",
+   "approved": true,
+   "human": "VERY HARD",
+   "flags": [
+    "simple_strategy"
+   ],
+   "p_calm": 0.018,
+   "gmax": 0.067,
+   "look6": 0.342,
+   "forced": 0.39,
+   "dep": 8,
+   "dist": 4,
+   "steps": 14,
+   "sol": 18,
+   "pos": 517
+  },
+  {
+   "id": "N76",
+   "src": "P29_R08bs92_3",
+   "approved": false,
+   "human": "HARD",
+   "flags": [
+    "simple_strategy"
+   ],
+   "p_calm": 0.009,
+   "gmax": 0.058,
+   "look6": 0.083,
+   "forced": 0.26,
+   "dep": 9,
+   "dist": 5,
+   "steps": 17,
+   "sol": 19,
+   "pos": 916
+  },
+  {
+   "id": "N77",
+   "src": "P29_R01b_7",
+   "approved": true,
+   "human": "EXTREME",
+   "flags": [
+    "simple_strategy"
+   ],
+   "p_calm": 0.038,
+   "gmax": 0.083,
+   "look6": 0.108,
+   "forced": 0.35,
+   "dep": 7,
+   "dist": 5,
+   "steps": 13,
+   "sol": 17,
+   "pos": 493
+  }
+ ],
+ "confusion": {
+  "TP_unflagged_approved": 1,
+  "FP_unflagged_not_approved": 2,
+  "FN_flagged_approved": 2,
+  "TN_flagged_not_approved": 2
+ }
+}

@@ -1,0 +1,64 @@
+{
+ "target": "EXTREME",
+ "facts": [],
+ "mechanic": "sequence,switch",
+ "idea": "P30 hand core: the boomerang guards the reversal: a Sequence block stands in the flip target's lane; its advance (a launch and return) and its escape must be timed around the switch",
+ "family": "P30 T12_SEQTRIGGER",
+ "map": [
+  ". . . Gv&A . . .",
+  ". . . . . . .",
+  ". . . . . . .",
+  ". . . R>:^ . . .",
+  ". . . . . . .",
+  ". . . . . . .",
+  ". . . . . . P^%A"
+ ],
+ "frozen": [
+  [
+   0,
+   3
+  ],
+  [
+   3,
+   3
+  ],
+  [
+   6,
+   6
+  ]
+ ],
+ "max_positions": 2000,
+ "piece_free": 13,
+ "max_pieces": 17,
+ "shortcut_weight": 80,
+ "coverage_weight": 25,
+ "late_weight": 20,
+ "endgame_weight": 20,
+ "length_weight": 1.0,
+ "length_cap": 18,
+ "pressure_weight": 1.5,
+ "palette": "all",
+ "suffixes": [
+  "&A",
+  ":^",
+  ":v",
+  ":<",
+  ":>"
+ ],
+ "suffix_rate": 0.35,
+ "suffix_max": {
+  "&A": 3,
+  ":^": 1,
+  ":v": 1,
+  ":<": 1,
+  ":>": 1
+ },
+ "crates_max": 0,
+ "seed": 304,
+ "size": "medium",
+ "max_solve_nodes": 1500,
+ "spinners_max": 4,
+ "strict_essential": true,
+ "token_guard": true,
+ "phase30_core": "T12_SEQTRIGGER"
+}

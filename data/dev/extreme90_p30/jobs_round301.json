@@ -1,0 +1,163 @@
+[
+ {
+  "name": "gen_T01_PULLEDTRIGGER_s301",
+  "dir": "data/dev/extreme90_p30/runs/T01_PULLEDTRIGGER_s301",
+  "cpu": true,
+  "cmd": [
+   "timeout",
+   "1000",
+   "/tmp/claude-0/-home-user-ChainEscape/7e9f2bd8-6e70-52bd-944d-4d9f0e72484e/scratchpad/godot/godot",
+   "--headless",
+   "--path",
+   ".",
+   "--script",
+   "res://tools/ta90_search.gd",
+   "--",
+   "--file=data/dev/extreme90_p30/seed_T01_PULLEDTRIGGER.json",
+   "--minutes=12",
+   "--batch=40",
+   "--beam=5",
+   "--patience=8",
+   "--seed=301",
+   "--out=data/dev/extreme90_p30/runs/T01_PULLEDTRIGGER_s301/run.json"
+  ]
+ },
+ {
+  "name": "gen_T03_PULLTHEKEY_s301",
+  "dir": "data/dev/extreme90_p30/runs/T03_PULLTHEKEY_s301",
+  "cpu": true,
+  "cmd": [
+   "timeout",
+   "1000",
+   "/tmp/claude-0/-home-user-ChainEscape/7e9f2bd8-6e70-52bd-944d-4d9f0e72484e/scratchpad/godot/godot",
+   "--headless",
+   "--path",
+   ".",
+   "--script",
+   "res://tools/ta90_search.gd",
+   "--",
+   "--file=data/dev/extreme90_p30/seed_T03_PULLTHEKEY.json",
+   "--minutes=12",
+   "--batch=40",
+   "--beam=5",
+   "--patience=8",
+   "--seed=301",
+   "--out=data/dev/extreme90_p30/runs/T03_PULLTHEKEY_s301/run.json"
+  ]
+ },
+ {
+  "name": "gen_T05_ARMOREDLINK_s301",
+  "dir": "data/dev/extreme90_p30/runs/T05_ARMOREDLINK_s301",
+  "cpu": true,
+  "cmd": [
+   "timeout",
+   "1000",
+   "/tmp/claude-0/-home-user-ChainEscape/7e9f2bd8-6e70-52bd-944d-4d9f0e72484e/scratchpad/godot/godot",
+   "--headless",
+   "--path",
+   ".",
+   "--script",
+   "res://tools/ta90_search.gd",
+   "--",
+   "--file=data/dev/extreme90_p30/seed_T05_ARMOREDLINK.json",
+   "--minutes=12",
+   "--batch=40",
+   "--beam=5",
+   "--patience=8",
+   "--seed=301",
+   "--out=data/dev/extreme90_p30/runs/T05_ARMOREDLINK_s301/run.json"
+  ]
+ },
+ {
+  "name": "gen_T10_KEYLADDER_s301",
+  "dir": "data/dev/extreme90_p30/runs/T10_KEYLADDER_s301",
+  "cpu": true,
+  "cmd": [
+   "timeout",
+   "1000",
+   "/tmp/claude-0/-home-user-ChainEscape/7e9f2bd8-6e70-52bd-944d-4d9f0e72484e/scratchpad/godot/godot",
+   "--headless",
+   "--path",
+   ".",
+   "--script",
+   "res://tools/ta90_search.gd",
+   "--",
+   "--file=data/dev/extreme90_p30/seed_T10_KEYLADDER.json",
+   "--minutes=12",
+   "--batch=40",
+   "--beam=5",
+   "--patience=8",
+   "--seed=301",
+   "--out=data/dev/extreme90_p30/runs/T10_KEYLADDER_s301/run.json"
+  ]
+ },
+ {
+  "name": "gen_T12_SEQTRIGGER_s301",
+  "dir": "data/dev/extreme90_p30/runs/T12_SEQTRIGGER_s301",
+  "cpu": true,
+  "cmd": [
+   "timeout",
+   "1000",
+   "/tmp/claude-0/-home-user-ChainEscape/7e9f2bd8-6e70-52bd-944d-4d9f0e72484e/scratchpad/godot/godot",
+   "--headless",
+   "--path",
+   ".",
+   "--script",
+   "res://tools/ta90_search.gd",
+   "--",
+   "--file=data/dev/extreme90_p30/seed_T12_SEQTRIGGER.json",
+   "--minutes=12",
+   "--batch=40",
+   "--beam=5",
+   "--patience=8",
+   "--seed=301",
+   "--out=data/dev/extreme90_p30/runs/T12_SEQTRIGGER_s301/run.json"
+  ]
+ },
+ {
+  "name": "gen_T14_TWOTRIGGERS_s301",
+  "dir": "data/dev/extreme90_p30/runs/T14_TWOTRIGGERS_s301",
+  "cpu": true,
+  "cmd": [
+   "timeout",
+   "1000",
+   "/tmp/claude-0/-home-user-ChainEscape/7e9f2bd8-6e70-52bd-944d-4d9f0e72484e/scratchpad/godot/godot",
+   "--headless",
+   "--path",
+   ".",
+   "--script",
+   "res://tools/ta90_search.gd",
+   "--",
+   "--file=data/dev/extreme90_p30/seed_T14_TWOTRIGGERS.json",
+   "--minutes=12",
+   "--batch=40",
+   "--beam=5",
+   "--patience=8",
+   "--seed=301",
+   "--out=data/dev/extreme90_p30/runs/T14_TWOTRIGGERS_s301/run.json"
+  ]
+ },
+ {
+  "name": "gen_T27_TRIGGERLINK_s301",
+  "dir": "data/dev/extreme90_p30/runs/T27_TRIGGERLINK_s301",
+  "cpu": true,
+  "cmd": [
+   "timeout",
+   "1000",
+   "/tmp/claude-0/-home-user-ChainEscape/7e9f2bd8-6e70-52bd-944d-4d9f0e72484e/scratchpad/godot/godot",
+   "--headless",
+   "--path",
+   ".",
+   "--script",
+   "res://tools/ta90_search.gd",
+   "--",
+   "--file=data/dev/extreme90_p30/seed_T27_TRIGGERLINK.json",
+   "--minutes=12",
+   "--batch=40",
+   "--beam=5",
+   "--patience=8",
+   "--seed=301",
+   "--out=data/dev/extreme90_p30/runs/T27_TRIGGERLINK_s301/run.json"
+  ]
+ }
+]

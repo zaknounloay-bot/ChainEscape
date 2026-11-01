@@ -1,0 +1,11 @@
+Godot Engine v4.3.stable.official.77dcf97d8 - https://godotengine.org
+
+T43_0 HINT-FOLLOW PASS: WIN after 21 moves; ids [2, 12, 7, 0, 1, 6, 3, 5, 11, 5, 8, 9, 4, 15, 14, 13, 18, 10, 17, 10, 16]
+T43_1 HINT-FOLLOW PASS: WIN after 20 moves; ids [0, 1, 5, 6, 2, 4, 11, 10, 4, 7, 8, 3, 14, 13, 12, 17, 9, 16, 9, 15]
+T43_3 HINT-FOLLOW PASS: WIN after 18 moves; ids [0, 1, 2, 3, 10, 9, 5, 4, 5, 6, 7, 8, 15, 11, 12, 11, 13, 14]
+T43_4 HINT-FOLLOW PASS: WIN after 21 moves; ids [1, 2, 6, 0, 3, 5, 7, 12, 11, 5, 8, 9, 4, 15, 14, 13, 18, 10, 17, 10, 16]
+T43_5 HINT-FOLLOW PASS: WIN after 18 moves; ids [0, 3, 4, 11, 10, 9, 1, 2, 6, 5, 6, 7, 8, 15, 12, 13, 12, 14]
+T43_6 HINT-FOLLOW PASS: WIN after 18 moves; ids [0, 1, 2, 3, 10, 9, 8, 5, 4, 5, 6, 7, 15, 11, 12, 11, 13, 14]
+T43_7 HINT-FOLLOW PASS: WIN after 18 moves; ids [0, 3, 4, 5, 11, 10, 1, 2, 7, 6, 7, 8, 9, 15, 12, 13, 12, 14]
+T43_8 HINT-FOLLOW PASS: WIN after 18 moves; ids [0, 3, 4, 9, 11, 1, 2, 6, 5, 6, 7, 8, 10, 15, 12, 13, 12, 14]
+T43_9 HINT-FOLLOW PASS: WIN after 19 moves; ids [1, 2, 3, 5, 11, 10, 0, 4, 7, 6, 7, 8, 9, 16, 12, 13, 12, 14, 15]

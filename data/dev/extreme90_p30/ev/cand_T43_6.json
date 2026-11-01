@@ -1,0 +1,17 @@
+{
+ "T43_6": {
+  "map": [
+   ". . . . . . .",
+   ". . Y^@ . P<&A . .",
+   ". . G>&A . . . .",
+   ". . R^&B P^= Y<&A R<&B Gv@",
+   ". . . Rv@- B>@ . B>",
+   ". . B<&B . . . R>=",
+   ". . P^%A P^ G^%B . ."
+  ],
+  "target": "EXTREME",
+  "facts": [],
+  "mechanic": "switch",
+  "max_positions": 2000
+ }
+}

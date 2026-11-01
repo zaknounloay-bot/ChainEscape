@@ -1,0 +1,5 @@
+START screen_T14b pid=9680
+START screen_T12r pid=9681
+DONE screen_T14b exit=0 100s
+DONE screen_T12r exit=0 132s
+ALL DONE

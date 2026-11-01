@@ -1,0 +1,72 @@
+{
+ "N78": {
+  "key": "T43_8",
+  "rank_file": "T43",
+  "family": "P30 crossed triggers (switch A x switch B)",
+  "group": "reversal x reversal (two groups)",
+  "mechanics": [
+   "switch",
+   "spinner"
+  ],
+  "idea": "crossed triggers: two switch groups, and each group's switch piece is held by the OTHER group's flip target - which reversal fires first decides which lanes open, and the wrong first trigger leaves a target facing into a wall",
+  "related": "N20 / N42 / N75 (two switch pieces of ONE group); closest occupancy N67 0.35",
+  "source": "hybrid: hand core frozen cell for cell (seed_T43_CROSSEDTRIGGERS.json, Phase 30); blocks added by tools/ta90_search.gd WITHOUT --ops=v20 (baseline operators - the flag was missing from every Phase 30 run command although protocol.json specified v20; found and corrected in the Phase 31 audit) with the Phase 28 pipeline + the Phase 30 core_essential check, RNG seed 303/304 (protocol.json); early screen tools/extreme90_screen30.py (incl. hint-follow); advisory rank tools/ta90_rank29.gd"
+ },
+ "N79": {
+  "key": "T14b_4",
+  "rank_file": "T14b",
+  "family": "P30 two triggers, one group (switch + armor parity)",
+  "group": "reversal parity x armor",
+  "mechanics": [
+   "switch",
+   "armor",
+   "spinner"
+  ],
+  "idea": "two triggers, one group: two switch pieces fire the same reversal, so an armored target faces back after both - which shell is cracked, and how many reversals have happened when it is free, decide whether it can leave",
+  "related": "N75 (approved: two switch pieces, an armored key) - closest; N55 / N62 (switch + armor); closest occupancy N75 0.32",
+  "source": "hybrid: hand core frozen cell for cell (seed_T14b_TWOTRIGGERS.json, Phase 30); blocks added by tools/ta90_search.gd WITHOUT --ops=v20 (baseline operators - the flag was missing from every Phase 30 run command although protocol.json specified v20; found and corrected in the Phase 31 audit) with the Phase 28 pipeline + the Phase 30 core_essential check, RNG seed 302 (protocol.json); early screen tools/extreme90_screen30.py (incl. hint-follow); advisory rank tools/ta90_rank29.gd"
+ },
+ "N80": {
+  "key": "T12r_9",
+  "rank_file": "T12r",
+  "family": "P30 the boomerang guards the reversal (Sequence + switch)",
+  "group": "Sequence x reversal",
+  "mechanics": [
+   "sequence",
+   "switch",
+   "spinner"
+  ],
+  "idea": "the boomerang guards the reversal: a Sequence block stands in the flip target's lane; its advance (a launch and return) needs a clear lane and changes its arrow, so the boomerang, the switch and the target must be ordered",
+  "related": "Sequence + switch is new to the bank; N5 / N21 / N45 (Sequence keys, no switch); closest occupancy N48 0.36",
+  "source": "hybrid: hand core frozen cell for cell (seed_T12r_SEQTRIGGER.json, Phase 30); blocks added by tools/ta90_search.gd WITHOUT --ops=v20 (baseline operators - the flag was missing from every Phase 30 run command although protocol.json specified v20; found and corrected in the Phase 31 audit) with the Phase 28 pipeline + the Phase 30 core_essential check, RNG seed 302 (protocol.json); early screen tools/extreme90_screen30.py (incl. hint-follow); advisory rank tools/ta90_rank29.gd"
+ },
+ "N81": {
+  "key": "T59_4",
+  "rank_file": "T59",
+  "family": "P30 the aimed ram (switch + armor)",
+  "group": "reversal x armor (ram)",
+  "mechanics": [
+   "switch",
+   "armor",
+   "spinner"
+  ],
+  "idea": "the aimed ram: the only block that can crack the armored piece is a flip target - the reversal decides whether it rams the shell or simply leaves, and once it has left nothing can crack it",
+  "related": "N79 (same mechanic set, parity instead of aiming; pairwise < 0.30); N62 / N55; closest occupancy N59 0.32",
+  "source": "hybrid: hand core frozen cell for cell (seed_T59_AIMEDRAM.json, Phase 30); blocks added by tools/ta90_search.gd WITHOUT --ops=v20 (baseline operators - the flag was missing from every Phase 30 run command although protocol.json specified v20; found and corrected in the Phase 31 audit) with the Phase 28 pipeline + the Phase 30 core_essential check, RNG seed 305/306 (protocol.json); early screen tools/extreme90_screen30.py (incl. hint-follow); advisory rank tools/ta90_rank29.gd"
+ },
+ "N82": {
+  "key": "T61_1",
+  "rank_file": "T61",
+  "family": "P30 the boomerang cracks the shell (Sequence + armor + switch)",
+  "group": "Sequence x armor x reversal",
+  "mechanics": [
+   "sequence",
+   "switch",
+   "armor",
+   "spinner"
+  ],
+  "idea": "the boomerang cracks the shell: a Sequence block launches and returns, then its new lane runs into an armored flip target - its escape is the ram, so when it advances and which way the reversal has left the shell decide whether the shell can ever leave",
+  "related": "N80 (Sequence + switch, no ram); Phase 28 P08 (Sequence x armor, no reversal - structurally weak); closest occupancy N64 0.33",
+  "source": "hybrid: hand core frozen cell for cell (seed_T61_BOOMERANGRAM.json, Phase 30); blocks added by tools/ta90_search.gd WITHOUT --ops=v20 (baseline operators - the flag was missing from every Phase 30 run command although protocol.json specified v20; found and corrected in the Phase 31 audit) with the Phase 28 pipeline + the Phase 30 core_essential check, RNG seed 307 (protocol.json); early screen tools/extreme90_screen30.py (incl. hint-follow); advisory rank tools/ta90_rank29.gd"
+ }
+}

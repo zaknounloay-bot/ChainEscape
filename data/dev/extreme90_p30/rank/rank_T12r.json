@@ -1,0 +1,270 @@
+{
+ "T12r_1": {
+  "dep_depth": 10,
+  "dep_pairs": 70,
+  "escapes": 16,
+  "first_deep_trap": 1,
+  "first_trap": 1,
+  "flags": [
+   "simple_strategy"
+  ],
+  "forced": 9,
+  "forced_share": 0.45,
+  "free": 11,
+  "gmax": 0.042,
+  "look6": 0.025,
+  "open_moves": 5,
+  "open_safe": 3,
+  "p_calm": 0.013,
+  "p_look1": 0,
+  "p_look2": 0,
+  "p_random": 0,
+  "positions": 806,
+  "rank_key": [
+   1,
+   0.197,
+   -10
+  ],
+  "solution": 20,
+  "win_density": 0.23,
+  "win_lines": 1390974
+ },
+ "T12r_2": {
+  "dep_depth": 10,
+  "dep_pairs": 70,
+  "escapes": 16,
+  "first_deep_trap": 1,
+  "first_trap": 1,
+  "flags": [
+   "simple_strategy"
+  ],
+  "forced": 9,
+  "forced_share": 0.45,
+  "free": 11,
+  "gmax": 0.042,
+  "look6": 0.025,
+  "open_moves": 5,
+  "open_safe": 3,
+  "p_calm": 0.013,
+  "p_look1": 0,
+  "p_look2": 0,
+  "p_random": 0,
+  "positions": 806,
+  "rank_key": [
+   1,
+   0.197,
+   -10
+  ],
+  "solution": 20,
+  "win_density": 0.23,
+  "win_lines": 1390974
+ },
+ "T12r_3": {
+  "dep_depth": 10,
+  "dep_pairs": 64,
+  "escapes": 16,
+  "first_deep_trap": 1,
+  "first_trap": 1,
+  "flags": [
+   "simple_strategy"
+  ],
+  "forced": 6,
+  "forced_share": 0.3,
+  "free": 14,
+  "gmax": 0.125,
+  "look6": 0.025,
+  "open_moves": 5,
+  "open_safe": 4,
+  "p_calm": 0.029,
+  "p_look1": 0.001,
+  "p_look2": 0.001,
+  "p_random": 0.001,
+  "positions": 874,
+  "rank_key": [
+   1,
+   0.44,
+   -10
+  ],
+  "solution": 20,
+  "win_density": 0.25,
+  "win_lines": 2086461
+ },
+ "T12r_4": {
+  "dep_depth": 9,
+  "dep_pairs": 59,
+  "escapes": 16,
+  "first_deep_trap": 1,
+  "first_trap": 1,
+  "flags": [
+   "simple_strategy"
+  ],
+  "forced": 9,
+  "forced_share": 0.45,
+  "free": 11,
+  "gmax": 0.083,
+  "look6": 0.017,
+  "open_moves": 6,
+  "open_safe": 4,
+  "p_calm": 0.013,
+  "p_look1": 0.001,
+  "p_look2": 0.001,
+  "p_random": 0.001,
+  "positions": 876,
+  "rank_key": [
+   1,
+   0.23,
+   -9
+  ],
+  "solution": 20,
+  "win_density": 0.3,
+  "win_lines": 8165850
+ },
+ "T12r_5": {
+  "dep_depth": 10,
+  "dep_pairs": 73,
+  "escapes": 16,
+  "first_deep_trap": 1,
+  "first_trap": 1,
+  "flags": [],
+  "forced": 9,
+  "forced_share": 0.45,
+  "free": 11,
+  "gmax": 0.042,
+  "look6": 0.025,
+  "open_moves": 5,
+  "open_safe": 2,
+  "p_calm": 0.008,
+  "p_look1": 0,
+  "p_look2": 0,
+  "p_random": 0,
+  "positions": 991,
+  "rank_key": [
+   0,
+   0.147,
+   -10
+  ],
+  "solution": 20,
+  "win_density": 0.21,
+  "win_lines": 1294800
+ },
+ "T12r_6": {
+  "dep_depth": 9,
+  "dep_pairs": 55,
+  "escapes": 15,
+  "first_deep_trap": 1,
+  "first_trap": 1,
+  "flags": [
+   "simple_strategy"
+  ],
+  "forced": 9,
+  "forced_share": 0.47,
+  "free": 10,
+  "gmax": 0.058,
+  "look6": 0.017,
+  "open_moves": 5,
+  "open_safe": 3,
+  "p_calm": 0.013,
+  "p_look1": 0.001,
+  "p_look2": 0.001,
+  "p_random": 0.001,
+  "positions": 706,
+  "rank_key": [
+   1,
+   0.205,
+   -9
+  ],
+  "solution": 19,
+  "win_density": 0.24,
+  "win_lines": 826815
+ },
+ "T12r_7": {
+  "dep_depth": 9,
+  "dep_pairs": 55,
+  "escapes": 15,
+  "first_deep_trap": 1,
+  "first_trap": 1,
+  "flags": [
+   "simple_strategy"
+  ],
+  "forced": 9,
+  "forced_share": 0.47,
+  "free": 10,
+  "gmax": 0.058,
+  "look6": 0.017,
+  "open_moves": 5,
+  "open_safe": 3,
+  "p_calm": 0.013,
+  "p_look1": 0.001,
+  "p_look2": 0.001,
+  "p_random": 0.001,
+  "positions": 706,
+  "rank_key": [
+   1,
+   0.205,
+   -9
+  ],
+  "solution": 19,
+  "win_density": 0.24,
+  "win_lines": 826815
+ },
+ "T12r_8": {
+  "dep_depth": 9,
+  "dep_pairs": 55,
+  "escapes": 15,
+  "first_deep_trap": 1,
+  "first_trap": 1,
+  "flags": [
+   "simple_strategy"
+  ],
+  "forced": 9,
+  "forced_share": 0.47,
+  "free": 10,
+  "gmax": 0.05,
+  "look6": 0.017,
+  "open_moves": 5,
+  "open_safe": 3,
+  "p_calm": 0.013,
+  "p_look1": 0.001,
+  "p_look2": 0.001,
+  "p_random": 0.001,
+  "positions": 756,
+  "rank_key": [
+   1,
+   0.197,
+   -9
+  ],
+  "solution": 19,
+  "win_density": 0.22,
+  "win_lines": 826815
+ },
+ "T12r_9": {
+  "dep_depth": 13,
+  "dep_pairs": 125,
+  "escapes": 18,
+  "first_deep_trap": 1,
+  "first_trap": 1,
+  "flags": [
+   "simple_strategy"
+  ],
+  "forced": 9,
+  "forced_share": 0.41,
+  "free": 13,
+  "gmax": 0.058,
+  "look6": 0.025,
+  "open_moves": 5,
+  "open_safe": 3,
+  "p_calm": 0.013,
+  "p_look1": 0,
+  "p_look2": 0,
+  "p_random": 0,
+  "positions": 562,
+  "rank_key": [
+   1,
+   0.213,
+   -13
+  ],
+  "solution": 22,
+  "win_density": 0.18,
+  "win_lines": 39420
+ }
+}

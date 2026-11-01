@@ -1,0 +1,9 @@
+{
+ "T61_7": {
+  "distinct": 4,
+  "pieces_tested": 10,
+  "steps": 12,
+  "trivial": [],
+  "trivial_removals": 0
+ }
+}

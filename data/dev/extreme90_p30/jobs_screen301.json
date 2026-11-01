@@ -1,0 +1,26 @@
+[
+ {
+  "name": "screen_T10",
+  "dir": "data/dev/extreme90_p30/scr/T10",
+  "quiet": true,
+  "cmd": [
+   "python3",
+   "tools/extreme90_screen30.py",
+   "data/dev/extreme90_p30/sl/T10.json",
+   "data/dev/extreme90_p30/scr/T10",
+   "/tmp/claude-0/-home-user-ChainEscape/7e9f2bd8-6e70-52bd-944d-4d9f0e72484e/scratchpad/godot/godot"
+  ]
+ },
+ {
+  "name": "screen_T14",
+  "dir": "data/dev/extreme90_p30/scr/T14",
+  "quiet": true,
+  "cmd": [
+   "python3",
+   "tools/extreme90_screen30.py",
+   "data/dev/extreme90_p30/sl/T14.json",
+   "data/dev/extreme90_p30/scr/T14",
+   "/tmp/claude-0/-home-user-ChainEscape/7e9f2bd8-6e70-52bd-944d-4d9f0e72484e/scratchpad/godot/godot"
+  ]
+ }
+]

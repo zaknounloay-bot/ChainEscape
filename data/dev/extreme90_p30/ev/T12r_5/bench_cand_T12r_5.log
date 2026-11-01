@@ -1,0 +1,47 @@
+Godot Engine v4.3.stable.official.77dcf97d8 - https://godotengine.org
+
+SCRIPT ERROR: Invalid access of index '6' on a base object of type: 'Array'.
+          at: _rot (res://tools/vh_pilot4_canon.gd:101)
+SCRIPT ERROR: Out of bounds get index '0' (on base: 'Array')
+          at: _relabel (res://tools/vh_pilot4_canon.gd:141)
+SCRIPT ERROR: Out of bounds get index '0' (on base: 'Array')
+          at: _relabel (res://tools/vh_pilot4_canon.gd:141)
+SCRIPT ERROR: Out of bounds get index '0' (on base: 'Array')
+          at: _rot (res://tools/vh_pilot4_canon.gd:96)
+SCRIPT ERROR: Out of bounds get index '0' (on base: 'Array')
+          at: _relabel (res://tools/vh_pilot4_canon.gd:141)
+SCRIPT ERROR: Out of bounds get index '0' (on base: 'Array')
+          at: _relabel (res://tools/vh_pilot4_canon.gd:141)
+SCRIPT ERROR: Out of bounds get index '0' (on base: 'Array')
+          at: _rot (res://tools/vh_pilot4_canon.gd:96)
+SCRIPT ERROR: Out of bounds get index '0' (on base: 'Array')
+          at: _relabel (res://tools/vh_pilot4_canon.gd:141)
+SCRIPT ERROR: Out of bounds get index '0' (on base: 'Array')
+          at: _relabel (res://tools/vh_pilot4_canon.gd:141)
+SCRIPT ERROR: Out of bounds get index '0' (on base: 'Array')
+          at: _rot (res://tools/vh_pilot4_canon.gd:96)
+known boards: 44336
+known boards incl. T1-T5 and the demos: 44336; played boards for the near-copy guard: 333
+== T12r_5: 991 positions, winnable true
+   1  r0c6>        lose: r5c2^(17) r6c0^(14) r6c3<(17)
+   2  r3c6^        lose: r5c2^(16) r6c0^(13) r6c3<(16)
+   3  r4c6^        lose: r5c2^(15) r6c0^(12) r6c3<(15)
+   4  r0c5> advance lose: r5c2^(14) r6c0^(11) r6c3<(14) r6c6^(14)
+   5  r3c3> advance lose: r5c2^(13) r6c0^(10) r6c3<(13) r6c6^(13)
+   6  r5c5> advance lose: r5c2^(12) r6c0^(9) r6c3<(12) r6c6^(12)
+   7  r5c5>        lose: r5c2^(11) r6c0^(8) r6c3<(11) r6c6^(11)
+   8  r5c3>        lose: r5c2^(10) r6c0^(7) r6c3<(10) r6c6^(10)
+   9  r5c2^        lose: r6c0^(6) r6c6^(9)
+  10  r5c1>        lose: r6c0^(5) r6c6^(8)
+  11  r6c1^        lose: r6c0^(4) r6c6^(7)
+  12  r6c0^        lose: r6c6^(6)
+  13  r6c2<        lose: r6c6^(5)
+  14  r6c3v advance lose: r6c6^(4)
+  15  r6c3<        lose: r6c6^(3)
+  16  r6c5<        lose: r6c6^(2)
+  17  r0c5v        lose: 
+  18  r6c6^        lose: 
+  19  r0c3^        lose: 
+  20  r3c3^        lose: 
+  greedy {"look2":0.01,"look4":0.02,"min_turn":0,"mobility":0.04,"safe":0}
+  features {"calm_prefix":3,"concurrency":0.7,"coverage":0.8,"deep_traps":4,"distinct":4,"effective_decisions":14,"learner4":5,"learner6":5,"look6":0.025,"pieces":16,"positions":991,"quick_fail_share":0.05,"safe_share":0.15,"shortcut":0.042,"solution":20,"steps":16,"trap_delay":11,"undo_proof":0.95}

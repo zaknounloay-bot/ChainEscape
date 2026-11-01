@@ -1,0 +1,1042 @@
+{
+ "T14w_0": {
+  "map": [
+   "Y> . . . . . .",
+   ". . . Bv . . Pv&A",
+   ". . . Y>= . . P<@~",
+   ". . P< Y<&A= . Gv P<=",
+   ". . B>@~ Rv@- . P<@ .",
+   ". . . . . Yv .",
+   "P^%A . . . . . G^%A"
+  ],
+  "mechanic": "switch,armor",
+  "positions": 527
+ },
+ "T14w_1": {
+  "map": [
+   ". . . . . . .",
+   ". . . Bv . . Pv&A",
+   ". . . Y>= . . P<@~",
+   ". . P^ Y<&A= . Gv P<=",
+   ". Yv B>@~ Rv@- . P<@ .",
+   ". . . . . Yv .",
+   "P^%A . . . . . G^%A"
+  ],
+  "mechanic": "switch,armor",
+  "positions": 759
+ },
+ "T14w_2": {
+  "map": [
+   ". . . . . . .",
+   ". . . Bv . . Pv&A",
+   ". . . Y>= . . P<@~",
+   ". . P^ Y<&A= . Gv P<=",
+   ". B^ B>@~ Rv@- . P<@ .",
+   ". . . . . Yv .",
+   "P^%A . . . . . G^%A"
+  ],
+  "mechanic": "switch,armor",
+  "positions": 759
+ },
+ "T14w_3": {
+  "map": [
+   ". . . . . . .",
+   ". . . Bv . . Pv&A",
+   ". . . Y>= . . P<@~",
+   ". . P< Y<&A= . Gv P<=",
+   ". Yv B>@~ Rv@- . P<@ .",
+   ". . . . . Yv .",
+   "P^%A . . . . . G^%A"
+  ],
+  "mechanic": "switch,armor",
+  "positions": 759
+ },
+ "T14w_4": {
+  "map": [
+   ". . . . . . .",
+   ". . . Bv . . Pv&A",
+   ". . . Y>= . . P<@~",
+   ". . P< Y<&A= . Gv P<=",
+   ". B^ B>@~ Rv@- . P<@ .",
+   ". . . . . Yv .",
+   "P^%A . . . . . G^%A"
+  ],
+  "mechanic": "switch,armor",
+  "positions": 759
+ },
+ "T14w_5": {
+  "map": [
+   ". . . . . . .",
+   ". . . Bv . . Pv&A",
+   ". . . Y>= . . P<@~",
+   ". . P^ Y<&A= . Gv P<=",
+   ". Y< B>@~ Rv@- . P<@ .",
+   ". . . . . Yv .",
+   "P^%A . . . . . G^%A"
+  ],
+  "mechanic": "switch,armor",
+  "positions": 759
+ },
+ "T14w_6": {
+  "map": [
+   ". . . . . . .",
+   ". . . Bv . . Pv&A",
+   ". . . Y>= . . P<@~",
+   ". . P^ Y<&A= . Gv P<=",
+   ". Yv B>@~ Rv@- . P<@ .",
+   ". . . . . Y< .",
+   "P^%A . . . . . G^%A"
+  ],
+  "mechanic": "switch,armor",
+  "positions": 759
+ },
+ "T14w_7": {
+  "map": [
+   ". . . . . . .",
+   ". . . Bv . . Pv&A",
+   ". . . Y>= P<&A . P<@~",
+   ". . P^ Y<&A= . Gv P<=",
+   ". Yv B>@~ Rv@- . P<@ .",
+   ". . . . . Y< .",
+   "P^%A . . . . . G^%A"
+  ],
+  "mechanic": "switch,armor",
+  "positions": 913
+ },
+ "T14w_8": {
+  "map": [
+   ". . . . . . .",
+   ". . . Bv . . Pv&A",
+   ". . . Y>= P<&A . P<@~",
+   ". . B^ Y<&A= . Gv P<=",
+   ". Yv B>@~ Rv@- . P<@ .",
+   ". . . . . Y< .",
+   "P^%A . . . . . G^%A"
+  ],
+  "mechanic": "switch,armor",
+  "positions": 913
+ },
+ "T14w_9": {
+  "map": [
+   ". . . . . . .",
+   ". . . Bv . . Pv&A",
+   ". . . Y>= P<&A . P<@~",
+   ". . P^ Y<&A= . . P<=",
+   ". Yv B>@~ Rv@- . P<@ P<",
+   ". . . . . Y< .",
+   "P^%A . . . . . G^%A"
+  ],
+  "mechanic": "switch,armor",
+  "positions": 929
+ },
+ "T14w_10": {
+  "map": [
+   ". . . . . . .",
+   ". . . Bv . . Pv&A",
+   ". . . Y>= . . P<@~",
+   ". . . Y<&A= . Gv P<=",
+   ". Yv B>@~ Rv@- . P<@ .",
+   ". . . . . Yv .",
+   "P^%A . . . . . G^%A"
+  ],
+  "mechanic": "switch,armor",
+  "positions": 371
+ },
+ "T14w_11": {
+  "map": [
+   ". . . . . . .",
+   ". . . Bv . . Pv&A",
+   ". . . Y>= . . P<@~",
+   ". . . Y<&A= . Gv P<=",
+   ". B^ B>@~ Rv@- . P<@ .",
+   ". . . . . Yv .",
+   "P^%A . . . . . G^%A"
+  ],
+  "mechanic": "switch,armor",
+  "positions": 371
+ },
+ "T14w_12": {
+  "map": [
+   ". . . . . . .",
+   ". . . Bv . . Pv&A",
+   ". . . Y>= . . P<@~",
+   ". . P^ Y<&A= . Gv P<=",
+   ". . B>@~ Rv@- . P<@ .",
+   ". . . . . Yv .",
+   "P^%A . . . . . G^%A"
+  ],
+  "mechanic": "switch,armor",
+  "positions": 439
+ },
+ "T14w_13": {
+  "map": [
+   ". . . . . . .",
+   ". . . Bv . . Pv&A",
+   ". . . Y>= . . P<@~",
+   ". . P< Y<&A= . Gv P<=",
+   ". . B>@~ Rv@- . P<@ .",
+   ". . . . . Yv .",
+   "P^%A . . . . . G^%A"
+  ],
+  "mechanic": "switch,armor",
+  "positions": 439
+ },
+ "T14w_14": {
+  "map": [
+   ". . . . . . .",
+   ". . . Bv . . Pv&A",
+   ". . . Y>= . . P<@~",
+   ". . P^ Y<&A= . Gv P<=",
+   ". Yv B>@~ . . P<@ .",
+   ". . . . . Yv .",
+   "P^%A . . . . . G^%A"
+  ],
+  "mechanic": "switch,armor",
+  "positions": 439
+ },
+ "T14w_15": {
+  "map": [
+   ". . . . . . .",
+   ". . . Bv . . Pv&A",
+   ". . . Y>= P<&A . P<@~",
+   ". . . Y<&A= . Gv P<=",
+   ". Yv B>@~ Rv@- . P<@ .",
+   ". . . . . Y< .",
+   "P^%A . . . . . G^%A"
+  ],
+  "mechanic": "switch,armor",
+  "positions": 447
+ },
+ "T14w_16": {
+  "map": [
+   ". . . . . . .",
+   ". . . Bv . . Pv&A",
+   ". . . Y>= P<&A . P<@~",
+   ". . . Y<&A= . Gv P<=",
+   ". Y< B>@~ Rv@- . P<@ .",
+   ". . . . . Y< .",
+   "P^%A . . . . . G^%A"
+  ],
+  "mechanic": "switch,armor",
+  "positions": 447
+ },
+ "T14w_17": {
+  "map": [
+   ". . . . . . .",
+   ". . . Bv . . Pv&A",
+   ". . . Y>= P<&A . P<@~",
+   ". . . Y<&A= . Gv P<=",
+   ". Yv B>@~ Rv@- . P< .",
+   ". . . . . Y< .",
+   "P^%A . . . . . G^%A"
+  ],
+  "mechanic": "switch,armor",
+  "positions": 447
+ },
+ "T14w_18": {
+  "map": [
+   ". . . . . . .",
+   ". . . Bv . . Pv&A",
+   ". . . Y>= P<&A . P<@~",
+   ". . . Y<&A= . Gv P<=",
+   ". Yv B>@~ Rv@- . P<@ .",
+   ". . . . . Y> .",
+   "P^%A . . . . . G^%A"
+  ],
+  "mechanic": "switch,armor",
+  "positions": 447
+ },
+ "T14w_19": {
+  "map": [
+   ". . . . . . .",
+   ". . . Bv . . Pv&A",
+   ". . . Y>= P<&A . P<@~",
+   ". . . Y<&A= . Gv P<=",
+   ". Yv B>@~ Rv@- G< P<@ .",
+   ". . . . . Y< .",
+   "P^%A . . . . . G^%A"
+  ],
+  "mechanic": "switch,armor",
+  "positions": 471
+ },
+ "T14w_20": {
+  "map": [
+   ". . . . . . .",
+   ". . . Bv . . Pv&A",
+   ". . . Y>= P<&A . P<@~",
+   ". . . Y<&A= . Gv P<=",
+   ". Yv B>@~ Rv@- B< P<@ .",
+   ". . . . . Y< .",
+   "P^%A . . . . . G^%A"
+  ],
+  "mechanic": "switch,armor",
+  "positions": 471
+ },
+ "T14w_21": {
+  "map": [
+   ". . . . . . .",
+   ". . . Bv . . Pv&A",
+   ". . . Y>= P<&A . P<@~",
+   ". . . Y<&A= . . P<=",
+   ". Y< B>@~ Rv@- . P<@ P<",
+   ". . . . . Y< .",
+   "P^%A . . . . . G^%A"
+  ],
+  "mechanic": "switch,armor",
+  "positions": 489
+ },
+ "T14w_22": {
+  "map": [
+   ". . . . . . .",
+   ". . . Bv . . Pv&A",
+   ". . . Y>= . . P<@~",
+   ". . P^ Y<&A= . Gv P<=",
+   "R^&A . B>@~ Rv@- . P<@ .",
+   ". . . . . Yv .",
+   "P^%A . . . . . G^%A"
+  ],
+  "mechanic": "switch,armor",
+  "positions": 495
+ },
+ "T14w_23": {
+  "map": [
+   ". . . . . . .",
+   ". . . Bv . . Pv&A",
+   ". . . Y>= . . P<@~",
+   ". . P^ Y<&A= . Gv@~ P<=",
+   ". . B>@~ Rv . P<@ .",
+   ". . . . . Yv .",
+   "P^%A R< . . . . G^%A"
+  ],
+  "mechanic": "switch,armor",
+  "positions": 955
+ },
+ "T14w_24": {
+  "map": [
+   ". . . . . . .",
+   ". . . Bv . . Pv&A",
+   ". . . Y>= P<&A . P<@~",
+   ". . . Y<&A= . Gv P<=",
+   ". Yv B>@~ Rv@- . P<@ .",
+   ". . . . . . .",
+   "P^%A . . . . . G^%A"
+  ],
+  "mechanic": "switch,armor",
+  "positions": 255
+ },
+ "T14w_25": {
+  "map": [
+   ". . . . . . .",
+   ". . . Bv . . Pv&A",
+   ". . . Y>= P<&A . P<@~",
+   ". . . Y<&A= . Gv P<=",
+   ". . B>@~ Rv@- . P<@ .",
+   ". . . . . Y< .",
+   "P^%A . . . . . G^%A"
+  ],
+  "mechanic": "switch,armor",
+  "positions": 255
+ },
+ "T14w_26": {
+  "map": [
+   ". . . . . . .",
+   ". . . Bv . . Pv&A",
+   ". . . Y>= P<&A . P<@~",
+   ". . . Y<&A= . Gv P<=",
+   ". Yv B>@~ . . P<@ .",
+   ". . . . . Y< .",
+   "P^%A . . . . . G^%A"
+  ],
+  "mechanic": "switch,armor",
+  "positions": 255
+ },
+ "T14w_27": {
+  "map": [
+   ". . . . . . .",
+   ". . . Bv . . Pv&A",
+   ". . . Y>= P<&A . P<@~",
+   ". . . Y<&A= . Gv P<=",
+   ". Yv B>@~ R< . P<@ .",
+   ". . . . . Y< .",
+   "P^%A . . . . . G^%A"
+  ],
+  "mechanic": "switch,armor",
+  "positions": 303
+ },
+ "T14w_28": {
+  "map": [
+   ". . . . . . .",
+   ". . . Bv . . Pv&A",
+   ". . . Y>= P<&A . P<@~",
+   ". . . Y<&A= . Gv P<=",
+   ". Yv . Rv@- . P<@ .",
+   ". . . . . Y< .",
+   "P^%A . . . . . G^%A"
+  ],
+  "mechanic": "switch,armor",
+  "positions": 303
+ },
+ "T14w_29": {
+  "map": [
+   ". . . . . . .",
+   ". . . Bv . . Pv&A",
+   ". . . Y>= . . P<@~",
+   ". . P^ Y<&A= . Gv P<=",
+   ". Yv B>@~ Rv@- . P<@ P<",
+   ". . . Gv . Y< .",
+   "P^%A . . . . . G^%A"
+  ],
+  "mechanic": "switch,armor",
+  "positions": 417
+ },
+ "T14w_30": {
+  "map": [
+   ". . . . . . .",
+   ". . . Bv . . Pv&A",
+   ". . . Y>= P<&A . P<@~",
+   ". . . Y<&A= . Gv P<=",
+   ". Yv B>@~ Rv@- . P<@ .",
+   "P< . . . . Y< .",
+   "P^%A . . . . . G^%A"
+  ],
+  "mechanic": "switch,armor",
+  "positions": 479
+ },
+ "T14w_31": {
+  "map": [
+   ". . . . . . .",
+   ". . . Bv . . Pv&A",
+   ". . . Y>= . . P<@~",
+   ". . P^ Y<&A= . Gv P<=",
+   "R^&A . B< Rv@- . P<@ .",
+   ". . . . . Yv .",
+   "P^%A . . . . . G^%A"
+  ],
+  "mechanic": "switch,armor",
+  "positions": 511
+ },
+ "T14w_32": {
+  "map": [
+   ". . . . . . .",
+   ". . . Bv . . Pv&A",
+   ". . . Y>= . . P<@~",
+   ". . P^ Y<&A= . Gv P<=",
+   ". Yv B>@~ R< . P<@ .",
+   ". . . . . Yv .",
+   "P^%A . . . . . G^%A"
+  ],
+  "mechanic": "switch,armor",
+  "positions": 519
+ },
+ "T14w_33": {
+  "map": [
+   ". . . . . . .",
+   ". . . Bv . . Pv&A",
+   ". . Y> Y>= P<&A . P<@~",
+   ". . . Y<&A= . Gv P<=",
+   ". Yv B>@~ Rv@- . P<@ .",
+   ". . . . . Y< .",
+   "P^%A . . . . . G^%A"
+  ],
+  "mechanic": "switch,armor",
+  "positions": 521
+ },
+ "T14w_34": {
+  "map": [
+   ". . . . . . .",
+   ". . . Bv . . Pv&A",
+   ". . . Y>= . . P<@~",
+   ". . P^ Y<&A= . Gv P<=",
+   ". B^ B>@~ Rv@- . P<@ Y<",
+   ". . . . . Yv .",
+   "P^%A . . . G<&A . G^%A"
+  ],
+  "mechanic": "switch,armor",
+  "positions": 525
+ },
+ "T14w_35": {
+  "map": [
+   ". . . . . . .",
+   ". . . Bv . . Pv&A",
+   ". . . Y>= . . P<@~",
+   ". . P^ Y<&A= . Gv P<=",
+   ". Yv B>@~ Rv@- . P<@ P<",
+   ". . . . . Yv .",
+   "P^%A . . . B> . G^%A"
+  ],
+  "mechanic": "switch,armor",
+  "positions": 525
+ },
+ "T14w_36": {
+  "map": [
+   ". . . . . . .",
+   ". . . Bv . . Pv&A",
+   ". . . Y>= . . P<@~",
+   ". . P< Y<&A= . Gv P<=",
+   ". Yv B>@~ Rv@- . P<@ P<",
+   ". . . . . Yv .",
+   "P^%A . . . G> . G^%A"
+  ],
+  "mechanic": "switch,armor",
+  "positions": 525
+ },
+ "T14w_37": {
+  "map": [
+   ". . . . . . .",
+   ". . . Bv . . Pv&A",
+   ". . . Y>= . . P<@~",
+   ". . P^ Y<&A= . Gv P<=",
+   "R^&A . Bv Rv@- . P<@ .",
+   ". . . . . Yv .",
+   "P^%A . . . . . G^%A"
+  ],
+  "mechanic": "switch,armor",
+  "positions": 543
+ },
+ "T14w_38": {
+  "map": [
+   ". . . . . . .",
+   ". . . Bv . . Pv&A",
+   ". . . Y>= . . P<@~",
+   ". . P^ Y<&A= . Gv P<=",
+   ". Yv B>@~ Rv@- . P<@ P<",
+   "G^ . . . . Y< .",
+   "P^%A . . . . . G^%A"
+  ],
+  "mechanic": "switch,armor",
+  "positions": 563
+ },
+ "T14w_39": {
+  "map": [
+   ". . . . . . .",
+   ". . . Bv . . Pv&A",
+   ". . . Y>= P<&A . P<@~",
+   ". . . Y<&A= . Gv P<=",
+   ". Yv B>@~ Rv@- . P<@ .",
+   ". . . . . Y< .",
+   "P^%A Gv . . . . G^%A"
+  ],
+  "mechanic": "switch,armor",
+  "positions": 591
+ },
+ "T14w_40": {
+  "map": [
+   ". . . . . . R^@~",
+   ". . . Bv . . Pv&A",
+   ". . . Y>= . . P<@~",
+   ". . P^ Y<&A= . Gv P<=",
+   ". . B>@~ Rv . P<@ .",
+   ". . . . . Yv .",
+   "P^%A . . . . . G^%A"
+  ],
+  "mechanic": "switch,armor",
+  "positions": 615
+ },
+ "T14w_41": {
+  "map": [
+   "B^ . . . . . .",
+   ". . . Bv . . Pv&A",
+   ". . . Y>= . . P<@~",
+   ". . P^ Y<&A= . Gv P<=",
+   ". B^ B>@~ Rv@- . P<@ Y<",
+   ". . . . . Yv .",
+   "P^%A . . . . . G^%A"
+  ],
+  "mechanic": "switch,armor",
+  "positions": 625
+ },
+ "T14w_42": {
+  "map": [
+   "Y>&A . . . . . .",
+   ". . . Bv . . Pv&A",
+   ". . . Y>= . . P<@~",
+   ". . P< Y<&A= . Gv P<=",
+   ". Yv B>@~ Rv@- . P<@ P<",
+   ". . . . . Yv .",
+   "P^%A . . . . . G^%A"
+  ],
+  "mechanic": "switch,armor",
+  "positions": 625
+ },
+ "T14w_43": {
+  "map": [
+   ". . . . . . .",
+   "Y< . . Bv . . Pv&A",
+   ". . . Y>= . . P<@~",
+   ". . P^ Y<&A= . Gv P<=",
+   ". Yv B>@~ Rv@- . P<@ P<",
+   ". . . . . Yv .",
+   "P^%A . . . . . G^%A"
+  ],
+  "mechanic": "switch,armor",
+  "positions": 625
+ },
+ "T14w_44": {
+  "map": [
+   ". . . . . . .",
+   ". . . Bv . . Pv&A",
+   ". . . Y>= . . P<@~",
+   ". . P^ Y<&A= . Gv P<=",
+   ". Yv B>@~ Rv@- . P<@ P<",
+   "P< . . . . Yv .",
+   "P^%A . . . . . G^%A"
+  ],
+  "mechanic": "switch,armor",
+  "positions": 625
+ },
+ "T14w_45": {
+  "map": [
+   "R^ . . . . . .",
+   ". . . Bv . . Pv&A",
+   ". . . Y>= . . P<@~",
+   ". . P^ Y<&A= . Gv P<=",
+   ". Yv B>@~ Rv@- . P<@ P<",
+   ". . . . . Yv .",
+   "P^%A . . . . . G^%A"
+  ],
+  "mechanic": "switch,armor",
+  "positions": 625
+ },
+ "T14w_46": {
+  "map": [
+   ". . . . . . .",
+   ". . . Bv . . Pv&A",
+   ". . . Y>= . . P<@~",
+   ". . P^ Y<&A= . Gv P<=",
+   ". Y< B>@~ Rv@- . P<@ P<",
+   "P^ . . . . Yv .",
+   "P^%A . . . . . G^%A"
+  ],
+  "mechanic": "switch,armor",
+  "positions": 625
+ },
+ "T14w_47": {
+  "map": [
+   "Y> . . . . . .",
+   ". . . Bv . . Pv&A",
+   ". . . Y>= . . P<@~",
+   ". . P^ Y<&A= . Gv P<=",
+   ". Yv B>@~ Rv@- . P<@ P<",
+   ". . . . . Y< .",
+   "P^%A . . . . . G^%A"
+  ],
+  "mechanic": "switch,armor",
+  "positions": 625
+ },
+ "T14w_48": {
+  "map": [
+   ". . . . . . .",
+   ". . . Bv . . Pv&A",
+   ". . . Y>= . . P<@~",
+   ". . P^ Y<&A= . Gv P<=",
+   ". Yv B< Rv@- . P<@ .",
+   ". . . . . Yv .",
+   "P^%A . . . . . G^%A"
+  ],
+  "mechanic": "switch,armor",
+  "positions": 639
+ },
+ "T14w_49": {
+  "map": [
+   ". . . . . . .",
+   ". . . Bv . . Pv&A",
+   ". . . Y>= . . P<@~",
+   ". . P^ Y<&A= . Gv P<=",
+   ". . B>@~ Rv@- . P<@ Y<",
+   ". . . . . Yv .",
+   "P^%A R< . . . . G^%A"
+  ],
+  "mechanic": "switch,armor",
+  "positions": 651
+ },
+ "T14w_50": {
+  "map": [
+   ". . . . . . .",
+   ". . . Bv . . Pv&A",
+   ". . . Y>= . . P<@~",
+   ". . P< Y<&A= . Gv P<=",
+   ". . B>@~ Rv@- . P<@ Y<",
+   ". . . . . Yv .",
+   "P^%A R< . . . . G^%A"
+  ],
+  "mechanic": "switch,armor",
+  "positions": 651
+ },
+ "T14w_51": {
+  "map": [
+   ". . . . . . .",
+   ". . . Bv . . Pv&A",
+   ". . . Y>= . . P<@~",
+   ". . P< Y<&A= . Gv P<=",
+   ". Yv B>@~ Rv@- . P<@ P<",
+   ". . . . . Yv .",
+   "P^%A Yv . . . . G^%A"
+  ],
+  "mechanic": "switch,armor",
+  "positions": 661
+ },
+ "T14w_52": {
+  "map": [
+   ". . . . . . .",
+   ". . . Bv . . Pv&A",
+   ". . . Y>= . . P<@~",
+   ". . P< Y<&A= . Gv P<=",
+   ". Yv B>@~ Rv@- . P<@ P<",
+   ". . . . . Y> .",
+   "P^%A Yv . . . . G^%A"
+  ],
+  "mechanic": "switch,armor",
+  "positions": 661
+ },
+ "T14w_53": {
+  "map": [
+   ". . . . . . .",
+   ". . . Bv P> . Pv&A",
+   ". . . Y>= . . P<@~",
+   ". . P^ Y<&A= . Gv P<=",
+   ". . B>@~ Rv@- . P<@ .",
+   ". . . . . Yv .",
+   "P^%A . . . . . G^%A"
+  ],
+  "mechanic": "switch,armor",
+  "positions": 703
+ },
+ "T14w_54": {
+  "map": [
+   ". . . . . . .",
+   ". . . Bv P<&A . Pv&A",
+   ". . . Y>= . . P<@~",
+   ". . P^ Y<&A= . Gv P<=",
+   ". . B>@~ Rv@- . P<@ .",
+   ". . . . . Yv .",
+   "P^%A . . . . . G^%A"
+  ],
+  "mechanic": "switch,armor",
+  "positions": 703
+ },
+ "T14w_55": {
+  "map": [
+   ". . . . . . .",
+   ". . . Bv . . Pv&A",
+   ". . P< Y>= . . P<@~",
+   ". . P^ Y<&A= . Gv P<=",
+   "R^&A . B>@~ Rv@- . P<@ .",
+   ". . . . . Yv .",
+   "P^%A . . . . . G^%A"
+  ],
+  "mechanic": "switch,armor",
+  "positions": 707
+ },
+ "T14w_56": {
+  "map": [
+   "Y^ . . . . . .",
+   ". . . Bv . . Pv&A",
+   ". . . Y>= . . P<@~",
+   ". . P^ Y<&A= . Gv P<=",
+   ". . B>@~ Rv@- . P<@ Y<",
+   ". . . . . Yv .",
+   "P^%A R< . . . . G^%A"
+  ],
+  "mechanic": "switch,armor",
+  "positions": 723
+ },
+ "T14w_57": {
+  "map": [
+   ". . . . . . .",
+   ". . . Bv . . Pv&A",
+   ". . . Y>= . . P<@~",
+   ". . P< Y<&A= . Gv P<=",
+   ". . B>@~ Rv@- . P<@ P<",
+   ". . . . . Yv .",
+   "P^%A Yv . . . . G^%A"
+  ],
+  "mechanic": "switch,armor",
+  "positions": 723
+ },
+ "T14w_58": {
+  "map": [
+   ". . . . . . .",
+   ". . . Bv . . Pv&A",
+   ". . . Y>= . . P<@~",
+   ". . Pv Y<&A= . Gv P<=",
+   ". B^ B>@~ Rv@- . P<@ Y<",
+   ". . . . . Y< .",
+   "P^%A R>&A . . . . G^%A"
+  ],
+  "mechanic": "switch,armor",
+  "positions": 759
+ },
+ "T14w_59": {
+  "map": [
+   ". . . . . . .",
+   ". . . Bv . . Pv&A",
+   ". . B< Y>= . . P<@~",
+   ". . P^ Y<&A= . Gv P<=",
+   ". Yv B>@~ Rv@- . P<@ P<",
+   ". . . . . Y< .",
+   "P^%A . . . . . G^%A"
+  ],
+  "mechanic": "switch,armor",
+  "positions": 760
+ },
+ "T14w_60": {
+  "map": [
+   ". . . . . . .",
+   ". . . Bv . . Pv&A",
+   ". . R^ Y>= . . P<@~",
+   ". . P^ Y<&A= . Gv P<=",
+   ". Y< B>@~ Rv@- . P<@ P<",
+   ". . . . . Yv .",
+   "P^%A . . . . . G^%A"
+  ],
+  "mechanic": "switch,armor",
+  "positions": 760
+ },
+ "T14w_61": {
+  "map": [
+   ". . . . . . .",
+   ". . . Bv . . Pv&A",
+   ". . . Y>= . . P<@~",
+   ". . P^ Y<&A= . Gv P<=",
+   ". Y< B>@~ Rv@- . P<@ P<",
+   ". . . . Y> Yv .",
+   "P^%A . . . . . G^%A"
+  ],
+  "mechanic": "switch,armor",
+  "positions": 833
+ },
+ "T14w_62": {
+  "map": [
+   ". . . . . . .",
+   ". . . Bv G> . Pv&A",
+   ". . . Y>= . . P<@~",
+   ". . P^ Y<&A= . Gv P<=",
+   ". Y< B>@~ Rv@- . P<@ P<",
+   ". . . . . Yv .",
+   "P^%A . . . . . G^%A"
+  ],
+  "mechanic": "switch,armor",
+  "positions": 835
+ },
+ "T14w_63": {
+  "map": [
+   ". . . . . . .",
+   ". . . Bv R> . Pv&A",
+   ". . . Y>= . . P<@~",
+   ". . P^ Y<&A= . Gv P<=",
+   ". Yv B>@~ Rv@- . P<@ P<",
+   ". . . . . Y< .",
+   "P^%A . . . . . G^%A"
+  ],
+  "mechanic": "switch,armor",
+  "positions": 835
+ },
+ "T14w_64": {
+  "map": [
+   ". . . . . . .",
+   "P^ . . Bv . . Pv&A",
+   ". . . Y>= . . P<@~",
+   ". . P^ Y<&A= . Gv P<=",
+   ". Yv B>@~ Rv@- . P<@ .",
+   ". . . . . Yv .",
+   "P^%A . . . . . G^%A"
+  ],
+  "mechanic": "switch,armor",
+  "positions": 911
+ },
+ "T14w_65": {
+  "map": [
+   ". . . . . . .",
+   ". . . Bv . . Pv&A",
+   ". . . Y>= . . P<@~",
+   ". . P^ Y<&A= . Gv P<=",
+   ". B^ B>@~ Rv@- . P<@ Y<",
+   ". . . . . Yv .",
+   "P^%A R< . . . . G^%A"
+  ],
+  "mechanic": "switch,armor",
+  "positions": 939
+ },
+ "T14w_66": {
+  "map": [
+   ". . . . . . .",
+   ". . . Bv . . Pv&A",
+   ". . . Y>= . . P<@~",
+   ". . P^ Y<&A= . Gv P<=",
+   ". B^ B>@~ Rv@- . P<@ Y<",
+   ". . . . . Yv .",
+   "P^%A R>&A . . . . G^%A"
+  ],
+  "mechanic": "switch,armor",
+  "positions": 939
+ },
+ "T14w_67": {
+  "map": [
+   ". . . . . . .",
+   ". . . Bv . . Pv&A",
+   ". . . Y>= . . P<@~",
+   ". . P^ Y<&A= . Gv P<=",
+   ". B^ B>@~ Rv@- . P<@ Y<",
+   ". . . . . Y< .",
+   "P^%A R>&A . . . . G^%A"
+  ],
+  "mechanic": "switch,armor",
+  "positions": 939
+ },
+ "T14w_68": {
+  "map": [
+   ". . . . . . .",
+   ". . . Bv . . Pv&A",
+   ". . . Y>= . . P<@~",
+   ". . P^ Y<&A= . Gv P<=",
+   ". B< B>@~ Rv@- . P<@ Y<",
+   ". . . . . Y< .",
+   "P^%A R>&A . . . . G^%A"
+  ],
+  "mechanic": "switch,armor",
+  "positions": 939
+ },
+ "T14w_69": {
+  "map": [
+   ". . . . . . .",
+   ". . . Bv . . Pv&A",
+   ". . . Y>= . . P<@~",
+   ". . P^ Y<&A= . Gv P<=",
+   ". Y< B>@~ Rv@- . P<@ P<",
+   ". . . . . Yv .",
+   "P^%A . . . P< . G^%A"
+  ],
+  "mechanic": "switch,armor",
+  "positions": 939
+ },
+ "T14w_70": {
+  "map": [
+   ". . . . . . .",
+   ". . . Bv . . Pv&A",
+   ". . . Y>= . . P<@~",
+   ". . P^ Y<&A= . Gv P<=",
+   ". Yv B>@~ Rv@- . P<@ P<",
+   ". . . . . Y< .",
+   "P^%A . . . G< . G^%A"
+  ],
+  "mechanic": "switch,armor",
+  "positions": 939
+ },
+ "T14w_71": {
+  "map": [
+   ". . . . . . .",
+   ". . . Bv . . Pv&A",
+   ". . . Y>= . . P<@~",
+   "B^ . . Y<&A= . Gv P<=",
+   ". Yv B>@~ Rv@- . P<@ P<",
+   ". . . . . Yv .",
+   "P^%A . . . . . G^%A"
+  ],
+  "mechanic": "switch,armor",
+  "positions": 310
+ },
+ "T14w_72": {
+  "map": [
+   "B^ . . . . . .",
+   ". . . Bv . . Pv&A",
+   ". . . Y>= . . P<@~",
+   ". . . Y<&A= . Gv P<=",
+   ". Yv B>@~ Rv@- . P<@ P<",
+   ". . . . . Yv .",
+   "P^%A . . . . . G^%A"
+  ],
+  "mechanic": "switch,armor",
+  "positions": 314
+ },
+ "T14w_73": {
+  "map": [
+   ". . . . . . .",
+   ". . . Bv . . Pv&A",
+   ". . . Y>= P<&A . P^",
+   ". . . Y<&A= . Gv P<=",
+   ". Yv B>@~ Rv@- . P<@ P<",
+   ". . . . . Y< .",
+   "P^%A . . . . . G^%A"
+  ],
+  "mechanic": "switch,armor",
+  "positions": 316
+ },
+ "T14w_74": {
+  "map": [
+   ". . . . . . .",
+   ". . . Bv . B< Pv&A",
+   ". . . Y>= P<&A . P<@~",
+   ". . . Y<&A= . Gv P<=",
+   ". Yv B>@~ Rv@- . P<@ P<",
+   ". . . . . Y< .",
+   "P^%A . . . . . G^%A"
+  ],
+  "mechanic": "switch,armor",
+  "positions": 319
+ },
+ "T14w_75": {
+  "map": [
+   ". . . . . . .",
+   ". . . Bv . R< Pv&A",
+   ". . . Y>= P<&A . P<@~",
+   ". . . Y<&A= . Gv P<=",
+   ". Yv B>@~ Rv@- . P<@ P<",
+   ". . . . . Y< .",
+   "P^%A . . . . . G^%A"
+  ],
+  "mechanic": "switch,armor",
+  "positions": 319
+ },
+ "T14w_76": {
+  "map": [
+   ". . . . . . .",
+   ". . . Bv . R< Pv&A",
+   ". . . Y>= P<&A . P<@~",
+   ". . . Y<&A= . Gv P<=",
+   ". Y< B>@~ Rv@- . P<@ P<",
+   ". . . . . Y< .",
+   "P^%A . . . . . G^%A"
+  ],
+  "mechanic": "switch,armor",
+  "positions": 319
+ },
+ "T14w_77": {
+  "map": [
+   ". . . . . . .",
+   ". . . Bv . . Pv&A",
+   ". . . Y>= P<&A . P<@~",
+   ". . . Y<&A= . Gv P<=",
+   ". Y< B>@~ Rv@- . P<@ P<",
+   ". . . . . Y< .",
+   "P^%A . . . B> . G^%A"
+  ],
+  "mechanic": "switch,armor",
+  "positions": 322
+ },
+ "T14w_78": {
+  "map": [
+   ". . . . . . .",
+   ". . . Bv . . Pv&A",
+   ". . . Y>= P<&A . P<@~",
+   ". . . Y<&A= . Gv P<=",
+   ". Y< B>@~ Rv@- . P<@ P<",
+   "Y< . . . . Y< .",
+   "P^%A . . . . . G^%A"
+  ],
+  "mechanic": "switch,armor",
+  "positions": 336
+ },
+ "T14w_79": {
+  "map": [
+   ". . . . . . .",
+   ". . . Bv . . Pv&A",
+   ". . . Y>= . . P<@~",
+   ". . P^ Y<&A= . Gv P<=",
+   ". . B>@~ Rv@- . P<@ P<",
+   ". . . . . Yv .",
+   "P^%A . . . . . G^%A"
+  ],
+  "mechanic": "switch,armor",
+  "positions": 361
+ }
+}

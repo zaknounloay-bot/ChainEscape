@@ -1,0 +1,600 @@
+{
+ "T10w_0": {
+  "map": [
+   ". . . . R^ R<#Y .",
+   ". . P^#B . B<&A . .",
+   ". . . . . . .",
+   ". . B<#Y&A Gv@#B . . .",
+   "B^ Y>@- . . . Yv .",
+   "R^ Y^@- Pv . G< P>&A .",
+   ". P>@~ . . . . G^%A"
+  ],
+  "mechanic": "switch,lock",
+  "positions": 983
+ },
+ "T10w_1": {
+  "map": [
+   ". . . . . R<#Y .",
+   ". . P^#B . B<&A Pv .",
+   ". . . . . . .",
+   ". . B<#Y&A Gv@#B . . .",
+   "B^ Y>@- . . . Yv .",
+   "R^ Y^@- Pv . G< P>&A .",
+   ". P>@~ . . . . G^%A"
+  ],
+  "mechanic": "switch,lock",
+  "positions": 596
+ },
+ "T10w_2": {
+  "map": [
+   ". . . . . R<#Y R>",
+   ". . P^#B . B<&A . .",
+   ". . . . . . .",
+   ". . B<#Y&A Gv@#B . . .",
+   "B^ Y>@- . . . Yv .",
+   "R^ Y^@- Pv . G< P>&A .",
+   ". P>@~ . . . . G^%A"
+  ],
+  "mechanic": "switch,lock",
+  "positions": 629
+ },
+ "T10w_3": {
+  "map": [
+   ". . . . . R<#Y .",
+   ". . P^#B . B<&A . .",
+   ". . . . . . .",
+   ". . B<#Y&A Gv@#B . . .",
+   "B^ Y>@- . . . Yv R^",
+   "R^ Y^@- Pv . G< P>&A .",
+   ". P>@~ . . . . G^%A"
+  ],
+  "mechanic": "switch,lock",
+  "positions": 623
+ },
+ "T10w_4": {
+  "map": [
+   ". . . . . R<#Y .",
+   ". . P^#B . B<&A . .",
+   ". . . . . . B^",
+   ". . B<#Y&A Gv@#B . . .",
+   "B^ Y>@- . . . Yv .",
+   "R^ Y^@- Pv . G< P>&A .",
+   ". P>@~ . . . . G^%A"
+  ],
+  "mechanic": "switch,lock",
+  "positions": 629
+ },
+ "T10w_5": {
+  "map": [
+   ". . . . . R<#Y .",
+   ". . P^#B . B<&A . .",
+   ". . . . . . B<",
+   ". . B<#Y&A Gv@#B . . .",
+   "B^ Y>@- . . . Yv .",
+   "R^ Y^@- Pv . G< P>&A .",
+   ". P>@~ . . . . G^%A"
+  ],
+  "mechanic": "switch,lock",
+  "positions": 629
+ },
+ "T10w_6": {
+  "map": [
+   ". . . . . R<#Y .",
+   ". . P^#B . B<&A Pv .",
+   ". . . . . . .",
+   ". B< B<#Y&A Gv@#B . . .",
+   "B^ Y>@- . . . Yv .",
+   "R^ Y^@- . . G< P>&A .",
+   ". P>@~ . . . . G^%A"
+  ],
+  "mechanic": "switch,lock",
+  "positions": 664
+ },
+ "T10w_7": {
+  "map": [
+   ". . . . . R<#Y .",
+   ". . P^#B . B<&A . Y^",
+   ". . . . . . .",
+   ". . B<#Y&A Gv@#B . . .",
+   "B^ Y>@- . . . Yv .",
+   "R^ Y^@- Pv . G< P>&A .",
+   ". P>@~ . . . . G^%A"
+  ],
+  "mechanic": "switch,lock",
+  "positions": 611
+ },
+ "T10w_8": {
+  "map": [
+   ". . . . . R<#Y .",
+   ". . P^#B . B<&A . P^",
+   ". . . . . . .",
+   ". . B<#Y&A Gv@#B . . .",
+   "B^ Y>@- . . . Yv .",
+   "R^ Y^@- Pv . G< P>&A .",
+   ". P>@~ . . . . G^%A"
+  ],
+  "mechanic": "switch,lock",
+  "positions": 629
+ },
+ "T10w_9": {
+  "map": [
+   ". . . . . R<#Y .",
+   ". . P^#B . B<&A . B^",
+   ". . . . . . .",
+   ". . B<#Y&A Gv@#B . . .",
+   "B^ Y>@- . . . Yv .",
+   "R^ Y^@- Pv . G< P>&A .",
+   ". P>@~ . . . . G^%A"
+  ],
+  "mechanic": "switch,lock",
+  "positions": 629
+ },
+ "T10w_10": {
+  "map": [
+   ". . . . . R<#Y .",
+   ". . P^#B . B<&A . .",
+   ". . . . . R^ .",
+   ". . B<#Y&A Gv@#B . . .",
+   "B^ Y>@- . . . Yv .",
+   "R^ Y^@- Pv . G< P>&A .",
+   ". P>@~ . . . . G^%A"
+  ],
+  "mechanic": "switch,lock",
+  "positions": 635
+ },
+ "T10w_11": {
+  "map": [
+   ". . . . . R<#Y .",
+   ". . P^#B . B<&A . .",
+   ". . . . . . .",
+   ". . B<#Y&A Gv@#B . . .",
+   "B^ Y>@- . . . Yv .",
+   "R^ Y^@- Pv . G< P>&A .",
+   ". P>@~ . . . Yv G^%A"
+  ],
+  "mechanic": "switch,lock",
+  "positions": 671
+ },
+ "T10w_12": {
+  "map": [
+   ". . . . . R<#Y .",
+   ". . P^#B . B<&A . .",
+   ". . . . . Gv .",
+   ". . B<#Y&A Gv@#B . . .",
+   "B^ Y>@- . . . Yv .",
+   "R^ Y^@- Pv . G< P>&A .",
+   ". P>@~ . . . . G^%A"
+  ],
+  "mechanic": "switch,lock",
+  "positions": 839
+ },
+ "T10w_13": {
+  "map": [
+   ". . . . . R<#Y .",
+   ". . P^#B . B<&A . .",
+   ". . . . . R^ .",
+   ". . B<#Y&A Gv@#B . . .",
+   "B^ Y>@- . . . Yv R^",
+   "R^ Y^@- Pv . G< P>&A .",
+   ". P>@~ . . . . G^%A"
+  ],
+  "mechanic": "switch,lock",
+  "positions": 731
+ },
+ "T10w_14": {
+  "map": [
+   ". . . . . R<#Y .",
+   ". . P^#B . B<&A . .",
+   ". . . . . . .",
+   ". . B<#Y&A Gv@#B . B^ .",
+   "B^ Y>@- . . . Yv .",
+   "R^ Y^@- Pv . G< P>&A .",
+   ". P>@~ . Rv . . G^%A"
+  ],
+  "mechanic": "switch,lock",
+  "positions": 923
+ },
+ "T10w_15": {
+  "map": [
+   ". . . . . R<#Y .",
+   ". . P^#B . B<&A . .",
+   ". . . . . . .",
+   ". . B<#Y&A Gv@#B . . .",
+   "B^ Y>@- . . . Yv .",
+   "R^ Y^@- Pv . G< P>&A P>",
+   ". P>@~ . . . . G^%A"
+  ],
+  "mechanic": "switch,lock",
+  "positions": 561
+ },
+ "T10w_16": {
+  "map": [
+   ". . . . . R<#Y .",
+   ". . P^#B . B<&A . .",
+   ". . . . . . B^",
+   ". . B<#Y&A Gv@#B . . .",
+   "B^ Y>@- . . . Yv .",
+   "R^ Y^@- Pv . G< P>&A P^",
+   ". P>@~ . . . . G^%A"
+  ],
+  "mechanic": "switch,lock",
+  "positions": 583
+ },
+ "T10w_17": {
+  "map": [
+   ". . . . . R<#Y .",
+   ". . P^#B . B<&A . .",
+   ". . . . . . B<",
+   ". . B<#Y&A Gv@#B . . .",
+   "B^ Y>@- . . . Yv .",
+   "R^ Y^@- Pv . G< P>&A P^",
+   ". P>@~ . . . . G^%A"
+  ],
+  "mechanic": "switch,lock",
+  "positions": 583
+ },
+ "T10w_18": {
+  "map": [
+   ". . . . . R<#Y .",
+   ". . P^#B . B<&A . .",
+   ". . . . . . B^",
+   ". . B<#Y&A Gv@#B . . .",
+   "B< Y>@- . . . Yv .",
+   "R^ Y^@- Pv . G< P>&A P^",
+   ". P>@~ . . . . G^%A"
+  ],
+  "mechanic": "switch,lock",
+  "positions": 583
+ },
+ "T10w_19": {
+  "map": [
+   ". . . . . R<#Y .",
+   ". . P^#B . B<&A . .",
+   ". . . . . . .",
+   ". . B<#Y&A Gv@#B . B^ .",
+   "B^ Y>@- . . . Yv .",
+   "R^ Y^@- Pv . G< P>&A .",
+   ". P>@~ . . . . G^%A"
+  ],
+  "mechanic": "switch,lock",
+  "positions": 599
+ },
+ "T10w_20": {
+  "map": [
+   ". . . . . R<#Y .",
+   ". . P^#B . B<&A . .",
+   ". . . . . . .",
+   "B< . B<#Y&A Gv@#B . . .",
+   "B^ Y>@- . . . Yv .",
+   "R^ Y^@- Pv . G< P>&A .",
+   ". P>@~ . . . . G^%A"
+  ],
+  "mechanic": "switch,lock",
+  "positions": 601
+ },
+ "T10w_21": {
+  "map": [
+   ". . . . . R<#Y .",
+   ". . P^#B . B<&A . .",
+   ". . . . . . .",
+   ". . B<#Y&A Gv@#B . . .",
+   "B^ Y>@- . . . Yv Y>",
+   "R^ Y^@- Pv . G< P>&A P>",
+   ". P>@~ . . . . G^%A"
+  ],
+  "mechanic": "switch,lock",
+  "positions": 649
+ },
+ "T10w_22": {
+  "map": [
+   ". . . . . R<#Y .",
+   ". . P^#B . B<&A . .",
+   ". . . . . . .",
+   ". . B<#Y&A Gv@#B . . .",
+   "B^ Y>@- . . . Yv Y^",
+   "R^ Y^@- Pv . G< P>&A P>",
+   ". P>@~ . . . . G^%A"
+  ],
+  "mechanic": "switch,lock",
+  "positions": 649
+ },
+ "T10w_23": {
+  "map": [
+   ". . . . . R<#Y .",
+   ". . P^#B . B<&A . .",
+   ". . . . . . Y>",
+   ". . B<#Y&A Gv@#B . . .",
+   "B^ Y>@- . . . Yv .",
+   "R^ Y^@- Pv . G< P>&A P>",
+   ". P>@~ . . . . G^%A"
+  ],
+  "mechanic": "switch,lock",
+  "positions": 655
+ },
+ "T10w_24": {
+  "map": [
+   ". . . . . R<#Y .",
+   ". . P^#B . B<&A . .",
+   ". . . . . . Y<",
+   ". . B<#Y&A Gv@#B . . .",
+   "B^ Y>@- . . . Yv .",
+   "R^ Y^@- Pv . G< P>&A P>",
+   ". P>@~ . . . . G^%A"
+  ],
+  "mechanic": "switch,lock",
+  "positions": 655
+ },
+ "T10w_25": {
+  "map": [
+   ". . . . . R<#Y .",
+   ". . P^#B . B<&A . .",
+   ". . . . . . B^",
+   ". . B<#Y&A Gv@#B . . .",
+   "B^ Y>@- . . . Yv .",
+   "R^ Y^@- Pv . G< P>&A P>",
+   ". P>@~ . . . . G^%A"
+  ],
+  "mechanic": "switch,lock",
+  "positions": 673
+ },
+ "T10w_26": {
+  "map": [
+   ". . . . . R<#Y .",
+   ". . P^#B . B<&A R> .",
+   ". . . . . . .",
+   ". . B<#Y&A Gv@#B . . .",
+   "B^ Y>@- . . . Yv .",
+   "R^ Y^@- Pv . G< P>&A P>",
+   ". P>@~ . . . . G^%A"
+  ],
+  "mechanic": "switch,lock",
+  "positions": 880
+ },
+ "T10w_27": {
+  "map": [
+   ". . . . . R<#Y .",
+   ". . P^#B . B<&A R> .",
+   ". . . . . . .",
+   ". . B<#Y&A Gv@#B . . .",
+   "B< Y>@- . . . Yv .",
+   "R^ Y^@- Pv . G< P>&A P>",
+   ". P>@~ . . . . G^%A"
+  ],
+  "mechanic": "switch,lock",
+  "positions": 880
+ },
+ "T10w_28": {
+  "map": [
+   ". . . . . R<#Y .",
+   ". . P^#B Y^ B<&A . .",
+   ". . . . . . .",
+   ". . B<#Y&A Gv@#B . . .",
+   "B^ Y>@- . . . Yv .",
+   "R^ Y^@- Pv . G< P>&A .",
+   ". P>@~ . . . . G^%A"
+  ],
+  "mechanic": "switch,lock",
+  "positions": 947
+ },
+ "T10w_29": {
+  "map": [
+   ". . . . . R<#Y .",
+   ". P^ P^#B . B<&A . .",
+   ". . . . . . .",
+   ". . B<#Y&A Gv@#B . . .",
+   "B^ Y>@- . . . Yv .",
+   "R^ Y^@- Pv . G< P>&A .",
+   ". P>@~ . . . . G^%A"
+  ],
+  "mechanic": "switch,lock",
+  "positions": 947
+ },
+ "T10w_30": {
+  "map": [
+   ". . . . . R<#Y .",
+   ". . P^#B . B<&A . .",
+   ". . . . . . .",
+   ". . B<#Y&A Gv@#B . . .",
+   "B^ Y>@- . . . Yv .",
+   "R< Y^@- Pv . G< P>&A P>",
+   ". P>@~ . . . . G^%A"
+  ],
+  "mechanic": "switch,lock",
+  "positions": 988
+ },
+ "T10w_31": {
+  "map": [
+   ". . . . . R<#Y .",
+   ". . P^#B . B<&A . B^",
+   ". . . . . . .",
+   ". . B<#Y&A Gv@#B . . P^",
+   "B^ Y>@- . . . Yv .",
+   "R^ Y^@- Pv . G< P>&A .",
+   ". P>@~ . . . . G^%A"
+  ],
+  "mechanic": "switch,lock",
+  "positions": 719
+ },
+ "T10w_32": {
+  "map": [
+   ". . . . . R<#Y .",
+   ". . P^#B . B<&A . .",
+   ". . . . . . .",
+   ". . B<#Y&A Gv@#B . B^ .",
+   "B^ Y>@- . . . Yv .",
+   "R^ Y^@- Pv . G< P>&A P>",
+   ". P>@~ . . . . G^%A"
+  ],
+  "mechanic": "switch,lock",
+  "positions": 621
+ },
+ "T10w_33": {
+  "map": [
+   ". . . . . R<#Y .",
+   ". . P^#B . B<&A . .",
+   ". . . . . . .",
+   ". . B<#Y&A Gv@#B . B^ .",
+   "B< Y>@- . . . Yv .",
+   "R^ Y^@- Pv . G< P>&A P>",
+   ". P>@~ . . . . G^%A"
+  ],
+  "mechanic": "switch,lock",
+  "positions": 621
+ },
+ "T10w_34": {
+  "map": [
+   ". . . . . R<#Y .",
+   ". . P^#B . B<&A . .",
+   ". . . . . R^ .",
+   ". . B<#Y&A Gv@#B . . .",
+   "B^ Y>@- . . . Yv .",
+   "R^ Y^@- Pv . G< P>&A P>",
+   ". P>@~ . . . . G^%A"
+  ],
+  "mechanic": "switch,lock",
+  "positions": 657
+ },
+ "T10w_35": {
+  "map": [
+   ". . . . . R<#Y .",
+   ". . P^#B . B<&A . .",
+   ". . . . . R^ .",
+   ". . B<#Y&A Gv@#B . . .",
+   "B^ Y>@- . . . Yv .",
+   "R^ Y^@- Pv . G< P>&A P^",
+   ". P>@~ . . . . G^%A"
+  ],
+  "mechanic": "switch,lock",
+  "positions": 657
+ },
+ "T10w_36": {
+  "map": [
+   ". . . . . R<#Y .",
+   ". . P^#B . B<&A . .",
+   ". . . . . R^ .",
+   ". . B<#Y&A Gv@#B . . .",
+   "B< Y>@- . . . Yv .",
+   "R^ Y^@- Pv . G< P>&A P>",
+   ". P>@~ . . . . G^%A"
+  ],
+  "mechanic": "switch,lock",
+  "positions": 657
+ },
+ "T10w_37": {
+  "map": [
+   ". . . . . R<#Y .",
+   ". . P^#B . B<&A . .",
+   ". . . . Gv . .",
+   ". . B<#Y&A Gv@#B . . .",
+   "B^ Y>@- . . . Yv .",
+   "R^ Y^@- Pv . G< P>&A P>",
+   ". P>@~ . . . . G^%A"
+  ],
+  "mechanic": "switch,lock",
+  "positions": 669
+ },
+ "T10w_38": {
+  "map": [
+   ". . . . . R<#Y .",
+   ". . P^#B . B<&A . .",
+   ". . . . Gv . .",
+   ". . B<#Y&A Gv@#B . . .",
+   "B< Y>@- . . . Yv .",
+   "R^ Y^@- Pv . G< P>&A P>",
+   ". P>@~ . . . . G^%A"
+  ],
+  "mechanic": "switch,lock",
+  "positions": 669
+ },
+ "T10w_39": {
+  "map": [
+   ". . . . . R<#Y .",
+   "G^ . P^#B . B<&A . P^",
+   ". . . . . . .",
+   ". . B<#Y&A Gv@#B . . .",
+   "B^ Y>@- . . . Yv .",
+   "R^ Y^@- Pv . G< P>&A .",
+   ". P>@~ . . . . G^%A"
+  ],
+  "mechanic": "switch,lock",
+  "positions": 699
+ },
+ "T10w_40": {
+  "map": [
+   ". . . . . R<#Y .",
+   ". . P^#B . B<&A . .",
+   ". . . P> . R^ .",
+   ". . B<#Y&A Gv@#B . . .",
+   "B^ Y>@- . . . Yv .",
+   "R^ Y^@- Pv . G< P>&A .",
+   ". P>@~ . . . . G^%A"
+  ],
+  "mechanic": "switch,lock",
+  "positions": 742
+ },
+ "T10w_41": {
+  "map": [
+   ". . . . . R<#Y .",
+   ". . P^#B . B<&A . .",
+   ". . . P> . R^ .",
+   ". . B<#Y&A Gv@#B . . .",
+   "B< Y>@- . . . Yv .",
+   "R^ Y^@- Pv . G< P>&A .",
+   ". P>@~ . . . . G^%A"
+  ],
+  "mechanic": "switch,lock",
+  "positions": 742
+ },
+ "T10w_42": {
+  "map": [
+   ". . . . . R<#Y .",
+   ". . P^#B . B<&A . .",
+   ". . . . . R^ .",
+   ". . B<#Y&A Gv@#B . . .",
+   "B^ Y>@- . . . Yv .",
+   "R^ Y^@- Pv G< G< P>&A .",
+   ". P>@~ . . . . G^%A"
+  ],
+  "mechanic": "switch,lock",
+  "positions": 767
+ },
+ "T10w_43": {
+  "map": [
+   ". . . . . R<#Y .",
+   ". . P^#B . B<&A . P^",
+   ". . . . . . .",
+   ". . B<#Y&A Gv@#B . . .",
+   "B^ Y>@- . . R> Yv .",
+   "R^ Y^@- Pv . G< P>&A .",
+   ". P>@~ . . . . G^%A"
+  ],
+  "mechanic": "switch,lock",
+  "positions": 903
+ },
+ "T10w_44": {
+  "map": [
+   ". . . . . R<#Y .",
+   ". . P^#B . B<&A . .",
+   ". . . . . . .",
+   ". . B<#Y&A Gv@#B . . Y^",
+   "B^ Y>@- . . . Yv .",
+   "R^ Y^@- Pv . G< P>&A P>",
+   ". P>@~ . . . . G^%A"
+  ],
+  "mechanic": "switch,lock",
+  "positions": 655
+ },
+ "T10w_45": {
+  "map": [
+   ". . . . . R<#Y .",
+   ". . P^#B . B<&A . .",
+   ". . . . . . .",
+   ". . B<#Y&A Gv@#B . . P>",
+   "B^ Y>@- . . . Yv .",
+   "R^ Y^@- Pv . G< P>&A P>",
+   ". P>@~ . . . . G^%A"
+  ],
+  "mechanic": "switch,lock",
+  "positions": 673
+ }
+}

@@ -1,0 +1,28 @@
+[
+ {
+  "name": "eval_T61_7",
+  "dir": "data/dev/extreme90_p30/ev/T61_7",
+  "quiet": true,
+  "cmd": [
+   "python3",
+   "tools/extreme90_eval25.py",
+   "data/dev/extreme90_p30/ev/cand_T61_7.json",
+   "data/dev/extreme90_p30/ev/T61_7",
+   "/tmp/claude-0/-home-user-ChainEscape/7e9f2bd8-6e70-52bd-944d-4d9f0e72484e/scratchpad/godot/godot",
+   "--full"
+  ]
+ },
+ {
+  "name": "eval_T61_1",
+  "dir": "data/dev/extreme90_p30/ev/T61_1",
+  "quiet": true,
+  "cmd": [
+   "python3",
+   "tools/extreme90_eval25.py",
+   "data/dev/extreme90_p30/ev/cand_T61_1.json",
+   "data/dev/extreme90_p30/ev/T61_1",
+   "/tmp/claude-0/-home-user-ChainEscape/7e9f2bd8-6e70-52bd-944d-4d9f0e72484e/scratchpad/godot/godot",
+   "--full"
+  ]
+ }
+]

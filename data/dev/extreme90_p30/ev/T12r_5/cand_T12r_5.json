@@ -1,0 +1,17 @@
+{
+ "T12r_5": {
+  "map": [
+   ". . . Gv&A . P>:v R>",
+   ". . . . . . .",
+   ". . . . . . .",
+   ". . . R>:^ . . G^",
+   ". . . . . . G^",
+   ". R> P^ B>@- . Y>:> .",
+   "Y^ B<@ R< Gv:< . B<@~ P^%A"
+  ],
+  "target": "EXTREME",
+  "facts": [],
+  "mechanic": "sequence,switch",
+  "max_positions": 2000
+ }
+}

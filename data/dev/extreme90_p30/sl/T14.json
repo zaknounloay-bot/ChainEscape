@@ -1,0 +1,106 @@
+{
+ "T14_0": {
+  "map": [
+   "Y> . . . . . .",
+   ". . . Bv . . Pv&A",
+   ". . . Y>= . . P<@~",
+   ". . P< Y<&A= . Gv P<=",
+   ". . B>@~ Rv@- . P<@ .",
+   ". . . . . Yv .",
+   "P^%A . . . . . G^%A"
+  ],
+  "mechanic": "switch,armor",
+  "positions": 527
+ },
+ "T14_1": {
+  "map": [
+   ". . . . . . .",
+   ". . . Bv . . Pv&A",
+   ". . . Y>= . . P<@~",
+   ". . P^ Y<&A= . Gv P<=",
+   ". Yv B>@~ Rv@- . P<@ .",
+   ". . . . . Yv .",
+   "P^%A . . . . . G^%A"
+  ],
+  "mechanic": "switch,armor",
+  "positions": 759
+ },
+ "T14_2": {
+  "map": [
+   ". . . . . . .",
+   ". . . Bv . . Pv&A",
+   ". . . Y>= . . P<@~",
+   ". . P^ Y<&A= . Gv P<=",
+   ". B^ B>@~ Rv@- . P<@ .",
+   ". . . . . Yv .",
+   "P^%A . . . . . G^%A"
+  ],
+  "mechanic": "switch,armor",
+  "positions": 759
+ },
+ "T14_3": {
+  "map": [
+   ". . . . . . .",
+   ". . . Bv . . Pv&A",
+   ". . . Y>= . . P<@~",
+   ". . P< Y<&A= . Gv P<=",
+   ". Yv B>@~ Rv@- . P<@ .",
+   ". . . . . Yv .",
+   "P^%A . . . . . G^%A"
+  ],
+  "mechanic": "switch,armor",
+  "positions": 759
+ },
+ "T14_4": {
+  "map": [
+   ". . . . . . .",
+   ". . . Bv . . Pv&A",
+   ". . . Y>= . . P<@~",
+   ". . P< Y<&A= . Gv P<=",
+   ". B^ B>@~ Rv@- . P<@ .",
+   ". . . . . Yv .",
+   "P^%A . . . . . G^%A"
+  ],
+  "mechanic": "switch,armor",
+  "positions": 759
+ },
+ "T14_5": {
+  "map": [
+   ". . . . . . .",
+   ". . . Bv . . Pv&A",
+   ". . . Y>= . . P<@~",
+   ". . P^ Y<&A= . Gv P<=",
+   ". Y< B>@~ Rv@- . P<@ .",
+   ". . . . . Yv .",
+   "P^%A . . . . . G^%A"
+  ],
+  "mechanic": "switch,armor",
+  "positions": 759
+ },
+ "T14_6": {
+  "map": [
+   ". . . . . . .",
+   ". . . Bv . . Pv&A",
+   ". . . Y>= . . P<@~",
+   ". . P^ Y<&A= . Gv P<=",
+   ". Yv B>@~ Rv@- . P<@ .",
+   ". . . . . Y< .",
+   "P^%A . . . . . G^%A"
+  ],
+  "mechanic": "switch,armor",
+  "positions": 759
+ },
+ "T14_7": {
+  "map": [
+   ". . . . . . .",
+   ". . . Bv . . Pv&A",
+   ". . . Y>= P<&A . P<@~",
+   ". . P^ Y<&A= . Gv P<=",
+   ". Yv B>@~ Rv@- . P<@ .",
+   ". . . . . Y< .",
+   "P^%A . . . . . G^%A"
+  ],
+  "mechanic": "switch,armor",
+  "positions": 913
+ }
+}

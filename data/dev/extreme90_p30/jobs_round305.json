@@ -1,0 +1,25 @@
+[
+ {
+  "name": "gen_T61_BOOMERANGRAM_s307",
+  "dir": "data/dev/extreme90_p30/runs/T61_BOOMERANGRAM_s307",
+  "cpu": true,
+  "cmd": [
+   "timeout",
+   "1100",
+   "/tmp/claude-0/-home-user-ChainEscape/7e9f2bd8-6e70-52bd-944d-4d9f0e72484e/scratchpad/godot/godot",
+   "--headless",
+   "--path",
+   ".",
+   "--script",
+   "res://tools/ta90_search.gd",
+   "--",
+   "--file=data/dev/extreme90_p30/seed_T61_BOOMERANGRAM.json",
+   "--minutes=12",
+   "--batch=40",
+   "--beam=5",
+   "--patience=12",
+   "--seed=307",
+   "--out=data/dev/extreme90_p30/runs/T61_BOOMERANGRAM_s307/run.json"
+  ]
+ }
+]

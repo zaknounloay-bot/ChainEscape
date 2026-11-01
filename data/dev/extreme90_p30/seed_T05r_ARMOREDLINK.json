@@ -1,0 +1,65 @@
+{
+ "target": "EXTREME",
+ "facts": [],
+ "mechanic": "switch,gate,armor",
+ "idea": "P30 hand core: the armored link: the gate's link is an armored flip target - it must be cracked by a ram before it can leave, and the reversal decides which side it leaves by, and so what still blocks the gate's lane (round 302: rammer not frozen - round 301 boards made it a trivial removal; core_essential on)",
+ "family": "P30 T05r_ARMOREDLINK",
+ "map": [
+  "Gv . . . . . .",
+  ". . . XC . . .",
+  ". . . . . . .",
+  "R>&A+C= . . . . . .",
+  ". . . . . . .",
+  ". . . G^ . . .",
+  ". . . . . . P^%A"
+ ],
+ "frozen": [
+  [
+   1,
+   3
+  ],
+  [
+   3,
+   0
+  ],
+  [
+   5,
+   3
+  ],
+  [
+   6,
+   6
+  ]
+ ],
+ "max_positions": 2000,
+ "piece_free": 15,
+ "max_pieces": 19,
+ "shortcut_weight": 80,
+ "coverage_weight": 25,
+ "late_weight": 20,
+ "endgame_weight": 20,
+ "length_weight": 1.0,
+ "length_cap": 18,
+ "pressure_weight": 1.5,
+ "palette": "all",
+ "suffixes": [
+  "&A",
+  "+C",
+  "="
+ ],
+ "suffix_rate": 0.45,
+ "suffix_max": {
+  "&A": 3,
+  "+C": 2,
+  "=": 3
+ },
+ "crates_max": 0,
+ "seed": 402,
+ "size": "medium",
+ "max_solve_nodes": 1500,
+ "spinners_max": 4,
+ "strict_essential": true,
+ "token_guard": true,
+ "phase30_core": "T05r_ARMOREDLINK",
+ "core_essential": true
+}

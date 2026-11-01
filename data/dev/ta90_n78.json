@@ -1,0 +1,188 @@
+{
+ "format": "ce-ta90-proto",
+ "v": 1,
+ "test": "ta90_n78",
+ "assist": {
+  "undo": 3,
+  "show_a_move": 0,
+  "hammer": 0
+ },
+ "note": "Development only. Phase 30 EXTREME candidate (?extreme90p30=1); never shared, never production. TECHNICALLY QUALIFIED (Category A and B): NOT human-approved; human difficulty unvalidated.",
+ "boards": [
+  {
+   "id": "N78",
+   "accepted": true,
+   "label": "TECHNICALLY QUALIFIED - HUMAN UNTESTED",
+   "variant": "N78",
+   "design": "P30_T43_8",
+   "family": "P30 crossed triggers (switch A x switch B)",
+   "concept_group": "reversal x reversal (two groups)",
+   "primary": "switch, spinner",
+   "target": "EXTREME (a design target, not a rating; never shown to players)",
+   "idea": "crossed triggers: two switch groups, and each group's switch piece is held by the OTHER group's flip target - which reversal fires first decides which lanes open, and the wrong first trigger leaves a target facing into a wall",
+   "source": "hybrid: hand core frozen cell for cell (seed_T43_CROSSEDTRIGGERS.json, Phase 30); blocks added by tools/ta90_search.gd WITHOUT --ops=v20 (baseline operators - the flag was missing from every Phase 30 run command although protocol.json specified v20; found and corrected in the Phase 31 audit) with the Phase 28 pipeline + the Phase 30 core_essential check, RNG seed 303/304 (protocol.json); early screen tools/extreme90_screen30.py (incl. hint-follow); advisory rank tools/ta90_rank29.gd",
+   "related_bank_concept": "N20 / N42 / N75 (two switch pieces of ONE group); closest occupancy N67 0.35",
+   "fingerprint": "fb4828286d1b5f623999493566938dce1f592483562b6395f8f3b5c434db0927",
+   "mechanics": [
+    "switch",
+    "spinner"
+   ],
+   "puzzle": {
+    "format": "ce-puzzle",
+    "v": 1,
+    "rules": 1,
+    "rows": 7,
+    "cols": 7,
+    "map": [
+     ". . . . . . .",
+     ". . Y^@ P^ P<&A . .",
+     ". . G>&A . . . .",
+     ". . R^&B P^= Y<&A R<&B Gv@",
+     ". . . Rv@- B>@ . B>",
+     ". . B<&B . . . R>=",
+     ". . P^%A . G^%B . ."
+    ]
+   },
+   "design_report": {
+    "A": {
+     "fingerprint": "fb4828286d1b5f623999493566938dce1f592483562b6395f8f3b5c434db0927",
+     "hint_nodes": [
+      50,
+      374
+     ],
+     "parity": [
+      0,
+      0
+     ],
+     "portals": 0,
+     "position_cap": 2000,
+     "positions": 774,
+     "replay": true,
+     "solution": 18,
+     "solve_ms": 3.1,
+     "timeup_worst_ms": 26,
+     "timeup_worst_nodes": 586,
+     "winnable": 259
+    },
+    "B": {
+     "coverage": 0.78,
+     "decision_steps": 14,
+     "distinct_mistakes": 5,
+     "endgame_decision": true,
+     "last_decision": 14,
+     "late": 0.78,
+     "line": [
+      "r3c4< ram [x3]",
+      "r1c2^ [x3]",
+      "r1c3^ [x1]",
+      "r1c4< [x1]",
+      "r2c2> [x1]",
+      "r3c2^ [x1]",
+      "r3c3^ [x1]",
+      "r4c6> [x2]",
+      "r4c4> [x2]",
+      "r3c4< [x1]",
+      "r3c5< [x2]",
+      "r3c6^ [x1]",
+      "r4c3^ [x1]",
+      "r6c4^ [x1]",
+      "r5c2> ram",
+      "r5c6>",
+      "r5c2>",
+      "r6c2^"
+     ],
+     "losing_per_step": [
+      3,
+      3,
+      1,
+      1,
+      1,
+      1,
+      1,
+      2,
+      2,
+      1,
+      2,
+      1,
+      1,
+      1,
+      0,
+      0,
+      0,
+      0
+     ],
+     "matters_switch": true,
+     "mistakes": [
+      "r1c3^",
+      "r2c2>",
+      "r5c2<",
+      "r3c4<",
+      "r6c4^"
+     ],
+     "shortcut": 0.017,
+     "spinner_dependence": "without it: 1 decision steps, 1 distinct mistakes (with it: 14, 5)",
+     "without_switch": "unsolvable without it"
+    },
+    "C": {
+     "decisions_k4_6_8": [
+      12,
+      10,
+      8
+     ],
+     "deepest": 16,
+     "greedy": {
+      "look2": 0.005,
+      "look4": 0.017,
+      "min_turn": 0,
+      "mobility": 0,
+      "safe": 0
+     },
+     "hidden_k6_8": [
+      14,
+      8
+     ],
+     "learner": {
+      "look4": 1,
+      "look6": 0
+     },
+     "look6_greedy": 0.017,
+     "opening": "4 / 7",
+     "pressure": {
+      "advances": 0,
+      "calm_prefix": 1,
+      "flips": 1,
+      "multi_turned": 2,
+      "prediction_share": 0.39,
+      "pulls": 0,
+      "rams": 2,
+      "signals": 3,
+      "spinners_turned": 2,
+      "trap_delay_median": 7,
+      "turns": 4,
+      "undo_proof": 0.9
+     },
+     "win_share": 0.335
+    },
+    "filler": {
+     "distinct": 5,
+     "pieces_tested": 16,
+     "steps": 14,
+     "trivial": [],
+     "trivial_removals": 0
+    },
+    "similarity": {
+     "closest_known": "N67",
+     "overlap": 0.35
+    },
+    "advisory_rank29": {
+     "flags": [],
+     "gmax": 0.017,
+     "look6": 0.017,
+     "p_calm": 0.003,
+     "forced_share": 0.39,
+     "dep_depth": 9
+    }
+   }
+  }
+ ]
+}

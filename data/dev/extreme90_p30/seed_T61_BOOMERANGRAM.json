@@ -1,0 +1,67 @@
+{
+ "target": "EXTREME",
+ "facts": [],
+ "mechanic": "sequence,switch,armor",
+ "idea": "P30 hand core: the boomerang cracks the shell - a Sequence block launches and returns, then its NEW lane runs into an armored flip target: its escape is the ram that cracks it, so when it advances, and which way the reversal has left the shell, decide whether the shell can ever leave",
+ "family": "P30 T61_BOOMERANGRAM",
+ "map": [
+  ". . . . . . .",
+  ". . . R>:v . . .",
+  ". . . . . . .",
+  ". . . Y<&A= . . .",
+  ". . . . . . .",
+  ". . . . . . .",
+  ". . . . . . P^%A"
+ ],
+ "frozen": [
+  [
+   1,
+   3
+  ],
+  [
+   3,
+   3
+  ],
+  [
+   6,
+   6
+  ]
+ ],
+ "max_positions": 2000,
+ "piece_free": 15,
+ "max_pieces": 19,
+ "shortcut_weight": 80,
+ "coverage_weight": 25,
+ "late_weight": 20,
+ "endgame_weight": 20,
+ "length_weight": 1.0,
+ "length_cap": 18,
+ "pressure_weight": 1.5,
+ "palette": "all",
+ "suffixes": [
+  "&A",
+  "=",
+  ":^",
+  ":v",
+  ":<",
+  ":>"
+ ],
+ "suffix_rate": 0.45,
+ "suffix_max": {
+  "&A": 3,
+  "=": 3,
+  ":^": 1,
+  ":v": 1,
+  ":<": 1,
+  ":>": 1
+ },
+ "crates_max": 0,
+ "seed": 380,
+ "size": "medium",
+ "max_solve_nodes": 1500,
+ "spinners_max": 4,
+ "strict_essential": true,
+ "token_guard": true,
+ "phase30_core": "T61_BOOMERANGRAM",
+ "core_essential": true
+}
