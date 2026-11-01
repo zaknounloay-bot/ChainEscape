@@ -1,0 +1,43 @@
+Godot Engine v4.3.stable.official.77dcf97d8 - https://godotengine.org
+
+SCRIPT ERROR: Invalid access of index '6' on a base object of type: 'Array'.
+          at: _rot (res://tools/vh_pilot4_canon.gd:101)
+SCRIPT ERROR: Out of bounds get index '0' (on base: 'Array')
+          at: _relabel (res://tools/vh_pilot4_canon.gd:141)
+SCRIPT ERROR: Out of bounds get index '0' (on base: 'Array')
+          at: _relabel (res://tools/vh_pilot4_canon.gd:141)
+SCRIPT ERROR: Out of bounds get index '0' (on base: 'Array')
+          at: _rot (res://tools/vh_pilot4_canon.gd:96)
+SCRIPT ERROR: Out of bounds get index '0' (on base: 'Array')
+          at: _relabel (res://tools/vh_pilot4_canon.gd:141)
+SCRIPT ERROR: Out of bounds get index '0' (on base: 'Array')
+          at: _relabel (res://tools/vh_pilot4_canon.gd:141)
+SCRIPT ERROR: Out of bounds get index '0' (on base: 'Array')
+          at: _rot (res://tools/vh_pilot4_canon.gd:96)
+SCRIPT ERROR: Out of bounds get index '0' (on base: 'Array')
+          at: _relabel (res://tools/vh_pilot4_canon.gd:141)
+SCRIPT ERROR: Out of bounds get index '0' (on base: 'Array')
+          at: _relabel (res://tools/vh_pilot4_canon.gd:141)
+SCRIPT ERROR: Out of bounds get index '0' (on base: 'Array')
+          at: _rot (res://tools/vh_pilot4_canon.gd:96)
+known boards: 39929
+known boards incl. T1-T5 and the demos: 39929; played boards for the near-copy guard: 333
+N52   {"calm_prefix":0,"concurrency":0.84,"coverage":0.84,"deep_traps":4,"distinct":4,"effective_decisions":16,"learner4":1,"learner6":1,"look6":0.017,"pieces":15,"positions":763,"quick_fail_share":0.19,"safe_share":0,"shortcut":0.075,"solution":19,"steps":16,"trap_delay":6,"undo_proof":0.81}
+N53   {"calm_prefix":0,"concurrency":0.89,"coverage":0.79,"deep_traps":4,"distinct":4,"effective_decisions":15,"learner4":11,"learner6":11,"look6":0,"pieces":17,"positions":623,"quick_fail_share":0.1,"safe_share":0,"shortcut":0.083,"solution":19,"steps":15,"trap_delay":9,"undo_proof":0.9}
+N55   {"calm_prefix":1,"concurrency":0.59,"coverage":0.88,"deep_traps":4,"distinct":4,"effective_decisions":10,"learner4":2,"learner6":2,"look6":0.008,"pieces":15,"positions":186,"quick_fail_share":0.3,"safe_share":0.06,"shortcut":0.008,"solution":17,"steps":15,"trap_delay":6,"undo_proof":0.7}
+N56   {"calm_prefix":0,"concurrency":0.78,"coverage":0.89,"deep_traps":5,"distinct":6,"effective_decisions":14,"learner4":3,"learner6":1,"look6":0,"pieces":16,"positions":190,"quick_fail_share":0.1,"safe_share":0,"shortcut":0,"solution":18,"steps":16,"trap_delay":8,"undo_proof":0.9}
+N59   {"calm_prefix":4,"concurrency":0.72,"coverage":0.78,"deep_traps":3,"distinct":4,"effective_decisions":13,"learner4":0,"learner6":0,"look6":0.025,"pieces":15,"positions":171,"quick_fail_share":0.11,"safe_share":0.22,"shortcut":0.067,"solution":18,"steps":14,"trap_delay":9,"undo_proof":0.89}
+N61   {"calm_prefix":1,"concurrency":0.76,"coverage":0.71,"deep_traps":6,"distinct":6,"effective_decisions":11,"learner4":4,"learner6":3,"look6":0.042,"pieces":16,"positions":548,"quick_fail_share":0.08,"safe_share":0.06,"shortcut":0.008,"solution":17,"steps":12,"trap_delay":8,"undo_proof":0.92}
+N62   {"calm_prefix":4,"concurrency":0.78,"coverage":0.83,"deep_traps":5,"distinct":5,"effective_decisions":14,"learner4":2,"learner6":1,"look6":0.067,"pieces":15,"positions":251,"quick_fail_share":0.26,"safe_share":0.22,"shortcut":0.033,"solution":18,"steps":15,"trap_delay":8,"undo_proof":0.74}
+N64   {"calm_prefix":2,"concurrency":0.94,"coverage":0.76,"deep_traps":4,"distinct":5,"effective_decisions":13,"learner4":7,"learner6":7,"look6":0.033,"pieces":14,"positions":367,"quick_fail_share":0.13,"safe_share":0.12,"shortcut":0,"solution":17,"steps":13,"trap_delay":8,"undo_proof":0.88}
+N68   {"calm_prefix":2,"concurrency":0.73,"coverage":0.93,"deep_traps":7,"distinct":7,"effective_decisions":11,"learner4":8,"learner6":7,"look6":0,"pieces":12,"positions":647,"quick_fail_share":0.07,"safe_share":0.13,"shortcut":0,"solution":15,"steps":14,"trap_delay":9,"undo_proof":0.93}
+N69   {"calm_prefix":3,"concurrency":0.64,"coverage":0.86,"deep_traps":5,"distinct":5,"effective_decisions":9,"learner4":4,"learner6":2,"look6":0.017,"pieces":13,"positions":249,"quick_fail_share":0.24,"safe_share":0.21,"shortcut":0.083,"solution":14,"steps":12,"trap_delay":8,"undo_proof":0.76}
+N54   {"calm_prefix":1,"concurrency":0.76,"coverage":0.82,"deep_traps":5,"distinct":5,"effective_decisions":13,"learner4":0,"learner6":0,"look6":0.175,"pieces":16,"positions":393,"quick_fail_share":0.22,"safe_share":0.06,"shortcut":0.05,"solution":17,"steps":14,"trap_delay":6,"undo_proof":0.78}
+N57   {"calm_prefix":3,"concurrency":0.93,"coverage":0.79,"deep_traps":5,"distinct":5,"effective_decisions":11,"learner4":4,"learner6":4,"look6":0,"pieces":10,"positions":1066,"quick_fail_share":0,"safe_share":0.21,"shortcut":0,"solution":14,"steps":11,"trap_delay":11,"undo_proof":1}
+N58   {"calm_prefix":0,"concurrency":0.87,"coverage":0.87,"deep_traps":5,"distinct":5,"effective_decisions":13,"learner4":3,"learner6":1,"look6":0.05,"pieces":8,"positions":881,"quick_fail_share":0.05,"safe_share":0,"shortcut":0.167,"solution":15,"steps":13,"trap_delay":7,"undo_proof":0.95}
+N60   {"calm_prefix":0,"concurrency":0.68,"coverage":0.84,"deep_traps":5,"distinct":5,"effective_decisions":12,"learner4":0,"learner6":0,"look6":0.1,"pieces":15,"positions":237,"quick_fail_share":0.29,"safe_share":0,"shortcut":0.142,"solution":19,"steps":16,"trap_delay":5,"undo_proof":0.71}
+N63   {"calm_prefix":0,"concurrency":0.61,"coverage":0.89,"deep_traps":3,"distinct":4,"effective_decisions":11,"learner4":2,"learner6":2,"look6":0.008,"pieces":16,"positions":255,"quick_fail_share":0.17,"safe_share":0,"shortcut":0.008,"solution":18,"steps":16,"trap_delay":9,"undo_proof":0.83}
+N65   {"calm_prefix":1,"concurrency":0.63,"coverage":0.88,"deep_traps":5,"distinct":5,"effective_decisions":10,"learner4":2,"learner6":0,"look6":0.083,"pieces":16,"positions":347,"quick_fail_share":0.14,"safe_share":0.06,"shortcut":0.108,"solution":16,"steps":14,"trap_delay":7,"undo_proof":0.86}
+N67   {"calm_prefix":0,"concurrency":0.76,"coverage":0.82,"deep_traps":4,"distinct":4,"effective_decisions":12,"learner4":2,"learner6":2,"look6":0.042,"pieces":15,"positions":564,"quick_fail_share":0.15,"safe_share":0,"shortcut":0.075,"solution":17,"steps":14,"trap_delay":10,"undo_proof":0.85}
+N70   {"calm_prefix":2,"concurrency":0.93,"coverage":0.87,"deep_traps":5,"distinct":5,"effective_decisions":13,"learner4":2,"learner6":2,"look6":0.05,"pieces":15,"positions":258,"quick_fail_share":0.2,"safe_share":0.13,"shortcut":0.083,"solution":15,"steps":13,"trap_delay":6,"undo_proof":0.8}
+N66   {"calm_prefix":0,"concurrency":0.78,"coverage":0.83,"deep_traps":4,"distinct":4,"effective_decisions":14,"learner4":2,"learner6":1,"look6":0.05,"pieces":17,"positions":343,"quick_fail_share":0.14,"safe_share":0,"shortcut":0.15,"solution":18,"steps":15,"trap_delay":9,"undo_proof":0.86}

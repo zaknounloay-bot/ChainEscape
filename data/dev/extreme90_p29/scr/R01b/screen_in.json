@@ -1,0 +1,154 @@
+{
+ "R01b_0": {
+  "map": [
+   ". . . . . . G>@",
+   ". . . . . . R<+C",
+   "P^ . . . . . .",
+   ". Gv XC Y>&A* Bv@ R^ .",
+   ". . . . P^ Pv&A P>*",
+   "R^+C P^@- G<&A B<= . . .",
+   ". . . . . . G^%A"
+  ],
+  "target": "EXTREME",
+  "facts": [],
+  "mechanic": "magnet,switch,gate,armor",
+  "max_positions": 2000,
+  "overlap": [
+   0.36,
+   "N59"
+  ]
+ },
+ "R01b_1": {
+  "map": [
+   ". . . . . . G>@",
+   ". . . . . . R<+C",
+   "P^ . . . . . .",
+   ". Gv XC Y>&A* Bv@ R^ .",
+   ". . . . P> Pv&A P>*",
+   "R^+C P^@- G<&A B<= . . .",
+   ". . . . . . G^%A"
+  ],
+  "target": "EXTREME",
+  "facts": [],
+  "mechanic": "magnet,switch,gate,armor",
+  "max_positions": 2000,
+  "overlap": [
+   0.36,
+   "N59"
+  ]
+ },
+ "R01b_2": {
+  "map": [
+   ". . . . . . .",
+   "G< . P^@- . . . R<+C",
+   ". . . . . . .",
+   ". Gv XC Y>&A* Bv@ R^ Y^",
+   ". . . . . Pv&A P>*",
+   "R^+C P^@- G<&A B<= . . .",
+   ". . . . . . G^%A"
+  ],
+  "target": "EXTREME",
+  "facts": [],
+  "mechanic": "magnet,switch,gate,armor",
+  "max_positions": 2000,
+  "overlap": [
+   0.38,
+   "N46"
+  ]
+ },
+ "R01b_3": {
+  "map": [
+   ". . . . . . .",
+   ". . P^@- . . . R<+C",
+   ". . . . . . .",
+   ". Gv XC Y>&A* Bv@ R^ Y^",
+   ". . . . Y^@~ Pv&A P>*",
+   "R^+C P^@- G<&A B<= . . .",
+   ". . . . . . G^%A"
+  ],
+  "target": "EXTREME",
+  "facts": [],
+  "mechanic": "magnet,switch,gate,armor",
+  "max_positions": 2000,
+  "overlap": [
+   0.38,
+   "N46"
+  ]
+ },
+ "R01b_4": {
+  "map": [
+   ". . . . . . .",
+   ". . P^@- . . . R<+C",
+   "G^@~ . . . . . .",
+   ". Gv XC Y>&A* Bv@ R^ Y^",
+   ". . . . . Pv&A P>*",
+   "R^+C P^@- G<&A B<= . . .",
+   ". . . . . . G^%A"
+  ],
+  "target": "EXTREME",
+  "facts": [],
+  "mechanic": "magnet,switch,gate,armor",
+  "max_positions": 2000,
+  "overlap": [
+   0.38,
+   "N46"
+  ]
+ },
+ "R01b_5": {
+  "map": [
+   ". . . . . Bv@~ G>@",
+   ". . . . . . R<+C",
+   "P> . . . . . .",
+   ". Gv XC Y>&A* Bv@ R^ .",
+   ". . . . . Pv&A P>*",
+   "R^+C P^@- G<&A B<= . . .",
+   ". . . . . . G^%A"
+  ],
+  "target": "EXTREME",
+  "facts": [],
+  "mechanic": "magnet,switch,gate,armor",
+  "max_positions": 2000,
+  "overlap": [
+   0.38,
+   "N64"
+  ]
+ },
+ "R01b_6": {
+  "map": [
+   ". . . . . . .",
+   ". . P^@- . . . R<+C",
+   ". . . . . . .",
+   ". Gv XC Y>&A* Bv@ R^ Y<@",
+   ". . . . . Pv&A P>*",
+   "R^+C P^@- G<&A B<= . . .",
+   ". . . . . . G^%A"
+  ],
+  "target": "EXTREME",
+  "facts": [],
+  "mechanic": "magnet,switch,gate,armor",
+  "max_positions": 2000,
+  "overlap": [
+   0.38,
+   "N59"
+  ]
+ },
+ "R01b_7": {
+  "map": [
+   "R< . . . . . .",
+   ". . . . . . R<+C",
+   ". . . . . R<@ .",
+   ". Gv XC Y>&A* Bv@ R^ Y^",
+   "Rv@ . . . . Pv&A P>*",
+   "R^+C P^@- G<&A B<= . . .",
+   ". . . . . . G^%A"
+  ],
+  "target": "EXTREME",
+  "facts": [],
+  "mechanic": "magnet,switch,gate,armor",
+  "max_positions": 2000,
+  "overlap": [
+   0.39,
+   "N46"
+  ]
+ }
+}

@@ -1,0 +1,31 @@
+Godot Engine v4.3.stable.official.77dcf97d8 - https://godotengine.org
+
+SCRIPT ERROR: Invalid access of index '6' on a base object of type: 'Array'.
+          at: _rot (res://tools/vh_pilot4_canon.gd:101)
+SCRIPT ERROR: Out of bounds get index '0' (on base: 'Array')
+          at: _relabel (res://tools/vh_pilot4_canon.gd:141)
+SCRIPT ERROR: Out of bounds get index '0' (on base: 'Array')
+          at: _relabel (res://tools/vh_pilot4_canon.gd:141)
+SCRIPT ERROR: Out of bounds get index '0' (on base: 'Array')
+          at: _rot (res://tools/vh_pilot4_canon.gd:96)
+SCRIPT ERROR: Out of bounds get index '0' (on base: 'Array')
+          at: _relabel (res://tools/vh_pilot4_canon.gd:141)
+SCRIPT ERROR: Out of bounds get index '0' (on base: 'Array')
+          at: _relabel (res://tools/vh_pilot4_canon.gd:141)
+SCRIPT ERROR: Out of bounds get index '0' (on base: 'Array')
+          at: _rot (res://tools/vh_pilot4_canon.gd:96)
+SCRIPT ERROR: Out of bounds get index '0' (on base: 'Array')
+          at: _relabel (res://tools/vh_pilot4_canon.gd:141)
+SCRIPT ERROR: Out of bounds get index '0' (on base: 'Array')
+          at: _relabel (res://tools/vh_pilot4_canon.gd:141)
+SCRIPT ERROR: Out of bounds get index '0' (on base: 'Array')
+          at: _rot (res://tools/vh_pilot4_canon.gd:96)
+known boards: 41574
+known boards incl. T1-T5 and the demos: 41574; played boards for the near-copy guard: 333
+R08bs92_1    flags ["simple_strategy"] gmax 0.058 look6 0.075 p_calm 0.010 forced 0.26 dep 9
+R08bs92_2    flags ["simple_strategy"] gmax 0.058 look6 0.075 p_calm 0.010 forced 0.26 dep 9
+R08bs92_3    flags ["simple_strategy"] gmax 0.058 look6 0.083 p_calm 0.009 forced 0.26 dep 9
+R08bs92_4    flags ["simple_strategy"] gmax 0.058 look6 0.083 p_calm 0.009 forced 0.26 dep 9
+R08bs92_5    flags ["simple_strategy"] gmax 0.058 look6 0.083 p_calm 0.009 forced 0.26 dep 9
+R08bs92_6    flags ["simple_strategy"] gmax 0.067 look6 0.142 p_calm 0.009 forced 0.26 dep 9
+R08bs92_7    flags ["simple_strategy"] gmax 0.067 look6 0.075 p_calm 0.015 forced 0.28 dep 8

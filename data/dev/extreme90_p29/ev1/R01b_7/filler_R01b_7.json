@@ -1,0 +1,9 @@
+{
+ "R01b_7": {
+  "distinct": 5,
+  "pieces_tested": 16,
+  "steps": 13,
+  "trivial": [],
+  "trivial_removals": 0
+ }
+}

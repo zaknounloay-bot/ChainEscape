@@ -1,5 +1,5 @@
 {
- "note": "Authoritative EXTREME bank status after the Phase 27 owner decisions (development only). Records are never deleted; this manifest only classifies them.",
+ "note": "Authoritative EXTREME bank status after the owner decisions on the Phase 29 boards (recorded in Phase 29 closure; data/dev/extreme90_p29/owner_decisions_n71_n77.json) and the Phase 28 boards (owner_approvals_p29.json). Development only. Records are never deleted; this manifest only classifies them.",
  "updated": "2026-10-31",
  "owner_approved": [
   "N3",
@@ -30,7 +30,13 @@
   "N56",
   "N59",
   "N61",
-  "N62"
+  "N62",
+  "N64",
+  "N68",
+  "N69",
+  "N72",
+  "N75",
+  "N77"
  ],
  "strong_provisional": [
   "N48",
@@ -48,17 +54,19 @@
   "N45",
   "N47"
  ],
- "technically_qualified_untested": [
-  "N63",
-  "N64",
-  "N65",
-  "N66",
-  "N67",
-  "N68",
-  "N69",
-  "N70"
+ "technically_qualified_untested": [],
+ "borderline_not_approved": [
+  "N66"
  ],
  "downgraded_or_archived": [
+  "N71",
+  "N73",
+  "N74",
+  "N76",
+  "N63",
+  "N65",
+  "N67",
+  "N70",
   "N50",
   "N54",
   "N57",
@@ -81,12 +89,17 @@
   "N10",
   "N12"
  ],
+ "release_readiness_watch": {
+  "N68": "owner-approved; WebAssembly TIME UP 22.8-31.5 ms in 10 controlled low-load headless-Chromium runs (median ~25 ms; Phase 28 report J). Real iPhone timing not yet measured."
+ },
  "target": 50,
  "counts": {
-  "owner_approved": 29,
+  "owner_approved": 35,
   "strong_provisional": 3,
   "provisional": 9,
-  "technically_qualified_untested": 8,
-  "downgraded_or_archived": 21
+  "technically_qualified_untested": 0,
+  "borderline_not_approved": 1,
+  "downgraded_or_archived": 29,
+  "remaining_to_target": 15
  }
 }

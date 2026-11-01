@@ -1,0 +1,154 @@
+{
+ "R05_0": {
+  "map": [
+   ". . . . . . .",
+   "Rv . . . . . .",
+   ". . . M . . .",
+   "Y> P>@~ . . . R<@- Y<@~",
+   ". . . M . Y< .",
+   ". . . G^&A . . .",
+   ". . . Gv%A . . P^%A"
+  ],
+  "target": "EXTREME",
+  "facts": [],
+  "mechanic": "movable,switch",
+  "max_positions": 2000,
+  "overlap": [
+   0.23,
+   "N44"
+  ]
+ },
+ "R05_1": {
+  "map": [
+   ". . . . . . .",
+   "Rv . . . . . .",
+   ". . . M . . .",
+   "Y> P>@~ . . . R<@- .",
+   ". . . M . Y< .",
+   ". . . G^&A . . .",
+   ". . . Gv%A . . P^%A"
+  ],
+  "target": "EXTREME",
+  "facts": [],
+  "mechanic": "movable,switch",
+  "max_positions": 2000,
+  "overlap": [
+   0.23,
+   "N44"
+  ]
+ },
+ "R05_2": {
+  "map": [
+   ". . . . . . .",
+   "Rv . . . . . .",
+   ". . . M . . .",
+   "Y> P>@~ . . . R<@- .",
+   ". . . M . Y< .",
+   ". . . G^&A . . .",
+   ". . . G<%A . . P^%A"
+  ],
+  "target": "EXTREME",
+  "facts": [],
+  "mechanic": "movable,switch",
+  "max_positions": 2000,
+  "overlap": [
+   0.23,
+   "N44"
+  ]
+ },
+ "R05_3": {
+  "map": [
+   ". . . . . . .",
+   "Rv . . . . . .",
+   ". . . M . . .",
+   "Y> P>@~ . . . R<@- Y>@",
+   ". . . M . Y< .",
+   ". . . G^&A . . .",
+   ". . . Gv%A . . P^%A"
+  ],
+  "target": "EXTREME",
+  "facts": [],
+  "mechanic": "movable,switch",
+  "max_positions": 2000,
+  "overlap": [
+   0.23,
+   "N44"
+  ]
+ },
+ "R05_4": {
+  "map": [
+   ". . . . . . .",
+   "Rv . . . . . .",
+   ". . . M . . .",
+   "Y> P>@~ . . . R<@- Y>@",
+   ". . . M . Y< .",
+   ". . . G^&A . . .",
+   ". . . G<%A . . P^%A"
+  ],
+  "target": "EXTREME",
+  "facts": [],
+  "mechanic": "movable,switch",
+  "max_positions": 2000,
+  "overlap": [
+   0.23,
+   "N44"
+  ]
+ },
+ "R05_5": {
+  "map": [
+   ". . . . . . R^@",
+   ". . . . . . .",
+   ". . . M . . .",
+   "Y> P>@~ . . . R<@- .",
+   ". . . M . Y< .",
+   ". . . G^&A . . .",
+   ". . . Gv%A . . P^%A"
+  ],
+  "target": "EXTREME",
+  "facts": [],
+  "mechanic": "movable,switch",
+  "max_positions": 2000,
+  "overlap": [
+   0.23,
+   "N44"
+  ]
+ },
+ "R05_6": {
+  "map": [
+   ". . . . . . .",
+   ". . . . . . .",
+   ". . . M . . .",
+   "Y> P>@~ . . . R<@- Y<@~",
+   ". . . M . Y< .",
+   ". . . G^&A . . .",
+   ". . . Gv%A . . P^%A"
+  ],
+  "target": "EXTREME",
+  "facts": [],
+  "mechanic": "movable,switch",
+  "max_positions": 2000,
+  "overlap": [
+   0.24,
+   "N44"
+  ]
+ },
+ "R05_7": {
+  "map": [
+   ". . . . . . .",
+   ". . . . . . .",
+   ". . . M . . .",
+   "Y> P>@~ . . . Rv@ Y^@",
+   ". . . M . Y< .",
+   ". . . G^&A . . .",
+   ". . . Gv%A . . P^%A"
+  ],
+  "target": "EXTREME",
+  "facts": [],
+  "mechanic": "movable,switch",
+  "max_positions": 2000,
+  "overlap": [
+   0.24,
+   "N44"
+  ]
+ }
+}

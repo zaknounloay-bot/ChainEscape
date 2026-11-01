@@ -1,0 +1,152 @@
+{
+ "R03s92_0": {
+  "dep_depth": 8,
+  "dep_pairs": 61,
+  "escapes": 16,
+  "first_deep_trap": 1,
+  "first_trap": 1,
+  "flags": [
+   "simple_strategy"
+  ],
+  "forced": 2,
+  "forced_share": 0.12,
+  "free": 15,
+  "gmax": 0.15,
+  "look6": 0.3,
+  "open_moves": 6,
+  "open_safe": 5,
+  "p_calm": 0.051,
+  "p_look1": 0.041,
+  "p_look2": 0.042,
+  "p_random": 0.041,
+  "positions": 675,
+  "rank_key": [
+   1,
+   0.96,
+   -8
+  ],
+  "solution": 17,
+  "win_density": 0.38,
+  "win_lines": -1
+ },
+ "R03s92_1": {
+  "dep_depth": 8,
+  "dep_pairs": 59,
+  "escapes": 15,
+  "first_deep_trap": 1,
+  "first_trap": 1,
+  "flags": [
+   "simple_strategy"
+  ],
+  "forced": 8,
+  "forced_share": 0.5,
+  "free": 8,
+  "gmax": 0.142,
+  "look6": 0.208,
+  "open_moves": 5,
+  "open_safe": 4,
+  "p_calm": 0.057,
+  "p_look1": 0.036,
+  "p_look2": 0.038,
+  "p_random": 0.036,
+  "positions": 336,
+  "rank_key": [
+   1,
+   0.92,
+   -8
+  ],
+  "solution": 16,
+  "win_density": 0.38,
+  "win_lines": -1
+ },
+ "R03s92_2": {
+  "dep_depth": 8,
+  "dep_pairs": 59,
+  "escapes": 15,
+  "first_deep_trap": 1,
+  "first_trap": 1,
+  "flags": [
+   "simple_strategy"
+  ],
+  "forced": 8,
+  "forced_share": 0.5,
+  "free": 8,
+  "gmax": 0.142,
+  "look6": 0.208,
+  "open_moves": 5,
+  "open_safe": 4,
+  "p_calm": 0.057,
+  "p_look1": 0.036,
+  "p_look2": 0.038,
+  "p_random": 0.036,
+  "positions": 336,
+  "rank_key": [
+   1,
+   0.92,
+   -8
+  ],
+  "solution": 16,
+  "win_density": 0.38,
+  "win_lines": -1
+ },
+ "R03s92_3": {
+  "dep_depth": 8,
+  "dep_pairs": 60,
+  "escapes": 15,
+  "first_deep_trap": 1,
+  "first_trap": 1,
+  "flags": [
+   "simple_strategy"
+  ],
+  "forced": 7,
+  "forced_share": 0.44,
+  "free": 9,
+  "gmax": 0.125,
+  "look6": 0.233,
+  "open_moves": 4,
+  "open_safe": 3,
+  "p_calm": 0.057,
+  "p_look1": 0.033,
+  "p_look2": 0.035,
+  "p_random": 0.033,
+  "positions": 401,
+  "rank_key": [
+   1,
+   0.928,
+   -8
+  ],
+  "solution": 16,
+  "win_density": 0.28,
+  "win_lines": -1
+ },
+ "R03s92_4": {
+  "dep_depth": 8,
+  "dep_pairs": 57,
+  "escapes": 15,
+  "first_deep_trap": 1,
+  "first_trap": 1,
+  "flags": [
+   "simple_strategy"
+  ],
+  "forced": 7,
+  "forced_share": 0.44,
+  "free": 9,
+  "gmax": 0.125,
+  "look6": 0.292,
+  "open_moves": 5,
+  "open_safe": 4,
+  "p_calm": 0.047,
+  "p_look1": 0.024,
+  "p_look2": 0.026,
+  "p_random": 0.024,
+  "positions": 432,
+  "rank_key": [
+   1,
+   0.887,
+   -8
+  ],
+  "solution": 16,
+  "win_density": 0.4,
+  "win_lines": -1
+ }
+}

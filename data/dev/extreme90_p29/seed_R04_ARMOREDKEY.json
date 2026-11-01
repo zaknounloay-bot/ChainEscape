@@ -1,0 +1,64 @@
+{
+ "target": "EXTREME",
+ "facts": [],
+ "mechanic": "switch,lock,armor",
+ "idea": "P29 hand core: the key is an armored flip target: cracked, it can leave only the way the reversal leaves it facing - and the prisoner waits for it",
+ "family": "P29 R04_ARMOREDKEY",
+ "map": [
+  ". . . . . . .",
+  ". . . . . . .",
+  ". . . . . . .",
+  "R> . Y<&A= . . . .",
+  ". . . . . . .",
+  ". . . B^#Y . . .",
+  ". . . . . . G^%A"
+ ],
+ "frozen": [
+  [
+   3,
+   0
+  ],
+  [
+   3,
+   2
+  ],
+  [
+   5,
+   3
+  ],
+  [
+   6,
+   6
+  ]
+ ],
+ "max_positions": 2000,
+ "piece_free": 13,
+ "max_pieces": 17,
+ "shortcut_weight": 80,
+ "coverage_weight": 25,
+ "late_weight": 20,
+ "endgame_weight": 20,
+ "length_weight": 1.0,
+ "length_cap": 18,
+ "pressure_weight": 1.5,
+ "palette": "all",
+ "suffixes": [
+  "&A",
+  "#Y",
+  "="
+ ],
+ "suffix_rate": 0.3,
+ "suffix_max": {
+  "&A": 3,
+  "#Y": 2,
+  "=": 3
+ },
+ "crates_max": 0,
+ "seed": 192,
+ "size": "medium",
+ "max_solve_nodes": 1500,
+ "spinners_max": 4,
+ "strict_essential": true,
+ "token_guard": true,
+ "phase29_core": "R04_ARMOREDKEY"
+}

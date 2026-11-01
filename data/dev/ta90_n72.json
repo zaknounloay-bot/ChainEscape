@@ -1,0 +1,198 @@
+{
+ "format": "ce-ta90-proto",
+ "v": 1,
+ "test": "ta90_n72",
+ "assist": {
+  "undo": 3,
+  "show_a_move": 0,
+  "hammer": 0
+ },
+ "note": "Development only. Phase 29 EXTREME candidate (?extreme90p29=1); never shared, never production. TECHNICALLY QUALIFIED (Category A and B): NOT human-approved; human difficulty unvalidated.",
+ "boards": [
+  {
+   "id": "N72",
+   "accepted": true,
+   "label": "TECHNICALLY QUALIFIED - HUMAN UNTESTED",
+   "variant": "N72",
+   "design": "P29_R02b_4",
+   "family": "P29 the turned magnet with locked cargo (magnet + switch + lock)",
+   "concept_group": "magnet x reversal x lock",
+   "primary": "magnet, switch, lock, armor, spinner",
+   "target": "EXTREME (a design target, not a rating; never shown to players)",
+   "idea": "the turned magnet with locked cargo: the reversal picks which side the magnet pulls; the cargo on one side is locked, so pulled before its key leaves it arrives and blocks - the pull, the key and the reversal must be ordered",
+   "source": "hybrid: hand core frozen cell for cell (seed_R02b_LOCKEDCARGO.json, Phase 29); blocks added by tools/ta90_search.gd --ops=v20 with the Phase 28 pipeline (token guard, strict essentiality, spinners_max), RNG seed 92 (protocol.json); early screen tools/extreme90_screen28.py; advisory rank tools/ta90_rank29.gd",
+   "related_bank_concept": "N64 (the turned magnet - the closest; here the pulled block is locked), N67 (pull the prisoner - its pull line never turns); closest occupancy N64 0.30",
+   "fingerprint": "d52f38229628fd877557ec5d5a7571e5d66f755fdfb8afa8a04d8d2f3b45018a",
+   "mechanics": [
+    "magnet",
+    "switch",
+    "lock",
+    "armor",
+    "spinner"
+   ],
+   "puzzle": {
+    "format": "ce-puzzle",
+    "v": 1,
+    "rules": 1,
+    "rows": 7,
+    "cols": 7,
+    "map": [
+     "Gv B< B< P>@- . . .",
+     ". . . Bv&A . . .",
+     ". . . G<@~ . . .",
+     ". Gv#B . Y>&A* G<@#B R^ .",
+     ". . . . . R^ Yv@-",
+     "G<&A . . P<= Y>* . .",
+     "B> . . . . . G^%A"
+    ]
+   },
+   "design_report": {
+    "A": {
+     "fingerprint": "d52f38229628fd877557ec5d5a7571e5d66f755fdfb8afa8a04d8d2f3b45018a",
+     "hint_nodes": [
+      118,
+      52
+     ],
+     "parity": [
+      0,
+      0
+     ],
+     "portals": 0,
+     "position_cap": 2000,
+     "positions": 290,
+     "replay": true,
+     "solution": 18,
+     "solve_ms": 10.1,
+     "timeup_worst_ms": 8,
+     "timeup_worst_nodes": 156,
+     "winnable": 51
+    },
+    "B": {
+     "coverage": 0.83,
+     "decision_steps": 15,
+     "distinct_mistakes": 6,
+     "endgame_decision": true,
+     "last_decision": 15,
+     "late": 0.83,
+     "line": [
+      "r0c3> [x2]",
+      "r3c5^ [x2]",
+      "r4c5^ [x2]",
+      "r4c6> [x2]",
+      "r5c0< [x3]",
+      "r6c6^ [x2]",
+      "r6c0> [x2]",
+      "r0c0v [x2]",
+      "r0c1< [x2]",
+      "r0c2< [x2]",
+      "r1c3^ [x2]",
+      "r3c1v [x3]",
+      "r3c3< [x3]",
+      "r2c3< [x2]",
+      "r3c3v ram [x1]",
+      "r5c3<",
+      "r3c3v",
+      "r5c4>"
+     ],
+     "losing_per_step": [
+      2,
+      2,
+      2,
+      2,
+      3,
+      2,
+      2,
+      2,
+      2,
+      2,
+      2,
+      3,
+      3,
+      2,
+      1,
+      0,
+      0,
+      0
+     ],
+     "matters_armor": true,
+     "matters_lock": true,
+     "matters_magnet": true,
+     "matters_switch": true,
+     "mistakes": [
+      "r2c3<",
+      "r5c4>",
+      "r6c6^",
+      "r2c3^",
+      "r3c4^",
+      "r3c3>"
+     ],
+     "shortcut": 0,
+     "spinner_dependence": "unsolvable without it",
+     "without_armor": "without it: 1 decision steps, 1 distinct mistakes (with it: 15, 6)",
+     "without_lock": "without it: 8 decision steps, 2 distinct mistakes (with it: 15, 6)",
+     "without_magnet": "unsolvable without it",
+     "without_switch": "unsolvable without it"
+    },
+    "C": {
+     "decisions_k4_6_8": [
+      12,
+      10,
+      8
+     ],
+     "deepest": 16,
+     "greedy": {
+      "look2": 0,
+      "look4": 0,
+      "min_turn": 0,
+      "mobility": 0,
+      "safe": 0
+     },
+     "hidden_k6_8": [
+      20,
+      16
+     ],
+     "learner": {
+      "look4": 8,
+      "look6": 7
+     },
+     "look6_greedy": 0,
+     "opening": "3 / 5",
+     "pressure": {
+      "advances": 0,
+      "calm_prefix": 0,
+      "flips": 2,
+      "multi_turned": 2,
+      "prediction_share": 0.39,
+      "pulls": 1,
+      "rams": 1,
+      "signals": 2,
+      "spinners_turned": 3,
+      "trap_delay_median": 8,
+      "turns": 6,
+      "undo_proof": 0.81
+     },
+     "win_share": 0.176
+    },
+    "filler": {
+     "distinct": 6,
+     "pieces_tested": 17,
+     "steps": 15,
+     "trivial": [],
+     "trivial_removals": 0
+    },
+    "similarity": {
+     "closest_known": "N64",
+     "overlap": 0.3
+    },
+    "advisory_rank29": {
+     "flags": [],
+     "gmax": 0,
+     "look6": 0,
+     "p_calm": 0,
+     "forced_share": 0.44,
+     "dep_depth": 12
+    }
+   }
+  }
+ ]
+}

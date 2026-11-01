@@ -1,0 +1,106 @@
+{
+ "R06_0": {
+  "map": [
+   ". . . . . . B<#Y",
+   "Gv . . . . B^@ P>@-#Y",
+   "Y> . . . . XC .",
+   "Y>+C . M . Gv%A G<&A .",
+   ". . Y>@ . Gv+C . .",
+   ". . G^&A . . Y>&A .",
+   "Bv . . . B< . P^%A"
+  ],
+  "mechanic": "movable,switch,gate,lock",
+  "positions": 532
+ },
+ "R06_1": {
+  "map": [
+   ". . . . . . B<#Y",
+   ". . . . . B^@ P>@-#Y",
+   "Y> . . . . XC .",
+   "Y>+C . M . Gv%A G<&A .",
+   ". . Y>@ . Gv+C . .",
+   ". . G^&A . . Y>&A G<",
+   ". . . . Bv@- . P^%A"
+  ],
+  "mechanic": "movable,switch,gate,lock",
+  "positions": 412
+ },
+ "R06_2": {
+  "map": [
+   ". . . . . . B<#Y",
+   ". . . . . B^@ P>@-#Y",
+   "Y> . . . . XC .",
+   "Y>+C . M . Gv%A G<&A .",
+   ". . . . Gv+C . .",
+   ". . G^&A . . Yv&A .",
+   "Bv . . . Bv@- Pv@- P^%A"
+  ],
+  "mechanic": "movable,switch,gate,lock",
+  "positions": 617
+ },
+ "R06_3": {
+  "map": [
+   ". . . . . . B<#Y",
+   ". . . . . B^@ P>@-#Y",
+   "Y> . . . . XC .",
+   "Y>+C . M . Gv%A G<&A .",
+   ". . . . Gv+C . .",
+   ". . G^&A . . Yv&A .",
+   "B>@- . . . Yv@- . P^%A"
+  ],
+  "mechanic": "movable,switch,gate,lock",
+  "positions": 414
+ },
+ "R06_4": {
+  "map": [
+   ". . . . . . B<#Y",
+   ". . . . . B^@ P>@-#Y",
+   "Y> . . . . XC .",
+   "Y>+C . M . Gv%A G<&A .",
+   ". . P> . Gv+C . .",
+   ". . G^&A . . Yv&A .",
+   "B>@- . . . . . P^%A"
+  ],
+  "mechanic": "movable,switch,gate,lock",
+  "positions": 430
+ },
+ "R06_5": {
+  "map": [
+   ". . . . . . B<#Y",
+   ". . . . . B^@ P>@-#Y",
+   "Y> . . . . XC .",
+   "Y>+C . M . Gv%A G<&A .",
+   ". . Y>@ . Gv+C . .",
+   ". . G^&A . . Y>&A .",
+   ". . . . Bv@- . P^%A"
+  ],
+  "mechanic": "movable,switch,gate,lock",
+  "positions": 458
+ },
+ "R06_6": {
+  "map": [
+   ". . . . . . B<#Y",
+   ". . . . . B^ P>@-#Y",
+   "Y> . . . . XC .",
+   "Y>+C . M . Gv%A G<&A .",
+   ". . Y>@ . Gv+C . .",
+   ". . G^&A . . Y>&A .",
+   ". . . . Bv@- . P^%A"
+  ],
+  "mechanic": "movable,switch,gate,lock",
+  "positions": 458
+ },
+ "R06_7": {
+  "map": [
+   ". . . . . . B<#Y",
+   ". . . . . B^@ P>@-#Y",
+   "Y> . . . . XC .",
+   "Y>+C . M . Gv%A G<&A .",
+   ". . . . Gv+C . .",
+   ". . G^&A . . Yv&A .",
+   "B^@ . . . Bv@- . P^%A"
+  ],
+  "mechanic": "movable,switch,gate,lock",
+  "positions": 480
+ }
+}

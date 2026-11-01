@@ -1,0 +1,109 @@
+{
+ "N71": {
+  "key": "R09_4",
+  "rank_file": "R09",
+  "family": "P29 the locked pusher (crate + switch + lock)",
+  "group": "crate x reversal x lock",
+  "mechanics": [
+   "movable",
+   "switch",
+   "lock",
+   "spinner"
+  ],
+  "idea": "the locked pusher: the only block that can push the crate is locked and is the flip target - its key must cross the crate's landing lane before the push, and the switch decides which way the pusher faces when it is finally free",
+  "related": "N68 (a crate shuttle and a door: a lock opens the crate's exit; here the lock holds the pusher), N66 (key also a link); closest occupancy N15 0.31",
+  "source": "hybrid: hand core frozen cell for cell (seed_R09_LOCKEDPUSHER.json, Phase 29); blocks added by tools/ta90_search.gd --ops=v20 with the Phase 28 pipeline (token guard, strict essentiality, spinners_max), RNG seed 92 (protocol.json); early screen tools/extreme90_screen28.py; advisory rank tools/ta90_rank29.gd"
+ },
+ "N72": {
+  "key": "R02b_4",
+  "rank_file": "R02b",
+  "family": "P29 the turned magnet with locked cargo (magnet + switch + lock)",
+  "group": "magnet x reversal x lock",
+  "mechanics": [
+   "magnet",
+   "switch",
+   "lock",
+   "armor",
+   "spinner"
+  ],
+  "idea": "the turned magnet with locked cargo: the reversal picks which side the magnet pulls; the cargo on one side is locked, so pulled before its key leaves it arrives and blocks - the pull, the key and the reversal must be ordered",
+  "related": "N64 (the turned magnet - the closest; here the pulled block is locked), N67 (pull the prisoner - its pull line never turns); closest occupancy N64 0.30",
+  "source": "hybrid: hand core frozen cell for cell (seed_R02b_LOCKEDCARGO.json, Phase 29); blocks added by tools/ta90_search.gd --ops=v20 with the Phase 28 pipeline (token guard, strict essentiality, spinners_max), RNG seed 92 (protocol.json); early screen tools/extreme90_screen28.py; advisory rank tools/ta90_rank29.gd"
+ },
+ "N73": {
+  "key": "R06_5",
+  "rank_file": "R06",
+  "family": "P29 the key-link and the crate (crate + switch + gate + lock)",
+  "group": "crate x reversal x gate x lock",
+  "mechanics": [
+   "movable",
+   "switch",
+   "gate",
+   "lock",
+   "spinner"
+  ],
+  "idea": "the key is also the gate's link, and the crate stands in the key's lane: the key must leave to open both the lock and the gate, but its lane is the crate's - push the crate, or reverse the key, in the right order",
+  "related": "N66 (the key is also a link - borderline HARD; here a crate blocks that key), N68 (crate + lock); closest occupancy N68 0.37",
+  "source": "hybrid: hand core frozen cell for cell (seed_R06_LINKKEYCRATE.json, Phase 29); blocks added by tools/ta90_search.gd --ops=v20 with the Phase 28 pipeline (token guard, strict essentiality, spinners_max), RNG seed 91 (protocol.json); early screen tools/extreme90_screen28.py; advisory rank tools/ta90_rank29.gd"
+ },
+ "N74": {
+  "key": "R03_0",
+  "rank_file": "R03",
+  "family": "P29 the crate walls in the switch (crate + switch)",
+  "group": "crate x reversal",
+  "mechanics": [
+   "movable",
+   "switch",
+   "spinner"
+  ],
+  "idea": "the crate walls in the switch: the switch can fire only once the crate is pushed out of its row, and the pusher that does it needs that very reversal to leave",
+  "related": "N68 / N69 (crate + switch); closest occupancy N60 0.30",
+  "source": "hybrid: hand core frozen cell for cell (seed_R03_WALLEDSWITCH.json, Phase 29); blocks added by tools/ta90_search.gd --ops=v20 with the Phase 28 pipeline (token guard, strict essentiality, spinners_max), RNG seed 91 (protocol.json); early screen tools/extreme90_screen28.py; advisory rank tools/ta90_rank29.gd"
+ },
+ "N75": {
+  "key": "R04_0",
+  "rank_file": "R04",
+  "family": "P29 the armored key (switch + lock + armor)",
+  "group": "reversal x lock x armor",
+  "mechanics": [
+   "switch",
+   "lock",
+   "armor",
+   "spinner"
+  ],
+  "idea": "the key is an armored flip target: once cracked it can leave only the way the reversal leaves it facing - and the locked prisoner waits for it",
+  "related": "N61 (key turned to face its prisoner), N62 (the shell's exit - armor + reversal), N66; closest occupancy N66 0.38",
+  "source": "hybrid: hand core frozen cell for cell (seed_R04_ARMOREDKEY.json, Phase 29); blocks added by tools/ta90_search.gd --ops=v20 with the Phase 28 pipeline (token guard, strict essentiality, spinners_max), RNG seed 91 (protocol.json); early screen tools/extreme90_screen28.py; advisory rank tools/ta90_rank29.gd"
+ },
+ "N76": {
+  "key": "R08bs92_3",
+  "rank_file": "R08bs92",
+  "family": "P29 two turned magnets (magnet + switch)",
+  "group": "magnet x reversal",
+  "mechanics": [
+   "magnet",
+   "switch",
+   "armor",
+   "spinner"
+  ],
+  "idea": "two magnets are flip targets of one switch: one must fire before the reversal and the other after, so the single switch press splits the two pulls",
+  "related": "N64 (one turned magnet - the closest family; here two magnets share the switch), N52 (pull order); closest occupancy N39 0.35",
+  "source": "hybrid: hand core frozen cell for cell (seed_R08b_TWOTURNED.json, Phase 29); blocks added by tools/ta90_search.gd --ops=v20 with the Phase 28 pipeline (token guard, strict essentiality, spinners_max), RNG seed 92 (protocol.json); early screen tools/extreme90_screen28.py; advisory rank tools/ta90_rank29.gd"
+ },
+ "N77": {
+  "key": "R01b_7",
+  "rank_file": "R01b",
+  "family": "P29 the turned magnet behind a gate (magnet + switch + gate)",
+  "group": "magnet x reversal x gate",
+  "mechanics": [
+   "magnet",
+   "switch",
+   "gate",
+   "armor",
+   "spinner"
+  ],
+  "idea": "a turned magnet behind a gate: the reversal decides which side the magnet pulls from, and the gate on one side decides whether that side can be pulled at all - the gate opens before the pull in the same move",
+  "related": "N64 (the turned magnet), N72 (locked cargo instead of a gate; pairwise 0.38); closest occupancy N46 0.39",
+  "source": "hybrid: hand core frozen cell for cell (seed_R01b_GATEDMAGNET.json, Phase 29); blocks added by tools/ta90_search.gd --ops=v20 with the Phase 28 pipeline (token guard, strict essentiality, spinners_max), RNG seed 92 (protocol.json); early screen tools/extreme90_screen28.py; advisory rank tools/ta90_rank29.gd"
+ }
+}

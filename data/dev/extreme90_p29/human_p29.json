@@ -1,0 +1,55 @@
+{
+ "source": "Phase 30 brief (project owner), first exposures of the Phase 29 page (?extreme90p29=1, build p29-qa1-20261031). Recorded verbatim; nothing inferred. Restart / UNDO counts, attempts and move sequences were NOT supplied for any board.",
+ "recorded": "2026-10-31",
+ "boards": {
+  "N72": {
+   "difficulty": "EXTREME",
+   "outcome_90s": "TIME UP",
+   "enjoyment": "5/5",
+   "fingerprint": "d52f38229628fd877557ec5d5a7571e5d66f755fdfb8afa8a04d8d2f3b45018a",
+   "source_board": "R02b_4"
+  },
+  "N75": {
+   "difficulty": "VERY HARD",
+   "outcome_90s": "TIME UP",
+   "enjoyment": "5/5",
+   "fingerprint": "ae138a5dda702e9bcd87ec5596617b661fdb4ecacdf272b3bb80f20ccbd26d58",
+   "source_board": "R04_0"
+  },
+  "N77": {
+   "difficulty": "EXTREME",
+   "outcome_90s": "TIME UP",
+   "enjoyment": "5/5",
+   "fingerprint": "998d8b547accda2f6c63d2e62c417e9a59f4cc27d67b92792c5ed5e96b7f6861",
+   "source_board": "R01b_7"
+  },
+  "N71": {
+   "difficulty": "EASY",
+   "outcome_90s": "not supplied",
+   "enjoyment": "not supplied",
+   "fingerprint": "304fd5fe6d49ea15355c05ce5450944fa0bd9e8eaf2db77ce89c0891224fd26e",
+   "source_board": "R09_4"
+  },
+  "N73": {
+   "difficulty": "HARD",
+   "outcome_90s": "not supplied",
+   "enjoyment": "not supplied",
+   "fingerprint": "623c48e0229c3b6c01326dfcd932ad6928c87f953e2f6a5e6ddcaa76baf9fcd7",
+   "source_board": "R06_5"
+  },
+  "N74": {
+   "difficulty": "MEDIUM",
+   "outcome_90s": "not supplied",
+   "enjoyment": "not supplied",
+   "fingerprint": "04431a8fe072abe70cc4af208a4b0b5cb813e0045880847a51896622ccc70ed0",
+   "source_board": "R03_0"
+  },
+  "N76": {
+   "difficulty": "HARD",
+   "outcome_90s": "not supplied",
+   "enjoyment": "not supplied",
+   "fingerprint": "edcef82925465b7b8779319b100a7e36c248deac269cbc8b679b8938d10d143f",
+   "source_board": "R08bs92_3"
+  }
+ }
+}

@@ -1,0 +1,17 @@
+{
+ "R04_0": {
+  "map": [
+   ". . Yv&A . . . .",
+   ". . P^#Y . . . .",
+   ". . G^@ . . . .",
+   "R> B>= Y<&A= . . . G^",
+   ". . P>= . . . .",
+   ". . . B^#Y . . .",
+   "Pv Yv@ Gv@- Y<&A Gv%A . G^%A"
+  ],
+  "target": "EXTREME",
+  "facts": [],
+  "mechanic": "switch,lock,armor",
+  "max_positions": 2000
+ }
+}

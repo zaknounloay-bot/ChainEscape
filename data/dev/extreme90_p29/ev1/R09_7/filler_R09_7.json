@@ -1,0 +1,9 @@
+{
+ "R09_7": {
+  "distinct": 6,
+  "pieces_tested": 16,
+  "steps": 14,
+  "trivial": [],
+  "trivial_removals": 0
+ }
+}

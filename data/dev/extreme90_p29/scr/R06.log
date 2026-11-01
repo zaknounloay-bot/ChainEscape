@@ -1,0 +1,9 @@
+R06_0                  Category A/B   ['the TIME UP check takes 43.9 ms in its worst position (> 40)']
+R06_1                  filler         ['r5c6 G<', 'r6c6 P^%A']
+R06_2                  filler         ['r3c5 G<&A']
+R06_3                  filler         ['r6c0 B>@-']
+R06_4                  filler         ['r6c0 B>@-']
+R06_5                  PASS           []
+R06_6                  PASS           []
+R06_7                  filler         ['r6c0 B^@']
+SCREEN: 8 boards, 2 PASS

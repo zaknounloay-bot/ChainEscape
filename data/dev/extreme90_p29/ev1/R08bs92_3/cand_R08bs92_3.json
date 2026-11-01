@@ -1,0 +1,17 @@
+{
+ "R08bs92_3": {
+  "map": [
+   ". . . . . . .",
+   ". Gv . Y>&A* . R^ G>@*",
+   ". . . Bv&A . . .",
+   "Pv@~ . . B<= . . .",
+   ". R^ . Y<&A* Pv&A Gv .",
+   ". Pv@- . P<= . . .",
+   ". . . Rv@- B^ Y< G^%A"
+  ],
+  "target": "EXTREME",
+  "facts": [],
+  "mechanic": "magnet,switch,armor",
+  "max_positions": 2000
+ }
+}

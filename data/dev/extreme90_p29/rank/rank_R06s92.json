@@ -1,0 +1,122 @@
+{
+ "R06s92_0": {
+  "dep_depth": 8,
+  "dep_pairs": 73,
+  "escapes": 15,
+  "first_deep_trap": 1,
+  "first_trap": 1,
+  "flags": [
+   "simple_strategy"
+  ],
+  "forced": 3,
+  "forced_share": 0.18,
+  "free": 14,
+  "gmax": 0.108,
+  "look6": 0.183,
+  "open_moves": 6,
+  "open_safe": 4,
+  "p_calm": 0.084,
+  "p_look1": 0.012,
+  "p_look2": 0.013,
+  "p_random": 0.008,
+  "positions": 603,
+  "rank_key": [
+   1,
+   1.131,
+   -8
+  ],
+  "solution": 17,
+  "win_density": 0.23,
+  "win_lines": -1
+ },
+ "R06s92_1": {
+  "dep_depth": 8,
+  "dep_pairs": 73,
+  "escapes": 15,
+  "first_deep_trap": 1,
+  "first_trap": 1,
+  "flags": [
+   "simple_strategy"
+  ],
+  "forced": 3,
+  "forced_share": 0.18,
+  "free": 14,
+  "gmax": 0.108,
+  "look6": 0.183,
+  "open_moves": 6,
+  "open_safe": 4,
+  "p_calm": 0.084,
+  "p_look1": 0.012,
+  "p_look2": 0.013,
+  "p_random": 0.008,
+  "positions": 603,
+  "rank_key": [
+   1,
+   1.131,
+   -8
+  ],
+  "solution": 17,
+  "win_density": 0.23,
+  "win_lines": -1
+ },
+ "R06s92_2": {
+  "dep_depth": 10,
+  "dep_pairs": 78,
+  "escapes": 15,
+  "first_deep_trap": 1,
+  "first_trap": 1,
+  "flags": [
+   "simple_strategy"
+  ],
+  "forced": 3,
+  "forced_share": 0.18,
+  "free": 14,
+  "gmax": 0.108,
+  "look6": 0.183,
+  "open_moves": 6,
+  "open_safe": 4,
+  "p_calm": 0.084,
+  "p_look1": 0.019,
+  "p_look2": 0.017,
+  "p_random": 0.019,
+  "positions": 772,
+  "rank_key": [
+   1,
+   1.131,
+   -10
+  ],
+  "solution": 17,
+  "win_density": 0.14,
+  "win_lines": -1
+ },
+ "R06s92_3": {
+  "dep_depth": 8,
+  "dep_pairs": 64,
+  "escapes": 14,
+  "first_deep_trap": 1,
+  "first_trap": 1,
+  "flags": [
+   "simple_strategy"
+  ],
+  "forced": 3,
+  "forced_share": 0.19,
+  "free": 13,
+  "gmax": 0.108,
+  "look6": 0.117,
+  "open_moves": 6,
+  "open_safe": 4,
+  "p_calm": 0.101,
+  "p_look1": 0.016,
+  "p_look2": 0.025,
+  "p_random": 0.012,
+  "positions": 559,
+  "rank_key": [
+   1,
+   1.235,
+   -8
+  ],
+  "solution": 16,
+  "win_density": 0.19,
+  "win_lines": -1
+ }
+}

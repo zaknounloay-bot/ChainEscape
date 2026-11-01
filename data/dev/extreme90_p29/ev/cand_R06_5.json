@@ -1,0 +1,17 @@
+{
+ "R06_5": {
+  "map": [
+   ". . . . . . B<#Y",
+   ". . . . . B^@ P>@-#Y",
+   "Y> . . . . XC .",
+   "Y>+C . M . Gv%A G<&A .",
+   ". . Y>@ . Gv+C . .",
+   ". . G^&A . . Y>&A .",
+   ". . . . Bv@- . P^%A"
+  ],
+  "target": "EXTREME",
+  "facts": [],
+  "mechanic": "movable,switch,gate,lock",
+  "max_positions": 2000
+ }
+}

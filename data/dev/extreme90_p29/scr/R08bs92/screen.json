@@ -1,0 +1,468 @@
+{
+ "R08bs92_0": {
+  "result": "filler",
+  "B": {
+   "coverage": 0.79,
+   "decision_steps": 15,
+   "distinct_mistakes": 5,
+   "endgame_decision": true,
+   "last_decision": 17,
+   "late": 0.89,
+   "losing_per_step": [
+    1,
+    1,
+    0,
+    0,
+    1,
+    1,
+    2,
+    1,
+    1,
+    2,
+    3,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    0,
+    0
+   ],
+   "matters_armor": true,
+   "matters_magnet": true,
+   "matters_switch": true,
+   "mistakes": [
+    "r1c5^",
+    "r4c1^",
+    "r6c6^",
+    "r6c4^",
+    "r5c3<"
+   ],
+   "shortcut": 0.125,
+   "spinner_dependence": "without it: 3 decision steps, 1 distinct mistakes (with it: 15, 5)",
+   "without_armor": "without it: 8 decision steps, 4 distinct mistakes (with it: 15, 5)",
+   "without_magnet": "unsolvable without it",
+   "without_switch": "without it: 8 decision steps, 4 distinct mistakes (with it: 15, 5)"
+  },
+  "A": {
+   "positions": 744,
+   "solution": 19,
+   "solve_ms": 5.3,
+   "timeup_worst_ms": 8.6
+  },
+  "overlap": [
+   0.35,
+   "N39"
+  ],
+  "filler": [
+   "r4c4 Pv&A",
+   "r4c6 G>@*",
+   "r6c5 Y<"
+  ]
+ },
+ "R08bs92_1": {
+  "result": "PASS",
+  "B": {
+   "coverage": 0.89,
+   "decision_steps": 17,
+   "distinct_mistakes": 5,
+   "endgame_decision": true,
+   "last_decision": 17,
+   "late": 0.89,
+   "losing_per_step": [
+    1,
+    1,
+    1,
+    1,
+    1,
+    2,
+    2,
+    1,
+    1,
+    2,
+    3,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    0,
+    0
+   ],
+   "matters_armor": true,
+   "matters_magnet": true,
+   "matters_switch": true,
+   "mistakes": [
+    "r1c5^",
+    "r6c6^",
+    "r4c1^",
+    "r6c4^",
+    "r5c3<"
+   ],
+   "shortcut": 0.04,
+   "spinner_dependence": "without it: 11 decision steps, 1 distinct mistakes (with it: 17, 5)",
+   "without_armor": "without it: 13 decision steps, 3 distinct mistakes (with it: 17, 5)",
+   "without_magnet": "unsolvable without it",
+   "without_switch": "without it: 7 decision steps, 4 distinct mistakes (with it: 17, 5)"
+  },
+  "A": {
+   "positions": 794,
+   "solution": 19,
+   "solve_ms": 5.5,
+   "timeup_worst_ms": 8.6
+  },
+  "overlap": [
+   0.35,
+   "N59"
+  ],
+  "filler": []
+ },
+ "R08bs92_2": {
+  "result": "PASS",
+  "B": {
+   "coverage": 0.89,
+   "decision_steps": 17,
+   "distinct_mistakes": 5,
+   "endgame_decision": true,
+   "last_decision": 17,
+   "late": 0.89,
+   "losing_per_step": [
+    1,
+    1,
+    1,
+    1,
+    1,
+    2,
+    2,
+    1,
+    1,
+    2,
+    3,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    0,
+    0
+   ],
+   "matters_armor": true,
+   "matters_magnet": true,
+   "matters_switch": true,
+   "mistakes": [
+    "r1c5^",
+    "r6c6^",
+    "r4c1^",
+    "r6c4^",
+    "r5c3<"
+   ],
+   "shortcut": 0.04,
+   "spinner_dependence": "without it: 11 decision steps, 1 distinct mistakes (with it: 17, 5)",
+   "without_armor": "without it: 13 decision steps, 3 distinct mistakes (with it: 17, 5)",
+   "without_magnet": "unsolvable without it",
+   "without_switch": "without it: 7 decision steps, 4 distinct mistakes (with it: 17, 5)"
+  },
+  "A": {
+   "positions": 812,
+   "solution": 19,
+   "solve_ms": 3.3,
+   "timeup_worst_ms": 8.7
+  },
+  "overlap": [
+   0.35,
+   "N60"
+  ],
+  "filler": []
+ },
+ "R08bs92_3": {
+  "result": "PASS",
+  "B": {
+   "coverage": 0.89,
+   "decision_steps": 17,
+   "distinct_mistakes": 5,
+   "endgame_decision": true,
+   "last_decision": 17,
+   "late": 0.89,
+   "losing_per_step": [
+    1,
+    1,
+    1,
+    1,
+    2,
+    2,
+    2,
+    1,
+    1,
+    2,
+    3,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    0,
+    0
+   ],
+   "matters_armor": true,
+   "matters_magnet": true,
+   "matters_switch": true,
+   "mistakes": [
+    "r1c5^",
+    "r6c6^",
+    "r4c1^",
+    "r6c4^",
+    "r5c3<"
+   ],
+   "shortcut": 0.045,
+   "spinner_dependence": "without it: 11 decision steps, 1 distinct mistakes (with it: 17, 5)",
+   "without_armor": "without it: 13 decision steps, 3 distinct mistakes (with it: 17, 5)",
+   "without_magnet": "unsolvable without it",
+   "without_switch": "without it: 7 decision steps, 4 distinct mistakes (with it: 17, 5)"
+  },
+  "A": {
+   "positions": 916,
+   "solution": 19,
+   "solve_ms": 4.5,
+   "timeup_worst_ms": 20.8
+  },
+  "overlap": [
+   0.35,
+   "N39"
+  ],
+  "filler": []
+ },
+ "R08bs92_4": {
+  "result": "PASS",
+  "B": {
+   "coverage": 0.89,
+   "decision_steps": 17,
+   "distinct_mistakes": 5,
+   "endgame_decision": true,
+   "last_decision": 17,
+   "late": 0.89,
+   "losing_per_step": [
+    1,
+    1,
+    1,
+    1,
+    2,
+    2,
+    2,
+    1,
+    1,
+    2,
+    3,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    0,
+    0
+   ],
+   "matters_armor": true,
+   "matters_magnet": true,
+   "matters_switch": true,
+   "mistakes": [
+    "r1c5^",
+    "r6c6^",
+    "r4c1^",
+    "r6c4^",
+    "r5c3<"
+   ],
+   "shortcut": 0.045,
+   "spinner_dependence": "without it: 11 decision steps, 1 distinct mistakes (with it: 17, 5)",
+   "without_armor": "without it: 13 decision steps, 3 distinct mistakes (with it: 17, 5)",
+   "without_magnet": "unsolvable without it",
+   "without_switch": "without it: 7 decision steps, 4 distinct mistakes (with it: 17, 5)"
+  },
+  "A": {
+   "positions": 916,
+   "solution": 19,
+   "solve_ms": 4.4,
+   "timeup_worst_ms": 14.6
+  },
+  "overlap": [
+   0.35,
+   "N59"
+  ],
+  "filler": []
+ },
+ "R08bs92_5": {
+  "result": "PASS",
+  "B": {
+   "coverage": 0.89,
+   "decision_steps": 17,
+   "distinct_mistakes": 5,
+   "endgame_decision": true,
+   "last_decision": 17,
+   "late": 0.89,
+   "losing_per_step": [
+    1,
+    1,
+    1,
+    1,
+    2,
+    2,
+    2,
+    1,
+    1,
+    2,
+    3,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    0,
+    0
+   ],
+   "matters_armor": true,
+   "matters_magnet": true,
+   "matters_switch": true,
+   "mistakes": [
+    "r1c5^",
+    "r6c6^",
+    "r4c1^",
+    "r6c4^",
+    "r5c3<"
+   ],
+   "shortcut": 0.045,
+   "spinner_dependence": "without it: 11 decision steps, 1 distinct mistakes (with it: 17, 5)",
+   "without_armor": "without it: 13 decision steps, 3 distinct mistakes (with it: 17, 5)",
+   "without_magnet": "unsolvable without it",
+   "without_switch": "without it: 7 decision steps, 4 distinct mistakes (with it: 17, 5)"
+  },
+  "A": {
+   "positions": 916,
+   "solution": 19,
+   "solve_ms": 4.7,
+   "timeup_worst_ms": 14.7
+  },
+  "overlap": [
+   0.35,
+   "N59"
+  ],
+  "filler": []
+ },
+ "R08bs92_6": {
+  "result": "PASS",
+  "B": {
+   "coverage": 0.89,
+   "decision_steps": 17,
+   "distinct_mistakes": 5,
+   "endgame_decision": true,
+   "last_decision": 17,
+   "late": 0.89,
+   "losing_per_step": [
+    1,
+    1,
+    1,
+    1,
+    2,
+    2,
+    1,
+    1,
+    2,
+    3,
+    3,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    0,
+    0
+   ],
+   "matters_armor": true,
+   "matters_magnet": true,
+   "matters_switch": true,
+   "mistakes": [
+    "r1c5^",
+    "r6c6^",
+    "r4c1^",
+    "r6c4^",
+    "r5c3<"
+   ],
+   "shortcut": 0.067,
+   "spinner_dependence": "without it: 11 decision steps, 1 distinct mistakes (with it: 17, 5)",
+   "without_armor": "without it: 13 decision steps, 3 distinct mistakes (with it: 17, 5)",
+   "without_magnet": "unsolvable without it",
+   "without_switch": "without it: 7 decision steps, 4 distinct mistakes (with it: 17, 5)"
+  },
+  "A": {
+   "positions": 936,
+   "solution": 19,
+   "solve_ms": 4.8,
+   "timeup_worst_ms": 17.5
+  },
+  "overlap": [
+   0.35,
+   "N39"
+  ],
+  "filler": []
+ },
+ "R08bs92_7": {
+  "result": "PASS",
+  "B": {
+   "coverage": 0.89,
+   "decision_steps": 16,
+   "distinct_mistakes": 4,
+   "endgame_decision": true,
+   "last_decision": 16,
+   "late": 0.89,
+   "losing_per_step": [
+    1,
+    1,
+    1,
+    2,
+    2,
+    2,
+    1,
+    1,
+    2,
+    3,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    0,
+    0
+   ],
+   "matters_armor": true,
+   "matters_magnet": true,
+   "matters_switch": true,
+   "mistakes": [
+    "r6c6^",
+    "r4c1^",
+    "r6c4^",
+    "r5c3<"
+   ],
+   "shortcut": 0.067,
+   "spinner_dependence": "unsolvable without it",
+   "without_armor": "without it: 11 decision steps, 2 distinct mistakes (with it: 16, 4)",
+   "without_magnet": "unsolvable without it",
+   "without_switch": "without it: 5 decision steps, 3 distinct mistakes (with it: 16, 4)"
+  },
+  "A": {
+   "positions": 366,
+   "solution": 18,
+   "solve_ms": 3.9,
+   "timeup_worst_ms": 5.8
+  },
+  "overlap": [
+   0.36,
+   "N39"
+  ],
+  "filler": []
+ }
+}

@@ -1,0 +1,62 @@
+{
+ "R08bs92_0": {
+  "distinct": 5,
+  "pieces_tested": 17,
+  "steps": 15,
+  "trivial": [
+   "r4c4 Pv&A",
+   "r4c6 G>@*",
+   "r6c5 Y<"
+  ],
+  "trivial_removals": 3
+ },
+ "R08bs92_1": {
+  "distinct": 5,
+  "pieces_tested": 17,
+  "steps": 17,
+  "trivial": [],
+  "trivial_removals": 0
+ },
+ "R08bs92_2": {
+  "distinct": 5,
+  "pieces_tested": 17,
+  "steps": 17,
+  "trivial": [],
+  "trivial_removals": 0
+ },
+ "R08bs92_3": {
+  "distinct": 5,
+  "pieces_tested": 17,
+  "steps": 17,
+  "trivial": [],
+  "trivial_removals": 0
+ },
+ "R08bs92_4": {
+  "distinct": 5,
+  "pieces_tested": 17,
+  "steps": 17,
+  "trivial": [],
+  "trivial_removals": 0
+ },
+ "R08bs92_5": {
+  "distinct": 5,
+  "pieces_tested": 17,
+  "steps": 17,
+  "trivial": [],
+  "trivial_removals": 0
+ },
+ "R08bs92_6": {
+  "distinct": 5,
+  "pieces_tested": 17,
+  "steps": 17,
+  "trivial": [],
+  "trivial_removals": 0
+ },
+ "R08bs92_7": {
+  "distinct": 4,
+  "pieces_tested": 16,
+  "steps": 16,
+  "trivial": [],
+  "trivial_removals": 0
+ }
+}

@@ -1,0 +1,17 @@
+{
+ "R01b_7": {
+  "map": [
+   "R< . . . . . .",
+   ". . . . . . R<+C",
+   ". . . . . R<@ .",
+   ". Gv XC Y>&A* Bv@ R^ Y^",
+   "Rv@ . . . . Pv&A P>*",
+   "R^+C P^@- G<&A B<= . . .",
+   ". . . . . . G^%A"
+  ],
+  "target": "EXTREME",
+  "facts": [],
+  "mechanic": "magnet,switch,gate,armor",
+  "max_positions": 2000
+ }
+}

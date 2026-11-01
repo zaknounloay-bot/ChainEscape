@@ -1,0 +1,17 @@
+{
+ "N73 (withdrawn before QA)": {
+  "key": "R05_4",
+  "rank_file": "R05",
+  "family": "P29 two crates in one column (crate + switch)",
+  "group": "crate x reversal",
+  "mechanics": [
+   "movable",
+   "switch",
+   "spinner"
+  ],
+  "idea": "two crates in one column: pushing one moves it into the other's route, and the pushers stay in the crates' line, so each needs the reversal to leave - which crate goes first decides whether both can be cleared",
+  "related": "N35 (one crate), N68 / N69 (crate + switch pushers); closest occupancy N44 0.23",
+  "source": "hybrid: hand core frozen cell for cell (seed_R05_TWOCRATES.json, Phase 29); blocks added by tools/ta90_search.gd --ops=v20 with the Phase 28 pipeline (token guard, strict essentiality, spinners_max), RNG seed 91 (protocol.json); early screen tools/extreme90_screen28.py; advisory rank tools/ta90_rank29.gd"
+ },
+ "reason": "R05 (two crates in one column): the engine hint (Solver.recommend_move on crate boards) cycles between the two pushers on every R05 board (desktop: ids 3,4,3,4...; browser: web_p29 could not solve it by touches in 90 s). The board is solvable (replay empty); the Solver is a game feature and is not changed. Withdrawn; ids renumbered N71-N77 before any commit or exposure."
+}

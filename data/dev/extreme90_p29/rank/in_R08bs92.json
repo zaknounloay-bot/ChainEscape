@@ -1,0 +1,93 @@
+{
+ "R08bs92_1": {
+  "map": [
+   ". R> . . . . .",
+   ". Gv . Y>&A* . R^ G>@*",
+   ". . . Bv&A . . .",
+   ". . . B<= . . .",
+   ". R^ . Y<&A* Pv&A Gv .",
+   ". Pv@- . P<= . . .",
+   ". . . Rv@- B^ Y< G^%A"
+  ],
+  "mechanic": "magnet,switch,armor",
+  "positions": 794
+ },
+ "R08bs92_2": {
+  "map": [
+   ". . . . . . .",
+   ". Gv . Y>&A* . R^ G>@*",
+   ". . . Bv&A . . .",
+   ". . . B<= . . .",
+   ". R^ . Y<&A* Pv&A Gv .",
+   ". Pv@- . P<= R> . .",
+   ". . . Rv@- B^ Y< G^%A"
+  ],
+  "mechanic": "magnet,switch,armor",
+  "positions": 812
+ },
+ "R08bs92_3": {
+  "map": [
+   ". . . . . . .",
+   ". Gv . Y>&A* . R^ G>@*",
+   ". . . Bv&A . . .",
+   "Pv@~ . . B<= . . .",
+   ". R^ . Y<&A* Pv&A Gv .",
+   ". Pv@- . P<= . . .",
+   ". . . Rv@- B^ Y< G^%A"
+  ],
+  "mechanic": "magnet,switch,armor",
+  "positions": 916
+ },
+ "R08bs92_4": {
+  "map": [
+   ". . . . . . .",
+   ". Gv . Y>&A* . R^ G>@*",
+   ". . . Bv&A . . .",
+   ". . G<@~ B<= . . .",
+   ". R^ . Y<&A* Pv&A Gv .",
+   ". Pv@- . P<= . . .",
+   ". . . Rv@- B^ Y< G^%A"
+  ],
+  "mechanic": "magnet,switch,armor",
+  "positions": 916
+ },
+ "R08bs92_5": {
+  "map": [
+   ". . . . . . .",
+   ". Gv . Y>&A* . R^ G>@*",
+   ". . . Bv&A . . .",
+   ". . R^@~ B<= . . .",
+   ". R^ . Y<&A* Pv&A Gv .",
+   ". Pv@- . P<= . . .",
+   ". . . Rv@- B^ Y< G^%A"
+  ],
+  "mechanic": "magnet,switch,armor",
+  "positions": 916
+ },
+ "R08bs92_6": {
+  "map": [
+   ". . . . . . .",
+   ". Gv . Y>&A* . R^ G>@*",
+   ". . . Bv&A . . .",
+   ". . . B<= . . .",
+   ". R^ . Y<&A* Pv&A Gv .",
+   ". Pv@- . P<= . . .",
+   "Y<@ . . Rv@- B^ Y< G^%A"
+  ],
+  "mechanic": "magnet,switch,armor",
+  "positions": 936
+ },
+ "R08bs92_7": {
+  "map": [
+   ". . . . . . .",
+   ". Gv . Y>&A* . R^ .",
+   ". . . Bv&A . . .",
+   ". . . B<= Pv@~ . .",
+   ". R^ . Y<&A* Pv&A Gv .",
+   ". Pv@- . P<= . . .",
+   ". . . Rv@- B^ Y< G^%A"
+  ],
+  "mechanic": "magnet,switch,armor",
+  "positions": 366
+ }
+}

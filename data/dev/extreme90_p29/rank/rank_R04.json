@@ -1,0 +1,32 @@
+{
+ "R04_0": {
+  "dep_depth": 8,
+  "dep_pairs": 64,
+  "escapes": 15,
+  "first_deep_trap": 1,
+  "first_trap": 1,
+  "flags": [
+   "simple_strategy"
+  ],
+  "forced": 7,
+  "forced_share": 0.39,
+  "free": 11,
+  "gmax": 0.067,
+  "look6": 0.342,
+  "open_moves": 6,
+  "open_safe": 5,
+  "p_calm": 0.018,
+  "p_look1": 0.011,
+  "p_look2": 0.02,
+  "p_random": 0.006,
+  "positions": 517,
+  "rank_key": [
+   1,
+   0.589,
+   -8
+  ],
+  "solution": 18,
+  "win_density": 0.36,
+  "win_lines": 922120
+ }
+}

@@ -1,0 +1,64 @@
+{
+ "target": "EXTREME",
+ "facts": [],
+ "mechanic": "switch,gate,lock",
+ "idea": "P29 hand core: the gate's last link is locked and faces its gate: it needs both the key's departure and the reversal, in an order",
+ "family": "P29 R07_LOCKEDLINK",
+ "map": [
+  ". . . . . . .",
+  ". . . . . . .",
+  ". . . XC . . .",
+  ". . . . . . .",
+  ". . . B^#Y&A+C . . .",
+  ". . . . . . .",
+  "Y> . . . . . P^%A"
+ ],
+ "frozen": [
+  [
+   2,
+   3
+  ],
+  [
+   4,
+   3
+  ],
+  [
+   6,
+   0
+  ],
+  [
+   6,
+   6
+  ]
+ ],
+ "max_positions": 2000,
+ "piece_free": 13,
+ "max_pieces": 17,
+ "shortcut_weight": 80,
+ "coverage_weight": 25,
+ "late_weight": 20,
+ "endgame_weight": 20,
+ "length_weight": 1.0,
+ "length_cap": 18,
+ "pressure_weight": 1.5,
+ "palette": "all",
+ "suffixes": [
+  "&A",
+  "+C",
+  "#Y"
+ ],
+ "suffix_rate": 0.3,
+ "suffix_max": {
+  "&A": 4,
+  "+C": 3,
+  "#Y": 2
+ },
+ "crates_max": 0,
+ "seed": 292,
+ "size": "medium",
+ "max_solve_nodes": 1500,
+ "spinners_max": 4,
+ "strict_essential": true,
+ "token_guard": true,
+ "phase29_core": "R07_LOCKEDLINK"
+}

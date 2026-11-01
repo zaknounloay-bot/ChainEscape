@@ -1,0 +1,17 @@
+{
+ "R05_1": {
+  "map": [
+   ". . . . . . .",
+   "Rv . . . . . .",
+   ". . . M . . .",
+   "Y> P>@~ . . . R<@- .",
+   ". . . M . Y< .",
+   ". . . G^&A . . .",
+   ". . . Gv%A . . P^%A"
+  ],
+  "target": "EXTREME",
+  "facts": [],
+  "mechanic": "movable,switch",
+  "max_positions": 2000
+ }
+}

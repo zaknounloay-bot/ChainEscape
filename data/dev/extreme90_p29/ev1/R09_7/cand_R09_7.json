@@ -1,0 +1,17 @@
+{
+ "R09_7": {
+  "map": [
+   "Gv Y< . . . . .",
+   "Yv . G>@- Gv#Y&A . . .",
+   ". . . . . . .",
+   "Yv . R>@ M . . .",
+   ". . . . . . .",
+   "Y> Yv . . . . .",
+   "G>@~ Rv&A Y<&A R^#Y B^@~ . P^%A"
+  ],
+  "target": "EXTREME",
+  "facts": [],
+  "mechanic": "movable,switch,lock",
+  "max_positions": 2000
+ }
+}

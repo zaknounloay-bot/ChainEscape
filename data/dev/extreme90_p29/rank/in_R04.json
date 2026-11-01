@@ -1,0 +1,15 @@
+{
+ "R04_0": {
+  "map": [
+   ". . Yv&A . . . .",
+   ". . P^#Y . . . .",
+   ". . G^@ . . . .",
+   "R> B>= Y<&A= . . . G^",
+   ". . P>= . . . .",
+   ". . . B^#Y . . .",
+   "Pv Yv@ Gv@- Y<&A Gv%A . G^%A"
+  ],
+  "mechanic": "switch,lock,armor",
+  "positions": 517
+ }
+}

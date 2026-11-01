@@ -1,0 +1,45 @@
+Godot Engine v4.3.stable.official.77dcf97d8 - https://godotengine.org
+
+SCRIPT ERROR: Invalid access of index '6' on a base object of type: 'Array'.
+          at: _rot (res://tools/vh_pilot4_canon.gd:101)
+SCRIPT ERROR: Out of bounds get index '0' (on base: 'Array')
+          at: _relabel (res://tools/vh_pilot4_canon.gd:141)
+SCRIPT ERROR: Out of bounds get index '0' (on base: 'Array')
+          at: _relabel (res://tools/vh_pilot4_canon.gd:141)
+SCRIPT ERROR: Out of bounds get index '0' (on base: 'Array')
+          at: _rot (res://tools/vh_pilot4_canon.gd:96)
+SCRIPT ERROR: Out of bounds get index '0' (on base: 'Array')
+          at: _relabel (res://tools/vh_pilot4_canon.gd:141)
+SCRIPT ERROR: Out of bounds get index '0' (on base: 'Array')
+          at: _relabel (res://tools/vh_pilot4_canon.gd:141)
+SCRIPT ERROR: Out of bounds get index '0' (on base: 'Array')
+          at: _rot (res://tools/vh_pilot4_canon.gd:96)
+SCRIPT ERROR: Out of bounds get index '0' (on base: 'Array')
+          at: _relabel (res://tools/vh_pilot4_canon.gd:141)
+SCRIPT ERROR: Out of bounds get index '0' (on base: 'Array')
+          at: _relabel (res://tools/vh_pilot4_canon.gd:141)
+SCRIPT ERROR: Out of bounds get index '0' (on base: 'Array')
+          at: _rot (res://tools/vh_pilot4_canon.gd:96)
+known boards: 41574
+known boards incl. T1-T5 and the demos: 41574; played boards for the near-copy guard: 333
+== R02b_4: 290 positions, winnable true
+   1  r0c3>        lose: r2c3<(15) r5c4>(15)
+   2  r3c5^        lose: r2c3<(14) r5c4>(14)
+   3  r4c5^        lose: r2c3<(13) r5c4>(13)
+   4  r4c6>        lose: r2c3<(12) r5c4>(12)
+   5  r5c0<        lose: r2c3<(11) r5c4>(11) r6c6^(5)
+   6  r6c6^        lose: r2c3<(10) r5c4>(10)
+   7  r6c0>        lose: r2c3<(9) r5c4>(9)
+   8  r0c0v        lose: r2c3<(8) r5c4>(8)
+   9  r0c1<        lose: r2c3<(7) r5c4>(7)
+  10  r0c2<        lose: r2c3<(6) r5c4>(6)
+  11  r1c3^        lose: r2c3<(5) r5c4>(5)
+  12  r3c1v        lose: r2c3^(4) r3c4^(4) r5c4>(4)
+  13  r3c3<        lose: r2c3^(3) r3c4^(3) r5c4>(3)
+  14  r2c3<        lose: r3c3>(2) r5c4>(2)
+  15  r3c3v ram    lose: r5c4>(1)
+  16  r5c3<        lose: 
+  17  r3c3v        lose: 
+  18  r5c4>        lose: 
+  greedy {"look2":0,"look4":0,"min_turn":0,"mobility":0,"safe":0}
+  features {"calm_prefix":0,"concurrency":0.89,"coverage":0.83,"deep_traps":5,"distinct":6,"effective_decisions":14,"learner4":8,"learner6":7,"look6":0,"pieces":17,"positions":290,"quick_fail_share":0.19,"safe_share":0,"shortcut":0,"solution":18,"steps":15,"trap_delay":8,"undo_proof":0.81}

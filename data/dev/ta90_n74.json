@@ -1,0 +1,186 @@
+{
+ "format": "ce-ta90-proto",
+ "v": 1,
+ "test": "ta90_n74",
+ "assist": {
+  "undo": 3,
+  "show_a_move": 0,
+  "hammer": 0
+ },
+ "note": "Development only. Phase 29 EXTREME candidate (?extreme90p29=1); never shared, never production. TECHNICALLY QUALIFIED (Category A and B): NOT human-approved; human difficulty unvalidated.",
+ "boards": [
+  {
+   "id": "N74",
+   "accepted": true,
+   "label": "TECHNICALLY QUALIFIED - HUMAN UNTESTED",
+   "variant": "N74",
+   "design": "P29_R03_0",
+   "family": "P29 the crate walls in the switch (crate + switch)",
+   "concept_group": "crate x reversal",
+   "primary": "movable, switch, spinner",
+   "target": "EXTREME (a design target, not a rating; never shown to players)",
+   "idea": "the crate walls in the switch: the switch can fire only once the crate is pushed out of its row, and the pusher that does it needs that very reversal to leave",
+   "source": "hybrid: hand core frozen cell for cell (seed_R03_WALLEDSWITCH.json, Phase 29); blocks added by tools/ta90_search.gd --ops=v20 with the Phase 28 pipeline (token guard, strict essentiality, spinners_max), RNG seed 91 (protocol.json); early screen tools/extreme90_screen28.py; advisory rank tools/ta90_rank29.gd",
+   "related_bank_concept": "N68 / N69 (crate + switch); closest occupancy N60 0.30",
+   "fingerprint": "04431a8fe072abe70cc4af208a4b0b5cb813e0045880847a51896622ccc70ed0",
+   "mechanics": [
+    "movable",
+    "switch",
+    "spinner"
+   ],
+   "puzzle": {
+    "format": "ce-puzzle",
+    "v": 1,
+    "rules": 1,
+    "rows": 7,
+    "cols": 7,
+    "map": [
+     ". . P> . . . .",
+     ". . P^%A . . . .",
+     ". . . . . . .",
+     "P>%A . M Gv . . .",
+     "G<@ Yv@~ Gv@~ G>&A . . .",
+     "G<&A . G^&A Y> R> R^@~ .",
+     ". . . . . . ."
+    ]
+   },
+   "design_report": {
+    "A": {
+     "fingerprint": "04431a8fe072abe70cc4af208a4b0b5cb813e0045880847a51896622ccc70ed0",
+     "hint_nodes": [
+      228,
+      918
+     ],
+     "parity": [
+      0,
+      0
+     ],
+     "portals": 0,
+     "position_cap": 2000,
+     "positions": 695,
+     "replay": true,
+     "solution": 14,
+     "solve_ms": 7.3,
+     "timeup_worst_ms": 21.3,
+     "timeup_worst_nodes": 918,
+     "winnable": 157
+    },
+    "B": {
+     "coverage": 0.86,
+     "decision_steps": 12,
+     "distinct_mistakes": 6,
+     "endgame_decision": true,
+     "last_decision": 13,
+     "late": 0.93,
+     "line": [
+      "r0c2> [x3]",
+      "r4c0< [x4]",
+      "r4c1< [x2]",
+      "r4c2< [x2]",
+      "r4c3> [x1]",
+      "r5c0< [x1]",
+      "r5c5^ [x1]",
+      "r5c4> [x1]",
+      "r5c3> [x1]",
+      "r3c3v [x1]",
+      "r5c2^ push [x2]",
+      "r1c2^",
+      "r5c2v [x1]",
+      "r3c0>"
+     ],
+     "losing_per_step": [
+      3,
+      4,
+      2,
+      2,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      2,
+      0,
+      1,
+      0
+     ],
+     "matters_movable": true,
+     "matters_switch": true,
+     "mistakes": [
+      "r4c1v",
+      "r4c3>",
+      "r5c0<",
+      "r1c2^",
+      "r3c0> push",
+      "r3c0>"
+     ],
+     "shortcut": 0.01,
+     "spinner_dependence": "unsolvable without it",
+     "without_movable": "without it: 1 decision steps, 1 distinct mistakes (with it: 12, 6)",
+     "without_switch": "unsolvable without it"
+    },
+    "C": {
+     "decisions_k4_6_8": [
+      11,
+      10,
+      8
+     ],
+     "deepest": 16,
+     "greedy": {
+      "look2": 0.01,
+      "look4": 0.008,
+      "min_turn": 0,
+      "mobility": 0,
+      "safe": 0.01
+     },
+     "hidden_k6_8": [
+      17,
+      15
+     ],
+     "learner": {
+      "look4": 1,
+      "look6": 1
+     },
+     "look6_greedy": 0.075,
+     "opening": "3 / 6",
+     "pressure": {
+      "advances": 0,
+      "calm_prefix": 4,
+      "flips": 1,
+      "multi_turned": 0,
+      "prediction_share": 0.21,
+      "pulls": 0,
+      "rams": 0,
+      "signals": 2,
+      "spinners_turned": 2,
+      "trap_delay_median": 12,
+      "turns": 2,
+      "undo_proof": 0.95
+     },
+     "win_share": 0.226
+    },
+    "filler": {
+     "distinct": 6,
+     "pieces_tested": 14,
+     "steps": 12,
+     "trivial": [],
+     "trivial_removals": 0
+    },
+    "similarity": {
+     "closest_known": "N60",
+     "overlap": 0.3
+    },
+    "advisory_rank29": {
+     "flags": [
+      "simple_strategy"
+     ],
+     "gmax": 0.008,
+     "look6": 0.075,
+     "p_calm": 0.019,
+     "forced_share": 0.21,
+     "dep_depth": 6
+    }
+   }
+  }
+ ]
+}

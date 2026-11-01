@@ -1,0 +1,9 @@
+{
+ "R03_0": {
+  "distinct": 6,
+  "pieces_tested": 14,
+  "steps": 12,
+  "trivial": [],
+  "trivial_removals": 0
+ }
+}

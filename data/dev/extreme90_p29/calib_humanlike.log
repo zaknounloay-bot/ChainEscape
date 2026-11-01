@@ -1,0 +1,43 @@
+Godot Engine v4.3.stable.official.77dcf97d8 - https://godotengine.org
+
+SCRIPT ERROR: Invalid access of index '6' on a base object of type: 'Array'.
+          at: _rot (res://tools/vh_pilot4_canon.gd:101)
+SCRIPT ERROR: Out of bounds get index '0' (on base: 'Array')
+          at: _relabel (res://tools/vh_pilot4_canon.gd:141)
+SCRIPT ERROR: Out of bounds get index '0' (on base: 'Array')
+          at: _relabel (res://tools/vh_pilot4_canon.gd:141)
+SCRIPT ERROR: Out of bounds get index '0' (on base: 'Array')
+          at: _rot (res://tools/vh_pilot4_canon.gd:96)
+SCRIPT ERROR: Out of bounds get index '0' (on base: 'Array')
+          at: _relabel (res://tools/vh_pilot4_canon.gd:141)
+SCRIPT ERROR: Out of bounds get index '0' (on base: 'Array')
+          at: _relabel (res://tools/vh_pilot4_canon.gd:141)
+SCRIPT ERROR: Out of bounds get index '0' (on base: 'Array')
+          at: _rot (res://tools/vh_pilot4_canon.gd:96)
+SCRIPT ERROR: Out of bounds get index '0' (on base: 'Array')
+          at: _relabel (res://tools/vh_pilot4_canon.gd:141)
+SCRIPT ERROR: Out of bounds get index '0' (on base: 'Array')
+          at: _relabel (res://tools/vh_pilot4_canon.gd:141)
+SCRIPT ERROR: Out of bounds get index '0' (on base: 'Array')
+          at: _rot (res://tools/vh_pilot4_canon.gd:96)
+known boards: 39929
+known boards incl. T1-T5 and the demos: 39929; played boards for the near-copy guard: 333
+N52        {"dep_depth":9,"dep_pairs":59,"escapes":15,"first_deep_trap":1,"first_trap":1,"forced":10,"free":9,"open_moves":5,"open_safe":1,"p_calm":0.001,"p_look1":0,"p_look2":0.001,"p_random":0,"positions":763,"solution":19,"win_density":0.44,"win_lines":4636800}
+N53        {"dep_depth":8,"dep_pairs":87,"escapes":17,"first_deep_trap":1,"first_trap":1,"forced":9,"free":10,"open_moves":6,"open_safe":4,"p_calm":0,"p_look1":0,"p_look2":0,"p_random":0,"positions":623,"solution":19,"win_density":0.29,"win_lines":262608}
+N55        {"dep_depth":11,"dep_pairs":90,"escapes":15,"first_deep_trap":1,"first_trap":1,"forced":7,"free":10,"open_moves":4,"open_safe":3,"p_calm":0.001,"p_look1":0,"p_look2":0,"p_random":0,"positions":186,"solution":17,"win_density":0.23,"win_lines":1176}
+N56        {"dep_depth":12,"dep_pairs":81,"escapes":14,"first_deep_trap":1,"first_trap":1,"forced":8,"free":10,"open_moves":2,"open_safe":1,"p_calm":0,"p_look1":0,"p_look2":0,"p_random":0,"positions":190,"solution":18,"win_density":0.27,"win_lines":-1}
+N59        {"dep_depth":12,"dep_pairs":90,"escapes":15,"first_deep_trap":1,"first_trap":1,"forced":6,"free":12,"open_moves":4,"open_safe":3,"p_calm":0.009,"p_look1":0,"p_look2":0,"p_random":0,"positions":171,"solution":18,"win_density":0.27,"win_lines":1116}
+N61        {"dep_depth":8,"dep_pairs":78,"escapes":16,"first_deep_trap":1,"first_trap":1,"forced":2,"free":15,"open_moves":7,"open_safe":4,"p_calm":0.005,"p_look1":0,"p_look2":0.001,"p_random":0,"positions":548,"solution":17,"win_density":0.2,"win_lines":193206}
+N62        {"dep_depth":10,"dep_pairs":92,"escapes":15,"first_deep_trap":1,"first_trap":1,"forced":10,"free":8,"open_moves":5,"open_safe":4,"p_calm":0.001,"p_look1":0,"p_look2":0.001,"p_random":0,"positions":251,"solution":18,"win_density":0.19,"win_lines":5415}
+N64        {"dep_depth":11,"dep_pairs":80,"escapes":14,"first_deep_trap":1,"first_trap":1,"forced":4,"free":13,"open_moves":4,"open_safe":3,"p_calm":0.001,"p_look1":0,"p_look2":0,"p_random":0,"positions":367,"solution":17,"win_density":0.13,"win_lines":1620}
+N68        {"dep_depth":5,"dep_pairs":35,"escapes":11,"first_deep_trap":1,"first_trap":1,"forced":6,"free":9,"open_moves":3,"open_safe":2,"p_calm":0,"p_look1":0.001,"p_look2":0.001,"p_random":0.001,"positions":647,"solution":15,"win_density":0.11,"win_lines":-1}
+N69        {"dep_depth":8,"dep_pairs":46,"escapes":11,"first_deep_trap":1,"first_trap":1,"forced":8,"free":6,"open_moves":4,"open_safe":2,"p_calm":0.008,"p_look1":0.001,"p_look2":0.001,"p_random":0,"positions":249,"solution":14,"win_density":0.14,"win_lines":-1}
+N54        {"dep_depth":7,"dep_pairs":59,"escapes":15,"first_deep_trap":1,"first_trap":1,"forced":7,"free":10,"open_moves":4,"open_safe":3,"p_calm":0.012,"p_look1":0.007,"p_look2":0.013,"p_random":0.007,"positions":393,"solution":17,"win_density":0.37,"win_lines":498006}
+N57        {"dep_depth":3,"dep_pairs":11,"escapes":9,"first_deep_trap":1,"first_trap":1,"forced":3,"free":11,"open_moves":6,"open_safe":3,"p_calm":0,"p_look1":0.004,"p_look2":0.004,"p_random":0.004,"positions":1066,"solution":14,"win_density":0.2,"win_lines":-1}
+N58        {"dep_depth":2,"dep_pairs":2,"escapes":7,"first_deep_trap":1,"first_trap":1,"forced":6,"free":9,"open_moves":4,"open_safe":2,"p_calm":0.007,"p_look1":0.011,"p_look2":0.011,"p_random":0.011,"positions":881,"solution":15,"win_density":0.39,"win_lines":-1}
+N60        {"dep_depth":11,"dep_pairs":81,"escapes":15,"first_deep_trap":1,"first_trap":1,"forced":11,"free":8,"open_moves":4,"open_safe":3,"p_calm":0.002,"p_look1":0,"p_look2":0,"p_random":0,"positions":237,"solution":19,"win_density":0.3,"win_lines":8940}
+N63        {"dep_depth":12,"dep_pairs":108,"escapes":16,"first_deep_trap":1,"first_trap":1,"forced":13,"free":5,"open_moves":4,"open_safe":1,"p_calm":0.001,"p_look1":0,"p_look2":0,"p_random":0,"positions":255,"solution":18,"win_density":0.13,"win_lines":134}
+N65        {"dep_depth":11,"dep_pairs":85,"escapes":15,"first_deep_trap":1,"first_trap":1,"forced":9,"free":7,"open_moves":5,"open_safe":2,"p_calm":0.021,"p_look1":0,"p_look2":0,"p_random":0,"positions":347,"solution":16,"win_density":0.19,"win_lines":5448}
+N67        {"dep_depth":7,"dep_pairs":52,"escapes":15,"first_deep_trap":1,"first_trap":1,"forced":7,"free":10,"open_moves":6,"open_safe":3,"p_calm":0.018,"p_look1":0.007,"p_look2":0.007,"p_random":0.007,"positions":564,"solution":17,"win_density":0.27,"win_lines":67417}
+N70        {"dep_depth":8,"dep_pairs":70,"escapes":15,"first_deep_trap":1,"first_trap":1,"forced":4,"free":11,"open_moves":5,"open_safe":2,"p_calm":0.04,"p_look1":0.003,"p_look2":0.003,"p_random":0.002,"positions":258,"solution":15,"win_density":0.26,"win_lines":18816}
+N66        {"dep_depth":9,"dep_pairs":86,"escapes":16,"first_deep_trap":1,"first_trap":1,"forced":9,"free":9,"open_moves":6,"open_safe":2,"p_calm":0.011,"p_look1":0,"p_look2":0,"p_random":0,"positions":343,"solution":18,"win_density":0.22,"win_lines":79023}

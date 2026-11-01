@@ -1,0 +1,106 @@
+{
+ "R03_0": {
+  "map": [
+   ". . P> . . . .",
+   ". . P^%A . . . .",
+   ". . . . . . .",
+   "P>%A . M Gv . . .",
+   "G<@ Yv@~ Gv@~ G>&A . . .",
+   "G<&A . G^&A Y> R> R^@~ .",
+   ". . . . . . ."
+  ],
+  "mechanic": "movable,switch",
+  "positions": 695
+ },
+ "R03_1": {
+  "map": [
+   ". . P> . . . .",
+   ". . P^%A . . . .",
+   ". . . . . . .",
+   "P>%A . M Gv . . .",
+   "G<@ Yv@~ Gv@~ G>&A . . .",
+   "G<&A . G^&A Y> R> Rv@ .",
+   ". . . . . . ."
+  ],
+  "mechanic": "movable,switch",
+  "positions": 695
+ },
+ "R03_2": {
+  "map": [
+   "Bv . P<@ . . . .",
+   ". . P^%A . . . .",
+   ". . . . . . .",
+   "P>%A . M . G^&A . .",
+   "G<@ Yv@~ Gv@~ G> . . .",
+   "G<&A . G^&A . . . .",
+   "Bv&A . . . . . ."
+  ],
+  "mechanic": "movable,switch",
+  "positions": 327
+ },
+ "R03_3": {
+  "map": [
+   ". . P> . . . .",
+   ". . P^%A . . . .",
+   ". . . . . . .",
+   "P>%A . M Gv . . .",
+   "G<@ Yv@~ Gv@~ . . . .",
+   "G<&A . G^&A Y> R> Rv@ .",
+   ". . . . . . ."
+  ],
+  "mechanic": "movable,switch",
+  "positions": 460
+ },
+ "R03_4": {
+  "map": [
+   ". Bv&A P<@ . . . .",
+   ". . P^%A . . . .",
+   ". . . . . . .",
+   "P>%A . M Gv . . .",
+   "G<@ Yv@~ Gv@~ G>&A . . .",
+   "G<&A . G^&A Y> R> R> G>",
+   ". . . . . . ."
+  ],
+  "mechanic": "movable,switch",
+  "positions": 679
+ },
+ "R03_5": {
+  "map": [
+   ". . P<@ . . . .",
+   ". . P^%A . . . .",
+   ". . . . . . .",
+   "P>%A . M Gv . . .",
+   "G<@ Yv@~ Gv@~ G^&A . . .",
+   "G<&A . G^&A Y> R> R> G^",
+   ". . . . . . ."
+  ],
+  "mechanic": "movable,switch",
+  "positions": 461
+ },
+ "R03_6": {
+  "map": [
+   ". . P<@ . . . .",
+   ". . P^%A . . . .",
+   ". . . . . . .",
+   "P>%A . M Gv . . .",
+   "G<@ Yv@~ G< G>&A . . .",
+   "G<&A . G^&A Y> R> R> .",
+   ". . . . . . ."
+  ],
+  "mechanic": "movable,switch",
+  "positions": 607
+ },
+ "R03_7": {
+  "map": [
+   "B<&A . P<@ . . . .",
+   ". . P^%A . . . .",
+   ". . . . . . .",
+   "P>%A . M Gv . . .",
+   "G<@ Yv@~ Gv@~ . . . .",
+   "G<&A . G^&A Y> R> R> G^",
+   ". . . . . . ."
+  ],
+  "mechanic": "movable,switch",
+  "positions": 629
+ }
+}

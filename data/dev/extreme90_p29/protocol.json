@@ -1,0 +1,71 @@
+{
+ "fixed_before_generating": "2026-10-31 (before any Phase 29 generator run)",
+ "pipeline": "unchanged Phase 28 pipeline (token guard, strict essentiality incl. spinners, spinners_max, early screen) + the Phase 29 advisory ranking layer (tools/ta90_rank29.gd) BEFORE full evaluation",
+ "families": {
+  "R01_GATEDMAGNET": [
+   "R01_GATEDMAGNET"
+  ],
+  "R02_LOCKEDCARGO": [
+   "R02_LOCKEDCARGO"
+  ],
+  "R03_WALLEDSWITCH": [
+   "R03_WALLEDSWITCH"
+  ],
+  "R04_ARMOREDKEY": [
+   "R04_ARMOREDKEY"
+  ],
+  "R05_TWOCRATES": [
+   "R05_TWOCRATES"
+  ],
+  "R06_LINKKEYCRATE": [
+   "R06_LINKKEYCRATE"
+  ],
+  "R07_LOCKEDLINK": [
+   "R07_LOCKEDLINK"
+  ],
+  "R08_TWOTURNED": [
+   "R08_TWOTURNED"
+  ],
+  "R09_LOCKEDPUSHER": [
+   "R09_LOCKEDPUSHER"
+  ],
+  "R01b_GATEDMAGNET": [
+   "R01b_GATEDMAGNET"
+  ],
+  "R02b_LOCKEDCARGO": [
+   "R02b_LOCKEDCARGO"
+  ],
+  "R08b_TWOTURNED": [
+   "R08b_TWOTURNED"
+  ]
+ },
+ "budget": {
+  "initial": {
+   "generator_runs": 24,
+   "full_evaluations": 40
+  },
+  "per_run": {
+   "minutes": 12,
+   "batch": 40,
+   "beam": 5,
+   "patience": 8,
+   "ops": "v20"
+  }
+ },
+ "selection": "one board per concept; among screened PASS boards, unflagged (rank29) first, then rank_key; then a full evaluation",
+ "seeds_rng": {
+  "round 1": 91,
+  "round 2": 92
+ },
+ "amendments": [
+  {
+   "when": "2026-10-31, after round 91 (8 runs) and before round 92",
+   "what": "R07 seed token order fixed (B^&A+C#Y -> B^#Y&A+C; the round 91 run refused its own core). Magnet cores R01/R02/R08 re-run as R01b/R02b/R08b without armor (monotone) at suffix rate 0.4. New concept R09. Second seeds for R03, R04, R06. Gates unchanged."
+  },
+  {
+   "when": "2026-10-31, full evaluations",
+   "what": "tools/extreme90_eval25.py writes <out>/bench.log, so two evaluations sharing an out dir can read each other's bench (R05_1 was reported unsolvable this way). Evaluations re-run in separate out dirs (ev1/<name>/); timing gates measured with no generator running."
+  }
+ ],
+ "budget_extensions": []
+}

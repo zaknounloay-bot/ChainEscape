@@ -1,0 +1,52 @@
+{
+ "source": "Phase 30 brief: explicit project-owner decisions, stored SEPARATELY from the player ratings (human_p29.json), from technical qualification (the records' design_report) and from release readiness.",
+ "recorded": "2026-10-31",
+ "approved_by_owner": {
+  "N72": {
+   "decision": "APPROVED",
+   "fingerprint": "d52f38229628fd877557ec5d5a7571e5d66f755fdfb8afa8a04d8d2f3b45018a"
+  },
+  "N75": {
+   "decision": "APPROVED",
+   "fingerprint": "ae138a5dda702e9bcd87ec5596617b661fdb4ecacdf272b3bb80f20ccbd26d58"
+  },
+  "N77": {
+   "decision": "APPROVED",
+   "fingerprint": "998d8b547accda2f6c63d2e62c417e9a59f4cc27d67b92792c5ed5e96b7f6861"
+  }
+ },
+ "not_approved": {
+  "N71": {
+   "decision": "DOWNGRADED",
+   "player_rating": "EASY",
+   "fingerprint": "304fd5fe6d49ea15355c05ce5450944fa0bd9e8eaf2db77ce89c0891224fd26e"
+  },
+  "N73": {
+   "decision": "DOWNGRADED",
+   "player_rating": "HARD",
+   "fingerprint": "623c48e0229c3b6c01326dfcd932ad6928c87f953e2f6a5e6ddcaa76baf9fcd7"
+  },
+  "N74": {
+   "decision": "DOWNGRADED",
+   "player_rating": "MEDIUM",
+   "fingerprint": "04431a8fe072abe70cc4af208a4b0b5cb813e0045880847a51896622ccc70ed0"
+  },
+  "N76": {
+   "decision": "DOWNGRADED",
+   "player_rating": "HARD",
+   "fingerprint": "edcef82925465b7b8779319b100a7e36c248deac269cbc8b679b8938d10d143f"
+  }
+ },
+ "count": {
+  "approved_before": 32,
+  "approved_now": 35,
+  "target": 50,
+  "remaining": 15,
+  "reconciled": "32 (Phase 29 brief) + N72, N75, N77 = 35"
+ },
+ "release_readiness": {
+  "N72": "technically qualified; headless-Chromium WebAssembly TIME UP within limit (web_p29 BENCH); real iPhone NOT tested",
+  "N75": "technically qualified; headless-Chromium WebAssembly TIME UP within limit (web_p29 BENCH); real iPhone NOT tested",
+  "N77": "technically qualified; headless-Chromium WebAssembly TIME UP within limit (web_p29 BENCH); real iPhone NOT tested"
+ }
+}

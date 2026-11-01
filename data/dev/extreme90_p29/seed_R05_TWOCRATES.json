@@ -1,0 +1,64 @@
+{
+ "target": "EXTREME",
+ "facts": [],
+ "mechanic": "movable,switch",
+ "idea": "P29 hand core: two crates in one column: pushing one moves it into the other's route; the pushers need the reversal to leave",
+ "family": "P29 R05_TWOCRATES",
+ "map": [
+  ". . . . . . .",
+  ". . . . . . .",
+  ". . . M . . .",
+  "Y> . . . . . .",
+  ". . . M . . .",
+  ". . . G^&A . . .",
+  ". . . . . . P^%A"
+ ],
+ "frozen": [
+  [
+   2,
+   3
+  ],
+  [
+   3,
+   0
+  ],
+  [
+   4,
+   3
+  ],
+  [
+   5,
+   3
+  ],
+  [
+   6,
+   6
+  ]
+ ],
+ "max_positions": 2000,
+ "piece_free": 13,
+ "max_pieces": 17,
+ "shortcut_weight": 80,
+ "coverage_weight": 25,
+ "late_weight": 20,
+ "endgame_weight": 20,
+ "length_weight": 1.0,
+ "length_cap": 18,
+ "pressure_weight": 1.5,
+ "palette": "all",
+ "suffixes": [
+  "&A"
+ ],
+ "suffix_rate": 0.3,
+ "suffix_max": {
+  "&A": 4
+ },
+ "crates_max": 2,
+ "seed": 192,
+ "size": "medium",
+ "max_solve_nodes": 1500,
+ "spinners_max": 4,
+ "strict_essential": true,
+ "token_guard": true,
+ "phase29_core": "R05_TWOCRATES"
+}

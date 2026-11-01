@@ -1,0 +1,64 @@
+{
+ "R03_0": {
+  "distinct": 6,
+  "pieces_tested": 14,
+  "steps": 12,
+  "trivial": [],
+  "trivial_removals": 0
+ },
+ "R03_1": {
+  "distinct": 6,
+  "pieces_tested": 14,
+  "steps": 12,
+  "trivial": [],
+  "trivial_removals": 0
+ },
+ "R03_2": {
+  "distinct": 5,
+  "pieces_tested": 13,
+  "steps": 9,
+  "trivial": [
+   "r0c0 Bv",
+   "r0c2 P<@"
+  ],
+  "trivial_removals": 2
+ },
+ "R03_3": {
+  "distinct": 5,
+  "pieces_tested": 13,
+  "steps": 11,
+  "trivial": [],
+  "trivial_removals": 0
+ },
+ "R03_4": {
+  "distinct": 6,
+  "pieces_tested": 16,
+  "steps": 14,
+  "trivial": [],
+  "trivial_removals": 0
+ },
+ "R03_5": {
+  "distinct": 4,
+  "pieces_tested": 15,
+  "steps": 11,
+  "trivial": [
+   "r3c3 Gv",
+   "r4c3 G^&A"
+  ],
+  "trivial_removals": 2
+ },
+ "R03_6": {
+  "distinct": 5,
+  "pieces_tested": 14,
+  "steps": 12,
+  "trivial": [],
+  "trivial_removals": 0
+ },
+ "R03_7": {
+  "distinct": 5,
+  "pieces_tested": 15,
+  "steps": 13,
+  "trivial": [],
+  "trivial_removals": 0
+ }
+}

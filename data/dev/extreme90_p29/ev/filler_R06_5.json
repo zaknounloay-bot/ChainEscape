@@ -1,0 +1,9 @@
+{
+ "R06_5": {
+  "distinct": 6,
+  "pieces_tested": 14,
+  "steps": 14,
+  "trivial": [],
+  "trivial_removals": 0
+ }
+}

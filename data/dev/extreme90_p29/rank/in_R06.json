@@ -1,0 +1,28 @@
+{
+ "R06_5": {
+  "map": [
+   ". . . . . . B<#Y",
+   ". . . . . B^@ P>@-#Y",
+   "Y> . . . . XC .",
+   "Y>+C . M . Gv%A G<&A .",
+   ". . Y>@ . Gv+C . .",
+   ". . G^&A . . Y>&A .",
+   ". . . . Bv@- . P^%A"
+  ],
+  "mechanic": "movable,switch,gate,lock",
+  "positions": 458
+ },
+ "R06_6": {
+  "map": [
+   ". . . . . . B<#Y",
+   ". . . . . B^ P>@-#Y",
+   "Y> . . . . XC .",
+   "Y>+C . M . Gv%A G<&A .",
+   ". . Y>@ . Gv+C . .",
+   ". . G^&A . . Y>&A .",
+   ". . . . Bv@- . P^%A"
+  ],
+  "mechanic": "movable,switch,gate,lock",
+  "positions": 458
+ }
+}

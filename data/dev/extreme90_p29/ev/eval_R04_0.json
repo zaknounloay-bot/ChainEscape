@@ -1,0 +1,95 @@
+{
+ "positions": 517,
+ "winnable": true,
+ "features": {
+  "calm_prefix": 3,
+  "concurrency": 0.83,
+  "coverage": 0.78,
+  "deep_traps": 3,
+  "distinct": 4,
+  "effective_decisions": 14,
+  "learner4": 0,
+  "learner6": 0,
+  "look6": 0.342,
+  "pieces": 15,
+  "positions": 517,
+  "quick_fail_share": 0.36,
+  "safe_share": 0.17,
+  "shortcut": 0.067,
+  "solution": 18,
+  "steps": 14,
+  "trap_delay": 6,
+  "undo_proof": 0.64
+ },
+ "overlap": [
+  0.38,
+  "N66"
+ ],
+ "bench_floor": true,
+ "verdict": "HUMAN-REVIEW CANDIDATE",
+ "why": [],
+ "A": {
+  "fingerprint": "ae138a5dda702e9bcd87ec5596617b661fdb4ecacdf272b3bb80f20ccbd26d58",
+  "hint_nodes": [
+   48,
+   16
+  ],
+  "parity": [
+   0,
+   0
+  ],
+  "portals": 0,
+  "position_cap": 2000,
+  "positions": 517,
+  "replay": true,
+  "solution": 18,
+  "solve_ms": 3.3,
+  "timeup_worst_ms": 4.3,
+  "timeup_worst_nodes": 52,
+  "winnable": 185
+ },
+ "B": {
+  "coverage": 0.78,
+  "decision_steps": 14,
+  "distinct_mistakes": 4,
+  "endgame_decision": true,
+  "last_decision": 15,
+  "late": 0.83,
+  "losing_per_step": [
+   1,
+   1,
+   1,
+   1,
+   1,
+   0,
+   1,
+   1,
+   1,
+   1,
+   1,
+   1,
+   1,
+   1,
+   1,
+   0,
+   0,
+   0
+  ],
+  "matters_armor": true,
+  "matters_lock": true,
+  "matters_switch": true,
+  "mistakes": [
+   "r6c1v",
+   "r6c1<",
+   "r6c6^",
+   "r2c2>"
+  ],
+  "shortcut": 0.06,
+  "spinner_dependence": "unsolvable without it",
+  "without_armor": "without it: 6 decision steps, 3 distinct mistakes (with it: 14, 4)",
+  "without_lock": "without it: 9 decision steps, 4 distinct mistakes (with it: 14, 4)",
+  "without_switch": "unsolvable without it"
+ },
+ "filler": 0,
+ "trivial": []
+}

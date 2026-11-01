@@ -1,0 +1,17 @@
+{
+ "R03_7": {
+  "map": [
+   "B<&A . P<@ . . . .",
+   ". . P^%A . . . .",
+   ". . . . . . .",
+   "P>%A . M Gv . . .",
+   "G<@ Yv@~ Gv@~ . . . .",
+   "G<&A . G^&A Y> R> R> G^",
+   ". . . . . . ."
+  ],
+  "target": "EXTREME",
+  "facts": [],
+  "mechanic": "movable,switch",
+  "max_positions": 2000
+ }
+}

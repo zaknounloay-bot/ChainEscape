@@ -1,0 +1,78 @@
+{
+ "R06s92_0": {
+  "map": [
+   ". . . . . . B<#Y",
+   "G< P^@~ R< P^#Y . . .",
+   ". . . . . XC P<",
+   "Y>+C P^ M . Y>@- . P>",
+   "R^ . . . . . .",
+   "Yv@- Yv@- G^&A . . . .",
+   ". . . . . . P^%A"
+  ],
+  "target": "EXTREME",
+  "facts": [],
+  "mechanic": "movable,switch,gate,lock",
+  "max_positions": 2000,
+  "overlap": [
+   0.32,
+   "N68"
+  ]
+ },
+ "R06s92_1": {
+  "map": [
+   ". . . . . . B<#Y",
+   "G< P^@~ R< P^#Y . . .",
+   ". . . . . XC P<",
+   "Y>+C P^ M . Y>+C . P>",
+   "R^ . . . . . .",
+   "Yv@- Yv@- G^&A . . . .",
+   ". . . . . . P^%A"
+  ],
+  "target": "EXTREME",
+  "facts": [],
+  "mechanic": "movable,switch,gate,lock",
+  "max_positions": 2000,
+  "overlap": [
+   0.32,
+   "N68"
+  ]
+ },
+ "R06s92_2": {
+  "map": [
+   "P<@- . . . . . B<#Y",
+   "G< P< R< P^#Y . . .",
+   ". . . . . XC P<",
+   "Y>+C P^ M . Y>@- . .",
+   "R^ . . . . . .",
+   "Yv@- Yv@- G^&A . . . .",
+   ". . . . . . P^%A"
+  ],
+  "target": "EXTREME",
+  "facts": [],
+  "mechanic": "movable,switch,gate,lock",
+  "max_positions": 2000,
+  "overlap": [
+   0.32,
+   "N68"
+  ]
+ },
+ "R06s92_3": {
+  "map": [
+   ". . . . . . B<#Y",
+   "G< P^@~ R< P^#Y . . .",
+   ". . . . . XC P<",
+   "Y>+C P^ M . . . P>",
+   "R^ . . . . . .",
+   "Yv@- Yv@- G^&A . . . .",
+   ". . . . . . P^%A"
+  ],
+  "target": "EXTREME",
+  "facts": [],
+  "mechanic": "movable,switch,gate,lock",
+  "max_positions": 2000,
+  "overlap": [
+   0.33,
+   "N68"
+  ]
+ }
+}

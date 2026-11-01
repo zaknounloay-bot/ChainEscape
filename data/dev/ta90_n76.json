@@ -1,0 +1,198 @@
+{
+ "format": "ce-ta90-proto",
+ "v": 1,
+ "test": "ta90_n76",
+ "assist": {
+  "undo": 3,
+  "show_a_move": 0,
+  "hammer": 0
+ },
+ "note": "Development only. Phase 29 EXTREME candidate (?extreme90p29=1); never shared, never production. TECHNICALLY QUALIFIED (Category A and B): NOT human-approved; human difficulty unvalidated.",
+ "boards": [
+  {
+   "id": "N76",
+   "accepted": true,
+   "label": "TECHNICALLY QUALIFIED - HUMAN UNTESTED",
+   "variant": "N76",
+   "design": "P29_R08bs92_3",
+   "family": "P29 two turned magnets (magnet + switch)",
+   "concept_group": "magnet x reversal",
+   "primary": "magnet, switch, armor, spinner",
+   "target": "EXTREME (a design target, not a rating; never shown to players)",
+   "idea": "two magnets are flip targets of one switch: one must fire before the reversal and the other after, so the single switch press splits the two pulls",
+   "source": "hybrid: hand core frozen cell for cell (seed_R08b_TWOTURNED.json, Phase 29); blocks added by tools/ta90_search.gd --ops=v20 with the Phase 28 pipeline (token guard, strict essentiality, spinners_max), RNG seed 92 (protocol.json); early screen tools/extreme90_screen28.py; advisory rank tools/ta90_rank29.gd",
+   "related_bank_concept": "N64 (one turned magnet - the closest family; here two magnets share the switch), N52 (pull order); closest occupancy N39 0.35",
+   "fingerprint": "edcef82925465b7b8779319b100a7e36c248deac269cbc8b679b8938d10d143f",
+   "mechanics": [
+    "magnet",
+    "switch",
+    "armor",
+    "spinner"
+   ],
+   "puzzle": {
+    "format": "ce-puzzle",
+    "v": 1,
+    "rules": 1,
+    "rows": 7,
+    "cols": 7,
+    "map": [
+     ". . . . . . .",
+     ". Gv . Y>&A* . R^ G>@*",
+     ". . . Bv&A . . .",
+     "Pv@~ . . B<= . . .",
+     ". R^ . Y<&A* Pv&A Gv .",
+     ". Pv@- . P<= . . .",
+     ". . . Rv@- B^ Y< G^%A"
+    ]
+   },
+   "design_report": {
+    "A": {
+     "fingerprint": "edcef82925465b7b8779319b100a7e36c248deac269cbc8b679b8938d10d143f",
+     "hint_nodes": [
+      24,
+      149
+     ],
+     "parity": [
+      0,
+      0
+     ],
+     "portals": 0,
+     "position_cap": 2000,
+     "positions": 916,
+     "replay": true,
+     "solution": 19,
+     "solve_ms": 4.3,
+     "timeup_worst_ms": 15.5,
+     "timeup_worst_nodes": 257,
+     "winnable": 195
+    },
+    "B": {
+     "coverage": 0.89,
+     "decision_steps": 17,
+     "distinct_mistakes": 5,
+     "endgame_decision": true,
+     "last_decision": 17,
+     "late": 0.89,
+     "line": [
+      "r2c3v ram [x1]",
+      "r1c6> [x1]",
+      "r1c5^ [x1]",
+      "r1c3> [x1]",
+      "r3c0v [x2]",
+      "r3c3< [x2]",
+      "r5c1v [x2]",
+      "r4c1^ [x1]",
+      "r4c3< [x1]",
+      "r4c3v ram [x2]",
+      "r6c3v [x3]",
+      "r6c4^ [x1]",
+      "r6c5< [x1]",
+      "r4c5v [x1]",
+      "r5c3< [x1]",
+      "r4c3v [x1]",
+      "r2c3v [x1]",
+      "r1c3v",
+      "r6c6^"
+     ],
+     "losing_per_step": [
+      1,
+      1,
+      1,
+      1,
+      2,
+      2,
+      2,
+      1,
+      1,
+      2,
+      3,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      0,
+      0
+     ],
+     "matters_armor": true,
+     "matters_magnet": true,
+     "matters_switch": true,
+     "mistakes": [
+      "r1c5^",
+      "r6c6^",
+      "r4c1^",
+      "r6c4^",
+      "r5c3<"
+     ],
+     "shortcut": 0.045,
+     "spinner_dependence": "without it: 11 decision steps, 1 distinct mistakes (with it: 17, 5)",
+     "without_armor": "without it: 13 decision steps, 3 distinct mistakes (with it: 17, 5)",
+     "without_magnet": "unsolvable without it",
+     "without_switch": "without it: 7 decision steps, 4 distinct mistakes (with it: 17, 5)"
+    },
+    "C": {
+     "decisions_k4_6_8": [
+      12,
+      7,
+      5
+     ],
+     "deepest": 15,
+     "greedy": {
+      "look2": 0.045,
+      "look4": 0.042,
+      "min_turn": 0.02,
+      "mobility": 0,
+      "safe": 0.005
+     },
+     "hidden_k6_8": [
+      10,
+      8
+     ],
+     "learner": {
+      "look4": 2,
+      "look6": 2
+     },
+     "look6_greedy": 0.083,
+     "opening": "5 / 6",
+     "pressure": {
+      "advances": 0,
+      "calm_prefix": 1,
+      "flips": 0,
+      "multi_turned": 0,
+      "prediction_share": 0.21,
+      "pulls": 2,
+      "rams": 2,
+      "signals": 2,
+      "spinners_turned": 0,
+      "trap_delay_median": 5,
+      "turns": 0,
+      "undo_proof": 0.65
+     },
+     "win_share": 0.213
+    },
+    "filler": {
+     "distinct": 5,
+     "pieces_tested": 17,
+     "steps": 17,
+     "trivial": [],
+     "trivial_removals": 0
+    },
+    "similarity": {
+     "closest_known": "N39",
+     "overlap": 0.35
+    },
+    "advisory_rank29": {
+     "flags": [
+      "simple_strategy"
+     ],
+     "gmax": 0.058,
+     "look6": 0.083,
+     "p_calm": 0.009,
+     "forced_share": 0.26,
+     "dep_depth": 9
+    }
+   }
+  }
+ ]
+}

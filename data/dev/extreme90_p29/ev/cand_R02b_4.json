@@ -1,0 +1,17 @@
+{
+ "R02b_4": {
+  "map": [
+   "Gv B< B< P>@- . . .",
+   ". . . Bv&A . . .",
+   ". . . G<@~ . . .",
+   ". Gv#B . Y>&A* G<@#B R^ .",
+   ". . . . . R^ Yv@-",
+   "G<&A . . P<= Y>* . .",
+   "B> . . . . . G^%A"
+  ],
+  "target": "EXTREME",
+  "facts": [],
+  "mechanic": "magnet,switch,lock,armor",
+  "max_positions": 2000
+ }
+}

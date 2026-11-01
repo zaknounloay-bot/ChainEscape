@@ -1,0 +1,45 @@
+Godot Engine v4.3.stable.official.77dcf97d8 - https://godotengine.org
+
+SCRIPT ERROR: Invalid access of index '6' on a base object of type: 'Array'.
+          at: _rot (res://tools/vh_pilot4_canon.gd:101)
+SCRIPT ERROR: Out of bounds get index '0' (on base: 'Array')
+          at: _relabel (res://tools/vh_pilot4_canon.gd:141)
+SCRIPT ERROR: Out of bounds get index '0' (on base: 'Array')
+          at: _relabel (res://tools/vh_pilot4_canon.gd:141)
+SCRIPT ERROR: Out of bounds get index '0' (on base: 'Array')
+          at: _rot (res://tools/vh_pilot4_canon.gd:96)
+SCRIPT ERROR: Out of bounds get index '0' (on base: 'Array')
+          at: _relabel (res://tools/vh_pilot4_canon.gd:141)
+SCRIPT ERROR: Out of bounds get index '0' (on base: 'Array')
+          at: _relabel (res://tools/vh_pilot4_canon.gd:141)
+SCRIPT ERROR: Out of bounds get index '0' (on base: 'Array')
+          at: _rot (res://tools/vh_pilot4_canon.gd:96)
+SCRIPT ERROR: Out of bounds get index '0' (on base: 'Array')
+          at: _relabel (res://tools/vh_pilot4_canon.gd:141)
+SCRIPT ERROR: Out of bounds get index '0' (on base: 'Array')
+          at: _relabel (res://tools/vh_pilot4_canon.gd:141)
+SCRIPT ERROR: Out of bounds get index '0' (on base: 'Array')
+          at: _rot (res://tools/vh_pilot4_canon.gd:96)
+known boards: 39940
+known boards incl. T1-T5 and the demos: 39940; played boards for the near-copy guard: 333
+generator: v20 (strategic operators)
+seed: -21.2 | 7 pieces, 32 positions, solution 7, distinct 3, steps 3 (cover 0.43, late 0.43), endgame false, mechanic 2/4, shortcut 100% | [". . . . . . .",". . . . . . .",". . . . . . .",". Gv XC Y>&A* . R^ .",". . . . . . .","R^+C . . B<= . . .",". . . . . . G^%A"]
+round 1 (41 evaluated, 0 invalid refused, 9 s): best 56.3 | 8 pieces, 44 positions, solution 8, distinct 3, steps 4 (cover 0.50, late 0.50), endgame false, mechanic 2/4, shortcut 25% | [". . . . . . .",". . . . . . .",". . . . . . .","B^* Gv XC Y>&A* . R^ .",". . . . . . .","R^+C . . B<= . . .",". . . . . . G^%A"]
+round 2 (76 evaluated, 0 invalid refused, 23 s): best 72.3 | 9 pieces, 104 positions, solution 10, distinct 3, steps 6 (cover 0.60, late 0.60), endgame false, mechanic 2/4, shortcut 8% | [". . . . . . .",". . . . . . .",". . . . . . .","B^* Gv XC Y>&A* . R^ .","Y<= . . . . . .","R^+C . . B<= . . .",". . . . . . G^%A"]
+round 3 (115 evaluated, 0 invalid refused, 37 s): best 82.5 | 10 pieces, 156 positions, solution 11, distinct 3, steps 7 (cover 0.64, late 0.64), endgame false, mechanic 3/5, shortcut 8% | [". . . . . . .",". . . . . . .",". . . . . . .","B^* Gv XC Y>&A* . R^ .","Y<= . . . . . R>@","R^+C . . B<= . . .",". . . . . . G^%A"]
+round 4 (155 evaluated, 0 invalid refused, 62 s): best 115.2 | 10 pieces, 164 positions, solution 11, distinct 3, steps 8 (cover 0.73, late 0.73), endgame true, mechanic 3/4, shortcut 18% | [". . . . . . .",". . . . . . Y>=",". . . . . . .","B^* Gv XC Y>&A* . R^ .",". . . . . . .","R^+C . R<&A B<= . . .",". . . . . . G^%A"]
+round 5 (194 evaluated, 0 invalid refused, 91 s): best 121.8 | 11 pieces, 194 positions, solution 12, distinct 3, steps 9 (cover 0.75, late 0.75), endgame true, mechanic 3/4, shortcut 18% | [". . . . . . .",". . . . . . Y>=",". . . . . . .","B^* Gv XC Y>&A* . R^ .",". . . . . . P>+C","R^+C . R<&A B<= . . .",". . . . . . G^%A"]
+round 6 (232 evaluated, 0 invalid refused, 140 s): best 126.2 | 12 pieces, 230 positions, solution 13, distinct 3, steps 10 (cover 0.77, late 0.77), endgame true, mechanic 3/4, shortcut 15% | [". . . . . . .",". . . . . . Y>=","P>&A . . . . . .","B^* Gv XC Y>&A* . R^ .",". . . . . . P>+C","R^+C . R<&A B<= . . .",". . . . . . G^%A"]
+round 7 (272 evaluated, 0 invalid refused, 177 s): best 126.2 | 12 pieces, 230 positions, solution 13, distinct 3, steps 10 (cover 0.77, late 0.77), endgame true, mechanic 3/4, shortcut 15% | [". . . . . . .",". . . . . . Y>=","P>&A . . . . . .","B^* Gv XC Y>&A* . R^ .",". . . . . . P>+C","R^+C . R<&A B<= . . .",". . . . . . G^%A"]
+round 8 (307 evaluated, 0 invalid refused, 228 s): best 129.2 | 13 pieces, 345 positions, solution 14, distinct 3, steps 10 (cover 0.71, late 0.71), endgame true, mechanic 4/5, shortcut 2% | [". . . . . . .",". . . . . Y< Y>=",". . . Pv@- . . .","B^* Gv XC Y>&A* . R^ .",". . . . . . P>+C","R^+C . R<&A B<= . . .",". . . . . . G^%A"]
+round 9 (341 evaluated, 0 invalid refused, 260 s): best 136.5 | 14 pieces, 391 positions, solution 15, distinct 2, steps 9 (cover 0.60, late 0.73), endgame true, mechanic 5/5, shortcut 8% | [". . . . . . .",". . . . . Y< Y>=",". . . Pv@- . . .","B^* Gv XC Y>&A* . R^ .",". . . . . . P>+C","R^+C B<@ R<&A B<= . . .",". . . . . . G^%A"]
+round 10 (379 evaluated, 0 invalid refused, 308 s): best 136.5 | 14 pieces, 391 positions, solution 15, distinct 2, steps 9 (cover 0.60, late 0.73), endgame true, mechanic 5/5, shortcut 8% | [". . . . . . .",". . . . . Y< Y>=",". . . Pv@- . . .","B^* Gv XC Y>&A* . R^ .",". . . . . . P>+C","R^+C B<@ R<&A B<= . . .",". . . . . . G^%A"]
+round 11 (416 evaluated, 0 invalid refused, 355 s): best 139.6 | 15 pieces, 1576 positions, solution 17, distinct 4, steps 14 (cover 0.82, late 0.82), endgame true, mechanic 4/5, shortcut 12% | [". . . . . . G<&A",". . . . . . Y>=",". . . . . . .","B^* Gv XC Y>&A* Yv@- R^ Y^=",". . . . . . P>+C","R^+C . R<&A B<= . . .",". . . Y<@~ . . G^%A"]
+round 12 (453 evaluated, 0 invalid refused, 415 s): best 141.0 | 14 pieces, 638 positions, solution 15, distinct 2, steps 10 (cover 0.67, late 0.73), endgame true, mechanic 5/5, shortcut 8% | [". . . R^@~ . . .",". . . . . . Y>=",". . . Pv@- . . .","B^* Gv XC Y>&A* . R^ .",". . . . . . P>+C","R^+C B<@ R<&A B<= . . .",". . . . . . G^%A"]
+round 13 (491 evaluated, 0 invalid refused, 487 s): best 143.5 | 15 pieces, 686 positions, solution 16, distinct 2, steps 11 (cover 0.69, late 0.75), endgame true, mechanic 5/5, shortcut 0% | [". . . R^@~ . . .",". . . . . . Y>=","B^&A . . Pv@- . . .","B^* Gv XC Y>&A* . R^ .",". . . . . . P>+C","R^+C B<@ R<&A B<= . . .",". . . . . . G^%A"]
+round 14 (529 evaluated, 0 invalid refused, 545 s): best 143.5 | 15 pieces, 674 positions, solution 16, distinct 2, steps 11 (cover 0.69, late 0.75), endgame true, mechanic 5/5, shortcut 0% | [". . . R^@~ . . .",". . . . . . Y>=","B^&A . . Pv@ . . .","B^* Gv XC Y>&A* . R^ .",". . . . . . P>+C","R^+C B<@ R<&A B<= . . .",". . . . . . G^%A"]
+round 15 (567 evaluated, 0 invalid refused, 616 s): best 144.5 | 16 pieces, 734 positions, solution 17, distinct 2, steps 12 (cover 0.71, late 0.76), endgame true, mechanic 5/5, shortcut 0% | ["R^@ . . R^@~ . . .",". . . . . . Y>=","B^&A . . Pv@- . . .","B^* Gv XC Y>&A* . R^ .",". . . . . . P>+C","R^+C B<@ R<&A B<= . . .",". . . . . . G^%A"]
+round 16 (603 evaluated, 0 invalid refused, 676 s): best 146.0 | 17 pieces, 976 positions, solution 19, distinct 2, steps 14 (cover 0.74, late 0.79), endgame true, mechanic 5/5, shortcut 0% | ["R^@ . . R^@~ . . .",". . . . . . Y>=","B^&A . . Pv@- . . P>=","B^* Gv XC Y>&A* . R^ .",". . . . . . P>+C","R^+C B<@ R<&A B<= . . .",". . . . . . G^%A"]
+round 17 (641 evaluated, 0 invalid refused, 758 s): best 146.0 | 17 pieces, 976 positions, solution 19, distinct 2, steps 14 (cover 0.74, late 0.79), endgame true, mechanic 5/5, shortcut 0% | ["R^@ . . R^@~ . . .",". . . . . . Y>=","B^&A . . Pv@- . . P>=","B^* Gv XC Y>&A* . R^ .",". . . . . . P>+C","R^+C B<@ R<&A B<= . . .",". . . . . . G^%A"]
+stopped after 17 rounds: time budget
+BEST ["R^@ . . R^@~ . . .",". . . . . . Y>=","B^&A . . Pv@- . . P>=","B^* Gv XC Y>&A* . R^ .",". . . . . . P>+C","R^+C B<@ R<&A B<= . . .",". . . . . . G^%A"]

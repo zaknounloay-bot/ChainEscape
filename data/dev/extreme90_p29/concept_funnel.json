@@ -1,0 +1,269 @@
+{
+ "note": "Phase 29 concept funnel (docs/extreme90_phase29.md, section F): decided before generation",
+ "proposals": [
+  {
+   "id": "R01",
+   "family": "magnet x reversal x gate",
+   "concept": "a turned magnet behind a gate (the reversal picks the side, the gate decides whether that side can be pulled)",
+   "decision": "ADVANCED",
+   "reason": "builds on the approved N64 mechanism with a second, independent dependency (gate timing)"
+  },
+  {
+   "id": "R02",
+   "family": "magnet x reversal x lock",
+   "concept": "a turned magnet whose cargo is locked",
+   "decision": "ADVANCED",
+   "reason": "N64 mechanism + lock timing; distinct from N67 (whose pull line never turns)"
+  },
+  {
+   "id": "R03",
+   "family": "crate x reversal",
+   "concept": "the crate walls in the switch; the pusher needs the reversal the crate blocks",
+   "decision": "ADVANCED",
+   "reason": "crate + switch pushers produced N68 / N69 (both EXTREME); a chicken-and-egg not in the bank"
+  },
+  {
+   "id": "R04",
+   "family": "reversal x lock x armor",
+   "concept": "the key is an armored flip target",
+   "decision": "ADVANCED",
+   "reason": "switch + lock + armor without spinners is not in the bank; risk: N61 / N62 family"
+  },
+  {
+   "id": "R05",
+   "family": "crate x reversal",
+   "concept": "two crates in one column - pushing one moves it into the other's route",
+   "decision": "ADVANCED",
+   "reason": "two-crate interaction is not in the bank (N35 has one crate)"
+  },
+  {
+   "id": "R06",
+   "family": "crate x reversal x gate x lock",
+   "concept": "the key is also the gate's link, and the crate stands in the key's lane",
+   "decision": "ADVANCED",
+   "reason": "combines the N66 key-link with a crate; risk: N66 was HARD - kept only if its profile is clean"
+  },
+  {
+   "id": "R07",
+   "family": "reversal x gate x lock",
+   "concept": "the gate's last link is locked and faces its gate",
+   "decision": "ADVANCED",
+   "reason": "order between a key, a reversal and a gate opening"
+  },
+  {
+   "id": "R08",
+   "family": "magnet x reversal",
+   "concept": "two turned magnets on one switch: one must fire before the reversal, one after",
+   "decision": "ADVANCED",
+   "reason": "a two-magnet extension of N64; flagged as its closest relative"
+  },
+  {
+   "id": "X01",
+   "family": "reversal x lock",
+   "concept": "the locked trigger",
+   "decision": "rejected",
+   "reason": "is N63 (MEDIUM: a linear forced chain)"
+  },
+  {
+   "id": "X02",
+   "family": "reversal x gate",
+   "concept": "the reversed block waits at the gate",
+   "decision": "rejected",
+   "reason": "is N65 (EASY)"
+  },
+  {
+   "id": "X03",
+   "family": "magnet x lock",
+   "concept": "pull the prisoner",
+   "decision": "rejected",
+   "reason": "is N67 (MEDIUM)"
+  },
+  {
+   "id": "X04",
+   "family": "magnet x reversal",
+   "concept": "the relocated switch",
+   "decision": "rejected",
+   "reason": "is N70 (EASY)"
+  },
+  {
+   "id": "X05",
+   "family": "lock x gate",
+   "concept": "the key is also a link",
+   "decision": "rejected",
+   "reason": "is N66 (HARD, borderline)"
+  },
+  {
+   "id": "X06",
+   "family": "magnet x reversal",
+   "concept": "the turned magnet",
+   "decision": "rejected",
+   "reason": "is N64 (approved)"
+  },
+  {
+   "id": "X07",
+   "family": "crate x reversal x lock",
+   "concept": "the shuttle and the door",
+   "decision": "rejected",
+   "reason": "is N68 (approved)"
+  },
+  {
+   "id": "X08",
+   "family": "crate x gate x reversal",
+   "concept": "two walls in one row",
+   "decision": "rejected",
+   "reason": "is N69 (approved)"
+  },
+  {
+   "id": "X09",
+   "family": "reversal x armor",
+   "concept": "the shell's exit",
+   "decision": "rejected",
+   "reason": "is N62"
+  },
+  {
+   "id": "X10",
+   "family": "reversal x lock",
+   "concept": "the key turned to face its prisoner",
+   "decision": "rejected",
+   "reason": "is N61"
+  },
+  {
+   "id": "X11",
+   "family": "magnet relocation",
+   "concept": "the magnet moves the magnet",
+   "decision": "rejected",
+   "reason": "is N59"
+  },
+  {
+   "id": "X12",
+   "family": "magnet",
+   "concept": "pull-order cascade",
+   "decision": "rejected",
+   "reason": "is N52"
+  },
+  {
+   "id": "X13",
+   "family": "lock x spinner",
+   "concept": "shared key, two counts",
+   "decision": "rejected",
+   "reason": "is N53"
+  },
+  {
+   "id": "X14",
+   "family": "crate x gate x spinner",
+   "concept": "the brake",
+   "decision": "rejected",
+   "reason": "is N56"
+  },
+  {
+   "id": "X15",
+   "family": "crate x Sequence",
+   "concept": "the Sequence pusher",
+   "decision": "rejected",
+   "reason": "N44 / N58"
+  },
+  {
+   "id": "X16",
+   "family": "monotone sets",
+   "concept": "lock + armor, gate + armor, Sequence + gate, portal + gate",
+   "decision": "rejected",
+   "reason": "Phase 28 finding: no move can become irreversibly wrong (no snapshot mechanic)"
+  },
+  {
+   "id": "X17",
+   "family": "magnet x crate",
+   "concept": "the magnet pulls a crate",
+   "decision": "rejected",
+   "reason": "engine: a crate stops a pull, and magnets are refused on crate boards"
+  },
+  {
+   "id": "X18",
+   "family": "Sequence x reversal",
+   "concept": "a reversal changes the boomerang's lane",
+   "decision": "rejected",
+   "reason": "engine: a flip moves nothing; Sequence blocks cannot be flip targets"
+  },
+  {
+   "id": "X19",
+   "family": "magnet x armor",
+   "concept": "an armored / locked / linked magnet",
+   "decision": "rejected",
+   "reason": "engine-invalid (xb28 validator)"
+  },
+  {
+   "id": "X20",
+   "family": "Sequence x armor",
+   "concept": "the battering ram",
+   "decision": "rejected",
+   "reason": "Phase 28 P08: 0 qualifying on seed 82, filler wall on seed 81 - structurally weak"
+  },
+  {
+   "id": "X21",
+   "family": "magnet x Sequence",
+   "concept": "the relocated boomerang",
+   "decision": "rejected",
+   "reason": "is N60 (MEDIUM)"
+  },
+  {
+   "id": "X22",
+   "family": "portal x reversal",
+   "concept": "the flip sends the rammer through the portal",
+   "decision": "rejected",
+   "reason": "K2 / H6"
+  },
+  {
+   "id": "X23",
+   "family": "portal x spinner",
+   "concept": "a turn changes the far side",
+   "decision": "rejected",
+   "reason": "N34 / N40"
+  },
+  {
+   "id": "X24",
+   "family": "crate x portal x reversal",
+   "concept": "the crate goes through the portal",
+   "decision": "rejected",
+   "reason": "N37 / N51"
+  },
+  {
+   "id": "R09",
+   "family": "crate x reversal x lock",
+   "concept": "the locked pusher: the only block that can push the crate is locked and is the flip target; its key must cross the crate's landing lane first",
+   "decision": "ADVANCED (round 92)",
+   "reason": "lock timing against a crate push is not in the bank (N68 is a crate shuttle and a door; R06 is a key that is also a link)"
+  },
+  {
+   "id": "R10",
+   "family": "crate x spinner",
+   "concept": "the turning pusher: a spinner instead of a switch as the crate core's direction change",
+   "decision": "rejected",
+   "reason": "the hand core is unsolvable as drawn (bench24: winnable false); not pursued - no guessing at spinner rules"
+  },
+  {
+   "id": "R01b",
+   "family": "magnet x reversal x gate",
+   "concept": "R01 without armor",
+   "decision": "ADVANCED (round 92 revision)",
+   "reason": "round 91 R01 stalled at 2 distinct mistakes; armor is monotone (Phase 28), so it is removed and the suffix rate raised 0.3 -> 0.4"
+  },
+  {
+   "id": "R02b",
+   "family": "magnet x reversal x lock",
+   "concept": "R02 without armor",
+   "decision": "ADVANCED (round 92 revision)",
+   "reason": "round 91 R02 stalled at 2 distinct mistakes; same change"
+  },
+  {
+   "id": "R08b",
+   "family": "magnet x reversal",
+   "concept": "R08 without armor",
+   "decision": "ADVANCED (round 92 revision)",
+   "reason": "round 91 R08 stalled at 3 distinct mistakes / 18-20% shortcut; same change"
+  }
+ ],
+ "counts": {
+  "proposals": 37,
+  "advanced": 12,
+  "rejected": 25
+ }
+}

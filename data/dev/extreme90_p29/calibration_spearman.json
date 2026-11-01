@@ -1,0 +1,21 @@
+{
+ "sol": 0.26,
+ "dist": -0.0,
+ "steps": 0.09,
+ "eff": 0.32,
+ "look6": -0.45,
+ "gmax": -0.38,
+ "learn": 0.29,
+ "pcalm": -0.53,
+ "plook2": -0.23,
+ "safe": 0.36,
+ "dep": 0.12,
+ "forced": -0.04,
+ "wd": -0.12,
+ "trapdelay": 0.18,
+ "deep": -0.12,
+ "quickfail": -0.11,
+ "conc": 0.13,
+ "pushshare": 0.12,
+ "escshare": -0.37
+}

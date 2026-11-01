@@ -1,0 +1,9 @@
+{
+ "R02b_4": {
+  "distinct": 6,
+  "pieces_tested": 17,
+  "steps": 15,
+  "trivial": [],
+  "trivial_removals": 0
+ }
+}
