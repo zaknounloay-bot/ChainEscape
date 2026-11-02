@@ -1,0 +1,22 @@
+A_T57_s305_0           filler         ['r1c4 Yv@', 'r2c4 Y^@', 'r2c6 Y<@~']
+A_T57_s305_1           not essential  {'without_switch': 'without it: 12 decision steps, 4 distinct mistakes (with it: 14, 4)'}
+A_T57_s305_2           not essential  {'without_switch': 'without it: 12 decision steps, 4 distinct mistakes (with it: 14, 4)'}
+A_T57_s305_3           PASS           []
+A_T57_s305_4           PASS           []
+A_T57_s305_5           PASS           []
+A_T57_s305_6           not essential  {'without_switch': 'without it: 13 decision steps, 4 distinct mistakes (with it: 12, 5)'}
+A_T57_s305_7           not essential  {'without_switch': 'without it: 11 decision steps, 5 distinct mistakes (with it: 12, 5)'}
+A_T57_s305_8           PASS           []
+A_T57_s305_9           filler         ['r0c1 G>&A', 'r0c2 Rv@']
+SCREEN: 10 boards, 4 PASS
+A_T57_s305_0           filler         
+A_T57_s305_1           not essential  
+A_T57_s305_2           not essential  
+A_T57_s305_3           PASS           PASS
+A_T57_s305_4           PASS           PASS
+A_T57_s305_5           PASS           PASS
+A_T57_s305_6           not essential  
+A_T57_s305_7           not essential  
+A_T57_s305_8           PASS           PASS
+A_T57_s305_9           filler         
+SCREEN30: 10 boards, 4 PASS

@@ -1,0 +1,17 @@
+{
+ "G_T10b_s302_0": {
+  "map": [
+   ". . . . . . .",
+   ". . . . . . B>@-",
+   ". . . . . . G>@",
+   ". R<%A B<#Y&A . G^@- Y>@~ .",
+   ". B>@- Yv@- Y>@- . Yv&A .",
+   ". . . G>@#Y P^@ P<#B B^&A",
+   ". . Pv#B . . . G^%A"
+  ],
+  "target": "EXTREME",
+  "facts": [],
+  "mechanic": "switch,lock",
+  "max_positions": 2000
+ }
+}

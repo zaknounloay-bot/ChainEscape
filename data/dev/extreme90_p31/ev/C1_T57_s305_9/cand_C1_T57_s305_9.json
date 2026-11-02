@@ -1,0 +1,17 @@
+{
+ "C1_T57_s305_9": {
+  "map": [
+   ". . . . . . .",
+   "Yv B>&A . Yv@- Yv@~ . G<",
+   ". . . . Y^@ Y>@ Gv&A",
+   "Y< . . . P<%A R> Gv&A",
+   ". . . . Gv&A . Y>",
+   ". . . . Y^ . .",
+   ". . . . G>%A . ."
+  ],
+  "target": "EXTREME",
+  "facts": [],
+  "mechanic": "switch",
+  "max_positions": 2000
+ }
+}

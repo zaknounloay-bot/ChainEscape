@@ -1,0 +1,62 @@
+{
+ "G_T27r_s308_0": {
+  "result": "not essential",
+  "detail": {
+   "without_gate": "without it: 10 decision steps, 4 distinct mistakes (with it: 11, 4)"
+  }
+ },
+ "G_T27r_s308_1": {
+  "result": "not essential",
+  "detail": {
+   "without_gate": "without it: 10 decision steps, 4 distinct mistakes (with it: 11, 4)"
+  }
+ },
+ "G_T27r_s308_2": {
+  "result": "Category A/B",
+  "detail": [
+   "a simple greedy player wins 24% (> 20%): a shortcut"
+  ]
+ },
+ "G_T27r_s308_3": {
+  "result": "not essential",
+  "detail": {
+   "without_gate": "without it: 9 decision steps, 4 distinct mistakes (with it: 10, 4)"
+  }
+ },
+ "G_T27r_s308_4": {
+  "result": "not essential",
+  "detail": {
+   "without_gate": "without it: 13 decision steps, 4 distinct mistakes (with it: 14, 4)"
+  }
+ },
+ "G_T27r_s308_5": {
+  "result": "not essential",
+  "detail": {
+   "without_gate": "without it: 10 decision steps, 5 distinct mistakes (with it: 11, 5)"
+  }
+ },
+ "G_T27r_s308_6": {
+  "result": "not essential",
+  "detail": {
+   "without_gate": "without it: 12 decision steps, 5 distinct mistakes (with it: 13, 5)"
+  }
+ },
+ "G_T27r_s308_7": {
+  "result": "not essential",
+  "detail": {
+   "without_gate": "without it: 12 decision steps, 6 distinct mistakes (with it: 13, 6)"
+  }
+ },
+ "G_T27r_s308_8": {
+  "result": "not essential",
+  "detail": {
+   "without_gate": "without it: 12 decision steps, 6 distinct mistakes (with it: 13, 6)"
+  }
+ },
+ "G_T27r_s308_9": {
+  "result": "not essential",
+  "detail": {
+   "without_gate": "without it: 11 decision steps, 6 distinct mistakes (with it: 12, 6)"
+  }
+ }
+}

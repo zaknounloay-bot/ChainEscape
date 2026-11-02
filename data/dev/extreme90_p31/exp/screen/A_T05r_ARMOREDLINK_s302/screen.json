@@ -1,0 +1,68 @@
+{
+ "A_T05r_s302_0": {
+  "result": "not essential",
+  "detail": {
+   "spinner_dependence": "without it: 11 decision steps, 3 distinct mistakes (with it: 11, 4)",
+   "without_gate": "without it: 11 decision steps, 5 distinct mistakes (with it: 11, 4)"
+  }
+ },
+ "A_T05r_s302_1": {
+  "result": "not essential",
+  "detail": {
+   "without_armor": "without it: 13 decision steps, 3 distinct mistakes (with it: 14, 4)",
+   "without_gate": "without it: 16 decision steps, 5 distinct mistakes (with it: 14, 4)"
+  }
+ },
+ "A_T05r_s302_2": {
+  "result": "not essential",
+  "detail": {
+   "without_armor": "without it: 14 decision steps, 4 distinct mistakes (with it: 15, 4)",
+   "without_gate": "without it: 17 decision steps, 5 distinct mistakes (with it: 15, 4)"
+  }
+ },
+ "A_T05r_s302_3": {
+  "result": "not essential",
+  "detail": {
+   "without_gate": "without it: 16 decision steps, 5 distinct mistakes (with it: 16, 4)"
+  }
+ },
+ "A_T05r_s302_4": {
+  "result": "not essential",
+  "detail": {
+   "spinner_dependence": "without it: 12 decision steps, 3 distinct mistakes (with it: 12, 4)",
+   "without_gate": "without it: 12 decision steps, 6 distinct mistakes (with it: 12, 4)"
+  }
+ },
+ "A_T05r_s302_5": {
+  "result": "not essential",
+  "detail": {
+   "without_gate": "without it: 12 decision steps, 4 distinct mistakes (with it: 11, 4)"
+  }
+ },
+ "A_T05r_s302_6": {
+  "result": "not essential",
+  "detail": {
+   "spinner_dependence": "without it: 14 decision steps, 3 distinct mistakes (with it: 14, 4)",
+   "without_gate": "without it: 14 decision steps, 5 distinct mistakes (with it: 14, 4)"
+  }
+ },
+ "A_T05r_s302_7": {
+  "result": "Category A/B",
+  "detail": [
+   "a simple greedy player wins 23% (> 20%): a shortcut"
+  ]
+ },
+ "A_T05r_s302_8": {
+  "result": "not essential",
+  "detail": {
+   "spinner_dependence": "without it: 14 decision steps, 3 distinct mistakes (with it: 14, 4)",
+   "without_gate": "without it: 14 decision steps, 5 distinct mistakes (with it: 14, 4)"
+  }
+ },
+ "A_T05r_s302_9": {
+  "result": "not essential",
+  "detail": {
+   "without_gate": "without it: 13 decision steps, 4 distinct mistakes (with it: 12, 4)"
+  }
+ }
+}

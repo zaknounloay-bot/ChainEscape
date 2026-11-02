@@ -1,0 +1,65 @@
+Godot Engine v4.3.stable.official.77dcf97d8 - https://godotengine.org
+
+ERROR: Level 0: block at (4, 1) flips with switch A, which does not exist
+   at: push_error (core/variant/variant_utility.cpp:1092)
+ERROR: Level 0: block at (2, 3) flips with switch A, which does not exist
+   at: push_error (core/variant/variant_utility.cpp:1092)
+ERROR: Level 0: block at (5, 5) flips with switch A, which does not exist
+   at: push_error (core/variant/variant_utility.cpp:1092)
+B_T10_s301_0 {"distinct":4,"pieces_tested":16,"steps":12,"trivial":["r1c2 P^#B","r1c4 B<&A"],"trivial_removals":2}
+ERROR: Level 0: block at (4, 1) flips with switch A, which does not exist
+   at: push_error (core/variant/variant_utility.cpp:1092)
+ERROR: Level 0: block at (2, 3) flips with switch A, which does not exist
+   at: push_error (core/variant/variant_utility.cpp:1092)
+ERROR: Level 0: block at (5, 5) flips with switch A, which does not exist
+   at: push_error (core/variant/variant_utility.cpp:1092)
+B_T10_s301_1 {"distinct":4,"pieces_tested":17,"steps":13,"trivial":["r1c2 P^#B","r1c4 B<&A"],"trivial_removals":2}
+ERROR: Level 0: block at (4, 1) flips with switch A, which does not exist
+   at: push_error (core/variant/variant_utility.cpp:1092)
+ERROR: Level 0: block at (2, 3) flips with switch A, which does not exist
+   at: push_error (core/variant/variant_utility.cpp:1092)
+ERROR: Level 0: block at (5, 5) flips with switch A, which does not exist
+   at: push_error (core/variant/variant_utility.cpp:1092)
+B_T10_s301_2 {"distinct":4,"pieces_tested":17,"steps":13,"trivial":["r1c2 P^#B","r1c4 B<&A"],"trivial_removals":2}
+ERROR: Level 0: block at (4, 1) flips with switch A, which does not exist
+   at: push_error (core/variant/variant_utility.cpp:1092)
+ERROR: Level 0: block at (2, 3) flips with switch A, which does not exist
+   at: push_error (core/variant/variant_utility.cpp:1092)
+ERROR: Level 0: block at (5, 5) flips with switch A, which does not exist
+   at: push_error (core/variant/variant_utility.cpp:1092)
+B_T10_s301_3 {"distinct":4,"pieces_tested":17,"steps":13,"trivial":["r1c2 P^#B","r1c4 B<&A"],"trivial_removals":2}
+ERROR: Level 0: block at (4, 1) flips with switch A, which does not exist
+   at: push_error (core/variant/variant_utility.cpp:1092)
+ERROR: Level 0: block at (2, 3) flips with switch A, which does not exist
+   at: push_error (core/variant/variant_utility.cpp:1092)
+ERROR: Level 0: block at (5, 5) flips with switch A, which does not exist
+   at: push_error (core/variant/variant_utility.cpp:1092)
+B_T10_s301_4 {"distinct":4,"pieces_tested":16,"steps":12,"trivial":["r1c2 P^#B","r1c4 B<&A"],"trivial_removals":2}
+ERROR: Level 0: block at (4, 1) flips with switch A, which does not exist
+   at: push_error (core/variant/variant_utility.cpp:1092)
+ERROR: Level 0: block at (2, 3) flips with switch A, which does not exist
+   at: push_error (core/variant/variant_utility.cpp:1092)
+ERROR: Level 0: block at (5, 5) flips with switch A, which does not exist
+   at: push_error (core/variant/variant_utility.cpp:1092)
+B_T10_s301_5 {"distinct":4,"pieces_tested":16,"steps":12,"trivial":["r1c2 P^#B","r1c4 B<&A"],"trivial_removals":2}
+ERROR: Level 0: block at (4, 1) flips with switch A, which does not exist
+   at: push_error (core/variant/variant_utility.cpp:1092)
+ERROR: Level 0: block at (2, 3) flips with switch A, which does not exist
+   at: push_error (core/variant/variant_utility.cpp:1092)
+ERROR: Level 0: block at (5, 5) flips with switch A, which does not exist
+   at: push_error (core/variant/variant_utility.cpp:1092)
+B_T10_s301_6 {"distinct":4,"pieces_tested":16,"steps":12,"trivial":["r1c2 P^#B","r1c4 B<&A"],"trivial_removals":2}
+ERROR: Level 0: block at (4, 1) flips with switch A, which does not exist
+   at: push_error (core/variant/variant_utility.cpp:1092)
+ERROR: Level 0: block at (2, 3) flips with switch A, which does not exist
+   at: push_error (core/variant/variant_utility.cpp:1092)
+ERROR: Level 0: block at (5, 5) flips with switch A, which does not exist
+   at: push_error (core/variant/variant_utility.cpp:1092)
+B_T10_s301_7 {"distinct":4,"pieces_tested":16,"steps":12,"trivial":["r1c2 P^#B","r1c4 B<&A"],"trivial_removals":2}
+ERROR: Level 0: block at (4, 1) flips with switch A, which does not exist
+   at: push_error (core/variant/variant_utility.cpp:1092)
+ERROR: Level 0: block at (2, 3) flips with switch A, which does not exist
+   at: push_error (core/variant/variant_utility.cpp:1092)
+ERROR: Level 0: block at (5, 5) flips with switch A, which does not exist
+   at: push_error (core/variant/variant_utility.cpp:1092)
+B_T10_s301_8 {"distinct":4,"pieces_tested":16,"steps":12,"trivial":["r1c2 P^#B","r1c4 B<&A"],"trivial_removals":2}

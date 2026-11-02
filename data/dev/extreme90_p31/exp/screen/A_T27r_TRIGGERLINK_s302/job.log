@@ -1,0 +1,22 @@
+A_T27r_s302_0          PASS           []
+A_T27r_s302_1          PASS           []
+A_T27r_s302_2          not essential  {'without_gate': 'without it: 13 decision steps, 4 distinct mistakes (with it: 11, 4)'}
+A_T27r_s302_3          not essential  {'without_gate': 'without it: 13 decision steps, 4 distinct mistakes (with it: 11, 4)'}
+A_T27r_s302_4          not essential  {'without_gate': 'without it: 13 decision steps, 4 distinct mistakes (with it: 11, 4)'}
+A_T27r_s302_5          PASS           []
+A_T27r_s302_6          PASS           []
+A_T27r_s302_7          filler         ['r4c5 Y^&A']
+A_T27r_s302_8          PASS           []
+A_T27r_s302_9          PASS           []
+SCREEN: 10 boards, 6 PASS
+A_T27r_s302_0          PASS           PASS
+A_T27r_s302_1          PASS           PASS
+A_T27r_s302_2          not essential  
+A_T27r_s302_3          not essential  
+A_T27r_s302_4          not essential  
+A_T27r_s302_5          PASS           PASS
+A_T27r_s302_6          PASS           PASS
+A_T27r_s302_7          filler         
+A_T27r_s302_8          PASS           PASS
+A_T27r_s302_9          PASS           PASS
+SCREEN30: 10 boards, 6 PASS

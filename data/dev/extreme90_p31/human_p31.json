@@ -1,0 +1,41 @@
+{
+ "source": "Phase 31 owner decision message (project owner), first exposures of the Phase 31 page (?extreme90p31=1, build p31-qa1-20261101). Recorded verbatim; nothing inferred. 90-second outcome, Restart / UNDO counts, attempts and move sequences were NOT supplied for any board; enjoyment was supplied only for N83, N86 and N87.",
+ "recorded": "2026-11-02",
+ "boards": {
+  "N83": {
+   "difficulty": "EXTREME",
+   "outcome_90s": "not supplied",
+   "enjoyment": "5/5",
+   "fingerprint": "78a09b2fee3efd8489fa4c4c8b0f4f363c56a0a71ed645efbfd9e57313fec9ff",
+   "source_board": "A_T01r_s302_2"
+  },
+  "N84": {
+   "difficulty": "MEDIUM",
+   "outcome_90s": "not supplied",
+   "enjoyment": "not supplied",
+   "fingerprint": "eab0d042cdae8a03b0d03142b4a3dedf5e0d1f8775f90915dab148da1f89b1fd",
+   "source_board": "A_T27r_s302_0"
+  },
+  "N85": {
+   "difficulty": "HARD",
+   "outcome_90s": "not supplied",
+   "enjoyment": "not supplied",
+   "fingerprint": "7402bad1588b4f4ca5fefbab33155e2619e8522d14678b30f69face7ceda818b",
+   "source_board": "G_T57_s308_0"
+  },
+  "N86": {
+   "difficulty": "EXTREME",
+   "outcome_90s": "not supplied",
+   "enjoyment": "5/5",
+   "fingerprint": "8d1800aa83cbcc6919b2116b176d268b7d144ffb66245a2053f7fff19d349b93",
+   "source_board": "G_T10b_s302_0"
+  },
+  "N87": {
+   "difficulty": "VERY HARD",
+   "outcome_90s": "not supplied",
+   "enjoyment": "5/5",
+   "fingerprint": "a9a6a5925dda083cbdc013ecbd434333e5600b6d1d30ef2720891e08a27633e5",
+   "source_board": "G_T30_s302_0"
+  }
+ }
+}

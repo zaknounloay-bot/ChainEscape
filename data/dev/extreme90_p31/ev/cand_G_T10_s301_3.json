@@ -1,0 +1,18 @@
+{
+ "G_T10_s301_3": {
+  "map": [
+   ". . . . . . .",
+   ". . P^#B . . . .",
+   ". . B^&A . . . .",
+   ". . B<#Y&A B>%A . . .",
+   ". . . G>#Y Rv@~ Yv .",
+   ". . Y^@~ B>&A . Pv@~ R^@~",
+   "Bv@- . Gv@~ . Y< . G^%A"
+  ],
+  "mechanic": "switch,lock",
+  "run": "G_T10_KEYLADDER_s301",
+  "rules": [
+   "S_old"
+  ]
+ }
+}

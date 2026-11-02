@@ -1,0 +1,448 @@
+{
+ "G_T10_s301_0": {
+  "result": "overlap",
+  "detail": [
+   0.41,
+   "N46"
+  ]
+ },
+ "G_T10_s301_1": {
+  "result": "overlap",
+  "detail": [
+   0.41,
+   "N46"
+  ]
+ },
+ "G_T10_s301_2": {
+  "result": "filler",
+  "B": {
+   "coverage": 0.79,
+   "decision_steps": 11,
+   "distinct_mistakes": 4,
+   "endgame_decision": true,
+   "last_decision": 11,
+   "late": 0.79,
+   "losing_per_step": [
+    3,
+    4,
+    3,
+    2,
+    2,
+    2,
+    2,
+    2,
+    1,
+    1,
+    1,
+    0,
+    0,
+    0
+   ],
+   "matters_lock": true,
+   "matters_switch": true,
+   "mistakes": [
+    "r3c3>",
+    "r6c2v",
+    "r6c5v",
+    "r6c6^"
+   ],
+   "shortcut": 0.135,
+   "spinner_dependence": "unsolvable without it",
+   "without_lock": "without it: 9 decision steps, 1 distinct mistakes (with it: 11, 4)",
+   "without_switch": "unsolvable without it"
+  },
+  "A": {
+   "positions": 220,
+   "solution": 14,
+   "solve_ms": 2.5,
+   "timeup_worst_ms": 1.3
+  },
+  "overlap": [
+   0.33,
+   "N81"
+  ],
+  "filler": [
+   "r1c2 P^#B"
+  ]
+ },
+ "G_T10_s301_3": {
+  "result": "PASS",
+  "B": {
+   "coverage": 0.87,
+   "decision_steps": 13,
+   "distinct_mistakes": 5,
+   "endgame_decision": true,
+   "last_decision": 13,
+   "late": 0.87,
+   "losing_per_step": [
+    3,
+    3,
+    3,
+    4,
+    3,
+    3,
+    2,
+    2,
+    2,
+    1,
+    1,
+    1,
+    1,
+    0,
+    0
+   ],
+   "matters_lock": true,
+   "matters_switch": true,
+   "mistakes": [
+    "r3c3>",
+    "r5c6^",
+    "r6c2v",
+    "r4c5v",
+    "r6c6^"
+   ],
+   "shortcut": 0.05,
+   "spinner_dependence": "unsolvable without it",
+   "without_lock": "without it: 0 decision steps, 0 distinct mistakes (with it: 13, 5)",
+   "without_switch": "unsolvable without it"
+  },
+  "A": {
+   "positions": 226,
+   "solution": 15,
+   "solve_ms": 8.8,
+   "timeup_worst_ms": 6.8
+  },
+  "overlap": [
+   0.32,
+   "N11"
+  ],
+  "filler": [],
+  "hint_follow": "PASS"
+ },
+ "G_T10_s301_4": {
+  "result": "filler",
+  "B": {
+   "coverage": 0.81,
+   "decision_steps": 13,
+   "distinct_mistakes": 5,
+   "endgame_decision": true,
+   "last_decision": 13,
+   "late": 0.81,
+   "losing_per_step": [
+    3,
+    3,
+    3,
+    4,
+    3,
+    3,
+    2,
+    2,
+    2,
+    1,
+    1,
+    1,
+    1,
+    0,
+    0,
+    0
+   ],
+   "matters_lock": true,
+   "matters_switch": true,
+   "mistakes": [
+    "r3c3>",
+    "r5c6^",
+    "r6c2v",
+    "r4c5v",
+    "r6c6^"
+   ],
+   "shortcut": 0.075,
+   "spinner_dependence": "unsolvable without it",
+   "without_lock": "without it: 0 decision steps, 0 distinct mistakes (with it: 13, 5)",
+   "without_switch": "unsolvable without it"
+  },
+  "A": {
+   "positions": 229,
+   "solution": 16,
+   "solve_ms": 4.9,
+   "timeup_worst_ms": 7
+  },
+  "overlap": [
+   0.32,
+   "N75"
+  ],
+  "filler": [
+   "r3c1 P^#B"
+  ]
+ },
+ "G_T10_s301_5": {
+  "result": "filler",
+  "B": {
+   "coverage": 0.75,
+   "decision_steps": 12,
+   "distinct_mistakes": 4,
+   "endgame_decision": true,
+   "last_decision": 12,
+   "late": 0.75,
+   "losing_per_step": [
+    2,
+    2,
+    3,
+    2,
+    3,
+    3,
+    3,
+    2,
+    2,
+    2,
+    1,
+    1,
+    0,
+    0,
+    0,
+    0
+   ],
+   "matters_lock": true,
+   "matters_switch": true,
+   "mistakes": [
+    "r3c3>",
+    "r6c2v",
+    "r6c6^",
+    "r4c5v"
+   ],
+   "shortcut": 0.005,
+   "spinner_dependence": "without it: 12 decision steps, 2 distinct mistakes (with it: 12, 4)",
+   "without_lock": "without it: 0 decision steps, 0 distinct mistakes (with it: 12, 4)",
+   "without_switch": "unsolvable without it"
+  },
+  "A": {
+   "positions": 260,
+   "solution": 16,
+   "solve_ms": 5.7,
+   "timeup_worst_ms": 3.6
+  },
+  "overlap": [
+   0.3,
+   "N81"
+  ],
+  "filler": [
+   "r1c2 P^#B"
+  ]
+ },
+ "G_T10_s301_6": {
+  "result": "filler",
+  "B": {
+   "coverage": 0.75,
+   "decision_steps": 12,
+   "distinct_mistakes": 4,
+   "endgame_decision": true,
+   "last_decision": 12,
+   "late": 0.75,
+   "losing_per_step": [
+    2,
+    2,
+    3,
+    2,
+    3,
+    3,
+    3,
+    2,
+    2,
+    2,
+    1,
+    1,
+    0,
+    0,
+    0,
+    0
+   ],
+   "matters_lock": true,
+   "matters_switch": true,
+   "mistakes": [
+    "r3c3>",
+    "r6c2v",
+    "r6c6^",
+    "r4c5v"
+   ],
+   "shortcut": 0.005,
+   "spinner_dependence": "unsolvable without it",
+   "without_lock": "without it: 0 decision steps, 0 distinct mistakes (with it: 12, 4)",
+   "without_switch": "unsolvable without it"
+  },
+  "A": {
+   "positions": 260,
+   "solution": 16,
+   "solve_ms": 4.9,
+   "timeup_worst_ms": 3.5
+  },
+  "overlap": [
+   0.3,
+   "N81"
+  ],
+  "filler": [
+   "r1c2 P^#B"
+  ]
+ },
+ "G_T10_s301_7": {
+  "result": "PASS",
+  "B": {
+   "coverage": 0.88,
+   "decision_steps": 14,
+   "distinct_mistakes": 5,
+   "endgame_decision": true,
+   "last_decision": 14,
+   "late": 0.88,
+   "losing_per_step": [
+    4,
+    4,
+    5,
+    4,
+    3,
+    3,
+    2,
+    2,
+    2,
+    2,
+    1,
+    1,
+    1,
+    1,
+    0,
+    0
+   ],
+   "matters_lock": true,
+   "matters_switch": true,
+   "mistakes": [
+    "r3c3>",
+    "r4c5v",
+    "r6c1v",
+    "r6c2v",
+    "r6c6^"
+   ],
+   "shortcut": 0.042,
+   "spinner_dependence": "unsolvable without it",
+   "without_lock": "without it: 13 decision steps, 2 distinct mistakes (with it: 14, 5)",
+   "without_switch": "unsolvable without it"
+  },
+  "A": {
+   "positions": 430,
+   "solution": 16,
+   "solve_ms": 8.8,
+   "timeup_worst_ms": 8.3
+  },
+  "overlap": [
+   0.3,
+   "N60"
+  ],
+  "filler": [],
+  "hint_follow": "PASS"
+ },
+ "G_T10_s301_8": {
+  "result": "filler",
+  "B": {
+   "coverage": 0.76,
+   "decision_steps": 13,
+   "distinct_mistakes": 4,
+   "endgame_decision": true,
+   "last_decision": 13,
+   "late": 0.76,
+   "losing_per_step": [
+    2,
+    2,
+    2,
+    3,
+    3,
+    4,
+    3,
+    3,
+    2,
+    2,
+    2,
+    1,
+    1,
+    0,
+    0,
+    0,
+    0
+   ],
+   "matters_lock": true,
+   "matters_switch": true,
+   "mistakes": [
+    "r3c3>",
+    "r6c2v",
+    "r6c6^",
+    "r4c5v"
+   ],
+   "shortcut": 0.08,
+   "spinner_dependence": "unsolvable without it",
+   "without_lock": "without it: 0 decision steps, 0 distinct mistakes (with it: 13, 4)",
+   "without_switch": "unsolvable without it"
+  },
+  "A": {
+   "positions": 538,
+   "solution": 17,
+   "solve_ms": 7.6,
+   "timeup_worst_ms": 4.7
+  },
+  "overlap": [
+   0.3,
+   "N46"
+  ],
+  "filler": [
+   "r1c2 P^#B"
+  ]
+ },
+ "G_T10_s301_9": {
+  "result": "PASS",
+  "B": {
+   "coverage": 0.88,
+   "decision_steps": 15,
+   "distinct_mistakes": 5,
+   "endgame_decision": true,
+   "last_decision": 15,
+   "late": 0.88,
+   "losing_per_step": [
+    3,
+    3,
+    3,
+    4,
+    3,
+    3,
+    2,
+    2,
+    2,
+    2,
+    2,
+    1,
+    1,
+    1,
+    1,
+    0,
+    0
+   ],
+   "matters_lock": true,
+   "matters_switch": true,
+   "mistakes": [
+    "r3c3>",
+    "r5c6^",
+    "r6c2v",
+    "r4c5v",
+    "r6c6^"
+   ],
+   "shortcut": 0.015,
+   "spinner_dependence": "unsolvable without it",
+   "without_lock": "without it: 12 decision steps, 2 distinct mistakes (with it: 15, 5)",
+   "without_switch": "unsolvable without it"
+  },
+  "A": {
+   "positions": 594,
+   "solution": 17,
+   "solve_ms": 26.4,
+   "timeup_worst_ms": 23.5
+  },
+  "overlap": [
+   0.3,
+   "N75"
+  ],
+  "filler": [],
+  "hint_follow": "PASS"
+ }
+}

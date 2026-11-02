@@ -1,0 +1,150 @@
+Godot Engine v4.3.stable.official.77dcf97d8 - https://godotengine.org
+
+SCRIPT ERROR: Invalid access of index '6' on a base object of type: 'Array'.
+          at: _rot (res://tools/vh_pilot4_canon.gd:101)
+SCRIPT ERROR: Out of bounds get index '0' (on base: 'Array')
+          at: _relabel (res://tools/vh_pilot4_canon.gd:141)
+SCRIPT ERROR: Out of bounds get index '0' (on base: 'Array')
+          at: _relabel (res://tools/vh_pilot4_canon.gd:141)
+SCRIPT ERROR: Out of bounds get index '0' (on base: 'Array')
+          at: _rot (res://tools/vh_pilot4_canon.gd:96)
+SCRIPT ERROR: Out of bounds get index '0' (on base: 'Array')
+          at: _relabel (res://tools/vh_pilot4_canon.gd:141)
+SCRIPT ERROR: Out of bounds get index '0' (on base: 'Array')
+          at: _relabel (res://tools/vh_pilot4_canon.gd:141)
+SCRIPT ERROR: Out of bounds get index '0' (on base: 'Array')
+          at: _rot (res://tools/vh_pilot4_canon.gd:96)
+SCRIPT ERROR: Out of bounds get index '0' (on base: 'Array')
+          at: _relabel (res://tools/vh_pilot4_canon.gd:141)
+SCRIPT ERROR: Out of bounds get index '0' (on base: 'Array')
+          at: _relabel (res://tools/vh_pilot4_canon.gd:141)
+SCRIPT ERROR: Out of bounds get index '0' (on base: 'Array')
+          at: _rot (res://tools/vh_pilot4_canon.gd:96)
+known boards: 49316
+known boards incl. T1-T5 and the demos: 49316; played boards for the near-copy guard: 333
+
+=== C1_T57_s305_0 (target EXTREME, 14 pieces) ===
+   . . . . . . .
+   . B>&A . Yv@- Yv@~ . G<
+   . . . . Y^@ Y>@ Gv&A
+   . . . . P<%A R> Gv&A
+   . . . . Gv&A . Y>
+   . . . . Y^ . .
+   . . . . Gv%A . .
+   solution: r4c6> [x2], r3c6v [x2], r1c3v [x2], r3c4< [x2], r1c1< [x1], r1c4< [x1], r1c6< [x1], r3c5> [x2], r2c5v [x2], r2c4< [x1], r2c6^ [x1], r4c4^ [x1], r5c4^, r6c4v
+   A {"fingerprint":"143324b482c84b27b12d7f54c9427592ddc467e37d472f26658ac97abcecc465","hint_nodes":[33,35],"portals":0,"position_cap":2000,"positions":209,"replay":true,"solution":14,"solve_ms":2.4,"timeup_worst_ms":2.2,"timeup_worst_nodes":52,"winnable":55}
+   B {"coverage":0.86,"decision_steps":12,"distinct_mistakes":4,"endgame_decision":true,"last_decision":12,"late":0.86,"line(see above)":["r4c6> [x2]","r3c6v [x2]","r1c3v [x2]","r3c4< [x2]","r1c1< [x1]","r1c4< [x1]","r1c6< [x1]","r3c5> [x2]","r2c5v [x2]","r2c4< [x1]","r2c6^ [x1]","r4c4^ [x1]","r5c4^","r6c4v"],"losing_per_step":[2,2,2,2,1,1,1,2,2,1,1,1,0,0],"matters_switch":true,"mistakes":["r3c4<","r6c4v","r2c6v","r2c6^"],"shortcut":0.125,"spinner_dependence":"unsolvable without it","without_switch":"unsolvable without it"}
+   C {"decisions_k4_6_8":[7,5,4],"deepest":12,"greedy":{"look2":0.065,"look4":0.092,"min_turn":0,"mobility":0.125,"safe":0.03},"hidden_k6_8":[9,6],"look6_greedy":0.192,"opening":"2 / 4","pressure":{"advances":0,"calm_prefix":2,"flips":3,"multi_turned":1,"prediction_share":0.36,"pulls":0,"rams":0,"signals":0,"spinners_turned":3,"trap_delay_median":6,"turns":5,"undo_proof":0.61},"win_share":0.263}
+   VERDICT: NEEDS WORK  -- 
+
+=== C1_T57_s305_1 (target EXTREME, 15 pieces) ===
+   . . . . . . .
+   . B>&A . Yv@- Yv@~ . G<
+   . . . . Y^@ Y>@ Gv&A
+   . . . . P<%A R> Gv&A
+   . . . . Gv&A . Y>
+   . . . . Y^ . Y>
+   . . . . Gv%A . .
+   solution: r4c6> [x2], r5c6> [x2], r3c6v [x2], r1c3v [x2], r3c4< [x2], r1c1< [x1], r1c4< [x1], r1c6< [x1], r3c5> [x2], r2c5v [x2], r2c4< [x1], r2c6^ [x1], r4c4^ [x1], r5c4^, r6c4v
+   A {"fingerprint":"ee02a300c784edcd0e4f38d6c17fae148623dcfd145d67571db9d26c30b1ac49","hint_nodes":[33,35],"portals":0,"position_cap":2000,"positions":267,"replay":true,"solution":15,"solve_ms":2.4,"timeup_worst_ms":2.1,"timeup_worst_nodes":52,"winnable":59}
+   B {"coverage":0.87,"decision_steps":13,"distinct_mistakes":4,"endgame_decision":true,"last_decision":13,"late":0.87,"line(see above)":["r4c6> [x2]","r5c6> [x2]","r3c6v [x2]","r1c3v [x2]","r3c4< [x2]","r1c1< [x1]","r1c4< [x1]","r1c6< [x1]","r3c5> [x2]","r2c5v [x2]","r2c4< [x1]","r2c6^ [x1]","r4c4^ [x1]","r5c4^","r6c4v"],"losing_per_step":[2,2,2,2,2,1,1,1,2,2,1,1,1,0,0],"matters_switch":true,"mistakes":["r3c4<","r6c4v","r2c6v","r2c6^"],"shortcut":0.12,"spinner_dependence":"unsolvable without it","without_switch":"unsolvable without it"}
+   C {"decisions_k4_6_8":[8,6,5],"deepest":13,"greedy":{"look2":0.05,"look4":0.092,"min_turn":0,"mobility":0.12,"safe":0.045},"hidden_k6_8":[11,8],"look6_greedy":0.175,"opening":"3 / 5","pressure":{"advances":0,"calm_prefix":3,"flips":3,"multi_turned":1,"prediction_share":0.33,"pulls":0,"rams":0,"signals":0,"spinners_turned":3,"trap_delay_median":6,"turns":5,"undo_proof":0.65},"win_share":0.221}
+   VERDICT: NEEDS WORK  -- 
+
+=== C1_T57_s305_2 (target EXTREME, 15 pieces) ===
+   . . . . . . .
+   Y^ B>&A . Yv@- Yv@~ . G<
+   . . . . Y^@ Y>@ Gv&A
+   . . . . P<%A R> Gv&A
+   . . . . Gv&A . Y>
+   . . . . Y^ . .
+   . . . . G>%A . .
+   solution: r1c0^ [x2], r4c6> [x2], r3c6v [x2], r1c3v [x2], r3c4< [x2], r1c1< [x1], r1c4< [x1], r1c6< [x1], r3c5> [x2], r2c5v [x2], r2c4< [x1], r2c6^ [x1], r4c4^ [x1], r5c4^, r6c4>
+   A {"fingerprint":"941a6ace76fc5e0e0cbf7c5b97fa0dd29bd028be212eb406efa41d1e143df1bd","hint_nodes":[33,35],"portals":0,"position_cap":2000,"positions":281,"replay":true,"solution":15,"solve_ms":4.7,"timeup_worst_ms":2.7,"timeup_worst_nodes":52,"winnable":75}
+   B {"coverage":0.87,"decision_steps":13,"distinct_mistakes":4,"endgame_decision":true,"last_decision":13,"late":0.87,"line(see above)":["r1c0^ [x2]","r4c6> [x2]","r3c6v [x2]","r1c3v [x2]","r3c4< [x2]","r1c1< [x1]","r1c4< [x1]","r1c6< [x1]","r3c5> [x2]","r2c5v [x2]","r2c4< [x1]","r2c6^ [x1]","r4c4^ [x1]","r5c4^","r6c4>"],"losing_per_step":[2,2,2,2,2,1,1,1,2,2,1,1,1,0,0],"matters_switch":true,"mistakes":["r3c4<","r6c4>","r2c6v","r2c6^"],"shortcut":0.12,"spinner_dependence":"unsolvable without it","without_switch":"unsolvable without it"}
+   C {"decisions_k4_6_8":[8,6,5],"deepest":13,"greedy":{"look2":0.05,"look4":0.092,"min_turn":0,"mobility":0.12,"safe":0.045},"hidden_k6_8":[11,8],"look6_greedy":0.175,"opening":"3 / 5","pressure":{"advances":0,"calm_prefix":3,"flips":3,"multi_turned":1,"prediction_share":0.33,"pulls":0,"rams":0,"signals":0,"spinners_turned":3,"trap_delay_median":6,"turns":5,"undo_proof":0.65},"win_share":0.267}
+   VERDICT: NEEDS WORK  -- 
+
+=== C1_T57_s305_3 (target EXTREME, 15 pieces) ===
+   . . . . . . .
+   Yv B>&A . Yv@- Yv@~ . G<
+   . . . . Y^@ Y>@ Gv&A
+   . . . . P<%A R> Gv&A
+   . . . . Gv&A . Y>
+   . . . . Y^ . .
+   . . . . G>%A . .
+   solution: r1c0v [x2], r4c6> [x2], r3c6v [x2], r1c3v [x2], r3c4< [x2], r1c1< [x1], r1c4< [x1], r1c6< [x1], r3c5> [x2], r2c5v [x2], r2c4< [x1], r2c6^ [x1], r4c4^ [x1], r5c4^, r6c4>
+   A {"fingerprint":"4a8c9c4b9ab1b3632ad5251e88feff380c8791ab4067b8c44e07460aa9cbb2f4","hint_nodes":[33,35],"portals":0,"position_cap":2000,"positions":281,"replay":true,"solution":15,"solve_ms":6.1,"timeup_worst_ms":2.8,"timeup_worst_nodes":52,"winnable":75}
+   B {"coverage":0.87,"decision_steps":13,"distinct_mistakes":4,"endgame_decision":true,"last_decision":13,"late":0.87,"line(see above)":["r1c0v [x2]","r4c6> [x2]","r3c6v [x2]","r1c3v [x2]","r3c4< [x2]","r1c1< [x1]","r1c4< [x1]","r1c6< [x1]","r3c5> [x2]","r2c5v [x2]","r2c4< [x1]","r2c6^ [x1]","r4c4^ [x1]","r5c4^","r6c4>"],"losing_per_step":[2,2,2,2,2,1,1,1,2,2,1,1,1,0,0],"matters_switch":true,"mistakes":["r3c4<","r6c4>","r2c6v","r2c6^"],"shortcut":0.12,"spinner_dependence":"unsolvable without it","without_switch":"unsolvable without it"}
+   C {"decisions_k4_6_8":[8,6,5],"deepest":13,"greedy":{"look2":0.05,"look4":0.092,"min_turn":0,"mobility":0.12,"safe":0.045},"hidden_k6_8":[11,8],"look6_greedy":0.175,"opening":"3 / 5","pressure":{"advances":0,"calm_prefix":3,"flips":3,"multi_turned":1,"prediction_share":0.33,"pulls":0,"rams":0,"signals":0,"spinners_turned":3,"trap_delay_median":6,"turns":5,"undo_proof":0.65},"win_share":0.267}
+   VERDICT: NEEDS WORK  -- 
+
+=== C1_T57_s305_5 (target EXTREME, 17 pieces) ===
+   . . . . . . .
+   Yv B>&A . . Yv@~ . Y^@
+   G> . . Y^ Y^@ Y>@ G>&A
+   . . . . P<%A R> Gv&A
+   . P^ . . Gv&A G> .
+   . . . . Y^ . .
+   . . . . G<%A . .
+   solution: r1c6^ [x4], r3c6v [x4], r4c5> [x4], r3c5> [x4], r2c5v [x4], r2c6> [x3], r2c4> [x3], r2c3^ [x1], r2c0> [x1], r1c0v [x1], r3c4< [x1], r1c1< [x1], r1c4< [x1], r4c1^ [x1], r4c4^ [x1], r5c4^, r6c4<
+   A {"fingerprint":"b17d136b12e03041ff55af0a55f82adc76495269845b18e262fe02cbf4fb383d","hint_nodes":[27,29],"portals":0,"position_cap":2000,"positions":386,"replay":true,"solution":17,"solve_ms":9.9,"timeup_worst_ms":4.1,"timeup_worst_nodes":84,"winnable":75}
+   B {"coverage":0.88,"decision_steps":15,"distinct_mistakes":4,"endgame_decision":true,"last_decision":15,"late":0.88,"line(see above)":["r1c6^ [x4]","r3c6v [x4]","r4c5> [x4]","r3c5> [x4]","r2c5v [x4]","r2c6> [x3]","r2c4> [x3]","r2c3^ [x1]","r2c0> [x1]","r1c0v [x1]","r3c4< [x1]","r1c1< [x1]","r1c4< [x1]","r4c1^ [x1]","r4c4^ [x1]","r5c4^","r6c4<"],"losing_per_step":[4,4,4,4,4,3,3,1,1,1,1,1,1,1,1,0,0],"matters_switch":true,"mistakes":["r2c3^","r2c6>","r3c4<","r6c4<"],"shortcut":0.11,"spinner_dependence":"unsolvable without it","without_switch":"unsolvable without it"}
+   C {"decisions_k4_6_8":[10,6,2],"deepest":9,"greedy":{"look2":0.005,"look4":0.017,"min_turn":0,"mobility":0.11,"safe":0.005},"hidden_k6_8":[14,4],"look6_greedy":0.5,"opening":"3 / 7","pressure":{"advances":0,"calm_prefix":3,"flips":2,"multi_turned":0,"prediction_share":0.24,"pulls":0,"rams":0,"signals":0,"spinners_turned":3,"trap_delay_median":5,"turns":3,"undo_proof":0.71},"win_share":0.194}
+   VERDICT: NEEDS WORK  -- 
+
+=== C1_T57_s305_6 (target EXTREME, 17 pieces) ===
+   . . . . . . .
+   . B>&A Gv Yv@- Yv@~ . .
+   . . . . Y^@ Y>@ G>&A
+   . . . . P<%A R> Gv&A
+   . G> . . Gv&A . Y>
+   . . . . Y^ Pv .
+   . . . . G>%A P> .
+   solution: r4c6> [x3], r6c5> [x3], r3c6v [x4], r5c5v [x3], r1c3v [x3], r1c2v [x2], r3c4< [x2], r1c1< [x1], r1c4< [x1], r3c5> [x1], r2c5v [x1], r2c4< [x1], r2c6< [x1], r4c4^ [x1], r5c4^, r4c1>, r6c4>
+   A {"fingerprint":"a43e22eca7db9d5fb31a02f25690fa9b582ed289d380965ad4d5715562042c27","hint_nodes":[32,66],"portals":0,"position_cap":2000,"positions":835,"replay":true,"solution":17,"solve_ms":4.8,"timeup_worst_ms":4.6,"timeup_worst_nodes":78,"winnable":115}
+   B {"coverage":0.82,"decision_steps":14,"distinct_mistakes":4,"endgame_decision":true,"last_decision":14,"late":0.82,"line(see above)":["r4c6> [x3]","r6c5> [x3]","r3c6v [x4]","r5c5v [x3]","r1c3v [x3]","r1c2v [x2]","r3c4< [x2]","r1c1< [x1]","r1c4< [x1]","r3c5> [x1]","r2c5v [x1]","r2c4< [x1]","r2c6< [x1]","r4c4^ [x1]","r5c4^","r4c1>","r6c4>"],"losing_per_step":[3,3,4,3,3,2,2,1,1,1,1,1,1,1,0,0,0],"matters_switch":true,"mistakes":["r1c2v","r2c6>","r3c4<","r6c4>"],"shortcut":0.067,"spinner_dependence":"unsolvable without it","without_switch":"unsolvable without it"}
+   C {"decisions_k4_6_8":[9,7,6],"deepest":14,"greedy":{"look2":0.02,"look4":0.067,"min_turn":0,"mobility":0,"safe":0.045},"hidden_k6_8":[19,15],"look6_greedy":0.225,"opening":"3 / 6","pressure":{"advances":0,"calm_prefix":4,"flips":3,"multi_turned":1,"prediction_share":0.29,"pulls":0,"rams":0,"signals":2,"spinners_turned":3,"trap_delay_median":8,"turns":5,"undo_proof":0.81},"win_share":0.138}
+   VERDICT: NEEDS WORK  -- 
+
+=== C1_T57_s305_7 (target EXTREME, 17 pieces) ===
+   . . . . . . .
+   Y^ B>&A Gv Yv@- Yv@~ . .
+   . . . . Y^@ Y>@ Gv
+   . . . . P<%A R> Gv&A
+   . . . . Gv&A . Y>
+   . . . . Y^ Pv .
+   . . . . G>%A R> .
+   solution: r1c0^ [x2], r4c6> [x2], r6c5> [x2], r3c6v [x3], r5c5v [x3], r1c3v [x3], r1c2v [x2], r3c4< [x2], r1c1< [x2], r1c4< [x2], r3c5> [x2], r2c5v [x2], r2c4< [x1], r2c6v [x1], r4c4^ [x1], r5c4^, r6c4>
+   A {"fingerprint":"9b6aecac9bd3900132ddc9894a878cd40559ce383920262b2047458575c91728","hint_nodes":[33,101],"portals":0,"position_cap":2000,"positions":839,"replay":true,"solution":17,"solve_ms":5.8,"timeup_worst_ms":5.2,"timeup_worst_nodes":101,"winnable":173}
+   B {"coverage":0.88,"decision_steps":15,"distinct_mistakes":4,"endgame_decision":true,"last_decision":15,"late":0.88,"line(see above)":["r1c0^ [x2]","r4c6> [x2]","r6c5> [x2]","r3c6v [x3]","r5c5v [x3]","r1c3v [x3]","r1c2v [x2]","r3c4< [x2]","r1c1< [x2]","r1c4< [x2]","r3c5> [x2]","r2c5v [x2]","r2c4< [x1]","r2c6v [x1]","r4c4^ [x1]","r5c4^","r6c4>"],"losing_per_step":[2,2,2,3,3,3,2,2,2,2,2,2,1,1,1,0,0],"matters_switch":true,"mistakes":["r1c2v","r3c4<","r6c4>","r2c6v"],"shortcut":0.205,"spinner_dependence":"unsolvable without it","without_switch":"unsolvable without it"}
+   C {"decisions_k4_6_8":[11,8,7],"deepest":15,"greedy":{"look2":0.015,"look4":0.075,"min_turn":0,"mobility":0.205,"safe":0.005},"hidden_k6_8":[18,14],"look6_greedy":0.208,"opening":"4 / 6","pressure":{"advances":0,"calm_prefix":5,"flips":2,"multi_turned":1,"prediction_share":0.29,"pulls":0,"rams":0,"signals":2,"spinners_turned":3,"trap_delay_median":7,"turns":5,"undo_proof":0.73},"win_share":0.206}
+   VERDICT: NEEDS WORK  -- a simple greedy player wins 20% (> 20%): a shortcut
+
+=== C1_T57_s305_8 (target EXTREME, 17 pieces) ===
+   . . . . . . .
+   Yv B>&A G^ Yv@- Yv@~ . .
+   . . . . Y^@ Y>@ Gv&A
+   Yv . . . P<%A R> Gv&A
+   . . . . Gv&A . Y>
+   . . . . Y^ . .
+   . . . . G>%A R> .
+   solution: r3c0v [x1], r4c6> [x2], r6c5> [x2], r1c0v [x3], r3c6v [x3], r1c3v [x3], r1c2^ [x2], r3c4< [x2], r1c1< [x2], r1c4< [x2], r3c5> [x2], r2c5v [x2], r2c4< [x1], r2c6^ [x1], r4c4^ [x1], r5c4^, r6c4>
+   A {"fingerprint":"345a9894ea2335a753f2fd16afdd210c7713129bca44c76f30f04921cf45e82d","hint_nodes":[33,65],"portals":0,"position_cap":2000,"positions":877,"replay":true,"solution":17,"solve_ms":6,"timeup_worst_ms":4.1,"timeup_worst_nodes":101,"winnable":159}
+   B {"coverage":0.88,"decision_steps":15,"distinct_mistakes":5,"endgame_decision":true,"last_decision":15,"late":0.88,"line(see above)":["r3c0v [x1]","r4c6> [x2]","r6c5> [x2]","r1c0v [x3]","r3c6v [x3]","r1c3v [x3]","r1c2^ [x2]","r3c4< [x2]","r1c1< [x2]","r1c4< [x2]","r3c5> [x2]","r2c5v [x2]","r2c4< [x1]","r2c6^ [x1]","r4c4^ [x1]","r5c4^","r6c4>"],"losing_per_step":[1,2,2,3,3,3,2,2,2,2,2,2,1,1,1,0,0],"matters_switch":true,"mistakes":["r1c2^","r3c4<","r6c4>","r2c6v","r2c6^"],"shortcut":0.205,"spinner_dependence":"unsolvable without it","without_switch":"unsolvable without it"}
+   C {"decisions_k4_6_8":[11,8,7],"deepest":14,"greedy":{"look2":0.015,"look4":0.075,"min_turn":0,"mobility":0.205,"safe":0.005},"hidden_k6_8":[17,13],"look6_greedy":0.208,"opening":"4 / 5","pressure":{"advances":0,"calm_prefix":5,"flips":3,"multi_turned":1,"prediction_share":0.29,"pulls":0,"rams":0,"signals":2,"spinners_turned":3,"trap_delay_median":7,"turns":5,"undo_proof":0.72},"win_share":0.181}
+   VERDICT: NEEDS WORK  -- a simple greedy player wins 20% (> 20%): a shortcut
+
+=== C1_T57_s305_9 (target EXTREME, 16 pieces) ===
+   . . . . . . .
+   Yv B>&A . Yv@- Yv@~ . G<
+   . . . . Y^@ Y>@ Gv&A
+   Y< . . . P<%A R> Gv&A
+   . . . . Gv&A . Y>
+   . . . . Y^ . .
+   . . . . G>%A . .
+   solution: r3c0< [x1], r4c6> [x2], r1c0v [x2], r3c6v [x2], r1c3v [x2], r3c4< [x2], r1c1< [x1], r1c4< [x1], r1c6< [x1], r3c5> [x2], r2c5v [x2], r2c4< [x1], r2c6^ [x1], r4c4^ [x1], r5c4^, r6c4>
+   A {"fingerprint":"a67e463f7439f85d417f3d69ecc8fb418653689c46106645b197032b5752d62a","hint_nodes":[33,35],"portals":0,"position_cap":2000,"positions":317,"replay":true,"solution":16,"solve_ms":2.6,"timeup_worst_ms":2.8,"timeup_worst_nodes":52,"winnable":87}
+   B {"coverage":0.88,"decision_steps":14,"distinct_mistakes":4,"endgame_decision":true,"last_decision":14,"late":0.88,"line(see above)":["r3c0< [x1]","r4c6> [x2]","r1c0v [x2]","r3c6v [x2]","r1c3v [x2]","r3c4< [x2]","r1c1< [x1]","r1c4< [x1]","r1c6< [x1]","r3c5> [x2]","r2c5v [x2]","r2c4< [x1]","r2c6^ [x1]","r4c4^ [x1]","r5c4^","r6c4>"],"losing_per_step":[1,2,2,2,2,2,1,1,1,2,2,1,1,1,0,0],"matters_switch":true,"mistakes":["r6c4>","r3c4<","r2c6v","r2c6^"],"shortcut":0.115,"spinner_dependence":"unsolvable without it","without_switch":"unsolvable without it"}
+   C {"decisions_k4_6_8":[9,7,6],"deepest":14,"greedy":{"look2":0.07,"look4":0.067,"min_turn":0,"mobility":0.115,"safe":0.035},"hidden_k6_8":[12,9],"look6_greedy":0.25,"opening":"3 / 4","pressure":{"advances":0,"calm_prefix":4,"flips":3,"multi_turned":1,"prediction_share":0.31,"pulls":0,"rams":0,"signals":0,"spinners_turned":3,"trap_delay_median":6,"turns":5,"undo_proof":0.67},"win_share":0.274}
+   VERDICT: NEEDS WORK  -- 

@@ -1,0 +1,37 @@
+{
+ "G_T01r_s308_0": {
+  "distinct": 4,
+  "pieces_tested": 13,
+  "steps": 10,
+  "trivial": [],
+  "trivial_removals": 0
+ },
+ "G_T01r_s308_4": {
+  "distinct": 5,
+  "pieces_tested": 15,
+  "steps": 12,
+  "trivial": [],
+  "trivial_removals": 0
+ },
+ "G_T01r_s308_5": {
+  "distinct": 4,
+  "pieces_tested": 14,
+  "steps": 11,
+  "trivial": [],
+  "trivial_removals": 0
+ },
+ "G_T01r_s308_7": {
+  "distinct": 4,
+  "pieces_tested": 16,
+  "steps": 13,
+  "trivial": [],
+  "trivial_removals": 0
+ },
+ "G_T01r_s308_8": {
+  "distinct": 4,
+  "pieces_tested": 15,
+  "steps": 12,
+  "trivial": [],
+  "trivial_removals": 0
+ }
+}

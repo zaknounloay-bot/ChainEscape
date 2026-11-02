@@ -1,0 +1,18 @@
+{
+ "A_T57_s305_3": {
+  "map": [
+   ". G>&A Rv@ . P< . .",
+   "R>%A B>&A Pv@~ R> . . .",
+   ". . . . Y^@ . Y<@-",
+   ". . . . P<%A . .",
+   ". . G^@- P>@~ Gv . .",
+   ". . . . P>@ . .",
+   ". Y> . Yv@ Bv@- . ."
+  ],
+  "mechanic": "switch",
+  "run": "A_T57_TWOEFFECTS_s305",
+  "rules": [
+   "S_old"
+  ]
+ }
+}

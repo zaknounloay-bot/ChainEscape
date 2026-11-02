@@ -1,0 +1,22 @@
+C1_T57_s305_4          overlap        (0.44, 'N74')
+C1_T57_s305_0          PASS           []
+C1_T57_s305_1          PASS           []
+C1_T57_s305_2          PASS           []
+C1_T57_s305_3          PASS           []
+C1_T57_s305_5          PASS           []
+C1_T57_s305_6          filler         ['r4c1 G>']
+C1_T57_s305_7          Category A/B   ['a simple greedy player wins 20% (> 20%): a shortcut']
+C1_T57_s305_8          Category A/B   ['a simple greedy player wins 20% (> 20%): a shortcut']
+C1_T57_s305_9          PASS           []
+SCREEN: 10 boards, 6 PASS
+C1_T57_s305_4          overlap        
+C1_T57_s305_0          PASS           PASS
+C1_T57_s305_1          PASS           PASS
+C1_T57_s305_2          PASS           PASS
+C1_T57_s305_3          PASS           PASS
+C1_T57_s305_5          PASS           PASS
+C1_T57_s305_6          filler         
+C1_T57_s305_7          Category A/B   
+C1_T57_s305_8          Category A/B   
+C1_T57_s305_9          PASS           PASS
+SCREEN30: 10 boards, 6 PASS

@@ -1,0 +1,218 @@
+[
+ {
+  "name": "screen_A_T01r_PULLEDTRIGGER_s302",
+  "dir": "data/dev/extreme90_p31/exp/screen/A_T01r_PULLEDTRIGGER_s302",
+  "quiet": true,
+  "cmd": [
+   "python3",
+   "tools/extreme90_screen30.py",
+   "data/dev/extreme90_p31/exp/screen/A_T01r_PULLEDTRIGGER_s302/shortlist.json",
+   "data/dev/extreme90_p31/exp/screen/A_T01r_PULLEDTRIGGER_s302",
+   "/tmp/claude-0/-home-user-ChainEscape/7e9f2bd8-6e70-52bd-944d-4d9f0e72484e/scratchpad/godot/godot"
+  ]
+ },
+ {
+  "name": "screen_A_T03r_PULLTHEKEY_s302",
+  "dir": "data/dev/extreme90_p31/exp/screen/A_T03r_PULLTHEKEY_s302",
+  "quiet": true,
+  "cmd": [
+   "python3",
+   "tools/extreme90_screen30.py",
+   "data/dev/extreme90_p31/exp/screen/A_T03r_PULLTHEKEY_s302/shortlist.json",
+   "data/dev/extreme90_p31/exp/screen/A_T03r_PULLTHEKEY_s302",
+   "/tmp/claude-0/-home-user-ChainEscape/7e9f2bd8-6e70-52bd-944d-4d9f0e72484e/scratchpad/godot/godot"
+  ]
+ },
+ {
+  "name": "screen_A_T05r_ARMOREDLINK_s302",
+  "dir": "data/dev/extreme90_p31/exp/screen/A_T05r_ARMOREDLINK_s302",
+  "quiet": true,
+  "cmd": [
+   "python3",
+   "tools/extreme90_screen30.py",
+   "data/dev/extreme90_p31/exp/screen/A_T05r_ARMOREDLINK_s302/shortlist.json",
+   "data/dev/extreme90_p31/exp/screen/A_T05r_ARMOREDLINK_s302",
+   "/tmp/claude-0/-home-user-ChainEscape/7e9f2bd8-6e70-52bd-944d-4d9f0e72484e/scratchpad/godot/godot"
+  ]
+ },
+ {
+  "name": "screen_A_T27r_TRIGGERLINK_s302",
+  "dir": "data/dev/extreme90_p31/exp/screen/A_T27r_TRIGGERLINK_s302",
+  "quiet": true,
+  "cmd": [
+   "python3",
+   "tools/extreme90_screen30.py",
+   "data/dev/extreme90_p31/exp/screen/A_T27r_TRIGGERLINK_s302/shortlist.json",
+   "data/dev/extreme90_p31/exp/screen/A_T27r_TRIGGERLINK_s302",
+   "/tmp/claude-0/-home-user-ChainEscape/7e9f2bd8-6e70-52bd-944d-4d9f0e72484e/scratchpad/godot/godot"
+  ]
+ },
+ {
+  "name": "screen_A_T48_BOOMERANGDOOR_s303",
+  "dir": "data/dev/extreme90_p31/exp/screen/A_T48_BOOMERANGDOOR_s303",
+  "quiet": true,
+  "cmd": [
+   "python3",
+   "tools/extreme90_screen30.py",
+   "data/dev/extreme90_p31/exp/screen/A_T48_BOOMERANGDOOR_s303/shortlist.json",
+   "data/dev/extreme90_p31/exp/screen/A_T48_BOOMERANGDOOR_s303",
+   "/tmp/claude-0/-home-user-ChainEscape/7e9f2bd8-6e70-52bd-944d-4d9f0e72484e/scratchpad/godot/godot"
+  ]
+ },
+ {
+  "name": "screen_A_T57_TWOEFFECTS_s305",
+  "dir": "data/dev/extreme90_p31/exp/screen/A_T57_TWOEFFECTS_s305",
+  "quiet": true,
+  "cmd": [
+   "python3",
+   "tools/extreme90_screen30.py",
+   "data/dev/extreme90_p31/exp/screen/A_T57_TWOEFFECTS_s305/shortlist.json",
+   "data/dev/extreme90_p31/exp/screen/A_T57_TWOEFFECTS_s305",
+   "/tmp/claude-0/-home-user-ChainEscape/7e9f2bd8-6e70-52bd-944d-4d9f0e72484e/scratchpad/godot/godot"
+  ]
+ },
+ {
+  "name": "screen_A_T59_AIMEDRAM_s305",
+  "dir": "data/dev/extreme90_p31/exp/screen/A_T59_AIMEDRAM_s305",
+  "quiet": true,
+  "cmd": [
+   "python3",
+   "tools/extreme90_screen30.py",
+   "data/dev/extreme90_p31/exp/screen/A_T59_AIMEDRAM_s305/shortlist.json",
+   "data/dev/extreme90_p31/exp/screen/A_T59_AIMEDRAM_s305",
+   "/tmp/claude-0/-home-user-ChainEscape/7e9f2bd8-6e70-52bd-944d-4d9f0e72484e/scratchpad/godot/godot"
+  ]
+ },
+ {
+  "name": "screen_A_T61_BOOMERANGRAM_s307",
+  "dir": "data/dev/extreme90_p31/exp/screen/A_T61_BOOMERANGRAM_s307",
+  "quiet": true,
+  "cmd": [
+   "python3",
+   "tools/extreme90_screen30.py",
+   "data/dev/extreme90_p31/exp/screen/A_T61_BOOMERANGRAM_s307/shortlist.json",
+   "data/dev/extreme90_p31/exp/screen/A_T61_BOOMERANGRAM_s307",
+   "/tmp/claude-0/-home-user-ChainEscape/7e9f2bd8-6e70-52bd-944d-4d9f0e72484e/scratchpad/godot/godot"
+  ]
+ },
+ {
+  "name": "screen_B_T59_AIMEDRAM_s305",
+  "dir": "data/dev/extreme90_p31/exp/screen/B_T59_AIMEDRAM_s305",
+  "quiet": true,
+  "cmd": [
+   "python3",
+   "tools/extreme90_screen30.py",
+   "data/dev/extreme90_p31/exp/screen/B_T59_AIMEDRAM_s305/shortlist.json",
+   "data/dev/extreme90_p31/exp/screen/B_T59_AIMEDRAM_s305",
+   "/tmp/claude-0/-home-user-ChainEscape/7e9f2bd8-6e70-52bd-944d-4d9f0e72484e/scratchpad/godot/godot"
+  ]
+ },
+ {
+  "name": "screen_B_T61_BOOMERANGRAM_s307",
+  "dir": "data/dev/extreme90_p31/exp/screen/B_T61_BOOMERANGRAM_s307",
+  "quiet": true,
+  "cmd": [
+   "python3",
+   "tools/extreme90_screen30.py",
+   "data/dev/extreme90_p31/exp/screen/B_T61_BOOMERANGRAM_s307/shortlist.json",
+   "data/dev/extreme90_p31/exp/screen/B_T61_BOOMERANGRAM_s307",
+   "/tmp/claude-0/-home-user-ChainEscape/7e9f2bd8-6e70-52bd-944d-4d9f0e72484e/scratchpad/godot/godot"
+  ]
+ },
+ {
+  "name": "screen_C1_T01r_PULLEDTRIGGER_s302",
+  "dir": "data/dev/extreme90_p31/exp/screen/C1_T01r_PULLEDTRIGGER_s302",
+  "quiet": true,
+  "cmd": [
+   "python3",
+   "tools/extreme90_screen30.py",
+   "data/dev/extreme90_p31/exp/screen/C1_T01r_PULLEDTRIGGER_s302/shortlist.json",
+   "data/dev/extreme90_p31/exp/screen/C1_T01r_PULLEDTRIGGER_s302",
+   "/tmp/claude-0/-home-user-ChainEscape/7e9f2bd8-6e70-52bd-944d-4d9f0e72484e/scratchpad/godot/godot"
+  ]
+ },
+ {
+  "name": "screen_C1_T05r_ARMOREDLINK_s302",
+  "dir": "data/dev/extreme90_p31/exp/screen/C1_T05r_ARMOREDLINK_s302",
+  "quiet": true,
+  "cmd": [
+   "python3",
+   "tools/extreme90_screen30.py",
+   "data/dev/extreme90_p31/exp/screen/C1_T05r_ARMOREDLINK_s302/shortlist.json",
+   "data/dev/extreme90_p31/exp/screen/C1_T05r_ARMOREDLINK_s302",
+   "/tmp/claude-0/-home-user-ChainEscape/7e9f2bd8-6e70-52bd-944d-4d9f0e72484e/scratchpad/godot/godot"
+  ]
+ },
+ {
+  "name": "screen_C1_T57_TWOEFFECTS_s305",
+  "dir": "data/dev/extreme90_p31/exp/screen/C1_T57_TWOEFFECTS_s305",
+  "quiet": true,
+  "cmd": [
+   "python3",
+   "tools/extreme90_screen30.py",
+   "data/dev/extreme90_p31/exp/screen/C1_T57_TWOEFFECTS_s305/shortlist.json",
+   "data/dev/extreme90_p31/exp/screen/C1_T57_TWOEFFECTS_s305",
+   "/tmp/claude-0/-home-user-ChainEscape/7e9f2bd8-6e70-52bd-944d-4d9f0e72484e/scratchpad/godot/godot"
+  ]
+ },
+ {
+  "name": "screen_C1_T59_AIMEDRAM_s305",
+  "dir": "data/dev/extreme90_p31/exp/screen/C1_T59_AIMEDRAM_s305",
+  "quiet": true,
+  "cmd": [
+   "python3",
+   "tools/extreme90_screen30.py",
+   "data/dev/extreme90_p31/exp/screen/C1_T59_AIMEDRAM_s305/shortlist.json",
+   "data/dev/extreme90_p31/exp/screen/C1_T59_AIMEDRAM_s305",
+   "/tmp/claude-0/-home-user-ChainEscape/7e9f2bd8-6e70-52bd-944d-4d9f0e72484e/scratchpad/godot/godot"
+  ]
+ },
+ {
+  "name": "screen_C1_T61_BOOMERANGRAM_s307",
+  "dir": "data/dev/extreme90_p31/exp/screen/C1_T61_BOOMERANGRAM_s307",
+  "quiet": true,
+  "cmd": [
+   "python3",
+   "tools/extreme90_screen30.py",
+   "data/dev/extreme90_p31/exp/screen/C1_T61_BOOMERANGRAM_s307/shortlist.json",
+   "data/dev/extreme90_p31/exp/screen/C1_T61_BOOMERANGRAM_s307",
+   "/tmp/claude-0/-home-user-ChainEscape/7e9f2bd8-6e70-52bd-944d-4d9f0e72484e/scratchpad/godot/godot"
+  ]
+ },
+ {
+  "name": "screen_C2_T01r_PULLEDTRIGGER_s302",
+  "dir": "data/dev/extreme90_p31/exp/screen/C2_T01r_PULLEDTRIGGER_s302",
+  "quiet": true,
+  "cmd": [
+   "python3",
+   "tools/extreme90_screen30.py",
+   "data/dev/extreme90_p31/exp/screen/C2_T01r_PULLEDTRIGGER_s302/shortlist.json",
+   "data/dev/extreme90_p31/exp/screen/C2_T01r_PULLEDTRIGGER_s302",
+   "/tmp/claude-0/-home-user-ChainEscape/7e9f2bd8-6e70-52bd-944d-4d9f0e72484e/scratchpad/godot/godot"
+  ]
+ },
+ {
+  "name": "screen_C2_T59_AIMEDRAM_s305",
+  "dir": "data/dev/extreme90_p31/exp/screen/C2_T59_AIMEDRAM_s305",
+  "quiet": true,
+  "cmd": [
+   "python3",
+   "tools/extreme90_screen30.py",
+   "data/dev/extreme90_p31/exp/screen/C2_T59_AIMEDRAM_s305/shortlist.json",
+   "data/dev/extreme90_p31/exp/screen/C2_T59_AIMEDRAM_s305",
+   "/tmp/claude-0/-home-user-ChainEscape/7e9f2bd8-6e70-52bd-944d-4d9f0e72484e/scratchpad/godot/godot"
+  ]
+ },
+ {
+  "name": "screen_C2_T61_BOOMERANGRAM_s307",
+  "dir": "data/dev/extreme90_p31/exp/screen/C2_T61_BOOMERANGRAM_s307",
+  "quiet": true,
+  "cmd": [
+   "python3",
+   "tools/extreme90_screen30.py",
+   "data/dev/extreme90_p31/exp/screen/C2_T61_BOOMERANGRAM_s307/shortlist.json",
+   "data/dev/extreme90_p31/exp/screen/C2_T61_BOOMERANGRAM_s307",
+   "/tmp/claude-0/-home-user-ChainEscape/7e9f2bd8-6e70-52bd-944d-4d9f0e72484e/scratchpad/godot/godot"
+  ]
+ }
+]

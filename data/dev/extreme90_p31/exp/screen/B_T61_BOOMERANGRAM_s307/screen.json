@@ -1,0 +1,65 @@
+{
+ "B_T61_s307_0": {
+  "result": "overlap",
+  "detail": [
+   0.71,
+   "N82"
+  ]
+ },
+ "B_T61_s307_1": {
+  "result": "overlap",
+  "detail": [
+   0.56,
+   "N82"
+  ]
+ },
+ "B_T61_s307_2": {
+  "result": "overlap",
+  "detail": [
+   0.56,
+   "N82"
+  ]
+ },
+ "B_T61_s307_3": {
+  "result": "overlap",
+  "detail": [
+   0.56,
+   "N82"
+  ]
+ },
+ "B_T61_s307_4": {
+  "result": "overlap",
+  "detail": [
+   0.5,
+   "N82"
+  ]
+ },
+ "B_T61_s307_5": {
+  "result": "overlap",
+  "detail": [
+   0.45,
+   "N82"
+  ]
+ },
+ "B_T61_s307_6": {
+  "result": "overlap",
+  "detail": [
+   0.45,
+   "N82"
+  ]
+ },
+ "B_T61_s307_7": {
+  "result": "overlap",
+  "detail": [
+   0.5,
+   "N82"
+  ]
+ },
+ "B_T61_s307_8": {
+  "result": "overlap",
+  "detail": [
+   0.5,
+   "N82"
+  ]
+ }
+}

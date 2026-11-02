@@ -1,0 +1,55 @@
+{
+ "source": "Phase 31 owner decision message: explicit project-owner decisions, stored SEPARATELY from the player ratings (human_p31.json), from technical qualification (the records' design_report) and from release readiness.",
+ "recorded": "2026-11-02",
+ "approved_by_owner": {
+  "N83": {
+   "decision": "APPROVED",
+   "player_rating": "EXTREME",
+   "enjoyment": "5/5",
+   "fingerprint": "78a09b2fee3efd8489fa4c4c8b0f4f363c56a0a71ed645efbfd9e57313fec9ff"
+  },
+  "N86": {
+   "decision": "APPROVED",
+   "player_rating": "EXTREME",
+   "enjoyment": "5/5",
+   "fingerprint": "8d1800aa83cbcc6919b2116b176d268b7d144ffb66245a2053f7fff19d349b93"
+  },
+  "N87": {
+   "decision": "APPROVED",
+   "player_rating": "VERY HARD",
+   "enjoyment": "5/5",
+   "fingerprint": "a9a6a5925dda083cbdc013ecbd434333e5600b6d1d30ef2720891e08a27633e5"
+  }
+ },
+ "not_approved": {
+  "N84": {
+   "decision": "NOT APPROVED",
+   "player_rating": "MEDIUM",
+   "fingerprint": "eab0d042cdae8a03b0d03142b4a3dedf5e0d1f8775f90915dab148da1f89b1fd"
+  },
+  "N85": {
+   "decision": "NOT APPROVED",
+   "player_rating": "HARD",
+   "fingerprint": "7402bad1588b4f4ca5fefbab33155e2619e8522d14678b30f69face7ceda818b"
+  }
+ },
+ "pending": {
+  "N82": {
+   "decision": "NOT APPROVED - pending an explicit owner decision (recommended in Phase 30/31, never approved)"
+  }
+ },
+ "count": {
+  "approved_before": 35,
+  "approved_now": 38,
+  "target": 50,
+  "remaining": 12,
+  "reconciled": "35 (Phase 30 owner decisions, owner_decisions_n71_n77.json) + N83, N86, N87 = 38"
+ },
+ "note_n87": "N87 was rated VERY HARD (not EXTREME) and is explicitly approved by the owner for the EXTREME bank, as N75 was in Phase 30.",
+ "release_readiness": {
+  "N83": "technically qualified; headless-Chromium WebAssembly TIME UP within limit (web_p31 BENCH); real iPhone NOT tested",
+  "N86": "technically qualified; headless-Chromium WebAssembly TIME UP within limit (web_p31 BENCH); real iPhone NOT tested",
+  "N87": "technically qualified; headless-Chromium WebAssembly TIME UP within limit (web_p31 BENCH); real iPhone NOT tested"
+ },
+ "phase32_baseline": "Owner instruction: Phase 32 keeps the Phase 31 generation approach (Phase 25-27 generator in its own worktree, fewest-positions selection per concept) as the baseline, with every modern technical safety check (token guard, strict essentiality, modern screen, full evaluation, hint-follow, dead-end check). Phase 32 not begun."
+}

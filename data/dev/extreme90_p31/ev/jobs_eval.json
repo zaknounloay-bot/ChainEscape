@@ -1,0 +1,314 @@
+[
+ {
+  "name": "eval_A_T01r_s302_0",
+  "dir": "data/dev/extreme90_p31/ev/A_T01r_s302_0",
+  "quiet": true,
+  "cmd": [
+   "python3",
+   "tools/extreme90_eval25.py",
+   "data/dev/extreme90_p31/ev/cand_A_T01r_s302_0.json",
+   "data/dev/extreme90_p31/ev/A_T01r_s302_0",
+   "/tmp/claude-0/-home-user-ChainEscape/7e9f2bd8-6e70-52bd-944d-4d9f0e72484e/scratchpad/godot/godot",
+   "--full"
+  ]
+ },
+ {
+  "name": "eval_A_T01r_s302_2",
+  "dir": "data/dev/extreme90_p31/ev/A_T01r_s302_2",
+  "quiet": true,
+  "cmd": [
+   "python3",
+   "tools/extreme90_eval25.py",
+   "data/dev/extreme90_p31/ev/cand_A_T01r_s302_2.json",
+   "data/dev/extreme90_p31/ev/A_T01r_s302_2",
+   "/tmp/claude-0/-home-user-ChainEscape/7e9f2bd8-6e70-52bd-944d-4d9f0e72484e/scratchpad/godot/godot",
+   "--full"
+  ]
+ },
+ {
+  "name": "eval_A_T01r_s302_6",
+  "dir": "data/dev/extreme90_p31/ev/A_T01r_s302_6",
+  "quiet": true,
+  "cmd": [
+   "python3",
+   "tools/extreme90_eval25.py",
+   "data/dev/extreme90_p31/ev/cand_A_T01r_s302_6.json",
+   "data/dev/extreme90_p31/ev/A_T01r_s302_6",
+   "/tmp/claude-0/-home-user-ChainEscape/7e9f2bd8-6e70-52bd-944d-4d9f0e72484e/scratchpad/godot/godot",
+   "--full"
+  ]
+ },
+ {
+  "name": "eval_G_T01r_s308_0",
+  "dir": "data/dev/extreme90_p31/ev/G_T01r_s308_0",
+  "quiet": true,
+  "cmd": [
+   "python3",
+   "tools/extreme90_eval25.py",
+   "data/dev/extreme90_p31/ev/cand_G_T01r_s308_0.json",
+   "data/dev/extreme90_p31/ev/G_T01r_s308_0",
+   "/tmp/claude-0/-home-user-ChainEscape/7e9f2bd8-6e70-52bd-944d-4d9f0e72484e/scratchpad/godot/godot",
+   "--full"
+  ]
+ },
+ {
+  "name": "eval_C2_T01r_s302_6",
+  "dir": "data/dev/extreme90_p31/ev/C2_T01r_s302_6",
+  "quiet": true,
+  "cmd": [
+   "python3",
+   "tools/extreme90_eval25.py",
+   "data/dev/extreme90_p31/ev/cand_C2_T01r_s302_6.json",
+   "data/dev/extreme90_p31/ev/C2_T01r_s302_6",
+   "/tmp/claude-0/-home-user-ChainEscape/7e9f2bd8-6e70-52bd-944d-4d9f0e72484e/scratchpad/godot/godot",
+   "--full"
+  ]
+ },
+ {
+  "name": "eval_G_T10b_s302_0",
+  "dir": "data/dev/extreme90_p31/ev/G_T10b_s302_0",
+  "quiet": true,
+  "cmd": [
+   "python3",
+   "tools/extreme90_eval25.py",
+   "data/dev/extreme90_p31/ev/cand_G_T10b_s302_0.json",
+   "data/dev/extreme90_p31/ev/G_T10b_s302_0",
+   "/tmp/claude-0/-home-user-ChainEscape/7e9f2bd8-6e70-52bd-944d-4d9f0e72484e/scratchpad/godot/godot",
+   "--full"
+  ]
+ },
+ {
+  "name": "eval_G_T10b_s302_3",
+  "dir": "data/dev/extreme90_p31/ev/G_T10b_s302_3",
+  "quiet": true,
+  "cmd": [
+   "python3",
+   "tools/extreme90_eval25.py",
+   "data/dev/extreme90_p31/ev/cand_G_T10b_s302_3.json",
+   "data/dev/extreme90_p31/ev/G_T10b_s302_3",
+   "/tmp/claude-0/-home-user-ChainEscape/7e9f2bd8-6e70-52bd-944d-4d9f0e72484e/scratchpad/godot/godot",
+   "--full"
+  ]
+ },
+ {
+  "name": "eval_G_T10b_s302_5",
+  "dir": "data/dev/extreme90_p31/ev/G_T10b_s302_5",
+  "quiet": true,
+  "cmd": [
+   "python3",
+   "tools/extreme90_eval25.py",
+   "data/dev/extreme90_p31/ev/cand_G_T10b_s302_5.json",
+   "data/dev/extreme90_p31/ev/G_T10b_s302_5",
+   "/tmp/claude-0/-home-user-ChainEscape/7e9f2bd8-6e70-52bd-944d-4d9f0e72484e/scratchpad/godot/godot",
+   "--full"
+  ]
+ },
+ {
+  "name": "eval_G_T10_s301_3",
+  "dir": "data/dev/extreme90_p31/ev/G_T10_s301_3",
+  "quiet": true,
+  "cmd": [
+   "python3",
+   "tools/extreme90_eval25.py",
+   "data/dev/extreme90_p31/ev/cand_G_T10_s301_3.json",
+   "data/dev/extreme90_p31/ev/G_T10_s301_3",
+   "/tmp/claude-0/-home-user-ChainEscape/7e9f2bd8-6e70-52bd-944d-4d9f0e72484e/scratchpad/godot/godot",
+   "--full"
+  ]
+ },
+ {
+  "name": "eval_A_T27r_s302_0",
+  "dir": "data/dev/extreme90_p31/ev/A_T27r_s302_0",
+  "quiet": true,
+  "cmd": [
+   "python3",
+   "tools/extreme90_eval25.py",
+   "data/dev/extreme90_p31/ev/cand_A_T27r_s302_0.json",
+   "data/dev/extreme90_p31/ev/A_T27r_s302_0",
+   "/tmp/claude-0/-home-user-ChainEscape/7e9f2bd8-6e70-52bd-944d-4d9f0e72484e/scratchpad/godot/godot",
+   "--full"
+  ]
+ },
+ {
+  "name": "eval_A_T27r_s302_1",
+  "dir": "data/dev/extreme90_p31/ev/A_T27r_s302_1",
+  "quiet": true,
+  "cmd": [
+   "python3",
+   "tools/extreme90_eval25.py",
+   "data/dev/extreme90_p31/ev/cand_A_T27r_s302_1.json",
+   "data/dev/extreme90_p31/ev/A_T27r_s302_1",
+   "/tmp/claude-0/-home-user-ChainEscape/7e9f2bd8-6e70-52bd-944d-4d9f0e72484e/scratchpad/godot/godot",
+   "--full"
+  ]
+ },
+ {
+  "name": "eval_A_T27r_s302_5",
+  "dir": "data/dev/extreme90_p31/ev/A_T27r_s302_5",
+  "quiet": true,
+  "cmd": [
+   "python3",
+   "tools/extreme90_eval25.py",
+   "data/dev/extreme90_p31/ev/cand_A_T27r_s302_5.json",
+   "data/dev/extreme90_p31/ev/A_T27r_s302_5",
+   "/tmp/claude-0/-home-user-ChainEscape/7e9f2bd8-6e70-52bd-944d-4d9f0e72484e/scratchpad/godot/godot",
+   "--full"
+  ]
+ },
+ {
+  "name": "eval_A_T27r_s302_8",
+  "dir": "data/dev/extreme90_p31/ev/A_T27r_s302_8",
+  "quiet": true,
+  "cmd": [
+   "python3",
+   "tools/extreme90_eval25.py",
+   "data/dev/extreme90_p31/ev/cand_A_T27r_s302_8.json",
+   "data/dev/extreme90_p31/ev/A_T27r_s302_8",
+   "/tmp/claude-0/-home-user-ChainEscape/7e9f2bd8-6e70-52bd-944d-4d9f0e72484e/scratchpad/godot/godot",
+   "--full"
+  ]
+ },
+ {
+  "name": "eval_G_T30_s302_0",
+  "dir": "data/dev/extreme90_p31/ev/G_T30_s302_0",
+  "quiet": true,
+  "cmd": [
+   "python3",
+   "tools/extreme90_eval25.py",
+   "data/dev/extreme90_p31/ev/cand_G_T30_s302_0.json",
+   "data/dev/extreme90_p31/ev/G_T30_s302_0",
+   "/tmp/claude-0/-home-user-ChainEscape/7e9f2bd8-6e70-52bd-944d-4d9f0e72484e/scratchpad/godot/godot",
+   "--full"
+  ]
+ },
+ {
+  "name": "eval_G_T30_s302_1",
+  "dir": "data/dev/extreme90_p31/ev/G_T30_s302_1",
+  "quiet": true,
+  "cmd": [
+   "python3",
+   "tools/extreme90_eval25.py",
+   "data/dev/extreme90_p31/ev/cand_G_T30_s302_1.json",
+   "data/dev/extreme90_p31/ev/G_T30_s302_1",
+   "/tmp/claude-0/-home-user-ChainEscape/7e9f2bd8-6e70-52bd-944d-4d9f0e72484e/scratchpad/godot/godot",
+   "--full"
+  ]
+ },
+ {
+  "name": "eval_G_T30_s302_4",
+  "dir": "data/dev/extreme90_p31/ev/G_T30_s302_4",
+  "quiet": true,
+  "cmd": [
+   "python3",
+   "tools/extreme90_eval25.py",
+   "data/dev/extreme90_p31/ev/cand_G_T30_s302_4.json",
+   "data/dev/extreme90_p31/ev/G_T30_s302_4",
+   "/tmp/claude-0/-home-user-ChainEscape/7e9f2bd8-6e70-52bd-944d-4d9f0e72484e/scratchpad/godot/godot",
+   "--full"
+  ]
+ },
+ {
+  "name": "eval_G_T30_s302_5",
+  "dir": "data/dev/extreme90_p31/ev/G_T30_s302_5",
+  "quiet": true,
+  "cmd": [
+   "python3",
+   "tools/extreme90_eval25.py",
+   "data/dev/extreme90_p31/ev/cand_G_T30_s302_5.json",
+   "data/dev/extreme90_p31/ev/G_T30_s302_5",
+   "/tmp/claude-0/-home-user-ChainEscape/7e9f2bd8-6e70-52bd-944d-4d9f0e72484e/scratchpad/godot/godot",
+   "--full"
+  ]
+ },
+ {
+  "name": "eval_G_T30_s302_7",
+  "dir": "data/dev/extreme90_p31/ev/G_T30_s302_7",
+  "quiet": true,
+  "cmd": [
+   "python3",
+   "tools/extreme90_eval25.py",
+   "data/dev/extreme90_p31/ev/cand_G_T30_s302_7.json",
+   "data/dev/extreme90_p31/ev/G_T30_s302_7",
+   "/tmp/claude-0/-home-user-ChainEscape/7e9f2bd8-6e70-52bd-944d-4d9f0e72484e/scratchpad/godot/godot",
+   "--full"
+  ]
+ },
+ {
+  "name": "eval_C1_T57_s305_0",
+  "dir": "data/dev/extreme90_p31/ev/C1_T57_s305_0",
+  "quiet": true,
+  "cmd": [
+   "python3",
+   "tools/extreme90_eval25.py",
+   "data/dev/extreme90_p31/ev/cand_C1_T57_s305_0.json",
+   "data/dev/extreme90_p31/ev/C1_T57_s305_0",
+   "/tmp/claude-0/-home-user-ChainEscape/7e9f2bd8-6e70-52bd-944d-4d9f0e72484e/scratchpad/godot/godot",
+   "--full"
+  ]
+ },
+ {
+  "name": "eval_C1_T57_s305_9",
+  "dir": "data/dev/extreme90_p31/ev/C1_T57_s305_9",
+  "quiet": true,
+  "cmd": [
+   "python3",
+   "tools/extreme90_eval25.py",
+   "data/dev/extreme90_p31/ev/cand_C1_T57_s305_9.json",
+   "data/dev/extreme90_p31/ev/C1_T57_s305_9",
+   "/tmp/claude-0/-home-user-ChainEscape/7e9f2bd8-6e70-52bd-944d-4d9f0e72484e/scratchpad/godot/godot",
+   "--full"
+  ]
+ },
+ {
+  "name": "eval_G_T57_s308_0",
+  "dir": "data/dev/extreme90_p31/ev/G_T57_s308_0",
+  "quiet": true,
+  "cmd": [
+   "python3",
+   "tools/extreme90_eval25.py",
+   "data/dev/extreme90_p31/ev/cand_G_T57_s308_0.json",
+   "data/dev/extreme90_p31/ev/G_T57_s308_0",
+   "/tmp/claude-0/-home-user-ChainEscape/7e9f2bd8-6e70-52bd-944d-4d9f0e72484e/scratchpad/godot/godot",
+   "--full"
+  ]
+ },
+ {
+  "name": "eval_G_T57_s308_4",
+  "dir": "data/dev/extreme90_p31/ev/G_T57_s308_4",
+  "quiet": true,
+  "cmd": [
+   "python3",
+   "tools/extreme90_eval25.py",
+   "data/dev/extreme90_p31/ev/cand_G_T57_s308_4.json",
+   "data/dev/extreme90_p31/ev/G_T57_s308_4",
+   "/tmp/claude-0/-home-user-ChainEscape/7e9f2bd8-6e70-52bd-944d-4d9f0e72484e/scratchpad/godot/godot",
+   "--full"
+  ]
+ },
+ {
+  "name": "eval_G_T57_s308_8",
+  "dir": "data/dev/extreme90_p31/ev/G_T57_s308_8",
+  "quiet": true,
+  "cmd": [
+   "python3",
+   "tools/extreme90_eval25.py",
+   "data/dev/extreme90_p31/ev/cand_G_T57_s308_8.json",
+   "data/dev/extreme90_p31/ev/G_T57_s308_8",
+   "/tmp/claude-0/-home-user-ChainEscape/7e9f2bd8-6e70-52bd-944d-4d9f0e72484e/scratchpad/godot/godot",
+   "--full"
+  ]
+ },
+ {
+  "name": "eval_A_T57_s305_3",
+  "dir": "data/dev/extreme90_p31/ev/A_T57_s305_3",
+  "quiet": true,
+  "cmd": [
+   "python3",
+   "tools/extreme90_eval25.py",
+   "data/dev/extreme90_p31/ev/cand_A_T57_s305_3.json",
+   "data/dev/extreme90_p31/ev/A_T57_s305_3",
+   "/tmp/claude-0/-home-user-ChainEscape/7e9f2bd8-6e70-52bd-944d-4d9f0e72484e/scratchpad/godot/godot",
+   "--full"
+  ]
+ }
+]

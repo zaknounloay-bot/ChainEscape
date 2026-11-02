@@ -1,0 +1,66 @@
+{
+ "G_T03_s301_0": {
+  "result": "overlap",
+  "detail": [
+   0.4,
+   "N28"
+  ]
+ },
+ "G_T03_s301_1": {
+  "result": "overlap",
+  "detail": [
+   0.4,
+   "N10"
+  ]
+ },
+ "G_T03_s301_2": {
+  "result": "overlap",
+  "detail": [
+   0.4,
+   "N10"
+  ]
+ },
+ "G_T03_s301_4": {
+  "result": "overlap",
+  "detail": [
+   0.42,
+   "N10"
+  ]
+ },
+ "G_T03_s301_3": {
+  "result": "not essential",
+  "detail": {
+   "without_lock": "without it: 9 decision steps, 4 distinct mistakes (with it: 10, 5)"
+  }
+ },
+ "G_T03_s301_5": {
+  "result": "not essential",
+  "detail": {
+   "without_lock": "without it: 12 decision steps, 5 distinct mistakes (with it: 13, 6)"
+  }
+ },
+ "G_T03_s301_6": {
+  "result": "Category A/B",
+  "detail": [
+   "solve 41.2 ms (> 40)"
+  ]
+ },
+ "G_T03_s301_7": {
+  "result": "not essential",
+  "detail": {
+   "without_lock": "without it: 10 decision steps, 4 distinct mistakes (with it: 11, 5)"
+  }
+ },
+ "G_T03_s301_8": {
+  "result": "not essential",
+  "detail": {
+   "without_lock": "without it: 11 decision steps, 5 distinct mistakes (with it: 12, 6)"
+  }
+ },
+ "G_T03_s301_9": {
+  "result": "not essential",
+  "detail": {
+   "without_lock": "without it: 11 decision steps, 5 distinct mistakes (with it: 12, 6)"
+  }
+ }
+}

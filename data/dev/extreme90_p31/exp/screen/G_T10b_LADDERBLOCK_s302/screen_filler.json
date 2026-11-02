@@ -1,0 +1,76 @@
+{
+ "G_T10b_s302_0": {
+  "distinct": 6,
+  "pieces_tested": 16,
+  "steps": 14,
+  "trivial": [],
+  "trivial_removals": 0
+ },
+ "G_T10b_s302_1": {
+  "distinct": 5,
+  "pieces_tested": 16,
+  "steps": 12,
+  "trivial": [
+   "r4c2 Yv@-"
+  ],
+  "trivial_removals": 1
+ },
+ "G_T10b_s302_2": {
+  "distinct": 5,
+  "pieces_tested": 16,
+  "steps": 12,
+  "trivial": [
+   "r4c2 Yv@-"
+  ],
+  "trivial_removals": 1
+ },
+ "G_T10b_s302_3": {
+  "distinct": 6,
+  "pieces_tested": 16,
+  "steps": 14,
+  "trivial": [],
+  "trivial_removals": 0
+ },
+ "G_T10b_s302_4": {
+  "distinct": 6,
+  "pieces_tested": 16,
+  "steps": 14,
+  "trivial": [],
+  "trivial_removals": 0
+ },
+ "G_T10b_s302_5": {
+  "distinct": 6,
+  "pieces_tested": 16,
+  "steps": 12,
+  "trivial": [],
+  "trivial_removals": 0
+ },
+ "G_T10b_s302_6": {
+  "distinct": 6,
+  "pieces_tested": 16,
+  "steps": 12,
+  "trivial": [],
+  "trivial_removals": 0
+ },
+ "G_T10b_s302_7": {
+  "distinct": 6,
+  "pieces_tested": 16,
+  "steps": 12,
+  "trivial": [],
+  "trivial_removals": 0
+ },
+ "G_T10b_s302_8": {
+  "distinct": 6,
+  "pieces_tested": 16,
+  "steps": 12,
+  "trivial": [],
+  "trivial_removals": 0
+ },
+ "G_T10b_s302_9": {
+  "distinct": 6,
+  "pieces_tested": 16,
+  "steps": 12,
+  "trivial": [],
+  "trivial_removals": 0
+ }
+}

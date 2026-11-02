@@ -1,0 +1,9 @@
+Godot Engine v4.3.stable.official.77dcf97d8 - https://godotengine.org
+
+A_T01r_s302_0 {"distinct":4,"pieces_tested":15,"steps":13,"trivial":[],"trivial_removals":0}
+A_T01r_s302_2 {"distinct":5,"pieces_tested":15,"steps":13,"trivial":[],"trivial_removals":0}
+A_T01r_s302_5 {"distinct":4,"pieces_tested":17,"steps":11,"trivial":["r0c6 R<@-","r5c6 R>"],"trivial_removals":2}
+A_T01r_s302_6 {"distinct":4,"pieces_tested":16,"steps":12,"trivial":[],"trivial_removals":0}
+A_T01r_s302_7 {"distinct":4,"pieces_tested":16,"steps":12,"trivial":[],"trivial_removals":0}
+A_T01r_s302_8 {"distinct":4,"pieces_tested":16,"steps":12,"trivial":[],"trivial_removals":0}
+A_T01r_s302_9 {"distinct":4,"pieces_tested":16,"steps":12,"trivial":[],"trivial_removals":0}

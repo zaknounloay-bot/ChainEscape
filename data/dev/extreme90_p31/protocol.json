@@ -1,0 +1,80 @@
+{
+ "fixed_before_generating": "2026-11-01, before any Phase 31 generator run (the Phase 30 regression was still running; no generator ran during it)",
+ "role": "development only; no Production, no gameplay or mechanic change, the frozen 300 Classic levels and the 120-second baseline untouched, the exact Solver unchanged",
+ "question": "did the earlier (Phase 25-27) generation method yield boards experienced humans rate VERY HARD / EXTREME more often than the Phase 28-30 method, and if so which change explains it?",
+ "human_record": {
+  "P25-27": "6/10 VERY HARD or EXTREME (first exposure, mostly one experienced player)",
+  "P28-30": "7/20",
+  "caution": "small, non-random samples; no causal or significance claim"
+ },
+ "hypotheses_tested": [
+  "H1 operators: Phase 29 round 92 and all of Phase 30 ran the generator WITHOUT --ops=v20 (baseline operators) although both protocols specified v20",
+  "H2 selection order: Phase 25/26 shortlisted the CHEAPEST boards (fewest solver positions) first; Phase 28-30 shortlisted the LOWEST BANK OVERLAP first and ranked by advisory human diagnostics",
+  "H3 search parameters: Phase 30 round 302+ raised piece_free 13->15, max_pieces 17->19, suffix_rate ->0.45, patience 8->12",
+  "H4 concept breadth vs depth: runs per concept fell from 1.7-2.0 (P25-27) to ~1.2 (P28-30)",
+  "H5 one board per concept: tested by record only - the rule was already in force in Phase 25 (protocol: 'one board per core counts'), so it is not a change between the periods"
+ ],
+ "arms": {
+  "A": "Phase 25-27 method: generator of commit c1ddc89 in an isolated git worktree, --ops=v20, piece_free 13, max_pieces 17, suffix_rate 0.30, patience 8",
+  "B": "Phase 30 as executed: the recorded Phase 30 runs (baseline operators, piece_free 15, max_pieces 19, suffix_rate 0.45, patience 12) - not re-run",
+  "C1": "hybrid: Phase 30 generator (token guard, strict essentiality incl. spinners, spinners_max, core_essential) in an isolated worktree at the Phase 30 commit, --ops=v20, Phase 25-27 parameters",
+  "C2": "ops-only control on 4 cores: Phase 30 generator, --ops=v20, Phase 30 parameters"
+ },
+ "cores": "8 Phase 30 hand cores, seed files unchanged: T01r T03r T05r T27r T48 T57 (0 qualifying under B) and T59 T61 (productive under B); RNG seed = the paired Phase 30 run's (302/302/302/302/303/305/305/307)",
+ "per_run": {
+  "minutes": 12,
+  "batch": 40,
+  "beam": 5,
+  "parallel": 4,
+  "load": "nothing else running"
+ },
+ "same_review_for_every_arm": "tools/extreme90_screen30.py (engine-valid tokens, bank overlap < 0.40, design report incl. solve / TIME UP <= 40 ms, strict essentiality, 0 filler, hint-follow) on a shortlist of each run",
+ "endpoints_fixed_now": {
+  "technical": [
+   "qualifying boards per run",
+   "screened PASS boards per run (same shortlist size)",
+   "concepts with >= 1 PASS board"
+  ],
+  "structural_advisory": [
+   "median positions of PASS boards",
+   "PASS boards with <= 450 positions",
+   "note: solver positions is the only record measure whose direction held out of sample on N53-N82 (AUC 0.67 on P25-28, 0.77 on P29-30); weak evidence"
+  ],
+  "human": "NOT measurable in Phase 31: the owner's first exposures of N83+ are the only human evidence; every candidate records its arm and selection rule so that Phase 32 results can be attributed"
+ },
+ "selection_rules_compared_on_the_same_pools": {
+  "S_old": "Phase 25/26: lowest positions first (cap 900), then score",
+  "S_p30": "Phase 28-30: lowest bank overlap first (cap 1000 as executed in Phase 30), screened PASS, advisory rank29 tie-break"
+ },
+ "budget": {
+  "experiment_generator_runs": 20,
+  "phase31_generation_runs_max": 8,
+  "full_evaluations_max": 24,
+  "rule": "the experiment runs double as Phase 31 generation; extra runs only for cores that produced PASS boards (deeper search: a second RNG seed)"
+ },
+ "gates": "Phase 30 gates unchanged: distinct mistakes >= 4, decision steps >= 8, coverage >= 0.60, late >= 0.75, solution >= 13, shortcut <= 0.20, solve and TIME UP <= 40 ms, bank overlap < 0.40, 0 filler, strict essentiality, hint-follow progress",
+ "amendments": [
+  {
+   "id": "AM1",
+   "recorded": "2026-11-01, after the 20 experiment runs and their screens, BEFORE any further generation",
+   "observed": "see exp/technical.json: arm A (Phase 25-27 method) gave qualifying pools on 8/8 cores and modern-screen PASS boards on 3 of the 6 new concepts (T01r, T27r, T57); arm B (Phase 30 as executed) gave 0 qualifying boards on all 6 new concepts; C1 gave PASS on 1 (T57), C2 on 1 of 2 (T01r). T59/T61 are calibration only (their concepts are N81/N82 - near copies fail the overlap gate).",
+   "decision": "Phase 31 generation uses the arm A method (the c1ddc89 generator in its own worktree, --ops=v20, Phase 25-27 parameters) and EVERY output board goes through the unchanged modern screen (tools/extreme90_screen30.py: tokens, overlap, 40 ms gates, strict essentiality, filler, hint-follow) and the unchanged full evaluation. The generator in the repository is not changed.",
+   "runs": {
+    "deeper (second RNG seed 308, the protocol rule)": [
+     "T01r_PULLEDTRIGGER",
+     "T27r_TRIGGERLINK",
+     "T57_TWOEFFECTS"
+    ],
+    "amended: the 5 Phase 30 concepts the experiment did not cover, with the RNG seed of their Phase 30 run (extends the A-vs-B pairing)": {
+     "T10_KEYLADDER": 301,
+     "T10b_LADDERBLOCK": 302,
+     "T30_TWOKEYS": 302,
+     "T03_PULLTHEKEY": 301,
+     "T05_ARMOREDLINK": 301
+    }
+   },
+   "budget": "8 runs = the Phase 31 generation maximum; no further runs",
+   "selection": "per concept, the shortlist union of S_old and S_p30 is screened; among PASS boards the full evaluation decides; positions, early3 and open_escape_losing are recorded as pre-registered predictions and are NOT used to rank"
+  }
+ ]
+}

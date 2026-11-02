@@ -1,0 +1,251 @@
+Godot Engine v4.3.stable.official.77dcf97d8 - https://godotengine.org
+
+SCRIPT ERROR: Invalid access of index '6' on a base object of type: 'Array'.
+          at: _rot (res://tools/vh_pilot4_canon.gd:101)
+SCRIPT ERROR: Out of bounds get index '0' (on base: 'Array')
+          at: _relabel (res://tools/vh_pilot4_canon.gd:141)
+SCRIPT ERROR: Out of bounds get index '0' (on base: 'Array')
+          at: _relabel (res://tools/vh_pilot4_canon.gd:141)
+SCRIPT ERROR: Out of bounds get index '0' (on base: 'Array')
+          at: _rot (res://tools/vh_pilot4_canon.gd:96)
+SCRIPT ERROR: Out of bounds get index '0' (on base: 'Array')
+          at: _relabel (res://tools/vh_pilot4_canon.gd:141)
+SCRIPT ERROR: Out of bounds get index '0' (on base: 'Array')
+          at: _relabel (res://tools/vh_pilot4_canon.gd:141)
+SCRIPT ERROR: Out of bounds get index '0' (on base: 'Array')
+          at: _rot (res://tools/vh_pilot4_canon.gd:96)
+SCRIPT ERROR: Out of bounds get index '0' (on base: 'Array')
+          at: _relabel (res://tools/vh_pilot4_canon.gd:141)
+SCRIPT ERROR: Out of bounds get index '0' (on base: 'Array')
+          at: _relabel (res://tools/vh_pilot4_canon.gd:141)
+SCRIPT ERROR: Out of bounds get index '0' (on base: 'Array')
+          at: _rot (res://tools/vh_pilot4_canon.gd:96)
+known boards: 37059
+known boards incl. T1-T5 and the demos: 37059; played boards for the near-copy guard: 333
+generator: v20 (strategic operators)
+seed: -85.0 | 3 pieces, 3 positions, solution 3, distinct 0, steps 0 (cover 0.00, late 0.00), endgame false, mechanic 0/2, shortcut 100% | [". . . . . . .",". . . Bv&A . . .",". . . . . . .",". . . G<* . . P<%A",". . . . . . .",". . . . . . .",". . . . . . ."]
+ERROR: Level 0: magnet at (0, 3) must be a plain arrow on a board without portals, Movable or hidden blocks
+   at: push_error (core/variant/variant_utility.cpp:1092)
+ERROR: Level 0: magnet at (0, 3) must be a plain arrow on a board without portals, Movable or hidden blocks
+   at: push_error (core/variant/variant_utility.cpp:1092)
+ERROR: Level 0: magnet at (0, 3) must be a plain arrow on a board without portals, Movable or hidden blocks
+   at: push_error (core/variant/variant_utility.cpp:1092)
+ERROR: Level 0: switch / flip / armored block at (4, 3) cannot be a spinner or hidden
+   at: push_error (core/variant/variant_utility.cpp:1092)
+ERROR: Level 0: magnet at (3, 2) must be a plain arrow on a board without portals, Movable or hidden blocks
+   at: push_error (core/variant/variant_utility.cpp:1092)
+ERROR: Level 0: magnet at (3, 2) must be a plain arrow on a board without portals, Movable or hidden blocks
+   at: push_error (core/variant/variant_utility.cpp:1092)
+ERROR: Level 0: magnet at (3, 2) must be a plain arrow on a board without portals, Movable or hidden blocks
+   at: push_error (core/variant/variant_utility.cpp:1092)
+ERROR: Level 0: switch / flip / armored block at (6, 0) cannot be a spinner or hidden
+   at: push_error (core/variant/variant_utility.cpp:1092)
+ERROR: Level 0: switch / flip / armored block at (6, 6) cannot be a spinner or hidden
+   at: push_error (core/variant/variant_utility.cpp:1092)
+ERROR: Level 0: magnet at (6, 2) must be a plain arrow on a board without portals, Movable or hidden blocks
+   at: push_error (core/variant/variant_utility.cpp:1092)
+ERROR: Level 0: magnet at (6, 2) must be a plain arrow on a board without portals, Movable or hidden blocks
+   at: push_error (core/variant/variant_utility.cpp:1092)
+ERROR: Level 0: magnet at (6, 2) must be a plain arrow on a board without portals, Movable or hidden blocks
+   at: push_error (core/variant/variant_utility.cpp:1092)
+ERROR: Level 0: switch / flip / armored block at (0, 3) cannot be a spinner or hidden
+   at: push_error (core/variant/variant_utility.cpp:1092)
+round 1 (41 evaluated, 1 s): best -70.0 | 4 pieces, 4 positions, solution 4, distinct 0, steps 0 (cover 0.00, late 0.00), endgame false, mechanic 1/2, shortcut 100% | [". . . . . . .",". . . Bv&A . . .",". . . . . . .",". . . G<* . . P<%A",". . . . . . .",". . . . . . .",". . . B^@~ . . ."]
+ERROR: Level 0: magnet at (3, 6) must be a plain arrow on a board without portals, Movable or hidden blocks
+   at: push_error (core/variant/variant_utility.cpp:1092)
+ERROR: Level 0: magnet at (3, 6) must be a plain arrow on a board without portals, Movable or hidden blocks
+   at: push_error (core/variant/variant_utility.cpp:1092)
+ERROR: Level 0: magnet at (3, 6) must be a plain arrow on a board without portals, Movable or hidden blocks
+   at: push_error (core/variant/variant_utility.cpp:1092)
+ERROR: Level 0: magnet at (4, 3) must be a plain arrow on a board without portals, Movable or hidden blocks
+   at: push_error (core/variant/variant_utility.cpp:1092)
+ERROR: Level 0: magnet at (3, 6) must be a plain arrow on a board without portals, Movable or hidden blocks
+   at: push_error (core/variant/variant_utility.cpp:1092)
+ERROR: Level 0: magnet at (3, 6) must be a plain arrow on a board without portals, Movable or hidden blocks
+   at: push_error (core/variant/variant_utility.cpp:1092)
+ERROR: Level 0: magnet at (3, 6) must be a plain arrow on a board without portals, Movable or hidden blocks
+   at: push_error (core/variant/variant_utility.cpp:1092)
+ERROR: Level 0: switch / flip / armored block at (4, 1) cannot be a spinner or hidden
+   at: push_error (core/variant/variant_utility.cpp:1092)
+ERROR: Level 0: switch / flip / armored block at (2, 1) cannot be a spinner or hidden
+   at: push_error (core/variant/variant_utility.cpp:1092)
+round 2 (79 evaluated, 2 s): best -35.1 | 5 pieces, 7 positions, solution 5, distinct 1, steps 1 (cover 0.20, late 0.20), endgame false, mechanic 2/2, shortcut 100% | [". . . . . . .",". . . Bv&A . . .",". . . . . . .",". . . G<* . Y^&A P<%A",". . . P^&A . . .",". . . . . . .",". . . . . . ."]
+ERROR: Level 0: magnet at (3, 6) must be a plain arrow on a board without portals, Movable or hidden blocks
+   at: push_error (core/variant/variant_utility.cpp:1092)
+ERROR: Level 0: magnet at (3, 6) must be a plain arrow on a board without portals, Movable or hidden blocks
+   at: push_error (core/variant/variant_utility.cpp:1092)
+ERROR: Level 0: magnet at (3, 6) must be a plain arrow on a board without portals, Movable or hidden blocks
+   at: push_error (core/variant/variant_utility.cpp:1092)
+ERROR: Level 0: magnet at (3, 6) must be a plain arrow on a board without portals, Movable or hidden blocks
+   at: push_error (core/variant/variant_utility.cpp:1092)
+ERROR: Level 0: magnet at (3, 6) must be a plain arrow on a board without portals, Movable or hidden blocks
+   at: push_error (core/variant/variant_utility.cpp:1092)
+ERROR: Level 0: magnet at (3, 6) must be a plain arrow on a board without portals, Movable or hidden blocks
+   at: push_error (core/variant/variant_utility.cpp:1092)
+ERROR: Level 0: magnet at (3, 6) must be a plain arrow on a board without portals, Movable or hidden blocks
+   at: push_error (core/variant/variant_utility.cpp:1092)
+ERROR: Level 0: magnet at (3, 6) must be a plain arrow on a board without portals, Movable or hidden blocks
+   at: push_error (core/variant/variant_utility.cpp:1092)
+ERROR: Level 0: magnet at (3, 6) must be a plain arrow on a board without portals, Movable or hidden blocks
+   at: push_error (core/variant/variant_utility.cpp:1092)
+ERROR: Level 0: magnet at (3, 6) must be a plain arrow on a board without portals, Movable or hidden blocks
+   at: push_error (core/variant/variant_utility.cpp:1092)
+ERROR: Level 0: magnet at (3, 6) must be a plain arrow on a board without portals, Movable or hidden blocks
+   at: push_error (core/variant/variant_utility.cpp:1092)
+ERROR: Level 0: magnet at (3, 6) must be a plain arrow on a board without portals, Movable or hidden blocks
+   at: push_error (core/variant/variant_utility.cpp:1092)
+ERROR: Level 0: magnet at (3, 6) must be a plain arrow on a board without portals, Movable or hidden blocks
+   at: push_error (core/variant/variant_utility.cpp:1092)
+ERROR: Level 0: magnet at (6, 4) must be a plain arrow on a board without portals, Movable or hidden blocks
+   at: push_error (core/variant/variant_utility.cpp:1092)
+ERROR: Level 0: magnet at (3, 6) must be a plain arrow on a board without portals, Movable or hidden blocks
+   at: push_error (core/variant/variant_utility.cpp:1092)
+ERROR: Level 0: magnet at (6, 4) must be a plain arrow on a board without portals, Movable or hidden blocks
+   at: push_error (core/variant/variant_utility.cpp:1092)
+ERROR: Level 0: magnet at (3, 6) must be a plain arrow on a board without portals, Movable or hidden blocks
+   at: push_error (core/variant/variant_utility.cpp:1092)
+ERROR: Level 0: magnet at (6, 4) must be a plain arrow on a board without portals, Movable or hidden blocks
+   at: push_error (core/variant/variant_utility.cpp:1092)
+ERROR: Level 0: magnet at (3, 6) must be a plain arrow on a board without portals, Movable or hidden blocks
+   at: push_error (core/variant/variant_utility.cpp:1092)
+ERROR: Level 0: magnet at (3, 6) must be a plain arrow on a board without portals, Movable or hidden blocks
+   at: push_error (core/variant/variant_utility.cpp:1092)
+ERROR: Level 0: magnet at (3, 6) must be a plain arrow on a board without portals, Movable or hidden blocks
+   at: push_error (core/variant/variant_utility.cpp:1092)
+ERROR: Level 0: magnet at (3, 6) must be a plain arrow on a board without portals, Movable or hidden blocks
+   at: push_error (core/variant/variant_utility.cpp:1092)
+ERROR: Level 0: switch / flip / armored block at (3, 2) cannot be a spinner or hidden
+   at: push_error (core/variant/variant_utility.cpp:1092)
+ERROR: Level 0: magnet at (3, 2) must be a plain arrow on a board without portals, Movable or hidden blocks
+   at: push_error (core/variant/variant_utility.cpp:1092)
+ERROR: Level 0: magnet at (3, 2) must be a plain arrow on a board without portals, Movable or hidden blocks
+   at: push_error (core/variant/variant_utility.cpp:1092)
+ERROR: Level 0: magnet at (3, 2) must be a plain arrow on a board without portals, Movable or hidden blocks
+   at: push_error (core/variant/variant_utility.cpp:1092)
+ERROR: Level 0: switch / flip / armored block at (4, 1) cannot be a spinner or hidden
+   at: push_error (core/variant/variant_utility.cpp:1092)
+ERROR: Level 0: switch / flip / armored block at (3, 0) cannot be a spinner or hidden
+   at: push_error (core/variant/variant_utility.cpp:1092)
+round 3 (118 evaluated, 4 s): best -14.3 | 6 pieces, 16 positions, solution 6, distinct 2, steps 2 (cover 0.33, late 0.33), endgame false, mechanic 2/2, shortcut 100% | [". . . . . . .",". . . Bv&A . . .",". . . . . . .",". . . G<* . Y^&A P<%A",". . . P^&A . . Pv*",". . . . . . .",". . . . . . ."]
+ERROR: Level 0: magnet at (3, 5) must be a plain arrow on a board without portals, Movable or hidden blocks
+   at: push_error (core/variant/variant_utility.cpp:1092)
+ERROR: Level 0: magnet at (3, 6) must be a plain arrow on a board without portals, Movable or hidden blocks
+   at: push_error (core/variant/variant_utility.cpp:1092)
+ERROR: Level 0: magnet at (3, 5) must be a plain arrow on a board without portals, Movable or hidden blocks
+   at: push_error (core/variant/variant_utility.cpp:1092)
+ERROR: Level 0: magnet at (3, 6) must be a plain arrow on a board without portals, Movable or hidden blocks
+   at: push_error (core/variant/variant_utility.cpp:1092)
+ERROR: Level 0: magnet at (3, 5) must be a plain arrow on a board without portals, Movable or hidden blocks
+   at: push_error (core/variant/variant_utility.cpp:1092)
+ERROR: Level 0: magnet at (3, 6) must be a plain arrow on a board without portals, Movable or hidden blocks
+   at: push_error (core/variant/variant_utility.cpp:1092)
+ERROR: Level 0: magnet at (3, 6) must be a plain arrow on a board without portals, Movable or hidden blocks
+   at: push_error (core/variant/variant_utility.cpp:1092)
+ERROR: Level 0: magnet at (3, 6) must be a plain arrow on a board without portals, Movable or hidden blocks
+   at: push_error (core/variant/variant_utility.cpp:1092)
+ERROR: Level 0: magnet at (3, 6) must be a plain arrow on a board without portals, Movable or hidden blocks
+   at: push_error (core/variant/variant_utility.cpp:1092)
+ERROR: Level 0: magnet at (3, 6) must be a plain arrow on a board without portals, Movable or hidden blocks
+   at: push_error (core/variant/variant_utility.cpp:1092)
+ERROR: Level 0: magnet at (3, 6) must be a plain arrow on a board without portals, Movable or hidden blocks
+   at: push_error (core/variant/variant_utility.cpp:1092)
+ERROR: Level 0: magnet at (3, 6) must be a plain arrow on a board without portals, Movable or hidden blocks
+   at: push_error (core/variant/variant_utility.cpp:1092)
+ERROR: Level 0: magnet at (3, 6) must be a plain arrow on a board without portals, Movable or hidden blocks
+   at: push_error (core/variant/variant_utility.cpp:1092)
+ERROR: Level 0: magnet at (3, 6) must be a plain arrow on a board without portals, Movable or hidden blocks
+   at: push_error (core/variant/variant_utility.cpp:1092)
+ERROR: Level 0: magnet at (3, 6) must be a plain arrow on a board without portals, Movable or hidden blocks
+   at: push_error (core/variant/variant_utility.cpp:1092)
+ERROR: Level 0: magnet at (3, 6) must be a plain arrow on a board without portals, Movable or hidden blocks
+   at: push_error (core/variant/variant_utility.cpp:1092)
+ERROR: Level 0: magnet at (3, 6) must be a plain arrow on a board without portals, Movable or hidden blocks
+   at: push_error (core/variant/variant_utility.cpp:1092)
+ERROR: Level 0: magnet at (3, 6) must be a plain arrow on a board without portals, Movable or hidden blocks
+   at: push_error (core/variant/variant_utility.cpp:1092)
+ERROR: Level 0: magnet at (3, 6) must be a plain arrow on a board without portals, Movable or hidden blocks
+   at: push_error (core/variant/variant_utility.cpp:1092)
+ERROR: Level 0: magnet at (3, 6) must be a plain arrow on a board without portals, Movable or hidden blocks
+   at: push_error (core/variant/variant_utility.cpp:1092)
+ERROR: Level 0: magnet at (3, 6) must be a plain arrow on a board without portals, Movable or hidden blocks
+   at: push_error (core/variant/variant_utility.cpp:1092)
+ERROR: Level 0: magnet at (3, 6) must be a plain arrow on a board without portals, Movable or hidden blocks
+   at: push_error (core/variant/variant_utility.cpp:1092)
+ERROR: Level 0: magnet at (3, 6) must be a plain arrow on a board without portals, Movable or hidden blocks
+   at: push_error (core/variant/variant_utility.cpp:1092)
+ERROR: Level 0: magnet at (3, 6) must be a plain arrow on a board without portals, Movable or hidden blocks
+   at: push_error (core/variant/variant_utility.cpp:1092)
+ERROR: Level 0: magnet at (3, 6) must be a plain arrow on a board without portals, Movable or hidden blocks
+   at: push_error (core/variant/variant_utility.cpp:1092)
+ERROR: Level 0: magnet at (3, 6) must be a plain arrow on a board without portals, Movable or hidden blocks
+   at: push_error (core/variant/variant_utility.cpp:1092)
+ERROR: Level 0: magnet at (3, 6) must be a plain arrow on a board without portals, Movable or hidden blocks
+   at: push_error (core/variant/variant_utility.cpp:1092)
+ERROR: Level 0: magnet at (6, 4) must be a plain arrow on a board without portals, Movable or hidden blocks
+   at: push_error (core/variant/variant_utility.cpp:1092)
+ERROR: Level 0: magnet at (6, 4) must be a plain arrow on a board without portals, Movable or hidden blocks
+   at: push_error (core/variant/variant_utility.cpp:1092)
+ERROR: Level 0: magnet at (6, 4) must be a plain arrow on a board without portals, Movable or hidden blocks
+   at: push_error (core/variant/variant_utility.cpp:1092)
+round 4 (157 evaluated, 6 s): best 4.4 | 7 pieces, 37 positions, solution 7, distinct 2, steps 4 (cover 0.57, late 0.57), endgame false, mechanic 2/2, shortcut 100% | [". . . . . . .",". . . Bv&A . . .",". . . . . . .",". . . G<* B^@- Y^&A P<%A",". . . P^&A . . Pv*",". . . . . . .",". . . . . . ."]
+ERROR: Level 0: switch / flip / armored block at (1, 3) cannot be a spinner or hidden
+   at: push_error (core/variant/variant_utility.cpp:1092)
+round 5 (191 evaluated, 10 s): best 28.0 | 8 pieces, 60 positions, solution 8, distinct 2, steps 4 (cover 0.50, late 0.50), endgame false, mechanic 2/2, shortcut 72% | [". . . . . . .",". . . Bv&A . . .",". . . . R>@- . .",". . . G<* B^@- Y^&A P<%A",". . . P^&A . . Pv*",". . . . . . .",". . . . . . ."]
+round 6 (225 evaluated, 15 s): best 44.0 | 9 pieces, 102 positions, solution 9, distinct 2, steps 5 (cover 0.56, late 0.56), endgame false, mechanic 2/2, shortcut 60% | [". . . . . . .",". . . Bv&A . . .",". . . R^@~ R>@- . .",". . . G<* B^@- Y^&A P<%A",". . . P^&A . . Pv*",". . . . . . .",". . . . . . ."]
+round 7 (263 evaluated, 22 s): best 70.6 | 9 pieces, 108 positions, solution 9, distinct 3, steps 6 (cover 0.67, late 0.67), endgame false, mechanic 2/2, shortcut 42% | [". . . B< . . .",". . . Bv&A . . .",". . . . R>@- . .",". . . G<* B<@~ Y^&A P<%A",". . . P^&A . . Pv*",". . . . . . .",". . . . . . ."]
+round 8 (300 evaluated, 31 s): best 94.6 | 10 pieces, 132 positions, solution 10, distinct 3, steps 7 (cover 0.70, late 0.70), endgame true, mechanic 2/2, shortcut 42% | [". . . B< . . .",". . . Bv&A . . .",". . . . R>@- . .",". R^@ . G<* B<@~ Y^&A P<%A",". . . P^&A . . Pv*",". . . . . . .",". . . . . . ."]
+round 9 (337 evaluated, 41 s): best 101.6 | 10 pieces, 132 positions, solution 10, distinct 2, steps 7 (cover 0.70, late 0.70), endgame true, mechanic 2/2, shortcut 30% | [". . . B< . . .",". . . Bv&A . . .",". . . . R>@- . .",". . Bv G<* B<@~ Y^&A P<%A",". . . P^&A . . Pv*",". . . . . . .",". . . . . . ."]
+round 10 (371 evaluated, 53 s): best 116.2 | 12 pieces, 200 positions, solution 12, distinct 4, steps 9 (cover 0.75, late 0.75), endgame true, mechanic 2/2, shortcut 35% | [". . . B< . . .",". . . Bv&A . B^@ .",". . . . R>@- R>@~ .","G^@- . . G<* B<@~ Y^&A P<%A",". . . P^&A . . Pv*",". . . . . . .",". . . . . . ."]
+round 11 (407 evaluated, 67 s): best 118.4 | 11 pieces, 104 positions, solution 11, distinct 3, steps 8 (cover 0.73, late 0.73), endgame true, mechanic 2/2, shortcut 20% | [". . . B< . . .",". . . Bv&A . B^@ .",". . . . . R>@~ .","G^@- . . G<* B<@~ Y^&A P<%A",". . . P^&A . . Pv*",". . . . . . .",". . . . . . ."]
+round 12 (446 evaluated, 81 s): best 126.8 | 13 pieces, 690 positions, solution 13, distinct 3, steps 10 (cover 0.77, late 0.77), endgame true, mechanic 2/2, shortcut 20% | [". . . B< . . Y^@~",". . . Bv&A . . .",". . . . R>@- . .","Y<@~ R^@ . G<* B<@~ Y^&A P<%A",". . . P^&A . . Pv*",". . . Bv@- . . .",". . . . . . ."]
+round 13 (485 evaluated, 99 s): best 135.0 | 13 pieces, 318 positions, solution 13, distinct 4, steps 10 (cover 0.77, late 0.77), endgame true, mechanic 2/2, shortcut 15% | [". . . B< . . .",". . . Bv&A . . .","P>@ . . . R>@- . .","Y<@~ R^@ . G<* B<@~ Y^&A P<%A",". . . P^&A . . Pv*",". . . . . . .",". . . . . . Y<@~"]
+round 14 (524 evaluated, 117 s): best 136.6 | 14 pieces, 638 positions, solution 14, distinct 4, steps 11 (cover 0.79, late 0.79), endgame true, mechanic 2/2, shortcut 12% | [". . . B< . . R>@",". . . Bv&A . . .","P>@ . . . R>@- . .","Y<@~ R^@ . G<* B<@~ Y^&A P<%A",". . . P^&A . . Pv*",". . . . . . .",". . . . . . Y<@~"]
+round 15 (563 evaluated, 136 s): best 137.4 | 14 pieces, 481 positions, solution 14, distinct 4, steps 11 (cover 0.79, late 0.79), endgame true, mechanic 2/2, shortcut 10% | [". . . B>@ . . R>@",". . . Bv&A . . .","P>@ . . . R>@- . .","Y<@~ R^@ . G<* B<@~ Y^&A P<%A",". . . P^&A . . Pv*",". . . . . . .",". . . . . . Y<@~"]
+round 16 (601 evaluated, 155 s): best 137.4 | 14 pieces, 481 positions, solution 14, distinct 4, steps 11 (cover 0.79, late 0.79), endgame true, mechanic 2/2, shortcut 10% | [". . . B>@ . . R>@",". . . Bv&A . . .","P>@ . . . R>@- . .","Y<@~ R^@ . G<* B<@~ Y^&A P<%A",". . . P^&A . . Pv*",". . . . . . .",". . . . . . Y<@~"]
+round 17 (637 evaluated, 175 s): best 138.2 | 14 pieces, 342 positions, solution 14, distinct 4, steps 11 (cover 0.79, late 0.79), endgame true, mechanic 2/2, shortcut 8% | [". . . B>@ . . .",". . . Bv&A . . .","P>@ . . . R>@- Y^@~ .","Y<@~ R^@ . G<* B<@~ Y^&A P<%A",". . . P^&A . . Pv*",". . . . . . .",". . . . . . Y<@~"]
+round 18 (676 evaluated, 199 s): best 138.6 | 17 pieces, 1178 positions, solution 17, distinct 4, steps 14 (cover 0.82, late 0.82), endgame true, mechanic 2/2, shortcut 8% | [". . . B>@ . . R>@",". . . Bv&A Yv G^@~ .","P>@ . . . R>@- . .","Y<@~ R^@ . G<* B<@~ Y^&A P<%A",". . Yv@~ P^&A . . Pv*",". . . . . . .",". . . . . . Y<@~"]
+round 19 (714 evaluated, 216 s): best 138.6 | 17 pieces, 1178 positions, solution 17, distinct 4, steps 14 (cover 0.82, late 0.82), endgame true, mechanic 2/2, shortcut 8% | [". . . B>@ . . R>@",". . . Bv&A Yv G^@~ .","P>@ . . . R>@- . .","Y<@~ R^@ . G<* B<@~ Y^&A P<%A",". . Yv@~ P^&A . . Pv*",". . . . . . .",". . . . . . Y<@~"]
+round 20 (750 evaluated, 234 s): best 140.0 | 17 pieces, 1696 positions, solution 17, distinct 5, steps 14 (cover 0.82, late 0.82), endgame true, mechanic 2/2, shortcut 15% | [". . . B>@ . . R>@",". . . Bv&A Yv G^@~ .","P>@- . . . R>@- . .","Y<@~ R^@ . G<* Bv@~ Y^&A P<%A",". . Yv@~ P^&A . . Pv*",". . . . . . .",". . . . . . Y<@~"]
+round 21 (788 evaluated, 256 s): best 143.6 | 16 pieces, 459 positions, solution 16, distinct 5, steps 13 (cover 0.81, late 0.81), endgame true, mechanic 2/2, shortcut 10% | [". . . B>@ . G^@- .",". . . Bv&A . Y> .","P>@ . . . R>@- Y^@~ .","Y<@~ R^@ . G<* B<@~ Y^&A P<%A",". . . P^&A . . Pv*",". . . . . . .",". . . . . . Y<@~"]
+round 22 (826 evaluated, 279 s): best 147.1 | 17 pieces, 920 positions, solution 17, distinct 6, steps 14 (cover 0.82, late 0.82), endgame true, mechanic 2/2, shortcut 15% | [". . B<@- B>@ . G^@- .",". . . Bv&A . Y> .","P>@ . . . R>@- Y^@~ .","Y<@~ R^@ . G<* B<@~ Y^&A P<%A",". . . P^&A . . Pv*",". . . . . . .",". . . . . . Y<@~"]
+round 23 (859 evaluated, 297 s): best 147.6 | 17 pieces, 782 positions, solution 17, distinct 6, steps 14 (cover 0.82, late 0.82), endgame true, mechanic 2/2, shortcut 15% | [". . B<@- B>@ . G^@- .",". . . Bv&A . Y> .","P>@ . . . R>@- Y<@ .","Y<@~ R^@ . G<* B<@~ Y^&A P<%A",". . . P^&A . . Pv*",". . . . . . .",". . . . . . Y<@~"]
+round 24 (898 evaluated, 321 s): best 147.6 | 17 pieces, 782 positions, solution 17, distinct 6, steps 14 (cover 0.82, late 0.82), endgame true, mechanic 2/2, shortcut 15% | [". . B<@- B>@ . G^@- .",". . . Bv&A . Y> .","P>@ . . . R>@- Y<@ .","Y<@~ R^@ . G<* B<@~ Y^&A P<%A",". . . P^&A . . Pv*",". . . . . . .",". . . . . . Y<@~"]
+round 25 (933 evaluated, 341 s): best 148.0 | 16 pieces, 614 positions, solution 16, distinct 6, steps 13 (cover 0.81, late 0.81), endgame true, mechanic 2/2, shortcut 8% | [". . B<@- B>@ . G^@- .",". . . Bv&A . Y> .","P>@ . . . R>@- Y^@~ .","Y<@~ R^@ . G<* B<@~ Y^&A P<%A",". . . P^&A . . Pv*",". . . . . . .",". . . . . . ."]
+round 26 (970 evaluated, 360 s): best 148.8 | 17 pieces, 750 positions, solution 17, distinct 6, steps 14 (cover 0.82, late 0.82), endgame true, mechanic 2/2, shortcut 2% | [". . B<@- B>@ . G^@- P<",". . . Bv&A . Y> .","P>@ . . . R^@ . .","Y<@~ R^@ . G<* B<@~ Y^&A P<%A",". . . P^&A . . Pv*",". . . . . . .",". . . . . . Y<@~"]
+round 27 (1007 evaluated, 383 s): best 148.8 | 17 pieces, 750 positions, solution 17, distinct 6, steps 14 (cover 0.82, late 0.82), endgame true, mechanic 2/2, shortcut 2% | [". . B<@- B>@ . G^@- P<",". . . Bv&A . Y> .","P>@ . . . R^@ . .","Y<@~ R^@ . G<* B<@~ Y^&A P<%A",". . . P^&A . . Pv*",". . . . . . .",". . . . . . Y<@~"]
+round 28 (1043 evaluated, 409 s): best 150.0 | 17 pieces, 802 positions, solution 17, distinct 7, steps 14 (cover 0.82, late 0.82), endgame true, mechanic 2/2, shortcut 12% | [". . B<@- B>@ . G^@- .",". . . Bv&A R>&A Y> .","P>@ . . . R>@- Y^@~ .","Y<@~ R^@ . G<* B<@~ Y^ P<%A",". . . P^&A . . Pv*",". . . . . . .",". . . . . . ."]
+ERROR: Level 0: switch / flip / armored block at (6, 1) cannot be a spinner or hidden
+   at: push_error (core/variant/variant_utility.cpp:1092)
+round 29 (1082 evaluated, 439 s): best 150.8 | 17 pieces, 802 positions, solution 17, distinct 7, steps 14 (cover 0.82, late 0.82), endgame true, mechanic 2/2, shortcut 2% | [". . B<@- B>@ . G^@- .",". . . Bv&A R>&A Y>@- .","P>@ . . . R>@- Y^@~ .","Y<@~ R^@ . G<* B<@~ Y^ P<%A",". . . P^&A . . Pv*",". . . . . . .",". . . . . . ."]
+round 30 (1119 evaluated, 464 s): best 151.1 | 17 pieces, 738 positions, solution 17, distinct 7, steps 14 (cover 0.82, late 0.82), endgame true, mechanic 2/2, shortcut 2% | [". . B<@- B>@ . G^@- .",". . . Bv&A R>&A Y> .","P>@ . . . R>@- Y^@~ .","Y<@~ R^@ . G<* B^@ Y^ P<%A",". . . P^&A . . Pv*",". . . . . . .",". . . . . . ."]
+ERROR: Level 0: switch / flip / armored block at (5, 1) cannot be a spinner or hidden
+   at: push_error (core/variant/variant_utility.cpp:1092)
+round 31 (1155 evaluated, 486 s): best 151.1 | 17 pieces, 738 positions, solution 17, distinct 7, steps 14 (cover 0.82, late 0.82), endgame true, mechanic 2/2, shortcut 2% | [". . B<@- B>@ . G^@- .",". . . Bv&A R>&A Y> .","P>@ . . . R>@- Y^@~ .","Y<@~ R^@ . G<* B^@ Y^ P<%A",". . . P^&A . . Pv*",". . . . . . .",". . . . . . ."]
+round 32 (1193 evaluated, 509 s): best 151.9 | 17 pieces, 706 positions, solution 17, distinct 6, steps 14 (cover 0.82, late 0.82), endgame true, mechanic 2/2, shortcut 2% | [". . B<@- B>@ . G<@ .",". . . Bv&A R>&A Y> .","P>@ . . . R>@- Y^@~ .","Y<@~ R^@ . G<* B^@ Y^ P<%A",". . . P^&A . . Pv*",". . . . . . .",". . . . . . ."]
+ERROR: Level 0: switch / flip / armored block at (4, 3) cannot be a spinner or hidden
+   at: push_error (core/variant/variant_utility.cpp:1092)
+ERROR: Level 0: switch / flip / armored block at (1, 3) cannot be a spinner or hidden
+   at: push_error (core/variant/variant_utility.cpp:1092)
+round 33 (1231 evaluated, 533 s): best 151.9 | 17 pieces, 706 positions, solution 17, distinct 6, steps 14 (cover 0.82, late 0.82), endgame true, mechanic 2/2, shortcut 2% | [". . B<@- B>@ . G<@ .",". . . Bv&A R>&A Y> .","P>@ . . . R>@- Y^@~ .","Y<@~ R^@ . G<* B^@ Y^ P<%A",". . . P^&A . . Pv*",". . . . . . .",". . . . . . ."]
+round 34 (1270 evaluated, 560 s): best 151.9 | 17 pieces, 706 positions, solution 17, distinct 6, steps 14 (cover 0.82, late 0.82), endgame true, mechanic 2/2, shortcut 2% | [". . B<@- B>@ . G<@ .",". . . Bv&A R>&A Y> .","P>@ . . . R>@- Y^@~ .","Y<@~ R^@ . G<* B^@ Y^ P<%A",". . . P^&A . . Pv*",". . . . . . .",". . . . . . ."]
+ERROR: Level 0: switch / flip / armored block at (1, 0) cannot be a spinner or hidden
+   at: push_error (core/variant/variant_utility.cpp:1092)
+round 35 (1307 evaluated, 582 s): best 152.0 | 17 pieces, 514 positions, solution 17, distinct 6, steps 14 (cover 0.82, late 0.82), endgame true, mechanic 2/2, shortcut 2% | [". . B<@- B>@ . . .",". . . Bv&A R>&A Y> .","P>@ . . . R>@- Y^@~ .","Y<@~ R^@ P<&A G<* B^@ Y^ P<%A",". . . P^ . . Pv*",". . . . . . .",". . . . . . ."]
+ERROR: Level 0: switch / flip / armored block at (3, 4) cannot be a spinner or hidden
+   at: push_error (core/variant/variant_utility.cpp:1092)
+ERROR: Level 0: switch / flip / armored block at (6, 5) cannot be a spinner or hidden
+   at: push_error (core/variant/variant_utility.cpp:1092)
+round 36 (1345 evaluated, 606 s): best 152.0 | 17 pieces, 514 positions, solution 17, distinct 6, steps 14 (cover 0.82, late 0.82), endgame true, mechanic 2/2, shortcut 2% | [". . B<@- B>@ . . .",". . . Bv&A R>&A Y> .","P>@ . . . R>@- Y^@~ .","Y<@~ R^@ P<&A G<* B^@ Y^ P<%A",". . . P^ . . Pv*",". . . . . . .",". . . . . . ."]
+round 37 (1379 evaluated, 628 s): best 152.0 | 17 pieces, 514 positions, solution 17, distinct 6, steps 14 (cover 0.82, late 0.82), endgame true, mechanic 2/2, shortcut 2% | [". . B<@- B>@ . . .",". . . Bv&A R>&A Y> .","P>@ . . . R>@- Y^@~ .","Y<@~ R^@ P<&A G<* B^@ Y^ P<%A",". . . P^ . . Pv*",". . . . . . .",". . . . . . ."]
+round 38 (1414 evaluated, 656 s): best 152.0 | 17 pieces, 514 positions, solution 17, distinct 6, steps 14 (cover 0.82, late 0.82), endgame true, mechanic 2/2, shortcut 2% | [". . B<@- B>@ . . .",". . . Bv&A R>&A Y> .","P>@ . . . R>@- Y^@~ .","Y<@~ R^@ P<&A G<* B^@ Y^ P<%A",". . . P^ . . Pv*",". . . . . . .",". . . . . . ."]
+ERROR: Level 0: switch / flip / armored block at (5, 4) cannot be a spinner or hidden
+   at: push_error (core/variant/variant_utility.cpp:1092)
+round 39 (1453 evaluated, 683 s): best 152.0 | 17 pieces, 514 positions, solution 17, distinct 6, steps 14 (cover 0.82, late 0.82), endgame true, mechanic 2/2, shortcut 2% | [". . B<@- B>@ . . .",". . . Bv&A R>&A Y> .","P>@ . . . R>@- Y^@~ .","Y<@~ R^@ P<&A G<* B^@ Y^ P<%A",". . . P^ . . Pv*",". . . . . . .",". . . . . . ."]
+ERROR: Level 0: switch / flip / armored block at (1, 4) cannot be a spinner or hidden
+   at: push_error (core/variant/variant_utility.cpp:1092)
+ERROR: Level 0: switch / flip / armored block at (3, 5) cannot be a spinner or hidden
+   at: push_error (core/variant/variant_utility.cpp:1092)
+round 40 (1486 evaluated, 702 s): best 152.0 | 17 pieces, 514 positions, solution 17, distinct 6, steps 14 (cover 0.82, late 0.82), endgame true, mechanic 2/2, shortcut 2% | [". . B<@- B>@ . . .",". . . Bv&A R>&A Y> .","P>@ . . . R>@- Y^@~ .","Y<@~ R^@ P<&A G<* B^@ Y^ P<%A",". . . P^ . . Pv*",". . . . . . .",". . . . . . ."]
+round 41 (1518 evaluated, 720 s): best 152.3 | 17 pieces, 436 positions, solution 17, distinct 6, steps 14 (cover 0.82, late 0.82), endgame true, mechanic 2/2, shortcut 2% | [". . B<@- B>@ . . .",". . . Bv&A R>&A Y> .","P> . . . R>@- Y^@~ .","Y<@~ R^@ P<&A G<* B^@ Y^ P<%A",". . . P^%A . . Pv*",". . . . . . .",". . . . . . ."]
+stopped after 41 rounds: time budget
+BEST [". . B<@- B>@ . . .",". . . Bv&A R>&A Y> .","P> . . . R>@- Y^@~ .","Y<@~ R^@ P<&A G<* B^@ Y^ P<%A",". . . P^%A . . Pv*",". . . . . . .",". . . . . . ."]

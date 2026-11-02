@@ -1,0 +1,131 @@
+{
+ "A_T27r_s302_5": {
+  "A": {
+   "fingerprint": "1e5fec869d6132039e61194b6c46156375a4f5e953686843af156aa22e49111c",
+   "hint_nodes": [
+    59,
+    73
+   ],
+   "parity": [
+    0,
+    0
+   ],
+   "portals": 0,
+   "position_cap": 2000,
+   "positions": 357,
+   "replay": true,
+   "solution": 14,
+   "solve_ms": 8.6,
+   "timeup_worst_ms": 7,
+   "timeup_worst_nodes": 158,
+   "winnable": 102
+  },
+  "B": {
+   "coverage": 0.86,
+   "decision_steps": 12,
+   "distinct_mistakes": 5,
+   "endgame_decision": true,
+   "last_decision": 12,
+   "late": 0.86,
+   "line": [
+    "r5c6> [x2]",
+    "r0c3< [x2]",
+    "r0c4^ [x1]",
+    "r1c6^ [x2]",
+    "r6c6^ [x2]",
+    "r1c4< [x3]",
+    "r1c5^ [x2]",
+    "r3c3^ [x2]",
+    "r3c4^ [x2]",
+    "r3c5> [x1]",
+    "r5c3^ [x1]",
+    "r3c2> [x1]",
+    "r3c1v",
+    "r6c5v"
+   ],
+   "losing_per_step": [
+    2,
+    2,
+    1,
+    2,
+    2,
+    3,
+    2,
+    2,
+    2,
+    1,
+    1,
+    1,
+    0,
+    0
+   ],
+   "matters_gate": true,
+   "matters_switch": true,
+   "mistakes": [
+    "r0c4>",
+    "r6c5v",
+    "r1c5^",
+    "r1c5>",
+    "r3c5>"
+   ],
+   "shortcut": 0.15,
+   "spinner_dependence": "without it: 12 decision steps, 1 distinct mistakes (with it: 12, 5)",
+   "without_gate": "without it: 5 decision steps, 3 distinct mistakes (with it: 12, 5)",
+   "without_switch": "unsolvable without it"
+  },
+  "C": {
+   "decisions_k4_6_8": [
+    7,
+    5,
+    2
+   ],
+   "deepest": 10,
+   "greedy": {
+    "look2": 0.005,
+    "look4": 0.075,
+    "min_turn": 0,
+    "mobility": 0.15,
+    "safe": 0.005
+   },
+   "hidden_k6_8": [
+    6,
+    2
+   ],
+   "learner": {
+    "look4": 0,
+    "look6": 0
+   },
+   "look6_greedy": 0.133,
+   "opening": "4 / 6",
+   "pressure": {
+    "advances": 0,
+    "calm_prefix": 1,
+    "flips": 2,
+    "multi_turned": 1,
+    "prediction_share": 0.5,
+    "pulls": 0,
+    "rams": 0,
+    "signals": 0,
+    "spinners_turned": 5,
+    "trap_delay_median": 5,
+    "turns": 6,
+    "undo_proof": 0.67
+   },
+   "win_share": 0.286
+  },
+  "map": [
+   ". . . P<@-+C G>@- . .",
+   ". . . XC P^@- B^@~ R^",
+   ". . . . . . .",
+   ". P>@ B<&A Y^@- B>@- B<&A .",
+   ". . . . . . .",
+   ". . . G^ . . G>&A",
+   ". . . . . Bv%A P^%A+C"
+  ],
+  "name": "A_T27r_s302_5",
+  "target": "EXTREME",
+  "verdict": "HUMAN-REVIEW CANDIDATE",
+  "why_a": [],
+  "why_b": []
+ }
+}

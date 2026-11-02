@@ -1,0 +1,23 @@
+{
+ "C1_T61_s307_0": {
+  "distinct": 4,
+  "pieces_tested": 12,
+  "steps": 13,
+  "trivial": [],
+  "trivial_removals": 0
+ },
+ "C1_T61_s307_5": {
+  "distinct": 5,
+  "pieces_tested": 12,
+  "steps": 13,
+  "trivial": [],
+  "trivial_removals": 0
+ },
+ "C1_T61_s307_6": {
+  "distinct": 5,
+  "pieces_tested": 13,
+  "steps": 15,
+  "trivial": [],
+  "trivial_removals": 0
+ }
+}

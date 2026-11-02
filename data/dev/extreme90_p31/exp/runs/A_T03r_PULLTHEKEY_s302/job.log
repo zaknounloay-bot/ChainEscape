@@ -1,0 +1,103 @@
+Godot Engine v4.3.stable.official.77dcf97d8 - https://godotengine.org
+
+SCRIPT ERROR: Invalid access of index '6' on a base object of type: 'Array'.
+          at: _rot (res://tools/vh_pilot4_canon.gd:101)
+SCRIPT ERROR: Out of bounds get index '0' (on base: 'Array')
+          at: _relabel (res://tools/vh_pilot4_canon.gd:141)
+SCRIPT ERROR: Out of bounds get index '0' (on base: 'Array')
+          at: _relabel (res://tools/vh_pilot4_canon.gd:141)
+SCRIPT ERROR: Out of bounds get index '0' (on base: 'Array')
+          at: _rot (res://tools/vh_pilot4_canon.gd:96)
+SCRIPT ERROR: Out of bounds get index '0' (on base: 'Array')
+          at: _relabel (res://tools/vh_pilot4_canon.gd:141)
+SCRIPT ERROR: Out of bounds get index '0' (on base: 'Array')
+          at: _relabel (res://tools/vh_pilot4_canon.gd:141)
+SCRIPT ERROR: Out of bounds get index '0' (on base: 'Array')
+          at: _rot (res://tools/vh_pilot4_canon.gd:96)
+SCRIPT ERROR: Out of bounds get index '0' (on base: 'Array')
+          at: _relabel (res://tools/vh_pilot4_canon.gd:141)
+SCRIPT ERROR: Out of bounds get index '0' (on base: 'Array')
+          at: _relabel (res://tools/vh_pilot4_canon.gd:141)
+SCRIPT ERROR: Out of bounds get index '0' (on base: 'Array')
+          at: _rot (res://tools/vh_pilot4_canon.gd:96)
+known boards: 37059
+known boards incl. T1-T5 and the demos: 37059; played boards for the near-copy guard: 333
+generator: v20 (strategic operators)
+seed: -43.5 | 3 pieces, 4 positions, solution 3, distinct 1, steps 1 (cover 0.33, late 0.33), endgame false, mechanic 1/2, shortcut 100% | [". . . . . . .",". . . . . . .",". . . . . . .",". . . R<* . Yv .",". . . . . . .",". . . B^#Y . . .",". . . . . . ."]
+ERROR: Level 0: magnet at (6, 3) must be a plain arrow on a board without portals, Movable or hidden blocks
+   at: push_error (core/variant/variant_utility.cpp:1092)
+ERROR: Level 0: magnet at (6, 3) must be a plain arrow on a board without portals, Movable or hidden blocks
+   at: push_error (core/variant/variant_utility.cpp:1092)
+ERROR: Level 0: magnet at (6, 3) must be a plain arrow on a board without portals, Movable or hidden blocks
+   at: push_error (core/variant/variant_utility.cpp:1092)
+ERROR: Level 0: magnet at (1, 3) must be a plain arrow on a board without portals, Movable or hidden blocks
+   at: push_error (core/variant/variant_utility.cpp:1092)
+ERROR: Level 0: magnet at (1, 3) must be a plain arrow on a board without portals, Movable or hidden blocks
+   at: push_error (core/variant/variant_utility.cpp:1092)
+ERROR: Level 0: magnet at (1, 3) must be a plain arrow on a board without portals, Movable or hidden blocks
+   at: push_error (core/variant/variant_utility.cpp:1092)
+round 1 (39 evaluated, 1 s): best -30.8 | 4 pieces, 8 positions, solution 4, distinct 1, steps 2 (cover 0.50, late 0.50), endgame false, mechanic 1/2, shortcut 100% | [". . . B< . . .",". . . . . . .",". . . . . . .",". . . R<* . Yv .",". . . . . . .",". . . B^#Y . . .",". . . . . . ."]
+ERROR: Level 0: magnet at (3, 0) must be a plain arrow on a board without portals, Movable or hidden blocks
+   at: push_error (core/variant/variant_utility.cpp:1092)
+ERROR: Level 0: magnet at (3, 0) must be a plain arrow on a board without portals, Movable or hidden blocks
+   at: push_error (core/variant/variant_utility.cpp:1092)
+ERROR: Level 0: magnet at (3, 0) must be a plain arrow on a board without portals, Movable or hidden blocks
+   at: push_error (core/variant/variant_utility.cpp:1092)
+ERROR: Level 0: magnet at (6, 3) must be a plain arrow on a board without portals, Movable or hidden blocks
+   at: push_error (core/variant/variant_utility.cpp:1092)
+ERROR: Level 0: magnet at (6, 3) must be a plain arrow on a board without portals, Movable or hidden blocks
+   at: push_error (core/variant/variant_utility.cpp:1092)
+ERROR: Level 0: magnet at (6, 3) must be a plain arrow on a board without portals, Movable or hidden blocks
+   at: push_error (core/variant/variant_utility.cpp:1092)
+ERROR: Level 0: magnet at (5, 6) must be a plain arrow on a board without portals, Movable or hidden blocks
+   at: push_error (core/variant/variant_utility.cpp:1092)
+ERROR: Level 0: magnet at (5, 6) must be a plain arrow on a board without portals, Movable or hidden blocks
+   at: push_error (core/variant/variant_utility.cpp:1092)
+ERROR: Level 0: magnet at (5, 6) must be a plain arrow on a board without portals, Movable or hidden blocks
+   at: push_error (core/variant/variant_utility.cpp:1092)
+ERROR: Level 0: magnet at (0, 3) must be a plain arrow on a board without portals, Movable or hidden blocks
+   at: push_error (core/variant/variant_utility.cpp:1092)
+ERROR: Level 0: magnet at (0, 3) must be a plain arrow on a board without portals, Movable or hidden blocks
+   at: push_error (core/variant/variant_utility.cpp:1092)
+ERROR: Level 0: magnet at (0, 3) must be a plain arrow on a board without portals, Movable or hidden blocks
+   at: push_error (core/variant/variant_utility.cpp:1092)
+round 2 (73 evaluated, 3 s): best -14.9 | 5 pieces, 16 positions, solution 5, distinct 2, steps 3 (cover 0.60, late 0.60), endgame false, mechanic 1/2, shortcut 100% | [". . . R<* Yv . .",". . . . . . .",". . . . . . .",". . . R<* . Yv .",". . . . . . .",". . . B^#Y . . .",". . . . . . ."]
+round 3 (111 evaluated, 5 s): best -8.3 | 6 pieces, 14 positions, solution 6, distinct 1, steps 3 (cover 0.50, late 0.50), endgame false, mechanic 2/2, shortcut 100% | [". . . R<* . R<#Y .",". . . . . . .",". . . . . . .",". . . R<* . Yv .",". . . . . Rv .",". . . B^#Y . . .",". . . . . . ."]
+round 4 (146 evaluated, 8 s): best 11.8 | 7 pieces, 28 positions, solution 7, distinct 1, steps 5 (cover 0.71, late 0.71), endgame true, mechanic 1/2, shortcut 100% | [". . . R<* . R<#Y .",". . . . . . .",". . . . . . .",". . . R<* . Yv .",". . . P<@- . Rv .",". . . B^#Y . . .",". . . . . . ."]
+round 5 (175 evaluated, 11 s): best 12.7 | 8 pieces, 40 positions, solution 8, distinct 1, steps 3 (cover 0.38, late 0.75), endgame true, mechanic 2/2, shortcut 100% | [". . . R<* . R<#Y .",". . . . . . .",". . . . . . .",". . Y< R<* . Yv .",". . . P<@- . Rv .",". . . B^#Y . . .",". . . . . . ."]
+round 6 (211 evaluated, 16 s): best 33.0 | 9 pieces, 66 positions, solution 9, distinct 1, steps 6 (cover 0.67, late 0.78), endgame true, mechanic 2/2, shortcut 100% | [". . . R<* . R<#Y .",". . . B^@- . . .",". . . . . . .","P<@ . . R<* . Yv .",". . . P<@- . Rv .",". . . B^#Y . . .",". . . . . . ."]
+round 7 (247 evaluated, 21 s): best 36.8 | 10 pieces, 133 positions, solution 10, distinct 1, steps 7 (cover 0.70, late 0.80), endgame true, mechanic 2/2, shortcut 100% | [". . . R<* . R<#Y .",". . . B^@- . . .",". . . . . . .","P<@ . . R<* . Yv .",". . . P<@- . Rv .",". . . B^#Y . . .",". . . R<@- . . ."]
+round 8 (283 evaluated, 29 s): best 52.4 | 10 pieces, 79 positions, solution 10, distinct 1, steps 7 (cover 0.70, late 0.80), endgame true, mechanic 2/2, shortcut 82% | [". . . R<* . R<#Y R<@",". . . B^@ . . .",". . . . . . .","P<@ . . R<* . Yv .",". . . P<@- . Rv .",". . . B^#Y . . .",". . . . . . ."]
+round 9 (319 evaluated, 38 s): best 56.5 | 12 pieces, 244 positions, solution 12, distinct 2, steps 9 (cover 0.75, late 0.83), endgame true, mechanic 1/2, shortcut 78% | [". . B<@- R<* G<@~ R<#Y .",". . . B^@- . . .",". . . . . . .","P<@ . . R<* . Yv .",". . . P<@- . Rv .",". . . B^#Y . . .",". . . R<@- . . ."]
+round 10 (356 evaluated, 50 s): best 98.3 | 11 pieces, 210 positions, solution 11, distinct 3, steps 9 (cover 0.82, late 0.82), endgame true, mechanic 2/2, shortcut 50% | [". . . R<* . R<#Y .",". . . B^@- . . .",". . . . . . .","P<@ Pv@- . R<* . Yv .","R<@ . . P>@ . Rv .",". . . B^#Y . . .",". . . . . . ."]
+round 11 (393 evaluated, 60 s): best 106.3 | 12 pieces, 334 positions, solution 12, distinct 3, steps 10 (cover 0.83, late 0.83), endgame true, mechanic 2/2, shortcut 45% | [". . . R<* . R<#Y .",". . . B^@- . Rv@ .",". . . . . . .","P<@ Pv@- . R<* . Yv .","R<@ . . P>@ . Rv .",". . . B^#Y . . .",". . . . . . ."]
+round 12 (431 evaluated, 76 s): best 116.5 | 13 pieces, 426 positions, solution 13, distinct 3, steps 11 (cover 0.85, late 0.85), endgame true, mechanic 2/2, shortcut 38% | [". . . R<* . R<#Y R<@",". . . B^@- . Rv@ .",". . . . . . .","P<@ Pv@- . R<* . Yv .","R<@ . . P>@ . Rv .",". . . B^#Y . . .",". . . . . . ."]
+round 13 (470 evaluated, 95 s): best 124.3 | 14 pieces, 604 positions, solution 14, distinct 4, steps 12 (cover 0.86, late 0.86), endgame true, mechanic 1/2, shortcut 12% | [". . P^@- R<* B<@~ R<#Y .",". . . B^@- . Rv@ .",". . . . . . .","P<@ Pv@- . R<* . Yv .","R<@ . . P>@ . Rv .",". . . B^#Y . . .",". . . . . . ."]
+round 14 (508 evaluated, 119 s): best 130.3 | 14 pieces, 734 positions, solution 14, distinct 3, steps 12 (cover 0.86, late 0.86), endgame true, mechanic 2/2, shortcut 22% | [". . . R<* . R<#Y R<@",". . . B^@- . Rv@ .",". . . . . . .","P<@ Pv@- . R<* . Yv P<@-","R<@ . . P>@ . Rv .",". . . B^#Y . . .",". . . . . . ."]
+round 15 (543 evaluated, 140 s): best 130.3 | 14 pieces, 734 positions, solution 14, distinct 3, steps 12 (cover 0.86, late 0.86), endgame true, mechanic 2/2, shortcut 22% | [". . . R<* . R<#Y R<@",". . . B^@- . Rv@ .",". . . . . . .","P<@ Pv@- . R<* . Yv P<@-","R<@ . . P>@ . Rv .",". . . B^#Y . . .",". . . . . . ."]
+round 16 (579 evaluated, 166 s): best 130.3 | 14 pieces, 734 positions, solution 14, distinct 3, steps 12 (cover 0.86, late 0.86), endgame true, mechanic 2/2, shortcut 22% | [". . . R<* . R<#Y R<@",". . . B^@- . Rv@ .",". . . . . . .","P<@ Pv@- . R<* . Yv P<@-","R<@ . . P>@ . Rv .",". . . B^#Y . . .",". . . . . . ."]
+round 17 (616 evaluated, 191 s): best 130.3 | 14 pieces, 734 positions, solution 14, distinct 3, steps 12 (cover 0.86, late 0.86), endgame true, mechanic 2/2, shortcut 22% | [". . . R<* . R<#Y R<@",". . . B^@- . Rv@ .",". . . . . . .","P<@ Pv@- . R<* . Yv P<@-","R<@ . . P>@ . Rv .",". . . B^#Y . . .",". . . . . . ."]
+round 18 (652 evaluated, 216 s): best 130.3 | 14 pieces, 734 positions, solution 14, distinct 3, steps 12 (cover 0.86, late 0.86), endgame true, mechanic 2/2, shortcut 22% | [". . . R<* . R<#Y R<@",". . . B^@- . Rv@ .",". . . . . . .","P<@ Pv@- . R<* . Yv P<@-","R<@ . . P>@ . Rv .",". . . B^#Y . . .",". . . . . . ."]
+round 19 (687 evaluated, 241 s): best 130.3 | 14 pieces, 734 positions, solution 14, distinct 3, steps 12 (cover 0.86, late 0.86), endgame true, mechanic 2/2, shortcut 22% | [". . . R<* . R<#Y R<@",". . . B^@- . Rv@ .",". . . . . . .","P<@ Pv@- . R<* . Yv P<@-","R<@ . . P>@ . Rv .",". . . B^#Y . . .",". . . . . . ."]
+round 20 (722 evaluated, 261 s): best 130.3 | 14 pieces, 734 positions, solution 14, distinct 3, steps 12 (cover 0.86, late 0.86), endgame true, mechanic 2/2, shortcut 22% | [". . . R<* . R<#Y R<@",". . . B^@- . Rv@ .",". . . . . . .","P<@ Pv@- . R<* . Yv P<@-","R<@ . . P>@ . Rv .",". . . B^#Y . . .",". . . . . . ."]
+round 21 (757 evaluated, 289 s): best 132.1 | 13 pieces, 387 positions, solution 13, distinct 3, steps 11 (cover 0.85, late 0.85), endgame true, mechanic 2/2, shortcut 20% | [". . . R<* . R<#Y R<@",". . . B^@- . Rv@ .",". . . . . . .","P<@ Pv@- . R<* . Yv P<@-","R<@ . . . . Rv .",". . . B^#Y . . .",". . . . . . ."]
+round 22 (793 evaluated, 316 s): best 133.3 | 15 pieces, 547 positions, solution 15, distinct 5, steps 12 (cover 0.80, late 0.80), endgame true, mechanic 2/2, shortcut 28% | [". Y^@ P^@- R<* B<@~ R<#Y .",". . . B^@- . . .",". . . . . . .","P<@ Pv@- . R<* . Yv .","R<@ . . . . Rv .",". R<@~ . B^#Y . . .",". . . . . P>@~ ."]
+round 23 (832 evaluated, 340 s): best 134.9 | 14 pieces, 419 positions, solution 14, distinct 5, steps 11 (cover 0.79, late 0.79), endgame true, mechanic 2/2, shortcut 25% | [". Y^@ P^@- R<* B<@~ R<#Y .",". . . B^@- . . .",". . . . . . .","P<@ Pv@- . R<* . Yv .","R<@ . . . . . .",". R<@~ . B^#Y . . .",". . . . . P>@~ ."]
+round 24 (866 evaluated, 357 s): best 134.9 | 14 pieces, 419 positions, solution 14, distinct 5, steps 11 (cover 0.79, late 0.79), endgame true, mechanic 2/2, shortcut 25% | [". Y^@ P^@- R<* B<@~ R<#Y .",". . . B^@- . . .",". . . . . . .","P<@ Pv@- . R<* . Yv .","R<@ . . . . . .",". R<@~ . B^#Y . . .",". . . . . P>@~ ."]
+round 25 (902 evaluated, 375 s): best 135.0 | 16 pieces, 1128 positions, solution 16, distinct 5, steps 13 (cover 0.81, late 0.81), endgame true, mechanic 2/2, shortcut 25% | [". Y^@ P^@- R<* B<@~ R<#Y B>@~",". . . B^@- . . .",". . . . . . .","P<@ Pv@- . R<* . Yv .","R<@ . . . . Rv .",". R<@~ . B^#Y . . .",". . . . . P>@~ ."]
+round 26 (941 evaluated, 398 s): best 143.9 | 15 pieces, 1045 positions, solution 15, distinct 6, steps 12 (cover 0.80, late 0.80), endgame true, mechanic 2/2, shortcut 5% | [". Y^@ P^@- R^* B<@~ R<#Y .",". . . B^@- . . .",". . . . . . .","P<@ Pv@- . R<* . Yv .","R<@ . . . . Rv .",". R<@~ . B^#Y . . .",". . . . . P>@~ ."]
+round 27 (980 evaluated, 424 s): best 143.9 | 15 pieces, 1045 positions, solution 15, distinct 6, steps 12 (cover 0.80, late 0.80), endgame true, mechanic 2/2, shortcut 5% | [". Y^@ P^@- R^* B<@~ R<#Y .",". . . B^@- . . .",". . . . . . .","P<@ Pv@- . R<* . Yv .","R<@ . . . . Rv .",". R<@~ . B^#Y . . .",". . . . . P>@~ ."]
+round 28 (1014 evaluated, 447 s): best 143.9 | 15 pieces, 1045 positions, solution 15, distinct 6, steps 12 (cover 0.80, late 0.80), endgame true, mechanic 2/2, shortcut 5% | [". Y^@ P^@- R^* B<@~ R<#Y .",". . . B^@- . . .",". . . . . . .","P<@ Pv@- . R<* . Yv .","R<@ . . . . Rv .",". R<@~ . B^#Y . . .",". . . . . P>@~ ."]
+round 29 (1049 evaluated, 472 s): best 143.9 | 15 pieces, 1045 positions, solution 15, distinct 6, steps 12 (cover 0.80, late 0.80), endgame true, mechanic 2/2, shortcut 5% | [". Y^@ P^@- R^* B<@~ R<#Y .",". . . B^@- . . .",". . . . . . .","P<@ Pv@- . R<* . Yv .","R<@ . . . . Rv .",". R<@~ . B^#Y . . .",". . . . . P>@~ ."]
+round 30 (1085 evaluated, 500 s): best 146.6 | 17 pieces, 1081 positions, solution 17, distinct 6, steps 14 (cover 0.82, late 0.82), endgame true, mechanic 2/2, shortcut 5% | ["B^@~ Y^@ P^@- R^* B<@~ R<#Y .",". . . B^@- . . .",". . . . . . .","P<@ Pv@- . R<* . Yv .","R<@ . . . . Rv .",". R<@~ . B^#Y . . .",". . . . . P>@~ Yv@~"]
+round 31 (1124 evaluated, 528 s): best 147.4 | 17 pieces, 1055 positions, solution 17, distinct 6, steps 14 (cover 0.82, late 0.82), endgame true, mechanic 2/2, shortcut 5% | ["B^@~ Y^@ P^@- R^* B<@~ R<#Y .",". . . B^@- . . .",". . . . . . .","P<@ Pv@- . R<* . Yv .","R<@ . . . . R< .",". R<@~ . B^#Y . . .",". . . . . P>@~ Yv@~"]
+round 32 (1159 evaluated, 552 s): best 147.4 | 17 pieces, 1055 positions, solution 17, distinct 6, steps 14 (cover 0.82, late 0.82), endgame true, mechanic 2/2, shortcut 5% | ["B^@~ Y^@ P^@- R^* B<@~ R<#Y .",". . . B^@- . . .",". . . . . . .","P<@ Pv@- . R<* . Yv .","R<@ . . . . R< .",". R<@~ . B^#Y . . .",". . . . . P>@~ Yv@~"]
+round 33 (1189 evaluated, 576 s): best 147.6 | 17 pieces, 1109 positions, solution 17, distinct 6, steps 14 (cover 0.82, late 0.82), endgame true, mechanic 2/2, shortcut 10% | ["B^@~ Y^@ P^@- R^* B<@~ R>#Y .",". . . B^@- . . .",". . . . . . .","P<@ Pv@- . R<* . Yv .","R<@ . . . . R< .",". R<@~ . B^#Y . . .",". . . . . P>@~ Yv@~"]
+round 34 (1227 evaluated, 603 s): best 147.6 | 17 pieces, 1109 positions, solution 17, distinct 6, steps 14 (cover 0.82, late 0.82), endgame true, mechanic 2/2, shortcut 10% | ["B^@~ Y^@ P^@- R^* B<@~ R>#Y .",". . . B^@- . . .",". . . . . . .","P<@ Pv@- . R<* . Yv .","R<@ . . . . R< .",". R<@~ . B^#Y . . .",". . . . . P>@~ Yv@~"]
+round 35 (1262 evaluated, 634 s): best 148.2 | 17 pieces, 728 positions, solution 17, distinct 6, steps 14 (cover 0.82, late 0.82), endgame true, mechanic 2/2, shortcut 2% | ["B^@~ Y^@ P^@- R^* B<@~ R<#Y .",". . . B^@- . . .",". . . . . . .","P<@ Pv@- . R<* . Yv .","R<@ . . . R^@ R< .",". R<@~ . B^#Y . . .",". . . . . . Yv@~"]
+round 36 (1296 evaluated, 661 s): best 148.8 | 16 pieces, 366 positions, solution 16, distinct 6, steps 13 (cover 0.81, late 0.81), endgame true, mechanic 2/2, shortcut 0% | ["B^@~ Y^@ P^@- R^* B<@~ R<#Y .",". . . B^@- . . .",". . . . . . .","P<@ Pv@- . R<* . Yv .","R<@ . . . R^@ R< .",". R<@~ . B^#Y . . .",". . . . . . ."]
+round 37 (1334 evaluated, 687 s): best 148.8 | 16 pieces, 366 positions, solution 16, distinct 6, steps 13 (cover 0.81, late 0.81), endgame true, mechanic 2/2, shortcut 0% | ["B^@~ Y^@ P^@- R^* B<@~ R<#Y .",". . . B^@- . . .",". . . . . . .","P<@ Pv@- . R<* . Yv .","R<@ . . . R^@ R< .",". R<@~ . B^#Y . . .",". . . . . . ."]
+round 38 (1370 evaluated, 705 s): best 149.7 | 17 pieces, 402 positions, solution 17, distinct 6, steps 14 (cover 0.82, late 0.82), endgame true, mechanic 2/2, shortcut 0% | ["B^@~ Y^@ P^@~ R^* B<@~ R<#Y .",". . . B^@- . . .",". . . . . . .","P<@ Pv@- . R<* . Yv .","R<@ . . . R^@ R< .",". R<@~ . B^#Y . R^@~ .",". . . . . . ."]
+round 39 (1404 evaluated, 726 s): best 149.7 | 17 pieces, 402 positions, solution 17, distinct 6, steps 14 (cover 0.82, late 0.82), endgame true, mechanic 2/2, shortcut 0% | ["B^@~ Y^@ P^@~ R^* B<@~ R<#Y .",". . . B^@- . . .",". . . . . . .","P<@ Pv@- . R<* . Yv .","R<@ . . . R^@ R< .",". R<@~ . B^#Y . R^@~ .",". . . . . . ."]
+stopped after 39 rounds: time budget
+BEST ["B^@~ Y^@ P^@~ R^* B<@~ R<#Y .",". . . B^@- . . .",". . . . . . .","P<@ Pv@- . R<* . Yv .","R<@ . . . R^@ R< .",". R<@~ . B^#Y . R^@~ .",". . . . . . ."]

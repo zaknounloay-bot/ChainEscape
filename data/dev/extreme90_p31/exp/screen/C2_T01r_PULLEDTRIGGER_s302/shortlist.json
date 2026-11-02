@@ -1,0 +1,172 @@
+{
+ "C2_T01r_s302_0": {
+  "map": [
+   ". . R> Yv@- . R>@- G>&A",
+   ". . . Bv&A . R^&A .",
+   ". . . . . Bv@~ G>",
+   ". . . G<* P^@ G^* P<%A",
+   ". . . . . B> .",
+   ". . . . . . .",
+   ". . . . . . ."
+  ],
+  "mechanic": "magnet,switch",
+  "positions": 157,
+  "overlap": 0.38,
+  "rules": [
+   "S_old"
+  ]
+ },
+ "C2_T01r_s302_1": {
+  "map": [
+   ". . . Yv@- . Y^@- .",
+   ". . . Bv&A . R^&A .",
+   ". . Rv . . Bv@~ .",
+   "R<&A . G< G<* P^@ G^* P<%A",
+   ". . . . . B> .",
+   ". . . . . . .",
+   ". . . . . . R>"
+  ],
+  "mechanic": "magnet,switch",
+  "positions": 211,
+  "overlap": 0.4,
+  "rules": [
+   "S_old"
+  ]
+ },
+ "C2_T01r_s302_2": {
+  "map": [
+   ". . . Yv%A . Y^@- .",
+   ". . . Bv&A . R>&A .",
+   "Rv . R< . . Bv@~ G>",
+   "G>@~ Yv&A G^ G<* P^@ G^* P<%A",
+   ". B> . R> . Bv .",
+   ". . . . . B> .",
+   ". . . . . . ."
+  ],
+  "mechanic": "magnet,switch",
+  "positions": 247,
+  "overlap": 0.42,
+  "rules": [
+   "S_old"
+  ]
+ },
+ "C2_T01r_s302_3": {
+  "map": [
+   ". . . Yv@- . Y^@- .",
+   ". . . Bv&A . . .",
+   ". . . . . Bv@~ G>",
+   ". Y<&A G< G<* P^@ G^* P<%A",
+   ". . . . . B> .",
+   ". . . . . . .",
+   ". . . . . . R>"
+  ],
+  "mechanic": "magnet,switch",
+  "positions": 255,
+  "overlap": 0.43,
+  "rules": [
+   "S_old"
+  ]
+ },
+ "C2_T01r_s302_4": {
+  "map": [
+   ". . . Yv%A . Y^@- G<",
+   ". . . Bv&A . R>&A .",
+   ". . R^ . . Bv@~ G^",
+   "G>@~ Yv&A G< G<* P^@ G^* P<%A",
+   ". B> . . . . .",
+   ". Y> . . . B> .",
+   ". . . . . . ."
+  ],
+  "mechanic": "magnet,switch",
+  "positions": 256,
+  "overlap": 0.38,
+  "rules": [
+   "S_old"
+  ]
+ },
+ "C2_T01r_s302_5": {
+  "map": [
+   ". . . Yv@- . Y^@- .",
+   ". . . Bv&A . R^&A .",
+   ". . . . . Bv@~ G>",
+   "Rv . . G<* P^@ G^* P<%A",
+   ". . . . . . .",
+   ". . . . . . Yv",
+   ". . . Bv&A . . R>"
+  ],
+  "mechanic": "magnet,switch",
+  "positions": 527,
+  "overlap": 0.33,
+  "rules": [
+   "S_p30"
+  ]
+ },
+ "C2_T01r_s302_6": {
+  "map": [
+   ". . . Yv%A . Y^@- .",
+   ". . . Bv&A . R> .",
+   ". . R< . . Bv@~ G>",
+   "G>@~ Yv&A . G<* P^@ G^* P<%A",
+   ". B> . . . B> .",
+   ". Y> . . . B> .",
+   ". . . . . . ."
+  ],
+  "mechanic": "magnet,switch",
+  "positions": 663,
+  "overlap": 0.33,
+  "rules": [
+   "S_p30"
+  ]
+ },
+ "C2_T01r_s302_7": {
+  "map": [
+   ". . . Yv%A . . .",
+   ". . . Bv&A . R^&A .",
+   ". . Y^ . . . G>",
+   "Yv@~ . R<@ G<* P^@ G^* P<%A",
+   ". . G>&A . . B> Gv",
+   ". . . . . . .",
+   ". . . . . . ."
+  ],
+  "mechanic": "magnet,switch",
+  "positions": 744,
+  "overlap": 0.33,
+  "rules": [
+   "S_p30"
+  ]
+ },
+ "C2_T01r_s302_8": {
+  "map": [
+   ". . . Yv@- . Y^@- .",
+   ". . . Bv&A . R^&A .",
+   ". . . . . Bv@~ G>",
+   ". . . G<* P^@ G^* P<%A",
+   ". . . . . B> .",
+   ". . . . . . .",
+   ". . . Bv&A . . R>"
+  ],
+  "mechanic": "magnet,switch",
+  "positions": 467,
+  "overlap": 0.35,
+  "rules": [
+   "S_p30"
+  ]
+ },
+ "C2_T01r_s302_9": {
+  "map": [
+   ". . . Yv@- . Y^@- .",
+   ". . . Bv&A . R^&A .",
+   ". . . . . Bv@~ G>",
+   ". . . G<* P^@ G^* P<%A",
+   ". . . . . B> .",
+   ". . . . . . .",
+   ". . . R< . . R>"
+  ],
+  "mechanic": "magnet,switch",
+  "positions": 467,
+  "overlap": 0.35,
+  "rules": [
+   "S_p30"
+  ]
+ }
+}

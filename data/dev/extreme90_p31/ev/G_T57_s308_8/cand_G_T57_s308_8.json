@@ -1,0 +1,17 @@
+{
+ "G_T57_s308_8": {
+  "map": [
+   "Y^@ G< Y^@~ B<@~ B< . .",
+   "B< B>&A . R^@- . G>&A G<",
+   "P^@ Y>@- G^&A . Y^@ P^@- .",
+   ". . . . P<%A . P<&A",
+   ". . . . . . .",
+   ". . . . . . .",
+   ". . . . . . ."
+  ],
+  "target": "EXTREME",
+  "facts": [],
+  "mechanic": "switch",
+  "max_positions": 2000
+ }
+}

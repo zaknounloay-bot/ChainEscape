@@ -1,0 +1,22 @@
+A_T59_s305_0           PASS           []
+A_T59_s305_1           PASS           []
+A_T59_s305_2           PASS           []
+A_T59_s305_3           PASS           []
+A_T59_s305_4           PASS           []
+A_T59_s305_5           filler         ['r0c3 Gv&A', 'r5c3 P^@']
+A_T59_s305_6           Category A/B   ['solve 49.3 ms (> 40)']
+A_T59_s305_7           PASS           []
+A_T59_s305_8           filler         ['r0c3 Gv&A', 'r1c4 Yv@~', 'r5c3 P^@']
+A_T59_s305_9           PASS           []
+SCREEN: 10 boards, 7 PASS
+A_T59_s305_0           PASS           PASS
+A_T59_s305_1           PASS           PASS
+A_T59_s305_2           PASS           PASS
+A_T59_s305_3           PASS           PASS
+A_T59_s305_4           PASS           PASS
+A_T59_s305_5           filler         
+A_T59_s305_6           Category A/B   
+A_T59_s305_7           PASS           PASS
+A_T59_s305_8           filler         
+A_T59_s305_9           PASS           PASS
+SCREEN30: 10 boards, 7 PASS

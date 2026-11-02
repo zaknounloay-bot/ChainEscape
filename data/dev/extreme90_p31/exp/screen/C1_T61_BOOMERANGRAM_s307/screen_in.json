@@ -1,0 +1,78 @@
+{
+ "C1_T61_s307_0": {
+  "map": [
+   ". . . . . . .",
+   ". . . R>:v . . .",
+   ". . B> R>@- . B^@- G^",
+   ". . . Y<&A= . . .",
+   ". . . . . R^= .",
+   ". . . . . G^@~ G>:<",
+   ". . . G<&A Pv= . P^%A"
+  ],
+  "target": "EXTREME",
+  "facts": [],
+  "mechanic": "sequence,switch,armor",
+  "max_positions": 2000,
+  "overlap": [
+   0.37,
+   "N64"
+  ]
+ },
+ "C1_T61_s307_2": {
+  "map": [
+   ". . . . . . .",
+   ". . . R>:v . . .",
+   ". . . R>@- . . G^&A",
+   ". . . Y<&A= . . .",
+   ". . . . . R^= .",
+   ". . . . . G^@~ G>:<",
+   ". . . G<&A Pv= Bv@- P^%A"
+  ],
+  "target": "EXTREME",
+  "facts": [],
+  "mechanic": "sequence,switch,armor",
+  "max_positions": 2000,
+  "overlap": [
+   0.39,
+   "N64"
+  ]
+ },
+ "C1_T61_s307_5": {
+  "map": [
+   ". . . . . . .",
+   ". . . R>:v . . .",
+   ". . . R>@- . . G^&A",
+   ". . . Y<&A= . . .",
+   ". . . . . R^= B>@~",
+   ". . . . . G^@~ G>:<",
+   ". . . G<&A Pv= Bv@- P^%A"
+  ],
+  "target": "EXTREME",
+  "facts": [],
+  "mechanic": "sequence,switch,armor",
+  "max_positions": 2000,
+  "overlap": [
+   0.37,
+   "N64"
+  ]
+ },
+ "C1_T61_s307_6": {
+  "map": [
+   ". . . . . . .",
+   ". . . R>:v . . .",
+   ". . B> R>@- . B^@- G^",
+   ". . . Y<&A= . . .",
+   ". . . . . R^= .",
+   ". . . . . G^@~ G>:<",
+   ". . . G<&A Pv= Bv:^ P^%A"
+  ],
+  "target": "EXTREME",
+  "facts": [],
+  "mechanic": "sequence,switch,armor",
+  "max_positions": 2000,
+  "overlap": [
+   0.37,
+   "N64"
+  ]
+ }
+}

@@ -1,0 +1,22 @@
+C2_T01r_s302_1         overlap        (0.4, 'N81')
+C2_T01r_s302_2         overlap        (0.42, 'N46')
+C2_T01r_s302_3         overlap        (0.43, 'N77')
+C2_T01r_s302_0         filler         ['r0c2 R>']
+C2_T01r_s302_4         filler         ['r0c6 G<', 'r2c6 G^']
+C2_T01r_s302_5         filler         ['r6c3 Bv&A']
+C2_T01r_s302_6         PASS           []
+C2_T01r_s302_7         PASS           []
+C2_T01r_s302_8         filler         ['r6c3 Bv&A']
+C2_T01r_s302_9         filler         ['r6c3 R<']
+SCREEN: 10 boards, 2 PASS
+C2_T01r_s302_1         overlap        
+C2_T01r_s302_2         overlap        
+C2_T01r_s302_3         overlap        
+C2_T01r_s302_0         filler         
+C2_T01r_s302_4         filler         
+C2_T01r_s302_5         filler         
+C2_T01r_s302_6         PASS           PASS
+C2_T01r_s302_7         PASS           PASS
+C2_T01r_s302_8         filler         
+C2_T01r_s302_9         filler         
+SCREEN30: 10 boards, 2 PASS

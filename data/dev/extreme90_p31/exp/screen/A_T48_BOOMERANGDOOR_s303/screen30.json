@@ -1,0 +1,58 @@
+{
+ "A_T48_s303_1": {
+  "result": "overlap",
+  "detail": [
+   0.42,
+   "N64"
+  ]
+ },
+ "A_T48_s303_2": {
+  "result": "overlap",
+  "detail": [
+   0.42,
+   "N64"
+  ]
+ },
+ "A_T48_s303_0": {
+  "result": "not essential",
+  "detail": {
+   "without_gate": "without it: 16 decision steps, 4 distinct mistakes (with it: 14, 4)"
+  }
+ },
+ "A_T48_s303_3": {
+  "result": "not essential",
+  "detail": {
+   "without_gate": "without it: 14 decision steps, 4 distinct mistakes (with it: 12, 4)"
+  }
+ },
+ "A_T48_s303_4": {
+  "result": "not essential",
+  "detail": {
+   "without_gate": "without it: 14 decision steps, 4 distinct mistakes (with it: 12, 4)"
+  }
+ },
+ "A_T48_s303_5": {
+  "result": "not essential",
+  "detail": {
+   "without_gate": "without it: 14 decision steps, 4 distinct mistakes (with it: 12, 4)"
+  }
+ },
+ "A_T48_s303_6": {
+  "result": "not essential",
+  "detail": {
+   "without_gate": "without it: 15 decision steps, 4 distinct mistakes (with it: 13, 4)"
+  }
+ },
+ "A_T48_s303_7": {
+  "result": "not essential",
+  "detail": {
+   "without_gate": "without it: 16 decision steps, 4 distinct mistakes (with it: 14, 4)"
+  }
+ },
+ "A_T48_s303_8": {
+  "result": "not essential",
+  "detail": {
+   "without_gate": "without it: 17 decision steps, 4 distinct mistakes (with it: 15, 4)"
+  }
+ }
+}

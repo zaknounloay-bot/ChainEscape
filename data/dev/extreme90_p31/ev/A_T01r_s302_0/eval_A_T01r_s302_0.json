@@ -1,0 +1,29 @@
+{
+ "positions": 72,
+ "winnable": true,
+ "features": {
+  "calm_prefix": 2,
+  "concurrency": 0.73,
+  "coverage": 0.87,
+  "deep_traps": 2,
+  "distinct": 4,
+  "effective_decisions": 11,
+  "learner4": 1,
+  "learner6": 2,
+  "look6": 0.042,
+  "pieces": 15,
+  "positions": 72,
+  "quick_fail_share": 0.44,
+  "safe_share": 0.13,
+  "shortcut": 0.208,
+  "solution": 15,
+  "steps": 13,
+  "trap_delay": 4,
+  "undo_proof": 0.56
+ },
+ "overlap": [
+  0.38,
+  "N81"
+ ],
+ "bench_floor": false
+}

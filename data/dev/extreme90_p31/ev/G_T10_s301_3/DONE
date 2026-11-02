@@ -1,0 +1,1 @@
+{"exit": 0, "seconds": 132.0, "pid": 22074, "cmd": ["python3", "tools/extreme90_eval25.py", "data/dev/extreme90_p31/ev/cand_G_T10_s301_3.json", "data/dev/extreme90_p31/ev/G_T10_s301_3", "/tmp/claude-0/-home-user-ChainEscape/7e9f2bd8-6e70-52bd-944d-4d9f0e72484e/scratchpad/godot/godot", "--full"]}

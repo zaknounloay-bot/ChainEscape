@@ -20,7 +20,7 @@
    "primary": "magnet, switch, armor, spinner",
    "target": "EXTREME (a design target, not a rating; never shown to players)",
    "idea": "two magnets are flip targets of one switch: one must fire before the reversal and the other after, so the single switch press splits the two pulls",
-   "source": "hybrid: hand core frozen cell for cell (seed_R08b_TWOTURNED.json, Phase 29); blocks added by tools/ta90_search.gd --ops=v20 with the Phase 28 pipeline (token guard, strict essentiality, spinners_max), RNG seed 92 (protocol.json); early screen tools/extreme90_screen28.py; advisory rank tools/ta90_rank29.gd",
+   "source": "hybrid: hand core frozen cell for cell (seed_R08b_TWOTURNED.json, Phase 29); blocks added by tools/ta90_search.gd WITHOUT --ops=v20 (baseline operators - the flag was missing from the round 92 run script although protocol.json specified v20; found and corrected in the Phase 31 audit) with the Phase 28 pipeline (token guard, strict essentiality, spinners_max), RNG seed 92 (protocol.json); early screen tools/extreme90_screen28.py; advisory rank tools/ta90_rank29.gd",
    "related_bank_concept": "N64 (one turned magnet - the closest family; here two magnets share the switch), N52 (pull order); closest occupancy N39 0.35",
    "fingerprint": "edcef82925465b7b8779319b100a7e36c248deac269cbc8b679b8938d10d143f",
    "mechanics": [

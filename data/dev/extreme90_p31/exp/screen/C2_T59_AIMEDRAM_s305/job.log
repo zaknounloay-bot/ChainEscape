@@ -1,0 +1,22 @@
+C2_T59_s305_0          PASS           []
+C2_T59_s305_1          PASS           []
+C2_T59_s305_2          filler         ['r0c4 Gv']
+C2_T59_s305_3          PASS           []
+C2_T59_s305_4          filler         ['r3c1 G^']
+C2_T59_s305_5          PASS           []
+C2_T59_s305_6          PASS           []
+C2_T59_s305_7          PASS           []
+C2_T59_s305_8          PASS           []
+C2_T59_s305_9          PASS           []
+SCREEN: 10 boards, 8 PASS
+C2_T59_s305_0          PASS           PASS
+C2_T59_s305_1          PASS           PASS
+C2_T59_s305_2          filler         
+C2_T59_s305_3          PASS           PASS
+C2_T59_s305_4          filler         
+C2_T59_s305_5          PASS           PASS
+C2_T59_s305_6          PASS           PASS
+C2_T59_s305_7          PASS           PASS
+C2_T59_s305_8          PASS           PASS
+C2_T59_s305_9          PASS           PASS
+SCREEN30: 10 boards, 8 PASS

@@ -1,0 +1,44 @@
+Godot Engine v4.3.stable.official.77dcf97d8 - https://godotengine.org
+
+SCRIPT ERROR: Invalid access of index '6' on a base object of type: 'Array'.
+          at: _rot (res://tools/vh_pilot4_canon.gd:101)
+SCRIPT ERROR: Out of bounds get index '0' (on base: 'Array')
+          at: _relabel (res://tools/vh_pilot4_canon.gd:141)
+SCRIPT ERROR: Out of bounds get index '0' (on base: 'Array')
+          at: _relabel (res://tools/vh_pilot4_canon.gd:141)
+SCRIPT ERROR: Out of bounds get index '0' (on base: 'Array')
+          at: _rot (res://tools/vh_pilot4_canon.gd:96)
+SCRIPT ERROR: Out of bounds get index '0' (on base: 'Array')
+          at: _relabel (res://tools/vh_pilot4_canon.gd:141)
+SCRIPT ERROR: Out of bounds get index '0' (on base: 'Array')
+          at: _relabel (res://tools/vh_pilot4_canon.gd:141)
+SCRIPT ERROR: Out of bounds get index '0' (on base: 'Array')
+          at: _rot (res://tools/vh_pilot4_canon.gd:96)
+SCRIPT ERROR: Out of bounds get index '0' (on base: 'Array')
+          at: _relabel (res://tools/vh_pilot4_canon.gd:141)
+SCRIPT ERROR: Out of bounds get index '0' (on base: 'Array')
+          at: _relabel (res://tools/vh_pilot4_canon.gd:141)
+SCRIPT ERROR: Out of bounds get index '0' (on base: 'Array')
+          at: _rot (res://tools/vh_pilot4_canon.gd:96)
+known boards: 52194
+known boards incl. T1-T5 and the demos: 52194; played boards for the near-copy guard: 333
+== C2_T01r_s302_6: 663 positions, winnable true
+   1  r0c5^        lose: r1c5>(11) r3c4^(14)
+   2  r2c2<        lose: r3c4^(13)
+   3  r1c5>        lose: r3c4^(12)
+   4  r2c5<        lose: r2c6>(9) r3c4^(11)
+   5  r2c6>        lose: r3c4^(10) r3c5^(10)
+   6  r4c5>        lose: r3c4^(9) r3c5^(9)
+   7  r4c1>        lose: r3c4^(8) r3c5^(8)
+   8  r5c5>        lose: r3c4^(7) r3c5^(7)
+   9  r5c1>        lose: r3c4^(6)
+  10  r3c1v        lose: r3c4^(5)
+  11  r3c0v        lose: r3c4^(4)
+  12  r3c5^        lose: r3c3<(1) r3c4^(3)
+  13  r3c3<        lose: 
+  14  r3c3v        lose: 
+  15  r1c3v        lose: r3c6<(0)
+  16  r0c3v        lose: 
+  17  r3c6<        lose: 
+  greedy {"look2":0.02,"look4":0.13,"min_turn":0,"mobility":0,"safe":0.03}
+  features {"calm_prefix":2,"concurrency":0.76,"coverage":0.76,"deep_traps":4,"distinct":6,"effective_decisions":12,"learner4":0,"learner6":0,"look6":0.133,"pieces":17,"positions":663,"quick_fail_share":0.15,"safe_share":0.12,"shortcut":0.125,"solution":17,"steps":13,"trap_delay":9,"undo_proof":0.85}

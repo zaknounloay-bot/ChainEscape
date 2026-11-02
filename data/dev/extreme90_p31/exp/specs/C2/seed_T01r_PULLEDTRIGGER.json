@@ -1,0 +1,60 @@
+{
+ "target": "EXTREME",
+ "facts": [],
+ "mechanic": "magnet,switch",
+ "idea": "P30 hand core: the pulled trigger: a fixed magnet pulls the switch piece into its own cell, so WHEN the magnet leaves decides where the reversal is fired from and which lane it opens (round 302: larger piece budget, suffix rate 0.45, core_essential on)",
+ "family": "P30 T01r_PULLEDTRIGGER",
+ "map": [
+  ". . . . . . .",
+  ". . . Bv&A . . .",
+  ". . . . . . .",
+  ". . . G<* . . P<%A",
+  ". . . . . . .",
+  ". . . . . . .",
+  ". . . . . . ."
+ ],
+ "frozen": [
+  [
+   1,
+   3
+  ],
+  [
+   3,
+   3
+  ],
+  [
+   3,
+   6
+  ]
+ ],
+ "max_positions": 2000,
+ "piece_free": 15,
+ "max_pieces": 19,
+ "shortcut_weight": 80,
+ "coverage_weight": 25,
+ "late_weight": 20,
+ "endgame_weight": 20,
+ "length_weight": 1.0,
+ "length_cap": 18,
+ "pressure_weight": 1.5,
+ "palette": "all",
+ "suffixes": [
+  "&A",
+  "*"
+ ],
+ "suffix_rate": 0.45,
+ "suffix_max": {
+  "&A": 3,
+  "*": 2
+ },
+ "crates_max": 0,
+ "seed": 400,
+ "size": "medium",
+ "max_solve_nodes": 1500,
+ "spinners_max": 4,
+ "strict_essential": true,
+ "token_guard": true,
+ "phase30_core": "T01r_PULLEDTRIGGER",
+ "core_essential": true,
+ "phase31_arm": "C2"
+}

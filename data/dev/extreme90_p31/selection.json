@@ -1,0 +1,141 @@
+{
+ "N83": {
+  "key": "A_T01r_s302_2",
+  "core": "T01r_PULLEDTRIGGER",
+  "family": "P30 the pulled trigger (magnet + switch)",
+  "group": "magnet x reversal",
+  "mechanics": [
+   "magnet",
+   "switch",
+   "spinner"
+  ],
+  "idea": "the pulled trigger: a fixed magnet pulls the switch piece into its own cell, so WHEN the magnet leaves decides where the reversal is fired from and which lane it opens",
+  "related": "closest occupancy N81 0.38 (bank); pairwise with the other Phase 31 boards <= 0.30",
+  "source": "hybrid: hand core frozen cell for cell (seed_T01r_PULLEDTRIGGER.json, Phase 30); blocks added by the Phase 25-27 generator (tools/ta90_search.gd of commit c1ddc89, run in a separate worktree) --ops=v20 with the Phase 25-27 search parameters (piece_free 13, max_pieces 17, suffix_rate 0.30, patience 8), RNG seed 302, experiment arm A; every board then passed the unchanged modern pipeline: engine-valid tokens, bank overlap, tools/extreme90_screen30.py (40 ms gates, strict essentiality, filler, hint-follow) and the full evaluation tools/extreme90_eval25.py --full; shortlist rule S_old; Phase 31 protocol data/dev/extreme90_p31/protocol.json (arms, AM1)",
+  "selection": "one board per concept: the fewest positions among the fully qualified boards of the concept (S_old, Phase 25/26 rule; Phase 31 section E)",
+  "preregistered_prediction": {
+   "positions": 87,
+   "early3": 5,
+   "open_escape_losing": 2,
+   "note": "recorded before any human play; NOT used to select; the owner is the judge"
+  },
+  "owner_decision": {
+   "decision": "APPROVED",
+   "player_rating": "EXTREME",
+   "enjoyment": "5/5",
+   "recorded": "2026-11-02",
+   "file": "data/dev/extreme90_p31/owner_decisions_n83_n87.json"
+  }
+ },
+ "N84": {
+  "key": "A_T27r_s302_0",
+  "core": "T27r_TRIGGERLINK",
+  "family": "P30 the trigger is the last link (switch + gate)",
+  "group": "reversal x gate",
+  "mechanics": [
+   "switch",
+   "gate",
+   "spinner"
+  ],
+  "idea": "the trigger is the last link: the switch piece is also the gate's link, so one move both reverses the targets and opens the gate - every target must face the right way before the door opens",
+  "related": "closest occupancy N17 0.35 (bank); pairwise with the other Phase 31 boards <= 0.30",
+  "source": "hybrid: hand core frozen cell for cell (seed_T27r_TRIGGERLINK.json, Phase 30); blocks added by the Phase 25-27 generator (tools/ta90_search.gd of commit c1ddc89, run in a separate worktree) --ops=v20 with the Phase 25-27 search parameters (piece_free 13, max_pieces 17, suffix_rate 0.30, patience 8), RNG seed 302, experiment arm A; every board then passed the unchanged modern pipeline: engine-valid tokens, bank overlap, tools/extreme90_screen30.py (40 ms gates, strict essentiality, filler, hint-follow) and the full evaluation tools/extreme90_eval25.py --full; shortlist rule S_old; Phase 31 protocol data/dev/extreme90_p31/protocol.json (arms, AM1)",
+  "selection": "one board per concept: the fewest positions among the fully qualified boards of the concept (S_old, Phase 25/26 rule; Phase 31 section E)",
+  "preregistered_prediction": {
+   "positions": 163,
+   "early3": 6,
+   "open_escape_losing": 2,
+   "note": "recorded before any human play; NOT used to select; the owner is the judge"
+  },
+  "owner_decision": {
+   "decision": "NOT APPROVED",
+   "player_rating": "MEDIUM",
+   "enjoyment": "not supplied",
+   "recorded": "2026-11-02",
+   "file": "data/dev/extreme90_p31/owner_decisions_n83_n87.json"
+  }
+ },
+ "N85": {
+  "key": "G_T57_s308_0",
+  "core": "T57_TWOEFFECTS",
+  "family": "P30 one escape, two effects (switch + spinner)",
+  "group": "reversal x spinner",
+  "mechanics": [
+   "switch",
+   "spinner"
+  ],
+  "idea": "one escape, two effects: the switch piece stands beside a spinner, so the same escape turns the spinner AND reverses the targets - which neighbours the spinner faces when the reversal lands decides the order of everything after",
+  "related": "closest occupancy N21 0.35 (bank); pairwise with the other Phase 31 boards <= 0.30",
+  "source": "hybrid: hand core frozen cell for cell (seed_T57_TWOEFFECTS.json, Phase 30); blocks added by the Phase 25-27 generator (tools/ta90_search.gd of commit c1ddc89, run in a separate worktree) --ops=v20 with the Phase 25-27 search parameters (piece_free 13, max_pieces 17, suffix_rate 0.30, patience 8), RNG seed 308, Phase 31 deeper run (second RNG seed); every board then passed the unchanged modern pipeline: engine-valid tokens, bank overlap, tools/extreme90_screen30.py (40 ms gates, strict essentiality, filler, hint-follow) and the full evaluation tools/extreme90_eval25.py --full; shortlist rule S_old; Phase 31 protocol data/dev/extreme90_p31/protocol.json (arms, AM1)",
+  "selection": "one board per concept: the fewest positions among the fully qualified boards of the concept (S_old, Phase 25/26 rule; Phase 31 section E)",
+  "preregistered_prediction": {
+   "positions": 208,
+   "early3": 6,
+   "open_escape_losing": 2,
+   "note": "recorded before any human play; NOT used to select; the owner is the judge"
+  },
+  "owner_decision": {
+   "decision": "NOT APPROVED",
+   "player_rating": "HARD",
+   "enjoyment": "not supplied",
+   "recorded": "2026-11-02",
+   "file": "data/dev/extreme90_p31/owner_decisions_n83_n87.json"
+  }
+ },
+ "N86": {
+  "key": "G_T10b_s302_0",
+  "core": "T10b_LADDERBLOCK",
+  "family": "P30 the blocked key ladder (switch + lock)",
+  "group": "reversal x lock chain",
+  "mechanics": [
+   "switch",
+   "lock",
+   "spinner"
+  ],
+  "idea": "the blocked key ladder: the last prisoner blocks the key's only exit, so the key must be REVERSED to leave - and that same reversal turns the locked middle key away from its exit",
+  "related": "closest occupancy N61 0.36 (bank); pairwise with the other Phase 31 boards <= 0.30",
+  "source": "hybrid: hand core frozen cell for cell (seed_T10b_LADDERBLOCK.json, Phase 30); blocks added by the Phase 25-27 generator (tools/ta90_search.gd of commit c1ddc89, run in a separate worktree) --ops=v20 with the Phase 25-27 search parameters (piece_free 13, max_pieces 17, suffix_rate 0.30, patience 8), RNG seed 302, Phase 31 run (AM1); every board then passed the unchanged modern pipeline: engine-valid tokens, bank overlap, tools/extreme90_screen30.py (40 ms gates, strict essentiality, filler, hint-follow) and the full evaluation tools/extreme90_eval25.py --full; shortlist rule S_old; Phase 31 protocol data/dev/extreme90_p31/protocol.json (arms, AM1)",
+  "selection": "one board per concept: the fewest positions among the fully qualified boards of the concept (S_old, Phase 25/26 rule; Phase 31 section E)",
+  "preregistered_prediction": {
+   "positions": 143,
+   "early3": 7,
+   "open_escape_losing": 3,
+   "note": "recorded before any human play; NOT used to select; the owner is the judge"
+  },
+  "owner_decision": {
+   "decision": "APPROVED",
+   "player_rating": "EXTREME",
+   "enjoyment": "5/5",
+   "recorded": "2026-11-02",
+   "file": "data/dev/extreme90_p31/owner_decisions_n83_n87.json"
+  }
+ },
+ "N87": {
+  "key": "G_T30_s302_0",
+  "core": "T30_TWOKEYS",
+  "family": "P30 two keys, one reversal (switch + lock)",
+  "group": "reversal x two locks",
+  "mechanics": [
+   "switch",
+   "lock",
+   "spinner"
+  ],
+  "idea": "two keys, one reversal: both keys are flip targets of one switch and each faces its own prisoner; one press turns both, so each key must leave on the right side of the single switch press",
+  "related": "closest occupancy N46 0.32 (bank); pairwise with the other Phase 31 boards <= 0.30",
+  "source": "hybrid: hand core frozen cell for cell (seed_T30_TWOKEYS.json, Phase 30); blocks added by the Phase 25-27 generator (tools/ta90_search.gd of commit c1ddc89, run in a separate worktree) --ops=v20 with the Phase 25-27 search parameters (piece_free 13, max_pieces 17, suffix_rate 0.30, patience 8), RNG seed 302, Phase 31 run (AM1); every board then passed the unchanged modern pipeline: engine-valid tokens, bank overlap, tools/extreme90_screen30.py (40 ms gates, strict essentiality, filler, hint-follow) and the full evaluation tools/extreme90_eval25.py --full; shortlist rule S_old; Phase 31 protocol data/dev/extreme90_p31/protocol.json (arms, AM1)",
+  "selection": "one board per concept: the fewest positions among the fully qualified boards of the concept (S_old, Phase 25/26 rule; Phase 31 section E)",
+  "preregistered_prediction": {
+   "positions": 94,
+   "early3": 4,
+   "open_escape_losing": 2,
+   "note": "recorded before any human play; NOT used to select; the owner is the judge"
+  },
+  "owner_decision": {
+   "decision": "APPROVED",
+   "player_rating": "VERY HARD",
+   "enjoyment": "5/5",
+   "recorded": "2026-11-02",
+   "file": "data/dev/extreme90_p31/owner_decisions_n83_n87.json"
+  }
+ }
+}

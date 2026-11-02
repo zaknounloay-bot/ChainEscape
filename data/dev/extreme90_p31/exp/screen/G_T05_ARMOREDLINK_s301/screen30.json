@@ -1,0 +1,14 @@
+{
+ "G_T05_s301_0": {
+  "result": "Category A/B",
+  "detail": [
+   "the TIME UP check takes 46.3 ms in its worst position (> 40)"
+  ]
+ },
+ "G_T05_s301_1": {
+  "result": "Category A/B",
+  "detail": [
+   "the TIME UP check takes 62.3 ms in its worst position (> 40)"
+  ]
+ }
+}

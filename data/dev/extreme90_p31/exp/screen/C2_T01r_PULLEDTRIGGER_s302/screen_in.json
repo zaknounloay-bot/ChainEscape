@@ -1,0 +1,135 @@
+{
+ "C2_T01r_s302_0": {
+  "map": [
+   ". . R> Yv@- . R>@- G>&A",
+   ". . . Bv&A . R^&A .",
+   ". . . . . Bv@~ G>",
+   ". . . G<* P^@ G^* P<%A",
+   ". . . . . B> .",
+   ". . . . . . .",
+   ". . . . . . ."
+  ],
+  "target": "EXTREME",
+  "facts": [],
+  "mechanic": "magnet,switch",
+  "max_positions": 2000,
+  "overlap": [
+   0.38,
+   "N46"
+  ]
+ },
+ "C2_T01r_s302_4": {
+  "map": [
+   ". . . Yv%A . Y^@- G<",
+   ". . . Bv&A . R>&A .",
+   ". . R^ . . Bv@~ G^",
+   "G>@~ Yv&A G< G<* P^@ G^* P<%A",
+   ". B> . . . . .",
+   ". Y> . . . B> .",
+   ". . . . . . ."
+  ],
+  "target": "EXTREME",
+  "facts": [],
+  "mechanic": "magnet,switch",
+  "max_positions": 2000,
+  "overlap": [
+   0.38,
+   "N76"
+  ]
+ },
+ "C2_T01r_s302_5": {
+  "map": [
+   ". . . Yv@- . Y^@- .",
+   ". . . Bv&A . R^&A .",
+   ". . . . . Bv@~ G>",
+   "Rv . . G<* P^@ G^* P<%A",
+   ". . . . . . .",
+   ". . . . . . Yv",
+   ". . . Bv&A . . R>"
+  ],
+  "target": "EXTREME",
+  "facts": [],
+  "mechanic": "magnet,switch",
+  "max_positions": 2000,
+  "overlap": [
+   0.33,
+   "N82"
+  ]
+ },
+ "C2_T01r_s302_6": {
+  "map": [
+   ". . . Yv%A . Y^@- .",
+   ". . . Bv&A . R> .",
+   ". . R< . . Bv@~ G>",
+   "G>@~ Yv&A . G<* P^@ G^* P<%A",
+   ". B> . . . B> .",
+   ". Y> . . . B> .",
+   ". . . . . . ."
+  ],
+  "target": "EXTREME",
+  "facts": [],
+  "mechanic": "magnet,switch",
+  "max_positions": 2000,
+  "overlap": [
+   0.33,
+   "N76"
+  ]
+ },
+ "C2_T01r_s302_7": {
+  "map": [
+   ". . . Yv%A . . .",
+   ". . . Bv&A . R^&A .",
+   ". . Y^ . . . G>",
+   "Yv@~ . R<@ G<* P^@ G^* P<%A",
+   ". . G>&A . . B> Gv",
+   ". . . . . . .",
+   ". . . . . . ."
+  ],
+  "target": "EXTREME",
+  "facts": [],
+  "mechanic": "magnet,switch",
+  "max_positions": 2000,
+  "overlap": [
+   0.33,
+   "N53"
+  ]
+ },
+ "C2_T01r_s302_8": {
+  "map": [
+   ". . . Yv@- . Y^@- .",
+   ". . . Bv&A . R^&A .",
+   ". . . . . Bv@~ G>",
+   ". . . G<* P^@ G^* P<%A",
+   ". . . . . B> .",
+   ". . . . . . .",
+   ". . . Bv&A . . R>"
+  ],
+  "target": "EXTREME",
+  "facts": [],
+  "mechanic": "magnet,switch",
+  "max_positions": 2000,
+  "overlap": [
+   0.35,
+   "N82"
+  ]
+ },
+ "C2_T01r_s302_9": {
+  "map": [
+   ". . . Yv@- . Y^@- .",
+   ". . . Bv&A . R^&A .",
+   ". . . . . Bv@~ G>",
+   ". . . G<* P^@ G^* P<%A",
+   ". . . . . B> .",
+   ". . . . . . .",
+   ". . . R< . . R>"
+  ],
+  "target": "EXTREME",
+  "facts": [],
+  "mechanic": "magnet,switch",
+  "max_positions": 2000,
+  "overlap": [
+   0.35,
+   "N82"
+  ]
+ }
+}

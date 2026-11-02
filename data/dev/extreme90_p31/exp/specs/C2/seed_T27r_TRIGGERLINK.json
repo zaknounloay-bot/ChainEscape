@@ -1,0 +1,64 @@
+{
+ "target": "EXTREME",
+ "facts": [],
+ "mechanic": "switch,gate",
+ "idea": "P30 hand core: the trigger is the last link: the switch piece is also the gate's link, so one move both reverses the targets and opens the gate - every target must face right before the door opens (round 302: larger piece budget, suffix rate 0.45, core_essential on)",
+ "family": "P30 T27r_TRIGGERLINK",
+ "map": [
+  ". . . . . . .",
+  ". . . XC . . .",
+  ". . . . . . .",
+  ". . . . . B<&A .",
+  ". . . . . . .",
+  ". . . G^ . . .",
+  ". . . . . . P^%A+C"
+ ],
+ "frozen": [
+  [
+   1,
+   3
+  ],
+  [
+   3,
+   5
+  ],
+  [
+   5,
+   3
+  ],
+  [
+   6,
+   6
+  ]
+ ],
+ "max_positions": 2000,
+ "piece_free": 15,
+ "max_pieces": 19,
+ "shortcut_weight": 80,
+ "coverage_weight": 25,
+ "late_weight": 20,
+ "endgame_weight": 20,
+ "length_weight": 1.0,
+ "length_cap": 18,
+ "pressure_weight": 1.5,
+ "palette": "all",
+ "suffixes": [
+  "&A",
+  "+C"
+ ],
+ "suffix_rate": 0.45,
+ "suffix_max": {
+  "&A": 3,
+  "+C": 2
+ },
+ "crates_max": 0,
+ "seed": 406,
+ "size": "medium",
+ "max_solve_nodes": 1500,
+ "spinners_max": 4,
+ "strict_essential": true,
+ "token_guard": true,
+ "phase30_core": "T27r_TRIGGERLINK",
+ "core_essential": true,
+ "phase31_arm": "C2"
+}

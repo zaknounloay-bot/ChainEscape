@@ -1,0 +1,18 @@
+{
+ "C2_T01r_s302_6": {
+  "map": [
+   ". . . Yv%A . Y^@- .",
+   ". . . Bv&A . R> .",
+   ". . R< . . Bv@~ G>",
+   "G>@~ Yv&A . G<* P^@ G^* P<%A",
+   ". B> . . . B> .",
+   ". Y> . . . B> .",
+   ". . . . . . ."
+  ],
+  "mechanic": "magnet,switch",
+  "run": "C2_T01r_PULLEDTRIGGER_s302",
+  "rules": [
+   "S_p30"
+  ]
+ }
+}

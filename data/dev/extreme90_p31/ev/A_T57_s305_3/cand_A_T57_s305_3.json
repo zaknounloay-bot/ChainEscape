@@ -1,0 +1,17 @@
+{
+ "A_T57_s305_3": {
+  "map": [
+   ". G>&A Rv@ . P< . .",
+   "R>%A B>&A Pv@~ R> . . .",
+   ". . . . Y^@ . Y<@-",
+   ". . . . P<%A . .",
+   ". . G^@- P>@~ Gv . .",
+   ". . . . P>@ . .",
+   ". Y> . Yv@ Bv@- . ."
+  ],
+  "target": "EXTREME",
+  "facts": [],
+  "mechanic": "switch",
+  "max_positions": 2000
+ }
+}

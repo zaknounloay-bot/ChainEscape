@@ -1,0 +1,172 @@
+{
+ "G_T10b_s302_0": {
+  "map": [
+   ". . . . . . .",
+   ". . . . . . B>@-",
+   ". . . . . . G>@",
+   ". R<%A B<#Y&A . G^@- Y>@~ .",
+   ". B>@- Yv@- Y>@- . Yv&A .",
+   ". . . G>@#Y P^@ P<#B B^&A",
+   ". . Pv#B . . . G^%A"
+  ],
+  "mechanic": "switch,lock",
+  "positions": 143,
+  "overlap": 0.36,
+  "rules": [
+   "S_old"
+  ]
+ },
+ "G_T10b_s302_1": {
+  "map": [
+   ". . . . . . .",
+   ". . . . . . B>@-",
+   ". . . . . . G>@",
+   ". R<%A B<#Y&A . G^@- Y>@ .",
+   ". B^@~ Yv@- Y^@ . Yv&A .",
+   ". . . G>@#Y P^@ P<#B B^&A",
+   ". . Pv#B . . . G^%A"
+  ],
+  "mechanic": "switch,lock",
+  "positions": 172,
+  "overlap": 0.36,
+  "rules": [
+   "S_old"
+  ]
+ },
+ "G_T10b_s302_2": {
+  "map": [
+   ". . . . . . .",
+   ". . . . . . B>@-",
+   ". . . . . . G>@",
+   ". R<%A B<#Y&A . G^@- Y>@ .",
+   ". B^@ Yv@- Y^@ . Yv&A .",
+   ". . . G>@#Y P^@ P<#B B^&A",
+   ". . Pv#B . . . G^%A"
+  ],
+  "mechanic": "switch,lock",
+  "positions": 172,
+  "overlap": 0.36,
+  "rules": [
+   "S_old"
+  ]
+ },
+ "G_T10b_s302_3": {
+  "map": [
+   ". . . . . . .",
+   ". . . . . . B>@-",
+   ". . . . . . G>@",
+   ". R<%A B<#Y&A . G^@- Y>@ .",
+   ". B>@- Yv@- Y^@ . Yv&A .",
+   ". . . G>@#Y P^@ P<#B B^&A",
+   ". . Pv#B . . . G^%A"
+  ],
+  "mechanic": "switch,lock",
+  "positions": 215,
+  "overlap": 0.36,
+  "rules": [
+   "S_old"
+  ]
+ },
+ "G_T10b_s302_4": {
+  "map": [
+   ". . . . . . .",
+   ". . . . . . B>@-",
+   ". . . . . . G>@",
+   ". R<%A B<#Y&A . G^@- Y>@~ .",
+   ". B>@- Yv@- Y^@ . Yv&A .",
+   ". . . G>@#Y P^@ P<#B B^&A",
+   ". . Pv#B . . . G^%A"
+  ],
+  "mechanic": "switch,lock",
+  "positions": 215,
+  "overlap": 0.36,
+  "rules": [
+   "S_old"
+  ]
+ },
+ "G_T10b_s302_5": {
+  "map": [
+   ". . Rv . . . G^@-",
+   ". . . . . . B>@-",
+   ". . . . . . G>@",
+   ". R<%A B<#Y&A . . . .",
+   ". Bv Y^@- Y^@ . Yv&A .",
+   ". . . G>@#Y P^@ P<#B B^&A",
+   ". . Pv#B . . . G^%A"
+  ],
+  "mechanic": "switch,lock",
+  "positions": 392,
+  "overlap": 0.29,
+  "rules": [
+   "S_p30"
+  ]
+ },
+ "G_T10b_s302_6": {
+  "map": [
+   ". . . . . . G^@-",
+   ". . . . . . B>@-",
+   ". . . . . . G>@",
+   ". R<%A B<#Y&A . . . .",
+   ". Bv Y^@- Y^@ . Yv&A .",
+   ". P<@ . G>@#Y P^@ P<#B B^&A",
+   ". . Pv#B . . . G^%A"
+  ],
+  "mechanic": "switch,lock",
+  "positions": 539,
+  "overlap": 0.29,
+  "rules": [
+   "S_p30"
+  ]
+ },
+ "G_T10b_s302_7": {
+  "map": [
+   ". . . . . . G^@-",
+   ". . . . . . B>@-",
+   ". . Y> . . . G>@",
+   ". R<%A B<#Y&A . . . .",
+   ". B< Y^@- Y^@ . Yv&A .",
+   ". . . G>@#Y P^@ P<#B B^&A",
+   ". . Pv#B . . . G^%A"
+  ],
+  "mechanic": "switch,lock",
+  "positions": 557,
+  "overlap": 0.29,
+  "rules": [
+   "S_p30"
+  ]
+ },
+ "G_T10b_s302_8": {
+  "map": [
+   ". . . . . . G^@-",
+   ". . . . . . B>@-",
+   ". Pv . . . . G>@",
+   ". R<%A B<#Y&A . . . .",
+   ". B< Y^@- Y^@ . Yv&A .",
+   ". . . G>@#Y P^@ P<#B B^&A",
+   ". . Pv#B . . . G^%A"
+  ],
+  "mechanic": "switch,lock",
+  "positions": 627,
+  "overlap": 0.29,
+  "rules": [
+   "S_p30"
+  ]
+ },
+ "G_T10b_s302_9": {
+  "map": [
+   ". . . . . . G^@-",
+   ". . . . . . B>@-",
+   ". . R> . . . G>@",
+   ". R<%A B<#Y&A . . . .",
+   ". B< Y^@- Y^@ . Yv&A .",
+   ". . . G>@#Y P^@ P<#B B^&A",
+   ". . Pv#B . . . G^%A"
+  ],
+  "mechanic": "switch,lock",
+  "positions": 641,
+  "overlap": 0.29,
+  "rules": [
+   "S_p30"
+  ]
+ }
+}

@@ -1,0 +1,172 @@
+{
+ "C1_T57_s305_0": {
+  "map": [
+   ". . . . . . .",
+   ". B>&A . Yv@- Yv@~ . G<",
+   ". . . . Y^@ Y>@ Gv&A",
+   ". . . . P<%A R> Gv&A",
+   ". . . . Gv&A . Y>",
+   ". . . . Y^ . .",
+   ". . . . Gv%A . ."
+  ],
+  "mechanic": "switch",
+  "positions": 209,
+  "overlap": 0.35,
+  "rules": [
+   "S_old"
+  ]
+ },
+ "C1_T57_s305_1": {
+  "map": [
+   ". . . . . . .",
+   ". B>&A . Yv@- Yv@~ . G<",
+   ". . . . Y^@ Y>@ Gv&A",
+   ". . . . P<%A R> Gv&A",
+   ". . . . Gv&A . Y>",
+   ". . . . Y^ . Y>",
+   ". . . . Gv%A . ."
+  ],
+  "mechanic": "switch",
+  "positions": 267,
+  "overlap": 0.33,
+  "rules": [
+   "S_old"
+  ]
+ },
+ "C1_T57_s305_2": {
+  "map": [
+   ". . . . . . .",
+   "Y^ B>&A . Yv@- Yv@~ . G<",
+   ". . . . Y^@ Y>@ Gv&A",
+   ". . . . P<%A R> Gv&A",
+   ". . . . Gv&A . Y>",
+   ". . . . Y^ . .",
+   ". . . . G>%A . ."
+  ],
+  "mechanic": "switch",
+  "positions": 281,
+  "overlap": 0.33,
+  "rules": [
+   "S_old"
+  ]
+ },
+ "C1_T57_s305_3": {
+  "map": [
+   ". . . . . . .",
+   "Yv B>&A . Yv@- Yv@~ . G<",
+   ". . . . Y^@ Y>@ Gv&A",
+   ". . . . P<%A R> Gv&A",
+   ". . . . Gv&A . Y>",
+   ". . . . Y^ . .",
+   ". . . . G>%A . ."
+  ],
+  "mechanic": "switch",
+  "positions": 281,
+  "overlap": 0.33,
+  "rules": [
+   "S_old"
+  ]
+ },
+ "C1_T57_s305_4": {
+  "map": [
+   ". . . . . . .",
+   ". B>&A Gv Yv@- Yv@~ . G<",
+   ". . . . Y^@ Y>@ Gv&A",
+   ". . . . P<%A R> Gv&A",
+   ". . . . Gv&A . .",
+   ". . . . Y^ . .",
+   ". . . . Gv%A . ."
+  ],
+  "mechanic": "switch",
+  "positions": 292,
+  "overlap": 0.44,
+  "rules": [
+   "S_old"
+  ]
+ },
+ "C1_T57_s305_5": {
+  "map": [
+   ". . . . . . .",
+   "Yv B>&A . . Yv@~ . Y^@",
+   "G> . . Y^ Y^@ Y>@ G>&A",
+   ". . . . P<%A R> Gv&A",
+   ". P^ . . Gv&A G> .",
+   ". . . . Y^ . .",
+   ". . . . G<%A . ."
+  ],
+  "mechanic": "switch",
+  "positions": 386,
+  "overlap": 0.31,
+  "rules": [
+   "S_p30"
+  ]
+ },
+ "C1_T57_s305_6": {
+  "map": [
+   ". . . . . . .",
+   ". B>&A Gv Yv@- Yv@~ . .",
+   ". . . . Y^@ Y>@ G>&A",
+   ". . . . P<%A R> Gv&A",
+   ". G> . . Gv&A . Y>",
+   ". . . . Y^ Pv .",
+   ". . . . G>%A P> ."
+  ],
+  "mechanic": "switch",
+  "positions": 835,
+  "overlap": 0.31,
+  "rules": [
+   "S_p30"
+  ]
+ },
+ "C1_T57_s305_7": {
+  "map": [
+   ". . . . . . .",
+   "Y^ B>&A Gv Yv@- Yv@~ . .",
+   ". . . . Y^@ Y>@ Gv",
+   ". . . . P<%A R> Gv&A",
+   ". . . . Gv&A . Y>",
+   ". . . . Y^ Pv .",
+   ". . . . G>%A R> ."
+  ],
+  "mechanic": "switch",
+  "positions": 839,
+  "overlap": 0.31,
+  "rules": [
+   "S_p30"
+  ]
+ },
+ "C1_T57_s305_8": {
+  "map": [
+   ". . . . . . .",
+   "Yv B>&A G^ Yv@- Yv@~ . .",
+   ". . . . Y^@ Y>@ Gv&A",
+   "Yv . . . P<%A R> Gv&A",
+   ". . . . Gv&A . Y>",
+   ". . . . Y^ . .",
+   ". . . . G>%A R> ."
+  ],
+  "mechanic": "switch",
+  "positions": 877,
+  "overlap": 0.31,
+  "rules": [
+   "S_p30"
+  ]
+ },
+ "C1_T57_s305_9": {
+  "map": [
+   ". . . . . . .",
+   "Yv B>&A . Yv@- Yv@~ . G<",
+   ". . . . Y^@ Y>@ Gv&A",
+   "Y< . . . P<%A R> Gv&A",
+   ". . . . Gv&A . Y>",
+   ". . . . Y^ . .",
+   ". . . . G>%A . ."
+  ],
+  "mechanic": "switch",
+  "positions": 317,
+  "overlap": 0.32,
+  "rules": [
+   "S_p30"
+  ]
+ }
+}

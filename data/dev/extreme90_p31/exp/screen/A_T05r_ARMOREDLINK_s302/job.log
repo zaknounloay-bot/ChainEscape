@@ -1,0 +1,22 @@
+A_T05r_s302_0          not essential  {'spinner_dependence': 'without it: 11 decision steps, 3 distinct mistakes (with it: 11, 4)', 'without_gate': 'without it: 11 decision steps, 5 distin
+A_T05r_s302_1          not essential  {'without_armor': 'without it: 13 decision steps, 3 distinct mistakes (with it: 14, 4)', 'without_gate': 'without it: 16 decision steps, 5 distinct mi
+A_T05r_s302_2          not essential  {'without_armor': 'without it: 14 decision steps, 4 distinct mistakes (with it: 15, 4)', 'without_gate': 'without it: 17 decision steps, 5 distinct mi
+A_T05r_s302_3          not essential  {'without_gate': 'without it: 16 decision steps, 5 distinct mistakes (with it: 16, 4)'}
+A_T05r_s302_4          not essential  {'spinner_dependence': 'without it: 12 decision steps, 3 distinct mistakes (with it: 12, 4)', 'without_gate': 'without it: 12 decision steps, 6 distin
+A_T05r_s302_5          not essential  {'without_gate': 'without it: 12 decision steps, 4 distinct mistakes (with it: 11, 4)'}
+A_T05r_s302_6          not essential  {'spinner_dependence': 'without it: 14 decision steps, 3 distinct mistakes (with it: 14, 4)', 'without_gate': 'without it: 14 decision steps, 5 distin
+A_T05r_s302_7          Category A/B   ['a simple greedy player wins 23% (> 20%): a shortcut']
+A_T05r_s302_8          not essential  {'spinner_dependence': 'without it: 14 decision steps, 3 distinct mistakes (with it: 14, 4)', 'without_gate': 'without it: 14 decision steps, 5 distin
+A_T05r_s302_9          not essential  {'without_gate': 'without it: 13 decision steps, 4 distinct mistakes (with it: 12, 4)'}
+SCREEN: 10 boards, 0 PASS
+A_T05r_s302_0          not essential  
+A_T05r_s302_1          not essential  
+A_T05r_s302_2          not essential  
+A_T05r_s302_3          not essential  
+A_T05r_s302_4          not essential  
+A_T05r_s302_5          not essential  
+A_T05r_s302_6          not essential  
+A_T05r_s302_7          Category A/B   
+A_T05r_s302_8          not essential  
+A_T05r_s302_9          not essential  
+SCREEN30: 10 boards, 0 PASS

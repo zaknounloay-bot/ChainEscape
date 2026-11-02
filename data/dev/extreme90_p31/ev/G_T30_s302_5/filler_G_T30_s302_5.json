@@ -1,0 +1,9 @@
+{
+ "G_T30_s302_5": {
+  "distinct": 5,
+  "pieces_tested": 17,
+  "steps": 13,
+  "trivial": [],
+  "trivial_removals": 0
+ }
+}

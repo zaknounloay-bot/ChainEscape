@@ -1,0 +1,20 @@
+A_T48_s303_1           overlap        (0.42, 'N64')
+A_T48_s303_2           overlap        (0.42, 'N64')
+A_T48_s303_0           not essential  {'without_gate': 'without it: 16 decision steps, 4 distinct mistakes (with it: 14, 4)'}
+A_T48_s303_3           not essential  {'without_gate': 'without it: 14 decision steps, 4 distinct mistakes (with it: 12, 4)'}
+A_T48_s303_4           not essential  {'without_gate': 'without it: 14 decision steps, 4 distinct mistakes (with it: 12, 4)'}
+A_T48_s303_5           not essential  {'without_gate': 'without it: 14 decision steps, 4 distinct mistakes (with it: 12, 4)'}
+A_T48_s303_6           not essential  {'without_gate': 'without it: 15 decision steps, 4 distinct mistakes (with it: 13, 4)'}
+A_T48_s303_7           not essential  {'without_gate': 'without it: 16 decision steps, 4 distinct mistakes (with it: 14, 4)'}
+A_T48_s303_8           not essential  {'without_gate': 'without it: 17 decision steps, 4 distinct mistakes (with it: 15, 4)'}
+SCREEN: 9 boards, 0 PASS
+A_T48_s303_1           overlap        
+A_T48_s303_2           overlap        
+A_T48_s303_0           not essential  
+A_T48_s303_3           not essential  
+A_T48_s303_4           not essential  
+A_T48_s303_5           not essential  
+A_T48_s303_6           not essential  
+A_T48_s303_7           not essential  
+A_T48_s303_8           not essential  
+SCREEN30: 9 boards, 0 PASS

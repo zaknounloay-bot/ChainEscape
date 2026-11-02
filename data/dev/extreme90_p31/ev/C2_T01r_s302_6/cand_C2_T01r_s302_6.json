@@ -1,0 +1,17 @@
+{
+ "C2_T01r_s302_6": {
+  "map": [
+   ". . . Yv%A . Y^@- .",
+   ". . . Bv&A . R> .",
+   ". . R< . . Bv@~ G>",
+   "G>@~ Yv&A . G<* P^@ G^* P<%A",
+   ". B> . . . B> .",
+   ". Y> . . . B> .",
+   ". . . . . . ."
+  ],
+  "target": "EXTREME",
+  "facts": [],
+  "mechanic": "magnet,switch",
+  "max_positions": 2000
+ }
+}

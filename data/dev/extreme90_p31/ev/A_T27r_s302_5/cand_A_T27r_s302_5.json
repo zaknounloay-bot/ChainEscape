@@ -1,0 +1,17 @@
+{
+ "A_T27r_s302_5": {
+  "map": [
+   ". . . P<@-+C G>@- . .",
+   ". . . XC P^@- B^@~ R^",
+   ". . . . . . .",
+   ". P>@ B<&A Y^@- B>@- B<&A .",
+   ". . . . . . .",
+   ". . . G^ . . G>&A",
+   ". . . . . Bv%A P^%A+C"
+  ],
+  "target": "EXTREME",
+  "facts": [],
+  "mechanic": "switch,gate",
+  "max_positions": 2000
+ }
+}

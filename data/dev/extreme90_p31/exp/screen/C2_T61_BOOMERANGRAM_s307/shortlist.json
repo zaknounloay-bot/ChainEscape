@@ -1,0 +1,172 @@
+{
+ "C2_T61_s307_0": {
+  "map": [
+   ". . . . . P^&A .",
+   ". . . R>:v B>@~ Yv@- B^:^",
+   ". . . G>= R>:> B^&A .",
+   ". P^@ Rv= Y<&A= Y^:< . .",
+   ". . . . . . .",
+   ". . . . . . .",
+   ". R> . . . . P^%A"
+  ],
+  "mechanic": "sequence,switch,armor",
+  "positions": 343,
+  "overlap": 0.35,
+  "rules": [
+   "S_old"
+  ]
+ },
+ "C2_T61_s307_1": {
+  "map": [
+   ". . . . . P^&A .",
+   ". . . R>:v B>@~ Yv@- B^:^",
+   ". . . G>= R>:> B^&A .",
+   ". P^@~ Rv= Y<&A= Y^:< . .",
+   ". . . . . . .",
+   ". . . . . . .",
+   ". R> . . . . P^%A"
+  ],
+  "mechanic": "sequence,switch,armor",
+  "positions": 343,
+  "overlap": 0.35,
+  "rules": [
+   "S_old"
+  ]
+ },
+ "C2_T61_s307_2": {
+  "map": [
+   ". . . . . P^&A .",
+   ". . . R>:v B>@~ Yv@- B>:^",
+   ". . . G>= R>:> B^&A .",
+   ". P^@ Rv= Y<&A= Y^:< . .",
+   ". . . . . . .",
+   ". . . . . . .",
+   ". R> . . . . P^%A"
+  ],
+  "mechanic": "sequence,switch,armor",
+  "positions": 343,
+  "overlap": 0.35,
+  "rules": [
+   "S_old"
+  ]
+ },
+ "C2_T61_s307_3": {
+  "map": [
+   ". . . . . P^&A .",
+   ". . . R>:v B>@~ Yv@- B^:^",
+   ". . . G>= R>:> B^&A Yv@-",
+   ". . Rv= Y<&A= Y^:< . .",
+   ". . . . . . .",
+   ". . . . . . .",
+   ". R> . . . . P^%A"
+  ],
+  "mechanic": "sequence,switch,armor",
+  "positions": 378,
+  "overlap": 0.35,
+  "rules": [
+   "S_old"
+  ]
+ },
+ "C2_T61_s307_4": {
+  "map": [
+   ". . . . P>@~ P^&A .",
+   ". . . R>:v B>@~ Yv@- B^:^",
+   ". . . G>= R>:> B^&A .",
+   ". P^@~ Rv= Y<&A= Y^:< . .",
+   ". . . . . . .",
+   ". . . . . . .",
+   ". R> . . . . P^%A"
+  ],
+  "mechanic": "sequence,switch,armor",
+  "positions": 441,
+  "overlap": 0.39,
+  "rules": [
+   "S_old"
+  ]
+ },
+ "C2_T61_s307_5": {
+  "map": [
+   ". . . . . P^&A .",
+   ". . . R>:v B>@~ Yv@- .",
+   ". . . G>= R>:> B^ Yv@-",
+   "B^ P^@ Rv= Y<&A= Y^:< . .",
+   ". . . . . . .",
+   ". . . . . . B^",
+   ". R> . . . . P^%A"
+  ],
+  "mechanic": "sequence,switch,armor",
+  "positions": 666,
+  "overlap": 0.32,
+  "rules": [
+   "S_p30"
+  ]
+ },
+ "C2_T61_s307_6": {
+  "map": [
+   ". . . . . P^&A .",
+   ". . . R>:v B>@~ Yv@- B^:^",
+   ". . . G>= R>:> B^&A Yv@-",
+   ". P^@ Rv= Y<&A= Y^:< . .",
+   ". . . . . . .",
+   ". . . . . . Y<",
+   ". R> . . . . P^%A"
+  ],
+  "mechanic": "sequence,switch,armor",
+  "positions": 870,
+  "overlap": 0.32,
+  "rules": [
+   "S_p30"
+  ]
+ },
+ "C2_T61_s307_7": {
+  "map": [
+   ". . . . . P^&A .",
+   ". . . R>:v B>@~ Yv@- .",
+   ". . . G>= R>:> B^ Yv@-",
+   "B^ P^@ Rv= Y<&A= Y^:< . .",
+   ". . . . . . .",
+   ". . . . . . .",
+   ". R> . . . . P^%A"
+  ],
+  "mechanic": "sequence,switch,armor",
+  "positions": 510,
+  "overlap": 0.33,
+  "rules": [
+   "S_p30"
+  ]
+ },
+ "C2_T61_s307_8": {
+  "map": [
+   ". . . . . P^&A .",
+   ". . . R>:v B>@~ Yv@- B^:^",
+   ". . . G>= R>:> B^&A Yv@-",
+   ". P^@ Rv= Y<&A= Y^:< . .",
+   ". . . . . . .",
+   ". . . . . . .",
+   ". R> . . . . P^%A"
+  ],
+  "mechanic": "sequence,switch,armor",
+  "positions": 686,
+  "overlap": 0.33,
+  "rules": [
+   "S_p30"
+  ]
+ },
+ "C2_T61_s307_9": {
+  "map": [
+   ". . . . . P^&A .",
+   ". . . R>:v B>@~ Yv@- B>:^",
+   ". . . G>= R>:> B^&A Yv@-",
+   ". P^@ Rv= Y<&A= Y^:< . .",
+   ". . . . . . .",
+   ". . . . . . .",
+   ". R> . . . . P^%A"
+  ],
+  "mechanic": "sequence,switch,armor",
+  "positions": 686,
+  "overlap": 0.33,
+  "rules": [
+   "S_p30"
+  ]
+ }
+}

@@ -1,0 +1,60 @@
+{
+ "target": "EXTREME",
+ "facts": [],
+ "mechanic": "switch,armor",
+ "idea": "P30 hand core: the aimed ram: the only block that can crack the armored piece is a flip target - the reversal decides whether it rams the shell or simply leaves, and once it has left nothing can crack it",
+ "family": "P30 T59_AIMEDRAM",
+ "map": [
+  ". . . Gv&A . . .",
+  ". . . . . . .",
+  ". . . . . . .",
+  ". . . Y<= . . .",
+  ". . . . . . .",
+  ". . . . . . .",
+  ". . . . . . P^%A"
+ ],
+ "frozen": [
+  [
+   0,
+   3
+  ],
+  [
+   3,
+   3
+  ],
+  [
+   6,
+   6
+  ]
+ ],
+ "max_positions": 2000,
+ "piece_free": 13,
+ "max_pieces": 17,
+ "shortcut_weight": 80,
+ "coverage_weight": 25,
+ "late_weight": 20,
+ "endgame_weight": 20,
+ "length_weight": 1.0,
+ "length_cap": 18,
+ "pressure_weight": 1.5,
+ "palette": "all",
+ "suffixes": [
+  "&A",
+  "="
+ ],
+ "suffix_rate": 0.3,
+ "suffix_max": {
+  "&A": 3,
+  "=": 3
+ },
+ "crates_max": 0,
+ "seed": 361,
+ "size": "medium",
+ "max_solve_nodes": 1500,
+ "spinners_max": 4,
+ "strict_essential": true,
+ "token_guard": true,
+ "phase30_core": "T59_AIMEDRAM",
+ "core_essential": true,
+ "phase31_arm": "C1"
+}

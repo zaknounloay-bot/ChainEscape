@@ -1,0 +1,22 @@
+C1_T59_s305_0          overlap        (0.41, 'N1')
+C1_T59_s305_1          overlap        (0.41, 'N1')
+C1_T59_s305_2          overlap        (0.47, 'N1')
+C1_T59_s305_3          overlap        (0.47, 'N1')
+C1_T59_s305_4          overlap        (0.4, 'N68')
+C1_T59_s305_5          PASS           []
+C1_T59_s305_6          PASS           []
+C1_T59_s305_7          Category A/B   ['solve 48.4 ms (> 40)']
+C1_T59_s305_8          PASS           []
+C1_T59_s305_9          PASS           []
+SCREEN: 10 boards, 4 PASS
+C1_T59_s305_0          overlap        
+C1_T59_s305_1          overlap        
+C1_T59_s305_2          overlap        
+C1_T59_s305_3          overlap        
+C1_T59_s305_4          overlap        
+C1_T59_s305_5          PASS           PASS
+C1_T59_s305_6          PASS           PASS
+C1_T59_s305_7          Category A/B   
+C1_T59_s305_8          PASS           PASS
+C1_T59_s305_9          PASS           PASS
+SCREEN30: 10 boards, 4 PASS

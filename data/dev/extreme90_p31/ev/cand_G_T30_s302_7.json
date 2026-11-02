@@ -1,0 +1,18 @@
+{
+ "G_T30_s302_7": {
+  "map": [
+   ". . . . . . .",
+   ". P^#Y . . . G^#B .",
+   "B^%A R<@~ . . . Y< .",
+   ". Y^&A . . R>&A B^&A .",
+   ". Gv@ . . Y^@ B^@ .",
+   ". R<@ . . Yv&A B^@ .",
+   "R>%A . . . . Rv@#Y P^@~"
+  ],
+  "mechanic": "switch,lock",
+  "run": "G_T30_TWOKEYS_s302",
+  "rules": [
+   "S_p30"
+  ]
+ }
+}

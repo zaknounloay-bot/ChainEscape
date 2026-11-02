@@ -1,0 +1,18 @@
+{
+ "A_T27r_s302_0": {
+  "map": [
+   ". . . P<@-+C G>@- . .",
+   ". . . XC P^@- B^@~ Rv@-",
+   ". . . . . . .",
+   ". P>@ B<&A Y^@- B>@- B<&A .",
+   ". . . . . Y^@- .",
+   ". . . G^ . . .",
+   ". . . . . Bv%A P^%A+C"
+  ],
+  "mechanic": "switch,gate",
+  "run": "A_T27r_TRIGGERLINK_s302",
+  "rules": [
+   "S_old"
+  ]
+ }
+}

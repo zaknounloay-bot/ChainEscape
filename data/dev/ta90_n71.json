@@ -20,7 +20,7 @@
    "primary": "movable, switch, lock, spinner",
    "target": "EXTREME (a design target, not a rating; never shown to players)",
    "idea": "the locked pusher: the only block that can push the crate is locked and is the flip target - its key must cross the crate's landing lane before the push, and the switch decides which way the pusher faces when it is finally free",
-   "source": "hybrid: hand core frozen cell for cell (seed_R09_LOCKEDPUSHER.json, Phase 29); blocks added by tools/ta90_search.gd --ops=v20 with the Phase 28 pipeline (token guard, strict essentiality, spinners_max), RNG seed 92 (protocol.json); early screen tools/extreme90_screen28.py; advisory rank tools/ta90_rank29.gd",
+   "source": "hybrid: hand core frozen cell for cell (seed_R09_LOCKEDPUSHER.json, Phase 29); blocks added by tools/ta90_search.gd WITHOUT --ops=v20 (baseline operators - the flag was missing from the round 92 run script although protocol.json specified v20; found and corrected in the Phase 31 audit) with the Phase 28 pipeline (token guard, strict essentiality, spinners_max), RNG seed 92 (protocol.json); early screen tools/extreme90_screen28.py; advisory rank tools/ta90_rank29.gd",
    "related_bank_concept": "N68 (a crate shuttle and a door: a lock opens the crate's exit; here the lock holds the pusher), N66 (key also a link); closest occupancy N15 0.31",
    "fingerprint": "304fd5fe6d49ea15355c05ce5450944fa0bd9e8eaf2db77ce89c0891224fd26e",
    "mechanics": [

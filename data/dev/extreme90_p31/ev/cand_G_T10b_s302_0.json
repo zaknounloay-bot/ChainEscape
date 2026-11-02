@@ -1,0 +1,18 @@
+{
+ "G_T10b_s302_0": {
+  "map": [
+   ". . . . . . .",
+   ". . . . . . B>@-",
+   ". . . . . . G>@",
+   ". R<%A B<#Y&A . G^@- Y>@~ .",
+   ". B>@- Yv@- Y>@- . Yv&A .",
+   ". . . G>@#Y P^@ P<#B B^&A",
+   ". . Pv#B . . . G^%A"
+  ],
+  "mechanic": "switch,lock",
+  "run": "G_T10b_LADDERBLOCK_s302",
+  "rules": [
+   "S_old"
+  ]
+ }
+}

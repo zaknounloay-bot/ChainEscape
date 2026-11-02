@@ -1,0 +1,17 @@
+{
+ "G_T10_s301_3": {
+  "map": [
+   ". . . . . . .",
+   ". . P^#B . . . .",
+   ". . B^&A . . . .",
+   ". . B<#Y&A B>%A . . .",
+   ". . . G>#Y Rv@~ Yv .",
+   ". . Y^@~ B>&A . Pv@~ R^@~",
+   "Bv@- . Gv@~ . Y< . G^%A"
+  ],
+  "target": "EXTREME",
+  "facts": [],
+  "mechanic": "switch,lock",
+  "max_positions": 2000
+ }
+}

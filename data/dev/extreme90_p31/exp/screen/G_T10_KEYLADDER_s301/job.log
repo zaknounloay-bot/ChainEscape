@@ -1,0 +1,22 @@
+G_T10_s301_0           overlap        (0.41, 'N46')
+G_T10_s301_1           overlap        (0.41, 'N46')
+G_T10_s301_2           filler         ['r1c2 P^#B']
+G_T10_s301_3           PASS           []
+G_T10_s301_4           filler         ['r3c1 P^#B']
+G_T10_s301_5           filler         ['r1c2 P^#B']
+G_T10_s301_6           filler         ['r1c2 P^#B']
+G_T10_s301_7           PASS           []
+G_T10_s301_8           filler         ['r1c2 P^#B']
+G_T10_s301_9           PASS           []
+SCREEN: 10 boards, 3 PASS
+G_T10_s301_0           overlap        
+G_T10_s301_1           overlap        
+G_T10_s301_2           filler         
+G_T10_s301_3           PASS           PASS
+G_T10_s301_4           filler         
+G_T10_s301_5           filler         
+G_T10_s301_6           filler         
+G_T10_s301_7           PASS           PASS
+G_T10_s301_8           filler         
+G_T10_s301_9           PASS           PASS
+SCREEN30: 10 boards, 3 PASS

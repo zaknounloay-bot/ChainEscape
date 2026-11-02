@@ -1,0 +1,222 @@
+Godot Engine v4.3.stable.official.77dcf97d8 - https://godotengine.org
+
+SCRIPT ERROR: Invalid access of index '6' on a base object of type: 'Array'.
+          at: _rot (res://tools/vh_pilot4_canon.gd:101)
+SCRIPT ERROR: Out of bounds get index '0' (on base: 'Array')
+          at: _relabel (res://tools/vh_pilot4_canon.gd:141)
+SCRIPT ERROR: Out of bounds get index '0' (on base: 'Array')
+          at: _relabel (res://tools/vh_pilot4_canon.gd:141)
+SCRIPT ERROR: Out of bounds get index '0' (on base: 'Array')
+          at: _rot (res://tools/vh_pilot4_canon.gd:96)
+SCRIPT ERROR: Out of bounds get index '0' (on base: 'Array')
+          at: _relabel (res://tools/vh_pilot4_canon.gd:141)
+SCRIPT ERROR: Out of bounds get index '0' (on base: 'Array')
+          at: _relabel (res://tools/vh_pilot4_canon.gd:141)
+SCRIPT ERROR: Out of bounds get index '0' (on base: 'Array')
+          at: _rot (res://tools/vh_pilot4_canon.gd:96)
+SCRIPT ERROR: Out of bounds get index '0' (on base: 'Array')
+          at: _relabel (res://tools/vh_pilot4_canon.gd:141)
+SCRIPT ERROR: Out of bounds get index '0' (on base: 'Array')
+          at: _relabel (res://tools/vh_pilot4_canon.gd:141)
+SCRIPT ERROR: Out of bounds get index '0' (on base: 'Array')
+          at: _rot (res://tools/vh_pilot4_canon.gd:96)
+known boards: 37059
+known boards incl. T1-T5 and the demos: 37059; played boards for the near-copy guard: 333
+generator: v20 (strategic operators)
+seed: -85.0 | 4 pieces, 5 positions, solution 3, distinct 0, steps 0 (cover 0.00, late 0.00), endgame false, mechanic 0/2, shortcut 100% | [". . . . . . .",". . . XC . . .",". . . . . . .",". . . . . B<&A .",". . . . . . .",". . . G^ . . .",". . . . . . P^%A+C"]
+ERROR: Level 0: switch / flip / armored block at (5, 5) cannot be a spinner or hidden
+   at: push_error (core/variant/variant_utility.cpp:1092)
+ERROR: Level 0: switch / flip / armored block at (1, 3) cannot be a spinner or hidden
+   at: push_error (core/variant/variant_utility.cpp:1092)
+ERROR: Level 0: switch / flip / armored block at (6, 5) cannot be a spinner or hidden
+   at: push_error (core/variant/variant_utility.cpp:1092)
+ERROR: Level 0: switch / flip / armored block at (4, 3) cannot be a spinner or hidden
+   at: push_error (core/variant/variant_utility.cpp:1092)
+round 1 (41 evaluated, 1 s): best -70.0 | 5 pieces, 4 positions, solution 4, distinct 0, steps 0 (cover 0.00, late 0.00), endgame false, mechanic 1/2, shortcut 100% | [". . . . . . .",". . . XC . . .",". . . . . . .",". . . P>@~ . B<&A .",". . . . . . .",". . . G^ . . .",". . . . . . P^%A+C"]
+ERROR: Level 0: switch / flip / armored block at (2, 5) cannot be a spinner or hidden
+   at: push_error (core/variant/variant_utility.cpp:1092)
+ERROR: Level 0: switch / flip / armored block at (6, 3) cannot be a spinner or hidden
+   at: push_error (core/variant/variant_utility.cpp:1092)
+round 2 (79 evaluated, 2 s): best -45.1 | 6 pieces, 11 positions, solution 5, distinct 1, steps 1 (cover 0.20, late 0.40), endgame false, mechanic 1/2, shortcut 100% | [". . . . . . .",". . . XC . . .",". . . . . B^%A .",". . . P>@~ . B<&A .",". . . . . . .",". . . G^ . . .",". . . . . . P^%A+C"]
+round 3 (115 evaluated, 3 s): best -41.4 | 7 pieces, 21 positions, solution 6, distinct 1, steps 1 (cover 0.17, late 0.50), endgame false, mechanic 1/2, shortcut 100% | [". . . . . . .",". . . XC . . .",". . . . . B^%A .",". . . P>@~ . B<&A .",". . . . . . .",". . . G^ . . .",". . Yv@~+C . . . P^%A+C"]
+ERROR: Level 0: switch / flip / armored block at (5, 6) cannot be a spinner or hidden
+   at: push_error (core/variant/variant_utility.cpp:1092)
+ERROR: Level 0: switch / flip / armored block at (5, 4) cannot be a spinner or hidden
+   at: push_error (core/variant/variant_utility.cpp:1092)
+round 4 (147 evaluated, 4 s): best -13.1 | 8 pieces, 43 positions, solution 7, distinct 2, steps 4 (cover 0.57, late 0.57), endgame false, mechanic 1/2, shortcut 100% | [". . . . . . .",". . . XC . . .",". . . Y<+C . B^%A .",". . . P>@~ . B<&A .",". . . . . . .",". . . G^ . . .","Rv&A . . . . . P^%A+C"]
+ERROR: Level 0: switch / flip / armored block at (2, 5) cannot be a spinner or hidden
+   at: push_error (core/variant/variant_utility.cpp:1092)
+ERROR: Level 0: switch / flip / armored block at (3, 6) cannot be a spinner or hidden
+   at: push_error (core/variant/variant_utility.cpp:1092)
+round 5 (184 evaluated, 7 s): best -6.9 | 9 pieces, 59 positions, solution 8, distinct 2, steps 5 (cover 0.63, late 0.63), endgame false, mechanic 1/2, shortcut 100% | [". . . . . . G^@",". . . XC . . .",". . . Y<+C . B^%A .",". . . P>@~ . B<&A .",". . . . . . .",". . . G^ . . .","Rv&A . . . . . P^%A+C"]
+ERROR: Level 0: switch / flip / armored block at (5, 5) cannot be a spinner or hidden
+   at: push_error (core/variant/variant_utility.cpp:1092)
+round 6 (214 evaluated, 9 s): best 13.9 | 8 pieces, 35 positions, solution 7, distinct 2, steps 5 (cover 0.71, late 0.71), endgame true, mechanic 1/2, shortcut 100% | [". . . . . . .",". . . XC . . .",". . . Y<+C . . .",". . . P>@~ . B<&A .",". . . . . . .","B^&A . . G^ . . .","Rv&A . . . . . P^%A+C"]
+ERROR: Level 0: switch / flip / armored block at (5, 4) cannot be a spinner or hidden
+   at: push_error (core/variant/variant_utility.cpp:1092)
+round 7 (252 evaluated, 13 s): best 27.6 | 11 pieces, 151 positions, solution 10, distinct 3, steps 7 (cover 0.70, late 0.70), endgame true, mechanic 1/2, shortcut 100% | [". . . . . . G^@",". . . XC . . .",". . . Y<+C . B^%A R^&A",". . . P>@~ . B<&A .",". . . . . . .",". Y< . G^ . . .","Rv&A . . . . . P^%A+C"]
+round 8 (289 evaluated, 17 s): best 30.8 | 12 pieces, 340 positions, solution 11, distinct 3, steps 8 (cover 0.73, late 0.73), endgame true, mechanic 1/2, shortcut 100% | [". . . . . . G^@","Y<@- . . XC . . .",". . . Y<+C . B^%A R^&A",". . . P>@~ . B<&A .",". . . . . . .","G<@ . . G^ . . .","Rv&A . . . . . P^%A+C"]
+round 9 (326 evaluated, 22 s): best 37.6 | 13 pieces, 546 positions, solution 12, distinct 3, steps 9 (cover 0.75, late 0.75), endgame true, mechanic 1/2, shortcut 100% | [". . . . . . G^@","Y<@- . . XC . . .",". . . Y<+C . B^%A R^&A",". . . P>@~ . B<&A .",". . . . . . .","G<@ . . G^ . . .","Rv&A . . G<@~ . . P^%A+C"]
+round 10 (363 evaluated, 30 s): best 39.1 | 14 pieces, 1096 positions, solution 13, distinct 3, steps 10 (cover 0.77, late 0.77), endgame true, mechanic 1/2, shortcut 100% | [". . . . . . G^@","Y<@- . . XC . . .",". . . Y<+C . B^%A R^&A",". . . P>@~ . B<&A .",". . . . . P< .","G<@ . . G^ . . .","Rv&A . . G<@~ . . P^%A+C"]
+ERROR: Level 0: switch / flip / armored block at (0, 5) cannot be a spinner or hidden
+   at: push_error (core/variant/variant_utility.cpp:1092)
+round 11 (399 evaluated, 40 s): best 40.5 | 14 pieces, 750 positions, solution 13, distinct 3, steps 10 (cover 0.77, late 0.77), endgame true, mechanic 1/2, shortcut 100% | [". . . . . . G^@","Y<@- . . XC . . .",". . . Y<+C . B^%A R^&A",". . . P>@~ . B<&A .",". . . . . . Y>@","G^@ . . G^ . . .","Rv&A . Bv@- . . . P^%A+C"]
+ERROR: Level 0: switch / flip / armored block at (3, 4) cannot be a spinner or hidden
+   at: push_error (core/variant/variant_utility.cpp:1092)
+round 12 (436 evaluated, 53 s): best 82.1 | 14 pieces, 408 positions, solution 13, distinct 5, steps 10 (cover 0.77, late 0.77), endgame true, mechanic 1/2, shortcut 62% | ["G^@ . . . . . G<@","Y<@- . . XC . . .",". . . Y<+C . B^%A R^&A",". . . P>@~ . B<&A .",". . . . . . .","G<@ . . G^ . . .","Rv . . G<@~ . . P^%A+C"]
+round 13 (473 evaluated, 66 s): best 95.0 | 15 pieces, 634 positions, solution 14, distinct 5, steps 11 (cover 0.79, late 0.79), endgame true, mechanic 1/2, shortcut 50% | ["G^@ . . . . . G<@","Y<@- . . XC . . .",". . . Y<+C . B^%A R^&A",". . . P>@~ . B<&A .",". . . . . . .","G<@ . . G^ . . .","Rv . . G<@~ R<&A . P^%A+C"]
+round 14 (511 evaluated, 80 s): best 123.5 | 15 pieces, 298 positions, solution 14, distinct 5, steps 9 (cover 0.64, late 0.71), endgame true, mechanic 2/2, shortcut 22% | ["G^@ . . . . . G<@","Y<@- . . XC . . .","Bv&A . . Y<+C . B^%A R^&A",". . . P>@~ . B<&A .",". . . . . . .","G<@ . . G^ . . .","Rv . . G<@~ . . P^%A+C"]
+round 15 (547 evaluated, 94 s): best 127.1 | 16 pieces, 370 positions, solution 15, distinct 5, steps 10 (cover 0.67, late 0.73), endgame true, mechanic 2/2, shortcut 25% | ["G^@ . . . . . G<@","Y<@- . . XC . . .","Bv&A . . Y<+C Y> B^%A R^&A",". . . P>@~ . B<&A .",". . . . . . .","G<@ . . G^ . . .","Rv . . G<@~ . . P^%A+C"]
+round 16 (585 evaluated, 106 s): best 135.4 | 17 pieces, 492 positions, solution 16, distinct 5, steps 12 (cover 0.75, late 0.75), endgame true, mechanic 2/2, shortcut 2% | ["G^@ . . . . . G<@","Y<@- . . XC . . .",". . . Y<+C G>@- B^%A R^&A",". . . P>@~ . B<&A P^@~",". . . . . . .","G>@- . . G^ . . .","Rv . . G<@~ R<&A . P^%A+C"]
+round 17 (622 evaluated, 120 s): best 137.0 | 16 pieces, 318 positions, solution 15, distinct 5, steps 12 (cover 0.80, late 0.80), endgame true, mechanic 2/2, shortcut 2% | ["G^@ . . . . . G<@","Y<@- . . XC . . .",". . . Y<+C G>@- B^%A R^&A",". . . P>@~ . B<&A P^@~",". . . . . . .","G>@- . . G^ . . .","Rv . . . R<&A . P^%A+C"]
+round 18 (659 evaluated, 133 s): best 139.2 | 17 pieces, 297 positions, solution 16, distinct 5, steps 13 (cover 0.81, late 0.81), endgame true, mechanic 2/2, shortcut 0% | ["G^@ . . . . P<@~ G<@","Y<@- . . XC . . .",". . . Y<+C G>@- B^%A R^&A",". . . P>@~ . B<&A P^@~",". . . . . . .","G>@- . . G^ . . .","Rv . . . R<&A . P^%A+C"]
+ERROR: Level 0: switch / flip / armored block at (4, 1) cannot be a spinner or hidden
+   at: push_error (core/variant/variant_utility.cpp:1092)
+round 19 (698 evaluated, 148 s): best 141.0 | 17 pieces, 225 positions, solution 16, distinct 5, steps 13 (cover 0.81, late 0.81), endgame true, mechanic 2/2, shortcut 0% | ["G^@ . . . . P<@~ G<@","Y<@- . . XC . . .",". . . Y<+C G>@~ B^%A R^&A",". . . P>@~ . B<&A P^@~",". . . . . . .","G>@- . . G^ . . .","Rv . . . R<&A . P^%A+C"]
+round 20 (733 evaluated, 162 s): best 141.0 | 17 pieces, 225 positions, solution 16, distinct 5, steps 13 (cover 0.81, late 0.81), endgame true, mechanic 2/2, shortcut 0% | ["G^@ . . . . P<@~ G<@","Y<@- . . XC . . .",". . . Y<+C G>@~ B^%A R^&A",". . . P>@~ . B<&A P^@~",". . . . . . .","G>@- . . G^ . . .","Rv . . . R<&A . P^%A+C"]
+round 21 (767 evaluated, 172 s): best 141.0 | 17 pieces, 225 positions, solution 16, distinct 5, steps 13 (cover 0.81, late 0.81), endgame true, mechanic 2/2, shortcut 0% | ["G^@ . . . . P<@~ G<@","Y<@- . . XC . . .",". . . Y<+C G>@~ B^%A R^&A",". . . P>@~ . B<&A P^@~",". . . . . . .","G>@- . . G^ . . .","Rv . . . R<&A . P^%A+C"]
+round 22 (804 evaluated, 183 s): best 141.0 | 17 pieces, 225 positions, solution 16, distinct 5, steps 13 (cover 0.81, late 0.81), endgame true, mechanic 2/2, shortcut 0% | ["G^@ . . . . P<@~ G<@","Y<@- . . XC . . .",". . . Y<+C G>@~ B^%A R^&A",". . . P>@~ . B<&A P^@~",". . . . . . .","G>@- . . G^ . . .","Rv . . . R<&A . P^%A+C"]
+round 23 (836 evaluated, 195 s): best 141.0 | 17 pieces, 225 positions, solution 16, distinct 5, steps 13 (cover 0.81, late 0.81), endgame true, mechanic 2/2, shortcut 0% | ["G^@ . . . . P<@~ G<@","Y<@- . . XC . . .",". . . Y<+C G>@~ B^%A R^&A",". . . P>@~ . B<&A P^@~",". . . . . . .","G>@- . . G^ . . .","Rv . . . R<&A . P^%A+C"]
+ERROR: Level 0: switch / flip / armored block at (5, 4) cannot be a spinner or hidden
+   at: push_error (core/variant/variant_utility.cpp:1092)
+round 24 (870 evaluated, 208 s): best 142.6 | 17 pieces, 191 positions, solution 16, distinct 5, steps 14 (cover 0.88, late 0.88), endgame true, mechanic 2/2, shortcut 18% | ["G^@ . . . . P<@~ G<@","Y<@- . . XC . . .",". . . Y<+C G>@~ B^%A R^&A",". . . P>@ . B<&A P^@~",". . . . . . .","G>@- . . G^ . . .","Rv . . . R>&A . P^%A+C"]
+round 25 (907 evaluated, 220 s): best 142.6 | 17 pieces, 191 positions, solution 16, distinct 5, steps 14 (cover 0.88, late 0.88), endgame true, mechanic 2/2, shortcut 18% | ["G^@ . . . . P<@~ G<@","Y<@- . . XC . . .",". . . Y<+C G>@~ B^%A R^&A",". . . P>@ . B<&A P^@~",". . . . . . .","G>@- . . G^ . . .","Rv . . . R>&A . P^%A+C"]
+ERROR: Level 0: switch / flip / armored block at (4, 3) cannot be a spinner or hidden
+   at: push_error (core/variant/variant_utility.cpp:1092)
+ERROR: Level 0: switch / flip / armored block at (5, 5) cannot be a spinner or hidden
+   at: push_error (core/variant/variant_utility.cpp:1092)
+ERROR: Level 0: switch / flip / armored block at (6, 1) cannot be a spinner or hidden
+   at: push_error (core/variant/variant_utility.cpp:1092)
+ERROR: Level 0: switch / flip / armored block at (4, 2) cannot be a spinner or hidden
+   at: push_error (core/variant/variant_utility.cpp:1092)
+round 26 (945 evaluated, 234 s): best 142.6 | 17 pieces, 191 positions, solution 16, distinct 5, steps 14 (cover 0.88, late 0.88), endgame true, mechanic 2/2, shortcut 18% | ["G^@ . . . . P<@~ G<@","Y<@- . . XC . . .",". . . Y<+C G>@~ B^%A R^&A",". . . P>@ . B<&A P^@~",". . . . . . .","G>@- . . G^ . . .","Rv . . . R>&A . P^%A+C"]
+round 27 (985 evaluated, 247 s): best 142.6 | 17 pieces, 191 positions, solution 16, distinct 5, steps 14 (cover 0.88, late 0.88), endgame true, mechanic 2/2, shortcut 18% | ["G^@ . . . . P<@~ G<@","Y<@- . . XC . . .",". . . Y<+C G>@~ B^%A R^&A",". . . P>@ . B<&A P^@~",". . . . . . .","G>@- . . G^ . . .","Rv . . . R>&A . P^%A+C"]
+ERROR: Level 0: switch / flip / armored block at (1, 6) cannot be a spinner or hidden
+   at: push_error (core/variant/variant_utility.cpp:1092)
+ERROR: Level 0: switch / flip / armored block at (5, 0) cannot be a spinner or hidden
+   at: push_error (core/variant/variant_utility.cpp:1092)
+round 28 (1023 evaluated, 259 s): best 144.1 | 17 pieces, 181 positions, solution 16, distinct 5, steps 14 (cover 0.88, late 0.88), endgame true, mechanic 2/2, shortcut 18% | ["G^@ . . . . P<@~ G<@","Y<@- . . XC . . .",". . . Y<+C G>@~ B^%A R^&A",". . . P>@ . B<&A P^@~",". . . . . . .","G>@- . . G^ . . .","Rv@- . . . R>&A . P^%A+C"]
+ERROR: Level 0: switch / flip / armored block at (2, 6) cannot be a spinner or hidden
+   at: push_error (core/variant/variant_utility.cpp:1092)
+round 29 (1061 evaluated, 272 s): best 144.1 | 17 pieces, 181 positions, solution 16, distinct 5, steps 14 (cover 0.88, late 0.88), endgame true, mechanic 2/2, shortcut 18% | ["G^@ . . . . P<@~ G<@","Y<@- . . XC . . .",". . . Y<+C G>@~ B^%A R^&A",". . . P>@ . B<&A P^@~",". . . . . . .","G>@- . . G^ . . .","Rv@- . . . R>&A . P^%A+C"]
+round 30 (1096 evaluated, 284 s): best 147.1 | 17 pieces, 452 positions, solution 16, distinct 6, steps 14 (cover 0.88, late 0.88), endgame true, mechanic 2/2, shortcut 8% | ["G^@ . . . . P<@~ G<@","Y<@- . . XC . . .",". . . Y<+C G>@~ B^%A R^&A",". . . P>@ . B<&A P^@~",". . . . . . G<@-","G>@- . . G^ . . .","Rv . . . . . P^%A+C"]
+ERROR: Level 0: switch / flip / armored block at (3, 3) cannot be a spinner or hidden
+   at: push_error (core/variant/variant_utility.cpp:1092)
+ERROR: Level 0: switch / flip / armored block at (5, 1) cannot be a spinner or hidden
+   at: push_error (core/variant/variant_utility.cpp:1092)
+ERROR: Level 0: switch / flip / armored block at (3, 0) cannot be a spinner or hidden
+   at: push_error (core/variant/variant_utility.cpp:1092)
+round 31 (1132 evaluated, 298 s): best 147.1 | 17 pieces, 452 positions, solution 16, distinct 6, steps 14 (cover 0.88, late 0.88), endgame true, mechanic 2/2, shortcut 8% | ["G^@ . . . . P<@~ G<@","Y<@- . . XC . . .",". . . Y<+C G>@~ B^%A R^&A",". . . P>@ . B<&A P^@~",". . . . . . G<@-","G>@- . . G^ . . .","Rv . . . . . P^%A+C"]
+ERROR: Level 0: switch / flip / armored block at (6, 3) cannot be a spinner or hidden
+   at: push_error (core/variant/variant_utility.cpp:1092)
+ERROR: Level 0: switch / flip / armored block at (5, 0) cannot be a spinner or hidden
+   at: push_error (core/variant/variant_utility.cpp:1092)
+ERROR: Level 0: switch / flip / armored block at (0, 4) cannot be a spinner or hidden
+   at: push_error (core/variant/variant_utility.cpp:1092)
+round 32 (1169 evaluated, 310 s): best 147.1 | 17 pieces, 452 positions, solution 16, distinct 6, steps 14 (cover 0.88, late 0.88), endgame true, mechanic 2/2, shortcut 8% | ["G^@ . . . . P<@~ G<@","Y<@- . . XC . . .",". . . Y<+C G>@~ B^%A R^&A",". . . P>@ . B<&A P^@~",". . . . . . G<@-","G>@- . . G^ . . .","Rv . . . . . P^%A+C"]
+ERROR: Level 0: switch / flip / armored block at (0, 6) cannot be a spinner or hidden
+   at: push_error (core/variant/variant_utility.cpp:1092)
+ERROR: Level 0: switch / flip / armored block at (6, 4) cannot be a spinner or hidden
+   at: push_error (core/variant/variant_utility.cpp:1092)
+ERROR: Level 0: switch / flip / armored block at (6, 0) cannot be a spinner or hidden
+   at: push_error (core/variant/variant_utility.cpp:1092)
+round 33 (1203 evaluated, 323 s): best 147.7 | 17 pieces, 356 positions, solution 16, distinct 6, steps 14 (cover 0.88, late 0.88), endgame true, mechanic 2/2, shortcut 5% | ["G^@ . . . . P<@~ G<@","Y<@- . . XC . . .",". . . Y<+C G< B^%A R^&A",". . . P>@ . B<&A P^@~",". . . . . . G<@-","G>@- . . G^ . . .","Rv . . . . . P^%A+C"]
+ERROR: Level 0: switch / flip / armored block at (0, 6) cannot be a spinner or hidden
+   at: push_error (core/variant/variant_utility.cpp:1092)
+round 34 (1241 evaluated, 340 s): best 147.7 | 17 pieces, 356 positions, solution 16, distinct 6, steps 14 (cover 0.88, late 0.88), endgame true, mechanic 2/2, shortcut 5% | ["G^@ . . . . P<@~ G<@","Y<@- . . XC . . .",". . . Y<+C G< B^%A R^&A",". . . P>@ . B<&A P^@~",". . . . . . G<@-","G>@- . . G^ . . .","Rv . . . . . P^%A+C"]
+ERROR: Level 0: switch / flip / armored block at (0, 1) cannot be a spinner or hidden
+   at: push_error (core/variant/variant_utility.cpp:1092)
+round 35 (1279 evaluated, 359 s): best 148.2 | 17 pieces, 452 positions, solution 16, distinct 6, steps 14 (cover 0.88, late 0.88), endgame true, mechanic 2/2, shortcut 2% | ["G^@ . . . . P^ G<","Y<@- . . XC . . .",". . . Y<+C G< B^%A R^&A",". . . P>@ . B<&A P^@~",". . . . . . G<@-","G>@- . . G^ . . .","Rv . . . . . P^%A+C"]
+ERROR: Level 0: switch / flip / armored block at (6, 3) cannot be a spinner or hidden
+   at: push_error (core/variant/variant_utility.cpp:1092)
+ERROR: Level 0: switch / flip / armored block at (4, 2) cannot be a spinner or hidden
+   at: push_error (core/variant/variant_utility.cpp:1092)
+round 36 (1316 evaluated, 375 s): best 148.6 | 17 pieces, 418 positions, solution 16, distinct 6, steps 14 (cover 0.88, late 0.88), endgame true, mechanic 2/2, shortcut 0% | ["G^@ . . . . . G<@","Y<@- . . XC . . Y^@",". . . Y<+C G>&A B^%A R^&A",". . . P>@ . B<&A P^@~",". . . . . . G<@-","G>@- . . G^ . . .","Rv . . . . . P^%A+C"]
+ERROR: Level 0: switch / flip / armored block at (6, 0) cannot be a spinner or hidden
+   at: push_error (core/variant/variant_utility.cpp:1092)
+round 37 (1352 evaluated, 392 s): best 148.6 | 17 pieces, 418 positions, solution 16, distinct 6, steps 14 (cover 0.88, late 0.88), endgame true, mechanic 2/2, shortcut 0% | ["G^@ . . . . . G<@","Y<@- . . XC . . Y^@",". . . Y<+C G>&A B^%A R^&A",". . . P>@ . B<&A P^@~",". . . . . . G<@-","G>@- . . G^ . . .","Rv . . . . . P^%A+C"]
+round 38 (1386 evaluated, 408 s): best 148.6 | 17 pieces, 418 positions, solution 16, distinct 6, steps 14 (cover 0.88, late 0.88), endgame true, mechanic 2/2, shortcut 0% | ["G^@ . . . . . G<@","Y<@- . . XC . . Y^@",". . . Y<+C G>&A B^%A R^&A",". . . P>@ . B<&A P^@~",". . . . . . G<@-","G>@- . . G^ . . .","Rv . . . . . P^%A+C"]
+round 39 (1422 evaluated, 422 s): best 149.5 | 17 pieces, 358 positions, solution 16, distinct 6, steps 14 (cover 0.88, late 0.88), endgame true, mechanic 2/2, shortcut 0% | ["G^@ . . . . P^&A G<","Y<@- . . XC . . .",". . . Y<+C . B^%A R^&A",". . P>@- P>@ . B<&A P^@~",". . . . . . G<@-","G>@- . . G^ . . .","Rv@~ . . . . . P^%A+C"]
+round 40 (1457 evaluated, 439 s): best 149.5 | 17 pieces, 358 positions, solution 16, distinct 6, steps 14 (cover 0.88, late 0.88), endgame true, mechanic 2/2, shortcut 0% | ["G^@ . . . . P^&A G<","Y<@- . . XC . . .",". . . Y<+C . B^%A R^&A",". . P>@- P>@ . B<&A P^@~",". . . . . . G<@-","G>@- . . G^ . . .","Rv@~ . . . . . P^%A+C"]
+round 41 (1493 evaluated, 453 s): best 149.5 | 17 pieces, 358 positions, solution 16, distinct 6, steps 14 (cover 0.88, late 0.88), endgame true, mechanic 2/2, shortcut 0% | ["G^@ . . . . P^&A G<","Y<@- . . XC . . .",". . . Y<+C . B^%A R^&A",". . P>@- P>@ . B<&A P^@~",". . . . . . G<@-","G>@- . . G^ . . .","Rv@~ . . . . . P^%A+C"]
+round 42 (1526 evaluated, 467 s): best 149.5 | 17 pieces, 358 positions, solution 16, distinct 6, steps 14 (cover 0.88, late 0.88), endgame true, mechanic 2/2, shortcut 0% | ["G^@ . . . . P^&A G<","Y<@- . . XC . . .",". . . Y<+C . B^%A R^&A",". . P>@- P>@ . B<&A P^@~",". . . . . . G<@-","G>@- . . G^ . . .","Rv@~ . . . . . P^%A+C"]
+ERROR: Level 0: switch / flip / armored block at (3, 2) cannot be a spinner or hidden
+   at: push_error (core/variant/variant_utility.cpp:1092)
+ERROR: Level 0: switch / flip / armored block at (6, 4) cannot be a spinner or hidden
+   at: push_error (core/variant/variant_utility.cpp:1092)
+round 43 (1560 evaluated, 482 s): best 149.6 | 17 pieces, 287 positions, solution 16, distinct 6, steps 14 (cover 0.88, late 0.88), endgame true, mechanic 2/2, shortcut 2% | ["G^@ . . . . P^&A G<","Y<@- . . XC . . .",". . . Y<+C . B^%A R^&A",". . P>@- P>@ . B<&A P>@~",". . . . . . G<@-","G>@- . . G^ . . .","Rv@~ . . . . . P^%A+C"]
+ERROR: Level 0: switch / flip / armored block at (6, 1) cannot be a spinner or hidden
+   at: push_error (core/variant/variant_utility.cpp:1092)
+ERROR: Level 0: switch / flip / armored block at (0, 5) cannot be a spinner or hidden
+   at: push_error (core/variant/variant_utility.cpp:1092)
+ERROR: Level 0: switch / flip / armored block at (1, 0) cannot be a spinner or hidden
+   at: push_error (core/variant/variant_utility.cpp:1092)
+ERROR: Level 0: switch / flip / armored block at (2, 6) cannot be a spinner or hidden
+   at: push_error (core/variant/variant_utility.cpp:1092)
+round 44 (1599 evaluated, 499 s): best 149.6 | 17 pieces, 287 positions, solution 16, distinct 6, steps 14 (cover 0.88, late 0.88), endgame true, mechanic 2/2, shortcut 2% | ["G^@ . . . . P^&A G<","Y<@- . . XC . . .",". . . Y<+C . B^%A R^&A",". . P>@- P>@ . B<&A P>@~",". . . . . . G<@-","G>@- . . G^ . . .","Rv@~ . . . . . P^%A+C"]
+ERROR: Level 0: switch / flip / armored block at (1, 6) cannot be a spinner or hidden
+   at: push_error (core/variant/variant_utility.cpp:1092)
+ERROR: Level 0: switch / flip / armored block at (6, 5) cannot be a spinner or hidden
+   at: push_error (core/variant/variant_utility.cpp:1092)
+round 45 (1637 evaluated, 516 s): best 149.6 | 17 pieces, 287 positions, solution 16, distinct 6, steps 14 (cover 0.88, late 0.88), endgame true, mechanic 2/2, shortcut 2% | ["G^@ . . . . P^&A G<","Y<@- . . XC . . .",". . . Y<+C . B^%A R^&A",". . P>@- P>@ . B<&A P>@~",". . . . . . G<@-","G>@- . . G^ . . .","Rv@~ . . . . . P^%A+C"]
+ERROR: Level 0: switch / flip / armored block at (5, 4) cannot be a spinner or hidden
+   at: push_error (core/variant/variant_utility.cpp:1092)
+ERROR: Level 0: switch / flip / armored block at (4, 3) cannot be a spinner or hidden
+   at: push_error (core/variant/variant_utility.cpp:1092)
+round 46 (1669 evaluated, 531 s): best 149.6 | 17 pieces, 287 positions, solution 16, distinct 6, steps 14 (cover 0.88, late 0.88), endgame true, mechanic 2/2, shortcut 2% | ["G^@ . . . . P^&A G<","Y<@- . . XC . . .",". . . Y<+C . B^%A R^&A",". . P>@- P>@ . B<&A P>@~",". . . . . . G<@-","G>@- . . G^ . . .","Rv@~ . . . . . P^%A+C"]
+ERROR: Level 0: switch / flip / armored block at (4, 2) cannot be a spinner or hidden
+   at: push_error (core/variant/variant_utility.cpp:1092)
+round 47 (1705 evaluated, 548 s): best 149.6 | 17 pieces, 287 positions, solution 16, distinct 6, steps 14 (cover 0.88, late 0.88), endgame true, mechanic 2/2, shortcut 2% | ["G^@ . . . . P^&A G<","Y<@- . . XC . . .",". . . Y<+C . B^%A R^&A",". . P>@- P>@ . B<&A P>@~",". . . . . . G<@-","G>@- . . G^ . . .","Rv@~ . . . . . P^%A+C"]
+ERROR: Level 0: switch / flip / armored block at (6, 0) cannot be a spinner or hidden
+   at: push_error (core/variant/variant_utility.cpp:1092)
+round 48 (1741 evaluated, 564 s): best 149.8 | 17 pieces, 287 positions, solution 16, distinct 6, steps 14 (cover 0.88, late 0.88), endgame true, mechanic 2/2, shortcut 0% | ["G^@ . . . . P^&A Gv@~","Y<@- . . XC . . .",". . . Y<+C . B^%A R^&A",". . P>@- P>@ . B<&A P>@~",". . . . . . G<@-","G>@- . . G^ . . .","Rv@~ . . . . . P^%A+C"]
+ERROR: Level 0: switch / flip / armored block at (1, 1) cannot be a spinner or hidden
+   at: push_error (core/variant/variant_utility.cpp:1092)
+ERROR: Level 0: switch / flip / armored block at (2, 2) cannot be a spinner or hidden
+   at: push_error (core/variant/variant_utility.cpp:1092)
+ERROR: Level 0: switch / flip / armored block at (4, 3) cannot be a spinner or hidden
+   at: push_error (core/variant/variant_utility.cpp:1092)
+ERROR: Level 0: switch / flip / armored block at (1, 1) cannot be a spinner or hidden
+   at: push_error (core/variant/variant_utility.cpp:1092)
+round 49 (1778 evaluated, 581 s): best 149.8 | 17 pieces, 287 positions, solution 16, distinct 6, steps 14 (cover 0.88, late 0.88), endgame true, mechanic 2/2, shortcut 0% | ["G^@ . . . . P^&A Gv@~","Y<@- . . XC . . .",". . . Y<+C . B^%A R^&A",". . P>@- P>@ . B<&A P>@~",". . . . . . G<@-","G>@- . . G^ . . .","Rv@~ . . . . . P^%A+C"]
+ERROR: Level 0: switch / flip / armored block at (2, 6) cannot be a spinner or hidden
+   at: push_error (core/variant/variant_utility.cpp:1092)
+round 50 (1814 evaluated, 600 s): best 149.8 | 17 pieces, 287 positions, solution 16, distinct 6, steps 14 (cover 0.88, late 0.88), endgame true, mechanic 2/2, shortcut 0% | ["G^@ . . . . P^&A Gv@~","Y<@- . . XC . . .",". . . Y<+C . B^%A R^&A",". . P>@- P>@ . B<&A P>@~",". . . . . . G<@-","G>@- . . G^ . . .","Rv@~ . . . . . P^%A+C"]
+ERROR: Level 0: switch / flip / armored block at (0, 6) cannot be a spinner or hidden
+   at: push_error (core/variant/variant_utility.cpp:1092)
+ERROR: Level 0: switch / flip / armored block at (6, 5) cannot be a spinner or hidden
+   at: push_error (core/variant/variant_utility.cpp:1092)
+ERROR: Level 0: switch / flip / armored block at (2, 6) cannot be a spinner or hidden
+   at: push_error (core/variant/variant_utility.cpp:1092)
+round 51 (1848 evaluated, 615 s): best 150.0 | 17 pieces, 423 positions, solution 16, distinct 6, steps 14 (cover 0.88, late 0.88), endgame true, mechanic 2/2, shortcut 0% | ["G^@ . . . . . G<","Y<@- . . XC . . .",". . . Y< . B^%A R^&A",". . P>@~ P>@ . B<&A P>@~",". . . . . . G<@-","G>@- . . G^ . . .","Rv@~ . . . . R<@- P^%A+C"]
+ERROR: Level 0: switch / flip / armored block at (3, 3) cannot be a spinner or hidden
+   at: push_error (core/variant/variant_utility.cpp:1092)
+ERROR: Level 0: switch / flip / armored block at (0, 1) cannot be a spinner or hidden
+   at: push_error (core/variant/variant_utility.cpp:1092)
+ERROR: Level 0: switch / flip / armored block at (3, 2) cannot be a spinner or hidden
+   at: push_error (core/variant/variant_utility.cpp:1092)
+ERROR: Level 0: switch / flip / armored block at (2, 6) cannot be a spinner or hidden
+   at: push_error (core/variant/variant_utility.cpp:1092)
+round 52 (1885 evaluated, 630 s): best 150.1 | 17 pieces, 215 positions, solution 16, distinct 6, steps 14 (cover 0.88, late 0.88), endgame true, mechanic 2/2, shortcut 0% | ["G^@ . . . . G<&A G<","Y<@- . . XC . . .",". . . Y< . B^%A R^&A",". . P>@~ P>@ . B<&A P>@~",". . . . . . G<@-","G>@- . . G^ . . .","Rv@~ . . . . . P^%A+C"]
+ERROR: Level 0: switch / flip / armored block at (0, 6) cannot be a spinner or hidden
+   at: push_error (core/variant/variant_utility.cpp:1092)
+round 53 (1922 evaluated, 648 s): best 150.1 | 17 pieces, 215 positions, solution 16, distinct 6, steps 14 (cover 0.88, late 0.88), endgame true, mechanic 2/2, shortcut 0% | ["G^@ . . . . G<&A G<","Y<@- . . XC . . .",". . . Y< . B^%A R^&A",". . P>@~ P>@ . B<&A P>@~",". . . . . . G<@-","G>@- . . G^ . . .","Rv@~ . . . . . P^%A+C"]
+round 54 (1954 evaluated, 664 s): best 150.1 | 17 pieces, 215 positions, solution 16, distinct 6, steps 14 (cover 0.88, late 0.88), endgame true, mechanic 2/2, shortcut 0% | ["G^@ . . . . G<&A G<","Y<@- . . XC . . .",". . . Y< . B^%A R^&A",". . P>@~ P>@ . B<&A P>@~",". . . . . . G<@-","G>@- . . G^ . . .","Rv@~ . . . . . P^%A+C"]
+ERROR: Level 0: switch / flip / armored block at (4, 1) cannot be a spinner or hidden
+   at: push_error (core/variant/variant_utility.cpp:1092)
+round 55 (1990 evaluated, 680 s): best 150.1 | 17 pieces, 215 positions, solution 16, distinct 6, steps 14 (cover 0.88, late 0.88), endgame true, mechanic 2/2, shortcut 0% | ["G^@ . . . . G<&A G<","Y<@- . . XC . . .",". . . Y< . B^%A R^&A",". . P>@~ P>@ . B<&A P>@~",". . . . . . G<@-","G>@- . . G^ . . .","Rv@~ . . . . . P^%A+C"]
+ERROR: Level 0: switch / flip / armored block at (5, 5) cannot be a spinner or hidden
+   at: push_error (core/variant/variant_utility.cpp:1092)
+round 56 (2025 evaluated, 697 s): best 150.1 | 17 pieces, 215 positions, solution 16, distinct 6, steps 14 (cover 0.88, late 0.88), endgame true, mechanic 2/2, shortcut 0% | ["G^@ . . . . G<&A G<","Y<@- . . XC . . .",". . . Y< . B^%A R^&A",". . P>@~ P>@ . B<&A P>@~",". . . . . . G<@-","G>@- . . G^ . . .","Rv@~ . . . . . P^%A+C"]
+ERROR: Level 0: switch / flip / armored block at (6, 0) cannot be a spinner or hidden
+   at: push_error (core/variant/variant_utility.cpp:1092)
+round 57 (2054 evaluated, 710 s): best 150.1 | 17 pieces, 215 positions, solution 16, distinct 6, steps 14 (cover 0.88, late 0.88), endgame true, mechanic 2/2, shortcut 0% | ["G^@ . . . . G<&A G<","Y<@- . . XC . . .",". . . Y< . B^%A R^&A",". . P>@~ P>@ . B<&A P>@~",". . . . . . G<@-","G>@- . . G^ . . .","Rv@~ . . . . . P^%A+C"]
+ERROR: Level 0: switch / flip / armored block at (6, 1) cannot be a spinner or hidden
+   at: push_error (core/variant/variant_utility.cpp:1092)
+ERROR: Level 0: switch / flip / armored block at (6, 5) cannot be a spinner or hidden
+   at: push_error (core/variant/variant_utility.cpp:1092)
+ERROR: Level 0: switch / flip / armored block at (5, 5) cannot be a spinner or hidden
+   at: push_error (core/variant/variant_utility.cpp:1092)
+round 58 (2083 evaluated, 722 s): best 150.8 | 17 pieces, 604 positions, solution 16, distinct 7, steps 14 (cover 0.88, late 0.88), endgame true, mechanic 2/2, shortcut 0% | ["G^@ . . . . . G<","Y<@- . . XC . . .",". . . Y< . B^%A R^&A",". . P>@-+C P>@ . B<&A P>@~",". . . . . . G<@-","G>@- . . G^ . . .","Rv@~ Y^&A . . . . P^%A+C"]
+stopped after 58 rounds: time budget
+BEST ["G^@ . . . . . G<","Y<@- . . XC . . .",". . . Y< . B^%A R^&A",". . P>@-+C P>@ . B<&A P>@~",". . . . . . G<@-","G>@- . . G^ . . .","Rv@~ Y^&A . . . . P^%A+C"]

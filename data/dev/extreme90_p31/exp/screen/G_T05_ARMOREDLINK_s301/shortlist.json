@@ -1,0 +1,38 @@
+{
+ "G_T05_s301_0": {
+  "map": [
+   "Gv . . . . . .",
+   "G< . . XC . . .",
+   "P<@ R^@ . R^&A . . .",
+   "R>&A+C= Gv&A P^= . . . .",
+   ". B>@- . . . B^@- R^@-",
+   ". G<+C . G^ B^@~ Rv .",
+   ". . . . . . P^%A"
+  ],
+  "mechanic": "switch,gate,armor",
+  "positions": 786,
+  "overlap": 0.36,
+  "rules": [
+   "S_old",
+   "S_p30"
+  ]
+ },
+ "G_T05_s301_1": {
+  "map": [
+   "Gv . . . . . .",
+   "G< . . XC . . .",
+   "P<@ . . R^&A . . .",
+   "R>&A+C= Gv&A P^= . . . .",
+   ". B>@- . . . B^@- R^@-",
+   ". G< . G^ B^@~ Rv .",
+   ". . . . . . P^%A"
+  ],
+  "mechanic": "switch,gate,armor",
+  "positions": 858,
+  "overlap": 0.33,
+  "rules": [
+   "S_old",
+   "S_p30"
+  ]
+ }
+}

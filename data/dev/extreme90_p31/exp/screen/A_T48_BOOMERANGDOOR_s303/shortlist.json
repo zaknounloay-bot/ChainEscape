@@ -1,0 +1,156 @@
+{
+ "A_T48_s303_0": {
+  "map": [
+   ". . . . . . .",
+   ". . . . . G>:v .",
+   ". . . B<@- Bv+C P<&A G<:^",
+   ". R>:< . XC . P>@- .",
+   ". . . . . R<@~ G^@",
+   ". . . . . G^&A+C .",
+   ". Yv@- G< P<%A . R^@ P^%A"
+  ],
+  "mechanic": "sequence,switch,gate",
+  "positions": 395,
+  "overlap": 0.38,
+  "rules": [
+   "S_old"
+  ]
+ },
+ "A_T48_s303_1": {
+  "map": [
+   ". . . . . . .",
+   ". . . R^+C . G<:v .",
+   ". . . B<@- . P<&A G<:^",
+   ". R>:< . XC . P>@- .",
+   ". . . . . R<@- G>@-",
+   ". . . . . G^&A+C .",
+   ". Yv@- . P<%A . R^@ P^%A"
+  ],
+  "mechanic": "sequence,switch,gate",
+  "positions": 428,
+  "overlap": 0.42,
+  "rules": [
+   "S_old"
+  ]
+ },
+ "A_T48_s303_2": {
+  "map": [
+   ". . . . . . .",
+   ". . . R^ . G<:v .",
+   ". . . B<@- . P<&A G<:^",
+   ". R>:< . XC . P>@- .",
+   ". . . . . R<@- G>@-",
+   ". . . . . G^&A+C .",
+   ". Yv@- . P<%A . R^@ P^%A"
+  ],
+  "mechanic": "sequence,switch,gate",
+  "positions": 440,
+  "overlap": 0.42,
+  "rules": [
+   "S_old"
+  ]
+ },
+ "A_T48_s303_3": {
+  "map": [
+   ". . . . . . .",
+   ". . . . . G>:v .",
+   ". . . B<@ . P< G<",
+   ". R>:< . XC . P>@- .",
+   ". . . . . R<@- G>@-",
+   ". P<@- . . . G^&A+C .",
+   ". Yv@- . P<%A . R^@ P^%A"
+  ],
+  "mechanic": "sequence,switch,gate",
+  "positions": 521,
+  "overlap": 0.35,
+  "rules": [
+   "S_old",
+   "S_p30"
+  ]
+ },
+ "A_T48_s303_4": {
+  "map": [
+   ". . . . . . .",
+   ". . . . . G>:v .",
+   ". . . . . P< G<:^",
+   ". R>:< . XC . P>@- .",
+   ". . . . . R<@- G>@-",
+   ". P< . . . G^&A+C .",
+   ". Yv@- . P<%A . R^@ P^%A"
+  ],
+  "mechanic": "sequence,switch,gate",
+  "positions": 521,
+  "overlap": 0.39,
+  "rules": [
+   "S_old"
+  ]
+ },
+ "A_T48_s303_5": {
+  "map": [
+   ". . . . . . .",
+   ". . . . . G>:v .",
+   ". . . B<@ . P< G<:^",
+   ". R>:< . XC . P>@- .",
+   ". . . . . R<@- G>@-",
+   ". P<@- . . . G^&A+C .",
+   ". Yv@- P>@~ P<%A . R^@ P^%A"
+  ],
+  "mechanic": "sequence,switch,gate",
+  "positions": 791,
+  "overlap": 0.33,
+  "rules": [
+   "S_p30"
+  ]
+ },
+ "A_T48_s303_6": {
+  "map": [
+   ". . . . . . .",
+   ". . . . . G>:v .",
+   ". . . B<@ . P< G<:^",
+   ". R>:< . XC . P>@- .",
+   ". . . . . R<@- G>@-",
+   ". P<@- . . . G^&A+C .",
+   ". Yv@- . P<%A . R^@ P^%A"
+  ],
+  "mechanic": "sequence,switch,gate",
+  "positions": 593,
+  "overlap": 0.35,
+  "rules": [
+   "S_p30"
+  ]
+ },
+ "A_T48_s303_7": {
+  "map": [
+   ". . . . . . .",
+   ". . . . . G>:v .",
+   ". . Rv@- B<@ . P< G<:^",
+   ". R>:< . XC . P>@- .",
+   ". . . . . R<@- G>@-",
+   ". P<@- . . . G^&A+C .",
+   ". Yv@- . P<%A . R^@ P^%A"
+  ],
+  "mechanic": "sequence,switch,gate",
+  "positions": 665,
+  "overlap": 0.35,
+  "rules": [
+   "S_p30"
+  ]
+ },
+ "A_T48_s303_8": {
+  "map": [
+   ". . . . . . .",
+   ". . . . . G>:v .",
+   ". Y<@- . B<@- B<+C P<&A G<:^",
+   ". R>:< . XC . P>@- .",
+   ". . . . . R<@~ G>@-",
+   ". P< . . . G^&A+C .",
+   ". Yv@- . P<%A . R^@ P^%A"
+  ],
+  "mechanic": "sequence,switch,gate",
+  "positions": 737,
+  "overlap": 0.35,
+  "rules": [
+   "S_p30"
+  ]
+ }
+}

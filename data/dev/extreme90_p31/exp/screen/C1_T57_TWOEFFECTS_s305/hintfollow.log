@@ -1,0 +1,8 @@
+Godot Engine v4.3.stable.official.77dcf97d8 - https://godotengine.org
+
+C1_T57_s305_0 HINT-FOLLOW PASS: WIN after 14 moves; ids [1, 11, 9, 7, 8, 5, 0, 2, 3, 4, 6, 10, 13, 12]
+C1_T57_s305_1 HINT-FOLLOW PASS: WIN after 15 moves; ids [1, 11, 13, 9, 7, 8, 5, 0, 2, 3, 4, 6, 10, 14, 12]
+C1_T57_s305_2 HINT-FOLLOW PASS: WIN after 15 moves; ids [2, 0, 12, 10, 8, 9, 6, 1, 3, 4, 5, 7, 11, 14, 13]
+C1_T57_s305_3 HINT-FOLLOW PASS: WIN after 15 moves; ids [2, 0, 12, 10, 8, 9, 6, 1, 3, 4, 5, 7, 11, 14, 13]
+C1_T57_s305_5 HINT-FOLLOW PASS: WIN after 17 moves; ids [3, 11, 10, 14, 7, 8, 6, 9, 5, 4, 0, 1, 2, 12, 13, 16, 15]
+C1_T57_s305_9 HINT-FOLLOW PASS: WIN after 16 moves; ids [2, 8, 0, 13, 11, 9, 10, 6, 1, 3, 4, 5, 7, 12, 15, 14]

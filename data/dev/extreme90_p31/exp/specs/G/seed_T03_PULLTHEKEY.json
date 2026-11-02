@@ -1,0 +1,59 @@
+{
+ "target": "EXTREME",
+ "facts": [],
+ "mechanic": "magnet,lock",
+ "idea": "P30 hand core: pull the key: a magnet pulls the key into the prisoner's own column - the key must leave before the magnet fires, or the pull parks it where it blocks its prisoner",
+ "family": "P30 T03_PULLTHEKEY",
+ "map": [
+  ". . . . . . .",
+  ". . . . . . .",
+  ". . . . . . .",
+  ". . . R<* . Yv .",
+  ". . . . . . .",
+  ". . . B^#Y . . .",
+  ". . . . . . ."
+ ],
+ "frozen": [
+  [
+   3,
+   3
+  ],
+  [
+   3,
+   5
+  ],
+  [
+   5,
+   3
+  ]
+ ],
+ "max_positions": 2000,
+ "piece_free": 13,
+ "max_pieces": 17,
+ "shortcut_weight": 80,
+ "coverage_weight": 25,
+ "late_weight": 20,
+ "endgame_weight": 20,
+ "length_weight": 1.0,
+ "length_cap": 18,
+ "pressure_weight": 1.5,
+ "palette": "all",
+ "suffixes": [
+  "#Y",
+  "*"
+ ],
+ "suffix_rate": 0.3,
+ "suffix_max": {
+  "#Y": 2,
+  "*": 2
+ },
+ "crates_max": 0,
+ "seed": 301,
+ "size": "medium",
+ "max_solve_nodes": 1500,
+ "spinners_max": 4,
+ "strict_essential": true,
+ "token_guard": true,
+ "phase30_core": "T03_PULLTHEKEY",
+ "phase31_arm": "G (arm A method, AM1)"
+}

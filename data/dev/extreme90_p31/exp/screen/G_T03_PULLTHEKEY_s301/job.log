@@ -1,0 +1,22 @@
+G_T03_s301_0           overlap        (0.4, 'N28')
+G_T03_s301_1           overlap        (0.4, 'N10')
+G_T03_s301_2           overlap        (0.4, 'N10')
+G_T03_s301_4           overlap        (0.42, 'N10')
+G_T03_s301_3           not essential  {'without_lock': 'without it: 9 decision steps, 4 distinct mistakes (with it: 10, 5)'}
+G_T03_s301_5           not essential  {'without_lock': 'without it: 12 decision steps, 5 distinct mistakes (with it: 13, 6)'}
+G_T03_s301_6           Category A/B   ['solve 41.2 ms (> 40)']
+G_T03_s301_7           not essential  {'without_lock': 'without it: 10 decision steps, 4 distinct mistakes (with it: 11, 5)'}
+G_T03_s301_8           not essential  {'without_lock': 'without it: 11 decision steps, 5 distinct mistakes (with it: 12, 6)'}
+G_T03_s301_9           not essential  {'without_lock': 'without it: 11 decision steps, 5 distinct mistakes (with it: 12, 6)'}
+SCREEN: 10 boards, 0 PASS
+G_T03_s301_0           overlap        
+G_T03_s301_1           overlap        
+G_T03_s301_2           overlap        
+G_T03_s301_4           overlap        
+G_T03_s301_3           not essential  
+G_T03_s301_5           not essential  
+G_T03_s301_6           Category A/B   
+G_T03_s301_7           not essential  
+G_T03_s301_8           not essential  
+G_T03_s301_9           not essential  
+SCREEN30: 10 boards, 0 PASS

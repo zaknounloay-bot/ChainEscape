@@ -1,0 +1,18 @@
+G_T30_s302_0           PASS           []
+G_T30_s302_1           PASS           []
+G_T30_s302_2           filler         ['r1c5 G^#B', 'r2c5 Rv@']
+G_T30_s302_3           filler         ['r6c6 P<@']
+G_T30_s302_4           PASS           []
+G_T30_s302_5           PASS           []
+G_T30_s302_6           PASS           []
+G_T30_s302_7           PASS           []
+SCREEN: 8 boards, 6 PASS
+G_T30_s302_0           PASS           PASS
+G_T30_s302_1           PASS           PASS
+G_T30_s302_2           filler         
+G_T30_s302_3           filler         
+G_T30_s302_4           PASS           PASS
+G_T30_s302_5           PASS           PASS
+G_T30_s302_6           PASS           PASS
+G_T30_s302_7           PASS           PASS
+SCREEN30: 8 boards, 6 PASS

@@ -1,0 +1,58 @@
+{
+ "target": "EXTREME",
+ "facts": [],
+ "mechanic": "switch",
+ "idea": "P30 hand core: one escape, two effects: the switch piece stands beside a spinner, so the same escape turns the spinner AND reverses the targets - which neighbours the spinner faces when the reversal lands decides the order of everything after",
+ "family": "P30 T57_TWOEFFECTS",
+ "map": [
+  ". . . . . . .",
+  ". B>&A . . . . .",
+  ". . . . Y^@ . .",
+  ". . . . P<%A . .",
+  ". . . . . . .",
+  ". . . . . . .",
+  ". . . . . . ."
+ ],
+ "frozen": [
+  [
+   1,
+   1
+  ],
+  [
+   2,
+   4
+  ],
+  [
+   3,
+   4
+  ]
+ ],
+ "max_positions": 2000,
+ "piece_free": 13,
+ "max_pieces": 17,
+ "shortcut_weight": 80,
+ "coverage_weight": 25,
+ "late_weight": 20,
+ "endgame_weight": 20,
+ "length_weight": 1.0,
+ "length_cap": 18,
+ "pressure_weight": 1.5,
+ "palette": "all",
+ "suffixes": [
+  "&A"
+ ],
+ "suffix_rate": 0.3,
+ "suffix_max": {
+  "&A": 4
+ },
+ "crates_max": 0,
+ "seed": 360,
+ "size": "medium",
+ "max_solve_nodes": 1500,
+ "spinners_max": 4,
+ "strict_essential": true,
+ "token_guard": true,
+ "phase30_core": "T57_TWOEFFECTS",
+ "core_essential": true,
+ "phase31_arm": "C1"
+}

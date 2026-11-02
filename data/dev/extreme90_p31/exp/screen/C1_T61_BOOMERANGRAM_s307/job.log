@@ -1,0 +1,16 @@
+C1_T61_s307_1          overlap        (0.4, 'N31')
+C1_T61_s307_3          overlap        (0.44, 'N82')
+C1_T61_s307_4          overlap        (0.45, 'N64')
+C1_T61_s307_0          PASS           []
+C1_T61_s307_2          Category A/B   ['a simple greedy player wins 20% (> 20%): a shortcut']
+C1_T61_s307_5          PASS           []
+C1_T61_s307_6          PASS           []
+SCREEN: 7 boards, 3 PASS
+C1_T61_s307_1          overlap        
+C1_T61_s307_3          overlap        
+C1_T61_s307_4          overlap        
+C1_T61_s307_0          PASS           PASS
+C1_T61_s307_2          Category A/B   
+C1_T61_s307_5          PASS           PASS
+C1_T61_s307_6          PASS           PASS
+SCREEN30: 7 boards, 3 PASS

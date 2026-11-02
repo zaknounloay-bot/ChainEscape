@@ -1,0 +1,18 @@
+{
+ "A_T01r_s302_0": {
+  "map": [
+   ". . . . . . .",
+   ". B>@~ . Bv&A . Rv@~ P^@",
+   ". . . P>@~ B>&A . .",
+   ". Rv%A . G<* Y^* G^ P<%A",
+   ". P<&A . . . P> R<@-",
+   ". P<@ . . . . .",
+   ". . . . . . ."
+  ],
+  "mechanic": "magnet,switch",
+  "run": "A_T01r_PULLEDTRIGGER_s302",
+  "rules": [
+   "S_old"
+  ]
+ }
+}
