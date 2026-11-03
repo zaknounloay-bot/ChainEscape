@@ -1,0 +1,206 @@
+{
+ "P03_s331_0": {
+  "map": [
+   ". Y<= . . G<* B^@ R<&A",
+   ". . . . P^&A P<= .",
+   ". . . . . G>@- P>@",
+   ". Gv . Y>&A* . R^ B>@",
+   ". . . B>@- . R<@ P>@",
+   ". . . B<= . . .",
+   ". . . . . . G^%A"
+  ],
+  "mechanic": "magnet,switch,armor",
+  "positions": 191,
+  "overlap": 0.5,
+  "rules": [
+   "S_old"
+  ]
+ },
+ "P03_s331_1": {
+  "map": [
+   ". Y<@~ . . G<* B^@ R<&A",
+   ". . . . P^&A P<= .",
+   ". . . . . G> P>@",
+   ". Gv . Y>&A* . R^ B>@",
+   ". . . B>@- . R<@ P>@",
+   ". . . B<= . . .",
+   ". . . . . . G^%A"
+  ],
+  "mechanic": "magnet,switch,armor",
+  "positions": 191,
+  "overlap": 0.45,
+  "rules": [
+   "S_old"
+  ]
+ },
+ "P03_s331_2": {
+  "map": [
+   ". . . . . B^@ R<&A",
+   ". . . . . P<= .",
+   ". . . . . G^ P<",
+   ". Gv . Y>&A* P<@ R^ B>@",
+   ". . . B>@- . . P>@",
+   ". . . B<= . . .",
+   ". . . . . . G^%A"
+  ],
+  "mechanic": "magnet,switch,armor",
+  "positions": 216,
+  "overlap": 0.42,
+  "rules": [
+   "S_old"
+  ]
+ },
+ "P03_s331_3": {
+  "map": [
+   ". . . . G<* B^@ R<&A",
+   ". . . . P^ P<= .",
+   ". . . . . . P>@",
+   ". Gv . Y>&A* . R^ B>@",
+   ". . . B>@- . . P>@",
+   ". . . B<= . . .",
+   ". . . . . . G^%A"
+  ],
+  "mechanic": "magnet,switch,armor",
+  "positions": 222,
+  "overlap": 0.5,
+  "rules": [
+   "S_old"
+  ]
+ },
+ "P03_s331_4": {
+  "map": [
+   ". . . . G<* B^@ R<&A",
+   ". . . . P^&A P<= .",
+   ". . . P>%A . G<@ P>@",
+   ". Gv . Y>&A* . R^ B>@",
+   ". . . B>@- . R<@ P>@",
+   ". . . B<= . . .",
+   ". . . . . . G^%A"
+  ],
+  "mechanic": "magnet,switch,armor",
+  "positions": 229,
+  "overlap": 0.43,
+  "rules": [
+   "S_old"
+  ]
+ },
+ "P03_s331_5": {
+  "map": [
+   ". . . . G<* B^@ R<&A",
+   ". . . . P^ P<= .",
+   ". . . . . G<@ P>@",
+   ". Gv . Y>&A* . R^ B>@",
+   ". . . . . . P>@",
+   ". . . B<= . . .",
+   ". . . . . . G^%A"
+  ],
+  "mechanic": "magnet,switch,armor",
+  "positions": 231,
+  "overlap": 0.42,
+  "rules": [
+   "S_old"
+  ]
+ },
+ "P03_s331_6": {
+  "map": [
+   ". Y<@~ . B< . . R<&A",
+   ". . . . R<* P>= .",
+   ". . . . . . P<",
+   ". Gv . Y>&A* . R^ B>@",
+   ". . . B>@- . . P>@",
+   ". . . B<= . . .",
+   ". . . . . . G^%A"
+  ],
+  "mechanic": "magnet,switch,armor",
+  "positions": 815,
+  "overlap": 0.37,
+  "rules": [
+   "S_p30"
+  ]
+ },
+ "P03_s331_7": {
+  "map": [
+   ". Y<@~ . B< . . R<&A",
+   ". . . . . P>= .",
+   ". . . . . . P<",
+   ". Gv . Y>&A* P^ R^ B>@",
+   ". . . B>@- . . P>@",
+   ". . . B<= . . .",
+   ". . . . . . G^%A"
+  ],
+  "mechanic": "magnet,switch,armor",
+  "positions": 567,
+  "overlap": 0.38,
+  "rules": [
+   "S_p30"
+  ]
+ },
+ "P03_s331_8": {
+  "map": [
+   ". Y^@ G^@- . G<* B^@ R<&A",
+   ". . . . P>@- P<= .",
+   ". . . . . G<@ P>@",
+   ". Gv . Y>&A* . R^ B>@",
+   ". . . . . . P>@",
+   ". . . B<= . . .",
+   ". . . . P^ . G^%A"
+  ],
+  "mechanic": "magnet,switch,armor",
+  "positions": 635,
+  "overlap": 0.38,
+  "rules": [
+   "S_p30"
+  ]
+ },
+ "P03_s331_9": {
+  "map": [
+   ". . . . G<* B^@ .",
+   ". . . . P^&A P<= .",
+   ". . . . . G<@ P>@",
+   ". Gv . Y>&A* . R^ B>@",
+   ". . . B>@- . R<@ P>@",
+   ". . . B<= . . G>",
+   ". . . . . . G^%A"
+  ],
+  "mechanic": "magnet,switch,armor",
+  "positions": 800,
+  "overlap": 0.38,
+  "rules": [
+   "S_p30"
+  ]
+ },
+ "P03_s331_10": {
+  "map": [
+   ". Y^@ . . G<* . R<&A",
+   ". . . . P>@- P<= .",
+   ". . . . . G<@ P>@",
+   ". Gv . Y>&A* . R^ B>@",
+   ". . . . . . P>@",
+   ". . . B<= . . .",
+   ". . . . P^ . G^%A"
+  ],
+  "mechanic": "magnet,switch,armor",
+  "positions": 383,
+  "overlap": 0.39,
+  "rules": [
+   "S_p30"
+  ]
+ },
+ "P03_s331_11": {
+  "map": [
+   ". . . . . B^@ R<&A",
+   ". . . . P^&A P<= .",
+   ". . . . . G<@ P>@",
+   ". Gv . Y>&A* . R^ B>@",
+   ". . . B>@- . R<@ P<@-",
+   ". . . B<= . . .",
+   ". . . . . . G^%A"
+  ],
+  "mechanic": "magnet,switch,armor",
+  "positions": 265,
+  "overlap": 0.4,
+  "rules": [
+   "S_p30"
+  ]
+ }
+}

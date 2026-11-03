@@ -1,0 +1,3099 @@
+{
+ "N100": {
+  "attempts": [
+   {
+    "after_loss": 0,
+    "blocked": 0,
+    "blocked_after_loss": 0,
+    "choice_points": [
+     {
+      "chosen": 8,
+      "chosen_won": true,
+      "legal": 5,
+      "losing": [
+       {
+        "depth": 14,
+        "id": 3
+       }
+      ],
+      "move": 1,
+      "ms": 1703,
+      "winning": 4
+     },
+     {
+      "chosen": 16,
+      "chosen_won": true,
+      "legal": 4,
+      "losing": [
+       {
+        "depth": 13,
+        "id": 3
+       }
+      ],
+      "move": 2,
+      "ms": 2036,
+      "winning": 3
+     },
+     {
+      "chosen": 11,
+      "chosen_won": true,
+      "legal": 5,
+      "losing": [
+       {
+        "depth": 12,
+        "id": 3
+       },
+       {
+        "depth": 12,
+        "id": 15
+       }
+      ],
+      "move": 3,
+      "ms": 3236,
+      "winning": 3
+     },
+     {
+      "chosen": 2,
+      "chosen_won": true,
+      "legal": 4,
+      "losing": [
+       {
+        "depth": 11,
+        "id": 3
+       },
+       {
+        "depth": 11,
+        "id": 15
+       }
+      ],
+      "move": 4,
+      "ms": 4653,
+      "winning": 2
+     },
+     {
+      "chosen": 9,
+      "chosen_won": true,
+      "legal": 3,
+      "losing": [
+       {
+        "depth": 10,
+        "id": 3
+       },
+       {
+        "depth": 10,
+        "id": 15
+       }
+      ],
+      "move": 5,
+      "ms": 9287,
+      "winning": 1
+     },
+     {
+      "chosen": 3,
+      "chosen_won": true,
+      "legal": 2,
+      "losing": [
+       {
+        "depth": 9,
+        "id": 15
+       }
+      ],
+      "move": 6,
+      "ms": 11320,
+      "winning": 1
+     },
+     {
+      "chosen": 12,
+      "chosen_won": true,
+      "legal": 3,
+      "losing": [
+       {
+        "depth": 3,
+        "id": 15
+       }
+      ],
+      "move": 7,
+      "ms": 12587,
+      "winning": 2
+     },
+     {
+      "chosen": 15,
+      "chosen_won": false,
+      "legal": 3,
+      "losing": [
+       {
+        "depth": 2,
+        "id": 15
+       }
+      ],
+      "move": 8,
+      "ms": 13071,
+      "winning": 2
+     },
+     {
+      "chosen": 7,
+      "chosen_won": true,
+      "legal": 3,
+      "losing": [
+       {
+        "depth": 2,
+        "id": 15
+       }
+      ],
+      "move": 9,
+      "ms": 16538,
+      "winning": 2
+     },
+     {
+      "chosen": 6,
+      "chosen_won": true,
+      "legal": 3,
+      "losing": [
+       {
+        "depth": 5,
+        "id": 15
+       }
+      ],
+      "move": 10,
+      "ms": 17170,
+      "winning": 2
+     },
+     {
+      "chosen": 5,
+      "chosen_won": true,
+      "legal": 4,
+      "losing": [
+       {
+        "depth": 4,
+        "id": 15
+       }
+      ],
+      "move": 11,
+      "ms": 18921,
+      "winning": 3
+     },
+     {
+      "chosen": 14,
+      "chosen_won": true,
+      "legal": 4,
+      "losing": [
+       {
+        "depth": 4,
+        "id": 15
+       }
+      ],
+      "move": 12,
+      "ms": 20055,
+      "winning": 3
+     },
+     {
+      "chosen": 13,
+      "chosen_won": true,
+      "legal": 3,
+      "losing": [
+       {
+        "depth": 3,
+        "id": 15
+       }
+      ],
+      "move": 13,
+      "ms": 20822,
+      "winning": 2
+     },
+     {
+      "chosen": 10,
+      "chosen_won": true,
+      "legal": 3,
+      "losing": [
+       {
+        "depth": 2,
+        "id": 15
+       }
+      ],
+      "move": 14,
+      "ms": 21371,
+      "winning": 2
+     },
+     {
+      "chosen": 4,
+      "chosen_won": true,
+      "legal": 3,
+      "losing": [
+       {
+        "depth": 1,
+        "id": 15
+       }
+      ],
+      "move": 15,
+      "ms": 21971,
+      "winning": 2
+     }
+    ],
+    "choices": 15,
+    "choices_won": 14,
+    "cleared_end": 17,
+    "end": "SOLVED",
+    "end_ms": 23610,
+    "escapes": 18,
+    "events": [
+     "  1.70s m #8 Y> R4C7 -> cleared 1/17, options 5 legal / 4 winning  CHOICE",
+     "  2.04s m #16 B> R7C5 spinner -> cleared 2/17, options 4 legal / 3 winning  CHOICE",
+     "  3.24s m #11 Bv R5C5 spinner -> cleared 3/17, options 5 legal / 3 winning  CHOICE",
+     "  4.65s m #2 P> R3C5 -> cleared 4/17, options 4 legal / 2 winning  CHOICE",
+     "  9.29s m #9 Y< R5C1 -> cleared 5/17, options 3 legal / 1 winning  CHOICE",
+     " 11.32s m #3 Y^ R4C1 switch -> cleared 6/17, options 2 legal / 1 winning  CHOICE",
+     " 12.59s m #12 Y^ R6C1 -> cleared 7/17, options 3 legal / 2 winning  CHOICE",
+     " 13.07s m #15 R> R7C1 switch -> cleared 8/17, options 3 legal / 2 winning  CHOICE  <== LOST (2 of 3 legal moves still won: [7, 13]); play can go on up to 2 more moves",
+     " 15.87s UNDO -> cleared 7/17 (winnable again)",
+     " 16.54s m #7 Bv R4C6 -> cleared 8/17, options 3 legal / 2 winning  CHOICE",
+     " 17.17s m #6 Bv R4C5 spinner -> cleared 9/17, options 3 legal / 2 winning  CHOICE",
+     " 18.92s m #5 P> R4C3 -> cleared 10/17, options 4 legal / 3 winning  CHOICE",
+     " 20.05s m #14 P^ R6C3 spinner -> cleared 11/17, options 4 legal / 3 winning  CHOICE",
+     " 20.82s m #13 G< R6C2 -> cleared 12/17, options 3 legal / 2 winning  CHOICE",
+     " 21.37s m #10 G< R5C2 spinner -> cleared 13/17, options 3 legal / 2 winning  CHOICE",
+     " 21.97s m #4 Yv R4C2 -> cleared 14/17, options 3 legal / 2 winning  CHOICE",
+     " 22.84s m #15 R> R7C1 switch -> cleared 15/17, options 3 legal / 3 winning",
+     " 23.25s m #1 G^ R2C6 lock -> cleared 16/17, options 2 legal / 2 winning"
+    ],
+    "losing_move": "#15 R> R7C1 switch",
+    "lost_at_end": false,
+    "lost_at_move": 8,
+    "lost_ms": 13071,
+    "lost_options": "3 legal, 2 winning",
+    "max_cleared": 17,
+    "moves": 17,
+    "n": 1,
+    "path": [
+     8,
+     16,
+     11,
+     2,
+     9,
+     3,
+     12,
+     7,
+     6,
+     5,
+     14,
+     13,
+     10,
+     4,
+     15,
+     1
+    ],
+    "recovered_by_undo": 1,
+    "same_opening_as_previous": 0,
+    "solver_prefix": 2,
+    "start_ms": 0,
+    "trap_depth": 2,
+    "undos": 1,
+    "unlogged_final": "#0 P^ R2C2 lock [ok]",
+    "winning_alternatives": [
+     7,
+     13
+    ]
+   }
+  ],
+  "checks": [
+   [
+    "fingerprint (board record == supplied)",
+    true
+   ],
+   [
+    "pieces 17 == supplied 17",
+    true
+   ],
+   [
+    "completed: exactly one escapable block left after the log (the unlogged solving escape)",
+    true
+   ],
+   [
+    "moves (escapes incl. unlogged final) 18 == supplied 18",
+    true
+   ],
+   [
+    "max cleared 17 == supplied 17",
+    true
+   ],
+   [
+    "effects { \"flip\": 6, \"turn\": 5 } == supplied { \"flip\": 6, \"turn\": 5 }",
+    true
+   ],
+   [
+    "every logged event consistent with the engine",
+    true
+   ]
+  ],
+  "meta": {
+   "attempts": "1",
+   "blocked": "0",
+   "completed": "true",
+   "elapsed": "23610",
+   "first_move": "1703",
+   "fp": "01e8abb27b59d23134589c966b1ae7d14d9126874a04e35680e2541f154e34bc",
+   "max_cleared": "17",
+   "mech": "flip:6,turn:5",
+   "moves": "18",
+   "outcome": "COMPLETED",
+   "pieces": "17",
+   "rating": "MEDIUM",
+   "restarts": "0",
+   "unaided_max": "16",
+   "undo": "1"
+  },
+  "pieces": 17,
+  "problems": [],
+  "solution": [
+   8,
+   16,
+   2,
+   9,
+   3,
+   12,
+   7,
+   11,
+   6,
+   1,
+   5,
+   14,
+   13,
+   10,
+   4,
+   0,
+   15
+  ]
+ },
+ "N94": {
+  "attempts": [
+   {
+    "after_loss": 3,
+    "blocked": 0,
+    "blocked_after_loss": 0,
+    "choice_points": [
+     {
+      "chosen": 0,
+      "chosen_won": false,
+      "legal": 5,
+      "losing": [
+       {
+        "depth": 11,
+        "id": 0
+       },
+       {
+        "depth": 4,
+        "id": 2
+       },
+       {
+        "depth": 4,
+        "id": 7
+       }
+      ],
+      "move": 1,
+      "ms": 4737,
+      "winning": 2
+     }
+    ],
+    "choices": 1,
+    "choices_won": 0,
+    "cleared_end": 3,
+    "end": "RESTART",
+    "end_ms": 21967,
+    "escapes": 4,
+    "events": [
+     "  4.74s m #0 P> R1C7 -> cleared 1/15, options 5 legal / 2 winning  CHOICE  <== LOST (2 of 5 legal moves still won: [3, 12]); play can go on up to 11 more moves",
+     "  7.77s m #3 R^ R2C6 spinner -> cleared 2/15, options 4 legal / 0 winning  (lost)",
+     " 11.60s UNDO -> cleared 1/15 (still lost)",
+     " 12.25s m #2 Y^ R2C5 spinner -> cleared 2/15, options 4 legal / 0 winning  (lost)",
+     " 13.94s m #12 B< R6C4 -> cleared 3/15, options 3 legal / 0 winning  (lost)"
+    ],
+    "losing_move": "#0 P> R1C7",
+    "lost_at_end": true,
+    "lost_at_move": 1,
+    "lost_ms": 4737,
+    "lost_options": "5 legal, 2 winning",
+    "max_cleared": 3,
+    "moves": 4,
+    "n": 1,
+    "path": [
+     0,
+     2,
+     12
+    ],
+    "recovered_by_undo": 0,
+    "same_opening_as_previous": 0,
+    "solver_prefix": 0,
+    "start_ms": 0,
+    "trap_depth": 11,
+    "undos": 1,
+    "winning_alternatives": [
+     3,
+     12
+    ]
+   },
+   {
+    "after_loss": 7,
+    "blocked": 2,
+    "blocked_after_loss": 2,
+    "choice_points": [
+     {
+      "chosen": 3,
+      "chosen_won": true,
+      "legal": 5,
+      "losing": [
+       {
+        "depth": 11,
+        "id": 0
+       },
+       {
+        "depth": 4,
+        "id": 2
+       },
+       {
+        "depth": 4,
+        "id": 7
+       }
+      ],
+      "move": 1,
+      "ms": 30205,
+      "winning": 2
+     },
+     {
+      "chosen": 8,
+      "chosen_won": true,
+      "legal": 4,
+      "losing": [
+       {
+        "depth": 10,
+        "id": 0
+       },
+       {
+        "depth": 2,
+        "id": 7
+       }
+      ],
+      "move": 2,
+      "ms": 30805,
+      "winning": 2
+     },
+     {
+      "chosen": 7,
+      "chosen_won": true,
+      "legal": 3,
+      "losing": [
+       {
+        "depth": 9,
+        "id": 0
+       }
+      ],
+      "move": 3,
+      "ms": 32654,
+      "winning": 2
+     },
+     {
+      "chosen": 9,
+      "chosen_won": true,
+      "legal": 3,
+      "losing": [
+       {
+        "depth": 8,
+        "id": 0
+       }
+      ],
+      "move": 4,
+      "ms": 33254,
+      "winning": 2
+     },
+     {
+      "chosen": 1,
+      "chosen_won": false,
+      "legal": 3,
+      "losing": [
+       {
+        "depth": 7,
+        "id": 0
+       },
+       {
+        "depth": 8,
+        "id": 1
+       }
+      ],
+      "move": 5,
+      "ms": 34405,
+      "winning": 1
+     }
+    ],
+    "choices": 5,
+    "choices_won": 4,
+    "cleared_end": 12,
+    "end": "RESTART",
+    "end_ms": 45521,
+    "escapes": 12,
+    "events": [
+     " 30.20s m #3 R^ R2C6 spinner -> cleared 1/15, options 5 legal / 2 winning  CHOICE",
+     " 30.80s m #8 R^ R4C6 -> cleared 2/15, options 4 legal / 2 winning  CHOICE",
+     " 32.65s m #7 G< R4C4 magnet -> cleared 3/15, options 3 legal / 2 winning  CHOICE",
+     " 33.25s m #9 P< R4C4 switch -> cleared 4/15, options 3 legal / 2 winning  CHOICE",
+     " 34.41s m #1 B^ R2C4 -> cleared 5/15, options 3 legal / 1 winning  CHOICE  <== LOST (1 of 3 legal moves still won: [12]); play can go on up to 8 more moves",
+     " 37.95s m #10 P^ R5C4 spinner -> cleared 6/15, options 3 legal / 0 winning  (lost)",
+     " 38.35s m #12 B< R6C4 -> cleared 7/15, options 3 legal / 0 winning  (lost)",
+     " 39.69s m #11 P< R5C7 spinner -> cleared 8/15, options 2 legal / 0 winning  (lost)",
+     " 40.29s m #13 B< R6C7 spinner -> cleared 9/15, options 2 legal / 0 winning  (lost)",
+     " 40.79s m #14 P> R7C7 spinner -> cleared 10/15, options 2 legal / 0 winning  (lost)",
+     " 42.10s m #6 Bv R3C7 switch -> cleared 11/15, options 2 legal / 0 winning  (lost)",
+     " 42.92s m #0 P> R1C7 -> cleared 12/15, options 2 legal / 0 winning  (lost)",
+     " 44.35s blocked tap #5 R^ R3C5 magnet (blocked)  [in a lost position]",
+     " 44.79s blocked tap #2 Yv R2C5 spinner (blocked)  [in a lost position]"
+    ],
+    "losing_move": "#1 B^ R2C4",
+    "lost_at_end": true,
+    "lost_at_move": 5,
+    "lost_ms": 34405,
+    "lost_options": "3 legal, 1 winning",
+    "max_cleared": 12,
+    "moves": 12,
+    "n": 2,
+    "path": [
+     3,
+     8,
+     7,
+     9,
+     1,
+     10,
+     12,
+     11,
+     13,
+     14,
+     6,
+     0
+    ],
+    "recovered_by_undo": 0,
+    "same_opening_as_previous": 0,
+    "solver_prefix": 4,
+    "start_ms": 21967,
+    "trap_depth": 8,
+    "undos": 0,
+    "winning_alternatives": [
+     12
+    ]
+   },
+   {
+    "after_loss": 0,
+    "blocked": 0,
+    "blocked_after_loss": 0,
+    "choice_points": [
+     {
+      "chosen": 2,
+      "chosen_won": false,
+      "legal": 5,
+      "losing": [
+       {
+        "depth": 11,
+        "id": 0
+       },
+       {
+        "depth": 4,
+        "id": 2
+       },
+       {
+        "depth": 4,
+        "id": 7
+       }
+      ],
+      "move": 1,
+      "ms": 46606,
+      "winning": 2
+     }
+    ],
+    "choices": 1,
+    "choices_won": 0,
+    "cleared_end": 1,
+    "end": "RESTART",
+    "end_ms": 49898,
+    "escapes": 1,
+    "events": [
+     " 46.61s m #2 Y^ R2C5 spinner -> cleared 1/15, options 5 legal / 2 winning  CHOICE  <== LOST (2 of 5 legal moves still won: [3, 12]); play can go on up to 4 more moves"
+    ],
+    "losing_move": "#2 Y^ R2C5 spinner",
+    "lost_at_end": true,
+    "lost_at_move": 1,
+    "lost_ms": 46606,
+    "lost_options": "5 legal, 2 winning",
+    "max_cleared": 1,
+    "moves": 1,
+    "n": 3,
+    "path": [
+     2
+    ],
+    "recovered_by_undo": 0,
+    "same_opening_as_previous": 0,
+    "solver_prefix": 0,
+    "start_ms": 45521,
+    "trap_depth": 4,
+    "undos": 0,
+    "winning_alternatives": [
+     3,
+     12
+    ]
+   },
+   {
+    "after_loss": 8,
+    "blocked": 0,
+    "blocked_after_loss": 0,
+    "choice_points": [
+     {
+      "chosen": 3,
+      "chosen_won": true,
+      "legal": 5,
+      "losing": [
+       {
+        "depth": 11,
+        "id": 0
+       },
+       {
+        "depth": 4,
+        "id": 2
+       },
+       {
+        "depth": 4,
+        "id": 7
+       }
+      ],
+      "move": 1,
+      "ms": 50508,
+      "winning": 2
+     },
+     {
+      "chosen": 8,
+      "chosen_won": true,
+      "legal": 4,
+      "losing": [
+       {
+        "depth": 10,
+        "id": 0
+       },
+       {
+        "depth": 2,
+        "id": 7
+       }
+      ],
+      "move": 2,
+      "ms": 54106,
+      "winning": 2
+     },
+     {
+      "chosen": 12,
+      "chosen_won": true,
+      "legal": 3,
+      "losing": [
+       {
+        "depth": 9,
+        "id": 0
+       }
+      ],
+      "move": 3,
+      "ms": 56723,
+      "winning": 2
+     },
+     {
+      "chosen": 7,
+      "chosen_won": true,
+      "legal": 3,
+      "losing": [
+       {
+        "depth": 9,
+        "id": 0
+       }
+      ],
+      "move": 4,
+      "ms": 58239,
+      "winning": 2
+     },
+     {
+      "chosen": 12,
+      "chosen_won": true,
+      "legal": 3,
+      "losing": [
+       {
+        "depth": 8,
+        "id": 0
+       }
+      ],
+      "move": 5,
+      "ms": 61257,
+      "winning": 2
+     },
+     {
+      "chosen": 9,
+      "chosen_won": true,
+      "legal": 2,
+      "losing": [
+       {
+        "depth": 7,
+        "id": 0
+       }
+      ],
+      "move": 6,
+      "ms": 69208,
+      "winning": 1
+     },
+     {
+      "chosen": 0,
+      "chosen_won": false,
+      "legal": 3,
+      "losing": [
+       {
+        "depth": 6,
+        "id": 0
+       },
+       {
+        "depth": 7,
+        "id": 1
+       }
+      ],
+      "move": 7,
+      "ms": 70374,
+      "winning": 1
+     }
+    ],
+    "choices": 7,
+    "choices_won": 6,
+    "cleared_end": 12,
+    "end": "TIME UP",
+    "end_ms": 90000,
+    "escapes": 15,
+    "events": [
+     " 50.51s m #3 R^ R2C6 spinner -> cleared 1/15, options 5 legal / 2 winning  CHOICE",
+     " 54.11s m #8 R^ R4C6 -> cleared 2/15, options 4 legal / 2 winning  CHOICE",
+     " 56.72s m #12 B< R6C4 -> cleared 3/15, options 3 legal / 2 winning  CHOICE",
+     " 57.79s UNDO -> cleared 2/15",
+     " 58.24s m #7 G< R4C4 magnet -> cleared 3/15, options 3 legal / 2 winning  CHOICE",
+     " 61.26s m #12 B< R6C4 -> cleared 4/15, options 3 legal / 2 winning  CHOICE",
+     " 69.21s m #9 P< R4C4 switch -> cleared 5/15, options 2 legal / 1 winning  CHOICE",
+     " 70.37s m #0 P< R1C7 -> cleared 6/15, options 3 legal / 1 winning  CHOICE  <== LOST (1 of 3 legal moves still won: [10]); play can go on up to 6 more moves",
+     " 73.34s m #10 P< R5C4 spinner -> cleared 7/15, options 2 legal / 0 winning  (lost)",
+     " 75.19s m #11 P< R5C7 spinner -> cleared 8/15, options 2 legal / 0 winning  (lost)",
+     " 75.72s m #13 B< R6C7 spinner -> cleared 9/15, options 2 legal / 0 winning  (lost)",
+     " 76.26s m #14 P> R7C7 spinner -> cleared 10/15, options 2 legal / 0 winning  (lost)",
+     " 78.01s m #6 Bv R3C7 switch -> cleared 11/15, options 2 legal / 0 winning  (lost)",
+     " 81.14s UNDO -> cleared 10/15 (still lost)",
+     " 83.08s m #1 B^ R2C4 -> cleared 11/15, options 2 legal / 0 winning  (lost)",
+     " 84.89s UNDO -> cleared 10/15 (still lost)",
+     " 86.79s m #6 Bv R3C7 switch -> cleared 11/15, options 2 legal / 0 winning  (lost)",
+     " 89.74s m #1 Bv R2C4 -> cleared 12/15, options 1 legal / 0 winning  (lost)",
+     " 90.04s TIME UP"
+    ],
+    "losing_move": "#0 P< R1C7",
+    "lost_at_end": true,
+    "lost_at_move": 7,
+    "lost_ms": 70374,
+    "lost_options": "3 legal, 1 winning",
+    "max_cleared": 12,
+    "moves": 15,
+    "n": 4,
+    "path": [
+     3,
+     8,
+     7,
+     12,
+     9,
+     0,
+     10,
+     11,
+     13,
+     14,
+     6,
+     1
+    ],
+    "recovered_by_undo": 0,
+    "same_opening_as_previous": 0,
+    "solver_prefix": 3,
+    "start_ms": 49898,
+    "trap_depth": 6,
+    "undos": 3,
+    "winning_alternatives": [
+     10
+    ]
+   }
+  ],
+  "checks": [
+   [
+    "fingerprint (board record == supplied)",
+    true
+   ],
+   [
+    "pieces 15 == supplied 15",
+    true
+   ],
+   [
+    "moves (escapes incl. unlogged final) 32 == supplied 32",
+    true
+   ],
+   [
+    "max cleared 12 == supplied 12",
+    true
+   ],
+   [
+    "cleared at end 12 == supplied 12",
+    true
+   ],
+   [
+    "effects { \"flip\": 7, \"pull\": 2, \"turn\": 28 } == supplied { \"flip\": 7, \"pull\": 2, \"turn\": 28 }",
+    true
+   ],
+   [
+    "every logged event consistent with the engine",
+    true
+   ]
+  ],
+  "meta": {
+   "attempts": "4",
+   "blocked": "2",
+   "cleared_end": "12",
+   "completed": "false",
+   "elapsed": "90000",
+   "first_move": "4737",
+   "fp": "4654e81f75c7ba8f8388f0d2dfd23348e5278da2b16dbb227c1987983d34713f",
+   "longest_pause": "8238",
+   "max_cleared": "12",
+   "mech": "flip:7,pull:2,turn:28",
+   "moves": "32",
+   "outcome": "TIME_UP",
+   "pieces": "15",
+   "rating": "EXTREME",
+   "restarts": "3",
+   "unaided_max": "12",
+   "undo": "4"
+  },
+  "pieces": 15,
+  "problems": [],
+  "solution": [
+   3,
+   8,
+   7,
+   9,
+   12,
+   10,
+   11,
+   13,
+   14,
+   6,
+   4,
+   0,
+   2,
+   1,
+   5
+  ]
+ },
+ "N95": {
+  "attempts": [
+   {
+    "after_loss": 1,
+    "blocked": 0,
+    "blocked_after_loss": 0,
+    "choice_points": [
+     {
+      "chosen": 12,
+      "chosen_won": true,
+      "legal": 4,
+      "losing": [
+       {
+        "depth": 4,
+        "id": 8
+       },
+       {
+        "depth": 8,
+        "id": 14
+       }
+      ],
+      "move": 1,
+      "ms": 2653,
+      "winning": 2
+     },
+     {
+      "chosen": 8,
+      "chosen_won": false,
+      "legal": 3,
+      "losing": [
+       {
+        "depth": 3,
+        "id": 8
+       },
+       {
+        "depth": 7,
+        "id": 14
+       }
+      ],
+      "move": 2,
+      "ms": 4642,
+      "winning": 1
+     }
+    ],
+    "choices": 2,
+    "choices_won": 1,
+    "cleared_end": 3,
+    "end": "RESTART",
+    "end_ms": 12379,
+    "escapes": 3,
+    "events": [
+     "  2.65s m #12 Pv R6C3 spinner -> cleared 1/15, options 4 legal / 2 winning  CHOICE",
+     "  4.64s m #8 P> R4C5 spinner -> cleared 2/15, options 3 legal / 1 winning  CHOICE  <== LOST (1 of 3 legal moves still won: [7]); play can go on up to 3 more moves",
+     "  8.84s m #14 G^ R7C7 switch -> cleared 3/15, options 1 legal / 0 winning  (lost)"
+    ],
+    "losing_move": "#8 P> R4C5 spinner",
+    "lost_at_end": true,
+    "lost_at_move": 2,
+    "lost_ms": 4642,
+    "lost_options": "3 legal, 1 winning",
+    "max_cleared": 3,
+    "moves": 3,
+    "n": 1,
+    "path": [
+     12,
+     8,
+     14
+    ],
+    "recovered_by_undo": 0,
+    "same_opening_as_previous": 0,
+    "solver_prefix": 0,
+    "start_ms": 0,
+    "trap_depth": 3,
+    "undos": 0,
+    "winning_alternatives": [
+     7
+    ]
+   },
+   {
+    "after_loss": 0,
+    "blocked": 0,
+    "blocked_after_loss": 0,
+    "choice_points": [
+     {
+      "chosen": 7,
+      "chosen_won": true,
+      "legal": 4,
+      "losing": [
+       {
+        "depth": 4,
+        "id": 8
+       },
+       {
+        "depth": 8,
+        "id": 14
+       }
+      ],
+      "move": 1,
+      "ms": 14156,
+      "winning": 2
+     },
+     {
+      "chosen": 8,
+      "chosen_won": true,
+      "legal": 4,
+      "losing": [
+       {
+        "depth": 7,
+        "id": 14
+       }
+      ],
+      "move": 2,
+      "ms": 14938,
+      "winning": 3
+     },
+     {
+      "chosen": 2,
+      "chosen_won": true,
+      "legal": 3,
+      "losing": [
+       {
+        "depth": 6,
+        "id": 14
+       }
+      ],
+      "move": 3,
+      "ms": 15957,
+      "winning": 2
+     },
+     {
+      "chosen": 3,
+      "chosen_won": true,
+      "legal": 3,
+      "losing": [
+       {
+        "depth": 5,
+        "id": 14
+       }
+      ],
+      "move": 4,
+      "ms": 16505,
+      "winning": 2
+     },
+     {
+      "chosen": 12,
+      "chosen_won": true,
+      "legal": 3,
+      "losing": [
+       {
+        "depth": 4,
+        "id": 14
+       }
+      ],
+      "move": 5,
+      "ms": 19887,
+      "winning": 2
+     },
+     {
+      "chosen": 4,
+      "chosen_won": true,
+      "legal": 2,
+      "losing": [
+       {
+        "depth": 3,
+        "id": 14
+       }
+      ],
+      "move": 6,
+      "ms": 23739,
+      "winning": 1
+     },
+     {
+      "chosen": 0,
+      "chosen_won": true,
+      "legal": 2,
+      "losing": [
+       {
+        "depth": 0,
+        "id": 14
+       }
+      ],
+      "move": 7,
+      "ms": 25255,
+      "winning": 1
+     },
+     {
+      "chosen": 1,
+      "chosen_won": true,
+      "legal": 2,
+      "losing": [
+       {
+        "depth": 1,
+        "id": 14
+       }
+      ],
+      "move": 8,
+      "ms": 26122,
+      "winning": 1
+     },
+     {
+      "chosen": 11,
+      "chosen_won": true,
+      "legal": 2,
+      "losing": [
+       {
+        "depth": 0,
+        "id": 14
+       }
+      ],
+      "move": 9,
+      "ms": 26505,
+      "winning": 1
+     },
+     {
+      "chosen": 6,
+      "chosen_won": true,
+      "legal": 2,
+      "losing": [
+       {
+        "depth": 0,
+        "id": 14
+       }
+      ],
+      "move": 10,
+      "ms": 28006,
+      "winning": 1
+     }
+    ],
+    "choices": 10,
+    "choices_won": 10,
+    "cleared_end": 15,
+    "end": "SOLVED",
+    "end_ms": 31228,
+    "escapes": 15,
+    "events": [
+     " 14.16s m #7 Bv R4C4 spinner -> cleared 1/15, options 4 legal / 2 winning  CHOICE",
+     " 14.94s m #8 Pv R4C5 spinner -> cleared 2/15, options 4 legal / 3 winning  CHOICE",
+     " 15.96s m #2 Bv R3C4 spinner -> cleared 3/15, options 3 legal / 2 winning  CHOICE",
+     " 16.50s m #3 Y^ R3C5 spinner -> cleared 4/15, options 3 legal / 2 winning  CHOICE",
+     " 19.89s m #12 Pv R6C3 spinner -> cleared 5/15, options 3 legal / 2 winning  CHOICE",
+     " 23.74s m #4 G< R3C6 switch -> cleared 6/15, options 2 legal / 1 winning  CHOICE",
+     " 25.25s m #0 B^ R2C3 -> cleared 7/15, options 2 legal / 1 winning  CHOICE",
+     " 26.12s m #1 R< R2C6 -> cleared 8/15, options 2 legal / 1 winning  CHOICE",
+     " 26.50s m #11 Y^ R5C6 -> cleared 9/15, options 2 legal / 1 winning  CHOICE",
+     " 28.01s m #6 B> R4C3 lock -> cleared 10/15, options 2 legal / 1 winning  CHOICE",
+     " 29.27s m #10 G> R5C3 spinner -> cleared 11/15, options 4 legal / 4 winning",
+     " 29.74s m #5 R^ R4C2 spinner -> cleared 12/15, options 3 legal / 3 winning",
+     " 30.14s m #9 G^ R5C2 lock -> cleared 13/15, options 3 legal / 3 winning",
+     " 30.84s m #13 P< R6C6 lock -> cleared 14/15, options 2 legal / 2 winning"
+    ],
+    "losing_move": "",
+    "lost_at_end": false,
+    "lost_at_move": -1,
+    "lost_ms": -1,
+    "lost_options": "",
+    "max_cleared": 15,
+    "moves": 14,
+    "n": 2,
+    "path": [
+     7,
+     8,
+     2,
+     3,
+     12,
+     4,
+     0,
+     1,
+     11,
+     6,
+     10,
+     5,
+     9,
+     13
+    ],
+    "recovered_by_undo": 0,
+    "same_opening_as_previous": 0,
+    "solver_prefix": 1,
+    "start_ms": 12379,
+    "trap_depth": 0,
+    "undos": 0,
+    "unlogged_final": "#14 G^ R7C7 switch [ok]",
+    "winning_alternatives": []
+   }
+  ],
+  "checks": [
+   [
+    "fingerprint (board record == supplied)",
+    true
+   ],
+   [
+    "pieces 15 == supplied 15",
+    true
+   ],
+   [
+    "completed: exactly one escapable block left after the log (the unlogged solving escape)",
+    true
+   ],
+   [
+    "moves (escapes incl. unlogged final) 18 == supplied 18",
+    true
+   ],
+   [
+    "max cleared 15 == supplied 15",
+    true
+   ],
+   [
+    "effects { \"flip\": 6, \"turn\": 10 } == supplied { \"flip\": 6, \"turn\": 10 }",
+    true
+   ],
+   [
+    "every logged event consistent with the engine",
+    true
+   ]
+  ],
+  "meta": {
+   "attempts": "2",
+   "blocked": "0",
+   "completed": "true",
+   "elapsed": "31228",
+   "first_move": "2653",
+   "fp": "e7289be01bb874a0a8fa1cdd2ed6aab94300382c48a7b421043f71ec9360870e",
+   "max_cleared": "15",
+   "mech": "flip:6,turn:10",
+   "moves": "18",
+   "outcome": "COMPLETED",
+   "pieces": "15",
+   "rating": "MEDIUM",
+   "restarts": "1",
+   "unaided_max": "14",
+   "undo": "0"
+  },
+  "pieces": 15,
+  "problems": [],
+  "solution": [
+   7,
+   2,
+   8,
+   3,
+   4,
+   0,
+   1,
+   11,
+   6,
+   5,
+   9,
+   12,
+   10,
+   13,
+   14
+  ]
+ },
+ "N96": {
+  "attempts": [
+   {
+    "after_loss": 11,
+    "blocked": 0,
+    "blocked_after_loss": 0,
+    "choice_points": [
+     {
+      "chosen": 12,
+      "chosen_won": false,
+      "legal": 4,
+      "losing": [
+       {
+        "depth": 11,
+        "id": 9
+       },
+       {
+        "depth": 11,
+        "id": 12
+       }
+      ],
+      "move": 1,
+      "ms": 5971,
+      "winning": 2
+     }
+    ],
+    "choices": 1,
+    "choices_won": 0,
+    "cleared_end": 11,
+    "end": "RESTART",
+    "end_ms": 27523,
+    "escapes": 12,
+    "events": [
+     "  5.97s m #12 Gv R7C4 spinner -> cleared 1/14, options 4 legal / 2 winning  CHOICE  <== LOST (2 of 4 legal moves still won: [1, 7]); play can go on up to 11 more moves",
+     "  7.17s m #1 B^ R4C2 spinner -> cleared 2/14, options 4 legal / 0 winning  (lost)",
+     "  8.02s m #8 R^ R6C2 spinner -> cleared 3/14, options 5 legal / 0 winning  (lost)",
+     "  9.87s m #13 G< R7C6 -> cleared 4/14, options 4 legal / 0 winning  (lost)",
+     " 14.02s m #7 R> R5C6 -> cleared 5/14, options 3 legal / 0 winning  (lost)",
+     " 14.61s m #6 G> R5C5 spinner -> cleared 6/14, options 3 legal / 0 winning  (lost)",
+     " 16.14s m #5 R> R5C4 spinner -> cleared 7/14, options 4 legal / 0 winning  (lost)",
+     " 18.64s m #9 Rv R6C3 magnet -> cleared 8/14, options 3 legal / 0 winning  (lost)",
+     " 20.64s m #3 Gv R4C5 -> cleared 9/14, options 2 legal / 0 winning  (lost)",
+     " 21.30s m #2 G< R4C4 magnet -> cleared 10/14, options 1 legal / 0 winning  (lost)",
+     " 22.42s m #11 P^ R6C6 switch -> cleared 11/14, options 1 legal / 0 winning  (lost)",
+     " 24.17s UNDO -> cleared 10/14 (still lost)",
+     " 26.66s m #11 P^ R6C6 switch -> cleared 11/14, options 1 legal / 0 winning  (lost)"
+    ],
+    "losing_move": "#12 Gv R7C4 spinner",
+    "lost_at_end": true,
+    "lost_at_move": 1,
+    "lost_ms": 5971,
+    "lost_options": "4 legal, 2 winning",
+    "max_cleared": 11,
+    "moves": 12,
+    "n": 1,
+    "path": [
+     12,
+     1,
+     8,
+     13,
+     7,
+     6,
+     5,
+     9,
+     3,
+     2,
+     11
+    ],
+    "recovered_by_undo": 0,
+    "same_opening_as_previous": 0,
+    "solver_prefix": 0,
+    "start_ms": 0,
+    "trap_depth": 11,
+    "undos": 1,
+    "winning_alternatives": [
+     1,
+     7
+    ]
+   },
+   {
+    "after_loss": 9,
+    "blocked": 3,
+    "blocked_after_loss": 3,
+    "choice_points": [
+     {
+      "chosen": 1,
+      "chosen_won": true,
+      "legal": 4,
+      "losing": [
+       {
+        "depth": 11,
+        "id": 9
+       },
+       {
+        "depth": 11,
+        "id": 12
+       }
+      ],
+      "move": 1,
+      "ms": 30189,
+      "winning": 2
+     },
+     {
+      "chosen": 8,
+      "chosen_won": true,
+      "legal": 5,
+      "losing": [
+       {
+        "depth": 10,
+        "id": 2
+       },
+       {
+        "depth": 10,
+        "id": 9
+       },
+       {
+        "depth": 10,
+        "id": 12
+       }
+      ],
+      "move": 2,
+      "ms": 30606,
+      "winning": 2
+     },
+     {
+      "chosen": 12,
+      "chosen_won": false,
+      "legal": 4,
+      "losing": [
+       {
+        "depth": 9,
+        "id": 2
+       },
+       {
+        "depth": 9,
+        "id": 12
+       }
+      ],
+      "move": 3,
+      "ms": 31857,
+      "winning": 2
+     }
+    ],
+    "choices": 3,
+    "choices_won": 2,
+    "cleared_end": 12,
+    "end": "RESTART",
+    "end_ms": 59409,
+    "escapes": 12,
+    "events": [
+     " 30.19s m #1 B^ R4C2 spinner -> cleared 1/14, options 4 legal / 2 winning  CHOICE",
+     " 30.61s m #8 R^ R6C2 spinner -> cleared 2/14, options 5 legal / 2 winning  CHOICE",
+     " 31.86s m #12 Gv R7C4 spinner -> cleared 3/14, options 4 legal / 2 winning  CHOICE  <== LOST (2 of 4 legal moves still won: [7, 9]); play can go on up to 9 more moves",
+     " 35.37s m #13 G< R7C6 -> cleared 4/14, options 4 legal / 0 winning  (lost)",
+     " 35.86s m #7 R> R5C6 -> cleared 5/14, options 3 legal / 0 winning  (lost)",
+     " 36.96s m #6 G> R5C5 spinner -> cleared 6/14, options 3 legal / 0 winning  (lost)",
+     " 37.52s m #5 R> R5C4 spinner -> cleared 7/14, options 4 legal / 0 winning  (lost)",
+     " 43.26s m #3 Gv R4C5 -> cleared 8/14, options 3 legal / 0 winning  (lost)",
+     " 49.11s m #9 Rv R6C3 magnet -> cleared 9/14, options 2 legal / 0 winning  (lost)",
+     " 52.42s blocked tap #4 Bv R4C6 (blocked)  [in a lost position]",
+     " 53.62s blocked tap #0 Pv R2C4 spinner (blocked)  [in a lost position]",
+     " 54.02s m #2 G< R4C4 magnet -> cleared 10/14, options 1 legal / 0 winning  (lost)",
+     " 57.56s m #11 P^ R6C6 switch -> cleared 11/14, options 1 legal / 0 winning  (lost)",
+     " 58.16s m #10 B> R6C4 spinner -> cleared 12/14, options 1 legal / 0 winning  (lost)",
+     " 58.71s blocked tap #0 Pv R2C4 spinner (blocked)  [in a lost position]"
+    ],
+    "losing_move": "#12 Gv R7C4 spinner",
+    "lost_at_end": true,
+    "lost_at_move": 3,
+    "lost_ms": 31857,
+    "lost_options": "4 legal, 2 winning",
+    "max_cleared": 12,
+    "moves": 12,
+    "n": 2,
+    "path": [
+     1,
+     8,
+     12,
+     13,
+     7,
+     6,
+     5,
+     3,
+     9,
+     2,
+     11,
+     10
+    ],
+    "recovered_by_undo": 0,
+    "same_opening_as_previous": 0,
+    "solver_prefix": 1,
+    "start_ms": 27523,
+    "trap_depth": 9,
+    "undos": 0,
+    "winning_alternatives": [
+     7,
+     9
+    ]
+   },
+   {
+    "after_loss": 1,
+    "blocked": 0,
+    "blocked_after_loss": 0,
+    "choice_points": [
+     {
+      "chosen": 1,
+      "chosen_won": true,
+      "legal": 4,
+      "losing": [
+       {
+        "depth": 11,
+        "id": 9
+       },
+       {
+        "depth": 11,
+        "id": 12
+       }
+      ],
+      "move": 1,
+      "ms": 64143,
+      "winning": 2
+     },
+     {
+      "chosen": 9,
+      "chosen_won": false,
+      "legal": 5,
+      "losing": [
+       {
+        "depth": 10,
+        "id": 2
+       },
+       {
+        "depth": 10,
+        "id": 9
+       },
+       {
+        "depth": 10,
+        "id": 12
+       }
+      ],
+      "move": 2,
+      "ms": 65142,
+      "winning": 2
+     }
+    ],
+    "choices": 2,
+    "choices_won": 1,
+    "cleared_end": 3,
+    "end": "RESTART",
+    "end_ms": 68512,
+    "escapes": 3,
+    "events": [
+     " 64.14s m #1 B^ R4C2 spinner -> cleared 1/14, options 4 legal / 2 winning  CHOICE",
+     " 65.14s m #9 Rv R6C3 magnet -> cleared 2/14, options 5 legal / 2 winning  CHOICE  <== LOST (2 of 5 legal moves still won: [7, 8]); play can go on up to 10 more moves",
+     " 66.79s m #12 Gv R7C4 spinner -> cleared 3/14, options 3 legal / 0 winning  (lost)"
+    ],
+    "losing_move": "#9 Rv R6C3 magnet",
+    "lost_at_end": true,
+    "lost_at_move": 2,
+    "lost_ms": 65142,
+    "lost_options": "5 legal, 2 winning",
+    "max_cleared": 3,
+    "moves": 3,
+    "n": 3,
+    "path": [
+     1,
+     9,
+     12
+    ],
+    "recovered_by_undo": 0,
+    "same_opening_as_previous": 1,
+    "solver_prefix": 1,
+    "start_ms": 59409,
+    "trap_depth": 10,
+    "undos": 0,
+    "winning_alternatives": [
+     7,
+     8
+    ]
+   },
+   {
+    "after_loss": 5,
+    "blocked": 0,
+    "blocked_after_loss": 0,
+    "choice_points": [
+     {
+      "chosen": 1,
+      "chosen_won": true,
+      "legal": 4,
+      "losing": [
+       {
+        "depth": 11,
+        "id": 9
+       },
+       {
+        "depth": 11,
+        "id": 12
+       }
+      ],
+      "move": 1,
+      "ms": 69577,
+      "winning": 2
+     },
+     {
+      "chosen": 8,
+      "chosen_won": true,
+      "legal": 5,
+      "losing": [
+       {
+        "depth": 10,
+        "id": 2
+       },
+       {
+        "depth": 10,
+        "id": 9
+       },
+       {
+        "depth": 10,
+        "id": 12
+       }
+      ],
+      "move": 2,
+      "ms": 69776,
+      "winning": 2
+     },
+     {
+      "chosen": 12,
+      "chosen_won": false,
+      "legal": 4,
+      "losing": [
+       {
+        "depth": 9,
+        "id": 2
+       },
+       {
+        "depth": 9,
+        "id": 12
+       }
+      ],
+      "move": 3,
+      "ms": 77911,
+      "winning": 2
+     }
+    ],
+    "choices": 3,
+    "choices_won": 2,
+    "cleared_end": 8,
+    "end": "TIME UP",
+    "end_ms": 90000,
+    "escapes": 8,
+    "events": [
+     " 69.58s m #1 B^ R4C2 spinner -> cleared 1/14, options 4 legal / 2 winning  CHOICE",
+     " 69.78s m #8 R^ R6C2 spinner -> cleared 2/14, options 5 legal / 2 winning  CHOICE",
+     " 77.91s m #12 Gv R7C4 spinner -> cleared 3/14, options 4 legal / 2 winning  CHOICE  <== LOST (2 of 4 legal moves still won: [7, 9]); play can go on up to 9 more moves",
+     " 79.04s m #13 G< R7C6 -> cleared 4/14, options 4 legal / 0 winning  (lost)",
+     " 80.54s m #7 R> R5C6 -> cleared 5/14, options 3 legal / 0 winning  (lost)",
+     " 82.09s m #6 G> R5C5 spinner -> cleared 6/14, options 3 legal / 0 winning  (lost)",
+     " 85.48s m #9 Rv R6C3 magnet -> cleared 7/14, options 4 legal / 0 winning  (lost)",
+     " 86.05s m #5 R> R5C4 spinner -> cleared 8/14, options 3 legal / 0 winning  (lost)",
+     " 90.02s TIME UP"
+    ],
+    "losing_move": "#12 Gv R7C4 spinner",
+    "lost_at_end": true,
+    "lost_at_move": 3,
+    "lost_ms": 77911,
+    "lost_options": "4 legal, 2 winning",
+    "max_cleared": 8,
+    "moves": 8,
+    "n": 4,
+    "path": [
+     1,
+     8,
+     12,
+     13,
+     7,
+     6,
+     9,
+     5
+    ],
+    "recovered_by_undo": 0,
+    "same_opening_as_previous": 1,
+    "solver_prefix": 1,
+    "start_ms": 68512,
+    "trap_depth": 9,
+    "undos": 0,
+    "winning_alternatives": [
+     7,
+     9
+    ]
+   }
+  ],
+  "checks": [
+   [
+    "fingerprint (board record == supplied)",
+    true
+   ],
+   [
+    "pieces 14 == supplied 14",
+    true
+   ],
+   [
+    "moves (escapes incl. unlogged final) 35 == supplied 35",
+    true
+   ],
+   [
+    "max cleared 12 == supplied 12",
+    true
+   ],
+   [
+    "cleared at end 8 == supplied 8",
+    true
+   ],
+   [
+    "effects { \"flip\": 3, \"pull\": 2, \"turn\": 18 } == supplied { \"flip\": 3, \"pull\": 2, \"turn\": 18 }",
+    true
+   ],
+   [
+    "every logged event consistent with the engine",
+    true
+   ]
+  ],
+  "meta": {
+   "attempts": "4",
+   "blocked": "3",
+   "cleared_end": "8",
+   "completed": "false",
+   "elapsed": "90000",
+   "first_move": "5971",
+   "fp": "60b63fc1cf3e73cdb6f331e949a577657501de9d834e546a1fc43bb9bcfa7531",
+   "longest_pause": "8135",
+   "max_cleared": "12",
+   "mech": "flip:3,pull:2,turn:18",
+   "moves": "35",
+   "outcome": "TIME_UP",
+   "pieces": "14",
+   "rating": "VERY_HARD",
+   "restarts": "3",
+   "unaided_max": "12",
+   "undo": "1"
+  },
+  "pieces": 14,
+  "problems": [],
+  "solution": [
+   1,
+   7,
+   6,
+   3,
+   2,
+   8,
+   9,
+   10,
+   12,
+   13,
+   5,
+   4,
+   0,
+   11
+  ]
+ },
+ "N97": {
+  "attempts": [
+   {
+    "after_loss": 2,
+    "blocked": 0,
+    "blocked_after_loss": 0,
+    "choice_points": [
+     {
+      "chosen": 8,
+      "chosen_won": true,
+      "legal": 5,
+      "losing": [
+       {
+        "depth": 9,
+        "id": 2
+       },
+       {
+        "depth": 11,
+        "id": 11
+       }
+      ],
+      "move": 1,
+      "ms": 1988,
+      "winning": 3
+     },
+     {
+      "chosen": 1,
+      "chosen_won": true,
+      "legal": 5,
+      "losing": [
+       {
+        "depth": 8,
+        "id": 2
+       },
+       {
+        "depth": 10,
+        "id": 11
+       }
+      ],
+      "move": 2,
+      "ms": 2905,
+      "winning": 3
+     },
+     {
+      "chosen": 8,
+      "chosen_won": true,
+      "legal": 5,
+      "losing": [
+       {
+        "depth": 7,
+        "id": 2
+       },
+       {
+        "depth": 9,
+        "id": 11
+       }
+      ],
+      "move": 3,
+      "ms": 4549,
+      "winning": 3
+     },
+     {
+      "chosen": 7,
+      "chosen_won": true,
+      "legal": 5,
+      "losing": [
+       {
+        "depth": 6,
+        "id": 2
+       },
+       {
+        "depth": 8,
+        "id": 11
+       }
+      ],
+      "move": 4,
+      "ms": 4838,
+      "winning": 3
+     },
+     {
+      "chosen": 13,
+      "chosen_won": true,
+      "legal": 4,
+      "losing": [
+       {
+        "depth": 5,
+        "id": 2
+       },
+       {
+        "depth": 7,
+        "id": 11
+       }
+      ],
+      "move": 5,
+      "ms": 6921,
+      "winning": 2
+     },
+     {
+      "chosen": 12,
+      "chosen_won": true,
+      "legal": 5,
+      "losing": [
+       {
+        "depth": 4,
+        "id": 2
+       },
+       {
+        "depth": 6,
+        "id": 11
+       },
+       {
+        "depth": 6,
+        "id": 15
+       }
+      ],
+      "move": 6,
+      "ms": 8087,
+      "winning": 2
+     },
+     {
+      "chosen": 2,
+      "chosen_won": false,
+      "legal": 4,
+      "losing": [
+       {
+        "depth": 3,
+        "id": 2
+       },
+       {
+        "depth": 5,
+        "id": 11
+       },
+       {
+        "depth": 5,
+        "id": 15
+       }
+      ],
+      "move": 7,
+      "ms": 10388,
+      "winning": 1
+     }
+    ],
+    "choices": 7,
+    "choices_won": 6,
+    "cleared_end": 6,
+    "end": "RESTART",
+    "end_ms": 17441,
+    "escapes": 6,
+    "events": [
+     "  1.99s m #8 Y^ R4C2 spinner [ram] -> cleared 0/16, options 5 legal / 3 winning  CHOICE",
+     "  2.90s m #1 Y^ R1C2 -> cleared 1/16, options 5 legal / 3 winning  CHOICE",
+     "  4.55s m #8 Y^ R4C2 spinner -> cleared 2/16, options 5 legal / 3 winning  CHOICE",
+     "  4.84s m #7 R> R4C1 [ram] -> cleared 2/16, options 5 legal / 3 winning  CHOICE",
+     "  6.92s m #13 R^ R5C7 -> cleared 3/16, options 4 legal / 2 winning  CHOICE",
+     "  8.09s m #12 Y> R5C3 -> cleared 4/16, options 5 legal / 2 winning  CHOICE",
+     " 10.39s m #2 Y> R1C4 -> cleared 5/16, options 4 legal / 1 winning  CHOICE  <== LOST (1 of 4 legal moves still won: [3]); play can go on up to 3 more moves",
+     " 11.62s m #11 Yv R4C5 switch -> cleared 6/16, options 3 legal / 0 winning  (lost)",
+     " 12.27s m #9 Y> R4C3 [ram] -> cleared 6/16, options 3 legal / 0 winning  (lost)"
+    ],
+    "losing_move": "#2 Y> R1C4",
+    "lost_at_end": true,
+    "lost_at_move": 7,
+    "lost_ms": 10388,
+    "lost_options": "4 legal, 1 winning",
+    "max_cleared": 6,
+    "moves": 9,
+    "n": 1,
+    "path": [
+     8,
+     1,
+     8,
+     7,
+     13,
+     12,
+     2,
+     11,
+     9
+    ],
+    "rams": 3,
+    "recovered_by_undo": 0,
+    "same_opening_as_previous": 0,
+    "solver_prefix": 1,
+    "start_ms": 0,
+    "trap_depth": 3,
+    "undos": 0,
+    "winning_alternatives": [
+     3
+    ]
+   },
+   {
+    "after_loss": 0,
+    "blocked": 0,
+    "blocked_after_loss": 0,
+    "choice_points": [
+     {
+      "chosen": 3,
+      "chosen_won": true,
+      "legal": 5,
+      "losing": [
+       {
+        "depth": 9,
+        "id": 2
+       },
+       {
+        "depth": 11,
+        "id": 11
+       }
+      ],
+      "move": 1,
+      "ms": 18472,
+      "winning": 3
+     },
+     {
+      "chosen": 2,
+      "chosen_won": true,
+      "legal": 4,
+      "losing": [
+       {
+        "depth": 10,
+        "id": 11
+       }
+      ],
+      "move": 2,
+      "ms": 19306,
+      "winning": 3
+     },
+     {
+      "chosen": 12,
+      "chosen_won": true,
+      "legal": 3,
+      "losing": [
+       {
+        "depth": 4,
+        "id": 15
+       }
+      ],
+      "move": 8,
+      "ms": 31073,
+      "winning": 2
+     },
+     {
+      "chosen": 11,
+      "chosen_won": true,
+      "legal": 2,
+      "losing": [
+       {
+        "depth": 3,
+        "id": 15
+       }
+      ],
+      "move": 9,
+      "ms": 31706,
+      "winning": 1
+     },
+     {
+      "chosen": 9,
+      "chosen_won": true,
+      "legal": 2,
+      "losing": [
+       {
+        "depth": 0,
+        "id": 15
+       }
+      ],
+      "move": 10,
+      "ms": 32590,
+      "winning": 1
+     },
+     {
+      "chosen": 10,
+      "chosen_won": true,
+      "legal": 2,
+      "losing": [
+       {
+        "depth": 1,
+        "id": 15
+       }
+      ],
+      "move": 11,
+      "ms": 34339,
+      "winning": 1
+     },
+     {
+      "chosen": 9,
+      "chosen_won": true,
+      "legal": 2,
+      "losing": [
+       {
+        "depth": 0,
+        "id": 15
+       }
+      ],
+      "move": 12,
+      "ms": 35373,
+      "winning": 1
+     },
+     {
+      "chosen": 0,
+      "chosen_won": true,
+      "legal": 4,
+      "losing": [
+       {
+        "depth": 3,
+        "id": 7
+       },
+       {
+        "depth": 4,
+        "id": 15
+       }
+      ],
+      "move": 13,
+      "ms": 36890,
+      "winning": 2
+     },
+     {
+      "chosen": 4,
+      "chosen_won": true,
+      "legal": 4,
+      "losing": [
+       {
+        "depth": 2,
+        "id": 7
+       },
+       {
+        "depth": 3,
+        "id": 15
+       }
+      ],
+      "move": 14,
+      "ms": 37490,
+      "winning": 2
+     },
+     {
+      "chosen": 7,
+      "chosen_won": true,
+      "legal": 4,
+      "losing": [
+       {
+        "depth": 2,
+        "id": 15
+       }
+      ],
+      "move": 15,
+      "ms": 37771,
+      "winning": 3
+     },
+     {
+      "chosen": 5,
+      "chosen_won": true,
+      "legal": 3,
+      "losing": [
+       {
+        "depth": 1,
+        "id": 15
+       }
+      ],
+      "move": 16,
+      "ms": 38707,
+      "winning": 2
+     }
+    ],
+    "choices": 11,
+    "choices_won": 11,
+    "cleared_end": 16,
+    "end": "SOLVED",
+    "end_ms": 40460,
+    "escapes": 16,
+    "events": [
+     " 18.47s m #3 R< R2C4 spinner -> cleared 1/16, options 5 legal / 3 winning  CHOICE",
+     " 19.31s m #2 Y> R1C4 -> cleared 2/16, options 4 legal / 3 winning  CHOICE",
+     " 20.56s m #8 Y^ R4C2 spinner [ram] -> cleared 2/16, options 3 legal / 3 winning",
+     " 21.36s m #1 Y^ R1C2 -> cleared 3/16, options 3 legal / 3 winning",
+     " 22.97s m #8 Y^ R4C2 spinner -> cleared 4/16, options 3 legal / 3 winning",
+     " 23.20s m #7 R> R4C1 [ram] -> cleared 4/16, options 3 legal / 3 winning",
+     " 30.74s m #13 R^ R5C7 -> cleared 5/16, options 2 legal / 2 winning",
+     " 31.07s m #12 Y> R5C3 -> cleared 6/16, options 3 legal / 2 winning  CHOICE",
+     " 31.71s m #11 Yv R4C5 switch -> cleared 7/16, options 2 legal / 1 winning  CHOICE",
+     " 32.59s m #9 Y> R4C3 [ram] -> cleared 7/16, options 2 legal / 1 winning  CHOICE",
+     " 34.34s m #10 R^ R4C4 -> cleared 8/16, options 2 legal / 1 winning  CHOICE",
+     " 35.37s m #9 Y> R4C3 -> cleared 9/16, options 2 legal / 1 winning  CHOICE",
+     " 36.89s m #0 B> R1C1 spinner -> cleared 10/16, options 4 legal / 2 winning  CHOICE",
+     " 37.49s m #4 G^ R3C1 spinner -> cleared 11/16, options 4 legal / 2 winning  CHOICE",
+     " 37.77s m #7 R> R4C1 -> cleared 12/16, options 4 legal / 3 winning  CHOICE",
+     " 38.71s m #5 B< R3C5 -> cleared 13/16, options 3 legal / 2 winning  CHOICE",
+     " 39.19s m #6 Rv R3C6 spinner -> cleared 14/16, options 3 legal / 3 winning",
+     " 39.89s m #14 B^ R6C4 lock -> cleared 15/16, options 2 legal / 2 winning"
+    ],
+    "losing_move": "",
+    "lost_at_end": false,
+    "lost_at_move": -1,
+    "lost_ms": -1,
+    "lost_options": "",
+    "max_cleared": 16,
+    "moves": 18,
+    "n": 2,
+    "path": [
+     3,
+     2,
+     8,
+     1,
+     8,
+     7,
+     13,
+     12,
+     11,
+     9,
+     10,
+     9,
+     0,
+     4,
+     7,
+     5,
+     6,
+     14
+    ],
+    "rams": 3,
+    "recovered_by_undo": 0,
+    "same_opening_as_previous": 0,
+    "solver_prefix": 0,
+    "start_ms": 17441,
+    "trap_depth": 0,
+    "undos": 0,
+    "unlogged_final": "#15 G^ R7C7 switch [ok]",
+    "winning_alternatives": []
+   }
+  ],
+  "checks": [
+   [
+    "fingerprint (board record == supplied)",
+    true
+   ],
+   [
+    "pieces 16 == supplied 16",
+    true
+   ],
+   [
+    "completed: exactly one escapable block left after the log (the unlogged solving escape)",
+    true
+   ],
+   [
+    "moves (escapes incl. unlogged final) 22 == supplied 22",
+    true
+   ],
+   [
+    "max cleared 16 == supplied 16",
+    true
+   ],
+   [
+    "effects { \"flip\": 4, \"ram\": 6, \"turn\": 4 } == supplied { \"flip\": 4, \"ram\": 6, \"turn\": 4 }",
+    true
+   ],
+   [
+    "every logged event consistent with the engine",
+    true
+   ]
+  ],
+  "meta": {
+   "attempts": "2",
+   "blocked": "0",
+   "completed": "true",
+   "elapsed": "40460",
+   "first_move": "2905",
+   "fp": "2b71601d2cb42654f43a991bbcaf6ee88abe2cc70ac795b752b9b11f537253af",
+   "max_cleared": "16",
+   "mech": "flip:4,ram:6,turn:4",
+   "moves": "22",
+   "outcome": "COMPLETED",
+   "pieces": "16",
+   "rating": "MEDIUM",
+   "restarts": "1",
+   "unaided_max": "15",
+   "undo": "0"
+  },
+  "pieces": 16,
+  "problems": [],
+  "solution": [
+   8,
+   13,
+   12,
+   1,
+   3,
+   2,
+   8,
+   7,
+   11,
+   9,
+   10,
+   9,
+   14,
+   0,
+   4,
+   7,
+   5,
+   6,
+   15
+  ]
+ },
+ "N98": {
+  "attempts": [
+   {
+    "after_loss": 7,
+    "blocked": 0,
+    "blocked_after_loss": 0,
+    "choice_points": [
+     {
+      "chosen": 6,
+      "chosen_won": true,
+      "legal": 6,
+      "losing": [
+       {
+        "depth": 6,
+        "id": 5
+       },
+       {
+        "depth": 10,
+        "id": 9
+       }
+      ],
+      "move": 1,
+      "ms": 2003,
+      "winning": 4
+     },
+     {
+      "chosen": 4,
+      "chosen_won": true,
+      "legal": 6,
+      "losing": [
+       {
+        "depth": 7,
+        "id": 5
+       },
+       {
+        "depth": 9,
+        "id": 9
+       }
+      ],
+      "move": 2,
+      "ms": 3020,
+      "winning": 4
+     },
+     {
+      "chosen": 6,
+      "chosen_won": true,
+      "legal": 6,
+      "losing": [
+       {
+        "depth": 6,
+        "id": 5
+       },
+       {
+        "depth": 8,
+        "id": 9
+       }
+      ],
+      "move": 3,
+      "ms": 3436,
+      "winning": 4
+     },
+     {
+      "chosen": 5,
+      "chosen_won": false,
+      "legal": 5,
+      "losing": [
+       {
+        "depth": 7,
+        "id": 5
+       },
+       {
+        "depth": 7,
+        "id": 9
+       }
+      ],
+      "move": 4,
+      "ms": 11688,
+      "winning": 3
+     }
+    ],
+    "choices": 4,
+    "choices_won": 3,
+    "cleared_end": 9,
+    "end": "RESTART",
+    "end_ms": 21503,
+    "escapes": 9,
+    "events": [
+     "  2.00s m #6 R^ R5C4 magnet [ram] -> cleared 0/10, options 6 legal / 4 winning  CHOICE",
+     "  3.02s m #4 B> R4C4 -> cleared 1/10, options 6 legal / 4 winning  CHOICE",
+     "  3.44s m #6 R^ R5C4 magnet [ram] -> cleared 1/10, options 6 legal / 4 winning  CHOICE",
+     " 11.69s m #5 B< R5C2 magnet -> cleared 2/10, options 5 legal / 3 winning  CHOICE  <== LOST (3 of 5 legal moves still won: [0, 3, 7]); play can go on up to 7 more moves",
+     " 16.40s m #0 Y< R2C2 -> cleared 3/10, options 4 legal / 0 winning  (lost)",
+     " 16.87s armored tap #8 G> R6C2 shell",
+     " 16.87s m #6 R^ R5C2 magnet -> cleared 4/10, options 5 legal / 0 winning  (lost)",
+     " 18.44s m #9 Yv R7C4 -> cleared 5/10, options 4 legal / 0 winning  (lost)",
+     " 18.75s m #7 Pv R6C1 -> cleared 6/10, options 3 legal / 0 winning  (lost)",
+     " 19.15s m #1 P< R2C3 magnet -> cleared 7/10, options 2 legal / 0 winning  (lost)",
+     " 19.82s m #2 Y< R2C3 -> cleared 8/10, options 2 legal / 0 winning  (lost)",
+     " 20.13s m #3 R< R3C3 -> cleared 9/10, options 1 legal / 0 winning  (lost)"
+    ],
+    "losing_move": "#5 B< R5C2 magnet",
+    "lost_at_end": true,
+    "lost_at_move": 4,
+    "lost_ms": 11688,
+    "lost_options": "5 legal, 3 winning",
+    "max_cleared": 9,
+    "moves": 11,
+    "n": 1,
+    "path": [
+     6,
+     4,
+     6,
+     5,
+     0,
+     6,
+     9,
+     7,
+     1,
+     2,
+     3
+    ],
+    "rams": 2,
+    "recovered_by_undo": 0,
+    "same_opening_as_previous": 0,
+    "solver_prefix": 1,
+    "start_ms": 0,
+    "trap_depth": 7,
+    "undos": 0,
+    "winning_alternatives": [
+     0,
+     3,
+     7
+    ]
+   },
+   {
+    "after_loss": 0,
+    "blocked": 0,
+    "blocked_after_loss": 0,
+    "choice_points": [
+     {
+      "chosen": 6,
+      "chosen_won": true,
+      "legal": 6,
+      "losing": [
+       {
+        "depth": 6,
+        "id": 5
+       },
+       {
+        "depth": 10,
+        "id": 9
+       }
+      ],
+      "move": 1,
+      "ms": 22655,
+      "winning": 4
+     },
+     {
+      "chosen": 4,
+      "chosen_won": true,
+      "legal": 6,
+      "losing": [
+       {
+        "depth": 7,
+        "id": 5
+       },
+       {
+        "depth": 9,
+        "id": 9
+       }
+      ],
+      "move": 2,
+      "ms": 23639,
+      "winning": 4
+     },
+     {
+      "chosen": 6,
+      "chosen_won": true,
+      "legal": 6,
+      "losing": [
+       {
+        "depth": 6,
+        "id": 5
+       },
+       {
+        "depth": 8,
+        "id": 9
+       }
+      ],
+      "move": 3,
+      "ms": 23855,
+      "winning": 4
+     },
+     {
+      "chosen": 0,
+      "chosen_won": true,
+      "legal": 5,
+      "losing": [
+       {
+        "depth": 7,
+        "id": 5
+       },
+       {
+        "depth": 7,
+        "id": 9
+       }
+      ],
+      "move": 4,
+      "ms": 31889,
+      "winning": 3
+     },
+     {
+      "chosen": 1,
+      "chosen_won": true,
+      "legal": 5,
+      "losing": [
+       {
+        "depth": 6,
+        "id": 5
+       },
+       {
+        "depth": 6,
+        "id": 9
+       }
+      ],
+      "move": 5,
+      "ms": 32255,
+      "winning": 3
+     },
+     {
+      "chosen": 2,
+      "chosen_won": true,
+      "legal": 6,
+      "losing": [
+       {
+        "depth": 5,
+        "id": 5
+       },
+       {
+        "depth": 5,
+        "id": 9
+       }
+      ],
+      "move": 6,
+      "ms": 32739,
+      "winning": 4
+     },
+     {
+      "chosen": 6,
+      "chosen_won": true,
+      "legal": 5,
+      "losing": [
+       {
+        "depth": 4,
+        "id": 5
+       },
+       {
+        "depth": 4,
+        "id": 9
+       }
+      ],
+      "move": 7,
+      "ms": 33255,
+      "winning": 3
+     },
+     {
+      "chosen": 5,
+      "chosen_won": true,
+      "legal": 4,
+      "losing": [
+       {
+        "depth": 3,
+        "id": 9
+       }
+      ],
+      "move": 8,
+      "ms": 34355,
+      "winning": 3
+     }
+    ],
+    "choices": 8,
+    "choices_won": 8,
+    "cleared_end": 10,
+    "end": "SOLVED",
+    "end_ms": 36330,
+    "escapes": 10,
+    "events": [
+     " 22.66s m #6 R^ R5C4 magnet [ram] -> cleared 0/10, options 6 legal / 4 winning  CHOICE",
+     " 23.64s m #4 B> R4C4 -> cleared 1/10, options 6 legal / 4 winning  CHOICE",
+     " 23.86s m #6 R^ R5C4 magnet [ram] -> cleared 1/10, options 6 legal / 4 winning  CHOICE",
+     " 31.89s m #0 Y< R2C2 -> cleared 2/10, options 5 legal / 3 winning  CHOICE",
+     " 32.26s m #1 P< R2C3 magnet -> cleared 3/10, options 5 legal / 3 winning  CHOICE",
+     " 32.74s m #2 Y< R2C3 -> cleared 4/10, options 6 legal / 4 winning  CHOICE",
+     " 33.26s m #6 R^ R5C4 magnet -> cleared 5/10, options 5 legal / 3 winning  CHOICE",
+     " 34.35s m #5 B< R5C2 magnet -> cleared 6/10, options 4 legal / 3 winning  CHOICE",
+     " 34.92s m #9 Yv R5C2 [ram] -> cleared 6/10, options 3 legal / 3 winning",
+     " 35.66s m #8 G> R6C2 -> cleared 7/10, options 3 legal / 3 winning",
+     " 35.91s m #7 Pv R6C1 -> cleared 8/10, options 3 legal / 3 winning",
+     " 36.14s m #9 Yv R5C2 -> cleared 9/10, options 2 legal / 2 winning"
+    ],
+    "losing_move": "",
+    "lost_at_end": false,
+    "lost_at_move": -1,
+    "lost_ms": -1,
+    "lost_options": "",
+    "max_cleared": 10,
+    "moves": 12,
+    "n": 2,
+    "path": [
+     6,
+     4,
+     6,
+     0,
+     1,
+     2,
+     6,
+     5,
+     9,
+     8,
+     7,
+     9
+    ],
+    "rams": 3,
+    "recovered_by_undo": 0,
+    "same_opening_as_previous": 3,
+    "solver_prefix": 1,
+    "start_ms": 21503,
+    "trap_depth": 0,
+    "undos": 0,
+    "unlogged_final": "#3 R< R3C3 [ok]",
+    "winning_alternatives": []
+   }
+  ],
+  "checks": [
+   [
+    "fingerprint (board record == supplied)",
+    true
+   ],
+   [
+    "pieces 10 == supplied 10",
+    true
+   ],
+   [
+    "completed: exactly one escapable block left after the log (the unlogged solving escape)",
+    true
+   ],
+   [
+    "moves (escapes incl. unlogged final) 19 == supplied 19",
+    true
+   ],
+   [
+    "max cleared 10 == supplied 10",
+    true
+   ],
+   [
+    "effects { \"pull\": 6, \"ram\": 5 } == supplied { \"pull\": 6, \"ram\": 5 }",
+    true
+   ],
+   [
+    "every logged event consistent with the engine",
+    true
+   ]
+  ],
+  "meta": {
+   "armor_taps": "1",
+   "attempts": "2",
+   "blocked": "0",
+   "completed": "true",
+   "elapsed": "36330",
+   "first_move": "3020",
+   "fp": "161d9f1b6a92d740a14d83a4611964f8c3bf5f0117e132f886fdb2a4ee4129f9",
+   "max_cleared": "10",
+   "mech": "pull:6,ram:5",
+   "moves": "19",
+   "outcome": "COMPLETED",
+   "pieces": "10",
+   "rating": "MEDIUM",
+   "restarts": "1",
+   "unaided_max": "9",
+   "undo": "0"
+  },
+  "pieces": 10,
+  "problems": [],
+  "solution": [
+   6,
+   7,
+   0,
+   3,
+   4,
+   6,
+   1,
+   2,
+   6,
+   5,
+   9,
+   8,
+   9
+  ]
+ },
+ "N99": {
+  "attempts": [
+   {
+    "after_loss": 4,
+    "blocked": 1,
+    "blocked_after_loss": 1,
+    "choice_points": [
+     {
+      "chosen": 5,
+      "chosen_won": true,
+      "legal": 6,
+      "losing": [
+       {
+        "depth": 8,
+        "id": 1
+       },
+       {
+        "depth": 14,
+        "id": 8
+       }
+      ],
+      "move": 1,
+      "ms": 3453,
+      "winning": 4
+     },
+     {
+      "chosen": 0,
+      "chosen_won": true,
+      "legal": 5,
+      "losing": [
+       {
+        "depth": 7,
+        "id": 1
+       },
+       {
+        "depth": 13,
+        "id": 8
+       }
+      ],
+      "move": 2,
+      "ms": 5671,
+      "winning": 3
+     },
+     {
+      "chosen": 1,
+      "chosen_won": true,
+      "legal": 4,
+      "losing": [
+       {
+        "depth": 12,
+        "id": 8
+       }
+      ],
+      "move": 3,
+      "ms": 6202,
+      "winning": 3
+     },
+     {
+      "chosen": 14,
+      "chosen_won": false,
+      "legal": 5,
+      "losing": [
+       {
+        "depth": 6,
+        "id": 12
+       },
+       {
+        "depth": 10,
+        "id": 14
+       }
+      ],
+      "move": 5,
+      "ms": 12036,
+      "winning": 3
+     }
+    ],
+    "choices": 4,
+    "choices_won": 3,
+    "cleared_end": 7,
+    "end": "RESTART",
+    "end_ms": 23898,
+    "escapes": 7,
+    "events": [
+     "  3.45s m #5 R> R3C2 [ram] -> cleared 0/16, options 6 legal / 4 winning  CHOICE",
+     "  5.67s m #0 P< R1C2 spinner -> cleared 1/16, options 5 legal / 3 winning  CHOICE",
+     "  6.20s m #1 Y^ R1C3 -> cleared 2/16, options 4 legal / 3 winning  CHOICE",
+     " 11.82s m #15 R> R7C5 -> cleared 3/16, options 4 legal / 4 winning",
+     " 12.04s m #14 P> R7C3 switch -> cleared 4/16, options 5 legal / 3 winning  CHOICE  <== LOST (3 of 5 legal moves still won: [2, 4, 8]); play can go on up to 10 more moves",
+     " 12.90s m #12 G^ R5C5 [ram] -> cleared 4/16, options 3 legal / 0 winning  (lost)",
+     " 18.22s blocked tap #9 R^ R4C4 spinner (blocked)  [in a lost position]",
+     " 18.86s m #2 B< R1C4 -> cleared 5/16, options 2 legal / 0 winning  (lost)",
+     " 19.12s m #9 R^ R4C4 spinner -> cleared 6/16, options 2 legal / 0 winning  (lost)",
+     " 20.79s m #8 B> R3C7 switch -> cleared 7/16, options 2 legal / 0 winning  (lost)"
+    ],
+    "losing_move": "#14 P> R7C3 switch",
+    "lost_at_end": true,
+    "lost_at_move": 5,
+    "lost_ms": 12036,
+    "lost_options": "5 legal, 3 winning",
+    "max_cleared": 7,
+    "moves": 9,
+    "n": 1,
+    "path": [
+     5,
+     0,
+     1,
+     15,
+     14,
+     12,
+     2,
+     9,
+     8
+    ],
+    "rams": 2,
+    "recovered_by_undo": 0,
+    "same_opening_as_previous": 0,
+    "solver_prefix": 1,
+    "start_ms": 0,
+    "trap_depth": 10,
+    "undos": 0,
+    "winning_alternatives": [
+     2,
+     4,
+     8
+    ]
+   },
+   {
+    "after_loss": 2,
+    "blocked": 1,
+    "blocked_after_loss": 1,
+    "choice_points": [
+     {
+      "chosen": 5,
+      "chosen_won": true,
+      "legal": 6,
+      "losing": [
+       {
+        "depth": 8,
+        "id": 1
+       },
+       {
+        "depth": 14,
+        "id": 8
+       }
+      ],
+      "move": 1,
+      "ms": 29794,
+      "winning": 4
+     },
+     {
+      "chosen": 0,
+      "chosen_won": true,
+      "legal": 5,
+      "losing": [
+       {
+        "depth": 7,
+        "id": 1
+       },
+       {
+        "depth": 13,
+        "id": 8
+       }
+      ],
+      "move": 2,
+      "ms": 31872,
+      "winning": 3
+     },
+     {
+      "chosen": 1,
+      "chosen_won": true,
+      "legal": 4,
+      "losing": [
+       {
+        "depth": 12,
+        "id": 8
+       }
+      ],
+      "move": 3,
+      "ms": 32327,
+      "winning": 3
+     },
+     {
+      "chosen": 14,
+      "chosen_won": false,
+      "legal": 2,
+      "losing": [
+       {
+        "depth": 5,
+        "id": 14
+       }
+      ],
+      "move": 10,
+      "ms": 45291,
+      "winning": 1
+     }
+    ],
+    "choices": 4,
+    "choices_won": 3,
+    "cleared_end": 10,
+    "end": "RESTART",
+    "end_ms": 50025,
+    "escapes": 10,
+    "events": [
+     " 29.79s m #5 R> R3C2 [ram] -> cleared 0/16, options 6 legal / 4 winning  CHOICE",
+     " 31.87s m #0 P< R1C2 spinner -> cleared 1/16, options 5 legal / 3 winning  CHOICE",
+     " 32.33s m #1 Y^ R1C3 -> cleared 2/16, options 4 legal / 3 winning  CHOICE",
+     " 32.81s m #2 B< R1C4 -> cleared 3/16, options 4 legal / 4 winning",
+     " 35.57s m #8 B> R3C7 switch -> cleared 4/16, options 4 legal / 4 winning",
+     " 36.52s m #12 G^ R5C5 [ram] -> cleared 4/16, options 4 legal / 4 winning",
+     " 37.86s m #9 R^ R4C4 spinner -> cleared 5/16, options 3 legal / 3 winning",
+     " 41.54s m #13 B^ R5C7 -> cleared 6/16, options 3 legal / 3 winning",
+     " 42.56s m #15 R> R7C5 -> cleared 7/16, options 2 legal / 2 winning",
+     " 45.29s m #14 P> R7C3 switch -> cleared 8/16, options 2 legal / 1 winning  CHOICE  <== LOST (1 of 2 legal moves still won: [10]); play can go on up to 5 more moves",
+     " 46.41s m #4 Y< R3C1 -> cleared 9/16, options 3 legal / 0 winning  (lost)",
+     " 47.29s m #12 Gv R5C5 -> cleared 10/16, options 2 legal / 0 winning  (lost)",
+     " 48.51s blocked tap #6 B< R3C5 (blocked)  [in a lost position]"
+    ],
+    "losing_move": "#14 P> R7C3 switch",
+    "lost_at_end": true,
+    "lost_at_move": 10,
+    "lost_ms": 45291,
+    "lost_options": "2 legal, 1 winning",
+    "max_cleared": 10,
+    "moves": 12,
+    "n": 2,
+    "path": [
+     5,
+     0,
+     1,
+     2,
+     8,
+     12,
+     9,
+     13,
+     15,
+     14,
+     4,
+     12
+    ],
+    "rams": 2,
+    "recovered_by_undo": 0,
+    "same_opening_as_previous": 3,
+    "solver_prefix": 1,
+    "start_ms": 23898,
+    "trap_depth": 5,
+    "undos": 0,
+    "winning_alternatives": [
+     10
+    ]
+   },
+   {
+    "after_loss": 13,
+    "blocked": 4,
+    "blocked_after_loss": 4,
+    "choice_points": [
+     {
+      "chosen": 5,
+      "chosen_won": true,
+      "legal": 6,
+      "losing": [
+       {
+        "depth": 8,
+        "id": 1
+       },
+       {
+        "depth": 14,
+        "id": 8
+       }
+      ],
+      "move": 1,
+      "ms": 55388,
+      "winning": 4
+     },
+     {
+      "chosen": 8,
+      "chosen_won": false,
+      "legal": 5,
+      "losing": [
+       {
+        "depth": 7,
+        "id": 1
+       },
+       {
+        "depth": 13,
+        "id": 8
+       }
+      ],
+      "move": 2,
+      "ms": 65609,
+      "winning": 3
+     }
+    ],
+    "choices": 2,
+    "choices_won": 1,
+    "cleared_end": 13,
+    "end": "RESTART",
+    "end_ms": 84177,
+    "escapes": 13,
+    "events": [
+     " 55.39s m #5 R> R3C2 [ram] -> cleared 0/16, options 6 legal / 4 winning  CHOICE",
+     " 65.61s m #8 B> R3C7 switch -> cleared 1/16, options 5 legal / 3 winning  CHOICE  <== LOST (3 of 5 legal moves still won: [0, 4, 15]); play can go on up to 13 more moves",
+     " 67.02s m #12 G^ R5C5 [ram] -> cleared 1/16, options 4 legal / 0 winning  (lost)",
+     " 72.93s m #0 P< R1C2 spinner -> cleared 2/16, options 3 legal / 0 winning  (lost)",
+     " 73.38s blocked tap #1 Yv R1C3 (blocked)  [in a lost position]",
+     " 74.48s m #15 R> R7C5 -> cleared 3/16, options 2 legal / 0 winning  (lost)",
+     " 74.71s m #14 P> R7C3 switch -> cleared 4/16, options 2 legal / 0 winning  (lost)",
+     " 76.08s m #4 Y< R3C1 -> cleared 5/16, options 4 legal / 0 winning  (lost)",
+     " 76.56s m #1 Y^ R1C3 -> cleared 6/16, options 3 legal / 0 winning  (lost)",
+     " 76.84s m #2 B< R1C4 -> cleared 7/16, options 3 legal / 0 winning  (lost)",
+     " 77.76s blocked tap #6 B< R3C5 (blocked)  [in a lost position]",
+     " 78.33s m #9 R^ R4C4 spinner -> cleared 8/16, options 3 legal / 0 winning  (lost)",
+     " 79.26s m #10 G< R4C5 -> cleared 9/16, options 3 legal / 0 winning  (lost)",
+     " 80.54s m #11 Y< R4C6 spinner -> cleared 10/16, options 3 legal / 0 winning  (lost)",
+     " 81.08s m #7 G^ R3C6 spinner -> cleared 11/16, options 3 legal / 0 winning  (lost)",
+     " 81.81s m #13 B^ R5C7 -> cleared 12/16, options 2 legal / 0 winning  (lost)",
+     " 82.46s m #12 Gv R5C5 -> cleared 13/16, options 1 legal / 0 winning  (lost)",
+     " 83.12s blocked tap #6 B< R3C5 (blocked)  [in a lost position]",
+     " 83.56s blocked tap #5 R> R3C2 (blocked)  [in a lost position]"
+    ],
+    "losing_move": "#8 B> R3C7 switch",
+    "lost_at_end": true,
+    "lost_at_move": 2,
+    "lost_ms": 65609,
+    "lost_options": "5 legal, 3 winning",
+    "max_cleared": 13,
+    "moves": 15,
+    "n": 3,
+    "path": [
+     5,
+     8,
+     12,
+     0,
+     15,
+     14,
+     4,
+     1,
+     2,
+     9,
+     10,
+     11,
+     7,
+     13,
+     12
+    ],
+    "rams": 2,
+    "recovered_by_undo": 0,
+    "same_opening_as_previous": 1,
+    "solver_prefix": 1,
+    "start_ms": 50025,
+    "trap_depth": 13,
+    "undos": 0,
+    "winning_alternatives": [
+     0,
+     4,
+     15
+    ]
+   },
+   {
+    "after_loss": 0,
+    "blocked": 0,
+    "blocked_after_loss": 0,
+    "choice_points": [
+     {
+      "chosen": 5,
+      "chosen_won": true,
+      "legal": 6,
+      "losing": [
+       {
+        "depth": 8,
+        "id": 1
+       },
+       {
+        "depth": 14,
+        "id": 8
+       }
+      ],
+      "move": 1,
+      "ms": 87632,
+      "winning": 4
+     },
+     {
+      "chosen": 4,
+      "chosen_won": true,
+      "legal": 5,
+      "losing": [
+       {
+        "depth": 7,
+        "id": 1
+       },
+       {
+        "depth": 13,
+        "id": 8
+       }
+      ],
+      "move": 2,
+      "ms": 89904,
+      "winning": 3
+     }
+    ],
+    "choices": 2,
+    "choices_won": 2,
+    "cleared_end": 1,
+    "end": "TIME UP",
+    "end_ms": 90000,
+    "escapes": 1,
+    "events": [
+     " 87.63s m #5 R> R3C2 [ram] -> cleared 0/16, options 6 legal / 4 winning  CHOICE",
+     " 89.90s m #4 Y< R3C1 -> cleared 1/16, options 5 legal / 3 winning  CHOICE",
+     " 90.03s TIME UP"
+    ],
+    "losing_move": "",
+    "lost_at_end": false,
+    "lost_at_move": -1,
+    "lost_ms": -1,
+    "lost_options": "",
+    "max_cleared": 1,
+    "moves": 2,
+    "n": 4,
+    "path": [
+     5,
+     4
+    ],
+    "rams": 1,
+    "recovered_by_undo": 0,
+    "same_opening_as_previous": 1,
+    "solver_prefix": 1,
+    "start_ms": 84177,
+    "trap_depth": 0,
+    "undos": 0,
+    "winning_alternatives": []
+   }
+  ],
+  "checks": [
+   [
+    "fingerprint (board record == supplied)",
+    true
+   ],
+   [
+    "pieces 16 == supplied 16",
+    true
+   ],
+   [
+    "moves (escapes incl. unlogged final) 31 == supplied 31",
+    true
+   ],
+   [
+    "max cleared 13 == supplied 13",
+    true
+   ],
+   [
+    "cleared at end 1 == supplied 1",
+    true
+   ],
+   [
+    "effects { \"flip\": 20, \"ram\": 7, \"turn\": 5 } == supplied { \"flip\": 20, \"ram\": 7, \"turn\": 5 }",
+    true
+   ],
+   [
+    "every logged event consistent with the engine",
+    true
+   ]
+  ],
+  "meta": {
+   "attempts": "4",
+   "blocked": "6",
+   "cleared_end": "1",
+   "completed": "false",
+   "elapsed": "90000",
+   "first_move": "5671",
+   "fp": "b6c71c004f4e95901dc944eab42254da016eb957da4b6496d0b8d5a3b8948e88",
+   "long_pause": "attempt3,cleared1,of16,10221ms",
+   "longest_pause": "10221",
+   "max_cleared": "13",
+   "mech": "flip:20,ram:7,turn:5",
+   "moves": "31",
+   "outcome": "TIME_UP",
+   "pieces": "16",
+   "rating": "EXTREME",
+   "restarts": "3",
+   "unaided_max": "13",
+   "undo": "0"
+  },
+  "pieces": 16,
+  "problems": [],
+  "solution": [
+   5,
+   15,
+   0,
+   1,
+   2,
+   4,
+   8,
+   12,
+   13,
+   9,
+   10,
+   11,
+   7,
+   6,
+   5,
+   12,
+   3,
+   12,
+   14
+  ]
+ }
+}

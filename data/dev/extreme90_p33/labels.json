@@ -1,0 +1,1010 @@
+{
+ "note": "Phase 33: one label table for N1-N93, OWNER DECISION kept separate from the\nHUMAN DIFFICULTY RATING. Facts only, each with its source file; nothing inferred.\n  python3 data/dev/extreme90_p33/make_labels.py > data/dev/extreme90_p33/labels.json\n\nowner:   APPROVED | NOT_APPROVED (downgraded, archived or explicitly not approved)\n         | PROVISIONAL (strong / provisional / promising, never decided) | PENDING (N82)\n         | BORDERLINE (N66: borderline, not owner-approved)\nratings: the recorded human difficulty ratings (owner's first exposure first when known);\n         [] = no rating recorded in any rating file.\nstudy:   +1 approved, -1 human-rated and not approved, 0 = excluded from the binary study\n         (provisional, pending, borderline, or not approved without any recorded rating).",
+ "counts": {
+  "NOT_APPROVED": 41,
+  "APPROVED": 38,
+  "PROVISIONAL": 12,
+  "BORDERLINE": 1,
+  "PENDING": 1
+ },
+ "study_counts": {
+  "positive": 38,
+  "negative": 33,
+  "excluded": 22
+ },
+ "boards": [
+  {
+   "id": "N1",
+   "phase": 14,
+   "owner": "NOT_APPROVED",
+   "owner_source": "extreme90_bank_status.json:downgraded_or_archived",
+   "ratings": [],
+   "rating_source": "none recorded",
+   "study": 0
+  },
+  {
+   "id": "N2",
+   "phase": 14,
+   "owner": "NOT_APPROVED",
+   "owner_source": "extreme90_bank_status.json:downgraded_or_archived",
+   "ratings": [],
+   "rating_source": "none recorded",
+   "study": 0
+  },
+  {
+   "id": "N3",
+   "phase": 14,
+   "owner": "APPROVED",
+   "owner_source": "extreme90_bank_status.json:owner_approved",
+   "ratings": [],
+   "rating_source": "none recorded",
+   "study": 1
+  },
+  {
+   "id": "N4",
+   "phase": 15,
+   "owner": "NOT_APPROVED",
+   "owner_source": "extreme90_bank_status.json:downgraded_or_archived",
+   "ratings": [],
+   "rating_source": "none recorded",
+   "study": 0
+  },
+  {
+   "id": "N5",
+   "phase": 15,
+   "owner": "APPROVED",
+   "owner_source": "extreme90_bank_status.json:owner_approved",
+   "ratings": [],
+   "rating_source": "none recorded",
+   "study": 1
+  },
+  {
+   "id": "N6",
+   "phase": 15,
+   "owner": "NOT_APPROVED",
+   "owner_source": "extreme90_bank_status.json:downgraded_or_archived",
+   "ratings": [],
+   "rating_source": "none recorded",
+   "study": 0
+  },
+  {
+   "id": "N7",
+   "phase": 15,
+   "owner": "APPROVED",
+   "owner_source": "extreme90_bank_status.json:owner_approved",
+   "ratings": [],
+   "rating_source": "none recorded",
+   "study": 1
+  },
+  {
+   "id": "N8",
+   "phase": 15,
+   "owner": "NOT_APPROVED",
+   "owner_source": "extreme90_bank_status.json:downgraded_or_archived",
+   "ratings": [],
+   "rating_source": "none recorded",
+   "study": 0
+  },
+  {
+   "id": "N9",
+   "phase": 15,
+   "owner": "NOT_APPROVED",
+   "owner_source": "extreme90_bank_status.json:downgraded_or_archived",
+   "ratings": [],
+   "rating_source": "none recorded",
+   "study": 0
+  },
+  {
+   "id": "N10",
+   "phase": 15,
+   "owner": "NOT_APPROVED",
+   "owner_source": "extreme90_bank_status.json:downgraded_or_archived",
+   "ratings": [],
+   "rating_source": "none recorded",
+   "study": 0
+  },
+  {
+   "id": "N11",
+   "phase": 15,
+   "owner": "APPROVED",
+   "owner_source": "extreme90_bank_status.json:owner_approved",
+   "ratings": [],
+   "rating_source": "none recorded",
+   "study": 1
+  },
+  {
+   "id": "N12",
+   "phase": 15,
+   "owner": "NOT_APPROVED",
+   "owner_source": "extreme90_bank_status.json:downgraded_or_archived",
+   "ratings": [],
+   "rating_source": "none recorded",
+   "study": 0
+  },
+  {
+   "id": "N13",
+   "phase": 15,
+   "owner": "APPROVED",
+   "owner_source": "extreme90_bank_status.json:owner_approved",
+   "ratings": [],
+   "rating_source": "none recorded",
+   "study": 1
+  },
+  {
+   "id": "N14",
+   "phase": 16,
+   "owner": "APPROVED",
+   "owner_source": "extreme90_bank_status.json:owner_approved",
+   "ratings": [
+    "EXTREME"
+   ],
+   "rating_source": "extreme90_p23/human_ratings.json",
+   "study": 1
+  },
+  {
+   "id": "N15",
+   "phase": 16,
+   "owner": "APPROVED",
+   "owner_source": "extreme90_bank_status.json:owner_approved",
+   "ratings": [
+    "EXTREME"
+   ],
+   "rating_source": "extreme90_p23/human_ratings.json",
+   "study": 1
+  },
+  {
+   "id": "N16",
+   "phase": 16,
+   "owner": "APPROVED",
+   "owner_source": "extreme90_bank_status.json:owner_approved",
+   "ratings": [
+    "VERY HARD"
+   ],
+   "rating_source": "extreme90_p23/human_ratings.json",
+   "study": 1
+  },
+  {
+   "id": "N17",
+   "phase": 16,
+   "owner": "NOT_APPROVED",
+   "owner_source": "extreme90_bank_status.json:downgraded_or_archived",
+   "ratings": [
+    "MEDIUM"
+   ],
+   "rating_source": "extreme90_p23/human_ratings.json",
+   "study": -1
+  },
+  {
+   "id": "N18",
+   "phase": 16,
+   "owner": "APPROVED",
+   "owner_source": "extreme90_bank_status.json:owner_approved",
+   "ratings": [
+    "EXTREME"
+   ],
+   "rating_source": "extreme90_p23/human_ratings.json",
+   "study": 1
+  },
+  {
+   "id": "N19",
+   "phase": 16,
+   "owner": "NOT_APPROVED",
+   "owner_source": "extreme90_bank_status.json:downgraded_or_archived",
+   "ratings": [
+    "MEDIUM"
+   ],
+   "rating_source": "extreme90_p23/human_ratings.json",
+   "study": -1
+  },
+  {
+   "id": "N20",
+   "phase": 16,
+   "owner": "NOT_APPROVED",
+   "owner_source": "extreme90_bank_status.json:downgraded_or_archived",
+   "ratings": [
+    "EASY"
+   ],
+   "rating_source": "extreme90_p23/human_ratings.json",
+   "study": -1
+  },
+  {
+   "id": "N21",
+   "phase": 16,
+   "owner": "APPROVED",
+   "owner_source": "extreme90_bank_status.json:owner_approved",
+   "ratings": [
+    "EXTREME"
+   ],
+   "rating_source": "extreme90_p23/human_ratings.json",
+   "study": 1
+  },
+  {
+   "id": "N22",
+   "phase": 16,
+   "owner": "NOT_APPROVED",
+   "owner_source": "extreme90_bank_status.json:downgraded_or_archived",
+   "ratings": [
+    "EASY"
+   ],
+   "rating_source": "extreme90_p23/human_ratings.json",
+   "study": -1
+  },
+  {
+   "id": "N23",
+   "phase": 16,
+   "owner": "PROVISIONAL",
+   "owner_source": "extreme90_bank_status.json:provisional",
+   "ratings": [
+    "VERY HARD"
+   ],
+   "rating_source": "extreme90_p23/human_ratings.json",
+   "study": 0
+  },
+  {
+   "id": "N24",
+   "phase": 17,
+   "owner": "PROVISIONAL",
+   "owner_source": "extreme90_bank_status.json:provisional",
+   "ratings": [
+    "HARD"
+   ],
+   "rating_source": "extreme90_p23/human_ratings.json",
+   "study": 0
+  },
+  {
+   "id": "N25",
+   "phase": 17,
+   "owner": "NOT_APPROVED",
+   "owner_source": "extreme90_bank_status.json:downgraded_or_archived",
+   "ratings": [
+    "MEDIUM"
+   ],
+   "rating_source": "extreme90_p23/human_ratings.json",
+   "study": -1
+  },
+  {
+   "id": "N26",
+   "phase": 17,
+   "owner": "APPROVED",
+   "owner_source": "extreme90_bank_status.json:owner_approved",
+   "ratings": [
+    "VERY HARD"
+   ],
+   "rating_source": "extreme90_p23/human_ratings.json",
+   "study": 1
+  },
+  {
+   "id": "N27",
+   "phase": 17,
+   "owner": "APPROVED",
+   "owner_source": "extreme90_bank_status.json:owner_approved",
+   "ratings": [
+    "VERY HARD"
+   ],
+   "rating_source": "extreme90_p23/human_ratings.json",
+   "study": 1
+  },
+  {
+   "id": "N28",
+   "phase": 17,
+   "owner": "NOT_APPROVED",
+   "owner_source": "extreme90_bank_status.json:downgraded_or_archived",
+   "ratings": [
+    "MEDIUM"
+   ],
+   "rating_source": "extreme90_p23/human_ratings.json",
+   "study": -1
+  },
+  {
+   "id": "N29",
+   "phase": 17,
+   "owner": "APPROVED",
+   "owner_source": "extreme90_bank_status.json:owner_approved",
+   "ratings": [
+    "VERY HARD"
+   ],
+   "rating_source": "extreme90_p23/human_ratings.json",
+   "study": 1
+  },
+  {
+   "id": "N30",
+   "phase": 17,
+   "owner": "APPROVED",
+   "owner_source": "extreme90_bank_status.json:owner_approved",
+   "ratings": [
+    "VERY HARD"
+   ],
+   "rating_source": "extreme90_p23/human_ratings.json",
+   "study": 1
+  },
+  {
+   "id": "N31",
+   "phase": 18,
+   "owner": "APPROVED",
+   "owner_source": "extreme90_bank_status.json:owner_approved",
+   "ratings": [
+    "EXTREME",
+    "EXTREME",
+    "VERY HARD"
+   ],
+   "rating_source": "extreme90_p23/human_ratings.json",
+   "study": 1
+  },
+  {
+   "id": "N32",
+   "phase": 18,
+   "owner": "APPROVED",
+   "owner_source": "extreme90_bank_status.json:owner_approved",
+   "ratings": [
+    "EXTREME",
+    "EXTREME",
+    "HARD"
+   ],
+   "rating_source": "extreme90_p23/human_ratings.json",
+   "study": 1
+  },
+  {
+   "id": "N33",
+   "phase": 18,
+   "owner": "APPROVED",
+   "owner_source": "extreme90_bank_status.json:owner_approved",
+   "ratings": [
+    "EXTREME",
+    "EXTREME",
+    "VERY HARD"
+   ],
+   "rating_source": "extreme90_p23/human_ratings.json",
+   "study": 1
+  },
+  {
+   "id": "N34",
+   "phase": 18,
+   "owner": "APPROVED",
+   "owner_source": "extreme90_bank_status.json:owner_approved",
+   "ratings": [
+    "HARD",
+    "VERY HARD",
+    "VERY HARD"
+   ],
+   "rating_source": "extreme90_p23/human_ratings.json",
+   "study": 1
+  },
+  {
+   "id": "N35",
+   "phase": 19,
+   "owner": "APPROVED",
+   "owner_source": "extreme90_bank_status.json:owner_approved",
+   "ratings": [
+    "EXTREME",
+    "VERY HARD"
+   ],
+   "rating_source": "extreme90_p23/human_ratings.json",
+   "study": 1
+  },
+  {
+   "id": "N36",
+   "phase": 19,
+   "owner": "APPROVED",
+   "owner_source": "extreme90_bank_status.json:owner_approved",
+   "ratings": [
+    "VERY HARD",
+    "VERY HARD"
+   ],
+   "rating_source": "extreme90_p23/human_ratings.json",
+   "study": 1
+  },
+  {
+   "id": "N37",
+   "phase": 20,
+   "owner": "APPROVED",
+   "owner_source": "extreme90_bank_status.json:owner_approved",
+   "ratings": [],
+   "rating_source": "none recorded",
+   "study": 1
+  },
+  {
+   "id": "N38",
+   "phase": 20,
+   "owner": "APPROVED",
+   "owner_source": "extreme90_bank_status.json:owner_approved",
+   "ratings": [],
+   "rating_source": "none recorded",
+   "study": 1
+  },
+  {
+   "id": "N39",
+   "phase": 21,
+   "owner": "PROVISIONAL",
+   "owner_source": "extreme90_bank_status.json:provisional",
+   "ratings": [],
+   "rating_source": "none recorded",
+   "study": 0
+  },
+  {
+   "id": "N40",
+   "phase": 21,
+   "owner": "PROVISIONAL",
+   "owner_source": "extreme90_bank_status.json:provisional",
+   "ratings": [],
+   "rating_source": "none recorded",
+   "study": 0
+  },
+  {
+   "id": "N41",
+   "phase": 21,
+   "owner": "NOT_APPROVED",
+   "owner_source": "extreme90_bank_status.json:downgraded_or_archived",
+   "ratings": [
+    "EASY"
+   ],
+   "rating_source": "extreme90_p23/human_ratings.json",
+   "study": -1
+  },
+  {
+   "id": "N42",
+   "phase": 21,
+   "owner": "PROVISIONAL",
+   "owner_source": "extreme90_bank_status.json:provisional",
+   "ratings": [],
+   "rating_source": "none recorded",
+   "study": 0
+  },
+  {
+   "id": "N43",
+   "phase": 21,
+   "owner": "PROVISIONAL",
+   "owner_source": "extreme90_bank_status.json:provisional",
+   "ratings": [],
+   "rating_source": "none recorded",
+   "study": 0
+  },
+  {
+   "id": "N44",
+   "phase": 21,
+   "owner": "PROVISIONAL",
+   "owner_source": "extreme90_bank_status.json:provisional",
+   "ratings": [],
+   "rating_source": "none recorded",
+   "study": 0
+  },
+  {
+   "id": "N45",
+   "phase": 21,
+   "owner": "PROVISIONAL",
+   "owner_source": "extreme90_bank_status.json:provisional",
+   "ratings": [],
+   "rating_source": "none recorded",
+   "study": 0
+  },
+  {
+   "id": "N46",
+   "phase": 21,
+   "owner": "NOT_APPROVED",
+   "owner_source": "extreme90_bank_status.json:downgraded_or_archived",
+   "ratings": [
+    "MEDIUM"
+   ],
+   "rating_source": "extreme90_p23/human_ratings.json",
+   "study": -1
+  },
+  {
+   "id": "N47",
+   "phase": 21,
+   "owner": "PROVISIONAL",
+   "owner_source": "extreme90_bank_status.json:provisional",
+   "ratings": [],
+   "rating_source": "none recorded",
+   "study": 0
+  },
+  {
+   "id": "N48",
+   "phase": 22,
+   "owner": "PROVISIONAL",
+   "owner_source": "extreme90_bank_status.json:strong_provisional",
+   "ratings": [
+    "EXTREME",
+    "VERY HARD"
+   ],
+   "rating_source": "extreme90_p23/human_ratings.json",
+   "study": 0
+  },
+  {
+   "id": "N49",
+   "phase": 22,
+   "owner": "PROVISIONAL",
+   "owner_source": "extreme90_bank_status.json:strong_provisional",
+   "ratings": [
+    "VERY HARD",
+    "VERY HARD"
+   ],
+   "rating_source": "extreme90_p23/human_ratings.json",
+   "study": 0
+  },
+  {
+   "id": "N50",
+   "phase": 22,
+   "owner": "NOT_APPROVED",
+   "owner_source": "extreme90_bank_status.json:downgraded_or_archived",
+   "ratings": [
+    "EASY",
+    "HARD"
+   ],
+   "rating_source": "extreme90_p23/human_ratings.json",
+   "study": -1
+  },
+  {
+   "id": "N51",
+   "phase": 22,
+   "owner": "PROVISIONAL",
+   "owner_source": "extreme90_bank_status.json:strong_provisional",
+   "ratings": [
+    "EXTREME",
+    "VERY HARD"
+   ],
+   "rating_source": "extreme90_p23/human_ratings.json",
+   "study": 0
+  },
+  {
+   "id": "N52",
+   "phase": 24,
+   "owner": "APPROVED",
+   "owner_source": "extreme90_bank_status.json:owner_approved",
+   "ratings": [
+    "EXTREME"
+   ],
+   "rating_source": "extreme90_p25 report: recorded EXTREME rating (docs/extreme90_phase25.md K)",
+   "study": 1
+  },
+  {
+   "id": "N53",
+   "phase": 25,
+   "owner": "APPROVED",
+   "owner_source": "extreme90_bank_status.json:owner_approved",
+   "ratings": [
+    "EXTREME"
+   ],
+   "rating_source": "extreme90_p31/features_n53_n82.json (owner first exposure)",
+   "study": 1
+  },
+  {
+   "id": "N54",
+   "phase": 25,
+   "owner": "NOT_APPROVED",
+   "owner_source": "extreme90_bank_status.json:downgraded_or_archived",
+   "ratings": [
+    "MEDIUM"
+   ],
+   "rating_source": "extreme90_p31/features_n53_n82.json (owner first exposure)",
+   "study": -1
+  },
+  {
+   "id": "N55",
+   "phase": 25,
+   "owner": "APPROVED",
+   "owner_source": "extreme90_bank_status.json:owner_approved",
+   "ratings": [
+    "VERY HARD"
+   ],
+   "rating_source": "extreme90_p31/features_n53_n82.json (owner first exposure)",
+   "study": 1
+  },
+  {
+   "id": "N56",
+   "phase": 25,
+   "owner": "APPROVED",
+   "owner_source": "extreme90_bank_status.json:owner_approved",
+   "ratings": [
+    "EXTREME"
+   ],
+   "rating_source": "extreme90_p31/features_n53_n82.json (owner first exposure)",
+   "study": 1
+  },
+  {
+   "id": "N57",
+   "phase": 25,
+   "owner": "NOT_APPROVED",
+   "owner_source": "extreme90_bank_status.json:downgraded_or_archived",
+   "ratings": [
+    "EASY"
+   ],
+   "rating_source": "extreme90_p31/features_n53_n82.json (owner first exposure)",
+   "study": -1
+  },
+  {
+   "id": "N58",
+   "phase": 25,
+   "owner": "NOT_APPROVED",
+   "owner_source": "extreme90_bank_status.json:downgraded_or_archived",
+   "ratings": [
+    "HARD"
+   ],
+   "rating_source": "extreme90_p31/features_n53_n82.json (owner first exposure)",
+   "study": -1
+  },
+  {
+   "id": "N59",
+   "phase": 26,
+   "owner": "APPROVED",
+   "owner_source": "extreme90_bank_status.json:owner_approved",
+   "ratings": [
+    "EXTREME"
+   ],
+   "rating_source": "extreme90_p31/features_n53_n82.json (owner first exposure)",
+   "study": 1
+  },
+  {
+   "id": "N60",
+   "phase": 26,
+   "owner": "NOT_APPROVED",
+   "owner_source": "extreme90_bank_status.json:downgraded_or_archived",
+   "ratings": [
+    "MEDIUM"
+   ],
+   "rating_source": "extreme90_p31/features_n53_n82.json (owner first exposure)",
+   "study": -1
+  },
+  {
+   "id": "N61",
+   "phase": 26,
+   "owner": "APPROVED",
+   "owner_source": "extreme90_bank_status.json:owner_approved",
+   "ratings": [
+    "VERY HARD"
+   ],
+   "rating_source": "extreme90_p31/features_n53_n82.json (owner first exposure)",
+   "study": 1
+  },
+  {
+   "id": "N62",
+   "phase": 27,
+   "owner": "APPROVED",
+   "owner_source": "extreme90_bank_status.json:owner_approved",
+   "ratings": [
+    "EXTREME"
+   ],
+   "rating_source": "extreme90_p31/features_n53_n82.json (owner first exposure)",
+   "study": 1
+  },
+  {
+   "id": "N63",
+   "phase": 28,
+   "owner": "NOT_APPROVED",
+   "owner_source": "extreme90_bank_status.json:downgraded_or_archived",
+   "ratings": [
+    "MEDIUM"
+   ],
+   "rating_source": "extreme90_p31/features_n53_n82.json (owner first exposure)",
+   "study": -1
+  },
+  {
+   "id": "N64",
+   "phase": 28,
+   "owner": "APPROVED",
+   "owner_source": "extreme90_bank_status.json:owner_approved",
+   "ratings": [
+    "EXTREME"
+   ],
+   "rating_source": "extreme90_p31/features_n53_n82.json (owner first exposure)",
+   "study": 1
+  },
+  {
+   "id": "N65",
+   "phase": 28,
+   "owner": "NOT_APPROVED",
+   "owner_source": "extreme90_bank_status.json:downgraded_or_archived",
+   "ratings": [
+    "EASY"
+   ],
+   "rating_source": "extreme90_p31/features_n53_n82.json (owner first exposure)",
+   "study": -1
+  },
+  {
+   "id": "N66",
+   "phase": 28,
+   "owner": "BORDERLINE",
+   "owner_source": "extreme90_bank_status.json:borderline_not_approved",
+   "ratings": [
+    "HARD"
+   ],
+   "rating_source": "extreme90_p31/features_n53_n82.json (owner first exposure)",
+   "study": 0
+  },
+  {
+   "id": "N67",
+   "phase": 28,
+   "owner": "NOT_APPROVED",
+   "owner_source": "extreme90_bank_status.json:downgraded_or_archived",
+   "ratings": [
+    "MEDIUM"
+   ],
+   "rating_source": "extreme90_p31/features_n53_n82.json (owner first exposure)",
+   "study": -1
+  },
+  {
+   "id": "N68",
+   "phase": 28,
+   "owner": "APPROVED",
+   "owner_source": "extreme90_bank_status.json:owner_approved",
+   "ratings": [
+    "EXTREME"
+   ],
+   "rating_source": "extreme90_p31/features_n53_n82.json (owner first exposure)",
+   "study": 1
+  },
+  {
+   "id": "N69",
+   "phase": 28,
+   "owner": "APPROVED",
+   "owner_source": "extreme90_bank_status.json:owner_approved",
+   "ratings": [
+    "EXTREME"
+   ],
+   "rating_source": "extreme90_p31/features_n53_n82.json (owner first exposure)",
+   "study": 1
+  },
+  {
+   "id": "N70",
+   "phase": 28,
+   "owner": "NOT_APPROVED",
+   "owner_source": "extreme90_bank_status.json:downgraded_or_archived",
+   "ratings": [
+    "EASY"
+   ],
+   "rating_source": "extreme90_p31/features_n53_n82.json (owner first exposure)",
+   "study": -1
+  },
+  {
+   "id": "N71",
+   "phase": 29,
+   "owner": "NOT_APPROVED",
+   "owner_source": "extreme90_bank_status.json:downgraded_or_archived",
+   "ratings": [
+    "EASY"
+   ],
+   "rating_source": "extreme90_p31/features_n53_n82.json (owner first exposure)",
+   "study": -1
+  },
+  {
+   "id": "N72",
+   "phase": 29,
+   "owner": "APPROVED",
+   "owner_source": "extreme90_bank_status.json:owner_approved",
+   "ratings": [
+    "EXTREME"
+   ],
+   "rating_source": "extreme90_p31/features_n53_n82.json (owner first exposure)",
+   "study": 1
+  },
+  {
+   "id": "N73",
+   "phase": 29,
+   "owner": "NOT_APPROVED",
+   "owner_source": "extreme90_bank_status.json:downgraded_or_archived",
+   "ratings": [
+    "HARD"
+   ],
+   "rating_source": "extreme90_p31/features_n53_n82.json (owner first exposure)",
+   "study": -1
+  },
+  {
+   "id": "N74",
+   "phase": 29,
+   "owner": "NOT_APPROVED",
+   "owner_source": "extreme90_bank_status.json:downgraded_or_archived",
+   "ratings": [
+    "MEDIUM"
+   ],
+   "rating_source": "extreme90_p31/features_n53_n82.json (owner first exposure)",
+   "study": -1
+  },
+  {
+   "id": "N75",
+   "phase": 29,
+   "owner": "APPROVED",
+   "owner_source": "extreme90_bank_status.json:owner_approved",
+   "ratings": [
+    "VERY HARD"
+   ],
+   "rating_source": "extreme90_p31/features_n53_n82.json (owner first exposure)",
+   "study": 1
+  },
+  {
+   "id": "N76",
+   "phase": 29,
+   "owner": "NOT_APPROVED",
+   "owner_source": "extreme90_bank_status.json:downgraded_or_archived",
+   "ratings": [
+    "HARD"
+   ],
+   "rating_source": "extreme90_p31/features_n53_n82.json (owner first exposure)",
+   "study": -1
+  },
+  {
+   "id": "N77",
+   "phase": 29,
+   "owner": "APPROVED",
+   "owner_source": "extreme90_bank_status.json:owner_approved",
+   "ratings": [
+    "EXTREME"
+   ],
+   "rating_source": "extreme90_p31/features_n53_n82.json (owner first exposure)",
+   "study": 1
+  },
+  {
+   "id": "N78",
+   "phase": 30,
+   "owner": "NOT_APPROVED",
+   "owner_source": "never approved; Phase 31 brief rated them (features_n53_n82.json); exported as tested_no_decision",
+   "ratings": [
+    "MEDIUM"
+   ],
+   "rating_source": "extreme90_p31/features_n53_n82.json (owner first exposure)",
+   "study": -1
+  },
+  {
+   "id": "N79",
+   "phase": 30,
+   "owner": "NOT_APPROVED",
+   "owner_source": "never approved; Phase 31 brief rated them (features_n53_n82.json); exported as tested_no_decision",
+   "ratings": [
+    "MEDIUM"
+   ],
+   "rating_source": "extreme90_p31/features_n53_n82.json (owner first exposure)",
+   "study": -1
+  },
+  {
+   "id": "N80",
+   "phase": 30,
+   "owner": "NOT_APPROVED",
+   "owner_source": "never approved; Phase 31 brief rated them (features_n53_n82.json); exported as tested_no_decision",
+   "ratings": [
+    "HARD"
+   ],
+   "rating_source": "extreme90_p31/features_n53_n82.json (owner first exposure)",
+   "study": -1
+  },
+  {
+   "id": "N81",
+   "phase": 30,
+   "owner": "NOT_APPROVED",
+   "owner_source": "never approved; Phase 31 brief rated them (features_n53_n82.json); exported as tested_no_decision",
+   "ratings": [
+    "MEDIUM"
+   ],
+   "rating_source": "extreme90_p31/features_n53_n82.json (owner first exposure)",
+   "study": -1
+  },
+  {
+   "id": "N82",
+   "phase": 30,
+   "owner": "PENDING",
+   "owner_source": "extreme90_p31/owner_decisions_n83_n87.json:pending",
+   "ratings": [
+    "VERY HARD"
+   ],
+   "rating_source": "extreme90_p31/features_n53_n82.json (owner first exposure)",
+   "study": 0
+  },
+  {
+   "id": "N83",
+   "phase": 31,
+   "owner": "APPROVED",
+   "owner_source": "extreme90_p31/owner_decisions_n83_n87.json",
+   "ratings": [
+    "EXTREME"
+   ],
+   "rating_source": "extreme90_p31/human_p31.json",
+   "study": 1
+  },
+  {
+   "id": "N84",
+   "phase": 31,
+   "owner": "NOT_APPROVED",
+   "owner_source": "extreme90_p31/owner_decisions_n83_n87.json",
+   "ratings": [
+    "MEDIUM"
+   ],
+   "rating_source": "extreme90_p31/human_p31.json",
+   "study": -1
+  },
+  {
+   "id": "N85",
+   "phase": 31,
+   "owner": "NOT_APPROVED",
+   "owner_source": "extreme90_p31/owner_decisions_n83_n87.json",
+   "ratings": [
+    "HARD"
+   ],
+   "rating_source": "extreme90_p31/human_p31.json",
+   "study": -1
+  },
+  {
+   "id": "N86",
+   "phase": 31,
+   "owner": "APPROVED",
+   "owner_source": "extreme90_p31/owner_decisions_n83_n87.json",
+   "ratings": [
+    "EXTREME"
+   ],
+   "rating_source": "extreme90_p31/human_p31.json",
+   "study": 1
+  },
+  {
+   "id": "N87",
+   "phase": 31,
+   "owner": "APPROVED",
+   "owner_source": "extreme90_p31/owner_decisions_n83_n87.json",
+   "ratings": [
+    "VERY HARD"
+   ],
+   "rating_source": "extreme90_p31/human_p31.json",
+   "study": 1
+  },
+  {
+   "id": "N88",
+   "phase": 32,
+   "owner": "NOT_APPROVED",
+   "owner_source": "extreme90_p32/owner_decisions_n88_n93.json",
+   "ratings": [
+    "MEDIUM"
+   ],
+   "rating_source": "extreme90_p32/owner_decisions_n88_n93.json",
+   "study": -1
+  },
+  {
+   "id": "N89",
+   "phase": 32,
+   "owner": "NOT_APPROVED",
+   "owner_source": "extreme90_p32/owner_decisions_n88_n93.json",
+   "ratings": [
+    "MEDIUM"
+   ],
+   "rating_source": "extreme90_p32/owner_decisions_n88_n93.json",
+   "study": -1
+  },
+  {
+   "id": "N90",
+   "phase": 32,
+   "owner": "NOT_APPROVED",
+   "owner_source": "extreme90_p32/owner_decisions_n88_n93.json",
+   "ratings": [
+    "MEDIUM"
+   ],
+   "rating_source": "extreme90_p32/owner_decisions_n88_n93.json",
+   "study": -1
+  },
+  {
+   "id": "N91",
+   "phase": 32,
+   "owner": "NOT_APPROVED",
+   "owner_source": "extreme90_p32/owner_decisions_n88_n93.json",
+   "ratings": [
+    "MEDIUM"
+   ],
+   "rating_source": "extreme90_p32/owner_decisions_n88_n93.json",
+   "study": -1
+  },
+  {
+   "id": "N92",
+   "phase": 32,
+   "owner": "NOT_APPROVED",
+   "owner_source": "extreme90_p32/owner_decisions_n88_n93.json",
+   "ratings": [
+    "VERY HARD"
+   ],
+   "rating_source": "extreme90_p32/owner_decisions_n88_n93.json",
+   "study": -1
+  },
+  {
+   "id": "N93",
+   "phase": 32,
+   "owner": "NOT_APPROVED",
+   "owner_source": "extreme90_p32/owner_decisions_n88_n93.json",
+   "ratings": [
+    "MEDIUM"
+   ],
+   "rating_source": "extreme90_p32/owner_decisions_n88_n93.json",
+   "study": -1
+  }
+ ]
+}

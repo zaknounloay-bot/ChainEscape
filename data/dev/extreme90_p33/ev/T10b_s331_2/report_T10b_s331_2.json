@@ -1,0 +1,133 @@
+{
+ "T10b_s331_2": {
+  "A": {
+   "fingerprint": "e7289be01bb874a0a8fa1cdd2ed6aab94300382c48a7b421043f71ec9360870e",
+   "hint_nodes": [
+    24,
+    10
+   ],
+   "parity": [
+    0,
+    0
+   ],
+   "portals": 0,
+   "position_cap": 2000,
+   "positions": 136,
+   "replay": true,
+   "solution": 15,
+   "solve_ms": 2.8,
+   "timeup_worst_ms": 1.7,
+   "timeup_worst_nodes": 28,
+   "winnable": 52
+  },
+  "B": {
+   "coverage": 0.8,
+   "decision_steps": 12,
+   "distinct_mistakes": 5,
+   "endgame_decision": true,
+   "last_decision": 12,
+   "late": 0.8,
+   "line": [
+    "r3c3v [x2]",
+    "r2c3v [x1]",
+    "r3c4v [x2]",
+    "r2c4^ [x1]",
+    "r2c5< [x1]",
+    "r1c2^ [x1]",
+    "r1c5< [x1]",
+    "r4c5^ [x1]",
+    "r3c2> [x1]",
+    "r3c1^ [x1]",
+    "r4c1^ [x1]",
+    "r5c2v [x1]",
+    "r4c2v",
+    "r5c5<",
+    "r6c6^"
+   ],
+   "losing_per_step": [
+    2,
+    1,
+    2,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    0,
+    0,
+    0
+   ],
+   "matters_lock": true,
+   "matters_switch": true,
+   "mistakes": [
+    "r3c4>",
+    "r6c6^",
+    "r2c4<",
+    "r4c2^",
+    "r4c2>"
+   ],
+   "shortcut": 0.1,
+   "spinner_dependence": "unsolvable without it",
+   "without_lock": "without it: 9 decision steps, 5 distinct mistakes (with it: 12, 5)",
+   "without_switch": "unsolvable without it"
+  },
+  "C": {
+   "decisions_k4_6_8": [
+    5,
+    3,
+    1
+   ],
+   "deepest": 9,
+   "greedy": {
+    "look2": 0.075,
+    "look4": 0.1,
+    "min_turn": 0,
+    "mobility": 0,
+    "safe": 0.02
+   },
+   "hidden_k6_8": [
+    4,
+    1
+   ],
+   "learner": {
+    "look4": 0,
+    "look6": 0
+   },
+   "look6_greedy": 0.258,
+   "opening": "2 / 4",
+   "pressure": {
+    "advances": 0,
+    "calm_prefix": 0,
+    "flips": 3,
+    "multi_turned": 2,
+    "prediction_share": 0.47,
+    "pulls": 0,
+    "rams": 0,
+    "signals": 0,
+    "spinners_turned": 5,
+    "trap_delay_median": 4,
+    "turns": 8,
+    "undo_proof": 0.5
+   },
+   "win_share": 0.382
+  },
+  "map": [
+   ". . . . . . .",
+   ". . Bv&A . . R< .",
+   ". . . B>@~ Yv@ G<%A .",
+   ". R>@- B<#Y&A Bv@~ P>@ . .",
+   ". G^#B G<@#Y . . Yv&A .",
+   ". . Pv@- . . P<#B .",
+   ". . . . . . G^%A"
+  ],
+  "name": "T10b_s331_2",
+  "target": "EXTREME",
+  "verdict": "HUMAN-REVIEW CANDIDATE",
+  "why_a": [],
+  "why_b": []
+ }
+}

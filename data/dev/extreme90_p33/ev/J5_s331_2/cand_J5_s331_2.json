@@ -1,0 +1,17 @@
+{
+ "J5_s331_2": {
+  "map": [
+   ". . . . . . .",
+   ". . . . . . .",
+   ". . . . . . .",
+   ". Gv#Y . Y>&A . B^= .",
+   "R^@-#Y R^&A Rv= . Y^@~ Yv@ .",
+   ". . . B^%A . . .",
+   ". B>@- . . . . P>%A"
+  ],
+  "target": "EXTREME",
+  "facts": [],
+  "mechanic": "switch,lock",
+  "max_positions": 2000
+ }
+}

@@ -1,0 +1,66 @@
+{
+ "phase": 33,
+ "written": "2026-11-02, before the Phase 33 structure measures of N1-N93 were computed (only the Phase 31/32 struct files of N53-N93 existed) and before any Phase 33 generator run",
+ "labels": {
+  "file": "data/dev/extreme90_p33/labels.json (make_labels.py)",
+  "positive": "owner APPROVED (38)",
+  "negative": "owner NOT APPROVED (downgraded, archived or explicitly not approved) AND at least one recorded human rating (33)",
+  "excluded": "provisional / strong provisional / promising without decision, N82 pending, N66 borderline, and boards not approved without any recorded rating (N1, N2, N4, N6, N8-N10, N12): unrated is not rejected, provisional is not approved",
+  "rating_vs_decision": "the human difficulty rating is stored separately and is NOT the label; a VERY HARD rating does not make a board positive (N82, N92 are not approved)"
+ },
+ "measures": {
+  "tool": "tools/ta90_struct33.gd (extends ta90_struct31.gd; exact Solver unchanged)",
+  "pre_specified_predictors": {
+   "P1_positions": "reachable positions; lower = predicted approved (the Phase 25-26 selection rule, pre-registered in Phase 31 for N83+)",
+   "P2_early3": "losing legal moves in the first 3 solution steps; lower = predicted approved (pre-registered in Phase 31 for N83+)",
+   "P3_open_tempting": "opening moves that let a block escape and lose; lower = predicted approved (Phase 31 D)",
+   "P4_p_look2": "exact win chance of a random player who avoids moves dead within 2; lower = predicted approved (simple-player performance)",
+   "P5_strat_steps": "solution steps with a losing alternative whose dead end is not forced within 3 moves; higher = predicted approved (new in Phase 33, consequential decisions)",
+   "P6_forced_share": "forced steps / solution length; higher = predicted approved (forced-move sequences; Phase 31 found no difference on N53-N82)",
+   "P7_positions_and_early3": "both P1 and P2 thresholds (the only 2-measure rule tried)"
+  },
+  "descriptive_only": "every other struct33 measure is reported as approved-vs-not medians only; no rule is fitted on it"
+ },
+ "validation": {
+  "scheme": "chronological rolling origin: for every test phase t in 25..32, each single-measure rule's threshold is fitted ONLY on boards of phases < t (the threshold maximising balanced accuracy on training; ties -> the more lenient threshold), then applied unchanged to phase t. Pooled holdout counts over t = 25..32 are the headline result.",
+  "prospective": "P1 and P2 were pre-registered in Phase 31 for N83+; their Phase 31-32 results (N83-N93) are reported separately as the only truly prospective test",
+  "reported": "n, correct, false positives, false negatives, per test phase and pooled; holdout AUC; baseline = always predict approved and always predict not approved",
+  "multiple_comparisons": "7 rules are tried; the best holdout score among 7 is optimistic by selection and is reported as such",
+  "decision_rule": "a predictor may be used to ALLOCATE search effort or ORDER candidates only if its pooled holdout balanced accuracy is >= 0.65 AND it beats both baselines in at least 5 of the 8 test phases with labels of both classes or where it was applicable; otherwise advisory only. No predictor becomes a mandatory technical gate in Phase 33."
+ },
+ "generation_baseline": "the Phase 31 method (generator of c1ddc89 in its own worktree, --ops=v20, 13/17/0.30, patience 8, 12 min, batch 40, beam 5; shortlist sel31; screen30; eval25 --full; every modern gate unchanged)",
+ "gates_unchanged": "engine-valid tokens; bank overlap < 0.40 (bank incl. N88-N93); screen30: solve and TIME UP <= 40 ms, strict essentiality, 0 filler, hint-follow; eval25 --full (distinct mistakes >= 4, decision steps >= 8, coverage >= 0.60, late >= 0.75, solution >= 13, shortcut <= 0.20); pairwise overlap <= 0.30; dead-end check and hint-follow on the page build",
+ "budget": "at most 16 generator runs of 12 minutes and at most 24 full evaluations; amendments are recorded here with a reason before use",
+ "validation_result_before_generation": "no pre-specified predictor met the decision rule (validation.json): all predictors stay ADVISORY; none is a gate, none orders candidates",
+ "allocation": {
+  "written": "2026-11-02, after validation.json and before any Phase 33 generator run",
+  "evidence": "every P25+ core produced exactly one rated board (labels.json + records), so whether a core's approval transfers to a new board is UNKNOWN; P31 approvals (3/5) came from cores never rated before, P32 (0/6) also from never-rated cores. Families in the first-exposure era (P25+): magnet x reversal 4/6 approved, reversal x lock 4/8, reversal x armor 2/4, magnet x lock without a switch 0/4, gate (no crate) 1/4, Sequence 0/3 (descriptive, small n, not a predictor)",
+  "arm_R": {
+   "what": "fresh RNG seed on 8 cores that each produced an OWNER-APPROVED board (non-crate, the most recent per family)",
+   "cores": {
+    "T01r_PULLEDTRIGGER": "N83",
+    "T10b_LADDERBLOCK": "N86",
+    "T30_TWOKEYS": "N87",
+    "R04_ARMOREDKEY": "N75",
+    "P03_TURNEDMAGNET": "N64",
+    "L3_SHELLEXIT": "N62",
+    "J1_MAGPULLMAG": "N59",
+    "J5_KEYFACE": "N61"
+   },
+   "distinctness": "the unchanged bank-overlap gate (< 0.40 against every bank board, the approved sibling included); the overlap to the sibling is reported"
+  },
+  "arm_N": {
+   "what": "4 cores in families with approvals (no gate, Sequence, portal or crate) that never produced a rated board",
+   "cores": [
+    "K08_PULLEDTARGET",
+    "H2_PARITYLOCK",
+    "J4_RELAY",
+    "P07_ARMOREDKEY"
+   ]
+  },
+  "round_1": "12 runs, RNG seed 331, one per core",
+  "round_2": "RNG seed 332 only for cores with NO screen-PASS board after round 1 and a non-empty qualifying pool; at most 4 runs (total <= 16)",
+  "selection": "baseline rule unchanged: one board per concept, the FEWEST POSITIONS among boards passing every gate, pairwise overlap <= 0.30 (conflicts resolved by fewest positions); if more than 8 concepts qualify, the 8 with the fewest positions; each selected board records its arm, its advisory predictions (positions, early3, open_tempting, p_look2) and its overlap to the approved sibling (arm R)",
+  "what_the_owner_ratings_will_show": "approval share of arm R vs arm N, the first direct test of core transfer"
+ }
+}

@@ -1,0 +1,10 @@
+P07_s331_0             not essential  {'without_armor': 'without it: 13 decision steps, 4 distinct mistakes (with it: 14, 5)'}
+P07_s331_1             not essential  {'without_armor': 'without it: 13 decision steps, 5 distinct mistakes (with it: 15, 5)', 'without_lock': 'without it: 15 decision steps, 4 distinct mi
+P07_s331_2             not essential  {'without_armor': 'without it: 14 decision steps, 4 distinct mistakes (with it: 16, 5)'}
+P07_s331_3             Category A/B   ['a simple greedy player wins 22% (> 20%): a shortcut']
+SCREEN: 4 boards, 0 PASS
+P07_s331_0             not essential  
+P07_s331_1             not essential  
+P07_s331_2             not essential  
+P07_s331_3             Category A/B   
+SCREEN30: 4 boards, 0 PASS

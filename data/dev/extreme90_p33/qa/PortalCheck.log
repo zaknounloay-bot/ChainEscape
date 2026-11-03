@@ -1,0 +1,19 @@
+Godot Engine v4.3.stable.official.77dcf97d8 - https://godotengine.org
+
+ERROR: Level 0: portal A: 1 cell(s), a pair needs exactly 2
+   at: push_error (core/variant/variant_utility.cpp:1092)
+ERROR: Level 0: portal A: 1 cell(s), a pair needs exactly 2
+   at: push_error (core/variant/variant_utility.cpp:1092)
+ERROR: Level 0: portal B: 1 cell(s), a pair needs exactly 2
+   at: push_error (core/variant/variant_utility.cpp:1092)
+ERROR: Level 0: portal A: 3 cell(s), a pair needs exactly 2
+   at: push_error (core/variant/variant_utility.cpp:1092)
+ERROR: Level 0: portals: a lane from (1, 0) moving left would loop
+   at: push_error (core/variant/variant_utility.cpp:1092)
+
+69 checks passed, 0 failed
+PORTAL CHECKS PASSED
+WARNING: 4 RIDs of type "CanvasItem" were leaked.
+     at: _free_rids (servers/rendering/renderer_canvas_cull.cpp:2485)
+WARNING: ObjectDB instances leaked at exit (run with --verbose for details).
+     at: cleanup (core/object/object.cpp:2284)

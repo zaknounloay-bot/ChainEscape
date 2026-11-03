@@ -1,0 +1,29 @@
+Godot Engine v4.3.stable.official.77dcf97d8 - https://godotengine.org
+
+[ExperienceLab] QA session (13, reset): Levels 1-300, QA save user://experience_lab_qa.cfg
+[Save] load: source=file version=5 seq=7 last_played=14 highest_completed=13 highest_unlocked=14 total_score=3700 coins=88 stars=3 saved=2026-11-02 15:10:57 issues=[copies: file#7 bak#6]
+[Save] load: new -> fresh progress
+[Save] write #1: last_played=13 highest_completed=12 highest_unlocked=13 total_score=0 coins=60 file=ok
+[ExperienceLab] QA save seeded: cleared 1-12, chapters [1], tips []
+[ExperienceLab] QA session started at Level 13 (reset)
+[Save] profile: new player id
+[Save] write #2: last_played=13 highest_completed=12 highest_unlocked=13 total_score=0 coins=60 file=ok
+[Diag] last session ended at level 14 after 1s: process ended without a clean quit | [Diag] L14 ch2 via=next t=1s fps=117 mem=92.3MB objs=3424 nodes=627 orphans=0 res=97 tweens=18 fx=9 music=c02 music_players=0 sfx=3 save_seq=7
+[Chapter] level=13 chapter=2 theme=Sunny Meadow (id 2, prev 0) music=c02  <- transition
+[Save] write #3: last_played=13 highest_completed=12 highest_unlocked=13 total_score=0 coins=60 file=ok
+[ExperienceLab] {"kind":"start","level":13,"t":1793678811.60985,"via":"launch"}
+[Diag] L13 ch2 via=launch t=0s fps=1 mem=90.5MB objs=3263 nodes=591 orphans=0 res=98 tweens=9 fx=5 music=c02 music_players=1 sfx=0 save_seq=3
+[Save] write #4: last_played=13 highest_completed=12 highest_unlocked=13 total_score=0 coins=60 file=ok
+[Save] write #5: last_played=13 highest_completed=13 highest_unlocked=14 total_score=3700 coins=60 file=ok
+[Save] write #6: last_played=13 highest_completed=13 highest_unlocked=14 total_score=3700 coins=88 file=ok
+[ExperienceLab] {"hearts_left":3,"hints":0,"kind":"clear","level":13,"mistakes":0,"perfect":true,"secs":0.2,"stars":3,"t":1793678811.83236,"undos":0}
+[ExperienceLab] {"kind":"next","level":13,"secs_to_next":1.1,"t":1793678812.90543}
+[Chapter] level=14 chapter=2 theme=Sunny Meadow (id 2, prev 2) music=c02
+[Save] write #7: last_played=14 highest_completed=13 highest_unlocked=14 total_score=3700 coins=88 file=ok
+[ExperienceLab] {"kind":"start","level":14,"t":1793678812.90993,"via":"next"}
+[Diag] L14 ch2 via=next t=1s fps=79 mem=92.4MB objs=3425 nodes=627 orphans=0 res=98 tweens=18 fx=9 music=c02 music_players=0 sfx=3 save_seq=7
+
+26 checks passed, 0 failed
+EXPERIENCE LAB QA CHECKS PASSED
+WARNING: ObjectDB instances leaked at exit (run with --verbose for details).
+     at: cleanup (core/object/object.cpp:2284)

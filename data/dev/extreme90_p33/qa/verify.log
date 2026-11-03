@@ -1,0 +1,314 @@
+Godot Engine v4.3.stable.official.77dcf97d8 - https://godotengine.org
+
+  # C name               size blk spn rules  lck hid start trp dec dep len dir%  diff   S    L    M  fair rwd status
+  1  1 First Steps       3x3   3   0 -        0   0     3   0   0   1   3   33   1.5    -    -    -  -    -   OK
+  2  1 In The Way        4x4   4   0 -        0   0     1   0   0   3   4   50   3.9    -    -    -  -    -   OK
+  3  1 The Knot          4x4   6   0 -        0   0     2   0   0   4   6   33   4.3    -    -    -  -    -   OK
+  4  1 Two Threads       4x4   7   0 -        0   0     2   0   0   5   7   42   5.0    -    -    -  -    -   OK
+  5  1 Long Way Round    5x5   8   0 -        0   0     2   0   0   6   8   50   5.8    -    -    -  -    -   OK
+  6  1 Spinner           4x4   4   1 c0a0p0   0   0     1   0   0   3   4   50   4.4  ESS    -    -  -    -   OK
+  7  1 Right On Time     4x4   7   1 c0a0p0   0   0     3   0   1   4   7   42   6.4  ESS    -    -  -    -   OK
+  8  1 Hidden Arrow      4x4   5   0 -        0   1     1   0   0   4   5   40   5.2    -    -  1.7  yes  -   OK
+  9  1 Out Of Sight      4x4   8   1 c0a0p0   0   2     3   0   1   5   8   62   8.3  ESS    -  2.3  yes  -   OK
+ 10  1 Clockwork         5x4  10   2 c0a0p0   0   1     3   1   1   8  10   40  11.3  ESS    -  4.6  yes  -   OK
+ 11  2 Wrong Way         4x4  11   1 c0a0p0   0   0     3   1   2   8  11   36  12.2  5.3    -    -  -    -   OK
+ 12  2 Pinwheel          5x5  13   2 c0a0p0   0   0     1   0   1  10  13   30  12.3  2.3    -    -  -    -   OK
+ 13  2 Locked            4x4   5   0 -        1   0     2   0   0   4   5   60   5.0    -  1.9    -  -    -   OK
+ 14  2 Key Colors        4x4   9   0 -        2   0     1   0   0   7   9   33   8.7    -  3.8    -  -    -   OK
+ 15  2 Tight Squeeze     4x4  10   1 c0a0p0   0   0     3   1   3   7  10   30  13.4  7.2    -    -  -    -   OK
+ 16  2 Key Turn          5x5  11   1 c0a0p0   1   0     3   0   3   6  11   54  12.8  ESS  7.6    -  -    -   OK
+ 17  2 Fog               5x5  11   0 -        0   3     1   0   0   8  11   36   9.8    -    -  3.4  yes  -   OK
+ 18  2 Crosswind         5x5  15   2 c0a0p0   0   0     3   0   4  11  15   33  17.9  8.6    -    -  -    -   OK
+ 19  2 Padlocks          5x5  11   0 -        2   0     1   0   0  11  11   36  11.3    -  2.7    -  -    -   OK
+ 20  2 Secret Key        5x5  14   0 -        2   3     1   0   0  12  14   28  14.2    -  1.6  3.4  yes  -   OK
+ 21  3 Second Thoughts   5x5  14   2 c0a0p0   0   0     2   0   2  11  14   35  14.5  6.0    -    -  -    -   OK
+ 22  3 Knots             5x5  13   2 c0a0p0   0   0     3   0   6   9  13   38  20.2 14.2    -    -  -    -   OK
+ 23  3 Combination       5x5  12   0 -        3   0     1   0   0  10  12   33  11.7    -  3.5    -  -    -   OK
+ 24  3 Cogwheels         5x5  16   3 c0a0p0   0   0     3   1   4  13  16   31  20.8 10.7    -    -  -    -   OK
+ 25  3 Gridlock          6x6  20   3 c0a0p0   0   0     3   0   4  14  20   30  21.0  ESS    -    -  -    -   OK
+ 26  3 Master Key        5x5  12   0 -        3   0     1   0   0  11  12   33  12.3    -  5.7    -  -    -   OK
+ 27  3 Gatekeeper        6x6  14   3 c0a0p0   2   0     2   0   8  10  14   35  27.4 17.3  0.8    -  -    S   OK
+ 28  3 Safe House        5x5  16   1 c0a0p0   2   0     2   0   1  11  16   37  14.0  1.2  3.3    -  -    -   OK
+ 29  3 Spin the Lock     6x6  15   3 c0a0p0   2   0     2   1   6  12  15   33  26.0  ESS 15.7    -  -    S   OK
+ 30  3 Smoke and Mirrors 6x6  17   2 c0a0p0   0   3     2   1   2  14  17   29  19.6  6.4    -  2.1  yes  -   OK
+ 31  4 Twisted Lanes     6x6  15   3 c1a0p0   0   0     3   1   8  12  15   33  27.9 18.6    -    -  -    -   OK
+ 32  4 Vault             5x5  17   1 c1a0p0   4   0     2   0   1  11  17   29  16.1  2.1  2.6    -  -    S   OK
+ 33  4 Hairpin           5x5  19   3 c1a0p0   0   0     2   0   2  16  19   31  19.1  ESS    -    -  -    -   OK
+ 34  4 Strongroom        6x6  17   0 -        4   0     1   0   0  16  17   35  16.8    -  3.7    -  -    S   OK
+ 35  4 Domino Line       5x5  13   2 c0a0p0   0   0     3   2   7  10  13   30  25.9 18.1    -    -  -    -   OK
+ 36  4 Tumblers          6x6  17   2 c0a0p0   2   0     2   0   7  12  17   35  26.7  ESS  9.2    -  -    S   OK
+ 37  4 Rush Order        6x6  19   4 c0a0p0   0   0     2   1  11  13  19   31  35.5 23.9    -    -  -    -   OK
+ 38  4 Traffic Jam       6x6  19   4 c0a0p0   0   0     2   1   6  14  19   26  26.6  ESS    -    -  -    -   OK
+ 39  4 Labyrinth         6x6  19   3 c0a0p0   0   0     2   1  11  16  19   31  36.9  ESS    -    -  -    -   OK
+ 40  4 Night Shift       6x6  19   2 c0a0p0   0   3     2   0   7  13  19   31  28.6  ESS    -  1.0  yes  S   OK
+ 41  5 Gearbox           6x6  21   4 c0a1p0   0   0     2   0   0  13  21   33  14.5  ESS    -    -  -    -   OK
+ 42  5 Whirlpool         6x6  20   4 c0a1p0   0   0     2   1  11  17  20   35  38.7  ESS    -    -  -    -   OK
+ 43  5 Turnstile         6x6  18   4 c0a1p0   2   0     2   1   6  13  18   33  28.1  ESS  1.6    -  -    S   OK
+ 44  5 Chain Reaction    6x6  23   5 c0a0p0   0   0     2   1  11  17  23   30  39.5  ESS    -    -  -    -   OK
+ 45  5 Deadbolt          5x5  14   3 c0a0p0   2   0     2   1  10  13  14   35  34.0 23.9  2.7    -  -    S   OK
+ 46  5 Key Ring          6x6  20   4 c0a0p0   3   0     2   1   8  16  20   30  34.2 20.6  2.4    -  -    S   OK
+ 47  5 Grand Tangle      6x6  21   3 c0a0p0   0   0     2   1  15  14  21   33  43.5  ESS    -    -  -    -   OK
+ 48  5 Lockstep          6x6  20   4 c0a0p0   2   0     2   1   9  15  20   30  34.7  ESS 20.8    -  -    S   OK
+ 49  5 Detour            6x6  18   0 -        3   0     1   0   0  18  18   33  17.4    -  5.3    -  -    -   OK
+ 50  5 Eclipse           6x6  17   4 c0a1p0   1   3     2   0   7  14  17   29  30.5  ESS  0.8 16.8  yes  S   OK
+ 51  6 Clockmaker        6x6  23   5 c0a0p1   3   0     2   0   2  17  23   30  24.2  7.1  1.1    -  -    S   OK
+ 52  6 Great Escape      6x7  25   6 c0a0p0   0   0     2   1  14  22  25   32  48.6  ESS    -    -  -    G   OK
+ 53  6 Escape Room       6x6  20   5 c0a0p1   3   0     2   1  10  16  20   30  39.3  ESS 23.5    -  -    -   OK
+ 54  6 Mechanism         6x6  18   4 c0a0p0   3   0     2   1  12  16  18   33  41.5  ESS 14.4    -  -    S   OK
+ 55  6 Cyclone           6x7  22   6 c0a0p0   0   0     2   1   8  17  22   31  33.7  ESS    -    -  -    -   OK
+ 56  6 Pressure          6x7  22   5 c0a0p1   3   0     2   1  11  17  22   31  42.1  ESS  0.8    -  -    SG  OK
+ 57  6 Grand Vault       6x6  23   6 c0a0p1   3   0     2   1  13  17  23   30  46.5  ESS 30.4    -  -    -   OK
+ 58  6 Last Lock         6x6  18   4 c0a0p0   2   0     2   1  15  14  18   33  45.2  ESS  1.6    -  -    S   OK
+ 59  6 Final Turn        6x6  21   4 c0a0p0   2   0     2   1  16  20  21   33  51.1  ESS 35.4    -  -    -   OK
+ 60  6 The Last Secret   6x6  22   4 c0a0p0   2   4     2   0  10  15  22   31  38.3  ESS  1.6  1.6  yes  S   OK
+ 61  7 Neon Gate         6x6  23   5 c2a0p0   2   0     2   1  11  18  23   34  41.9 26.2 16.5    -  -    G   OK
+ 62  7 Afterglow         6x6  22   5 c3a0p0   2   0     2   1  13  17  22   27  45.2 30.3 27.0    -  -    S   OK
+ 63  7 Static            6x6  17   5 c2a2p0   1   0     2   1  14  10  17   41  42.2 31.9 19.3    -  -    -   OK
+ 64  7 Night Circuit     6x6  20   5 c2a0p0   2   0     2   1  15  15  20   35  47.2  ESS  8.4    -  -    GS  OK
+ 65  7 Flicker           6x6  24   7 c2a3p0   2   0     2   1  12  17  24   33  46.1  ESS  0.8    -  -    -   OK
+ 66  7 Voltage           6x6  25   5 c2a2p0   2   0     2   1  13  19  25   40  47.8  ESS 29.5    -  -    S   OK
+ 67  7 Backspin          6x6  20   5 c1a0p0   2   0     2   1  15  16  20   30  47.5  ESS  2.2    -  -    -   OK
+ 68  7 Glowline          6x6  25   4 c1a2p0   2   0     2   1  14  16  25   36  47.1  ESS  1.4    -  -    SG  OK
+ 69  7 Prism             6x6  19   4 c2a1p0   2   0     2   1  16  14  19   31  48.5  ESS  2.7    -  -    -   OK
+ 70  7 Blackout          6x7  25   5 c0a2p0   2   5     2   0  12  20  25   32  47.9  ESS  2.2 12.7  yes  S   OK
+ 71  8 Overdrive         6x6  21   6 c0a1p2   3   0     2   1  14  15  21   28  48.4  ESS  0.8    -  -    GS  OK
+ 72  8 Synthwave         6x6  22   6 c0a1p1   2   0     2   0  15  17  22   36  49.0  ESS  3.3    -  -    -   OK
+ 73  8 Pulse Lock        6x7  24   6 c1a3p2   2   0     2   1  12  20  24   29  48.7  ESS  1.6    -  -    S   OK
+ 74  8 Arcade            6x7  24   6 c0a2p2   3   0     2   1  14  16  24   29  50.0  ESS  2.1    -  -    G   OK
+ 75  8 Relay             6x6  23   5 c0a1p3   2   0     2   1  14  18  23   34  50.0  ESS  2.8    -  -    S   OK
+ 76  8 Dynamo            6x6   7   0 -        0   0     2   0   0   5   7   57   5.0    -    -    -  -    S   OK
+ 77  8 Feedback          6x6   9   1 c0a0p0   0   0     3   0   0   6   9   33   5.9  0.5    -    -  -    -   OK
+ 78  8 Wavelength        6x6  10   1 c0a0p0   0   0     3   0   1   6  10   40   8.0  2.4    -    -  -    GS  OK
+ 79  8 Hyperloop         7x6  12   2 c0a0p0   0   0     3   1   3   9  12   33  15.4  ESS    -    -  -    -   OK
+ 80  8 Dark Matter       6x7  23   6 c1a1p1   3   4     2   0  14  17  23   34  50.7  ESS 26.7  5.2  yes  S   OK
+ 81  9 Summit Path       7x6  15   3 c0a0p0   0   0     1   0   4  11  15   33  19.4  9.1    -    -  -    GS  OK
+ 82  9 Thin Air          7x7  16   3 c0a0p0   0   0     2   1   4  15  16   31  22.5 10.1    -    -  -    -   OK
+ 83  9 Ridge Line        7x6  16   4 c0a0p0   0   0     2   0   6  13  16   31  24.6  ESS    -    -  -    GS  OK
+ 84  9 Iron Crown        7x7  17   4 c0a0p0   0   0     2   0   7  12  17   35  26.1  ESS    -    -  -    -   OK
+ 85  9 Avalanche         7x6  15   3 c0a0p0   0   0     1   0   4  12  15   40  20.1  8.5    -    -  -    S   OK
+ 86  9 Glacier           7x7  17   3 c0a0p0   0   0     2   0   6  13  17   41  24.2 12.9    -    -  -    GS  OK
+ 87  9 Stormwatch        7x6  17   4 c0a0p0   0   0     2   1   6  13  17   35  27.4  ESS    -    -  -    -   OK
+ 88  9 High Pass         7x6  18   3 c0a0p0   0   0     2   0   9  13  18   38  30.5 18.4    -    -  -    GS  OK
+ 89  9 Keystone          7x7  18   4 c0a0p0   0   0     2   1   9  15  18   38  32.8  ESS    -    -  -    -   OK
+ 90  9 Eclipse Peak      6x6  24   5 c1a2p2   3   5     2   0  14  20  24   41  54.2  ESS 31.4  5.2  yes  S   OK
+ 91 10 Grandmaster       7x7  18   4 c0a0p0   0   0     1   0   9  14  18   44  31.7  ESS    -    -  -    GS  OK
+ 92 10 Checkmate         7x7  19   4 c0a0p0   0   0     2   1  10  14  19   31  34.2  ESS    -    -  -    -   OK
+ 93 10 Gordian Knot      7x7  20   4 c0a0p0   0   0     2   1  10  16  20   35  35.6  ESS    -    -  -    GS  OK
+ 94 10 Clockwork Crown   7x7  19   4 c0a0p1   0   0     2   1  11  14  19   31  36.9  ESS    -    -  -    -   OK
+ 95 10 Paradox           7x7  19   4 c0a0p0   0   0     2   0  11  14  19   26  36.0  ESS    -    -  -    S   OK
+ 96 10 Endgame           7x7  20   5 c0a0p0   0   0     2   1  14  13  20   40  41.9  ESS    -    -  -    GS  OK
+ 97 10 Apex              7x7  18   4 c0a0p0   0   0     1   0   5  15  18   38  24.7  ESS    -    -  -    -   OK
+ 98 10 Zenith            7x6  20   5 c0a0p0   0   0     2   1  16  15  20   40  48.9  ESS    -    -  -    GS  OK
+ 99 10 Last Light        7x6  18   4 c0a0p0   0   0     2   0  11  13  18   38  34.4 22.3    -    -  -    -   OK
+100 10 The Master        7x7  24   7 c1a2p2   3   3     2   1  21  19  24   29  67.7  ESS 41.1  4.0  yes  SGG OK
+101 11 First Switch      4x5   9   0 -        0   0     2   0   0   7   9   33   7.6    -    -    -  -    -   OK sw1:ESS gt0:- ar0:-
+102 11 Mirror Turn       4x5  10   0 -        0   0     2   0   0   8  10   40   8.4    -    -    -  -    -   OK sw1:ESS gt0:- ar0:-
+103 11 Flip Side         4x4   9   0 -        0   0     2   0   0   6   9   33   7.3    -    -    -  -    -   OK sw1:ESS gt0:- ar0:-
+104 11 Not Yet           4x5   8   0 -        0   0     1   0   1   6   8   37  10.4    -    -    -  -    -   OK sw1:ESS gt0:- ar0:-
+105 11 Two Ways          4x5   9   0 -        0   0     2   0   0   7   9   44   8.8    -    -    -  -    -   OK sw2:ESS gt0:- ar0:-
+106 11 Neon Hinge        5x5  14   1 c0a0p0   0   0     2   1   5  12  14   28  27.8  0.5    -    -  -    -   OK sw2:ESS gt0:- ar0:-
+107 11 Glass Relay       5x5  11   1 c0a0p0   0   0     2   1   6   9  11   36  28.5  5.9    -    -  -    S   OK sw2:ESS gt0:- ar0:-
+108 11 Backlight         5x5  13   0 -        0   0     2   1   5  10  13   30  25.9    -    -    -  -    G   OK sw2:ESS gt0:- ar0:-
+109 11 Switchback        5x5  12   1 c0a0p0   0   0     2   1   5  10  12   33  23.6  4.3    -    -  -    S   OK sw1:ESS gt0:- ar0:-
+110 11 Prism Row         5x5  14   0 -        0   0     2   0   4  11  14   35  23.0    -    -    -  -    S   OK sw2:ESS gt0:- ar0:-
+111 12 Neon Loop         6x6  17   3 c0a0p0   1   0     2   1   9  15  17   35  41.6  ESS  0.8    -  -    G   OK sw1:25.3 gt0:- ar0:-
+112 12 Relay Garden      6x6  20   3 c1a0p0   2   0     2   1   9  16  20   30  43.7  ESS  2.2    -  -    S   OK sw1:ESS gt0:- ar0:-
+113 12 Night Glass       6x6  18   3 c1a0p0   1   0     2   1   8  16  18   33  41.3  ESS  1.3    -  -    -   OK sw2:ESS gt0:- ar0:-
+114 12 Toggle Tide       6x6  18   3 c0a0p0   2   0     2   1  10  14  18   27  40.3  ESS  1.6    -  -    S   OK sw1:16.3 gt0:- ar0:-
+115 12 Afterglow         6x6  20   3 c1a0p0   1   0     2   1  10  16  20   35  48.2  ESS  1.4    -  -    -   OK sw2:31.0 gt0:- ar0:-
+116 12 Pane Shift        6x6  20   3 c0a0p0   2   0     2   1   9  16  20   35  44.8  2.1  3.4    -  -    G   OK sw2:ESS gt0:- ar0:-
+117 12 Signal Fade       6x6  17   3 c1a0p0   2   0     2   1  11  14  17   35  48.5  ESS  1.1    -  -    S   OK sw2:31.3 gt0:- ar0:-
+118 12 Glass Knot        6x6  20   3 c1a0p0   1   0     2   1   9  16  20   30  43.7  ESS  0.8    -  -    -   OK sw2:25.3 gt0:- ar0:-
+119 12 Lumen Lock        6x6  18   2 c0a0p0   1   0     2   1   9  14  18   33  44.1  ESS  0.8    -  -    S   OK sw2:28.3 gt0:- ar0:-
+120 12 Neon Crown        6x6  16   3 c1a0p0   2   0     2   1  10  12  16   31  43.1  ESS  1.6    -  -    -   OK sw1:28.0 gt0:- ar0:-
+121 13 First Gate        6x6  16   3 c0a0p0   1   0     2   1  13  12  16   31  39.7  ESS  1.3    -  -    G   OK sw0:- gt1:23.1 ar0:-
+122 13 Chain Link        6x6  17   3 c0a0p0   1   0     2   1  14  14  17   35  46.9  ESS  0.5    -  -    S   OK sw0:- gt1:6.8 ar0:-
+123 13 Steel Door        6x6  18   3 c0a0p0   1   0     2   1  14  16  18   33  44.3  ESS  0.8    -  -    -   OK sw0:- gt1:21.9 ar0:-
+124 13 Rivet Row         6x6  17   3 c0a0p0   1   0     2   1  15  15  17   35  45.4  ESS 22.1    -  -    GS  OK sw0:- gt1:9.2 ar0:-
+125 13 Gatekeeper        6x6  19   4 c0a1p0   0   0     2   1  15  16  19   31  50.7  ESS    -    -  -    -   OK sw0:- gt2:16.3 ar0:-
+126 13 Twin Links        6x6  19   4 c0a1p0   0   0     2   1  16  15  19   31  48.2  ESS    -    -  -    -   OK sw0:- gt1:1.1 ar0:-
+127 13 Iron Latch        6x6  20   4 c0a1p0   0   0     2   1  16  18  20   35  50.5  ESS    -    -  -    S   OK sw0:- gt1:26.4 ar0:-
+128 13 Cog Line          6x6  20   4 c0a1p0   0   0     2   1  14  18  20   30  46.4  ESS    -    -  -    G   OK sw0:- gt1:27.6 ar0:-
+129 13 Hinge Works       6x6  19   4 c0a1p0   0   0     2   1  15  17  19   31  47.5  ESS    -    -  -    S   OK sw0:- gt1:1.2 ar0:-
+130 13 Foundry           6x6  18   4 c0a1p0   0   0     2   1  16  14  18   33  48.9 34.0    -    -  -    -   OK sw0:- gt2:24.3 ar0:-
+131 14 Piston            6x7  19   4 c1a0p0   2   0     2   1  15  16  19   31  51.7  ESS  1.6    -  -    G   OK sw1:9.1 gt1:10.5 ar0:-
+132 14 Gear Train        6x7  19   4 c0a1p0   1   0     2   1  12  17  19   31  53.6  ESS  0.8    -  -    S   OK sw1:22.9 gt1:2.3 ar0:-
+133 14 Pressure Plate    6x6  17   4 c1a1p0   2   0     2   1  11  16  17   29  50.8  ESS 13.3    -  -    -   OK sw1:30.7 gt1:1.1 ar0:-
+134 14 Conveyor          6x6  19   4 c0a0p0   1   0     2   1  13  17  19   31  55.1  ESS  0.8    -  -    SG  OK sw1:37.3 gt1:1.1 ar0:-
+135 14 Bolt Cutter       6x6  17   3 c1a0p0   2   0     2   1  12  15  17   29  49.8 33.8 23.4    -  -    -   OK sw1:24.4 gt1:1.7 ar0:-
+136 14 Crank Shaft       6x7  18   4 c1a1p0   2   0     2   1  12  16  18   27  53.4  ESS 33.7    -  -    -   OK sw1:33.4 gt1:1.1 ar0:-
+137 14 Flywheel          6x7  18   4 c1a0p0   2   0     2   1  12  17  18   33  54.3  ESS  1.6    -  -    S   OK sw1:ESS gt1:14.7 ar0:-
+138 14 Turnstile         6x7  20   4 c0a1p0   1   0     2   1  12  17  20   30  48.7  ESS  5.3    -  -    G   OK sw1:5.4 gt1:5.7 ar0:-
+139 14 Forge Gate        6x6  20   4 c0a1p0   2   0     2   1  14  15  20   30  55.6  ESS 26.8    -  -    S   OK sw1:34.3 gt1:2.2 ar0:-
+140 14 Assembly          6x6  19   4 c1a1p0   0   0     2   1  13  17  19   31  55.8  ESS    -    -  -    -   OK sw1:36.1 gt1:1.7 ar0:-
+141 15 Charge            6x6  19   4 c1a0p0   2   0     2   1  11  17  19   31  50.8  ESS  1.6    -  -    G   OK sw2:31.3 gt0:- ar0:-
+142 15 Arc Line          6x6  20   5 c0a1p0   1   0     2   1  12  17  20   30  54.0 13.9  0.8    -  -    S   OK sw1:34.6 gt1:1.1 ar0:-
+143 15 Ion Field         6x7  22   5 c1a1p0   2   0     2   1  13  19  22   31  59.0  ESS  2.1    -  -    -   OK sw2:ESS gt0:- ar0:-
+144 15 Surge             6x7  21   5 c0a1p1   2   0     2   1  12  20  21   28  57.9  ESS  1.6    -  -    SG  OK sw2:35.2 gt0:- ar0:-
+145 15 Pulse Grid        6x6  17   4 c0a1p0   2   2     2   1  12  13  17   29  52.4  ESS 37.3  1.7  yes  -   OK sw1:33.4 gt1:1.6 ar0:-
+146 15 Static            6x7  22   5 c0a1p1   2   0     2   1  12  17  22   31  54.5  ESS 37.8    -  -    S   OK sw1:35.2 gt0:- ar0:-
+147 15 Current Knot      6x7  18   5 c1a0p1   1   0     2   1  12  15  18   27  52.7  ESS  0.8    -  -    -   OK sw2:ESS gt0:- ar0:-
+148 15 Overload          6x6  18   5 c0a1p1   2   0     2   1  12  16  18   27  55.0  ESS  2.7    -  -    GS  OK sw2:ESS gt0:- ar0:-
+149 15 Capacitor         6x7  19   5 c0a1p1   1   0     2   1  12  18  19   31  53.8  ESS  0.8    -  -    -   OK sw1:34.6 gt0:- ar0:-
+150 15 Halfway Deep      6x7  19   4 c0a0p0   2   3     2   1  15  14  19   31  61.9  ESS  2.7  4.6  yes  S   OK sw1:38.3 gt1:36.3 ar0:-
+151 16 First Shell       6x7  21   6 c1a1p0   2   0     1   0   3  18  22   33  27.8  ESS  1.6    -  -    G   OK sw0:- gt0:- ar1:5.9
+152 16 Quartz Wall       6x7  22   6 c1a0p1   2   0     2   1  17  17  24   31  55.7  ESS  5.9    -  -    -   OK sw0:- gt0:- ar2:19.5
+153 16 Plasma Veil       6x6  19   4 c1a1p0   2   0     2   1  11  16  19   31  50.4  ESS 25.5    -  -    G   OK sw2:ESS gt0:- ar0:-
+154 16 Hard Case         6x7  21   6 c1a1p0   2   0     2   1  18  17  22   33  59.8  ESS  3.4    -  -    S   OK sw0:- gt0:- ar1:3.4
+155 16 Resonance         6x6  18   4 c0a1p0   2   3     2   1  14  16  18   33  60.9  ESS 11.4  1.8  yes  -   OK sw1:40.0 gt1:1.7 ar0:-
+156 16 Geode             7x7  20   5 c1a0p0   2   0     2   1  18  19  22   30  57.2  ESS  1.6    -  -    G   OK sw0:- gt0:- ar2:7.9
+157 16 Discharge         6x7  23   5 c1a0p1   2   0     2   1  14  17  23   30  61.1  ESS 20.0    -  -    S   OK sw2:39.4 gt0:- ar0:-
+158 16 Deep Shard        7x7  22   5 c0a1p0   2   0     2   1  18  22  23   27  58.5 40.7  1.6    -  -    -   OK sw0:- gt0:- ar1:4.0
+159 16 Spark Gap         6x6  18   5 c1a1p1   2   0     2   1  13  16  18   27  56.6  ESS  1.6    -  -    SG  OK sw1:36.7 gt0:- ar0:-
+160 16 Plasma Core       6x7  18   4 c0a0p0   2   3     1   0  10  14  18   33  47.8  ESS 29.7  5.6  yes  -   OK sw1:ESS gt1:1.1 ar0:-
+161 17 Ice Vault         6x7  22   6 c1a0p0   2   0     2   1  22  15  24   27  63.2  ESS  2.1    -  -    S   OK sw0:- gt0:- ar2:5.4
+162 17 Flux              6x7  20   5 c0a1p1   2   0     2   1  13  18  20   30  59.5  ESS  1.6    -  -    S   OK sw1:4.4 gt0:- ar0:-
+163 17 Cracked Glass     7x7  21   6 c1a1p0   2   0     2   1  20  21  22   33  62.3  ESS  2.2    -  -    GS  OK sw0:- gt0:- ar1:4.0
+164 17 Live Wire         6x7  19   3 c1a0p1   2   0     2   1  14  17  19   31  60.4  2.6  9.7    -  -    -   OK sw2:41.2 gt0:- ar0:-
+165 17 Star Frost        7x7  21   6 c1a1p0   2   0     2   1  18  22  23   28  60.2 39.1  1.4    -  -    S   OK sw0:- gt0:- ar2:16.7
+166 17 Field Lines       6x6  22   5 c1a0p0   2   0     2   1  13  17  22   27  57.8  ESS  4.5    -  -    G   OK sw2:ESS gt0:- ar0:-
+167 17 Crystal Ward      7x7  23   6 c1a0p0   2   0     2   1  22  22  24   26  66.4  ESS  3.9    -  -    -   OK sw0:- gt0:- ar1:4.0
+168 17 Ionic Drift       6x6  19   5 c0a0p1   2   0     2   1  14  15  19   31  59.1  ESS  2.7    -  -    S   OK sw2:38.8 gt0:- ar0:-
+169 17 Coil              6x6  21   5 c0a1p1   2   0     2   1  17  18  21   28  60.2  ESS  1.3    -  -    -   OK sw2:22.7 gt0:- ar0:-
+170 17 Void Prism        6x7  22   6 c1a1p0   2   0     2   1  21  18  24   31  66.1  ESS 24.4    -  -    -   OK sw0:- gt0:- ar2:6.2
+171 18 Nebula            6x7  18   5 c1a1p1   2   0     2   1  17  14  20   27  59.2  ESS  3.3    -  -    G   OK sw1:1.1 gt1:3.5 ar2:10.9
+172 18 Dark Matter       7x7  19   5 c1a1p0   2   0     2   1  19  18  21   31  76.3  ESS 55.0    -  -    S   OK sw1:52.3 gt1:8.3 ar2:8.4
+173 18 Crystal Orbit     6x7  21   5 c0a1p1   2   0     2   1  15  17  22   28  64.9  ESS  2.0    -  -    G   OK sw1:41.5 gt1:1.1 ar1:3.6
+174 18 Cold Star         7x7  21   5 c0a1p1   2   0     2   1  13  17  22   28  52.8 25.5  1.0    -  -    S   OK sw1:7.8 gt1:2.6 ar1:2.8
+175 18 Shatter Point     7x7  21   5 c1a1p1   2   0     2   1  15  19  22   28  66.1  ESS  2.2    -  -    -   OK sw1:42.1 gt1:1.7 ar1:3.0
+176 18 Twin Lights       6x6   9   0 -        0   0     4   0   0   3   7   33   3.1    -    -    -  -    -   OK
+177 18 Double Link       6x6   8   1 c0a0p0   0   0     3   0   1   4   7   50   7.9  2.4    -    -  -    -   OK sw0:- gt1:1.1 ar0:-
+178 18 Crystal Heart     7x7  21   5 c0a1p1   2   0     2   1  17  19  22   28  64.0  ESS  1.6    -  -    GS  OK sw1:22.2 gt1:1.1 ar1:4.0
+179 18 Hold Fire         6x6  12   2 c0a0p0   0   0     5   0   1   6  11   33   8.3  ESS    -    -  -    -   OK
+180 18 Deep Field        7x7  18   5 c1a1p1   2   0     2   1  18  18  20   27  62.5  ESS  7.6    -  -    -   OK sw1:ESS gt1:3.7 ar2:6.8
+181 19 Elite Entry       6x7  22   6 c2a1p1   2   0     2   1  15  18  22   31  65.0  ESS 25.5    -  -    G   OK sw2:32.4 gt0:- ar0:-
+182 19 Gold Standard     6x7  22   6 c1a0p1   2   0     2   1  18  16  23   31  58.7  ESS  0.8    -  -    S   OK sw0:- gt1:1.1 ar2:6.1
+183 19 High Council      7x7  20   6 c0a1p0   2   2     2   1  18  19  21   30  75.0  ESS  3.3  2.3  yes  G   OK sw1:49.6 gt1:1.7 ar1:4.7
+184 19 Turnabout         6x6  12   0 -        0   0     4   0   2   6  11   50  12.2    -    -    -  -    -   OK sw1:5.4 gt0:- ar0:-
+185 19 Masterwork        7x7  20   6 c1a1p1   2   2     2   1  17  19  21   25  60.1  ESS  2.7  3.5  yes  GS  OK sw1:ESS gt1:2.2 ar1:4.0
+186 19 Crown Line        6x7  20   6 c1a0p1   2   0     2   1  20  18  22   30  63.1  ESS 38.7    -  -    -   OK sw0:- gt1:1.1 ar2:5.7
+187 19 Shell Game        6x7  17   6 c2a1p0   1   0     3   0   9  11  17   47  33.9  ESS  0.7    -  -    -   OK sw0:- gt1:0.0 ar1:1.0
+188 19 Summit Key        7x7  23   6 c1a1p1   2   0     2   1  18  20  25   30  63.3  ESS 36.8    -  -    SG  OK sw0:- gt2:14.2 ar2:20.6
+189 19 Champion          7x7  25   6 c1a1p1   2   2     2   1  15  19  26   32  68.2  ESS  6.0  2.3  yes  -   OK sw1:ESS gt1:2.5 ar1:4.1
+190 19 Two Bonds         7x7  20   6 c2a0p1   1   0     4   0   1  13  18   40  17.9  ESS -0.5    -  -    -   OK
+191 20 Final Ascent      6x7  23   6 c1a1p0   2   0     2   1  20  18  25   30  65.0  ESS 17.3    -  -    G   OK sw0:- gt2:1.1 ar2:6.2
+192 20 Reversal          6x7  19   6 c4a1p1   0   0     4   1  10  14  18   31  48.2  ESS    -    -  -    -   OK sw1:28.0 gt1:0.0 ar0:-
+193 20 Last Light        6x7  22   6 c1a1p1   2   0     2   1  16  18  22   31  67.8  ESS 11.2    -  -    G   OK sw2:ESS gt0:- ar0:-
+194 20 Pattern Lock      6x7  19   6 c2a2p0   1   0     6   0  10  10  18   42  33.5  ESS  0.8    -  -    -   OK
+195 20 Zenith            7x7  25   6 c1a1p0   2   2     2   1  15  20  26   32  69.6  ESS 43.0  4.0  yes  -   OK sw1:38.5 gt1:1.1 ar1:4.1
+196 20 Grandmaster Path  6x7  23   6 c2a1p1   2   0     2   1  18  19  23   30  67.5  ESS  1.6    -  -    GS  OK sw2:ESS gt0:- ar0:-
+197 20 Bond of Ages      7x7  20   6 c1a1p1   2   0     5   0   8   9  19   30  40.4 13.8 -11.8    -  -    -   OK sw1:9.9 gt1:0.0 ar0:-
+198 20 Legacy            7x7  22   6 c1a1p1   2   1     2   1  19  19  23   31  68.3  ESS 30.9  0.9  yes  GS  OK sw1:23.1 gt1:28.1 ar1:3.1
+199 20 Eternal Chain     6x7  21   5 c1a1p1   2   0     2   1  17  18  21   28  70.2  ESS  2.1    -  -    -   OK sw2:ESS gt0:- ar0:-
+200 20 The Grand Master  7x7  24   7 c2a1p1   2   2     2   1  24  21  26   29 108.1  ESS  9.4 81.4  yes  GGS OK sw2:ESS gt1:5.4 ar2:11.9
+201 21 First Portal      5x5   6   0 -        0   0     1   0   0   6   6   50   6.0    -    -    -  -    -   OK po1:ESS mv2
+202 21 Same Way Out      5x5   8   0 -        0   0     1   0   0   8   8   62   7.5    -    -    -  -    -   OK po1:ESS mv5
+203 21 Far Side          5x5   9   0 -        0   0     1   0   0   9   9   33   8.2    -    -    -  -    -   OK po1:ESS mv3
+204 21 Take Turns        5x6  10   0 -        0   0     1   0   0  10  10   50   9.0    -    -    -  -    -   OK po1:ESS mv2
+205 21 Through and Back  6x6  12   1 c0a0p0   0   0     2   0   2   8  12   50  11.9  4.3    -    -  -    -   OK po1:ESS mv5
+206 21 Far Wall          6x6  14   3 c0a0p0   0   0     2   0  10   9  14   35  29.0 21.7    -    -  -    S   OK po1:ESS mv4
+207 21 Turning Door      6x6  14   2 c0a0p0   0   0     2   1  10  13  14   35  31.9 21.0    -    -  -    -   OK po1:11.1 mv7
+208 21 Unseen Exit       6x6  14   2 c0a0p0   0   2     2   0  11  11  14   35  32.8 23.1    -  2.9  yes  G   OK po1:ESS mv5
+209 21 Open Doors        6x6  13   2 c0a0p0   0   0     2   1   7  11  13   38  24.8 16.5    -    -  -    S   OK po1:16.6 mv2
+210 21 Both Sides        6x6  15   3 c0a0p0   0   0     2   1  13  10  15   40  36.5 27.8    -    -  -    S   OK po1:26.3 mv3
+211 22 Locked Passage    6x6  17   3 c0a0p0   1   0     2   1  14  10  17   41  39.4 29.1  1.4    -  -    G   OK po1:5.8 mv3
+212 22 Counterturn       6x6  15   3 c2a1p0   0   0     2   1  13  11  15   40  41.1  ESS    -    -  -    S   OK po1:2.5 mv5
+213 22 Twin Doors        6x6  17   4 c0a0p0   0   0     2   1  14  11  17   41  43.4 32.6    -    -  -    SG  OK po2:ESS mv7
+214 22 Which Way First   6x7  19   3 c0a0p0   0   0     2   1  17  12  19   42  46.2  ESS    -    -  -    -   OK po1:4.2 mv3
+215 22 Easy Passage      6x6  15   2 c0a0p0   0   0     2   1  13   8  15   40  36.0 27.9    -    -  -    S   OK po2:ESS mv6
+216 22 Mirror Door       6x7  18   2 c0a0p0   0   0     2   1  12  14  18   27  47.9  1.0    -    -  -    -   OK po1:1.1 mv2 sw1:34.6 gt0:- ar0:-
+217 22 Chain Door        6x7  18   4 c0a0p0   0   0     2   1  16  14  18   38  46.9  ESS    -    -  -    S   OK po1:ESS mv5 sw0:- gt1:1.3 ar0:-
+218 22 Shell Shot        6x7  19   4 c0a0p0   0   0     2   1  16  14  20   42  46.7  ESS    -    -  -    -   OK po1:ESS mv5 sw0:- gt0:- ar1:3.9
+219 22 Long Way Round    7x7  21   5 c0a0p0   0   0     2   1  19  14  21   38  52.5 41.2    -    -  -    SG  OK po1:ESS mv6
+220 22 Clear Flow        6x7  17   3 c0a0p0   0   0     2   1  13  15  17   41  39.8  ESS    -    -  -    -   OK po2:16.7 mv6
+221 23 Crossroads        7x7  23   5 c0a0p0   0   0     2   0  18  15  23   43  54.2  ESS    -    -  -    S   OK po2:ESS mv8
+222 23 Old Friends       7x7  20   0 -        0   0     2   0  16  11  20   40  56.6    -    -    -  -    G   OK po1:ESS mv5 sw1:43.2 gt1:25.4 ar0:-
+223 23 False Door        7x7  23   5 c0a0p0   0   0     2   1  18  14  23   39  54.2  ESS    -    -  -    -   OK po1:ESS mv6
+224 23 Threshold         7x7  23   5 c0a0p0   0   0     1   0  19  17  23   43  57.8 43.2    -    -  -    S   OK po2:ESS mv5
+225 23 The Gateway       7x7  25   5 c0a0p0   0   0     1   0  21  16  25   44  67.7  ESS    -    -  -    GS  OK po2:ESS mv6
+226 23 First Sequence    5x5   5   0 -        0   0     1   0   0   5   6   60   5.8    -    -    -  -    -   OK sq1:1.1 ad1
+227 23 Next Arrow        5x5   6   0 -        0   0     1   0   0   6   8   33   7.0    -    -    -  -    -   OK sq2:1.8 ad2
+228 23 Turn and Through  5x6   8   0 -        0   0     1   0   0   8  10   50   8.5    -    -    -  -    -   OK po1:1.1 mv2 sq2:2.3 ad2
+229 23 Spin Cycle        6x6  12   2 c0a0p0   0   0     2   0   6   9  13   41  21.1  ESS    -    -  -    S   OK sq1:ESS ad1
+230 23 Double Door       6x6  13   1 c0a0p0   0   0     2   1   7  10  15   30  24.8 14.8    -    -  -    -   OK po1:16.0 mv3 sq2:6.1 ad2
+231 24 Wait For It       6x6  14   3 c0a0p0   0   0     2   1  10  11  16   42  33.4 23.3    -    -  -    S   OK sq2:20.0 ad2
+232 24 Unseen Turn       6x6  16   3 c0a0p0   0   1     2   0  14   9  18   37  38.5 28.7    -  0.6  yes  G   OK sq2:2.7 ad2
+233 24 Key Rhythm        6x6  15   2 c0a0p0   1   0     2   1  13  13  17   40  39.5 27.9 27.6    -  -    -   OK sq2:27.5 ad2
+234 24 Crack First       6x7  18   2 c0a0p0   0   0     2   1  13  16  21   33  42.1 25.5    -    -  -    S   OK sq2:ESS ad2 sw0:- gt0:- ar1:3.9
+235 24 Easy Rhythm       6x6  12   2 c0a0p0   0   0     2   1  10  10  14   33  30.8  ESS    -    -  -    S   OK sq2:20.7 ad2
+236 24 Counter Step      6x6  15   2 c1a1p0   0   0     2   1  13  11  17   33  41.2 29.2    -    -  -    -   OK sq2:28.5 ad2
+237 24 Portal Rhythm     6x7  17   3 c0a0p0   0   0     2   1  15  12  19   41  42.8  ESS    -    -  -    G   OK po1:20.7 mv3 sq2:29.6 ad2
+238 24 Three Beats       6x7  16   3 c0a0p0   0   0     2   0  15  14  19   43  43.3  ESS    -    -  -    S   OK sq3:ESS ad3
+239 24 Late Turn         6x7  18   4 c0a0p0   0   0     2   1  16  14  20   38  46.5  ESS    -    -  -    SG  OK po1:ESS mv4 sq2:33.3 ad2
+240 24 Twin Rhythm       6x7  17   3 c0a0p0   0   0     2   1  17  12  19   35  46.5  ESS    -    -  -    -   OK po2:ESS mv6 sq2:ESS ad2
+241 25 Echo              6x7  18   4 c0a0p0   0   0     2   1  17  14  21   33  48.9  ESS    -    -  -    S   OK sq3:34.5 ad3
+242 25 Relay             6x7  18   3 c0a0p0   0   0     2   1  19  12  21   33  51.0  ESS    -    -  -    G   OK po1:ESS mv3 sq3:8.1 ad3
+243 25 Shell Game        6x7  19   3 c0a0p0   0   0     2   1  18  15  22   31  51.6  ESS    -    -  -    -   OK sq2:ESS ad2 sw0:- gt0:- ar1:4.1
+244 25 Smooth Run        6x6  15   2 c0a0p0   0   0     2   0  14  13  17   33  39.6  ESS    -    -  -    S   OK po1:ESS mv2 sq2:ESS ad2
+245 25 Double Take       6x7  19   3 c0a1p0   0   0     2   0  19  15  22   31  53.0  ESS    -    -  -    -   OK sq3:36.7 ad3
+246 25 Locked Step       7x7  20   3 c0a0p0   1   0     2   1  19  16  22   30  54.0  ESS 12.6    -  -    GS  OK sq2:37.8 ad2
+247 25 Long Fuse         7x7  20   4 c0a0p0   0   0     2   1  17  15  22   30  54.5  ESS    -    -  -    G   OK po1:13.7 mv3 sq2:17.6 ad2
+248 25 Mirror Step       7x7  20   4 c0a0p0   0   1     2   1  20  16  22   45  56.2  ESS    -  0.6  yes  S   OK sq2:6.1 ad2
+249 25 Last Call         7x7  21   4 c0a0p0   0   0     2   0  21  15  24   38  56.5  ESS    -    -  -    -   OK po1:1.1 mv3 sq3:ESS ad3
+250 25 Perfect Timing    7x7  21   5 c0a0p0   0   0     2   1  21  15  25   33  63.8  ESS    -    -  -    SG  OK po1:15.5 mv1 sq4:46.8 ad4
+251 26 First Push        5x5   4   1 c0a0p0   0   0     2   1   1   4   4   50   8.5  ESS    -    -  -    -   OK mo1:4.4! pu1
+252 26 Other Side        5x5   7   1 c0a0p0   0   0     3   1   2   6   8   42  11.8  ESS    -    -  -    -   OK mo1:7.3! pu2
+253 26 Where It Lands    5x5   6   1 c0a0p0   0   0     3   1   4   4   7   33  14.7  ESS    -    -  -    -   OK mo1:10.9! pu2
+254 26 Push Order        5x6   6   1 c0a0p0   0   0     3   1   3   4   6   50  12.5  ESS    -    -  -    -   OK mo1:8.7! pu1
+255 26 First Crate Puzzl 6x6  10   2 c0a0p0   0   0     2   1   8   9  13   40  27.1  ESS    -    -  -    S   OK mo1:18.9! pu4
+256 26 Two Crates        6x6  13   2 c0a0p0   0   0     2   0   5  10  15   30  23.9  ESS    -    -  -    G   OK mo2:13.7! pu4
+257 26 Clear the Lane    6x6  10   1 c0a0p0   0   0     2   1   9   9  12   40  28.6  ESS    -    -  -    S   OK mo1:21.3! pu3
+258 26 Soft Push         6x6  10   1 c0a0p0   0   0     2   1   7   8  10   40  23.6  ESS    -    -  -    -   OK mo1:15.7! pu1
+259 26 Corner Pocket     6x6  13   2 c0a0p0   0   0     2   0  10  12  15   38  33.4  ESS    -    -  -    S   OK mo1:24.6! pu3
+260 26 Return Trip       6x6  12   2 c0a0p0   0   0     2   1  10  10  14   41  31.9  ESS    -    -  -    G   OK mo1:23.2! pu3
+261 27 Crate Lines       6x6  13   1 c0a0p0   0   0     2   0  14  10  18   30  42.2  ESS    -    -  -    S   OK mo2:33.3! pu7
+262 27 Stopper           6x7  14   2 c0a0p0   0   0     2   1  12  11  17   42  36.9  ESS    -    -  -    G   OK mo1:26.8! pu4
+263 27 Two Moves Ahead   6x7  14   2 c0a0p0   0   0     2   1  15  11  18   35  43.3  ESS    -    -  -    -   OK mo1:33.3! pu5
+264 27 Easy Slide        6x6  12   1 c0a0p0   0   0     2   1  10   9  13   41  30.1  ESS    -    -  -    S   OK mo1:21.9! pu2
+265 27 Future Lane       6x7  15   1 c0a0p0   0   0     2   1  11  12  18   40  36.0  ESS    -    -  -    S   OK mo2:26.1! pu5
+266 27 Spin and Push     6x7  15   2 c0a0p0   0   0     2   1  14  12  18   40  42.6  ESS    -    -  -    -   OK mo2:31.6! pu5
+267 27 Hard Shell        6x7  13   1 c0a0p0   0   0     2   1  13  13  17   38  40.4  ESS    -    -  -    G   OK mo1:31.0! pu4 sw0:- gt0:- ar1:3.5
+268 27 Crate Portal      6x7  13   2 c0a0p0   0   0     2   1   8  10  13   30  28.1  ESS    -    -  -    S   OK po1:19.0 mv1 mo1:18.5! pu1
+269 27 Sequence Push     6x7  14   1 c0a0p0   0   0     2   0  15  14  21   42  44.8  ESS    -    -  -    GS  OK sq2:ESS ad2 mo1:34.9! pu7
+270 27 Sliding Door      6x6  12   1 c0a0p0   0   0     2   1  11  11  14   41  35.1  ESS    -    -  -    -   OK po1:ESS mv3 mo1:26.4! pu3
+271 28 Plan Ahead        6x7  16   3 c0a0p0   0   0     2   0  16  10  22   43  45.3  ESS    -    -  -    S   OK po1:20.9 mv4 mo2:34.9! pu8
+272 28 Crossing          7x7  16   1 c0a0p0   0   0     2   1  15  13  18   43  47.8  ESS    -    -  -    G   OK sq2:ESS ad2 mo2:36.0! pu4
+273 28 Hold Position     7x7  16   3 c0a0p0   0   0     2   1  15  14  18   31  52.3  ESS    -    -  -    S   OK sq2:ESS ad2 mo2:ESS! pu3
+274 28 Edge of Plan      7x7  17   2 c0a0p0   0   0     2   1  16  13  21   29  49.1  ESS    -    -  -    -   OK po1:ESS mv3 mo2:38.4! pu6
+275 28 Future Perfect    7x7  17   2 c0a0p0   0   0     2   1  19  13  22   41  54.4  ESS    -    -  -    GS  OK po1:ESS mv7 mo2:43.0! pu7
+276 28 Crossover         6x7  18   4 c0a0p0   0   0     2   1  18  14  20   44  50.3 36.6    -    -  -    S   OK po2:ESS mv7 sq2:34.6 ad2
+277 28 Pushed Through    6x7  15   2 c0a0p0   0   0     2   0  15  13  22   26  49.3  ESS    -    -  -    G   OK po1:ESS mv2 mo1:32.3! pu8
+278 28 Step and Shove    6x7  14   2 c0a0p0   0   0     2   1  17  13  19   42  54.3  1.0    -    -  -    -   OK sq2:ESS ad2 mo2:44.2! pu7
+279 28 Spinning Rhythm   7x7  21   4 c1a1p0   0   0     2   1  18  16  23   42  53.2 39.1    -    -  -    S   OK sq2:33.8 ad2
+280 28 Shell Through     6x7  20   2 c0a0p0   0   0     2   1  19  16  22   40  53.3  ESS    -    -  -    G   OK po1:ESS mv3 sq1:3.1 ad1 sw0:- gt0:- ar1:3.5
+281 29 Open Road         6x7  18   3 c0a0p0   0   0     2   0  16  13  20   38  44.4 32.5    -    -  -    S   OK po1:1.7 mv3 sq2:31.0 ad2
+282 29 Moving Target     7x7  16   3 c0a0p0   0   0     2   1  13  12  19   37  41.7  ESS    -    -  -    G   OK mo2:31.2! pu5
+283 29 Hidden Door       7x7  21   2 c0a0p0   0   1     2   1  21  18  23   33  58.5 41.9    -  1.7  yes  S   OK po1:ESS mv5 sq2:23.9 ad2
+284 29 Locked Crate      7x7  16   2 c0a0p0   1   0     2   1  16  13  21   43  58.2  ESS  2.7    -  -    G   OK mo1:46.5! pu6
+285 29 Two Way Street    7x7  21   4 c0a0p0   0   0     2   1  21  16  23   42  57.6  ESS    -    -  -    S   OK po2:ESS mv8 sq2:ESS ad2
+286 29 Shove Off         7x7  16   2 c0a0p0   0   0     2   1  21  15  24   43  59.2 15.7    -    -  -    -   OK po1:22.2 mv5 sq2:45.7 ad2 mo1:45.6! pu9
+287 29 Easy Orbit        6x7  15   2 c0a0p0   0   0     2   1  17  13  21   40  48.8  ESS    -    -  -    S   OK sq1:3.0 ad1 mo1:37.0! pu6
+288 29 Toll Gate         7x7  21   3 c0a0p0   0   0     2   1  18  19  23   33  59.4  ESS    -    -  -    G   OK po1:ESS mv3 sq2:ESS ad2 sw0:- gt1:1.1 ar0:-
+289 29 Ram Line          7x7  15   2 c0a0p0   0   0     2   1  16  14  19   40  50.7  ESS    -    -  -    S   OK mo1:37.6! pu4 sw0:- gt0:- ar1:2.8
+290 29 Half Light        7x7  17   3 c0a0p0   0   1     2   1  18  15  21   35  54.1  ESS    -  2.1  yes  G   OK mo1:41.4! pu5
+291 30 Cold Logic        7x7  15   3 c0a0p0   0   0     2   0  19  13  22   33  53.2  1.5    -    -  -    S   OK sq2:ESS ad2 mo1:ESS! pu8
+292 30 Switchback Run    7x7  21   3 c0a0p0   0   0     2   0  18  13  23   38  66.5  ESS    -    -  -    G   OK po1:29.3 mv2 sq2:7.1 ad2 sw1:39.2 gt0:- ar0:-
+293 30 Far Reach         7x7  17   3 c0a0p0   0   0     2   1  18  15  21   35  53.9  ESS    -    -  -    S   OK po1:ESS mv3 mo1:40.6! pu5
+294 30 Clear Skies       7x7  16   1 c0a0p0   0   0     2   1  15  14  19   31  44.5  ESS    -    -  -    -   OK sq2:ESS ad2 mo1:32.3! pu3
+295 30 Heavy Lock        7x7  17   1 c0a0p0   1   0     2   0  14  20  25   29  51.0  ESS  4.2    -  -    G   OK sq1:ESS ad1 mo1:38.7! pu9
+296 30 Clockwork Heart   7x7  22   4 c1a2p0   0   0     2   1  21  18  25   36  65.4  ESS    -    -  -    S   OK po1:5.0 mv3 sq3:ESS ad3
+297 30 Deep Freight      6x7  17   3 c0a0p0   0   0     2   1  16  15  21   41  52.4  ESS    -    -  -    S   OK mo2:40.6! pu6
+298 30 Vault             7x7  18   0 -        0   0     2   1  18  16  23   38  55.8    -    -    -  -    G   OK sq2:ESS ad2 mo1:41.6! pu4 sw0:- gt0:- ar1:4.1
+299 30 Last Mile         7x7  22   5 c0a0p0   0   0     2   1  22  15  25   31  68.1  ESS    -    -  -    -   OK po2:ESS mv5 sq3:34.6 ad3
+300 30 Every Way Out     7x7  23   5 c2a0p0   0   0     2   1  25  15  27   39  74.7  ESS    -    -  -    GS  OK po2:ESS mv6 sq4:ESS ad4
+L100 (Master) structural difficulty 54.5; next: L59 45.4
+L200 (Master) structural difficulty 91.7; next: L172 65.8
+L225 (Portal milestone) difficulty 67.7 structural 62.7; next structural: L224 53.0
+L250 (milestone) difficulty 63.8 structural 57.4; next structural: L249 51.1 (from L226)
+L275 (milestone) difficulty 54.4 structural 50.3; next structural: L273 46.7 (from L251)
+L300 (milestone) difficulty 74.7 structural 67.4; next structural: L225 62.7 (from L201)
+MAGNET_ARC_CHAPTER_CHECK: Chapter 9 vs 8 on Magnet levels only: 25.3 vs 8.6 (full averages 28.2 vs 33.1)
+Chapter difficulty: C1 5.6  C2 11.8  C3 18.7  C4 26.0  C5 31.5  C6 41.0  C7 46.1  C8 33.1  C9 28.2  C10 39.2  C11 17.1  C12 43.9  C13 46.9  C14 52.9  C15 55.2  C16 53.6  C17 61.5  C18 46.5  C19 51.7  C20 63.9  C21 19.8  C22 44.0  C23 35.7  C24 40.5  C25 52.9  C26 21.6  C27 37.9  C28 50.9  C29 53.3  C30 58.6
+Magnet-level averages (76-99 without 80 / 90): C8 8.6  C9 25.3  C10 36.0
+L98 (Magnet arc) difficulty 48.9 structural 44.4; next: 41.9 / 37.4
+ALL 300 LEVELS SOLVABLE AND PASS CAMPAIGN RULES

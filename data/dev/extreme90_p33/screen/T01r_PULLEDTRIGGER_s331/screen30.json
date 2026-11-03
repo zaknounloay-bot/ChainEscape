@@ -1,0 +1,366 @@
+{
+ "T01r_s331_2": {
+  "result": "overlap",
+  "detail": [
+   0.4,
+   "N11"
+  ]
+ },
+ "T01r_s331_5": {
+  "result": "overlap",
+  "detail": [
+   0.45,
+   "N11"
+  ]
+ },
+ "T01r_s331_0": {
+  "result": "not essential",
+  "detail": {
+   "without_switch": "without it: 9 decision steps, 4 distinct mistakes (with it: 10, 5)"
+  }
+ },
+ "T01r_s331_1": {
+  "result": "not essential",
+  "detail": {
+   "without_switch": "without it: 9 decision steps, 4 distinct mistakes (with it: 10, 5)"
+  }
+ },
+ "T01r_s331_3": {
+  "result": "PASS",
+  "B": {
+   "coverage": 0.87,
+   "decision_steps": 13,
+   "distinct_mistakes": 6,
+   "endgame_decision": true,
+   "last_decision": 13,
+   "late": 0.87,
+   "losing_per_step": [
+    3,
+    2,
+    1,
+    1,
+    2,
+    2,
+    2,
+    2,
+    2,
+    2,
+    2,
+    1,
+    1,
+    0,
+    0
+   ],
+   "matters_magnet": true,
+   "matters_switch": true,
+   "mistakes": [
+    "r0c6>",
+    "r1c4^",
+    "r3c3<",
+    "r0c6<",
+    "r1c3^",
+    "r1c3v"
+   ],
+   "shortcut": 0.085,
+   "spinner_dependence": "unsolvable without it",
+   "without_magnet": "unsolvable without it",
+   "without_switch": "without it: 13 decision steps, 4 distinct mistakes (with it: 13, 6)"
+  },
+  "A": {
+   "positions": 95,
+   "solution": 15,
+   "solve_ms": 6.4,
+   "timeup_worst_ms": 5
+  },
+  "overlap": [
+   0.33,
+   "N75"
+  ],
+  "filler": [],
+  "hint_follow": "PASS"
+ },
+ "T01r_s331_4": {
+  "result": "PASS",
+  "B": {
+   "coverage": 0.87,
+   "decision_steps": 13,
+   "distinct_mistakes": 6,
+   "endgame_decision": true,
+   "last_decision": 13,
+   "late": 0.87,
+   "losing_per_step": [
+    3,
+    2,
+    1,
+    1,
+    2,
+    2,
+    2,
+    2,
+    2,
+    2,
+    2,
+    1,
+    1,
+    0,
+    0
+   ],
+   "matters_magnet": true,
+   "matters_switch": true,
+   "mistakes": [
+    "r0c6>",
+    "r1c4^",
+    "r3c3<",
+    "r0c6<",
+    "r1c3^",
+    "r1c3v"
+   ],
+   "shortcut": 0.085,
+   "spinner_dependence": "unsolvable without it",
+   "without_magnet": "unsolvable without it",
+   "without_switch": "without it: 13 decision steps, 4 distinct mistakes (with it: 13, 6)"
+  },
+  "A": {
+   "positions": 95,
+   "solution": 15,
+   "solve_ms": 6.3,
+   "timeup_worst_ms": 5
+  },
+  "overlap": [
+   0.32,
+   "N83"
+  ],
+  "filler": [],
+  "hint_follow": "PASS"
+ },
+ "T01r_s331_6": {
+  "result": "PASS",
+  "B": {
+   "coverage": 0.88,
+   "decision_steps": 15,
+   "distinct_mistakes": 6,
+   "endgame_decision": true,
+   "last_decision": 15,
+   "late": 0.88,
+   "losing_per_step": [
+    2,
+    2,
+    3,
+    2,
+    1,
+    1,
+    2,
+    2,
+    2,
+    2,
+    2,
+    2,
+    2,
+    1,
+    1,
+    0,
+    0
+   ],
+   "matters_magnet": true,
+   "matters_switch": true,
+   "mistakes": [
+    "r0c6>",
+    "r1c4^",
+    "r3c3<",
+    "r0c6<",
+    "r1c3^",
+    "r1c3v"
+   ],
+   "shortcut": 0.12,
+   "spinner_dependence": "unsolvable without it",
+   "without_magnet": "unsolvable without it",
+   "without_switch": "without it: 15 decision steps, 4 distinct mistakes (with it: 15, 6)"
+  },
+  "A": {
+   "positions": 135,
+   "solution": 17,
+   "solve_ms": 5.9,
+   "timeup_worst_ms": 6.3
+  },
+  "overlap": [
+   0.32,
+   "N75"
+  ],
+  "filler": [],
+  "hint_follow": "PASS"
+ },
+ "T01r_s331_7": {
+  "result": "PASS",
+  "B": {
+   "coverage": 0.88,
+   "decision_steps": 15,
+   "distinct_mistakes": 6,
+   "endgame_decision": true,
+   "last_decision": 15,
+   "late": 0.88,
+   "losing_per_step": [
+    2,
+    2,
+    3,
+    2,
+    1,
+    1,
+    2,
+    2,
+    2,
+    2,
+    2,
+    2,
+    2,
+    1,
+    1,
+    0,
+    0
+   ],
+   "matters_magnet": true,
+   "matters_switch": true,
+   "mistakes": [
+    "r0c6>",
+    "r1c4^",
+    "r3c3<",
+    "r0c6<",
+    "r1c3^",
+    "r1c3v"
+   ],
+   "shortcut": 0.12,
+   "spinner_dependence": "unsolvable without it",
+   "without_magnet": "unsolvable without it",
+   "without_switch": "without it: 15 decision steps, 4 distinct mistakes (with it: 15, 6)"
+  },
+  "A": {
+   "positions": 135,
+   "solution": 17,
+   "solve_ms": 6.3,
+   "timeup_worst_ms": 5.2
+  },
+  "overlap": [
+   0.32,
+   "N75"
+  ],
+  "filler": [],
+  "hint_follow": "PASS"
+ },
+ "T01r_s331_8": {
+  "result": "PASS",
+  "B": {
+   "coverage": 0.88,
+   "decision_steps": 15,
+   "distinct_mistakes": 6,
+   "endgame_decision": true,
+   "last_decision": 15,
+   "late": 0.88,
+   "losing_per_step": [
+    2,
+    2,
+    3,
+    2,
+    1,
+    1,
+    2,
+    2,
+    2,
+    2,
+    2,
+    2,
+    2,
+    1,
+    1,
+    0,
+    0
+   ],
+   "matters_magnet": true,
+   "matters_switch": true,
+   "mistakes": [
+    "r0c6>",
+    "r1c4^",
+    "r3c3<",
+    "r0c6<",
+    "r1c3^",
+    "r1c3v"
+   ],
+   "shortcut": 0.095,
+   "spinner_dependence": "unsolvable without it",
+   "without_magnet": "unsolvable without it",
+   "without_switch": "without it: 15 decision steps, 4 distinct mistakes (with it: 15, 6)"
+  },
+  "A": {
+   "positions": 143,
+   "solution": 17,
+   "solve_ms": 6.2,
+   "timeup_worst_ms": 5.4
+  },
+  "overlap": [
+   0.32,
+   "N75"
+  ],
+  "filler": [],
+  "hint_follow": "PASS"
+ },
+ "T01r_s331_9": {
+  "result": "not essential",
+  "detail": {
+   "without_switch": "without it: 13 decision steps, 5 distinct mistakes (with it: 13, 6)"
+  }
+ },
+ "T01r_s331_10": {
+  "result": "PASS",
+  "B": {
+   "coverage": 0.88,
+   "decision_steps": 14,
+   "distinct_mistakes": 7,
+   "endgame_decision": true,
+   "last_decision": 14,
+   "late": 0.88,
+   "losing_per_step": [
+    3,
+    2,
+    1,
+    1,
+    1,
+    2,
+    3,
+    3,
+    2,
+    2,
+    2,
+    2,
+    1,
+    1,
+    0,
+    0
+   ],
+   "matters_magnet": true,
+   "matters_switch": true,
+   "mistakes": [
+    "r0c6>",
+    "r1c4^",
+    "r3c3<",
+    "r0c6<",
+    "r1c3^",
+    "r5c6<",
+    "r1c3v"
+   ],
+   "shortcut": 0.085,
+   "spinner_dependence": "unsolvable without it",
+   "without_magnet": "unsolvable without it",
+   "without_switch": "without it: 14 decision steps, 5 distinct mistakes (with it: 14, 7)"
+  },
+  "A": {
+   "positions": 163,
+   "solution": 16,
+   "solve_ms": 6.8,
+   "timeup_worst_ms": 5.7
+  },
+  "overlap": [
+   0.32,
+   "N11"
+  ],
+  "filler": [],
+  "hint_follow": "PASS"
+ }
+}

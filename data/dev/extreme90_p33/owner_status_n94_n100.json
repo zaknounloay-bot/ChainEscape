@@ -1,0 +1,42 @@
+{
+ "source": "Phase 33 human results message (project owner), OWNER DECISION STATUS section. Stored apart from the difficulty ratings. Recommendations are NOT approvals: the approved bank stays 38/50 until the owner explicitly confirms.",
+ "recorded": "2026-11-03",
+ "approved_bank": "38/50 (unchanged)",
+ "boards": {
+  "N94": {
+   "decision": "NONE YET",
+   "status": "RECOMMENDED FOR APPROVAL - NOT CONFIRMED BY OWNER",
+   "fingerprint": "4654e81f75c7ba8f8388f0d2dfd23348e5278da2b16dbb227c1987983d34713f"
+  },
+  "N99": {
+   "decision": "NONE YET",
+   "status": "RECOMMENDED FOR APPROVAL - NOT CONFIRMED BY OWNER",
+   "fingerprint": "b6c71c004f4e95901dc944eab42254da016eb957da4b6496d0b8d5a3b8948e88"
+  },
+  "N96": {
+   "decision": "NONE YET",
+   "status": "BORDERLINE - REQUIRES OWNER JUDGMENT",
+   "fingerprint": "60b63fc1cf3e73cdb6f331e949a577657501de9d834e546a1fc43bb9bcfa7531"
+  },
+  "N95": {
+   "decision": "NOT APPROVED",
+   "status": "DOWNGRADED (MEDIUM)",
+   "fingerprint": "e7289be01bb874a0a8fa1cdd2ed6aab94300382c48a7b421043f71ec9360870e"
+  },
+  "N97": {
+   "decision": "NOT APPROVED",
+   "status": "DOWNGRADED (MEDIUM)",
+   "fingerprint": "2b71601d2cb42654f43a991bbcaf6ee88abe2cc70ac795b752b9b11f537253af"
+  },
+  "N98": {
+   "decision": "NOT APPROVED",
+   "status": "DOWNGRADED (MEDIUM)",
+   "fingerprint": "161d9f1b6a92d740a14d83a4611964f8c3bf5f0117e132f886fdb2a4ee4129f9"
+  },
+  "N100": {
+   "decision": "NOT APPROVED",
+   "status": "DOWNGRADED (MEDIUM)",
+   "fingerprint": "01e8abb27b59d23134589c966b1ae7d14d9126874a04e35680e2541f154e34bc"
+  }
+ }
+}

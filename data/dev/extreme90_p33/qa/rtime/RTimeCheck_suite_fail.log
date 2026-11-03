@@ -1,0 +1,6 @@
+Godot Engine v4.3.stable.official.77dcf97d8 - https://godotengine.org
+
+RTIME CHECK: FAILED (39 checks)
+  FAIL: SHOW A MOVE does not pause the clock
+WARNING: ObjectDB instances leaked at exit (run with --verbose for details).
+     at: cleanup (core/object/object.cpp:2284)

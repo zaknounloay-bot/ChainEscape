@@ -1,0 +1,143 @@
+{
+ "R04_s332_4": {
+  "A": {
+   "fingerprint": "bac8c7b264d372c02634b7c1ff58733540ec41ef511c15bdb15015188c1e0136",
+   "hint_nodes": [
+    32,
+    46
+   ],
+   "parity": [
+    0,
+    0
+   ],
+   "portals": 0,
+   "position_cap": 2000,
+   "positions": 383,
+   "replay": true,
+   "solution": 19,
+   "solve_ms": 2.7,
+   "timeup_worst_ms": 3.7,
+   "timeup_worst_nodes": 71,
+   "winnable": 89
+  },
+  "B": {
+   "coverage": 0.89,
+   "decision_steps": 17,
+   "distinct_mistakes": 5,
+   "endgame_decision": true,
+   "last_decision": 17,
+   "late": 0.89,
+   "line": [
+    "r3c1^ ram [x3]",
+    "r0c1^ [x3]",
+    "r1c3< [x3]",
+    "r0c3> [x2]",
+    "r3c1^ [x1]",
+    "r3c0> ram [x1]",
+    "r3c4v [x1]",
+    "r3c2> ram [x1]",
+    "r4c3> [x2]",
+    "r3c3^ [x1]",
+    "r4c2> [x1]",
+    "r3c2> [x1]",
+    "r5c3^ [x2]",
+    "r0c0> [x2]",
+    "r2c0^ [x2]",
+    "r3c0> [x1]",
+    "r2c4< [x1]",
+    "r2c5v",
+    "r6c6^"
+   ],
+   "losing_per_step": [
+    3,
+    3,
+    3,
+    2,
+    1,
+    1,
+    1,
+    1,
+    2,
+    1,
+    1,
+    1,
+    2,
+    2,
+    2,
+    1,
+    1,
+    0,
+    0
+   ],
+   "matters_armor": true,
+   "matters_lock": true,
+   "matters_switch": true,
+   "mistakes": [
+    "r0c3>",
+    "r3c4v",
+    "r6c6^",
+    "r3c3^",
+    "r3c0>"
+   ],
+   "shortcut": 0.083,
+   "spinner_dependence": "without it: 16 decision steps, 2 distinct mistakes (with it: 17, 5)",
+   "without_armor": "without it: 14 decision steps, 4 distinct mistakes (with it: 17, 5)",
+   "without_lock": "without it: 17 decision steps, 3 distinct mistakes (with it: 17, 5)",
+   "without_switch": "unsolvable without it"
+  },
+  "C": {
+   "decisions_k4_6_8": [
+    8,
+    6,
+    4
+   ],
+   "deepest": 12,
+   "greedy": {
+    "look2": 0.02,
+    "look4": 0.083,
+    "min_turn": 0,
+    "mobility": 0.06,
+    "safe": 0.01
+   },
+   "hidden_k6_8": [
+    13,
+    10
+   ],
+   "learner": {
+    "look4": 1,
+    "look6": 0
+   },
+   "look6_greedy": 0.108,
+   "opening": "3 / 6",
+   "pressure": {
+    "advances": 0,
+    "calm_prefix": 1,
+    "flips": 2,
+    "multi_turned": 0,
+    "prediction_share": 0.32,
+    "pulls": 0,
+    "rams": 3,
+    "signals": 1,
+    "spinners_turned": 2,
+    "trap_delay_median": 5,
+    "turns": 2,
+    "undo_proof": 0.54
+   },
+   "win_share": 0.232
+  },
+  "map": [
+   "B^@#Y Y^= . Y>&A . . .",
+   ". . . R<@- . . .",
+   "G^@~ . . . B>&A R<@- .",
+   "R> Y^@~ Y<&A= R^= Yv%A . .",
+   ". . Y> P>@~ . . .",
+   ". . . B^#Y . . .",
+   ". . . . . . G^%A"
+  ],
+  "name": "R04_s332_4",
+  "target": "EXTREME",
+  "verdict": "HUMAN-REVIEW CANDIDATE",
+  "why_a": [],
+  "why_b": []
+ }
+}

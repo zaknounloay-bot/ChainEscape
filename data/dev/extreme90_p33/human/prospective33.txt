@@ -1,0 +1,10 @@
+train: 71 study boards of phases <= 32 (38 approved, 33 not)
+test (rating proxy): + ['N94', 'N99'] | - ['N95', 'N97', 'N98', 'N100'] | excluded ['N96']
+P1_positions             thr 190        predicted+ ['N94', 'N95']               correct 4/6 (TP 1 FP 1 FN 1 TN 3)  N96 predicted -
+P2_early3                thr 5          predicted+ ['N95', 'N100']              correct 2/6 (TP 0 FP 2 FN 2 TN 2)  N96 predicted -
+P3_open_tempting         thr 4          predicted+ ['N94', 'N99', 'N96', 'N95', 'N97', 'N98', 'N100'] correct 2/6 (TP 2 FP 4 FN 0 TN 0)  N96 predicted +
+P4_p_look2               thr 0.001      predicted+ ['N94', 'N98']               correct 4/6 (TP 1 FP 1 FN 1 TN 3)  N96 predicted -
+P5_strat_steps           thr 14         predicted+ []                           correct 4/6 (TP 0 FP 0 FN 2 TN 4)  N96 predicted -
+P6_forced_share          thr 0.438      predicted+ ['N94', 'N98']               correct 4/6 (TP 1 FP 1 FN 1 TN 3)  N96 predicted -
+P7_positions_and_early3  thr [190, 5]   predicted+ ['N95']                      correct 3/6 (TP 0 FP 1 FN 2 TN 3)  N96 predicted -
+baselines: always + 2/6, always - 4/6

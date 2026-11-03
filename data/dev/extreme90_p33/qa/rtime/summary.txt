@@ -1,0 +1,14 @@
+CUR run 1 load_before 0.44 exit=0 :: RTIME CHECK: PASSED (39 checks) 
+BASE run 1 load_before 0.49 exit=0 :: RTIME CHECK: PASSED (39 checks) 
+CUR run 2 load_before 0.42 exit=0 :: RTIME CHECK: PASSED (39 checks) 
+BASE run 2 load_before 0.35 exit=0 :: RTIME CHECK: PASSED (39 checks) 
+CUR run 3 load_before 0.37 exit=0 :: RTIME CHECK: PASSED (39 checks) 
+BASE run 3 load_before 0.44 exit=0 :: RTIME CHECK: PASSED (39 checks) 
+RTIME_DONE
+LOAD CUR run 1 load_end 1.09 exit=0 :: RTIME CHECK: PASSED (39 checks) 
+LOAD BASE run 1 load_end 1.74 exit=0 :: RTIME CHECK: PASSED (39 checks) 
+LOAD CUR run 2 load_end 2.04 exit=0 :: RTIME CHECK: PASSED (39 checks) 
+LOAD BASE run 2 load_end 2.50 exit=0 :: RTIME CHECK: PASSED (39 checks) 
+LOAD CUR run 3 load_end 2.97 exit=0 :: RTIME CHECK: PASSED (39 checks) 
+LOAD BASE run 3 load_end 3.24 exit=0 :: RTIME CHECK: PASSED (39 checks) 
+LOAD_DONE

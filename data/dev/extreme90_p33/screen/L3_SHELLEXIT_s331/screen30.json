@@ -1,0 +1,227 @@
+{
+ "L3_s331_0": {
+  "result": "filler",
+  "B": {
+   "coverage": 0.68,
+   "decision_steps": 13,
+   "distinct_mistakes": 5,
+   "endgame_decision": true,
+   "last_decision": 16,
+   "late": 0.84,
+   "losing_per_step": [
+    3,
+    3,
+    2,
+    2,
+    1,
+    1,
+    1,
+    1,
+    1,
+    0,
+    0,
+    0,
+    1,
+    1,
+    1,
+    1,
+    0,
+    0,
+    0
+   ],
+   "matters_armor": true,
+   "matters_switch": true,
+   "mistakes": [
+    "r0c2^",
+    "r2c6>",
+    "r4c4v",
+    "r0c3<",
+    "r6c2>"
+   ],
+   "shortcut": 0.117,
+   "spinner_dependence": "unsolvable without it",
+   "without_armor": "without it: 8 decision steps, 4 distinct mistakes (with it: 13, 5)",
+   "without_switch": "unsolvable without it"
+  },
+  "A": {
+   "positions": 213,
+   "solution": 19,
+   "solve_ms": 1.5,
+   "timeup_worst_ms": 2.2
+  },
+  "overlap": [
+   0.37,
+   "N12"
+  ],
+  "filler": [
+   "r6c3 Y^"
+  ]
+ },
+ "L3_s331_1": {
+  "result": "not essential",
+  "detail": {
+   "without_armor": "without it: 12 decision steps, 4 distinct mistakes (with it: 13, 5)"
+  }
+ },
+ "L3_s331_2": {
+  "result": "not essential",
+  "detail": {
+   "without_armor": "without it: 14 decision steps, 5 distinct mistakes (with it: 16, 5)"
+  }
+ },
+ "L3_s331_3": {
+  "result": "not essential",
+  "detail": {
+   "without_armor": "without it: 15 decision steps, 5 distinct mistakes (with it: 17, 5)"
+  }
+ },
+ "L3_s331_4": {
+  "result": "not essential",
+  "detail": {
+   "without_armor": "without it: 13 decision steps, 4 distinct mistakes (with it: 14, 5)"
+  }
+ },
+ "L3_s331_5": {
+  "result": "not essential",
+  "detail": {
+   "without_armor": "without it: 13 decision steps, 4 distinct mistakes (with it: 14, 5)"
+  }
+ },
+ "L3_s331_6": {
+  "result": "not essential",
+  "detail": {
+   "without_armor": "without it: 14 decision steps, 4 distinct mistakes (with it: 16, 5)"
+  }
+ },
+ "L3_s331_7": {
+  "result": "PASS",
+  "B": {
+   "coverage": 0.84,
+   "decision_steps": 16,
+   "distinct_mistakes": 4,
+   "endgame_decision": true,
+   "last_decision": 16,
+   "late": 0.84,
+   "losing_per_step": [
+    2,
+    2,
+    4,
+    3,
+    2,
+    2,
+    2,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    0,
+    0,
+    0
+   ],
+   "matters_armor": true,
+   "matters_switch": true,
+   "mistakes": [
+    "r0c2^",
+    "r2c6>",
+    "r4c4v",
+    "r6c2>"
+   ],
+   "shortcut": 0.017,
+   "spinner_dependence": "unsolvable without it",
+   "without_armor": "without it: 9 decision steps, 3 distinct mistakes (with it: 16, 4)",
+   "without_switch": "unsolvable without it"
+  },
+  "A": {
+   "positions": 791,
+   "solution": 19,
+   "solve_ms": 1.1,
+   "timeup_worst_ms": 3.5
+  },
+  "overlap": [
+   0.3,
+   "N62"
+  ],
+  "filler": [],
+  "hint_follow": "PASS"
+ },
+ "L3_s331_8": {
+  "result": "PASS",
+  "B": {
+   "coverage": 0.84,
+   "decision_steps": 16,
+   "distinct_mistakes": 5,
+   "endgame_decision": true,
+   "last_decision": 16,
+   "late": 0.84,
+   "losing_per_step": [
+    4,
+    4,
+    4,
+    3,
+    3,
+    3,
+    2,
+    1,
+    2,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    0,
+    0,
+    0
+   ],
+   "matters_armor": true,
+   "matters_switch": true,
+   "mistakes": [
+    "r0c2^",
+    "r2c6>",
+    "r4c4v",
+    "r6c2>",
+    "r3c2<"
+   ],
+   "shortcut": 0.03,
+   "spinner_dependence": "unsolvable without it",
+   "without_armor": "without it: 13 decision steps, 4 distinct mistakes (with it: 16, 5)",
+   "without_switch": "unsolvable without it"
+  },
+  "A": {
+   "positions": 887,
+   "solution": 19,
+   "solve_ms": 1.4,
+   "timeup_worst_ms": 8.6
+  },
+  "overlap": [
+   0.3,
+   "N2"
+  ],
+  "filler": [],
+  "hint_follow": "PASS"
+ },
+ "L3_s331_9": {
+  "result": "not essential",
+  "detail": {
+   "without_armor": "without it: 15 decision steps, 4 distinct mistakes (with it: 17, 5)"
+  }
+ },
+ "L3_s331_10": {
+  "result": "not essential",
+  "detail": {
+   "without_armor": "without it: 15 decision steps, 4 distinct mistakes (with it: 15, 5)"
+  }
+ },
+ "L3_s331_11": {
+  "result": "not essential",
+  "detail": {
+   "without_armor": "without it: 15 decision steps, 4 distinct mistakes (with it: 15, 5)"
+  }
+ }
+}

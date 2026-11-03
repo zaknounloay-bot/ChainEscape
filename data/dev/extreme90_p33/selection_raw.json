@@ -1,0 +1,159 @@
+{
+ "rule": [
+  "  python3 tools/extreme90_stage2.py <data dir> <seed> [godot binary]   (from the repo root; appends to <dir>/stage2_state.json)",
+  "Candidates of the round -> similarity pre-filter -> full reports one at a time,",
+  "round-robin across families -> acceptance rules -> filler -> accepted list."
+ ],
+ "order": [
+  "T01r",
+  "T10b",
+  "J5",
+  "K08",
+  "R04",
+  "J4",
+  "P03",
+  "L3",
+  "T30"
+ ],
+ "conflicts": [
+  "J5_s331_1 rejected: pairwise [('T01r_s331_3', 0.39)]",
+  "J5_s331_2 rejected: pairwise [('T01r_s331_3', 0.39)]",
+  "J5: no board free of pairwise conflict",
+  "P03_s332_2 rejected: pairwise [('T01r_s331_3', 0.35), ('R04_s332_1', 0.32)]",
+  "P03_s332_7 rejected: pairwise [('T01r_s331_3', 0.35)]",
+  "P03: no board free of pairwise conflict"
+ ],
+ "dropped_by_cap_8": [],
+ "max_pairwise_overlap": 0.29,
+ "selected": [
+  {
+   "key": "T01r_s331_3",
+   "positions": 95,
+   "map": [
+    ". . . . . . P>&A",
+    ". . . Bv&A Y^@ R^@- Gv@~",
+    ". . . . R^* . Bv%A",
+    ". . . G<* . R^&A P<%A",
+    ". . . Pv@- . . P<@",
+    ". . . B< . . B^@-",
+    ". . . . . . P^@"
+   ],
+   "mechanic": "magnet,switch",
+   "run": "T01r_PULLEDTRIGGER_s331",
+   "concept": "T01r",
+   "arm": "R",
+   "sibling": "N83",
+   "overlap_to_sibling": 0.32
+  },
+  {
+   "key": "T10b_s331_2",
+   "positions": 136,
+   "map": [
+    ". . . . . . .",
+    ". . Bv&A . . R< .",
+    ". . . B>@~ Yv@ G<%A .",
+    ". R>@- B<#Y&A Bv@~ P>@ . .",
+    ". G^#B G<@#Y . . Yv&A .",
+    ". . Pv@- . . P<#B .",
+    ". . . . . . G^%A"
+   ],
+   "mechanic": "switch,lock",
+   "run": "T10b_LADDERBLOCK_s331",
+   "concept": "T10b",
+   "arm": "R",
+   "sibling": "N86",
+   "overlap_to_sibling": 0.26
+  },
+  {
+   "key": "K08_s331_2",
+   "positions": 294,
+   "map": [
+    ". . . . . . .",
+    ". . . Pv@ . . .",
+    ". . . . . . .",
+    ". B^@~ . G<* Gv Bv&A .",
+    ". . . R^@~ G^@~ R> .",
+    ". R^@~ Rv* Bv@ . P^%A .",
+    ". . . Gv@~ . G< ."
+   ],
+   "mechanic": "magnet,switch",
+   "run": "K08_PULLEDTARGET_s331",
+   "concept": "K08",
+   "arm": "N"
+  },
+  {
+   "key": "R04_s332_1",
+   "positions": 323,
+   "map": [
+    "B^@#Y Y^= . Y>&A . . .",
+    ". . . R<@- . . .",
+    "G^@~ . . . B>&A R<@- .",
+    "R> Y^@~ Y<&A= R^= Yv%A . .",
+    ". . Y> . . . R^",
+    ". . . B^#Y . . .",
+    ". . . . . . G^%A"
+   ],
+   "mechanic": "switch,lock,armor",
+   "run": "R04_ARMOREDKEY_s332",
+   "concept": "R04",
+   "arm": "R",
+   "sibling": "N75",
+   "overlap_to_sibling": 0.22
+  },
+  {
+   "key": "J4_s331_6",
+   "positions": 363,
+   "map": [
+    ". . . . . . .",
+    ". Y< P<* Y<= . . .",
+    ". . R< . . . .",
+    ". . . B>= . . .",
+    ". B<* . R^* . . .",
+    "Pv G>= . . . . .",
+    ". . . Yv . . ."
+   ],
+   "mechanic": "magnet,armor",
+   "run": "J4_RELAY_s331",
+   "concept": "J4",
+   "arm": "N"
+  },
+  {
+   "key": "L3_s331_7",
+   "positions": 791,
+   "map": [
+    ". P<@- Y^&A B< . . .",
+    ". . . . B^= . .",
+    "Y<&A R> . . B<&A= Gv@ B>%A",
+    ". . . R^@~ G<= Y^@- .",
+    ". . . . Gv&A . B^",
+    ". . . . . . .",
+    ". . P>%A . R> . ."
+   ],
+   "mechanic": "switch,armor",
+   "run": "L3_SHELLEXIT_s331",
+   "concept": "L3",
+   "arm": "R",
+   "sibling": "N62",
+   "overlap_to_sibling": 0.3
+  },
+  {
+   "key": "T30_s331_7",
+   "positions": 835,
+   "map": [
+    ". . . . . . .",
+    ". P^#Y . . . G^#B .",
+    ". . . . P> . .",
+    "Y^%A Y^&A P<&A . B<@ B^&A Y>",
+    "Y<&A G<@~#B . . Bv@ . .",
+    "Y^ G< P^@- . . . .",
+    "R>%A . . . B>@ . ."
+   ],
+   "mechanic": "switch,lock",
+   "run": "T30_TWOKEYS_s331",
+   "concept": "T30",
+   "arm": "R",
+   "sibling": "N87",
+   "overlap_to_sibling": 0.32
+  }
+ ]
+}

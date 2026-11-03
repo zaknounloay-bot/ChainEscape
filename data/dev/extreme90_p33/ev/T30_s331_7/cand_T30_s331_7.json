@@ -1,0 +1,17 @@
+{
+ "T30_s331_7": {
+  "map": [
+   ". . . . . . .",
+   ". P^#Y . . . G^#B .",
+   ". . . . P> . .",
+   "Y^%A Y^&A P<&A . B<@ B^&A Y>",
+   "Y<&A G<@~#B . . Bv@ . .",
+   "Y^ G< P^@- . . . .",
+   "R>%A . . . B>@ . ."
+  ],
+  "target": "EXTREME",
+  "facts": [],
+  "mechanic": "switch,lock",
+  "max_positions": 2000
+ }
+}

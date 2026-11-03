@@ -1,0 +1,48 @@
+PASS ?extreme90=1: the welcome screen; no overflow; buttons on screen
+PASS CHALLENGE tiles: N3, N5, N7, N11, N13, N14, N15, N16, N17, N18, N19, N20, N21, N22, N23, CHALLENGE 1-15 all on the iPhone SE screen, no reference
+PASS N3: START (a real tap) unlocked audio; the GREEN mix plays; a 90 s clock
+PASS CHALLENGE 1 (N3): solved by touches in a timed 90 s run (17.1 s), rules ta90-v1, silence on SOLVED
+PASS N3: the SHORT questionnaire by touch - difficulty (one per line), 1-5 in a row, YES / NO in a row, all on the iPhone SE screen; then straight back to the selection (no second set)
+PASS CHALLENGE 2 (N5): solved by touches in a timed 90 s run (18.4 s), rules ta90-v1, silence on SOLVED
+PASS N5: one SKIP leaves the questionnaire; back to CHOOSE A CHALLENGE
+PASS CHALLENGE 3 (N7): solved by touches in a timed 90 s run (29.4 s), rules ta90-v1, silence on SOLVED
+PASS N7: one SKIP leaves the questionnaire; back to CHOOSE A CHALLENGE
+PASS CHALLENGE 4 (N11): solved by touches in a timed 90 s run (21.1 s), rules ta90-v1, silence on SOLVED
+PASS N11: one SKIP leaves the questionnaire; back to CHOOSE A CHALLENGE
+PASS CHALLENGE 5 (N13): solved by touches in a timed 90 s run (21.1 s), rules ta90-v1, silence on SOLVED
+PASS N13: one SKIP leaves the questionnaire; back to CHOOSE A CHALLENGE
+PASS CHALLENGE 6 (N14): solved by touches in a timed 90 s run (20.8 s), rules ta90-v1, silence on SOLVED
+PASS N14: one SKIP leaves the questionnaire; back to CHOOSE A CHALLENGE
+PASS CHALLENGE 7 (N15): solved by touches in a timed 90 s run (26.5 s), rules ta90-v1, silence on SOLVED
+PASS N15: one SKIP leaves the questionnaire; back to CHOOSE A CHALLENGE
+PASS CHALLENGE 8 (N16): solved by touches in a timed 90 s run (22.0 s), rules ta90-v1, silence on SOLVED
+PASS N16: one SKIP leaves the questionnaire; back to CHOOSE A CHALLENGE
+PASS CHALLENGE 9 (N17): solved by touches in a timed 90 s run (20.4 s), rules ta90-v1, silence on SOLVED
+PASS N17: one SKIP leaves the questionnaire; back to CHOOSE A CHALLENGE
+PASS CHALLENGE 10 (N18): solved by touches in a timed 90 s run (25.6 s), rules ta90-v1, silence on SOLVED
+PASS N18: one SKIP leaves the questionnaire; back to CHOOSE A CHALLENGE
+PASS CHALLENGE 11 (N19): solved by touches in a timed 90 s run (20.6 s), rules ta90-v1, silence on SOLVED
+PASS N19: one SKIP leaves the questionnaire; back to CHOOSE A CHALLENGE
+PASS CHALLENGE 12 (N20): solved by touches in a timed 90 s run (17.1 s), rules ta90-v1, silence on SOLVED
+PASS N20: one SKIP leaves the questionnaire; back to CHOOSE A CHALLENGE
+PASS CHALLENGE 13 (N21): solved by touches in a timed 90 s run (26.3 s), rules ta90-v1, silence on SOLVED
+PASS N21: one SKIP leaves the questionnaire; back to CHOOSE A CHALLENGE
+PASS CHALLENGE 14 (N22): solved by touches in a timed 90 s run (22.1 s), rules ta90-v1, silence on SOLVED
+PASS N22: one SKIP leaves the questionnaire; back to CHOOSE A CHALLENGE
+PASS CHALLENGE 15 (N23): solved by touches in a timed 90 s run (21.4 s), rules ta90-v1, silence on SOLVED
+PASS N23: one SKIP leaves the questionnaire; back to CHOOSE A CHALLENGE
+PASS WebAssembly: a full solve (the TIME UP check) per board {"N3":0.3,"N5":1.6,"N7":4,"N11":6.8,"N13":4,"N14":10.5,"N15":20.3,"N16":13.5,"N17":6.6,"N18":19.9,"N19":8.6,"N20":5.5,"N21":4.8,"N22":9.5,"N23":2.5} ms
+BENCH {"N3":0.3,"N5":1.6,"N7":4,"N11":6.8,"N13":4,"N14":10.5,"N15":20.3,"N16":13.5,"N17":6.6,"N18":19.9,"N19":8.6,"N20":5.5,"N21":4.8,"N22":9.5,"N23":2.5}
+PASS ?ta90=1 / the 120-second pilot storage never written []
+PASS CHALLENGE 1 (N3): TIME UP at 90 s (the clock kept running through a reload); silence
+PASS TIME UP: one SKIP, then CONTINUE WITHOUT TIMER / FINISH at once (no other question)
+PASS CONTINUE WITHOUT TIMER: NO TIMER, the CALM mix, no SHOW A MOVE
+PASS solved without the timer, by touches
+PASS after the untimed solve: straight back to CHOOSE A CHALLENGE (no post-play questionnaire)
+BUNDLE {"format":"ce-xb90","rules":"ta90-v1","run0":{"board":"N3","timed":"TIME UP","untimed":true},"keys":["N11","N13","N14","N15","N16","N17","N18","N19","N20","N21","N22","N23","N3","N5","N7"],"nums":[4,5,6,7,8,9,10,11,12,13,14,15,1,2,3]}
+PASS export: questionnaire version, each board's mechanics; the skipped run has no answers and keeps its TIME UP outcome
+PASS COPY ALL RESULTS: one ce-xb90 bundle - every board under its internal id with its fingerprint and challenge number; the run kept TIME UP and the untimed solve apart
+PASS the player build ignores ?extreme90=1 {"hub":false,"music":false,"keys":[]}
+PASS no page errors []
+PASS no network calls outside the page []
+WEB EXTREME90 TEST: PASSED (45/45)

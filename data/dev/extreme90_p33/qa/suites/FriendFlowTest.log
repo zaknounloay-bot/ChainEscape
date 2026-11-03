@@ -1,0 +1,81 @@
+Godot Engine v4.3.stable.official.77dcf97d8 - https://godotengine.org
+
+[Save] load: new -> fresh progress
+[Save] profile: new player id
+[Save] write #1: last_played=1 highest_completed=0 highest_unlocked=1 total_score=0 coins=60 file=ok
+[Diag] last session ended at level 31 after 18s: process ended without a clean quit | [Diag] L31 ch4 via=select t=18s fps=145 mem=90.3MB objs=3868 nodes=777 orphans=0 res=104 tweens=53 fx=28 music=c04 music_players=0 sfx=8 save_seq=45
+[Chapter] level=1 chapter=1 theme=First Light (id 1, prev 0) music=c01  <- transition
+[Save] write #2: last_played=1 highest_completed=0 highest_unlocked=1 total_score=0 coins=60 file=ok
+[Diag] L1 ch1 via=launch t=0s fps=1 mem=95.3MB objs=3236 nodes=575 orphans=0 res=97 tweens=6 fx=3 music=c01 music_players=1 sfx=0 save_seq=2
+[Save] write #3: last_played=1 highest_completed=1 highest_unlocked=2 total_score=1001 coins=60 file=ok
+[Save] write #4: last_played=1 highest_completed=2 highest_unlocked=3 total_score=2003 coins=60 file=ok
+[Save] write #5: last_played=1 highest_completed=3 highest_unlocked=4 total_score=3006 coins=60 file=ok
+[Save] write #6: last_played=1 highest_completed=4 highest_unlocked=5 total_score=4010 coins=60 file=ok
+[Save] write #7: last_played=1 highest_completed=5 highest_unlocked=6 total_score=5015 coins=60 file=ok
+[Save] write #8: last_played=1 highest_completed=6 highest_unlocked=7 total_score=6021 coins=60 file=ok
+[Save] write #9: last_played=7 highest_completed=6 highest_unlocked=7 total_score=6021 coins=42 file=ok
+[Save] load: source=file version=5 seq=9 last_played=7 highest_completed=6 highest_unlocked=7 total_score=6021 coins=42 stars=18 saved=2026-11-03 04:07:27 issues=[copies: file#9 bak#8]
+[Diag] last session ended at level 1 after 0s: process ended without a clean quit | [Diag] L1 ch1 via=launch t=0s fps=1 mem=95.3MB objs=3236 nodes=575 orphans=0 res=97 tweens=6 fx=3 music=c01 music_players=1 sfx=0 save_seq=2
+[Chapter] level=7 chapter=1 theme=First Light (id 1, prev 0) music=c01  <- transition
+[Save] write #10: last_played=7 highest_completed=6 highest_unlocked=7 total_score=6021 coins=42 file=ok
+[Diag] L7 ch1 via=launch t=0s fps=1 mem=95.9MB objs=3338 nodes=609 orphans=0 res=97 tweens=14 fx=7 music=c01 music_players=1 sfx=0 save_seq=10
+[Social] friend challenge: easy {"blocks":8,"cols":5,"decision_points":0,"depth":6,"difficulty":5.3,"evals":1,"human_gap":0,"in_accept":true,"in_band":true,"ms":10,"one_safe_steps":0,"random_win":-1,"rounds":1,"rows":4,"safe_choices":1.38,"spinners":0,"start_moves":3}
+[Social] API POST -> HTTP 200
+[Social] friend challenge: medium {"blocks":14,"cols":5,"decision_points":1,"depth":10,"difficulty":13.9,"evals":14,"human_gap":0,"in_accept":true,"in_band":true,"ms":63,"one_safe_steps":0,"random_win":-1,"rounds":1,"rows":5,"safe_choices":2,"spinners":3,"start_moves":5}
+[Social] API POST -> HTTP 200
+[Social] friend challenge: hard {"blocks":18,"cols":6,"decision_points":14,"depth":9,"difficulty":37.7,"evals":138,"human_gap":1.57,"in_accept":true,"in_band":false,"ms":1504,"one_safe_steps":2,"random_win":0.021,"rounds":2,"rows":6,"safe_choices":2.28,"spinners":4,"start_moves":4}
+[Social] API POST -> HTTP 200
+[Social] friend challenge: very_hard {"blocks":17,"cols":6,"decision_points":2,"depth":10,"difficulty":15.4,"evals":476,"human_gap":12.64,"in_accept":false,"in_band":false,"ms":2025,"one_safe_steps":2,"random_win":0.075,"rounds":5,"rows":6,"safe_choices":2.06,"spinners":6,"start_moves":4}
+[Social] API POST -> HTTP 200
+[Social] friend challenge: easy {"blocks":9,"cols":4,"decision_points":0,"depth":6,"difficulty":5.4,"evals":1,"human_gap":0,"in_accept":true,"in_band":true,"ms":9,"one_safe_steps":0,"random_win":-1,"rounds":1,"rows":4,"safe_choices":1.78,"spinners":0,"start_moves":3}
+[Social] API POST -> HTTP 200
+[Social] friend challenge: medium {"blocks":13,"cols":5,"decision_points":5,"depth":8,"difficulty":17.8,"evals":13,"human_gap":0,"in_accept":true,"in_band":true,"ms":94,"one_safe_steps":1,"random_win":-1,"rounds":1,"rows":5,"safe_choices":2.77,"spinners":3,"start_moves":4}
+[Social] API POST -> HTTP 200
+[Social] friend challenge: hard {"blocks":18,"cols":6,"decision_points":10,"depth":12,"difficulty":32.2,"evals":175,"human_gap":0,"in_accept":true,"in_band":true,"ms":1088,"one_safe_steps":4,"random_win":0.063,"rounds":3,"rows":6,"safe_choices":1.67,"spinners":4,"start_moves":3}
+[Social] API POST -> HTTP 200
+[Social] friend challenge: medium {"blocks":15,"cols":5,"decision_points":4,"depth":9,"difficulty":16.8,"evals":5,"human_gap":0,"in_accept":true,"in_band":true,"ms":53,"one_safe_steps":2,"random_win":-1,"rounds":1,"rows":5,"safe_choices":2.33,"spinners":3,"start_moves":5}
+[Social] API POST -> HTTP 200
+[Social] friend challenge: hard {"blocks":18,"cols":6,"decision_points":14,"depth":9,"difficulty":36.7,"evals":196,"human_gap":0,"in_accept":true,"in_band":true,"ms":1133,"one_safe_steps":2,"random_win":0.25,"rounds":2,"rows":6,"safe_choices":2.33,"spinners":4,"start_moves":4}
+[Social] API POST -> HTTP 200
+[Social] friend challenge: hard {"blocks":17,"cols":6,"decision_points":6,"depth":14,"difficulty":25.4,"evals":107,"human_gap":0,"in_accept":true,"in_band":true,"ms":504,"one_safe_steps":2,"random_win":0.188,"rounds":2,"rows":6,"safe_choices":1.35,"spinners":4,"start_moves":4}
+[Social] API POST -> HTTP 200
+[Social] friend challenge: easy {"blocks":8,"cols":4,"decision_points":0,"depth":6,"difficulty":5.8,"evals":1,"human_gap":0,"in_accept":true,"in_band":true,"ms":11,"one_safe_steps":0,"random_win":-1,"rounds":1,"rows":4,"safe_choices":1.5,"spinners":0,"start_moves":2}
+[Social] API POST -> HTTP 200
+[Social] friend challenge: medium {"blocks":14,"cols":5,"decision_points":4,"depth":4,"difficulty":13.6,"evals":5,"human_gap":0,"in_accept":true,"in_band":true,"ms":35,"one_safe_steps":1,"random_win":-1,"rounds":1,"rows":5,"safe_choices":3.86,"spinners":3,"start_moves":8}
+[Social] API POST -> HTTP 200
+[Social] friend challenge: medium {"blocks":15,"cols":5,"decision_points":2,"depth":8,"difficulty":12.4,"evals":2,"human_gap":0,"in_accept":true,"in_band":true,"ms":20,"one_safe_steps":2,"random_win":-1,"rounds":1,"rows":5,"safe_choices":2.6,"spinners":3,"start_moves":4}
+[Social] API POST -> HTTP 200
+[Social] friend challenge: medium {"blocks":15,"cols":5,"decision_points":4,"depth":8,"difficulty":16.6,"evals":2,"human_gap":0,"in_accept":true,"in_band":true,"ms":27,"one_safe_steps":0,"random_win":-1,"rounds":1,"rows":5,"safe_choices":2.07,"spinners":2,"start_moves":4}
+[Social] API POST -> HTTP 200
+[Social] friend challenge: hard {"blocks":17,"cols":6,"decision_points":9,"depth":10,"difficulty":27.7,"evals":28,"human_gap":0,"in_accept":true,"in_band":true,"ms":176,"one_safe_steps":3,"random_win":0.063,"rounds":1,"rows":6,"safe_choices":2.35,"spinners":4,"start_moves":4}
+[Social] API POST -> HTTP 200
+[Social] friend challenge: medium {"blocks":13,"cols":5,"decision_points":1,"depth":11,"difficulty":13.4,"evals":26,"human_gap":0,"in_accept":true,"in_band":true,"ms":97,"one_safe_steps":0,"random_win":-1,"rounds":1,"rows":5,"safe_choices":1.46,"spinners":3,"start_moves":3}
+[Social] API POST -> HTTP 200
+[Social] friend challenge: hard {"blocks":17,"cols":6,"decision_points":6,"depth":11,"difficulty":22.5,"evals":204,"human_gap":0,"in_accept":true,"in_band":true,"ms":1095,"one_safe_steps":5,"random_win":0.063,"rounds":2,"rows":6,"safe_choices":1.65,"spinners":4,"start_moves":4}
+[Social] API POST -> HTTP 500
+[Social] API POST -> HTTP 200
+[Social] friend challenge: easy {"blocks":9,"cols":4,"decision_points":0,"depth":5,"difficulty":4.8,"evals":1,"human_gap":0,"in_accept":true,"in_band":true,"ms":12,"one_safe_steps":0,"random_win":-1,"rounds":1,"rows":4,"safe_choices":2.56,"spinners":0,"start_moves":3}
+[Social] API POST -> HTTP 200
+[Social] friend challenge: medium {"blocks":14,"cols":5,"decision_points":2,"depth":9,"difficulty":12.3,"evals":42,"human_gap":0,"in_accept":true,"in_band":true,"ms":99,"one_safe_steps":1,"random_win":-1,"rounds":2,"rows":5,"safe_choices":4.43,"spinners":2,"start_moves":7}
+[Social] API POST -> HTTP 500
+[Social] friend challenge: easy {"blocks":7,"cols":5,"decision_points":0,"depth":6,"difficulty":5.6,"evals":1,"human_gap":0,"in_accept":true,"in_band":true,"ms":17,"one_safe_steps":0,"random_win":-1,"rounds":1,"rows":4,"safe_choices":1.29,"spinners":0,"start_moves":2}
+[Social] API POST -> HTTP 200
+[Social] friend challenge: easy {"blocks":9,"cols":4,"decision_points":0,"depth":5,"difficulty":4.3,"evals":1,"human_gap":0,"in_accept":true,"in_band":true,"ms":10,"one_safe_steps":0,"random_win":-1,"rounds":1,"rows":4,"safe_choices":2.11,"spinners":0,"start_moves":4}
+[Social] API POST -> HTTP 500
+[Social] friend challenge: medium {"blocks":14,"cols":5,"decision_points":2,"depth":8,"difficulty":12.2,"evals":26,"human_gap":0,"in_accept":true,"in_band":true,"ms":196,"one_safe_steps":0,"random_win":-1,"rounds":1,"rows":5,"safe_choices":3.07,"spinners":3,"start_moves":4}
+[Social] API POST -> HTTP 200
+[Save] load: source=file version=5 seq=10 last_played=7 highest_completed=6 highest_unlocked=7 total_score=6021 coins=42 stars=18 saved=2026-11-03 04:07:27 issues=[copies: file#10 bak#9]
+[Diag] last session ended at level 7 after 0s: process ended without a clean quit | [Diag] L7 ch1 via=launch t=0s fps=1 mem=95.9MB objs=3338 nodes=609 orphans=0 res=97 tweens=14 fx=7 music=c01 music_players=1 sfx=0 save_seq=10
+[Chapter] level=7 chapter=1 theme=First Light (id 1, prev 0) music=c01  <- transition
+[Save] write #11: last_played=7 highest_completed=6 highest_unlocked=7 total_score=6021 coins=42 file=ok
+[Diag] L7 ch1 via=launch t=0s fps=145 mem=98.5MB objs=3387 nodes=609 orphans=0 res=97 tweens=10 fx=7 music=c01 music_players=1 sfx=1 save_seq=11
+[Social] API GET -> HTTP 200
+[FriendFlowTest] refused-smash case: block 12
+[Social] friend challenge: easy {"blocks":9,"cols":5,"decision_points":0,"depth":6,"difficulty":4.9,"evals":3,"human_gap":0,"in_accept":true,"in_band":true,"ms":13,"one_safe_steps":0,"random_win":-1,"rounds":1,"rows":4,"safe_choices":2.78,"spinners":0,"start_moves":4}
+[Social] API POST -> HTTP 200
+[Save] load: source=file version=5 seq=11 last_played=7 highest_completed=6 highest_unlocked=7 total_score=6021 coins=42 stars=18 saved=2026-11-03 04:08:15 issues=[copies: file#11 bak#10]
+[Diag] last session ended at level 7 after 0s: process ended without a clean quit | [Diag] L7 ch1 via=launch t=0s fps=145 mem=98.5MB objs=3387 nodes=609 orphans=0 res=97 tweens=10 fx=7 music=c01 music_players=1 sfx=1 save_seq=11
+[Chapter] level=7 chapter=1 theme=First Light (id 1, prev 0) music=c01  <- transition
+[Save] write #12: last_played=7 highest_completed=6 highest_unlocked=7 total_score=6021 coins=42 file=ok
+[Diag] L7 ch1 via=launch t=0s fps=145 mem=99.2MB objs=3391 nodes=609 orphans=0 res=97 tweens=10 fx=7 music=c01 music_players=1 sfx=0 save_seq=12
+FRIEND FLOW TEST: PASSED (149 checks)

@@ -1,0 +1,30 @@
+PASS one entry point (?tapilot=1): the welcome screen; an anonymous session id; no horizontal overflow; buttons on screen
+PASS the one question: never played / played a little / experienced player
+PASS CHOOSE A PUZZLE: PUZZLE 1-4 (each "Not played yet"), COPY ALL RESULTS; everything on screen, no overflow
+PASS the card before PUZZLE 1 (the basic rule for a new player): START and BACK TO PUZZLES on screen
+PASS PUZZLE 1: the 2:00 GREEN countdown on screen (pixel 30,123,52) above the board; tools [3,0,0]: UNDO x3, SHOW A MOVE x0, HAMMER x0
+PASS UNDO and RESTART below the board, on screen
+PASS no SHOW A MOVE through touches or keys; the record: hint allowance 0, the familiarity, the session
+PASS RESTART: the board again, the clock keeps running (109677 ms left)
+PASS a reload mid-run: straight back to PUZZLE 1 (no menu), the clock not restored (101116 < 105827 ms)
+PASS TIME UP after 120.0 s of wall time (a reload and a RESTART included); stages ["green","orange","red","final10"]
+PASS CONTINUE WITHOUT TIMER: the same puzzle, NO TIMER, no SHOW A MOVE
+PASS solved without the timer, by touches
+PASS back to CHOOSE A PUZZLE: PUZZLE 1 "Time up - solved without the timer"
+PASS PUZZLE 4 solved by touches
+PASS PUZZLE 4: SOLVED in time
+PASS each puzzle keeps its own result (Time up - solved without the timer / Solved in 0:15)
+PASS browser BACK to the pilot: the selection, results and familiarity kept
+PASS COPY ALL RESULTS: the clipboard holds ONE bundle with both puzzles, the session and the familiarity
+PASS the bundle keeps timed and untimed apart, with time, attempts, restarts, reopens, moves, blocked taps, hint allowance 0, stages and answers {"attempts":3,"blocked_taps":0,"board":"TA","elapsed_ms":120000,"familiarity":"NEVER PLAYED","fingerprint":"a28e22f0a1a216ba4ac701ff549e7d212ce1fe83ae2d8e3678065da555b730cf","first_exposure":true,"hin
+PASS the bundle: no device field, no design data
+PASS the player sees the copy confirmation ("COPIED - paste it into the chat")
+PASS no standalone test page's storage is touched
+  reduced-motion samples [[185,28,28],[185,28,28],[185,28,28],[185,28,28]] ["[0.25,0.1383,0.5,0.0844]","[0.25,0.1383,0.5,0.0844]","[0.25,0.1383,0.5,0.0844]","[0.25,0.1383,0.5,0.0844]"]
+PASS reduced motion on PUZZLE 3: RED, no pulse (luma 61-61), no scale
+PASS TIME UP; reduced motion and the familiarity recorded
+PASS FINISH (no untimed play): PUZZLE 3 "Time up"; the other puzzles untouched
+PASS the player build ignores ?tapilot=1 {"pilot":false,"vt":false,"ta":false,"keys":[]}
+PASS no page errors []
+PASS no network calls outside the page []
+WEB TAPILOT TEST: PASSED (28/28)

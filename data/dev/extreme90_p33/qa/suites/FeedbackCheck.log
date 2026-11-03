@@ -1,0 +1,128 @@
+Godot Engine v4.3.stable.official.77dcf97d8 - https://godotengine.org
+
+[Save] load: new -> fresh progress
+[Save] profile: new player id
+[Save] write #1: last_played=1 highest_completed=0 highest_unlocked=1 total_score=0 coins=60 file=ok
+[Diag] last session ended at level 1 after 0s: process ended without a clean quit | [Diag] L1 ch1 via=restore t=0s fps=1 mem=86.5MB objs=3361 nodes=603 orphans=0 res=97 tweens=13 fx=6 music=c01 music_players=1 sfx=0 save_seq=18
+[Chapter] level=1 chapter=1 theme=First Light (id 1, prev 0) music=c01  <- transition
+[Save] write #2: last_played=1 highest_completed=0 highest_unlocked=1 total_score=0 coins=60 file=ok
+[Diag] L1 ch1 via=launch t=0s fps=1 mem=84.7MB objs=3217 nodes=573 orphans=0 res=97 tweens=6 fx=3 music=c01 music_players=1 sfx=0 save_seq=2
+[Chapter] level=3 chapter=1 theme=First Light (id 1, prev 1) music=c01
+[Save] write #3: last_played=3 highest_completed=0 highest_unlocked=1 total_score=0 coins=60 file=ok
+[Diag] L3 ch1 via=select t=0s fps=1 mem=85.9MB objs=3361 nodes=630 orphans=0 res=97 tweens=13 fx=9 music=c01 music_players=0 sfx=0 save_seq=3
+[Chapter] level=6 chapter=1 theme=First Light (id 1, prev 1) music=c01
+[Save] write #4: last_played=6 highest_completed=0 highest_unlocked=1 total_score=0 coins=60 file=ok
+[Diag] L6 ch1 via=select t=0s fps=1 mem=86.1MB objs=3371 nodes=640 orphans=0 res=97 tweens=9 fx=11 music=c01 music_players=0 sfx=0 save_seq=4
+[Chapter] level=6 chapter=1 theme=First Light (id 1, prev 1) music=c01
+[Save] write #5: last_played=6 highest_completed=0 highest_unlocked=1 total_score=0 coins=60 file=ok
+[Diag] L6 ch1 via=retry t=3s fps=145 mem=86.1MB objs=3343 nodes=621 orphans=0 res=97 tweens=7 fx=8 music=c01 music_players=0 sfx=0 save_seq=5
+[Chapter] level=6 chapter=1 theme=First Light (id 1, prev 1) music=c01
+[Save] write #6: last_played=6 highest_completed=0 highest_unlocked=1 total_score=0 coins=60 file=ok
+[Diag] L6 ch1 via=select t=3s fps=145 mem=86.3MB objs=3407 nodes=657 orphans=0 res=97 tweens=14 fx=12 music=c01 music_players=0 sfx=0 save_seq=6
+[Chapter] level=41 chapter=5 theme=Twilight Grid (id 5, prev 1) music=c05  <- transition
+[Save] write #7: last_played=41 highest_completed=0 highest_unlocked=1 total_score=0 coins=60 file=ok
+[Diag] L41 ch5 via=select t=3s fps=145 mem=86.9MB objs=3660 nodes=774 orphans=0 res=98 tweens=34 fx=25 music=c05 music_players=0 sfx=1 save_seq=7
+[Chapter] level=13 chapter=2 theme=Sunny Meadow (id 2, prev 5) music=c02  <- transition
+[Save] write #8: last_played=13 highest_completed=0 highest_unlocked=1 total_score=0 coins=60 file=ok
+[Diag] L13 ch2 via=select t=4s fps=145 mem=87.6MB objs=3666 nodes=783 orphans=0 res=99 tweens=38 fx=26 music=c02 music_players=0 sfx=2 save_seq=8
+[Chapter] level=8 chapter=1 theme=First Light (id 1, prev 2) music=c01  <- transition
+[Save] write #9: last_played=8 highest_completed=0 highest_unlocked=1 total_score=0 coins=60 file=ok
+[Diag] L8 ch1 via=select t=10s fps=145 mem=87.2MB objs=3428 nodes=640 orphans=0 res=99 tweens=17 fx=11 music=c01 music_players=0 sfx=3 save_seq=9
+[Chapter] level=251 chapter=26 theme=Storm Core II (id 26, prev 1) music=c16  <- transition
+[Save] write #10: last_played=251 highest_completed=0 highest_unlocked=1 total_score=0 coins=60 file=ok
+[Save] write #11: last_played=251 highest_completed=0 highest_unlocked=1 total_score=0 coins=60 file=ok
+[Diag] L251 ch26 via=select t=10s fps=145 mem=87.6MB objs=3450 nodes=639 orphans=0 res=100 tweens=23 fx=9 music=c16 music_players=0 sfx=5 save_seq=11
+[Chapter] level=121 chapter=13 theme=Iron Foundry (id 13, prev 26) music=c13  <- transition
+[Save] write #12: last_played=121 highest_completed=0 highest_unlocked=1 total_score=0 coins=60 file=ok
+[Diag] L121 ch13 via=select t=10s fps=145 mem=88.2MB objs=3675 nodes=747 orphans=0 res=101 tweens=37 fx=21 music=c13 music_players=0 sfx=6 save_seq=12
+[Chapter] level=151 chapter=16 theme=Storm Core (id 16, prev 13) music=c16  <- transition
+[Save] write #13: last_played=151 highest_completed=0 highest_unlocked=1 total_score=0 coins=60 file=ok
+[Diag] L151 ch16 via=select t=10s fps=145 mem=89.1MB objs=3957 nodes=900 orphans=0 res=101 tweens=56 fx=38 music=c16 music_players=0 sfx=7 save_seq=13
+[Chapter] level=176 chapter=18 theme=Star Vault (id 18, prev 16) music=c18  <- transition
+[Save] write #14: last_played=176 highest_completed=0 highest_unlocked=1 total_score=0 coins=60 file=ok
+[Diag] L176 ch18 via=select t=10s fps=145 mem=89.0MB objs=3828 nodes=828 orphans=0 res=102 tweens=50 fx=30 music=c18 music_players=0 sfx=7 save_seq=14
+[Chapter] level=251 chapter=26 theme=Storm Core II (id 26, prev 18) music=c16  <- transition
+[Save] write #15: last_played=251 highest_completed=0 highest_unlocked=1 total_score=0 coins=60 file=ok
+[Diag] L251 ch26 via=select t=10s fps=145 mem=88.5MB objs=3599 nodes=677 orphans=0 res=102 tweens=36 fx=15 music=c16 music_players=0 sfx=8 save_seq=15
+[Chapter] level=252 chapter=26 theme=Storm Core II (id 26, prev 26) music=c16
+[Save] write #16: last_played=252 highest_completed=0 highest_unlocked=1 total_score=0 coins=60 file=ok
+[Diag] L252 ch26 via=select t=10s fps=145 mem=88.3MB objs=3555 nodes=657 orphans=0 res=102 tweens=33 fx=11 music=c16 music_players=0 sfx=8 save_seq=16
+[Chapter] level=253 chapter=26 theme=Storm Core II (id 26, prev 26) music=c16
+[Save] write #17: last_played=253 highest_completed=0 highest_unlocked=1 total_score=0 coins=60 file=ok
+[Diag] L253 ch26 via=select t=10s fps=145 mem=88.6MB objs=3586 nodes=675 orphans=0 res=102 tweens=35 fx=13 music=c16 music_players=0 sfx=8 save_seq=17
+[Chapter] level=254 chapter=26 theme=Storm Core II (id 26, prev 26) music=c16
+[Save] write #18: last_played=254 highest_completed=0 highest_unlocked=1 total_score=0 coins=60 file=ok
+[Diag] L254 ch26 via=select t=10s fps=145 mem=88.5MB objs=3575 nodes=666 orphans=0 res=102 tweens=35 fx=12 music=c16 music_players=0 sfx=8 save_seq=18
+[Chapter] level=255 chapter=26 theme=Storm Core II (id 26, prev 26) music=c16
+[Save] write #19: last_played=254 highest_completed=0 highest_unlocked=1 total_score=0 coins=60 file=ok
+[Save] write #20: last_played=255 highest_completed=0 highest_unlocked=1 total_score=0 coins=60 file=ok
+[Diag] L255 ch26 via=select t=10s fps=145 mem=88.7MB objs=3648 nodes=702 orphans=0 res=102 tweens=40 fx=16 music=c16 music_players=0 sfx=8 save_seq=20
+[Chapter] level=201 chapter=21 theme=Neon Glass II (id 21, prev 26) music=c11  <- transition
+[Save] write #21: last_played=201 highest_completed=0 highest_unlocked=1 total_score=0 coins=60 file=ok
+[Diag] L201 ch21 via=select t=11s fps=145 mem=88.9MB objs=3664 nodes=703 orphans=0 res=103 tweens=44 fx=17 music=c11 music_players=0 sfx=8 save_seq=21
+[Chapter] level=176 chapter=18 theme=Star Vault (id 18, prev 21) music=c18  <- transition
+[Save] write #22: last_played=176 highest_completed=0 highest_unlocked=1 total_score=0 coins=60 file=ok
+[Diag] L176 ch18 via=select t=11s fps=145 mem=89.0MB objs=3689 nodes=695 orphans=2 res=103 tweens=46 fx=17 music=c18 music_players=0 sfx=8 save_seq=22
+[Chapter] level=6 chapter=1 theme=First Light (id 1, prev 18) music=c01  <- transition
+[Save] write #23: last_played=6 highest_completed=0 highest_unlocked=1 total_score=0 coins=60 file=ok
+[Diag] L6 ch1 via=select t=11s fps=145 mem=89.0MB objs=3680 nodes=679 orphans=1 res=103 tweens=48 fx=17 music=c01 music_players=0 sfx=8 save_seq=23
+[Chapter] level=6 chapter=1 theme=First Light (id 1, prev 1) music=c01
+[Save] write #24: last_played=6 highest_completed=0 highest_unlocked=1 total_score=0 coins=60 file=ok
+[Diag] L6 ch1 via=select t=11s fps=145 mem=88.7MB objs=3573 nodes=630 orphans=1 res=103 tweens=40 fx=8 music=c01 music_players=0 sfx=8 save_seq=24
+[Chapter] level=7 chapter=1 theme=First Light (id 1, prev 1) music=c01
+[Save] write #25: last_played=7 highest_completed=0 highest_unlocked=1 total_score=0 coins=60 file=ok
+[Diag] L7 ch1 via=select t=11s fps=145 mem=88.8MB objs=3612 nodes=657 orphans=1 res=103 tweens=41 fx=11 music=c01 music_players=0 sfx=8 save_seq=25
+[Chapter] level=7 chapter=1 theme=First Light (id 1, prev 1) music=c01
+[Save] write #26: last_played=7 highest_completed=0 highest_unlocked=1 total_score=0 coins=60 file=ok
+[Diag] L7 ch1 via=select t=11s fps=145 mem=88.9MB objs=3660 nodes=684 orphans=1 res=103 tweens=45 fx=14 music=c01 music_players=0 sfx=8 save_seq=26
+[Chapter] level=6 chapter=1 theme=First Light (id 1, prev 1) music=c01
+[Save] write #27: last_played=6 highest_completed=0 highest_unlocked=1 total_score=0 coins=60 file=ok
+[Diag] L6 ch1 via=select t=15s fps=145 mem=89.1MB objs=3416 nodes=621 orphans=0 res=103 tweens=9 fx=8 music=c01 music_players=0 sfx=0 save_seq=27
+[Chapter] level=7 chapter=1 theme=First Light (id 1, prev 1) music=c01
+[Save] write #28: last_played=7 highest_completed=0 highest_unlocked=1 total_score=0 coins=60 file=ok
+[Diag] L7 ch1 via=select t=15s fps=145 mem=89.2MB objs=3478 nodes=648 orphans=0 res=103 tweens=17 fx=11 music=c01 music_players=0 sfx=0 save_seq=28
+[Chapter] level=8 chapter=1 theme=First Light (id 1, prev 1) music=c01
+[Save] write #29: last_played=8 highest_completed=0 highest_unlocked=1 total_score=0 coins=60 file=ok
+[Diag] L8 ch1 via=select t=15s fps=145 mem=89.2MB objs=3494 nodes=657 orphans=0 res=103 tweens=20 fx=12 music=c01 music_players=0 sfx=0 save_seq=29
+[Chapter] level=9 chapter=1 theme=First Light (id 1, prev 1) music=c01
+[Save] write #30: last_played=9 highest_completed=0 highest_unlocked=1 total_score=0 coins=60 file=ok
+[Diag] L9 ch1 via=select t=15s fps=145 mem=89.3MB objs=3516 nodes=666 orphans=0 res=103 tweens=21 fx=13 music=c01 music_players=0 sfx=0 save_seq=30
+[Chapter] level=10 chapter=1 theme=First Light (id 1, prev 1) music=c01
+[Save] write #31: last_played=10 highest_completed=0 highest_unlocked=1 total_score=0 coins=60 file=ok
+[Diag] L10 ch1 via=select t=15s fps=145 mem=89.4MB objs=3598 nodes=711 orphans=0 res=103 tweens=27 fx=18 music=c01 music_players=0 sfx=0 save_seq=31
+[Chapter] level=3 chapter=1 theme=First Light (id 1, prev 1) music=c01
+[Save] write #32: last_played=3 highest_completed=0 highest_unlocked=1 total_score=0 coins=60 file=ok
+[Diag] L3 ch1 via=select t=15s fps=145 mem=89.4MB objs=3596 nodes=696 orphans=0 res=103 tweens=33 fx=19 music=c01 music_players=0 sfx=2 save_seq=32
+[Chapter] level=13 chapter=2 theme=Sunny Meadow (id 2, prev 1) music=c02  <- transition
+[Save] write #33: last_played=13 highest_completed=0 highest_unlocked=1 total_score=0 coins=60 file=ok
+[Diag] L13 ch2 via=select t=15s fps=145 mem=89.2MB objs=3481 nodes=649 orphans=0 res=103 tweens=13 fx=12 music=c02 music_players=0 sfx=1 save_seq=33
+[Chapter] level=7 chapter=1 theme=First Light (id 1, prev 2) music=c01  <- transition
+[Save] write #34: last_played=7 highest_completed=0 highest_unlocked=1 total_score=0 coins=60 file=ok
+[Diag] L7 ch1 via=select t=17s fps=145 mem=89.3MB objs=3491 nodes=657 orphans=0 res=103 tweens=12 fx=12 music=c01 music_players=0 sfx=1 save_seq=34
+[Save] write #35: last_played=7 highest_completed=7 highest_unlocked=8 total_score=2520 coins=60 file=ok
+[Save] write #36: last_played=7 highest_completed=7 highest_unlocked=8 total_score=2520 coins=71 file=ok
+[Save] write #37: last_played=7 highest_completed=7 highest_unlocked=8 total_score=2520 coins=71 file=ok
+[Chapter] level=31 chapter=4 theme=Ember Ridge (id 4, prev 1) music=c04  <- transition
+[Save] write #38: last_played=31 highest_completed=7 highest_unlocked=8 total_score=2520 coins=500 file=ok
+[Diag] L31 ch4 via=select t=17s fps=145 mem=90.0MB objs=3856 nodes=770 orphans=0 res=104 tweens=60 fx=45 music=c04 music_players=0 sfx=8 save_seq=38
+[Save] write #39: last_played=31 highest_completed=7 highest_unlocked=8 total_score=2520 coins=470 file=ok
+[Save] write #40: last_played=31 highest_completed=7 highest_unlocked=8 total_score=2520 coins=470 file=ok
+[Chapter] level=7 chapter=1 theme=First Light (id 1, prev 4) music=c01  <- transition
+[Save] write #41: last_played=7 highest_completed=7 highest_unlocked=8 total_score=2520 coins=470 file=ok
+[Diag] L7 ch1 via=select t=18s fps=145 mem=90.2MB objs=3717 nodes=747 orphans=0 res=104 tweens=24 fx=22 music=c01 music_players=0 sfx=4 save_seq=41
+[Chapter] level=8 chapter=1 theme=First Light (id 1, prev 1) music=c01
+[Save] write #42: last_played=8 highest_completed=7 highest_unlocked=8 total_score=2520 coins=470 file=ok
+[Diag] L8 ch1 via=select t=18s fps=145 mem=90.0MB objs=3660 nodes=666 orphans=0 res=104 tweens=38 fx=21 music=c01 music_players=0 sfx=8 save_seq=42
+[Chapter] level=9 chapter=1 theme=First Light (id 1, prev 1) music=c01
+[Save] write #43: last_played=9 highest_completed=7 highest_unlocked=8 total_score=2520 coins=470 file=ok
+[Diag] L9 ch1 via=select t=18s fps=145 mem=89.9MB objs=3629 nodes=666 orphans=0 res=104 tweens=30 fx=13 music=c01 music_players=0 sfx=8 save_seq=43
+[Chapter] level=10 chapter=1 theme=First Light (id 1, prev 1) music=c01
+[Save] write #44: last_played=10 highest_completed=7 highest_unlocked=8 total_score=2520 coins=470 file=ok
+[Diag] L10 ch1 via=select t=18s fps=145 mem=90.1MB objs=3711 nodes=711 orphans=0 res=104 tweens=36 fx=18 music=c01 music_players=0 sfx=8 save_seq=44
+[Chapter] level=31 chapter=4 theme=Ember Ridge (id 4, prev 1) music=c04  <- transition
+[Save] write #45: last_played=31 highest_completed=7 highest_unlocked=8 total_score=2520 coins=470 file=ok
+[Diag] L31 ch4 via=select t=18s fps=145 mem=90.3MB objs=3868 nodes=777 orphans=0 res=104 tweens=53 fx=28 music=c04 music_players=0 sfx=8 save_seq=45
+[Save] write #46: last_played=31 highest_completed=7 highest_unlocked=8 total_score=2520 coins=410 file=ok
+[Save] write #47: last_played=31 highest_completed=7 highest_unlocked=8 total_score=2520 coins=410 file=ok
+95 checks passed, 0 failed
+FEEDBACK CHECKS PASSED

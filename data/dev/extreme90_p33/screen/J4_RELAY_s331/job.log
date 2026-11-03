@@ -1,0 +1,26 @@
+J4_s331_0              overlap        (0.44, 'N32')
+J4_s331_1              overlap        (0.42, 'N46')
+J4_s331_2              overlap        (0.44, 'N32')
+J4_s331_3              overlap        (0.42, 'N46')
+J4_s331_4              overlap        (0.42, 'N46')
+J4_s331_5              overlap        (0.43, 'N32')
+J4_s331_6              PASS           []
+J4_s331_7              PASS           []
+J4_s331_8              PASS           []
+J4_s331_9              PASS           []
+J4_s331_10             PASS           []
+J4_s331_11             PASS           []
+SCREEN: 12 boards, 6 PASS
+J4_s331_0              overlap        
+J4_s331_1              overlap        
+J4_s331_2              overlap        
+J4_s331_3              overlap        
+J4_s331_4              overlap        
+J4_s331_5              overlap        
+J4_s331_6              PASS           PASS
+J4_s331_7              PASS           PASS
+J4_s331_8              PASS           PASS
+J4_s331_9              PASS           PASS
+J4_s331_10             PASS           PASS
+J4_s331_11             PASS           PASS
+SCREEN30: 12 boards, 6 PASS

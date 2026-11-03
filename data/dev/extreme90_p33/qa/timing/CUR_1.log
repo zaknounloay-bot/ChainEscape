@@ -1,0 +1,36 @@
+PASS A: production build, fresh save (PLAY)
+FAIL A: active time 9046 ms within [wall clock 8823 ms - 100 ms beyond the 0.25 s frame cap, wall clock] (board playable -> winning tap)
+PASS A: a clean first clear: BEST = BEST CLEAN = 9046 ms
+PASS A: the card shows "TIME 0:09" (the first time on this level)
+PASS A: the card and its timing block fit the screen (0.109, 0.210, 0.891, 0.790)
+PASS A: first time: "TIME 0:09 | PERSONAL BEST 0:09 [card scale 0.938]" (no record banner)
+PASS B: REPLAY starts a fresh attempt (0 ms)
+PASS B: the game sees the hidden page (visibilitychange)
+PASS B: pagehide counts as hidden even while document.hidden is false
+PASS B: the 3 s stall (≤ 0.25 s), hidden 3 s and pagehide 2 s are not counted (9737 ms of 17677 ms on the wall clock)
+PASS B: active time 9737 ms within [wall clock 17677 - hidden 3000 - pagehide 2000 - 2866 ms beyond the frame cap (incl. the stall) = 9811 ms, 12677 ms]
+PASS B: the card time line "TIME 0:09   ·   BEST 0:09"
+PASS B: the replay's timing block: "TIME 0:09 | PERSONAL BEST 0:09"
+PASS B: BEST / BEST CLEAN = the faster of the two (9046 ms)
+PASS B: a faster clean replay improves BEST and BEST CLEAN (9046 -> 6187 ms)
+PASS B: the card shows "NEW PERSONAL BEST! TIME 0:06 | PREVIOUS BEST 0:09" and fits
+PASS C: both records are in the release save (chain_escape_save_r2)
+PASS C: after a reload Level 1 keeps BEST 6187 / CLEAN 6187
+PASS C: after closing and reopening the browser: BEST 6187 / CLEAN 6187
+PASS D[iphoneSE]: Level 1 card with "TIME 0:09 | PERSONAL BEST 0:09 [card scale 0.999] [moved down 0.089]" fits (0.084, 0.214, 0.916, 0.964)
+PASS D[iphoneSE]: NEW PERSONAL BEST card "NEW PERSONAL BEST! TIME 0:05 | PREVIOUS BEST 0:09 [moved down 0.063]" fits (0.083, 0.214, 0.917, 0.911)
+PASS D[promax]: Level 1 card with "TIME 0:09 | PERSONAL BEST 0:09" fits (0.083, 0.190, 0.917, 0.809)
+PASS D[promax]: NEW PERSONAL BEST card "NEW PERSONAL BEST! TIME 0:06 | PREVIOUS BEST 0:09" fits (0.083, 0.215, 0.917, 0.785)
+PASS D[iphoneSE]: the Level 100 milestone card with "TIME 0:02" fits (0.085, 0.216, 0.915, 0.984; auto-solve = assisted)
+PASS D[iphone14]: the Level 100 milestone card with "TIME 0:02" fits (0.084, 0.181, 0.916, 0.818; auto-solve = assisted)
+PASS G[iphoneSE]: Level 10 card "PERFECT!" with "TIME 0:02 | PERSONAL BEST 0:02 [card scale 0.994] [moved down 0.084]" fits (0.086, 0.216, 0.914, 0.953)
+PASS G[iphoneSE]: Level 150 card "150 LEVELS ESCAPED!" with "TIME 0:02 | PERSONAL BEST 0:02 [moved down 0.100]" fits (0.077, 0.209, 0.923, 0.991)
+PASS G[iphoneSE]: Level 250 card "250 LEVELS ESCAPED!" with "TIME 0:02 | PERSONAL BEST 0:02 [moved down 0.100]" fits (0.081, 0.212, 0.919, 0.987)
+PASS G[iphoneSE]: Level 300 card "300 LEVELS ESCAPED!" with "TIME 0:02 | PERSONAL BEST 0:02 [moved down 0.100]" fits (0.081, 0.212, 0.919, 0.987)
+PASS F: the Magnet card and the finger lesson: the clock does not run (0 ms, active false)
+PASS F: 4 guided taps over 7.8 s added 0 ms; the lesson over, the clock runs; not assisted
+PASS F: the recorded time is the independent play only (3478 ms of 3504 ms since the lesson ended)
+PASS E: no page errors ()
+
+32 passed, 1 failed
+WEB TIMING TEST FAILED

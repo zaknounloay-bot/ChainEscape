@@ -1,0 +1,19 @@
+{
+ "T01r_s331_3": {
+  "map": [
+   ". . . . . . P>&A",
+   ". . . Bv&A Y^@ R^@- Gv@~",
+   ". . . . R^* . Bv%A",
+   ". . . G<* . R^&A P<%A",
+   ". . . Pv@- . . P<@",
+   ". . . B< . . B^@-",
+   ". . . . . . P^@"
+  ],
+  "mechanic": "magnet,switch",
+  "run": "T01r_PULLEDTRIGGER_s331",
+  "rules": [
+   "S_old"
+  ],
+  "screen_key": "T01r_s331_3"
+ }
+}

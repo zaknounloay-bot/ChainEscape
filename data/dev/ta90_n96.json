@@ -1,0 +1,257 @@
+{
+ "format": "ce-ta90-proto",
+ "v": 1,
+ "test": "ta90_n96",
+ "assist": {
+  "undo": 3,
+  "show_a_move": 0,
+  "hammer": 0
+ },
+ "note": "Development only. Phase 33 EXTREME candidate (?extreme90p33=1); never shared, never production. TECHNICALLY QUALIFIED (Category A and B): NOT human-approved; human difficulty unvalidated.",
+ "boards": [
+  {
+   "id": "N96",
+   "accepted": true,
+   "label": "TECHNICALLY QUALIFIED - HUMAN TESTED, BORDERLINE (OWNER JUDGMENT PENDING)",
+   "variant": "N96",
+   "design": "P33_K08_s331_2",
+   "family": "P32 the pulled target (magnet + switch)",
+   "concept_group": "magnet x reversal",
+   "primary": "magnet, switch, spinner",
+   "target": "EXTREME (a design target, not a rating; never shown to players)",
+   "idea": "the pulled target: a flip target and its switch block each other; a fixed magnet pulls the TARGET into a new lane, and the switch then decides which way it leaves from there",
+   "source": "hybrid: hand core frozen cell for cell (seed_K08_PULLEDTARGET.json, Phase 32 (never produced a rated board)); blocks added by the Phase 25-27 generator (tools/ta90_search.gd of commit c1ddc89, run in a separate worktree) --ops=v20 with the Phase 25-27 search parameters (piece_free 13, max_pieces 17, suffix_rate 0.30, patience 8), RNG seed 331, round 1; every board then passed the unchanged modern pipeline: engine-valid tokens, bank overlap (bank incl. N88-N93), tools/extreme90_screen30.py (40 ms gates, strict essentiality, filler, hint-follow) and the full evaluation tools/extreme90_eval25.py --full; shortlist rule S_old+S_p30; Phase 33 protocol data/dev/extreme90_p33/protocol.json (the Phase 31 method, unchanged; arm N)",
+   "related_bank_concept": "closest occupancy N47 0.31 (bank); pairwise with the other Phase 33 boards <= 0.29",
+   "fingerprint": "60b63fc1cf3e73cdb6f331e949a577657501de9d834e546a1fc43bb9bcfa7531",
+   "mechanics": [
+    "magnet",
+    "switch",
+    "spinner"
+   ],
+   "puzzle": {
+    "format": "ce-puzzle",
+    "v": 1,
+    "rules": 1,
+    "rows": 7,
+    "cols": 7,
+    "map": [
+     ". . . . . . .",
+     ". . . Pv@ . . .",
+     ". . . . . . .",
+     ". B^@~ . G<* Gv Bv&A .",
+     ". . . R^@~ G^@~ R> .",
+     ". R^@~ Rv* Bv@ . P^%A .",
+     ". . . Gv@~ . G< ."
+    ]
+   },
+   "design_report": {
+    "A": {
+     "fingerprint": "60b63fc1cf3e73cdb6f331e949a577657501de9d834e546a1fc43bb9bcfa7531",
+     "hint_nodes": [
+      74,
+      117
+     ],
+     "parity": [
+      0,
+      0
+     ],
+     "portals": 0,
+     "position_cap": 2000,
+     "positions": 294,
+     "replay": true,
+     "solution": 14,
+     "solve_ms": 5,
+     "timeup_worst_ms": 6.7,
+     "timeup_worst_nodes": 117,
+     "winnable": 44
+    },
+    "B": {
+     "coverage": 0.86,
+     "decision_steps": 12,
+     "distinct_mistakes": 5,
+     "endgame_decision": true,
+     "last_decision": 12,
+     "late": 0.86,
+     "line": [
+      "r3c1^ [x2]",
+      "r4c5> [x3]",
+      "r4c4> [x3]",
+      "r3c4v [x4]",
+      "r3c3< [x3]",
+      "r5c1^ [x3]",
+      "r5c2v [x2]",
+      "r5c3< [x2]",
+      "r6c3< [x1]",
+      "r6c5< [x1]",
+      "r4c3> [x1]",
+      "r3c3v [x1]",
+      "r1c3v",
+      "r5c5^"
+     ],
+     "losing_per_step": [
+      2,
+      3,
+      3,
+      4,
+      3,
+      3,
+      2,
+      2,
+      1,
+      1,
+      1,
+      1,
+      0,
+      0
+     ],
+     "matters_magnet": true,
+     "matters_switch": true,
+     "mistakes": [
+      "r5c2v",
+      "r6c3v",
+      "r3c3<",
+      "r4c3>",
+      "r5c5^"
+     ],
+     "shortcut": 0.017,
+     "spinner_dependence": "unsolvable without it",
+     "without_magnet": "unsolvable without it",
+     "without_switch": "without it: 6 decision steps, 3 distinct mistakes (with it: 12, 5)"
+    },
+    "C": {
+     "decisions_k4_6_8": [
+      8,
+      6,
+      4
+     ],
+     "deepest": 12,
+     "greedy": {
+      "look2": 0.01,
+      "look4": 0.017,
+      "min_turn": 0,
+      "mobility": 0,
+      "safe": 0
+     },
+     "hidden_k6_8": [
+      16,
+      12
+     ],
+     "learner": {
+      "look4": 6,
+      "look6": 7
+     },
+     "look6_greedy": 0.05,
+     "opening": "2 / 4",
+     "pressure": {
+      "advances": 0,
+      "calm_prefix": 1,
+      "flips": 0,
+      "multi_turned": 1,
+      "prediction_share": 0.36,
+      "pulls": 1,
+      "rams": 0,
+      "signals": 1,
+      "spinners_turned": 4,
+      "trap_delay_median": 7,
+      "turns": 6,
+      "undo_proof": 0.73
+     },
+     "win_share": 0.15
+    },
+    "filler": {
+     "distinct": 5,
+     "pieces_tested": 14,
+     "steps": 12,
+     "trivial": [],
+     "trivial_removals": 0
+    },
+    "similarity": {
+     "closest_known": "N47",
+     "overlap": 0.31
+    },
+    "structure33": {
+     "apparent_steps": 5,
+     "beyond_undo": 1,
+     "capped": false,
+     "delayed": 19,
+     "dep_depth": 7,
+     "dep_pairs": 62,
+     "early3": 8,
+     "early3_delayed": 8,
+     "early3_loud": 0,
+     "escape_order_free": 8,
+     "first_choice": 1,
+     "first_strat": 1,
+     "forced": 6,
+     "instant_dead": 0,
+     "late_strat_share": 0.13,
+     "loud": 7,
+     "lps": [
+      2,
+      3,
+      3,
+      4,
+      3,
+      3,
+      2,
+      2,
+      1,
+      1,
+      1,
+      1,
+      0,
+      0
+     ],
+     "max_forced_run": 3,
+     "mean_winning": 1.57,
+     "mistakes": 5,
+     "ms": 664,
+     "open_escape_losing": 2,
+     "open_moves": 4,
+     "open_safe": 2,
+     "optional": 8,
+     "p_calm": 0.004,
+     "p_look1": 0.001,
+     "p_look2": 0.002,
+     "p_random": 0.001,
+     "positions": 294,
+     "repeat_taps": 0,
+     "solution": 14,
+     "strat_steps": 8,
+     "strat_tempting_steps": 8,
+     "tempting": 5,
+     "tempting_share": 1,
+     "trap_depth_median": 10,
+     "win_lines": 1970,
+     "winning": 44
+    },
+    "advisory_prediction": {
+     "positions": 294,
+     "early3": 8,
+     "open_tempting": 2,
+     "p_look2": 0.002,
+     "note": "ADVISORY ONLY (no predictor met the pre-registered decision rule, validation.json); recorded before any human play; NOT used to select or reject; the owner is the judge"
+    },
+    "arm": {
+     "arm": "N"
+    }
+   },
+   "human_test": {
+    "status": "TESTED (owner first exposure, Phase 33 page)",
+    "difficulty": "VERY HARD",
+    "enjoyment": "5/5",
+    "outcome_90s": "TIME UP",
+    "solve_time_ms": "TIME UP (no completion)",
+    "attempts": 4,
+    "restarts": 3,
+    "undo_used": 1,
+    "moves": 35,
+    "action_log": "data/dev/extreme90_p33/human/xb33_logs.json (the owner's compact transcription of the export, every event validated on the engine: tools/ta90_replay33.gd -> replay33.txt)",
+    "blocked_taps": 3,
+    "notes": "owner's COPY ALL RESULTS export (validated transcription)",
+    "owner_status": "BORDERLINE - REQUIRES OWNER JUDGMENT",
+    "file": "data/dev/extreme90_p33/human_p33.json"
+   }
+  }
+ ]
+}

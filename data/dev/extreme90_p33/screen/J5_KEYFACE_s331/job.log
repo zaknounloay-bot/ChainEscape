@@ -1,0 +1,24 @@
+J5_s331_0              not essential  {'without_lock': 'without it: 8 decision steps, 4 distinct mistakes (with it: 9, 4)'}
+J5_s331_1              PASS           []
+J5_s331_2              PASS           []
+J5_s331_3              filler         ['r2c3 Yv&A']
+J5_s331_4              PASS           []
+J5_s331_5              filler         ['r5c4 R^@-']
+J5_s331_6              not essential  {'without_lock': 'without it: 11 decision steps, 4 distinct mistakes (with it: 11, 5)'}
+J5_s331_7              PASS           []
+J5_s331_8              PASS           []
+J5_s331_9              PASS           []
+J5_s331_10             PASS           []
+SCREEN: 11 boards, 7 PASS
+J5_s331_0              not essential  
+J5_s331_1              PASS           PASS
+J5_s331_2              PASS           PASS
+J5_s331_3              filler         
+J5_s331_4              PASS           PASS
+J5_s331_5              filler         
+J5_s331_6              not essential  
+J5_s331_7              PASS           PASS
+J5_s331_8              PASS           PASS
+J5_s331_9              PASS           PASS
+J5_s331_10             PASS           PASS
+SCREEN30: 11 boards, 7 PASS

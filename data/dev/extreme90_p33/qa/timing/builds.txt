@@ -1,0 +1,4 @@
+d203ee92d4690f4621b3dd9eca0bed6660141128416e8ceefabe94f8346e49ed  /tmp/claude-0/-home-user-ChainEscape/7e9f2bd8-6e70-52bd-944d-4d9f0e72484e/scratchpad/player33/index.pck
+873e9ea896fc1d288e8ac3ca024e15bdd1804290a98567917d25f3c5bf12c1de  /tmp/claude-0/-home-user-ChainEscape/7e9f2bd8-6e70-52bd-944d-4d9f0e72484e/scratchpad/player32/index.pck
+980850a9d62c833399e0324f3c1b0c9d161e1426050cfdf5e2c80b941eff2fe8  /tmp/claude-0/-home-user-ChainEscape/7e9f2bd8-6e70-52bd-944d-4d9f0e72484e/scratchpad/web33/index.pck
+32acd1d5abf346741fe1d7289d121b9e2e5f3a32242d7e7f9860509e14fefb28  /tmp/claude-0/-home-user-ChainEscape/7e9f2bd8-6e70-52bd-944d-4d9f0e72484e/scratchpad/web32/index.pck

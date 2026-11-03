@@ -1,0 +1,81 @@
+{
+ "P03_s331_0": {
+  "result": "overlap",
+  "detail": [
+   0.5,
+   "N64"
+  ]
+ },
+ "P03_s331_1": {
+  "result": "overlap",
+  "detail": [
+   0.45,
+   "N64"
+  ]
+ },
+ "P03_s331_2": {
+  "result": "overlap",
+  "detail": [
+   0.42,
+   "N64"
+  ]
+ },
+ "P03_s331_3": {
+  "result": "overlap",
+  "detail": [
+   0.5,
+   "N64"
+  ]
+ },
+ "P03_s331_4": {
+  "result": "overlap",
+  "detail": [
+   0.43,
+   "N64"
+  ]
+ },
+ "P03_s331_5": {
+  "result": "overlap",
+  "detail": [
+   0.42,
+   "N64"
+  ]
+ },
+ "P03_s331_11": {
+  "result": "overlap",
+  "detail": [
+   0.4,
+   "N64"
+  ]
+ },
+ "P03_s331_6": {
+  "result": "not essential",
+  "detail": {
+   "without_switch": "without it: 13 decision steps, 4 distinct mistakes (with it: 12, 5)"
+  }
+ },
+ "P03_s331_7": {
+  "result": "not essential",
+  "detail": {
+   "without_switch": "without it: 13 decision steps, 3 distinct mistakes (with it: 12, 4)"
+  }
+ },
+ "P03_s331_8": {
+  "result": "not essential",
+  "detail": {
+   "without_switch": "without it: 16 decision steps, 6 distinct mistakes (with it: 15, 7)"
+  }
+ },
+ "P03_s331_9": {
+  "result": "not essential",
+  "detail": {
+   "without_switch": "without it: 15 decision steps, 4 distinct mistakes (with it: 14, 5)"
+  }
+ },
+ "P03_s331_10": {
+  "result": "not essential",
+  "detail": {
+   "without_switch": "without it: 14 decision steps, 4 distinct mistakes (with it: 13, 5)"
+  }
+ }
+}

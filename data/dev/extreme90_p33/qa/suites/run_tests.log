@@ -1,0 +1,251 @@
+Godot Engine v4.3.stable.official.77dcf97d8 - https://godotengine.org
+
+[Save] load: new -> fresh progress
+[Save] write #1: last_played=17 highest_completed=3 highest_unlocked=4 total_score=4200 coins=60 file=ok
+[Save] write #2: last_played=17 highest_completed=3 highest_unlocked=4 total_score=5100 coins=60 file=ok
+[Save] write #3: last_played=17 highest_completed=3 highest_unlocked=4 total_score=5100 coins=60 file=ok
+[Save] load: source=file version=5 seq=3 last_played=17 highest_completed=3 highest_unlocked=4 total_score=5100 coins=60 stars=3 saved=2026-11-03 04:05:52 issues=[copies: file#3 bak#2]
+[Save] load: source=file version=5 seq=0 last_played=23 highest_completed=22 highest_unlocked=23 total_score=4000 coins=60 stars=5 saved=never issues=[copies: file#0, migrated v1 -> v5]
+[Save] write #1: last_played=23 highest_completed=22 highest_unlocked=23 total_score=4000 coins=777 file=ok
+[Save] load: source=file version=5 seq=1 last_played=23 highest_completed=22 highest_unlocked=23 total_score=4000 coins=777 stars=5 saved=2026-11-03 04:05:53 issues=[copies: file#1 bak#0]
+ERROR: ConfigFile parse error at <string>:0: Unexpected EOF while parsing simple tag.
+   at: _parse (core/io/config_file.cpp:304)
+[Save] load: file copy unreadable - kept as test_migrate.cfg.corrupt-file-f917d129
+[Save] load: source=bak version=5 seq=0 last_played=23 highest_completed=22 highest_unlocked=23 total_score=4000 coins=60 stars=5 saved=never issues=[copies: bak#0, file unreadable, migrated v1 -> v5]
+[Save] load: new -> fresh progress
+[Save] write #1: last_played=1 highest_completed=0 highest_unlocked=1 total_score=0 coins=85 file=ok
+[Save] load: source=file version=5 seq=1 last_played=1 highest_completed=10 highest_unlocked=11 total_score=0 coins=85 stars=20 saved=2026-11-03 04:05:53 issues=[copies: file#1, highest_completed 0 -> 10 (from best scores)]
+[Save] load: new -> fresh progress
+[Save] write #1: last_played=1 highest_completed=0 highest_unlocked=1 total_score=0 coins=59 file=ok
+[Save] load: source=file version=5 seq=1 last_played=1 highest_completed=0 highest_unlocked=1 total_score=0 coins=59 stars=0 saved=2026-11-03 04:05:53 issues=[copies: file#1]
+  hammer rule: 1564 allowed, 111 rejected, 44 lost boards, 18 gates, 17 armored
+[Save] load: new -> fresh progress
+[Save] write #1: last_played=1 highest_completed=0 highest_unlocked=1 total_score=0 coins=65 file=ok
+[Save] write #2: last_played=1 highest_completed=0 highest_unlocked=1 total_score=0 coins=70 file=ok
+[Save] write #3: last_played=1 highest_completed=0 highest_unlocked=1 total_score=0 coins=85 file=ok
+[Save] load: source=file version=5 seq=3 last_played=1 highest_completed=0 highest_unlocked=1 total_score=0 coins=85 stars=0 saved=2026-11-03 04:06:14 issues=[copies: file#3 bak#2]
+[Save] load: new -> fresh progress
+[Save] write #1: last_played=1 highest_completed=1 highest_unlocked=2 total_score=1000 coins=60 file=ok
+[Save] write #2: last_played=1 highest_completed=2 highest_unlocked=3 total_score=2000 coins=60 file=ok
+[Save] write #3: last_played=1 highest_completed=3 highest_unlocked=4 total_score=3000 coins=60 file=ok
+[Save] write #4: last_played=1 highest_completed=4 highest_unlocked=5 total_score=4000 coins=60 file=ok
+[Save] write #5: last_played=1 highest_completed=5 highest_unlocked=6 total_score=5000 coins=60 file=ok
+[Save] write #6: last_played=1 highest_completed=6 highest_unlocked=7 total_score=6000 coins=60 file=ok
+[Save] write #7: last_played=1 highest_completed=7 highest_unlocked=8 total_score=7000 coins=60 file=ok
+[Save] write #8: last_played=1 highest_completed=8 highest_unlocked=9 total_score=8000 coins=60 file=ok
+[Save] write #9: last_played=1 highest_completed=9 highest_unlocked=10 total_score=9000 coins=60 file=ok
+[Save] write #10: last_played=1 highest_completed=10 highest_unlocked=11 total_score=10000 coins=60 file=ok
+[Save] write #11: last_played=1 highest_completed=10 highest_unlocked=11 total_score=10000 coins=110 file=ok
+[Save] load: source=file version=5 seq=11 last_played=1 highest_completed=10 highest_unlocked=11 total_score=10000 coins=110 stars=20 saved=2026-11-03 04:06:14 issues=[copies: file#11 bak#10]
+[Save] load: new -> fresh progress
+[Save] write #1: last_played=1 highest_completed=0 highest_unlocked=1 total_score=0 coins=150 file=ok
+[Save] load: source=file version=5 seq=1 last_played=1 highest_completed=30 highest_unlocked=31 total_score=0 coins=150 stars=30 saved=2026-11-03 04:06:14 issues=[copies: file#1, highest_completed 0 -> 30 (from best scores)]
+[Save] load: source=file version=5 seq=0 last_played=57 highest_completed=56 highest_unlocked=57 total_score=168000 coins=530 stars=112 saved=never issues=[copies: file#0, migrated v2 -> v5]
+[Save] write #1: last_played=57 highest_completed=56 highest_unlocked=57 total_score=168000 coins=530 file=ok
+[Save] load: source=file version=5 seq=1 last_played=57 highest_completed=56 highest_unlocked=57 total_score=168000 coins=530 stars=112 saved=2026-11-03 04:06:14 issues=[copies: file#1 bak#0]
+[Save] load: new -> fresh progress
+[Save] write #1: last_played=1 highest_completed=1 highest_unlocked=2 total_score=8200 coins=60 file=ok
+[Save] write #2: last_played=1 highest_completed=2 highest_unlocked=3 total_score=14200 coins=60 file=ok
+[Save] write #3: last_played=1 highest_completed=2 highest_unlocked=3 total_score=14200 coins=60 file=ok
+[Save] write #4: last_played=1 highest_completed=2 highest_unlocked=3 total_score=15000 coins=60 file=ok
+[Save] write #5: last_played=1 highest_completed=2 highest_unlocked=3 total_score=15000 coins=60 file=ok
+[Save] write #6: last_played=1 highest_completed=2 highest_unlocked=3 total_score=15000 coins=60 file=ok
+[Save] write #7: last_played=1 highest_completed=2 highest_unlocked=3 total_score=15000 coins=60 file=ok
+[Save] write #8: last_played=1 highest_completed=2 highest_unlocked=3 total_score=15000 coins=60 file=ok
+[Save] write #9: last_played=1 highest_completed=2 highest_unlocked=3 total_score=15000 coins=60 file=ok
+[Save] load: source=file version=5 seq=9 last_played=1 highest_completed=2 highest_unlocked=3 total_score=15000 coins=60 stars=5 saved=2026-11-03 04:06:14 issues=[copies: file#9 bak#8]
+[Save] load: new -> fresh progress
+[Save] write #1: last_played=1 highest_completed=1 highest_unlocked=2 total_score=3000 coins=60 file=ok
+[Save] write #2: last_played=1 highest_completed=2 highest_unlocked=3 total_score=6000 coins=60 file=ok
+[Save] write #3: last_played=1 highest_completed=3 highest_unlocked=4 total_score=9000 coins=60 file=ok
+[Save] write #4: last_played=1 highest_completed=4 highest_unlocked=5 total_score=12000 coins=60 file=ok
+[Save] write #5: last_played=1 highest_completed=5 highest_unlocked=6 total_score=15000 coins=60 file=ok
+[Save] write #6: last_played=1 highest_completed=6 highest_unlocked=7 total_score=18000 coins=60 file=ok
+[Save] write #7: last_played=1 highest_completed=7 highest_unlocked=8 total_score=21000 coins=60 file=ok
+[Save] write #8: last_played=1 highest_completed=8 highest_unlocked=9 total_score=24000 coins=60 file=ok
+[Save] write #9: last_played=1 highest_completed=9 highest_unlocked=10 total_score=27000 coins=60 file=ok
+[Save] write #10: last_played=1 highest_completed=10 highest_unlocked=11 total_score=30000 coins=60 file=ok
+[Save] write #11: last_played=1 highest_completed=11 highest_unlocked=12 total_score=33000 coins=60 file=ok
+[Save] write #12: last_played=1 highest_completed=12 highest_unlocked=13 total_score=36000 coins=60 file=ok
+[Save] write #13: last_played=1 highest_completed=13 highest_unlocked=14 total_score=39000 coins=60 file=ok
+[Save] write #14: last_played=1 highest_completed=14 highest_unlocked=15 total_score=42000 coins=60 file=ok
+[Save] write #15: last_played=1 highest_completed=15 highest_unlocked=16 total_score=45000 coins=60 file=ok
+[Save] write #16: last_played=1 highest_completed=16 highest_unlocked=17 total_score=48000 coins=60 file=ok
+[Save] write #17: last_played=1 highest_completed=17 highest_unlocked=18 total_score=51000 coins=60 file=ok
+[Save] write #18: last_played=1 highest_completed=18 highest_unlocked=19 total_score=54000 coins=60 file=ok
+[Save] write #19: last_played=1 highest_completed=19 highest_unlocked=20 total_score=57000 coins=60 file=ok
+[Save] write #20: last_played=1 highest_completed=20 highest_unlocked=21 total_score=60000 coins=60 file=ok
+[Save] write #21: last_played=1 highest_completed=21 highest_unlocked=22 total_score=63000 coins=60 file=ok
+[Save] write #22: last_played=1 highest_completed=22 highest_unlocked=23 total_score=66000 coins=60 file=ok
+[Save] write #23: last_played=1 highest_completed=23 highest_unlocked=24 total_score=69000 coins=60 file=ok
+[Save] write #24: last_played=1 highest_completed=24 highest_unlocked=25 total_score=72000 coins=60 file=ok
+[Save] write #25: last_played=1 highest_completed=25 highest_unlocked=26 total_score=75000 coins=60 file=ok
+[Save] write #26: last_played=1 highest_completed=26 highest_unlocked=27 total_score=78000 coins=60 file=ok
+[Save] write #27: last_played=1 highest_completed=27 highest_unlocked=28 total_score=81000 coins=60 file=ok
+[Save] write #28: last_played=1 highest_completed=28 highest_unlocked=29 total_score=84000 coins=60 file=ok
+[Save] write #29: last_played=1 highest_completed=29 highest_unlocked=30 total_score=87000 coins=60 file=ok
+[Save] write #30: last_played=1 highest_completed=30 highest_unlocked=31 total_score=90000 coins=60 file=ok
+[Save] write #31: last_played=1 highest_completed=31 highest_unlocked=32 total_score=93000 coins=60 file=ok
+[Save] write #32: last_played=1 highest_completed=32 highest_unlocked=33 total_score=96000 coins=60 file=ok
+[Save] write #33: last_played=1 highest_completed=33 highest_unlocked=34 total_score=99000 coins=60 file=ok
+[Save] write #34: last_played=1 highest_completed=34 highest_unlocked=35 total_score=102000 coins=60 file=ok
+[Save] write #35: last_played=1 highest_completed=35 highest_unlocked=36 total_score=105000 coins=60 file=ok
+[Save] write #36: last_played=1 highest_completed=36 highest_unlocked=37 total_score=108000 coins=60 file=ok
+[Save] write #37: last_played=1 highest_completed=37 highest_unlocked=38 total_score=111000 coins=60 file=ok
+[Save] write #38: last_played=1 highest_completed=38 highest_unlocked=39 total_score=114000 coins=60 file=ok
+[Save] write #39: last_played=1 highest_completed=39 highest_unlocked=40 total_score=117000 coins=60 file=ok
+[Save] write #40: last_played=1 highest_completed=40 highest_unlocked=41 total_score=120000 coins=60 file=ok
+[Save] write #41: last_played=1 highest_completed=41 highest_unlocked=42 total_score=123000 coins=60 file=ok
+[Save] write #42: last_played=1 highest_completed=42 highest_unlocked=43 total_score=126000 coins=60 file=ok
+[Save] write #43: last_played=1 highest_completed=43 highest_unlocked=44 total_score=129000 coins=60 file=ok
+[Save] write #44: last_played=1 highest_completed=44 highest_unlocked=45 total_score=132000 coins=60 file=ok
+[Save] write #45: last_played=1 highest_completed=45 highest_unlocked=46 total_score=135000 coins=60 file=ok
+[Save] write #46: last_played=46 highest_completed=45 highest_unlocked=46 total_score=135000 coins=60 file=ok
+[Save] write #47: last_played=46 highest_completed=45 highest_unlocked=46 total_score=137000 coins=60 file=ok
+[Save] load: source=file version=5 seq=0 last_played=46 highest_completed=45 highest_unlocked=46 total_score=135000 coins=0 stars=0 saved=never issues=[copies: file#0, migrated v4 -> v5, highest_completed 0 -> 45 (from best scores)]
+[Save] load: new -> fresh progress
+[Save] write #1: last_played=1 highest_completed=1 highest_unlocked=2 total_score=1000 coins=60 file=ok
+[Save] write #2: last_played=2 highest_completed=1 highest_unlocked=2 total_score=1000 coins=60 file=ok
+[Save] load: source=tmp version=5 seq=7 last_played=9 highest_completed=8 highest_unlocked=9 total_score=1000 coins=60 stars=1 saved=2026-11-03 04:06:14 issues=[copies: file#2 bak#1 tmp#7]
+[Save] write #8: last_played=9 highest_completed=8 highest_unlocked=9 total_score=1000 coins=60 file=ok
+[Save] write #9: last_played=9 highest_completed=8 highest_unlocked=9 total_score=1000 coins=60 file=ok
+[Save] write #10: last_played=9 highest_completed=8 highest_unlocked=9 total_score=1000 coins=60 file=ok
+[Save] load: new -> fresh progress
+[Save] write #1: last_played=1 highest_completed=1 highest_unlocked=2 total_score=2000 coins=60 file=ok
+[Save] write #2: last_played=1 highest_completed=2 highest_unlocked=3 total_score=4000 coins=60 file=ok
+[Save] write #3: last_played=1 highest_completed=3 highest_unlocked=4 total_score=6000 coins=60 file=ok
+[Save] write #4: last_played=1 highest_completed=4 highest_unlocked=5 total_score=8000 coins=60 file=ok
+[Save] write #5: last_played=1 highest_completed=5 highest_unlocked=6 total_score=10000 coins=60 file=ok
+[Save] write #6: last_played=1 highest_completed=6 highest_unlocked=7 total_score=12000 coins=60 file=ok
+[Save] write #7: last_played=1 highest_completed=7 highest_unlocked=8 total_score=14000 coins=60 file=ok
+[Save] write #8: last_played=1 highest_completed=8 highest_unlocked=9 total_score=16000 coins=60 file=ok
+[Save] write #9: last_played=1 highest_completed=9 highest_unlocked=10 total_score=18000 coins=60 file=ok
+[Save] write #10: last_played=1 highest_completed=10 highest_unlocked=11 total_score=20000 coins=60 file=ok
+[Save] write #11: last_played=1 highest_completed=11 highest_unlocked=12 total_score=22000 coins=60 file=ok
+[Save] write #12: last_played=1 highest_completed=12 highest_unlocked=13 total_score=24000 coins=60 file=ok
+[Save] write #13: last_played=13 highest_completed=12 highest_unlocked=13 total_score=24000 coins=345 file=ok
+[Save] write #14: last_played=13 highest_completed=12 highest_unlocked=13 total_score=24000 coins=345 file=ok
+ERROR: ConfigFile parse error at <string>:0: Unexpected EOF while parsing simple tag.
+   at: _parse (core/io/config_file.cpp:304)
+[Save] load: file copy unreadable - kept as test_corrupt.cfg.corrupt-file-a67c2dab
+[Save] load: source=bak version=5 seq=13 last_played=13 highest_completed=12 highest_unlocked=13 total_score=24000 coins=345 stars=24 saved=2026-11-03 04:06:14 issues=[copies: bak#13, file unreadable]
+ERROR: ConfigFile parse error at <string>:24: Expected value, got ERROR..
+   at: _parse (core/io/config_file.cpp:304)
+[Save] load: file copy unreadable - kept as test_corrupt.cfg.corrupt-file-16ec53a8
+ERROR: ConfigFile parse error at <string>:1: Expected value, got ERROR..
+   at: _parse (core/io/config_file.cpp:304)
+[Save] load: source=salvaged:file version=5 seq=13 last_played=13 highest_completed=12 highest_unlocked=13 total_score=24000 coins=345 stars=24 saved=2026-11-03 04:06:14 issues=[copies: salvaged:file#13, file unreadable, salvaged 45 entries]
+ERROR: ConfigFile parse error at <string>:0: Expected value, got '='..
+   at: _parse (core/io/config_file.cpp:304)
+[Save] load: file copy unreadable - kept as test_corrupt.cfg.corrupt-file-564e6c7d
+ERROR: ConfigFile parse error at <string>:1: Expected value, got '='..
+   at: _parse (core/io/config_file.cpp:304)
+[Save] load: unreadable -> fresh progress (file unreadable) - WRITES HELD until the player confirms (beacon: {})
+[Save] write held (unreadable save - waiting for the player to restore or start new): last_played=1 highest_completed=0
+[Save] recovery: player chose to start new (unreadable save)
+[Save] write #1: last_played=1 highest_completed=0 highest_unlocked=1 total_score=0 coins=60 file=ok
+[Save] load: new -> fresh progress
+[Save] load: source=file version=5 seq=0 last_played=58 highest_completed=57 highest_unlocked=58 total_score=229653 coins=910 stars=114 saved=never issues=[copies: file#0, migrated v3 -> v5]
+[Save] write #1: last_played=58 highest_completed=57 highest_unlocked=58 total_score=229653 coins=910 file=ok
+[Save] load: source=file version=5 seq=1 last_played=58 highest_completed=57 highest_unlocked=58 total_score=229653 coins=910 stars=114 saved=2026-11-03 04:06:14 issues=[copies: file#1 bak#0]
+[Save] load: new -> fresh progress
+[Save] write #1: last_played=1 highest_completed=1 highest_unlocked=2 total_score=3000 coins=60 file=ok
+[Save] write #2: last_played=1 highest_completed=2 highest_unlocked=3 total_score=6000 coins=60 file=ok
+[Save] write #3: last_played=1 highest_completed=3 highest_unlocked=4 total_score=9000 coins=60 file=ok
+[Save] write #4: last_played=1 highest_completed=4 highest_unlocked=5 total_score=12000 coins=60 file=ok
+[Save] write #5: last_played=1 highest_completed=5 highest_unlocked=6 total_score=15000 coins=60 file=ok
+[Save] write #6: last_played=1 highest_completed=6 highest_unlocked=7 total_score=18000 coins=60 file=ok
+[Save] write #7: last_played=1 highest_completed=7 highest_unlocked=8 total_score=21000 coins=60 file=ok
+[Save] write #8: last_played=1 highest_completed=8 highest_unlocked=9 total_score=24000 coins=60 file=ok
+[Save] write #9: last_played=1 highest_completed=9 highest_unlocked=10 total_score=27000 coins=60 file=ok
+[Save] write #10: last_played=1 highest_completed=10 highest_unlocked=11 total_score=30000 coins=60 file=ok
+[Save] write #11: last_played=1 highest_completed=11 highest_unlocked=12 total_score=33000 coins=60 file=ok
+[Save] write #12: last_played=1 highest_completed=12 highest_unlocked=13 total_score=36000 coins=60 file=ok
+[Save] write #13: last_played=1 highest_completed=13 highest_unlocked=14 total_score=39000 coins=60 file=ok
+[Save] write #14: last_played=1 highest_completed=14 highest_unlocked=15 total_score=42000 coins=60 file=ok
+[Save] write #15: last_played=1 highest_completed=15 highest_unlocked=16 total_score=45000 coins=60 file=ok
+[Save] write #16: last_played=1 highest_completed=16 highest_unlocked=17 total_score=48000 coins=60 file=ok
+[Save] write #17: last_played=1 highest_completed=17 highest_unlocked=18 total_score=51000 coins=60 file=ok
+[Save] write #18: last_played=1 highest_completed=18 highest_unlocked=19 total_score=54000 coins=60 file=ok
+[Save] write #19: last_played=1 highest_completed=19 highest_unlocked=20 total_score=57000 coins=60 file=ok
+[Save] write #20: last_played=1 highest_completed=20 highest_unlocked=21 total_score=60000 coins=60 file=ok
+[Save] write #21: last_played=21 highest_completed=20 highest_unlocked=21 total_score=60000 coins=60 file=ok
+[Save] load: missing -> fresh progress - WRITES HELD until the player confirms (beacon: {"highest_completed":20,"highest_unlocked":21,"seq":21,"total_score":60000,"unix":1793678774})
+[Save] write held (missing save - waiting for the player to restore or start new): last_played=1 highest_completed=0
+[Save] load: new -> fresh progress
+[Save] write #1: last_played=1 highest_completed=0 highest_unlocked=1 total_score=0 coins=60 file=ok
+[Save] load: new -> fresh progress
+[Save] write #1: last_played=1 highest_completed=1 highest_unlocked=2 total_score=4001 coins=60 file=ok
+[Save] write #2: last_played=1 highest_completed=2 highest_unlocked=3 total_score=8003 coins=60 file=ok
+[Save] write #3: last_played=1 highest_completed=3 highest_unlocked=4 total_score=12006 coins=60 file=ok
+[Save] write #4: last_played=1 highest_completed=4 highest_unlocked=5 total_score=16010 coins=60 file=ok
+[Save] write #5: last_played=1 highest_completed=5 highest_unlocked=6 total_score=20015 coins=60 file=ok
+[Save] write #6: last_played=1 highest_completed=6 highest_unlocked=7 total_score=24021 coins=60 file=ok
+[Save] write #7: last_played=1 highest_completed=7 highest_unlocked=8 total_score=28028 coins=60 file=ok
+[Save] write #8: last_played=1 highest_completed=8 highest_unlocked=9 total_score=32036 coins=60 file=ok
+[Save] write #9: last_played=1 highest_completed=9 highest_unlocked=10 total_score=36045 coins=60 file=ok
+[Save] write #10: last_played=1 highest_completed=10 highest_unlocked=11 total_score=40055 coins=60 file=ok
+[Save] write #11: last_played=1 highest_completed=11 highest_unlocked=12 total_score=44066 coins=60 file=ok
+[Save] write #12: last_played=1 highest_completed=12 highest_unlocked=13 total_score=48078 coins=60 file=ok
+[Save] write #13: last_played=1 highest_completed=13 highest_unlocked=14 total_score=52091 coins=60 file=ok
+[Save] write #14: last_played=1 highest_completed=14 highest_unlocked=15 total_score=56105 coins=60 file=ok
+[Save] write #15: last_played=1 highest_completed=15 highest_unlocked=16 total_score=60120 coins=60 file=ok
+[Save] write #16: last_played=1 highest_completed=16 highest_unlocked=17 total_score=64136 coins=60 file=ok
+[Save] write #17: last_played=1 highest_completed=17 highest_unlocked=18 total_score=68153 coins=60 file=ok
+[Save] write #18: last_played=1 highest_completed=18 highest_unlocked=19 total_score=72171 coins=60 file=ok
+[Save] write #19: last_played=1 highest_completed=19 highest_unlocked=20 total_score=76190 coins=60 file=ok
+[Save] write #20: last_played=1 highest_completed=20 highest_unlocked=21 total_score=80210 coins=60 file=ok
+[Save] write #21: last_played=1 highest_completed=21 highest_unlocked=22 total_score=84231 coins=60 file=ok
+[Save] write #22: last_played=1 highest_completed=22 highest_unlocked=23 total_score=88253 coins=60 file=ok
+[Save] write #23: last_played=1 highest_completed=23 highest_unlocked=24 total_score=92276 coins=60 file=ok
+[Save] write #24: last_played=1 highest_completed=24 highest_unlocked=25 total_score=96300 coins=60 file=ok
+[Save] write #25: last_played=1 highest_completed=25 highest_unlocked=26 total_score=100325 coins=60 file=ok
+[Save] write #26: last_played=1 highest_completed=26 highest_unlocked=27 total_score=104351 coins=60 file=ok
+[Save] write #27: last_played=1 highest_completed=27 highest_unlocked=28 total_score=108378 coins=60 file=ok
+[Save] write #28: last_played=1 highest_completed=28 highest_unlocked=29 total_score=112406 coins=60 file=ok
+[Save] write #29: last_played=1 highest_completed=29 highest_unlocked=30 total_score=116435 coins=60 file=ok
+[Save] write #30: last_played=1 highest_completed=30 highest_unlocked=31 total_score=120465 coins=60 file=ok
+[Save] write #31: last_played=1 highest_completed=31 highest_unlocked=32 total_score=124496 coins=60 file=ok
+[Save] write #32: last_played=1 highest_completed=32 highest_unlocked=33 total_score=128528 coins=60 file=ok
+[Save] write #33: last_played=1 highest_completed=33 highest_unlocked=34 total_score=132561 coins=60 file=ok
+[Save] write #34: last_played=1 highest_completed=34 highest_unlocked=35 total_score=136595 coins=60 file=ok
+[Save] write #35: last_played=1 highest_completed=35 highest_unlocked=36 total_score=140630 coins=60 file=ok
+[Save] write #36: last_played=1 highest_completed=36 highest_unlocked=37 total_score=144666 coins=60 file=ok
+[Save] write #37: last_played=1 highest_completed=37 highest_unlocked=38 total_score=148703 coins=60 file=ok
+[Save] write #38: last_played=1 highest_completed=38 highest_unlocked=39 total_score=152741 coins=60 file=ok
+[Save] write #39: last_played=1 highest_completed=39 highest_unlocked=40 total_score=156780 coins=60 file=ok
+[Save] write #40: last_played=1 highest_completed=40 highest_unlocked=41 total_score=160820 coins=60 file=ok
+[Save] write #41: last_played=1 highest_completed=41 highest_unlocked=42 total_score=164861 coins=60 file=ok
+[Save] write #42: last_played=1 highest_completed=42 highest_unlocked=43 total_score=168903 coins=60 file=ok
+[Save] write #43: last_played=1 highest_completed=43 highest_unlocked=44 total_score=172946 coins=60 file=ok
+[Save] write #44: last_played=1 highest_completed=44 highest_unlocked=45 total_score=176990 coins=60 file=ok
+[Save] write #45: last_played=1 highest_completed=45 highest_unlocked=46 total_score=181035 coins=60 file=ok
+[Save] write #46: last_played=1 highest_completed=45 highest_unlocked=46 total_score=186032 coins=60 file=ok
+[Save] write #47: last_played=46 highest_completed=45 highest_unlocked=46 total_score=186032 coins=1234 file=ok
+ERROR: Condition "CryptoCore::b64_decode(&w[0], buf.size(), &arr_len, (unsigned char *)cstr.get_data(), strlen) != OK" is true. Returning: Vector<uint8_t>()
+   at: base64_to_raw (core/core_bind.cpp:1160)
+[Save] load: new -> fresh progress
+[Save] write #1: last_played=1 highest_completed=1 highest_unlocked=2 total_score=99999 coins=60 file=ok
+[Save] write #2: last_played=1 highest_completed=50 highest_unlocked=51 total_score=104999 coins=60 file=ok
+[Save] merge: +44 levels, highest_completed 50 -> 50, total 104999 -> 287030, coins 1234
+[Save] merge: +0 levels, highest_completed 50 -> 50, total 287030 -> 287030, coins 1234
+ERROR: Level 0: gate C at (0, 0) has no links
+   at: push_error (core/variant/variant_utility.cpp:1092)
+ERROR: Level 0: bad map token 'Bv&A$S' at row 0 col 2
+   at: push_error (core/variant/variant_utility.cpp:1092)
+ERROR: Level 0: switch A at (0, 0) has nothing to flip
+   at: push_error (core/variant/variant_utility.cpp:1092)
+ERROR: Level 0: switch / flip / armored block at (0, 0) cannot be a spinner or hidden
+   at: push_error (core/variant/variant_utility.cpp:1092)
+ERROR: Level 0: block at (1, 0) flips with switch A, which does not exist
+   at: push_error (core/variant/variant_utility.cpp:1092)
+ERROR: Level 0: bad map token 'R>=#B' at row 0 col 0
+   at: push_error (core/variant/variant_utility.cpp:1092)
+[Save] load: source=file version=5 seq=812 last_played=101 highest_completed=100 highest_unlocked=101 total_score=605050 coins=4321 stars=300 saved=never issues=[copies: file#812, v0.6: continue 1 -> 101 (Second Era), migrated v4 -> v5]
+[Save] write #813: last_played=101 highest_completed=100 highest_unlocked=101 total_score=605050 coins=4321 file=ok
+[Save] load: source=file version=5 seq=813 last_played=101 highest_completed=100 highest_unlocked=101 total_score=605050 coins=4321 stars=300 saved=2026-11-03 04:06:16 issues=[copies: file#813 bak#812]
+[Save] write #814: last_played=101 highest_completed=101 highest_unlocked=102 total_score=610050 coins=4321 file=ok
+[Save] write #815: last_played=104 highest_completed=101 highest_unlocked=102 total_score=610050 coins=4321 file=ok
+[Save] load: source=file version=5 seq=815 last_played=104 highest_completed=101 highest_unlocked=102 total_score=610050 coins=4321 stars=302 saved=2026-11-03 04:06:16 issues=[copies: file#815 bak#814]
+33703 checks, 0 failures
+UNIT TESTS PASSED

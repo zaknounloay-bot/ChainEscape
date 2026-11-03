@@ -1,0 +1,17 @@
+{
+ "T10b_s331_4": {
+  "map": [
+   ". . . . . . .",
+   ". . Bv&A G^@- . R< .",
+   ". . . B>@~ Yv@ G<%A .",
+   ". R>@- B<#Y&A Bv@~ P<@ . .",
+   ". G^#B G<@#Y . . Yv&A .",
+   ". . Pv@- . . P<#B .",
+   ". . . . . . G^%A"
+  ],
+  "target": "EXTREME",
+  "facts": [],
+  "mechanic": "switch,lock",
+  "max_positions": 2000
+ }
+}

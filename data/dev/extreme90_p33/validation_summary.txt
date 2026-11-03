@@ -1,0 +1,17 @@
+Chronological holdout, test phases 25-32 (train = all earlier phases). n=71 rated boards in study (38 approved, 33 not); holdout n=39 (15 approved, 24 not)
+rule                     correct   TP   FP   FN   TN    bal   prec phases beating BOTH baselines
+P1_positions              27/39     4    1   11   23  0.613    0.8 1 of 8
+P2_early3                 30/39    13    7    2   17  0.788   0.65 3 of 8
+P3_open_tempting          15/39    15   24    0    0  0.500  0.385 0 of 8
+P4_p_look2                21/39    10   13    5   11  0.562  0.435 1 of 8
+P5_strat_steps            24/39     1    1   14   23  0.513    0.5 1 of 8
+P6_forced_share           22/39     5    7   10   17  0.521  0.417 1 of 8
+P7_positions_and_early3   27/39     3    0   12   24  0.600    1.0 1 of 8
+baselines: always approved 15/39, always not approved 24/39 (balanced 0.5)
+AUC (lower value = approved, except P5/P6 higher): all rated / P25-32 / P31-32 prospective
+  P1_positions           0.492 / 0.711 / 1.0
+  P2_early3              0.533 / 0.819 / 0.792
+  P3_open_tempting       0.484 / 0.664 / 0.562
+  P4_p_look2             0.537 / 0.565 / 0.229
+  P5_strat_steps         0.554 / 0.485 / 0.354
+  P6_forced_share        0.555 / 0.615 / 0.854

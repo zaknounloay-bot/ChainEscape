@@ -1,0 +1,24 @@
+R04_s332_0             not essential  {'without_armor': 'without it: 14 decision steps, 4 distinct mistakes (with it: 16, 5)'}
+R04_s332_1             PASS           []
+R04_s332_2             not essential  {'without_armor': 'without it: 15 decision steps, 5 distinct mistakes (with it: 17, 5)'}
+R04_s332_3             not essential  {'without_armor': 'without it: 15 decision steps, 5 distinct mistakes (with it: 17, 5)', 'without_lock': 'without it: 16 decision steps, 4 distinct mi
+R04_s332_4             PASS           []
+R04_s332_5             not essential  {'without_lock': 'without it: 18 decision steps, 4 distinct mistakes (with it: 18, 5)'}
+R04_s332_6             not essential  {'without_armor': 'without it: 14 decision steps, 5 distinct mistakes (with it: 16, 5)', 'without_lock': 'without it: 16 decision steps, 4 distinct mi
+R04_s332_7             not essential  {'without_lock': 'without it: 15 decision steps, 4 distinct mistakes (with it: 15, 5)'}
+R04_s332_8             not essential  {'without_lock': 'without it: 17 decision steps, 4 distinct mistakes (with it: 17, 5)'}
+R04_s332_9             not essential  {'without_armor': 'without it: 14 decision steps, 4 distinct mistakes (with it: 16, 5)', 'without_lock': 'without it: 15 decision steps, 4 distinct mi
+R04_s332_10            not essential  {'without_armor': 'without it: 14 decision steps, 5 distinct mistakes (with it: 16, 5)', 'without_lock': 'without it: 16 decision steps, 4 distinct mi
+SCREEN: 11 boards, 2 PASS
+R04_s332_0             not essential  
+R04_s332_1             PASS           PASS
+R04_s332_2             not essential  
+R04_s332_3             not essential  
+R04_s332_4             PASS           PASS
+R04_s332_5             not essential  
+R04_s332_6             not essential  
+R04_s332_7             not essential  
+R04_s332_8             not essential  
+R04_s332_9             not essential  
+R04_s332_10            not essential  
+SCREEN30: 11 boards, 2 PASS

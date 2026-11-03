@@ -1,0 +1,259 @@
+{
+ "T10b_s331_0": {
+  "result": "not essential",
+  "detail": {
+   "without_lock": "without it: 11 decision steps, 4 distinct mistakes (with it: 13, 4)"
+  }
+ },
+ "T10b_s331_1": {
+  "result": "not essential",
+  "detail": {
+   "without_lock": "without it: 11 decision steps, 4 distinct mistakes (with it: 13, 4)"
+  }
+ },
+ "T10b_s331_2": {
+  "result": "PASS",
+  "B": {
+   "coverage": 0.8,
+   "decision_steps": 12,
+   "distinct_mistakes": 5,
+   "endgame_decision": true,
+   "last_decision": 12,
+   "late": 0.8,
+   "losing_per_step": [
+    2,
+    1,
+    2,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    0,
+    0,
+    0
+   ],
+   "matters_lock": true,
+   "matters_switch": true,
+   "mistakes": [
+    "r3c4>",
+    "r6c6^",
+    "r2c4<",
+    "r4c2^",
+    "r4c2>"
+   ],
+   "shortcut": 0.1,
+   "spinner_dependence": "unsolvable without it",
+   "without_lock": "without it: 9 decision steps, 5 distinct mistakes (with it: 12, 5)",
+   "without_switch": "unsolvable without it"
+  },
+  "A": {
+   "positions": 136,
+   "solution": 15,
+   "solve_ms": 1.5,
+   "timeup_worst_ms": 1.1
+  },
+  "overlap": [
+   0.35,
+   "N9"
+  ],
+  "filler": []
+ },
+ "T10b_s331_3": {
+  "result": "not essential",
+  "detail": {
+   "without_lock": "without it: 11 decision steps, 4 distinct mistakes (with it: 13, 4)"
+  }
+ },
+ "T10b_s331_4": {
+  "result": "PASS",
+  "B": {
+   "coverage": 0.81,
+   "decision_steps": 13,
+   "distinct_mistakes": 4,
+   "endgame_decision": true,
+   "last_decision": 13,
+   "late": 0.81,
+   "losing_per_step": [
+    2,
+    2,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    0,
+    0,
+    0
+   ],
+   "matters_lock": true,
+   "matters_switch": true,
+   "mistakes": [
+    "r1c3^",
+    "r6c6^",
+    "r4c2^",
+    "r4c2>"
+   ],
+   "shortcut": 0.033,
+   "spinner_dependence": "unsolvable without it",
+   "without_lock": "without it: 10 decision steps, 4 distinct mistakes (with it: 13, 4)",
+   "without_switch": "unsolvable without it"
+  },
+  "A": {
+   "positions": 146,
+   "solution": 16,
+   "solve_ms": 1.9,
+   "timeup_worst_ms": 2
+  },
+  "overlap": [
+   0.33,
+   "N9"
+  ],
+  "filler": []
+ },
+ "T10b_s331_5": {
+  "result": "PASS",
+  "B": {
+   "coverage": 0.79,
+   "decision_steps": 11,
+   "distinct_mistakes": 5,
+   "endgame_decision": true,
+   "last_decision": 11,
+   "late": 0.79,
+   "losing_per_step": [
+    2,
+    1,
+    2,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    0,
+    0,
+    0
+   ],
+   "matters_lock": true,
+   "matters_switch": true,
+   "mistakes": [
+    "r3c4>",
+    "r6c6^",
+    "r2c4<",
+    "r4c2^",
+    "r4c2>"
+   ],
+   "shortcut": 0.175,
+   "spinner_dependence": "unsolvable without it",
+   "without_lock": "without it: 8 decision steps, 5 distinct mistakes (with it: 11, 5)",
+   "without_switch": "unsolvable without it"
+  },
+  "A": {
+   "positions": 157,
+   "solution": 14,
+   "solve_ms": 1.5,
+   "timeup_worst_ms": 1
+  },
+  "overlap": [
+   0.38,
+   "N9"
+  ],
+  "filler": []
+ },
+ "T10b_s331_6": {
+  "result": "PASS",
+  "B": {
+   "coverage": 0.82,
+   "decision_steps": 14,
+   "distinct_mistakes": 5,
+   "endgame_decision": true,
+   "last_decision": 14,
+   "late": 0.82,
+   "losing_per_step": [
+    2,
+    2,
+    2,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    0,
+    0,
+    0
+   ],
+   "matters_lock": true,
+   "matters_switch": true,
+   "mistakes": [
+    "r1c3^",
+    "r6c6^",
+    "r2c4<",
+    "r4c2^",
+    "r4c2>"
+   ],
+   "shortcut": 0.06,
+   "spinner_dependence": "unsolvable without it",
+   "without_lock": "without it: 12 decision steps, 3 distinct mistakes (with it: 14, 5)",
+   "without_switch": "unsolvable without it"
+  },
+  "A": {
+   "positions": 186,
+   "solution": 17,
+   "solve_ms": 3,
+   "timeup_worst_ms": 3.6
+  },
+  "overlap": [
+   0.32,
+   "N9"
+  ],
+  "filler": []
+ },
+ "T10b_s331_7": {
+  "result": "not essential",
+  "detail": {
+   "without_lock": "without it: 12 decision steps, 6 distinct mistakes (with it: 14, 6)"
+  }
+ },
+ "T10b_s331_8": {
+  "result": "not essential",
+  "detail": {
+   "without_lock": "without it: 12 decision steps, 6 distinct mistakes (with it: 14, 6)"
+  }
+ },
+ "T10b_s331_9": {
+  "result": "not essential",
+  "detail": {
+   "without_lock": "without it: 12 decision steps, 6 distinct mistakes (with it: 14, 6)"
+  }
+ },
+ "T10b_s331_10": {
+  "result": "not essential",
+  "detail": {
+   "without_lock": "without it: 12 decision steps, 6 distinct mistakes (with it: 14, 6)"
+  }
+ },
+ "T10b_s331_11": {
+  "result": "not essential",
+  "detail": {
+   "without_lock": "without it: 12 decision steps, 6 distinct mistakes (with it: 14, 6)"
+  }
+ }
+}

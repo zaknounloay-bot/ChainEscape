@@ -1,0 +1,46 @@
+Godot Engine v4.3.stable.official.77dcf97d8 - https://godotengine.org
+
+[Save] load: new -> fresh progress
+[Save] profile: new player id
+[Save] write #1: last_played=1 highest_completed=0 highest_unlocked=1 total_score=0 coins=60 file=ok
+[Diag] last session ended at level 12 after 0s: process ended without a clean quit | [Diag] L12 ch2 via=launch t=0s fps=145 mem=100.4MB objs=3497 nodes=663 orphans=0 res=98 tweens=15 fx=13 music=c02 music_players=1 sfx=0 save_seq=45
+[Chapter] level=1 chapter=1 theme=First Light (id 1, prev 0) music=c01  <- transition
+[Save] write #2: last_played=1 highest_completed=0 highest_unlocked=1 total_score=0 coins=60 file=ok
+[Diag] L1 ch1 via=launch t=0s fps=1 mem=97.4MB objs=3227 nodes=573 orphans=0 res=97 tweens=6 fx=3 music=c01 music_players=1 sfx=0 save_seq=2
+[Save] write #3: last_played=1 highest_completed=1 highest_unlocked=2 total_score=1001 coins=60 file=ok
+[Save] write #4: last_played=1 highest_completed=2 highest_unlocked=3 total_score=2003 coins=60 file=ok
+[Save] write #5: last_played=1 highest_completed=3 highest_unlocked=4 total_score=3006 coins=60 file=ok
+[Save] write #6: last_played=1 highest_completed=4 highest_unlocked=5 total_score=4010 coins=60 file=ok
+[Save] write #7: last_played=1 highest_completed=5 highest_unlocked=6 total_score=5015 coins=60 file=ok
+[Save] write #8: last_played=1 highest_completed=6 highest_unlocked=7 total_score=6021 coins=60 file=ok
+[Save] write #9: last_played=1 highest_completed=7 highest_unlocked=8 total_score=7028 coins=60 file=ok
+[Save] write #10: last_played=1 highest_completed=8 highest_unlocked=9 total_score=8036 coins=60 file=ok
+[Save] write #11: last_played=1 highest_completed=9 highest_unlocked=10 total_score=9045 coins=60 file=ok
+[Save] write #12: last_played=1 highest_completed=10 highest_unlocked=11 total_score=10055 coins=60 file=ok
+[Save] write #13: last_played=1 highest_completed=11 highest_unlocked=12 total_score=11066 coins=60 file=ok
+[Save] write #14: last_played=1 highest_completed=12 highest_unlocked=13 total_score=12078 coins=60 file=ok
+[Chapter] level=13 chapter=2 theme=Sunny Meadow (id 2, prev 1) music=c02  <- transition
+[Save] write #15: last_played=13 highest_completed=12 highest_unlocked=13 total_score=12078 coins=77 file=ok
+[Diag] L13 ch2 via=load t=0s fps=1 mem=98.2MB objs=3353 nodes=618 orphans=0 res=98 tweens=14 fx=8 music=c02 music_players=0 sfx=1 save_seq=15
+[Save] write #16: last_played=13 highest_completed=12 highest_unlocked=13 total_score=12078 coins=77 file=ok
+[Save] load: source=file version=5 seq=16 last_played=13 highest_completed=12 highest_unlocked=13 total_score=12078 coins=77 stars=36 saved=2026-11-03 04:10:26 issues=[copies: file#16 bak#15]
+[Diag] last session ended at level 13 after 0s: process ended without a clean quit | [Diag] L13 ch2 via=load t=0s fps=1 mem=98.2MB objs=3353 nodes=618 orphans=0 res=98 tweens=14 fx=8 music=c02 music_players=0 sfx=1 save_seq=15
+[Chapter] level=13 chapter=2 theme=Sunny Meadow (id 2, prev 0) music=c02  <- transition
+[Save] write #17: last_played=13 highest_completed=12 highest_unlocked=13 total_score=12078 coins=77 file=ok
+[Diag] L13 ch2 via=launch t=0s fps=1 mem=98.8MB objs=3304 nodes=591 orphans=0 res=98 tweens=8 fx=5 music=c02 music_players=1 sfx=1 save_seq=17
+layout play=[P: (373, 606), S: (534, 120)] level_select=[P: (373, 748), S: (534, 100)] create=[P: (373, 870), S: (534, 96)] stats=[P: (373, 988), S: (534, 156)] diag=[P: (24, 1184), S: (1232, 72)] view=[P: (0, 0), S: (1280, 1280)]
+card Card_Photo rect=[P: (350, 346.5007), S: (580, 333)]
+card Card_Friend rect=[P: (350, 705.5034), S: (580, 275)]
+ERROR: Condition "err" is true. Returning: Ref<Image>()
+   at: _jpegd_mem_loader_func (modules/jpg/image_loader_jpegd.cpp:132)
+ERROR: Condition "!image.is_valid()" is true. Returning: ERR_PARSE_ERROR
+   at: _load_from_buffer (core/io/image.cpp:3929)
+emoji on the Web font: 1 of 2 glyphs missing (drawn as boxes)
+ERROR: Condition "err" is true. Returning: Ref<Image>()
+   at: _jpegd_mem_loader_func (modules/jpg/image_loader_jpegd.cpp:132)
+ERROR: Condition "!image.is_valid()" is true. Returning: ERR_PARSE_ERROR
+   at: _load_from_buffer (core/io/image.cpp:3929)
+[Social] challenge ready: reveal {"attempts":1,"blocks":6,"decision_points":0,"depth":4,"difficulty":4.9,"in_band":true,"ms":23,"special":"armor","spinners":0}
+[Save] write #18: last_played=13 highest_completed=12 highest_unlocked=13 total_score=12078 coins=77 file=ok
+[Save] write #19: last_played=13 highest_completed=12 highest_unlocked=13 total_score=12078 coins=77 file=ok
+SOCIAL SMOKE: PASSED

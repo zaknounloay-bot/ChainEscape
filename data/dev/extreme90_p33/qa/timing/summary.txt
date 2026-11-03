@@ -1,0 +1,8 @@
+Idle comparison started 15:00:07: CUR=player33/web33, BASE=player32/web32, serial, alternating
+CUR run 1 exit=1 :: WEB TIMING TEST FAILED :: A: active time 9046 ms within [wall clock 8823 ms - 100 ms
+BASE run 1 exit=1 :: WEB TIMING TEST FAILED :: A: active time 8863 ms within [wall clock 8630 ms - 100 ms
+CUR run 2 exit=0 :: WEB TIMING TEST PASSED :: A: active time 8604 ms within [wall clock 8645 ms - 117 ms
+BASE run 2 exit=1 :: WEB TIMING TEST FAILED :: A: active time 9079 ms within [wall clock 8853 ms - 100 ms
+CUR run 3 exit=1 :: WEB TIMING TEST FAILED :: A: active time 8964 ms within [wall clock 8783 ms - 134 ms
+BASE run 3 exit=1 :: WEB TIMING TEST FAILED :: A: active time 8786 ms within [wall clock 8584 ms - 67 ms
+DONE 15:27:31

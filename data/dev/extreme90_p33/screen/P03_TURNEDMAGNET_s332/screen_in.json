@@ -1,0 +1,192 @@
+{
+ "P03_s332_1": {
+  "map": [
+   ". . . . . . R>@~",
+   ". . . . . . .",
+   ". . . . . . Y>@~",
+   ". Gv Pv= Y>&A* B^%A R^ Y>*",
+   ". . . Y>@- . . B^",
+   ". . . B<= . . G^&A",
+   ". Y< . . . . G^%A"
+  ],
+  "target": "EXTREME",
+  "facts": [],
+  "mechanic": "magnet,switch,armor",
+  "max_positions": 2000,
+  "overlap": [
+   0.38,
+   "N76"
+  ]
+ },
+ "P03_s332_2": {
+  "map": [
+   ". . . . . . R<@-",
+   ". . . . . . .",
+   ". . . . . . Y>@~",
+   "G>@ Gv Pv= Y>&A* B^%A R^ Y>*",
+   ". . . Y>@- . . Bv@",
+   ". . . B<= . . G^&A",
+   ". . . . . . G^%A"
+  ],
+  "target": "EXTREME",
+  "facts": [],
+  "mechanic": "magnet,switch,armor",
+  "max_positions": 2000,
+  "overlap": [
+   0.38,
+   "N67"
+  ]
+ },
+ "P03_s332_3": {
+  "map": [
+   ". . . . . . R>=",
+   ". . . . . . R>@~",
+   ". . . . . . Y>@~",
+   ". Gv Pv= Y>&A* B^%A R^ Y>*",
+   ". . . Y>@- . . B^",
+   ". . . B<= . . G^&A",
+   ". Y< . . . . G^%A"
+  ],
+  "target": "EXTREME",
+  "facts": [],
+  "mechanic": "magnet,switch,armor",
+  "max_positions": 2000,
+  "overlap": [
+   0.38,
+   "N64"
+  ]
+ },
+ "P03_s332_5": {
+  "map": [
+   ". . . . . . R>@~",
+   ". . . . . . R>@~",
+   ". . . . . . Y>@~",
+   "G>@ Gv Pv= Y>&A* B^%A R^ Y>*",
+   ". . . Y>@- . . B^",
+   ". G^@~ . B<= . . G^&A",
+   ". Y< . . . . G^%A"
+  ],
+  "target": "EXTREME",
+  "facts": [],
+  "mechanic": "magnet,switch,armor",
+  "max_positions": 2000,
+  "overlap": [
+   0.39,
+   "N77"
+  ]
+ },
+ "P03_s332_6": {
+  "map": [
+   ". . . . . . R>@~",
+   ". . . . . . R>@~",
+   ". . . . . . Y>@~",
+   "G>@ Gv . Y>&A* B^%A R^ Y>*",
+   ". . . . . . .",
+   ". . Yv B<= . . G^&A",
+   ". Y< . . . . G^%A"
+  ],
+  "target": "EXTREME",
+  "facts": [],
+  "mechanic": "magnet,switch,armor",
+  "max_positions": 2000,
+  "overlap": [
+   0.33,
+   "N82"
+  ]
+ },
+ "P03_s332_7": {
+  "map": [
+   ". . . . . . .",
+   ". . . . . . R>@~",
+   ". . . . . . Y>@~",
+   "G>@ Gv Pv= Y>&A* B^%A R^ Y>*",
+   ". . . Y>@- . . Bv@",
+   ". . . B<= . . G^&A",
+   ". Y< . . . . G^%A"
+  ],
+  "target": "EXTREME",
+  "facts": [],
+  "mechanic": "magnet,switch,armor",
+  "max_positions": 2000,
+  "overlap": [
+   0.35,
+   "N90"
+  ]
+ },
+ "P03_s332_8": {
+  "map": [
+   ". . . . . . R<@-",
+   ". . . . . . R>@~",
+   ". . . . G>&A . Y>@~",
+   ". Gv Pv= Y>&A* B^%A R^ Y>*",
+   ". . . Y>@- . . B<@",
+   ". . . B<= . . G^&A",
+   ". Y<@~ . . . . G^%A"
+  ],
+  "target": "EXTREME",
+  "facts": [],
+  "mechanic": "magnet,switch,armor",
+  "max_positions": 2000,
+  "overlap": [
+   0.35,
+   "N76"
+  ]
+ },
+ "P03_s332_9": {
+  "map": [
+   ". . . . . . R>@~",
+   ". . . . . . R>@~",
+   ". . . . . . Y>@~",
+   ". Gv Pv= Y>&A* B^%A R^ Y>*",
+   ". . . Y>@- . . B^",
+   ". . . B<= . . G^&A",
+   ". Y< . . G>@- . G^%A"
+  ],
+  "target": "EXTREME",
+  "facts": [],
+  "mechanic": "magnet,switch,armor",
+  "max_positions": 2000,
+  "overlap": [
+   0.35,
+   "N82"
+  ]
+ },
+ "P03_s332_10": {
+  "map": [
+   ". . . . . . R<@-",
+   ". . . . . . R>=",
+   ". . . . . . Y>@~",
+   "G>@ Gv Pv= Y>&A* B^%A R^ Y>*",
+   ". . . Y>@- . . Bv@",
+   ". . . B<= . . G^&A",
+   ". Y< . . . . G^%A"
+  ],
+  "target": "EXTREME",
+  "facts": [],
+  "mechanic": "magnet,switch,armor",
+  "max_positions": 2000,
+  "overlap": [
+   0.35,
+   "N77"
+  ]
+ },
+ "P03_s332_11": {
+  "map": [
+   ". . . . . . R<@-",
+   ". . . . . . R>@~",
+   ". . . . . . Y>@~",
+   "G>@ Gv Pv Y>&A* B^%A R^ Y>*",
+   ". . . Y>@- . . Bv@",
+   ". . . B<= . . G^&A",
+   ". Y< . . . . G^%A"
+  ],
+  "target": "EXTREME",
+  "facts": [],
+  "mechanic": "magnet,switch,armor",
+  "max_positions": 2000,
+  "overlap": [
+   0.35,
+   "N67"
+  ]
+ }
+}

@@ -1,0 +1,16 @@
+{
+ "R04_s332_1": {
+  "distinct": 4,
+  "pieces_tested": 16,
+  "steps": 17,
+  "trivial": [],
+  "trivial_removals": 0
+ },
+ "R04_s332_4": {
+  "distinct": 5,
+  "pieces_tested": 16,
+  "steps": 17,
+  "trivial": [],
+  "trivial_removals": 0
+ }
+}

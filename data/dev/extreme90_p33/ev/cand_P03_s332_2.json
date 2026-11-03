@@ -1,0 +1,19 @@
+{
+ "P03_s332_2": {
+  "map": [
+   ". . . . . . R<@-",
+   ". . . . . . .",
+   ". . . . . . Y>@~",
+   "G>@ Gv Pv= Y>&A* B^%A R^ Y>*",
+   ". . . Y>@- . . Bv@",
+   ". . . B<= . . G^&A",
+   ". . . . . . G^%A"
+  ],
+  "mechanic": "magnet,switch,armor",
+  "run": "P03_TURNEDMAGNET_s332",
+  "rules": [
+   "S_old"
+  ],
+  "screen_key": "P03_s332_2"
+ }
+}

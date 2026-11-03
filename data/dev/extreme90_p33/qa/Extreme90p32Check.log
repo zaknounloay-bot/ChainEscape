@@ -1,0 +1,5 @@
+Godot Engine v4.3.stable.official.77dcf97d8 - https://godotengine.org
+
+EXTREME90 P32 CHECK: PASSED (350 checks)
+WARNING: ObjectDB instances leaked at exit (run with --verbose for details).
+     at: cleanup (core/object/object.cpp:2284)

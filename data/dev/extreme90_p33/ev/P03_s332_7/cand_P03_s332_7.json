@@ -1,0 +1,17 @@
+{
+ "P03_s332_7": {
+  "map": [
+   ". . . . . . .",
+   ". . . . . . R>@~",
+   ". . . . . . Y>@~",
+   "G>@ Gv Pv= Y>&A* B^%A R^ Y>*",
+   ". . . Y>@- . . Bv@",
+   ". . . B<= . . G^&A",
+   ". Y< . . . . G^%A"
+  ],
+  "target": "EXTREME",
+  "facts": [],
+  "mechanic": "magnet,switch,armor",
+  "max_positions": 2000
+ }
+}

@@ -1,0 +1,22 @@
+K08_s331_0             not essential  {'without_switch': 'without it: 9 decision steps, 3 distinct mistakes (with it: 10, 4)'}
+K08_s331_1             not essential  {'without_switch': 'without it: 10 decision steps, 3 distinct mistakes (with it: 11, 4)'}
+K08_s331_2             PASS           []
+K08_s331_3             PASS           []
+K08_s331_4             PASS           []
+K08_s331_5             filler         ['r2c3 Pv&A', 'r2c4 Bv@~']
+K08_s331_6             PASS           []
+K08_s331_7             PASS           []
+K08_s331_8             PASS           []
+K08_s331_9             PASS           []
+SCREEN: 10 boards, 7 PASS
+K08_s331_0             not essential  
+K08_s331_1             not essential  
+K08_s331_2             PASS           PASS
+K08_s331_3             PASS           PASS
+K08_s331_4             PASS           PASS
+K08_s331_5             filler         
+K08_s331_6             PASS           PASS
+K08_s331_7             PASS           PASS
+K08_s331_8             PASS           PASS
+K08_s331_9             PASS           PASS
+SCREEN30: 10 boards, 7 PASS

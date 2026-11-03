@@ -1,0 +1,37 @@
+PASS the exact new board (fingerprint checked by the page)
+PASS 2:00: a GREEN pill on screen (pixel 30,123,52), clock icon, weight 700 (1:59)
+PASS the pill sits between the top bar and the board, never over it (pill 0.250,0.138,0.500,0.084, board top 0.2423)
+PASS timed run: no SHOW A MOVE control (tools [3,0,0]: UNDO x3, SHOW A MOVE x0, HAMMER x0); touches and keys request nothing; the record says show_a_move 0
+PASS reload in the timed game: the board from the start (logged), the clock not restored (102856 < 110202 ms), still no SHOW A MOVE
+PASS the 1:00 threshold: 1:01 is green
+PASS 1:00-0:31: ORANGE on screen (pixel 194,65,12), half-filled clock, weight 800
+PASS the 0:30 threshold: 0:31 is orange
+  (6 pixel samples took 11.7 s)
+PASS 0:30-0:11: RED on screen, warning icon, weight 900; a gentle pulse (luma 54-61, never above the resting 61)
+PASS the last 10 s: filled warning icon, a slightly stronger pulse (scale 1.002-1.029), no flash
+PASS no layout shift through the run: the pill keeps its place and size (except the last-10-s breathing), the board never moves, the pill never over the board
+PASS TIME UP after the countdown (120.1 s of wall time from 2:00, a reload included)
+PASS the timed result frozen: TIME UP at 120 s, the stages reached ["green","orange","red","final10"]
+PASS the timed questions (first-exposure difficulty first) stored with the timed record, before the offer {"another":"YES","enjoy":"3","excite":"4","first_difficulty":"VERY HARD","frustrate":"2","length":"APPROPRIATE","noticed_colours":"YES","timer_better":"YES"}
+PASS untimed game: no SHOW A MOVE control (tools [3,0,0]: UNDO x3, SHOW A MOVE x0, HAMMER x0); touches and keys request nothing; the record says show_a_move 0
+PASS untimed: NO TIMER; the position at 0:00 (11 blocks)
+PASS reload in the untimed game: the position rebuilt (10 blocks)
+PASS solved without the timer, by touches
+PASS the untimed SOLVED card
+PASS results: the timed TIME UP and the untimed completion in separate records; first-exposure rating with the timed record, post-play answers apart
+PASS the other tests' storage (the other two boards, ?stime, ?rtime ...) is untouched
+PASS only this test's board id appears on the page
+PASS run 2: solved by touches within the time
+PASS a timed WIN (102659 ms left; stages ["green"])
+PASS reduced motion: RED, warning icon, weight 900 - no pulse on screen (luma 61-61), no scale
+PASS reduced motion, last 10 s: the filled warning icon, still no pulse or scale
+PASS reduced motion is recorded with the timed result (true, phase timed_q)
+bench x1: verify max 6.6 ms, SHOW A MOVE max 5.3 ms, after a mistake max 10.5 ms
+PASS bench x1: the board timed (within 40 ms, desktop WebAssembly)
+bench x4: verify max 27.5 ms, SHOW A MOVE max 21.6 ms, after a mistake max 53.5 ms
+PASS bench x4: the board timed (reported: a desktop simulation)
+bench x6: verify max 42.6 ms, SHOW A MOVE max 38.6 ms, after a mistake max 81.1 ms
+PASS bench x6: the board timed (reported: a desktop simulation)
+PASS no page errors []
+PASS no network calls outside the page []
+WEB TTIME PAGE TEST tta: PASSED (32/32)

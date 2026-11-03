@@ -1,0 +1,68 @@
+start 02:40 load 0.10 0.39 1.32
+export dev exit=0
+export player exit=0 data/dev files: 0
+web_p33 exit=0 :: WEB EXTREME90 TEST: PASSED (190/190)
+WEB33_DONE
+ZIP33 build/dev_qa/chain_escape_dev_extreme90p33_p33-qa1-20261103.zip size=16269255 sha256=83fe3500b565da16eb5f5bc6a0fa6a6781e2159185cb50a132c0a0f65963a046 pck_match=yes pck=980850a9d62c833399e0324f3c1b0c9d161e1426050cfdf5e2c80b941eff2fe8
+Extreme90p33Check exit=0 :: EXTREME90 P33 CHECK: PASSED (378 checks) 
+Extreme90p32Check exit=0 :: EXTREME90 P32 CHECK: PASSED (350 checks) 
+Extreme90p31Check exit=0 :: EXTREME90 P31 CHECK: PASSED (326 checks) 
+Extreme90p30Check exit=0 :: EXTREME90 P30 CHECK: PASSED (306 checks) 
+Extreme90p29Check exit=0 :: EXTREME90 P29 CHECK: PASSED (288 checks) 
+Extreme90p28Check exit=0 :: EXTREME90 P28 CHECK: PASSED (260 checks) 
+Extreme90p27Check exit=0 :: EXTREME90 P27 CHECK: PASSED (226 checks) 
+Extreme90p26Check exit=0 :: EXTREME90 P26 CHECK: PASSED (222 checks) 
+Extreme90p25Check exit=0 :: EXTREME90 P25 CHECK: PASSED (212 checks) 
+Extreme90p24Check exit=0 :: EXTREME90 P24 CHECK: PASSED (186 checks) 
+Extreme90p22Check exit=0 :: EXTREME90 P22 CHECK: PASSED (184 checks) 
+Extreme90p21Check exit=0 :: EXTREME90 P21 CHECK: PASSED (168 checks) 
+Extreme90p20Check exit=0 :: EXTREME90 P20 CHECK: PASSED (132 checks) 
+Extreme90p19Check exit=0 :: EXTREME90 P19 CHECK: PASSED (124 checks) 
+Extreme90p18Check exit=0 :: EXTREME90 P18 CHECK: PASSED (111 checks) 
+Ta90ContinueCheck exit=0 :: CONTINUE SUMMARY: 343 cases, 0 not resumed exactly:  TA90 CONTINUE CHECK: PASSED (955 checks) 
+PortalCheck exit=0 :: PORTAL CHECKS PASSED 
+MovableCheck exit=0 :: MOVABLE CHECKS PASSED 
+MagnetCheck exit=0 :: MAGNET CHECKS PASSED 
+Ta90DeadendCheck_N94-N100 exit=0 :: TA90 DEADEND CHECK: PASSED (49 checks) 
+hintfollow N94-N100 exit=0 :: 7/7 PASS
+xb28_validate exit=0 :: XB28 VALIDATE CHECK: PASSED (3 checks) 
+suites: 17 pass, 2 fail
+BATCH_A_DONE
+web_p32 exit=0 :: WEB EXTREME90 TEST: PASSED (176/176)
+web_p31 exit=0 :: WEB EXTREME90 TEST: PASSED (164/164)
+RESUMED 06:24 after container restart (web_p30 interrupted; build web33 pck 980850a9d62c)
+web_p30 exit=0 :: WEB EXTREME90 TEST: PASSED (154/154)
+web_p29 exit=0 :: WEB EXTREME90 TEST: PASSED (144/144)
+web_p28 exit=0 :: WEB EXTREME90 TEST: PASSED (130/130)
+RESUMED 09:03 after container restart (passed steps skipped; build web33 pck 980850a9d62c)
+RESUMED 09:12 after container restart (passed steps skipped; build web33 pck 980850a9d62c)
+RESUMED 10:27 after container restart (passed steps skipped; build web33 pck 980850a9d62c)
+web_p27 exit=0 :: WEB EXTREME90 TEST: PASSED (114/114)
+web_p26 exit=0 :: WEB EXTREME90 TEST: PASSED (112/112)
+web_p25 exit=0 :: WEB EXTREME90 TEST: PASSED (106/106)
+web_p24 exit=0 :: WEB EXTREME90 TEST: PASSED (94/94)
+RESUMED 12:27 after background time limit (p22 partial saved as web_p22_interrupted.log)
+RESUMED 12:27 after container restart (passed steps skipped; build web33 pck 980850a9d62c)
+web_p22 exit=0 :: WEB EXTREME90 TEST: PASSED (92/92)
+web_p21 exit=0 :: WEB EXTREME90 TEST: PASSED (84/84)
+web_p20 exit=0 :: WEB EXTREME90 TEST: PASSED (66/66)
+web_p19 exit=0 :: WEB EXTREME90 TEST: PASSED (62/62)
+web_p18 exit=0 :: WEB EXTREME90 TEST: PASSED (55/55)
+web_p17 exit=0 :: WEB EXTREME90 TEST: PASSED (51/51)
+upgrade_p19 exit=0 :: WEB P19 UPGRADE TEST: PASSED (9/9)
+extreme90_archive exit=0 :: WEB EXTREME90 TEST: PASSED (45/45)
+ta90 exit=0 :: WEB TA90 TEST: PASSED (55/55)
+BATCH_B_DONE
+RESUMED 14:27 after background time limit (tapilot partial saved as tapilot_interrupted.log)
+RESUMED 14:27 after container restart (passed steps skipped; build web33 pck 980850a9d62c)
+tapilot exit=0 :: WEB TAPILOT TEST: PASSED (28/28)
+timing exit=1 :: WEB TIMING TEST FAILED
+friend_build exit=0 :: 25/25 passed
+stime exit=0 :: WEB STIME PAGE TEST: PASSED (31/31)
+ttime_tta exit=0 :: WEB TTIME PAGE TEST tta: PASSED (32/32)
+verify_levels exit=0 :: ALL 300 LEVELS SOLVABLE AND PASS CAMPAIGN RULES
+Extreme90p33Check exit=0 :: EXTREME90 P33 CHECK: PASSED (378 checks) 
+Ta90Check exit=0 :: TA90 CHECK: PASSED (91 checks) 
+Ta90ContinueCheck exit=0 :: CONTINUE SUMMARY: 343 cases, 0 not resumed exactly:  TA90 CONTINUE CHECK: PASSED (955 checks) 
+RTimeCheck exit=0 :: RTIME CHECK: PASSED (39 checks) 
+QA33 DONE 14:59

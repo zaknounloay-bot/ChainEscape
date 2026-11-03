@@ -1,0 +1,19 @@
+{
+ "L3_s331_7": {
+  "map": [
+   ". P<@- Y^&A B< . . .",
+   ". . . . B^= . .",
+   "Y<&A R> . . B<&A= Gv@ B>%A",
+   ". . . R^@~ G<= Y^@- .",
+   ". . . . Gv&A . B^",
+   ". . . . . . .",
+   ". . P>%A . R> . ."
+  ],
+  "mechanic": "switch,armor",
+  "run": "L3_SHELLEXIT_s331",
+  "rules": [
+   "S_p30"
+  ],
+  "screen_key": "L3_s331_7"
+ }
+}

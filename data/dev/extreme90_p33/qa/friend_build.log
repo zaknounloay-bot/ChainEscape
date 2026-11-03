@@ -1,0 +1,26 @@
+PASS A[iphone14]: a new player sees the title, Level 1 of 300 (player build true)
+PASS A[iphone14]: CONTINUE starts Level 1 "First Steps" (3 blocks)
+PASS B[iphone14]: F1 (+ S) opens no debug panel and solves nothing (open after F1: false)
+PASS B[iphone14]: 5+ taps on the LEVEL title open no debug panel
+PASS D: after a reload the save is kept (source file, seq 4 >= 3)
+PASS C: ?experiencelab=176 gives the normal game (title true, lab false/false/false, overlay false)
+PASS C: ?v=123&experiencelab=250&qareset=1 gives the normal game (title true, lab false/false/false, overlay false)
+PASS C: ?experiencelab=300 gives the normal game (title true, lab false/false/false, overlay false)
+PASS C: ?v=123&experiencelab=1 gives the normal game (title true, lab false/false/false, overlay false)
+PASS C: ?openinglab=1 gives the normal game (title true, lab false/false/false, overlay false)
+PASS C: ?twinsprototype=1 gives the normal game (title true, lab false/false/false, overlay false)
+PASS C: ?mechlab=1 gives the normal game (title true, lab false/false/false, overlay false)
+PASS C: ?mechlab=sequence gives the normal game (title true, lab false/false/false, overlay false)
+PASS C: ?friendbench=1 gives the normal game (title true, lab false/false/false, overlay false)
+PASS C: ?vhtest=1 gives the normal game (title true, lab false/false/false, overlay false)
+PASS C: ?sharetest=1 gives the normal game (title true, lab false/false/false, overlay false)
+PASS A[iphoneSE]: a new player sees the title, Level 1 of 300 (player build true)
+PASS A[iphoneSE]: CONTINUE starts Level 1 "First Steps" (3 blocks)
+PASS B[iphoneSE]: F1 (+ S) opens no debug panel and solves nothing (open after F1: false)
+PASS B[iphoneSE]: 5+ taps on the LEVEL title open no debug panel
+PASS A[promax]: a new player sees the title, Level 1 of 300 (player build true)
+PASS A[promax]: CONTINUE starts Level 1 "First Steps" (3 blocks)
+PASS B[promax]: F1 (+ S) opens no debug panel and solves nothing (open after F1: false)
+PASS B[promax]: 5+ taps on the LEVEL title open no debug panel
+PASS no page or console errors ()
+25/25 passed

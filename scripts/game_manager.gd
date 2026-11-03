@@ -457,6 +457,10 @@ func _open_shared_challenge() -> void:
 	if FriendBench.requested():
 		add_child(FriendBench.new())
 		return
+	# Developer page (?extreme90p33=1): the Phase 33 EXTREME candidates on the same 90 s page (local only).
+	if Extreme90P33.p33_requested():
+		add_child(Extreme90P33.new())
+		return
 	# Developer page (?extreme90p32=1): the Phase 32 EXTREME candidates on the same 90 s page (local only).
 	if Extreme90P32.p32_requested():
 		add_child(Extreme90P32.new())

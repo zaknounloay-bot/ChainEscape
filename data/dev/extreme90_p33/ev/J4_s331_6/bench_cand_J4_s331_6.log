@@ -1,0 +1,40 @@
+Godot Engine v4.3.stable.official.77dcf97d8 - https://godotengine.org
+
+SCRIPT ERROR: Invalid access of index '6' on a base object of type: 'Array'.
+          at: _rot (res://tools/vh_pilot4_canon.gd:101)
+SCRIPT ERROR: Out of bounds get index '0' (on base: 'Array')
+          at: _relabel (res://tools/vh_pilot4_canon.gd:141)
+SCRIPT ERROR: Out of bounds get index '0' (on base: 'Array')
+          at: _relabel (res://tools/vh_pilot4_canon.gd:141)
+SCRIPT ERROR: Out of bounds get index '0' (on base: 'Array')
+          at: _rot (res://tools/vh_pilot4_canon.gd:96)
+SCRIPT ERROR: Out of bounds get index '0' (on base: 'Array')
+          at: _relabel (res://tools/vh_pilot4_canon.gd:141)
+SCRIPT ERROR: Out of bounds get index '0' (on base: 'Array')
+          at: _relabel (res://tools/vh_pilot4_canon.gd:141)
+SCRIPT ERROR: Out of bounds get index '0' (on base: 'Array')
+          at: _rot (res://tools/vh_pilot4_canon.gd:96)
+SCRIPT ERROR: Out of bounds get index '0' (on base: 'Array')
+          at: _relabel (res://tools/vh_pilot4_canon.gd:141)
+SCRIPT ERROR: Out of bounds get index '0' (on base: 'Array')
+          at: _relabel (res://tools/vh_pilot4_canon.gd:141)
+SCRIPT ERROR: Out of bounds get index '0' (on base: 'Array')
+          at: _rot (res://tools/vh_pilot4_canon.gd:96)
+known boards: 61303
+known boards incl. T1-T5 and the demos: 61303; played boards for the near-copy guard: 333
+== J4_s331_6: 363 positions, winnable true
+   1  r4c3^ ram    lose: r4c1<(6) r6c3v(10)
+   2  r5c0v        lose: r4c1<(7) r6c3v(9)
+   3  r1c1<        lose: r4c1<(6) r6c3v(8)
+   4  r2c2<        lose: r1c2<(7) r4c1<(5) r6c3v(7)
+   5  r3c3>        lose: r1c2<(6) r4c1<(4) r6c3v(6)
+   6  r4c3^ ram    lose: r1c2<(5) r4c1<(3) r6c3v(5)
+   7  r1c2<        lose: r4c1<(4) r6c3v(4)
+   8  r1c2<        lose: r4c1<(3) r6c3v(3)
+   9  r4c3^        lose: r4c1<(2) r6c3v(2)
+  10  r4c1<        lose: r4c3v(1)
+  11  r4c1v ram    lose: 
+  12  r5c1>        lose: 
+  13  r4c1v        lose: 
+  greedy {"look2":0.01,"look4":0.05,"min_turn":0.02,"mobility":0.17,"safe":0.02}
+  features {"calm_prefix":2,"concurrency":0.77,"coverage":0.77,"deep_traps":3,"distinct":4,"effective_decisions":10,"learner4":1,"learner6":0,"look6":0.267,"pieces":10,"positions":363,"quick_fail_share":0.27,"safe_share":0.15,"shortcut":0.167,"solution":13,"steps":10,"trap_delay":5,"undo_proof":0.73}

@@ -1,0 +1,20 @@
+CompetitionCheck exit=0 17s :: COMPETITION CHECKS PASSED (off, queue, merge, game, standing, card)
+run_tests exit=0 67s :: UNIT TESTS PASSED
+TimingCheck exit=0 28s :: TIMING CHECKS PASSED
+ProfileCheck exit=0 4s :: PROFILE CHECKS PASSED
+ExperienceLabQaCheck exit=0 4s :: EXPERIENCE LAB QA CHECKS PASSED
+FeedbackCheck exit=0 24s :: FEEDBACK CHECKS PASSED
+FriendChallengeApiTest exit=0 7s :: FRIEND CHALLENGE API TEST: PASSED (58 checks)
+FriendFlowTest exit=0 70s :: FRIEND FLOW TEST: PASSED (149 checks)
+SocialApiTest exit=0 27s :: SOCIAL API TEST: PASSED
+RecipientTest exit=1 83s :: RECIPIENT TEST: FAILED (149 checks)
+SocialSmoke exit=0 26s :: SOCIAL SMOKE: PASSED
+SocialPlayTest exit=0 125s :: SOCIAL PLAY TEST: PASSED
+TaPilotCheck exit=0 9s :: TAPILOT CHECK: PASSED (33 checks)
+Extreme11Check exit=0 56s :: EXTREME11 CHECK: PASSED (74 checks)
+Q1TimeCheck exit=0 13s :: Q1 TIME CHECK: PASSED (37 checks)
+RTimeCheck exit=1 12s :: RTIME CHECK: FAILED (39 checks)
+Ta90Check exit=0 38s :: TA90 CHECK: PASSED (91 checks)
+Extreme90Check exit=0 40s :: EXTREME90 CHECK: PASSED (91 checks)
+Extreme90p17Check exit=0 44s :: EXTREME90 P17 CHECK: PASSED (97 checks)
+DONE

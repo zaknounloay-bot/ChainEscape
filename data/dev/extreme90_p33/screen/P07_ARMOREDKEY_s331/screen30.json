@@ -1,0 +1,27 @@
+{
+ "P07_s331_0": {
+  "result": "not essential",
+  "detail": {
+   "without_armor": "without it: 13 decision steps, 4 distinct mistakes (with it: 14, 5)"
+  }
+ },
+ "P07_s331_1": {
+  "result": "not essential",
+  "detail": {
+   "without_armor": "without it: 13 decision steps, 5 distinct mistakes (with it: 15, 5)",
+   "without_lock": "without it: 15 decision steps, 4 distinct mistakes (with it: 15, 5)"
+  }
+ },
+ "P07_s331_2": {
+  "result": "not essential",
+  "detail": {
+   "without_armor": "without it: 14 decision steps, 4 distinct mistakes (with it: 16, 5)"
+  }
+ },
+ "P07_s331_3": {
+  "result": "Category A/B",
+  "detail": [
+   "a simple greedy player wins 22% (> 20%): a shortcut"
+  ]
+ }
+}

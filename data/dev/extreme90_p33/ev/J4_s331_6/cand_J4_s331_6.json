@@ -1,0 +1,17 @@
+{
+ "J4_s331_6": {
+  "map": [
+   ". . . . . . .",
+   ". Y< P<* Y<= . . .",
+   ". . R< . . . .",
+   ". . . B>= . . .",
+   ". B<* . R^* . . .",
+   "Pv G>= . . . . .",
+   ". . . Yv . . ."
+  ],
+  "target": "EXTREME",
+  "facts": [],
+  "mechanic": "magnet,armor",
+  "max_positions": 2000
+ }
+}

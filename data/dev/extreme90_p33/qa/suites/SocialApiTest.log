@@ -1,0 +1,83 @@
+Godot Engine v4.3.stable.official.77dcf97d8 - https://godotengine.org
+
+[Save] load: new -> fresh progress
+[Save] profile: new player id
+[Save] write #1: last_played=1 highest_completed=0 highest_unlocked=1 total_score=0 coins=60 file=ok
+[Diag] last session ended at level 7 after 0s: process ended without a clean quit | [Diag] L7 ch1 via=launch t=0s fps=145 mem=99.2MB objs=3391 nodes=609 orphans=0 res=97 tweens=10 fx=7 music=c01 music_players=1 sfx=0 save_seq=12
+[Chapter] level=1 chapter=1 theme=First Light (id 1, prev 0) music=c01  <- transition
+[Save] write #2: last_played=1 highest_completed=0 highest_unlocked=1 total_score=0 coins=60 file=ok
+[Diag] L1 ch1 via=launch t=0s fps=1 mem=95.4MB objs=3237 nodes=575 orphans=0 res=97 tweens=6 fx=3 music=c01 music_players=1 sfx=0 save_seq=2
+[Save] write #3: last_played=1 highest_completed=1 highest_unlocked=2 total_score=1001 coins=60 file=ok
+[Save] write #4: last_played=1 highest_completed=2 highest_unlocked=3 total_score=2003 coins=60 file=ok
+[Save] write #5: last_played=1 highest_completed=3 highest_unlocked=4 total_score=3006 coins=60 file=ok
+[Save] write #6: last_played=1 highest_completed=4 highest_unlocked=5 total_score=4010 coins=60 file=ok
+[Save] write #7: last_played=1 highest_completed=5 highest_unlocked=6 total_score=5015 coins=60 file=ok
+[Save] write #8: last_played=1 highest_completed=6 highest_unlocked=7 total_score=6021 coins=60 file=ok
+[Save] write #9: last_played=1 highest_completed=7 highest_unlocked=8 total_score=7028 coins=60 file=ok
+[Save] write #10: last_played=1 highest_completed=8 highest_unlocked=9 total_score=8036 coins=60 file=ok
+[Save] write #11: last_played=1 highest_completed=8 highest_unlocked=9 total_score=8036 coins=55 file=ok
+[Chapter] level=9 chapter=1 theme=First Light (id 1, prev 1) music=c01
+[Save] write #12: last_played=9 highest_completed=8 highest_unlocked=9 total_score=8036 coins=55 file=ok
+[Diag] L9 ch1 via=load t=0s fps=1 mem=96.2MB objs=3393 nodes=645 orphans=0 res=97 tweens=15 fx=11 music=c01 music_players=0 sfx=0 save_seq=12
+[Social] challenge ready: reveal {"attempts":1,"blocks":6,"decision_points":0,"depth":5,"difficulty":4.9,"in_band":true,"ms":18,"special":"","spinners":0}
+[Social] API POST -> HTTP 200
+[Social] challenge ready: reveal {"attempts":1,"blocks":4,"decision_points":0,"depth":3,"difficulty":3.4,"in_band":true,"ms":18,"special":"","spinners":0}
+[Social] API POST -> HTTP 200
+[Social] challenge ready: reveal {"attempts":1,"blocks":6,"decision_points":0,"depth":4,"difficulty":3.8,"in_band":true,"ms":19,"special":"","spinners":0}
+[Social] API POST -> HTTP 200
+[Social] challenge ready: reveal {"attempts":1,"blocks":5,"decision_points":0,"depth":3,"difficulty":3.5,"in_band":true,"ms":17,"special":"","spinners":0}
+[Social] API POST -> HTTP 500
+WARNING: [Social] create failed: server
+     at: push_warning (core/variant/variant_utility.cpp:1112)
+WARNING: [Social] create failed: network
+     at: push_warning (core/variant/variant_utility.cpp:1112)
+WARNING: [Social] create failed: timeout
+     at: push_warning (core/variant/variant_utility.cpp:1112)
+----------------------------------------
+Exception occurred during processing of request from ('127.0.0.1', 53452)
+Traceback (most recent call last):
+  File "/usr/lib/python3.13/socketserver.py", line 697, in process_request_thread
+    self.finish_request(request, client_address)
+    ~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.13/socketserver.py", line 362, in finish_request
+    self.RequestHandlerClass(request, client_address, self)
+    ~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.13/socketserver.py", line 766, in __init__
+    self.handle()
+    ~~~~~~~~~~~^^
+  File "/usr/lib/python3.13/http/server.py", line 451, in handle
+    self.handle_one_request()
+    ~~~~~~~~~~~~~~~~~~~~~~~^^
+  File "/usr/lib/python3.13/http/server.py", line 439, in handle_one_request
+    method()
+    ~~~~~~^^
+  File "/home/user/ChainEscape/tools/mock_social_api.py", line 219, in do_POST
+    return self._send(500, {"ok": False, "error": "late"})
+           ~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/user/ChainEscape/tools/mock_social_api.py", line 138, in _send
+    self.wfile.write(data)
+    ~~~~~~~~~~~~~~~~^^^^^^
+  File "/usr/lib/python3.13/socketserver.py", line 845, in write
+    self._sock.sendall(b)
+    ~~~~~~~~~~~~~~~~~~^^^
+BrokenPipeError: [Errno 32] Broken pipe
+----------------------------------------
+ERROR: Parse JSON failed. Error at line 0: Unexpected character.
+   at: parse_string (core/io/json.cpp:576)
+[Social] API POST -> HTTP 200
+WARNING: [Social] create failed: invalid_response
+     at: push_warning (core/variant/variant_utility.cpp:1112)
+[Social] API POST -> HTTP 200
+WARNING: [Social] create failed: invalid_response
+     at: push_warning (core/variant/variant_utility.cpp:1112)
+[Social] API POST -> HTTP 429
+WARNING: [Social] create failed: rate_limited
+     at: push_warning (core/variant/variant_utility.cpp:1112)
+[Social] API POST -> HTTP 200
+[Social] API POST -> HTTP 200
+[Social] challenge ready: reveal {"attempts":1,"blocks":6,"decision_points":0,"depth":4,"difficulty":4.3,"in_band":true,"ms":18,"special":"","spinners":0}
+[Social] API POST -> HTTP 200
+[Social] API GET -> HTTP 200
+[Social] API GET -> HTTP 404
+[Social] API GET -> HTTP 410
+SOCIAL API TEST: PASSED

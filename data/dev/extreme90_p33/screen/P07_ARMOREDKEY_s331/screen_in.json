@@ -1,0 +1,78 @@
+{
+ "P07_s331_0": {
+  "map": [
+   ". . . . . . .",
+   ". P^@ . . Rv@-#Y . .",
+   "G> Yv@ P<@- Y^= . . R^#Y",
+   ". . . . . . .",
+   ". . . B>#Y . . B^@-",
+   "B> . . Gv@- Bv@ Y^ Gv@-",
+   ". . . P>@- . . ."
+  ],
+  "target": "EXTREME",
+  "facts": [],
+  "mechanic": "lock,armor",
+  "max_positions": 2000,
+  "overlap": [
+   0.36,
+   "N21"
+  ]
+ },
+ "P07_s331_1": {
+  "map": [
+   ". . . . . . .",
+   ". P^@ . . Rv@-#Y . .",
+   "G> Yv@ . Y^= . R^= R^#Y",
+   ". . . . . . .",
+   ". . . B>#Y . . B^@-",
+   "B> . . Gv@- Bv@ Y^ Gv@-",
+   ". . . P>@- . . ."
+  ],
+  "target": "EXTREME",
+  "facts": [],
+  "mechanic": "lock,armor",
+  "max_positions": 2000,
+  "overlap": [
+   0.36,
+   "N21"
+  ]
+ },
+ "P07_s331_2": {
+  "map": [
+   ". . . . . . .",
+   ". P^@ . . Rv@-#Y . .",
+   "G> Yv@ P<@- Y^= . R^= R^#Y",
+   ". . . . . . .",
+   ". . . B>#Y . . B^@-",
+   "B> . . Gv@- Bv@ Y^ Gv@-",
+   ". . . P>@- . . ."
+  ],
+  "target": "EXTREME",
+  "facts": [],
+  "mechanic": "lock,armor",
+  "max_positions": 2000,
+  "overlap": [
+   0.35,
+   "N21"
+  ]
+ },
+ "P07_s331_3": {
+  "map": [
+   ". . . . . . .",
+   ". P^@ . . Rv@-#Y . .",
+   "G> Yv@ P<@- Y^= . R^= R^#Y",
+   ". . . . . . .",
+   ". . . B>#Y Yv . B^@-",
+   "B> . . Gv@- Bv@ Y^ Gv@-",
+   ". . . P>@- . . ."
+  ],
+  "target": "EXTREME",
+  "facts": [],
+  "mechanic": "lock,armor",
+  "max_positions": 2000,
+  "overlap": [
+   0.33,
+   "N21"
+  ]
+ }
+}

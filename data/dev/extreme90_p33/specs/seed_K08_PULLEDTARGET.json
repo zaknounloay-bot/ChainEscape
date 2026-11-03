@@ -1,0 +1,59 @@
+{
+ "target": "EXTREME",
+ "facts": [],
+ "max_positions": 2000,
+ "piece_free": 13,
+ "max_pieces": 17,
+ "shortcut_weight": 80,
+ "coverage_weight": 25,
+ "late_weight": 20,
+ "endgame_weight": 20,
+ "length_weight": 1.0,
+ "length_cap": 18,
+ "pressure_weight": 1.5,
+ "palette": "all",
+ "suffix_rate": 0.3,
+ "crates_max": 0,
+ "size": "medium",
+ "max_solve_nodes": 1500,
+ "spinners_max": 4,
+ "strict_essential": true,
+ "token_guard": true,
+ "core_essential": true,
+ "mechanic": "magnet,switch",
+ "suffixes": [
+  "&A",
+  "*"
+ ],
+ "suffix_max": {
+  "&A": 3,
+  "*": 2
+ },
+ "idea": "the pulled target: a flip target and its switch block each other; a fixed magnet pulls the TARGET into a new lane, and the switch then decides which way it leaves from there",
+ "map": [
+  ". . . . . . .",
+  ". . . . . . .",
+  ". . . . . . .",
+  ". . . G<* . Bv&A .",
+  ". . . . . . .",
+  ". . . . . P^%A .",
+  ". . . . . . ."
+ ],
+ "family": "P32 K08_PULLEDTARGET",
+ "phase32_core": "K08_PULLEDTARGET",
+ "frozen": [
+  [
+   3,
+   3
+  ],
+  [
+   3,
+   5
+  ],
+  [
+   5,
+   5
+  ]
+ ],
+ "phase33_method": "Phase 31 arm A / AM1 (c1ddc89 generator, --ops=v20, Phase 25-27 parameters); core file data/dev/extreme90_p32/cores/seed_K08_PULLEDTARGET.json"
+}

@@ -1,0 +1,26 @@
+T10b_s331_0            not essential  {'without_lock': 'without it: 11 decision steps, 4 distinct mistakes (with it: 13, 4)'}
+T10b_s331_1            not essential  {'without_lock': 'without it: 11 decision steps, 4 distinct mistakes (with it: 13, 4)'}
+T10b_s331_2            PASS           []
+T10b_s331_3            not essential  {'without_lock': 'without it: 11 decision steps, 4 distinct mistakes (with it: 13, 4)'}
+T10b_s331_4            PASS           []
+T10b_s331_5            PASS           []
+T10b_s331_6            PASS           []
+T10b_s331_7            not essential  {'without_lock': 'without it: 12 decision steps, 6 distinct mistakes (with it: 14, 6)'}
+T10b_s331_8            not essential  {'without_lock': 'without it: 12 decision steps, 6 distinct mistakes (with it: 14, 6)'}
+T10b_s331_9            not essential  {'without_lock': 'without it: 12 decision steps, 6 distinct mistakes (with it: 14, 6)'}
+T10b_s331_10           not essential  {'without_lock': 'without it: 12 decision steps, 6 distinct mistakes (with it: 14, 6)'}
+T10b_s331_11           not essential  {'without_lock': 'without it: 12 decision steps, 6 distinct mistakes (with it: 14, 6)'}
+SCREEN: 12 boards, 4 PASS
+T10b_s331_0            not essential  
+T10b_s331_1            not essential  
+T10b_s331_2            PASS           PASS
+T10b_s331_3            not essential  
+T10b_s331_4            PASS           PASS
+T10b_s331_5            PASS           PASS
+T10b_s331_6            PASS           PASS
+T10b_s331_7            not essential  
+T10b_s331_8            not essential  
+T10b_s331_9            not essential  
+T10b_s331_10           not essential  
+T10b_s331_11           not essential  
+SCREEN30: 12 boards, 4 PASS

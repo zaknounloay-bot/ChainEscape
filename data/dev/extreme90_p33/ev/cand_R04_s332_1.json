@@ -1,0 +1,19 @@
+{
+ "R04_s332_1": {
+  "map": [
+   "B^@#Y Y^= . Y>&A . . .",
+   ". . . R<@- . . .",
+   "G^@~ . . . B>&A R<@- .",
+   "R> Y^@~ Y<&A= R^= Yv%A . .",
+   ". . Y> . . . R^",
+   ". . . B^#Y . . .",
+   ". . . . . . G^%A"
+  ],
+  "mechanic": "switch,lock,armor",
+  "run": "R04_ARMOREDKEY_s332",
+  "rules": [
+   "S_old"
+  ],
+  "screen_key": "R04_s332_1"
+ }
+}

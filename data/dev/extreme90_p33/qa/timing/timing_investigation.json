@@ -1,0 +1,92 @@
+{
+ "failing_check": "tools/web_timing_test.mjs check A (Classic Level 1, production player build): active time <= test wall clock + 150 ms",
+ "suite_failure": "timing.log in the Phase 33 regression chain: active 8932 ms vs wall 8747 ms (+185 ms > +150 ms); 32/33 other checks passed",
+ "idle_ab": {
+  "protocol": "serial, alternating CUR (player33/web33) and BASE (player32/web32, the committed Phase 32 builds), nothing else running",
+  "CUR": "2/3 failed (+223, -41 pass, +181 ms)",
+  "BASE": "3/3 failed (+233, +226, +202 ms)",
+  "only_check_A_failed": true
+ },
+ "diagnostic": {
+  "method": "scratch copy of the test (repo test unchanged) records inside the page, per animation frame, when chainEscapeState shows the title gone and the level completed, and the time of each touchstart/pointerdown",
+  "runs": [
+   {
+    "t1": 9150,
+    "wall": 8993,
+    "lossA": 167,
+    "test_start": 3860,
+    "page_title_gone": 3642,
+    "start_lag_ms": 218,
+    "test_win_mark": 12853,
+    "page_last_touch": 12936,
+    "touch_after_mark_ms": 83,
+    "page_completed": 13747,
+    "page_window_ms": 10105,
+    "touch_window_ms": 9294,
+    "t1_minus_touch_window": -144,
+    "arm": "CUR",
+    "run": 1,
+    "check_A_failed": true
+   },
+   {
+    "t1": 8899,
+    "wall": 8759,
+    "lossA": 133,
+    "test_start": 3865,
+    "page_title_gone": 3710,
+    "start_lag_ms": 155,
+    "test_win_mark": 12624,
+    "page_last_touch": 12716,
+    "touch_after_mark_ms": 92,
+    "page_completed": 13552,
+    "page_window_ms": 9842,
+    "touch_window_ms": 9006,
+    "t1_minus_touch_window": -107,
+    "arm": "BASE",
+    "run": 1,
+    "check_A_failed": false
+   },
+   {
+    "t1": 8950,
+    "wall": 8733,
+    "lossA": 100,
+    "test_start": 3679,
+    "page_title_gone": 3491,
+    "start_lag_ms": 189,
+    "test_win_mark": 12412,
+    "page_last_touch": 12502,
+    "touch_after_mark_ms": 89,
+    "page_completed": 13293,
+    "page_window_ms": 9803,
+    "touch_window_ms": 9011,
+    "t1_minus_touch_window": -61,
+    "arm": "CUR",
+    "run": 2,
+    "check_A_failed": true
+   },
+   {
+    "t1": 8881,
+    "wall": 8632,
+    "lossA": 100,
+    "test_start": 3864,
+    "page_title_gone": 3632,
+    "start_lag_ms": 232,
+    "test_win_mark": 12496,
+    "page_last_touch": 12584,
+    "touch_after_mark_ms": 88,
+    "page_completed": 13344,
+    "page_window_ms": 9712,
+    "touch_window_ms": 8953,
+    "t1_minus_touch_window": -71,
+    "arm": "BASE",
+    "run": 2,
+    "check_A_failed": true
+   }
+  ]
+ },
+ "finding": "The test's start mark lags the page's own title-gone moment by 155-232 ms (100 ms poll + CDP round trips) and the winning touch reaches the page 83-92 ms after the test's end mark; measured inside the page from title-gone to the winning touch, the recorded active time is 61-144 ms BELOW that window in all 4 runs. The game's timer does not over-count; the failure is in the test's measurement window.",
+ "not_a_phase33_regression": "reproduces on the Phase 32 baseline builds (3/3 idle, 2/2 diagnostic); Phase 33 changes no Classic code (game_manager.gd only adds a ?extreme90p33=1 dev branch)",
+ "unknown": "why the lag exceeds the slack in this container now when the same Phase 32 build passed during Phase 32 QA is not established",
+ "not_done": "the test, its 150 ms slack and the timer are unchanged; no gate was lowered",
+ "proposed_fix_for_owner": "take the start and end marks inside the page (title-gone frame, winning touch time) instead of after a 100 ms poll / before the CDP tap; not applied"
+}

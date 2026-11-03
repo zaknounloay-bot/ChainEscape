@@ -1,0 +1,683 @@
+Godot Engine v4.3.stable.official.77dcf97d8 - https://godotengine.org
+
+SCRIPT ERROR: Invalid access of index '6' on a base object of type: 'Array'.
+          at: _rot (res://tools/vh_pilot4_canon.gd:101)
+SCRIPT ERROR: Out of bounds get index '0' (on base: 'Array')
+          at: _relabel (res://tools/vh_pilot4_canon.gd:141)
+SCRIPT ERROR: Out of bounds get index '0' (on base: 'Array')
+          at: _relabel (res://tools/vh_pilot4_canon.gd:141)
+SCRIPT ERROR: Out of bounds get index '0' (on base: 'Array')
+          at: _rot (res://tools/vh_pilot4_canon.gd:96)
+SCRIPT ERROR: Out of bounds get index '0' (on base: 'Array')
+          at: _relabel (res://tools/vh_pilot4_canon.gd:141)
+SCRIPT ERROR: Out of bounds get index '0' (on base: 'Array')
+          at: _relabel (res://tools/vh_pilot4_canon.gd:141)
+SCRIPT ERROR: Out of bounds get index '0' (on base: 'Array')
+          at: _rot (res://tools/vh_pilot4_canon.gd:96)
+SCRIPT ERROR: Out of bounds get index '0' (on base: 'Array')
+          at: _relabel (res://tools/vh_pilot4_canon.gd:141)
+SCRIPT ERROR: Out of bounds get index '0' (on base: 'Array')
+          at: _relabel (res://tools/vh_pilot4_canon.gd:141)
+SCRIPT ERROR: Out of bounds get index '0' (on base: 'Array')
+          at: _rot (res://tools/vh_pilot4_canon.gd:96)
+known boards: 37059
+known boards incl. T1-T5 and the demos: 37059; played boards for the near-copy guard: 333
+generator: v20 (strategic operators)
+seed: -85.0 | 3 pieces, 3 positions, solution 3, distinct 0, steps 0 (cover 0.00, late 0.00), endgame false, mechanic 0/2, shortcut 100% | [". . . . . . .",". . . Bv&A . . .",". . . . . . .",". . . G<* . . P<%A",". . . . . . .",". . . . . . .",". . . . . . ."]
+ERROR: Level 0: switch / flip / armored block at (3, 6) cannot be a spinner or hidden
+   at: push_error (core/variant/variant_utility.cpp:1092)
+ERROR: Level 0: magnet at (1, 1) must be a plain arrow on a board without portals, Movable or hidden blocks
+   at: push_error (core/variant/variant_utility.cpp:1092)
+ERROR: Level 0: magnet at (1, 1) must be a plain arrow on a board without portals, Movable or hidden blocks
+   at: push_error (core/variant/variant_utility.cpp:1092)
+ERROR: Level 0: magnet at (1, 1) must be a plain arrow on a board without portals, Movable or hidden blocks
+   at: push_error (core/variant/variant_utility.cpp:1092)
+ERROR: Level 0: switch / flip / armored block at (1, 3) cannot be a spinner or hidden
+   at: push_error (core/variant/variant_utility.cpp:1092)
+ERROR: Level 0: magnet at (1, 1) must be a plain arrow on a board without portals, Movable or hidden blocks
+   at: push_error (core/variant/variant_utility.cpp:1092)
+ERROR: Level 0: magnet at (1, 1) must be a plain arrow on a board without portals, Movable or hidden blocks
+   at: push_error (core/variant/variant_utility.cpp:1092)
+ERROR: Level 0: magnet at (1, 1) must be a plain arrow on a board without portals, Movable or hidden blocks
+   at: push_error (core/variant/variant_utility.cpp:1092)
+ERROR: Level 0: magnet at (3, 5) must be a plain arrow on a board without portals, Movable or hidden blocks
+   at: push_error (core/variant/variant_utility.cpp:1092)
+ERROR: Level 0: magnet at (3, 5) must be a plain arrow on a board without portals, Movable or hidden blocks
+   at: push_error (core/variant/variant_utility.cpp:1092)
+ERROR: Level 0: magnet at (3, 5) must be a plain arrow on a board without portals, Movable or hidden blocks
+   at: push_error (core/variant/variant_utility.cpp:1092)
+ERROR: Level 0: magnet at (6, 4) must be a plain arrow on a board without portals, Movable or hidden blocks
+   at: push_error (core/variant/variant_utility.cpp:1092)
+ERROR: Level 0: magnet at (6, 4) must be a plain arrow on a board without portals, Movable or hidden blocks
+   at: push_error (core/variant/variant_utility.cpp:1092)
+ERROR: Level 0: magnet at (6, 4) must be a plain arrow on a board without portals, Movable or hidden blocks
+   at: push_error (core/variant/variant_utility.cpp:1092)
+round 1 (41 evaluated, 1 s): best -47.3 | 4 pieces, 5 positions, solution 4, distinct 1, steps 1 (cover 0.25, late 0.25), endgame false, mechanic 1/2, shortcut 100% | [". . . . . . .",". . . Bv&A . . .",". . . . . . .",". . . G<* . R^ P<%A",". . . . . . .",". . . . . . .",". . . . . . ."]
+ERROR: Level 0: switch / flip / armored block at (4, 3) cannot be a spinner or hidden
+   at: push_error (core/variant/variant_utility.cpp:1092)
+ERROR: Level 0: switch / flip / armored block at (1, 3) cannot be a spinner or hidden
+   at: push_error (core/variant/variant_utility.cpp:1092)
+ERROR: Level 0: switch / flip / armored block at (2, 1) cannot be a spinner or hidden
+   at: push_error (core/variant/variant_utility.cpp:1092)
+ERROR: Level 0: magnet at (3, 4) must be a plain arrow on a board without portals, Movable or hidden blocks
+   at: push_error (core/variant/variant_utility.cpp:1092)
+ERROR: Level 0: magnet at (3, 4) must be a plain arrow on a board without portals, Movable or hidden blocks
+   at: push_error (core/variant/variant_utility.cpp:1092)
+ERROR: Level 0: magnet at (3, 4) must be a plain arrow on a board without portals, Movable or hidden blocks
+   at: push_error (core/variant/variant_utility.cpp:1092)
+ERROR: Level 0: magnet at (3, 4) must be a plain arrow on a board without portals, Movable or hidden blocks
+   at: push_error (core/variant/variant_utility.cpp:1092)
+ERROR: Level 0: magnet at (3, 4) must be a plain arrow on a board without portals, Movable or hidden blocks
+   at: push_error (core/variant/variant_utility.cpp:1092)
+ERROR: Level 0: magnet at (3, 4) must be a plain arrow on a board without portals, Movable or hidden blocks
+   at: push_error (core/variant/variant_utility.cpp:1092)
+ERROR: Level 0: switch / flip / armored block at (0, 1) cannot be a spinner or hidden
+   at: push_error (core/variant/variant_utility.cpp:1092)
+ERROR: Level 0: magnet at (3, 6) must be a plain arrow on a board without portals, Movable or hidden blocks
+   at: push_error (core/variant/variant_utility.cpp:1092)
+ERROR: Level 0: magnet at (3, 6) must be a plain arrow on a board without portals, Movable or hidden blocks
+   at: push_error (core/variant/variant_utility.cpp:1092)
+ERROR: Level 0: magnet at (3, 6) must be a plain arrow on a board without portals, Movable or hidden blocks
+   at: push_error (core/variant/variant_utility.cpp:1092)
+round 2 (76 evaluated, 2 s): best -42.7 | 5 pieces, 7 positions, solution 5, distinct 1, steps 1 (cover 0.20, late 0.40), endgame false, mechanic 1/2, shortcut 100% | [". . . . . . .",". . . Bv&A . . .",". . . . . . .",". . G<@- G<* . R^ P<%A",". . . . . . .",". . . . . . .",". . . . . . ."]
+ERROR: Level 0: magnet at (5, 3) must be a plain arrow on a board without portals, Movable or hidden blocks
+   at: push_error (core/variant/variant_utility.cpp:1092)
+ERROR: Level 0: magnet at (5, 3) must be a plain arrow on a board without portals, Movable or hidden blocks
+   at: push_error (core/variant/variant_utility.cpp:1092)
+ERROR: Level 0: magnet at (5, 3) must be a plain arrow on a board without portals, Movable or hidden blocks
+   at: push_error (core/variant/variant_utility.cpp:1092)
+ERROR: Level 0: magnet at (5, 2) must be a plain arrow on a board without portals, Movable or hidden blocks
+   at: push_error (core/variant/variant_utility.cpp:1092)
+ERROR: Level 0: magnet at (5, 2) must be a plain arrow on a board without portals, Movable or hidden blocks
+   at: push_error (core/variant/variant_utility.cpp:1092)
+ERROR: Level 0: magnet at (5, 2) must be a plain arrow on a board without portals, Movable or hidden blocks
+   at: push_error (core/variant/variant_utility.cpp:1092)
+ERROR: Level 0: switch / flip / armored block at (0, 3) cannot be a spinner or hidden
+   at: push_error (core/variant/variant_utility.cpp:1092)
+ERROR: Level 0: switch / flip / armored block at (1, 3) cannot be a spinner or hidden
+   at: push_error (core/variant/variant_utility.cpp:1092)
+ERROR: Level 0: switch / flip / armored block at (6, 1) cannot be a spinner or hidden
+   at: push_error (core/variant/variant_utility.cpp:1092)
+round 3 (111 evaluated, 3 s): best -32.0 | 5 pieces, 9 positions, solution 5, distinct 1, steps 1 (cover 0.20, late 0.20), endgame false, mechanic 2/2, shortcut 100% | [". . . . . . .",". . . Bv&A . . .",". . . G^@~ . . .",". . . G<* . R^ P<%A",". . . . . . .",". . . . . . .",". . . . . . ."]
+ERROR: Level 0: switch / flip / armored block at (3, 6) cannot be a spinner or hidden
+   at: push_error (core/variant/variant_utility.cpp:1092)
+ERROR: Level 0: switch / flip / armored block at (5, 1) cannot be a spinner or hidden
+   at: push_error (core/variant/variant_utility.cpp:1092)
+ERROR: Level 0: switch / flip / armored block at (6, 1) cannot be a spinner or hidden
+   at: push_error (core/variant/variant_utility.cpp:1092)
+ERROR: Level 0: magnet at (3, 4) must be a plain arrow on a board without portals, Movable or hidden blocks
+   at: push_error (core/variant/variant_utility.cpp:1092)
+ERROR: Level 0: magnet at (3, 4) must be a plain arrow on a board without portals, Movable or hidden blocks
+   at: push_error (core/variant/variant_utility.cpp:1092)
+ERROR: Level 0: magnet at (3, 4) must be a plain arrow on a board without portals, Movable or hidden blocks
+   at: push_error (core/variant/variant_utility.cpp:1092)
+ERROR: Level 0: magnet at (5, 3) must be a plain arrow on a board without portals, Movable or hidden blocks
+   at: push_error (core/variant/variant_utility.cpp:1092)
+ERROR: Level 0: magnet at (5, 3) must be a plain arrow on a board without portals, Movable or hidden blocks
+   at: push_error (core/variant/variant_utility.cpp:1092)
+ERROR: Level 0: magnet at (5, 3) must be a plain arrow on a board without portals, Movable or hidden blocks
+   at: push_error (core/variant/variant_utility.cpp:1092)
+round 4 (147 evaluated, 4 s): best 17.1 | 7 pieces, 45 positions, solution 7, distinct 1, steps 3 (cover 0.43, late 0.71), endgame true, mechanic 2/2, shortcut 100% | [". . . . . . .",". . . Bv&A . . G^@",". . . . . . Bv%A",". . . G<* . R^ P<%A",". . . B^@~* . . .",". . . . . . .",". . . . . . ."]
+ERROR: Level 0: magnet at (3, 0) must be a plain arrow on a board without portals, Movable or hidden blocks
+   at: push_error (core/variant/variant_utility.cpp:1092)
+ERROR: Level 0: magnet at (3, 4) must be a plain arrow on a board without portals, Movable or hidden blocks
+   at: push_error (core/variant/variant_utility.cpp:1092)
+ERROR: Level 0: magnet at (3, 0) must be a plain arrow on a board without portals, Movable or hidden blocks
+   at: push_error (core/variant/variant_utility.cpp:1092)
+ERROR: Level 0: magnet at (3, 4) must be a plain arrow on a board without portals, Movable or hidden blocks
+   at: push_error (core/variant/variant_utility.cpp:1092)
+ERROR: Level 0: magnet at (3, 0) must be a plain arrow on a board without portals, Movable or hidden blocks
+   at: push_error (core/variant/variant_utility.cpp:1092)
+ERROR: Level 0: magnet at (3, 4) must be a plain arrow on a board without portals, Movable or hidden blocks
+   at: push_error (core/variant/variant_utility.cpp:1092)
+ERROR: Level 0: magnet at (3, 4) must be a plain arrow on a board without portals, Movable or hidden blocks
+   at: push_error (core/variant/variant_utility.cpp:1092)
+ERROR: Level 0: magnet at (3, 4) must be a plain arrow on a board without portals, Movable or hidden blocks
+   at: push_error (core/variant/variant_utility.cpp:1092)
+ERROR: Level 0: magnet at (3, 4) must be a plain arrow on a board without portals, Movable or hidden blocks
+   at: push_error (core/variant/variant_utility.cpp:1092)
+ERROR: Level 0: magnet at (3, 4) must be a plain arrow on a board without portals, Movable or hidden blocks
+   at: push_error (core/variant/variant_utility.cpp:1092)
+ERROR: Level 0: magnet at (3, 4) must be a plain arrow on a board without portals, Movable or hidden blocks
+   at: push_error (core/variant/variant_utility.cpp:1092)
+ERROR: Level 0: magnet at (3, 4) must be a plain arrow on a board without portals, Movable or hidden blocks
+   at: push_error (core/variant/variant_utility.cpp:1092)
+ERROR: Level 0: magnet at (3, 4) must be a plain arrow on a board without portals, Movable or hidden blocks
+   at: push_error (core/variant/variant_utility.cpp:1092)
+ERROR: Level 0: magnet at (3, 4) must be a plain arrow on a board without portals, Movable or hidden blocks
+   at: push_error (core/variant/variant_utility.cpp:1092)
+ERROR: Level 0: magnet at (3, 4) must be a plain arrow on a board without portals, Movable or hidden blocks
+   at: push_error (core/variant/variant_utility.cpp:1092)
+ERROR: Level 0: magnet at (3, 4) must be a plain arrow on a board without portals, Movable or hidden blocks
+   at: push_error (core/variant/variant_utility.cpp:1092)
+ERROR: Level 0: magnet at (3, 4) must be a plain arrow on a board without portals, Movable or hidden blocks
+   at: push_error (core/variant/variant_utility.cpp:1092)
+ERROR: Level 0: magnet at (3, 4) must be a plain arrow on a board without portals, Movable or hidden blocks
+   at: push_error (core/variant/variant_utility.cpp:1092)
+ERROR: Level 0: magnet at (3, 4) must be a plain arrow on a board without portals, Movable or hidden blocks
+   at: push_error (core/variant/variant_utility.cpp:1092)
+ERROR: Level 0: magnet at (3, 4) must be a plain arrow on a board without portals, Movable or hidden blocks
+   at: push_error (core/variant/variant_utility.cpp:1092)
+ERROR: Level 0: magnet at (3, 4) must be a plain arrow on a board without portals, Movable or hidden blocks
+   at: push_error (core/variant/variant_utility.cpp:1092)
+ERROR: Level 0: magnet at (3, 4) must be a plain arrow on a board without portals, Movable or hidden blocks
+   at: push_error (core/variant/variant_utility.cpp:1092)
+ERROR: Level 0: switch / flip / armored block at (6, 4) cannot be a spinner or hidden
+   at: push_error (core/variant/variant_utility.cpp:1092)
+ERROR: Level 0: magnet at (3, 4) must be a plain arrow on a board without portals, Movable or hidden blocks
+   at: push_error (core/variant/variant_utility.cpp:1092)
+ERROR: Level 0: switch / flip / armored block at (1, 3) cannot be a spinner or hidden
+   at: push_error (core/variant/variant_utility.cpp:1092)
+ERROR: Level 0: magnet at (6, 2) must be a plain arrow on a board without portals, Movable or hidden blocks
+   at: push_error (core/variant/variant_utility.cpp:1092)
+ERROR: Level 0: switch / flip / armored block at (3, 5) cannot be a spinner or hidden
+   at: push_error (core/variant/variant_utility.cpp:1092)
+ERROR: Level 0: switch / flip / armored block at (5, 1) cannot be a spinner or hidden
+   at: push_error (core/variant/variant_utility.cpp:1092)
+ERROR: Level 0: switch / flip / armored block at (3, 2) cannot be a spinner or hidden
+   at: push_error (core/variant/variant_utility.cpp:1092)
+ERROR: Level 0: switch / flip / armored block at (4, 1) cannot be a spinner or hidden
+   at: push_error (core/variant/variant_utility.cpp:1092)
+ERROR: Level 0: switch / flip / armored block at (3, 2) cannot be a spinner or hidden
+   at: push_error (core/variant/variant_utility.cpp:1092)
+round 5 (186 evaluated, 6 s): best 23.6 | 8 pieces, 34 positions, solution 8, distinct 2, steps 4 (cover 0.50, late 0.75), endgame true, mechanic 2/2, shortcut 100% | [". . . . . . .",". . . Bv&A . R^@- G^@",". . . Y^ . . Bv%A",". . . G<* . R^ P<%A",". . . . . . .",". . . . . . .",". . . . . . ."]
+ERROR: Level 0: magnet at (3, 4) must be a plain arrow on a board without portals, Movable or hidden blocks
+   at: push_error (core/variant/variant_utility.cpp:1092)
+ERROR: Level 0: magnet at (3, 4) must be a plain arrow on a board without portals, Movable or hidden blocks
+   at: push_error (core/variant/variant_utility.cpp:1092)
+ERROR: Level 0: magnet at (3, 4) must be a plain arrow on a board without portals, Movable or hidden blocks
+   at: push_error (core/variant/variant_utility.cpp:1092)
+ERROR: Level 0: magnet at (3, 4) must be a plain arrow on a board without portals, Movable or hidden blocks
+   at: push_error (core/variant/variant_utility.cpp:1092)
+ERROR: Level 0: magnet at (3, 6) must be a plain arrow on a board without portals, Movable or hidden blocks
+   at: push_error (core/variant/variant_utility.cpp:1092)
+ERROR: Level 0: magnet at (3, 4) must be a plain arrow on a board without portals, Movable or hidden blocks
+   at: push_error (core/variant/variant_utility.cpp:1092)
+ERROR: Level 0: magnet at (3, 6) must be a plain arrow on a board without portals, Movable or hidden blocks
+   at: push_error (core/variant/variant_utility.cpp:1092)
+ERROR: Level 0: magnet at (3, 4) must be a plain arrow on a board without portals, Movable or hidden blocks
+   at: push_error (core/variant/variant_utility.cpp:1092)
+ERROR: Level 0: magnet at (3, 6) must be a plain arrow on a board without portals, Movable or hidden blocks
+   at: push_error (core/variant/variant_utility.cpp:1092)
+ERROR: Level 0: magnet at (3, 4) must be a plain arrow on a board without portals, Movable or hidden blocks
+   at: push_error (core/variant/variant_utility.cpp:1092)
+ERROR: Level 0: magnet at (3, 4) must be a plain arrow on a board without portals, Movable or hidden blocks
+   at: push_error (core/variant/variant_utility.cpp:1092)
+ERROR: Level 0: magnet at (3, 4) must be a plain arrow on a board without portals, Movable or hidden blocks
+   at: push_error (core/variant/variant_utility.cpp:1092)
+ERROR: Level 0: magnet at (3, 4) must be a plain arrow on a board without portals, Movable or hidden blocks
+   at: push_error (core/variant/variant_utility.cpp:1092)
+ERROR: Level 0: magnet at (3, 4) must be a plain arrow on a board without portals, Movable or hidden blocks
+   at: push_error (core/variant/variant_utility.cpp:1092)
+ERROR: Level 0: magnet at (3, 4) must be a plain arrow on a board without portals, Movable or hidden blocks
+   at: push_error (core/variant/variant_utility.cpp:1092)
+ERROR: Level 0: magnet at (3, 4) must be a plain arrow on a board without portals, Movable or hidden blocks
+   at: push_error (core/variant/variant_utility.cpp:1092)
+ERROR: Level 0: magnet at (3, 4) must be a plain arrow on a board without portals, Movable or hidden blocks
+   at: push_error (core/variant/variant_utility.cpp:1092)
+ERROR: Level 0: magnet at (3, 4) must be a plain arrow on a board without portals, Movable or hidden blocks
+   at: push_error (core/variant/variant_utility.cpp:1092)
+ERROR: Level 0: magnet at (3, 4) must be a plain arrow on a board without portals, Movable or hidden blocks
+   at: push_error (core/variant/variant_utility.cpp:1092)
+ERROR: Level 0: magnet at (3, 4) must be a plain arrow on a board without portals, Movable or hidden blocks
+   at: push_error (core/variant/variant_utility.cpp:1092)
+ERROR: Level 0: magnet at (3, 4) must be a plain arrow on a board without portals, Movable or hidden blocks
+   at: push_error (core/variant/variant_utility.cpp:1092)
+ERROR: Level 0: magnet at (3, 4) must be a plain arrow on a board without portals, Movable or hidden blocks
+   at: push_error (core/variant/variant_utility.cpp:1092)
+ERROR: Level 0: magnet at (3, 4) must be a plain arrow on a board without portals, Movable or hidden blocks
+   at: push_error (core/variant/variant_utility.cpp:1092)
+ERROR: Level 0: magnet at (3, 4) must be a plain arrow on a board without portals, Movable or hidden blocks
+   at: push_error (core/variant/variant_utility.cpp:1092)
+ERROR: Level 0: magnet at (3, 4) must be a plain arrow on a board without portals, Movable or hidden blocks
+   at: push_error (core/variant/variant_utility.cpp:1092)
+ERROR: Level 0: magnet at (3, 4) must be a plain arrow on a board without portals, Movable or hidden blocks
+   at: push_error (core/variant/variant_utility.cpp:1092)
+ERROR: Level 0: magnet at (3, 4) must be a plain arrow on a board without portals, Movable or hidden blocks
+   at: push_error (core/variant/variant_utility.cpp:1092)
+ERROR: Level 0: magnet at (3, 4) must be a plain arrow on a board without portals, Movable or hidden blocks
+   at: push_error (core/variant/variant_utility.cpp:1092)
+ERROR: Level 0: magnet at (3, 4) must be a plain arrow on a board without portals, Movable or hidden blocks
+   at: push_error (core/variant/variant_utility.cpp:1092)
+ERROR: Level 0: magnet at (3, 4) must be a plain arrow on a board without portals, Movable or hidden blocks
+   at: push_error (core/variant/variant_utility.cpp:1092)
+ERROR: Level 0: magnet at (3, 4) must be a plain arrow on a board without portals, Movable or hidden blocks
+   at: push_error (core/variant/variant_utility.cpp:1092)
+ERROR: Level 0: magnet at (3, 4) must be a plain arrow on a board without portals, Movable or hidden blocks
+   at: push_error (core/variant/variant_utility.cpp:1092)
+ERROR: Level 0: switch / flip / armored block at (3, 5) cannot be a spinner or hidden
+   at: push_error (core/variant/variant_utility.cpp:1092)
+ERROR: Level 0: magnet at (3, 4) must be a plain arrow on a board without portals, Movable or hidden blocks
+   at: push_error (core/variant/variant_utility.cpp:1092)
+ERROR: Level 0: magnet at (3, 4) must be a plain arrow on a board without portals, Movable or hidden blocks
+   at: push_error (core/variant/variant_utility.cpp:1092)
+ERROR: Level 0: magnet at (3, 4) must be a plain arrow on a board without portals, Movable or hidden blocks
+   at: push_error (core/variant/variant_utility.cpp:1092)
+ERROR: Level 0: magnet at (3, 4) must be a plain arrow on a board without portals, Movable or hidden blocks
+   at: push_error (core/variant/variant_utility.cpp:1092)
+ERROR: Level 0: magnet at (3, 4) must be a plain arrow on a board without portals, Movable or hidden blocks
+   at: push_error (core/variant/variant_utility.cpp:1092)
+ERROR: Level 0: magnet at (3, 4) must be a plain arrow on a board without portals, Movable or hidden blocks
+   at: push_error (core/variant/variant_utility.cpp:1092)
+ERROR: Level 0: magnet at (3, 4) must be a plain arrow on a board without portals, Movable or hidden blocks
+   at: push_error (core/variant/variant_utility.cpp:1092)
+ERROR: Level 0: magnet at (3, 4) must be a plain arrow on a board without portals, Movable or hidden blocks
+   at: push_error (core/variant/variant_utility.cpp:1092)
+ERROR: Level 0: magnet at (3, 4) must be a plain arrow on a board without portals, Movable or hidden blocks
+   at: push_error (core/variant/variant_utility.cpp:1092)
+ERROR: Level 0: magnet at (3, 4) must be a plain arrow on a board without portals, Movable or hidden blocks
+   at: push_error (core/variant/variant_utility.cpp:1092)
+ERROR: Level 0: magnet at (3, 4) must be a plain arrow on a board without portals, Movable or hidden blocks
+   at: push_error (core/variant/variant_utility.cpp:1092)
+ERROR: Level 0: magnet at (3, 4) must be a plain arrow on a board without portals, Movable or hidden blocks
+   at: push_error (core/variant/variant_utility.cpp:1092)
+ERROR: Level 0: magnet at (3, 4) must be a plain arrow on a board without portals, Movable or hidden blocks
+   at: push_error (core/variant/variant_utility.cpp:1092)
+ERROR: Level 0: magnet at (3, 4) must be a plain arrow on a board without portals, Movable or hidden blocks
+   at: push_error (core/variant/variant_utility.cpp:1092)
+ERROR: Level 0: magnet at (3, 4) must be a plain arrow on a board without portals, Movable or hidden blocks
+   at: push_error (core/variant/variant_utility.cpp:1092)
+ERROR: Level 0: magnet at (3, 4) must be a plain arrow on a board without portals, Movable or hidden blocks
+   at: push_error (core/variant/variant_utility.cpp:1092)
+ERROR: Level 0: magnet at (3, 4) must be a plain arrow on a board without portals, Movable or hidden blocks
+   at: push_error (core/variant/variant_utility.cpp:1092)
+ERROR: Level 0: magnet at (3, 4) must be a plain arrow on a board without portals, Movable or hidden blocks
+   at: push_error (core/variant/variant_utility.cpp:1092)
+ERROR: Level 0: magnet at (3, 4) must be a plain arrow on a board without portals, Movable or hidden blocks
+   at: push_error (core/variant/variant_utility.cpp:1092)
+round 6 (219 evaluated, 8 s): best 32.5 | 9 pieces, 62 positions, solution 9, distinct 1, steps 6 (cover 0.67, late 0.78), endgame true, mechanic 2/2, shortcut 100% | [". . . . . . .",". . . Bv&A . . G^@",". . . Pv* . . Bv%A",". . . G<* G<@- R^ P<%A",". . . B^@~* . . .",". . . . . . .",". . . . . . ."]
+ERROR: Level 0: magnet at (3, 4) must be a plain arrow on a board without portals, Movable or hidden blocks
+   at: push_error (core/variant/variant_utility.cpp:1092)
+ERROR: Level 0: magnet at (3, 4) must be a plain arrow on a board without portals, Movable or hidden blocks
+   at: push_error (core/variant/variant_utility.cpp:1092)
+ERROR: Level 0: magnet at (3, 4) must be a plain arrow on a board without portals, Movable or hidden blocks
+   at: push_error (core/variant/variant_utility.cpp:1092)
+ERROR: Level 0: magnet at (3, 4) must be a plain arrow on a board without portals, Movable or hidden blocks
+   at: push_error (core/variant/variant_utility.cpp:1092)
+ERROR: Level 0: magnet at (3, 4) must be a plain arrow on a board without portals, Movable or hidden blocks
+   at: push_error (core/variant/variant_utility.cpp:1092)
+ERROR: Level 0: magnet at (3, 4) must be a plain arrow on a board without portals, Movable or hidden blocks
+   at: push_error (core/variant/variant_utility.cpp:1092)
+ERROR: Level 0: magnet at (3, 4) must be a plain arrow on a board without portals, Movable or hidden blocks
+   at: push_error (core/variant/variant_utility.cpp:1092)
+ERROR: Level 0: magnet at (3, 4) must be a plain arrow on a board without portals, Movable or hidden blocks
+   at: push_error (core/variant/variant_utility.cpp:1092)
+ERROR: Level 0: magnet at (3, 4) must be a plain arrow on a board without portals, Movable or hidden blocks
+   at: push_error (core/variant/variant_utility.cpp:1092)
+ERROR: Level 0: magnet at (3, 4) must be a plain arrow on a board without portals, Movable or hidden blocks
+   at: push_error (core/variant/variant_utility.cpp:1092)
+ERROR: Level 0: magnet at (3, 4) must be a plain arrow on a board without portals, Movable or hidden blocks
+   at: push_error (core/variant/variant_utility.cpp:1092)
+ERROR: Level 0: magnet at (3, 4) must be a plain arrow on a board without portals, Movable or hidden blocks
+   at: push_error (core/variant/variant_utility.cpp:1092)
+ERROR: Level 0: magnet at (3, 4) must be a plain arrow on a board without portals, Movable or hidden blocks
+   at: push_error (core/variant/variant_utility.cpp:1092)
+ERROR: Level 0: magnet at (3, 4) must be a plain arrow on a board without portals, Movable or hidden blocks
+   at: push_error (core/variant/variant_utility.cpp:1092)
+ERROR: Level 0: magnet at (3, 4) must be a plain arrow on a board without portals, Movable or hidden blocks
+   at: push_error (core/variant/variant_utility.cpp:1092)
+ERROR: Level 0: magnet at (3, 4) must be a plain arrow on a board without portals, Movable or hidden blocks
+   at: push_error (core/variant/variant_utility.cpp:1092)
+ERROR: Level 0: magnet at (3, 4) must be a plain arrow on a board without portals, Movable or hidden blocks
+   at: push_error (core/variant/variant_utility.cpp:1092)
+ERROR: Level 0: magnet at (3, 4) must be a plain arrow on a board without portals, Movable or hidden blocks
+   at: push_error (core/variant/variant_utility.cpp:1092)
+ERROR: Level 0: magnet at (3, 4) must be a plain arrow on a board without portals, Movable or hidden blocks
+   at: push_error (core/variant/variant_utility.cpp:1092)
+ERROR: Level 0: magnet at (3, 4) must be a plain arrow on a board without portals, Movable or hidden blocks
+   at: push_error (core/variant/variant_utility.cpp:1092)
+ERROR: Level 0: magnet at (3, 4) must be a plain arrow on a board without portals, Movable or hidden blocks
+   at: push_error (core/variant/variant_utility.cpp:1092)
+ERROR: Level 0: switch / flip / armored block at (4, 2) cannot be a spinner or hidden
+   at: push_error (core/variant/variant_utility.cpp:1092)
+ERROR: Level 0: magnet at (3, 4) must be a plain arrow on a board without portals, Movable or hidden blocks
+   at: push_error (core/variant/variant_utility.cpp:1092)
+ERROR: Level 0: magnet at (3, 4) must be a plain arrow on a board without portals, Movable or hidden blocks
+   at: push_error (core/variant/variant_utility.cpp:1092)
+ERROR: Level 0: magnet at (3, 4) must be a plain arrow on a board without portals, Movable or hidden blocks
+   at: push_error (core/variant/variant_utility.cpp:1092)
+ERROR: Level 0: magnet at (3, 4) must be a plain arrow on a board without portals, Movable or hidden blocks
+   at: push_error (core/variant/variant_utility.cpp:1092)
+ERROR: Level 0: magnet at (3, 4) must be a plain arrow on a board without portals, Movable or hidden blocks
+   at: push_error (core/variant/variant_utility.cpp:1092)
+ERROR: Level 0: magnet at (3, 4) must be a plain arrow on a board without portals, Movable or hidden blocks
+   at: push_error (core/variant/variant_utility.cpp:1092)
+ERROR: Level 0: magnet at (3, 4) must be a plain arrow on a board without portals, Movable or hidden blocks
+   at: push_error (core/variant/variant_utility.cpp:1092)
+ERROR: Level 0: magnet at (3, 4) must be a plain arrow on a board without portals, Movable or hidden blocks
+   at: push_error (core/variant/variant_utility.cpp:1092)
+ERROR: Level 0: magnet at (3, 4) must be a plain arrow on a board without portals, Movable or hidden blocks
+   at: push_error (core/variant/variant_utility.cpp:1092)
+ERROR: Level 0: magnet at (5, 3) must be a plain arrow on a board without portals, Movable or hidden blocks
+   at: push_error (core/variant/variant_utility.cpp:1092)
+ERROR: Level 0: magnet at (3, 4) must be a plain arrow on a board without portals, Movable or hidden blocks
+   at: push_error (core/variant/variant_utility.cpp:1092)
+ERROR: Level 0: magnet at (5, 3) must be a plain arrow on a board without portals, Movable or hidden blocks
+   at: push_error (core/variant/variant_utility.cpp:1092)
+ERROR: Level 0: magnet at (3, 4) must be a plain arrow on a board without portals, Movable or hidden blocks
+   at: push_error (core/variant/variant_utility.cpp:1092)
+ERROR: Level 0: magnet at (5, 3) must be a plain arrow on a board without portals, Movable or hidden blocks
+   at: push_error (core/variant/variant_utility.cpp:1092)
+ERROR: Level 0: magnet at (3, 4) must be a plain arrow on a board without portals, Movable or hidden blocks
+   at: push_error (core/variant/variant_utility.cpp:1092)
+ERROR: Level 0: magnet at (3, 4) must be a plain arrow on a board without portals, Movable or hidden blocks
+   at: push_error (core/variant/variant_utility.cpp:1092)
+ERROR: Level 0: magnet at (3, 4) must be a plain arrow on a board without portals, Movable or hidden blocks
+   at: push_error (core/variant/variant_utility.cpp:1092)
+ERROR: Level 0: magnet at (3, 4) must be a plain arrow on a board without portals, Movable or hidden blocks
+   at: push_error (core/variant/variant_utility.cpp:1092)
+ERROR: Level 0: magnet at (3, 4) must be a plain arrow on a board without portals, Movable or hidden blocks
+   at: push_error (core/variant/variant_utility.cpp:1092)
+ERROR: Level 0: magnet at (3, 4) must be a plain arrow on a board without portals, Movable or hidden blocks
+   at: push_error (core/variant/variant_utility.cpp:1092)
+ERROR: Level 0: magnet at (3, 4) must be a plain arrow on a board without portals, Movable or hidden blocks
+   at: push_error (core/variant/variant_utility.cpp:1092)
+ERROR: Level 0: magnet at (3, 4) must be a plain arrow on a board without portals, Movable or hidden blocks
+   at: push_error (core/variant/variant_utility.cpp:1092)
+round 7 (254 evaluated, 11 s): best 41.2 | 10 pieces, 106 positions, solution 10, distinct 3, steps 6 (cover 0.60, late 0.80), endgame true, mechanic 2/2, shortcut 100% | [". . . . . . .",". . . Bv&A Y^@ R^@- G^@",". . . Y^ . . Bv%A",". . . G<* . R^ P<%A",". . . . . . .",". . . . . . B<",". . . . . . ."]
+ERROR: Level 0: switch / flip / armored block at (5, 0) cannot be a spinner or hidden
+   at: push_error (core/variant/variant_utility.cpp:1092)
+ERROR: Level 0: switch / flip / armored block at (5, 1) cannot be a spinner or hidden
+   at: push_error (core/variant/variant_utility.cpp:1092)
+ERROR: Level 0: magnet at (3, 4) must be a plain arrow on a board without portals, Movable or hidden blocks
+   at: push_error (core/variant/variant_utility.cpp:1092)
+ERROR: Level 0: magnet at (3, 4) must be a plain arrow on a board without portals, Movable or hidden blocks
+   at: push_error (core/variant/variant_utility.cpp:1092)
+ERROR: Level 0: magnet at (3, 4) must be a plain arrow on a board without portals, Movable or hidden blocks
+   at: push_error (core/variant/variant_utility.cpp:1092)
+ERROR: Level 0: switch / flip / armored block at (6, 4) cannot be a spinner or hidden
+   at: push_error (core/variant/variant_utility.cpp:1092)
+ERROR: Level 0: magnet at (3, 4) must be a plain arrow on a board without portals, Movable or hidden blocks
+   at: push_error (core/variant/variant_utility.cpp:1092)
+ERROR: Level 0: magnet at (3, 4) must be a plain arrow on a board without portals, Movable or hidden blocks
+   at: push_error (core/variant/variant_utility.cpp:1092)
+ERROR: Level 0: magnet at (3, 4) must be a plain arrow on a board without portals, Movable or hidden blocks
+   at: push_error (core/variant/variant_utility.cpp:1092)
+ERROR: Level 0: magnet at (3, 4) must be a plain arrow on a board without portals, Movable or hidden blocks
+   at: push_error (core/variant/variant_utility.cpp:1092)
+ERROR: Level 0: magnet at (3, 4) must be a plain arrow on a board without portals, Movable or hidden blocks
+   at: push_error (core/variant/variant_utility.cpp:1092)
+ERROR: Level 0: magnet at (3, 4) must be a plain arrow on a board without portals, Movable or hidden blocks
+   at: push_error (core/variant/variant_utility.cpp:1092)
+ERROR: Level 0: magnet at (3, 4) must be a plain arrow on a board without portals, Movable or hidden blocks
+   at: push_error (core/variant/variant_utility.cpp:1092)
+ERROR: Level 0: magnet at (3, 4) must be a plain arrow on a board without portals, Movable or hidden blocks
+   at: push_error (core/variant/variant_utility.cpp:1092)
+ERROR: Level 0: magnet at (3, 4) must be a plain arrow on a board without portals, Movable or hidden blocks
+   at: push_error (core/variant/variant_utility.cpp:1092)
+ERROR: Level 0: magnet at (3, 4) must be a plain arrow on a board without portals, Movable or hidden blocks
+   at: push_error (core/variant/variant_utility.cpp:1092)
+ERROR: Level 0: magnet at (3, 4) must be a plain arrow on a board without portals, Movable or hidden blocks
+   at: push_error (core/variant/variant_utility.cpp:1092)
+ERROR: Level 0: magnet at (3, 4) must be a plain arrow on a board without portals, Movable or hidden blocks
+   at: push_error (core/variant/variant_utility.cpp:1092)
+ERROR: Level 0: magnet at (3, 4) must be a plain arrow on a board without portals, Movable or hidden blocks
+   at: push_error (core/variant/variant_utility.cpp:1092)
+ERROR: Level 0: magnet at (3, 4) must be a plain arrow on a board without portals, Movable or hidden blocks
+   at: push_error (core/variant/variant_utility.cpp:1092)
+ERROR: Level 0: magnet at (3, 4) must be a plain arrow on a board without portals, Movable or hidden blocks
+   at: push_error (core/variant/variant_utility.cpp:1092)
+ERROR: Level 0: magnet at (3, 4) must be a plain arrow on a board without portals, Movable or hidden blocks
+   at: push_error (core/variant/variant_utility.cpp:1092)
+ERROR: Level 0: switch / flip / armored block at (6, 0) cannot be a spinner or hidden
+   at: push_error (core/variant/variant_utility.cpp:1092)
+ERROR: Level 0: switch / flip / armored block at (0, 1) cannot be a spinner or hidden
+   at: push_error (core/variant/variant_utility.cpp:1092)
+ERROR: Level 0: switch / flip / armored block at (5, 2) cannot be a spinner or hidden
+   at: push_error (core/variant/variant_utility.cpp:1092)
+round 8 (288 evaluated, 14 s): best 44.9 | 11 pieces, 216 positions, solution 11, distinct 3, steps 7 (cover 0.64, late 0.82), endgame true, mechanic 2/2, shortcut 100% | [". . . . . . .",". . Pv&A Bv&A Y^@ R^@- G^@",". . . Y^ . . Bv%A",". . . G<* . R^ P<%A",". . . . . . .",". . . . . . B<",". . . . . . ."]
+ERROR: Level 0: switch / flip / armored block at (6, 6) cannot be a spinner or hidden
+   at: push_error (core/variant/variant_utility.cpp:1092)
+ERROR: Level 0: switch / flip / armored block at (3, 6) cannot be a spinner or hidden
+   at: push_error (core/variant/variant_utility.cpp:1092)
+ERROR: Level 0: switch / flip / armored block at (4, 1) cannot be a spinner or hidden
+   at: push_error (core/variant/variant_utility.cpp:1092)
+ERROR: Level 0: switch / flip / armored block at (2, 1) cannot be a spinner or hidden
+   at: push_error (core/variant/variant_utility.cpp:1092)
+round 9 (325 evaluated, 18 s): best 106.7 | 11 pieces, 168 positions, solution 11, distinct 3, steps 7 (cover 0.64, late 0.82), endgame true, mechanic 2/2, shortcut 32% | [". . . . . . P>&A",". . . Bv&A Y^@ R^@- G>@~",". . . Y^ . . Bv%A",". . . G<* . R^ P<%A",". . . . . . .",". . . . . . B<",". . . . . . ."]
+ERROR: Level 0: magnet at (6, 5) must be a plain arrow on a board without portals, Movable or hidden blocks
+   at: push_error (core/variant/variant_utility.cpp:1092)
+ERROR: Level 0: magnet at (6, 5) must be a plain arrow on a board without portals, Movable or hidden blocks
+   at: push_error (core/variant/variant_utility.cpp:1092)
+ERROR: Level 0: magnet at (6, 5) must be a plain arrow on a board without portals, Movable or hidden blocks
+   at: push_error (core/variant/variant_utility.cpp:1092)
+ERROR: Level 0: magnet at (4, 1) must be a plain arrow on a board without portals, Movable or hidden blocks
+   at: push_error (core/variant/variant_utility.cpp:1092)
+ERROR: Level 0: magnet at (4, 1) must be a plain arrow on a board without portals, Movable or hidden blocks
+   at: push_error (core/variant/variant_utility.cpp:1092)
+ERROR: Level 0: magnet at (4, 1) must be a plain arrow on a board without portals, Movable or hidden blocks
+   at: push_error (core/variant/variant_utility.cpp:1092)
+ERROR: Level 0: switch / flip / armored block at (1, 1) cannot be a spinner or hidden
+   at: push_error (core/variant/variant_utility.cpp:1092)
+round 10 (360 evaluated, 24 s): best 107.8 | 11 pieces, 168 positions, solution 11, distinct 3, steps 7 (cover 0.64, late 0.82), endgame true, mechanic 2/2, shortcut 32% | [". . . . . . P>&A",". . . Bv&A Y^@ R^@- G>@~",". . . Y^* . . Bv%A",". . . G<* . R^ P<%A",". . . . . . .",". . . . . . B<",". . . . . . ."]
+ERROR: Level 0: magnet at (5, 2) must be a plain arrow on a board without portals, Movable or hidden blocks
+   at: push_error (core/variant/variant_utility.cpp:1092)
+ERROR: Level 0: magnet at (5, 2) must be a plain arrow on a board without portals, Movable or hidden blocks
+   at: push_error (core/variant/variant_utility.cpp:1092)
+ERROR: Level 0: magnet at (5, 2) must be a plain arrow on a board without portals, Movable or hidden blocks
+   at: push_error (core/variant/variant_utility.cpp:1092)
+ERROR: Level 0: switch / flip / armored block at (3, 5) cannot be a spinner or hidden
+   at: push_error (core/variant/variant_utility.cpp:1092)
+ERROR: Level 0: switch / flip / armored block at (3, 5) cannot be a spinner or hidden
+   at: push_error (core/variant/variant_utility.cpp:1092)
+round 11 (399 evaluated, 31 s): best 122.0 | 12 pieces, 314 positions, solution 12, distinct 3, steps 8 (cover 0.67, late 0.83), endgame true, mechanic 2/2, shortcut 20% | [". . . . . . P>&A",". . . Bv&A Y^@ R^@- G>@~",". . . Y^* R^&A . Bv%A",". . . G<* . R^ P<%A",". . . . . . .",". . . . . . B<",". . . . . . ."]
+ERROR: Level 0: magnet at (2, 2) must be a plain arrow on a board without portals, Movable or hidden blocks
+   at: push_error (core/variant/variant_utility.cpp:1092)
+ERROR: Level 0: magnet at (2, 2) must be a plain arrow on a board without portals, Movable or hidden blocks
+   at: push_error (core/variant/variant_utility.cpp:1092)
+ERROR: Level 0: magnet at (2, 2) must be a plain arrow on a board without portals, Movable or hidden blocks
+   at: push_error (core/variant/variant_utility.cpp:1092)
+ERROR: Level 0: magnet at (3, 0) must be a plain arrow on a board without portals, Movable or hidden blocks
+   at: push_error (core/variant/variant_utility.cpp:1092)
+ERROR: Level 0: magnet at (3, 0) must be a plain arrow on a board without portals, Movable or hidden blocks
+   at: push_error (core/variant/variant_utility.cpp:1092)
+ERROR: Level 0: magnet at (3, 0) must be a plain arrow on a board without portals, Movable or hidden blocks
+   at: push_error (core/variant/variant_utility.cpp:1092)
+round 12 (437 evaluated, 39 s): best 124.8 | 14 pieces, 243 positions, solution 14, distinct 3, steps 10 (cover 0.71, late 0.86), endgame true, mechanic 2/2, shortcut 22% | [". . . . . . .",". . Pv&A Bv&A Y^@ R^@- G^@",". . . Y^ R>@- . Bv%A",". G^@ . G<* B^&A R^ P<%A",". . . . . . .",". . . . . . B<",". . . . . . ."]
+ERROR: Level 0: switch / flip / armored block at (3, 4) cannot be a spinner or hidden
+   at: push_error (core/variant/variant_utility.cpp:1092)
+round 13 (476 evaluated, 47 s): best 124.8 | 14 pieces, 243 positions, solution 14, distinct 3, steps 10 (cover 0.71, late 0.86), endgame true, mechanic 2/2, shortcut 22% | [". . . . . . .",". . Pv&A Bv&A Y^@ R^@- G^@",". . . Y^ R>@- . Bv%A",". G^@ . G<* B^&A R^ P<%A",". . . . . . .",". . . . . . B<",". . . . . . ."]
+round 14 (515 evaluated, 55 s): best 131.1 | 15 pieces, 331 positions, solution 15, distinct 4, steps 10 (cover 0.67, late 0.80), endgame true, mechanic 2/2, shortcut 12% | [". . . . . . .",". . Pv&A Bv&A Y^@ R^@- G^@",". . . Y^ R>@- P^* Bv%A",". G^@ . G<* B^&A R^ P<%A",". . . . . . .",". . . . . . B<",". . . . . . ."]
+ERROR: Level 0: switch / flip / armored block at (5, 4) cannot be a spinner or hidden
+   at: push_error (core/variant/variant_utility.cpp:1092)
+ERROR: Level 0: switch / flip / armored block at (3, 5) cannot be a spinner or hidden
+   at: push_error (core/variant/variant_utility.cpp:1092)
+round 15 (551 evaluated, 63 s): best 131.6 | 14 pieces, 322 positions, solution 14, distinct 4, steps 10 (cover 0.71, late 0.79), endgame true, mechanic 2/2, shortcut 20% | [". . . . . . P>&A",". . . Bv&A Y^@ R^@- G>@",". . . Y^* R^ . Bv%A","Gv&A B^@- . G<* . R^ P<%A",". . . . . . .",". . . . . . B<",". . . . . . ."]
+round 16 (589 evaluated, 72 s): best 133.2 | 16 pieces, 395 positions, solution 16, distinct 4, steps 11 (cover 0.69, late 0.81), endgame true, mechanic 2/2, shortcut 8% | [". . . . B<@~ . .",". . Pv&A Bv&A Y^@ R^@- G^@",". . . Y^ R>@- P^* Bv%A",". G^@ . G<* B^&A R^ P<%A",". . . . . . .",". . . . . . B<",". . . . . . ."]
+round 17 (629 evaluated, 81 s): best 134.4 | 16 pieces, 894 positions, solution 16, distinct 4, steps 12 (cover 0.75, late 0.81), endgame true, mechanic 2/2, shortcut 15% | [". . . . . . P>&A",". . . Bv&A Y^@ R^@- G>@",". . Gv Y^* R^ . Bv%A","Gv&A B^@- . G<* . R^ P<%A",". . . . . . .",". . . . . Y< B<",". . . . . . ."]
+round 18 (665 evaluated, 92 s): best 136.2 | 17 pieces, 1670 positions, solution 17, distinct 5, steps 13 (cover 0.76, late 0.82), endgame true, mechanic 2/2, shortcut 18% | [". . . . . . P>&A",". . . Bv&A Y^@ R^@- G>@",". . Gv Y^* R^ . Bv%A","Gv&A B^@- . G<* . R^ P<%A",". . . . . . .",". . . . . Y< B<",". . . . . . Y<@"]
+round 19 (703 evaluated, 104 s): best 143.6 | 17 pieces, 1174 positions, solution 17, distinct 6, steps 14 (cover 0.82, late 0.82), endgame true, mechanic 2/2, shortcut 18% | [". . . . . . P>&A",". . . Bv&A Y^@ R^@- Gv@~",". . Gv Y^* R^ . Bv%A","Gv&A B^@- . G<* . R^ P<%A",". . . . . . .",". . . . . Y< B<",". . . . . . Y<@"]
+round 20 (738 evaluated, 117 s): best 143.7 | 17 pieces, 350 positions, solution 17, distinct 5, steps 14 (cover 0.82, late 0.82), endgame true, mechanic 2/2, shortcut 8% | [". . . . . . P>&A",". . B^@ Bv&A Y^@ R^@- Gv@~",". . . Y^* R^ B<@~ Bv%A","Gv&A . . G<* . R^ P<%A","Pv . . . . . .","B<@- . . . . . B<",". . . . . . ."]
+round 21 (776 evaluated, 129 s): best 143.8 | 17 pieces, 335 positions, solution 17, distinct 5, steps 14 (cover 0.82, late 0.82), endgame true, mechanic 2/2, shortcut 8% | [". . . . . . P>&A",". . B^ Bv&A Y^@ R^@- Gv@~",". . . Y^* R^ B<@~ Bv%A","Gv&A . . G<* . R^ P<%A","Pv . . . . . .","B<@- . . . . . B<",". . . . . . ."]
+round 22 (813 evaluated, 138 s): best 145.0 | 17 pieces, 458 positions, solution 17, distinct 6, steps 13 (cover 0.76, late 0.76), endgame true, mechanic 2/2, shortcut 12% | [". . . . . . P>&A",". . B^@ Bv&A Y^@ R^@- Gv@~",". . . Y>* R^ B<@~ Bv%A","Gv&A . . G<* . R^ P<%A","Pv . . . . . P<@~",". . . . . . B<",". . . . . . ."]
+round 23 (853 evaluated, 151 s): best 147.5 | 16 pieces, 199 positions, solution 16, distinct 6, steps 14 (cover 0.88, late 0.88), endgame true, mechanic 2/2, shortcut 12% | [". . . . . . P>&A",". . . Bv&A Y^@ R^@- Gv@~",". . . . R^ B<@~ Bv%A","Gv&A . . G<* . R^ P<%A","Pv . . . . . .","B<@- . . . . . B<",". . . . . . P^@"]
+ERROR: Level 0: magnet at (5, 3) must be a plain arrow on a board without portals, Movable or hidden blocks
+   at: push_error (core/variant/variant_utility.cpp:1092)
+ERROR: Level 0: magnet at (5, 3) must be a plain arrow on a board without portals, Movable or hidden blocks
+   at: push_error (core/variant/variant_utility.cpp:1092)
+ERROR: Level 0: magnet at (5, 3) must be a plain arrow on a board without portals, Movable or hidden blocks
+   at: push_error (core/variant/variant_utility.cpp:1092)
+round 24 (889 evaluated, 161 s): best 149.2 | 16 pieces, 199 positions, solution 16, distinct 6, steps 14 (cover 0.88, late 0.88), endgame true, mechanic 2/2, shortcut 10% | [". . . . . . P>&A",". . . Bv&A Y^@ R^@- Gv@~",". . . . R^* B<@~ Bv%A","Gv&A . . G<* . R^ P<%A","Pv . . . . . .","B<@- . . . . . B<",". . . . . . P^@"]
+ERROR: Level 0: magnet at (0, 4) must be a plain arrow on a board without portals, Movable or hidden blocks
+   at: push_error (core/variant/variant_utility.cpp:1092)
+ERROR: Level 0: magnet at (0, 4) must be a plain arrow on a board without portals, Movable or hidden blocks
+   at: push_error (core/variant/variant_utility.cpp:1092)
+ERROR: Level 0: magnet at (0, 4) must be a plain arrow on a board without portals, Movable or hidden blocks
+   at: push_error (core/variant/variant_utility.cpp:1092)
+ERROR: Level 0: magnet at (2, 1) must be a plain arrow on a board without portals, Movable or hidden blocks
+   at: push_error (core/variant/variant_utility.cpp:1092)
+ERROR: Level 0: magnet at (2, 1) must be a plain arrow on a board without portals, Movable or hidden blocks
+   at: push_error (core/variant/variant_utility.cpp:1092)
+ERROR: Level 0: magnet at (2, 1) must be a plain arrow on a board without portals, Movable or hidden blocks
+   at: push_error (core/variant/variant_utility.cpp:1092)
+round 25 (927 evaluated, 173 s): best 150.5 | 17 pieces, 259 positions, solution 17, distinct 6, steps 15 (cover 0.88, late 0.88), endgame true, mechanic 2/2, shortcut 12% | [". . . . . . P>&A",". . . Bv&A Y^@ R^@- Gv@~",". . . G>@ R^ B<@~ Bv%A","Gv&A . . G<* . R^ P<%A","Pv . . . . . .","B<@- . . . . . B<",". . . . . . P^@"]
+round 26 (963 evaluated, 183 s): best 150.5 | 17 pieces, 259 positions, solution 17, distinct 6, steps 15 (cover 0.88, late 0.88), endgame true, mechanic 2/2, shortcut 12% | [". . . . . . P>&A",". . . Bv&A Y^@ R^@- Gv@~",". . . G>@ R^ B<@~ Bv%A","Gv&A . . G<* . R^ P<%A","Pv . . . . . .","B<@- . . . . . B<",". . . . . . P^@"]
+round 27 (999 evaluated, 196 s): best 150.5 | 17 pieces, 259 positions, solution 17, distinct 6, steps 15 (cover 0.88, late 0.88), endgame true, mechanic 2/2, shortcut 12% | [". . . . . . P>&A",". . . Bv&A Y^@ R^@- Gv@~",". . . G>@ R^ B<@~ Bv%A","Gv&A . . G<* . R^ P<%A","Pv . . . . . .","B<@- . . . . . B<",". . . . . . P^@"]
+ERROR: Level 0: magnet at (6, 6) must be a plain arrow on a board without portals, Movable or hidden blocks
+   at: push_error (core/variant/variant_utility.cpp:1092)
+ERROR: Level 0: magnet at (6, 6) must be a plain arrow on a board without portals, Movable or hidden blocks
+   at: push_error (core/variant/variant_utility.cpp:1092)
+ERROR: Level 0: magnet at (6, 6) must be a plain arrow on a board without portals, Movable or hidden blocks
+   at: push_error (core/variant/variant_utility.cpp:1092)
+round 28 (1038 evaluated, 208 s): best 150.5 | 17 pieces, 259 positions, solution 17, distinct 6, steps 15 (cover 0.88, late 0.88), endgame true, mechanic 2/2, shortcut 12% | [". . . . . . P>&A",". . . Bv&A Y^@ R^@- Gv@~",". . . G>@ R^ B<@~ Bv%A","Gv&A . . G<* . R^ P<%A","Pv . . . . . .","B<@- . . . . . B<",". . . . . . P^@"]
+ERROR: Level 0: magnet at (4, 2) must be a plain arrow on a board without portals, Movable or hidden blocks
+   at: push_error (core/variant/variant_utility.cpp:1092)
+ERROR: Level 0: magnet at (4, 2) must be a plain arrow on a board without portals, Movable or hidden blocks
+   at: push_error (core/variant/variant_utility.cpp:1092)
+ERROR: Level 0: magnet at (4, 2) must be a plain arrow on a board without portals, Movable or hidden blocks
+   at: push_error (core/variant/variant_utility.cpp:1092)
+ERROR: Level 0: magnet at (6, 6) must be a plain arrow on a board without portals, Movable or hidden blocks
+   at: push_error (core/variant/variant_utility.cpp:1092)
+ERROR: Level 0: magnet at (6, 6) must be a plain arrow on a board without portals, Movable or hidden blocks
+   at: push_error (core/variant/variant_utility.cpp:1092)
+ERROR: Level 0: magnet at (6, 6) must be a plain arrow on a board without portals, Movable or hidden blocks
+   at: push_error (core/variant/variant_utility.cpp:1092)
+ERROR: Level 0: magnet at (6, 6) must be a plain arrow on a board without portals, Movable or hidden blocks
+   at: push_error (core/variant/variant_utility.cpp:1092)
+ERROR: Level 0: magnet at (6, 6) must be a plain arrow on a board without portals, Movable or hidden blocks
+   at: push_error (core/variant/variant_utility.cpp:1092)
+ERROR: Level 0: magnet at (6, 6) must be a plain arrow on a board without portals, Movable or hidden blocks
+   at: push_error (core/variant/variant_utility.cpp:1092)
+ERROR: Level 0: magnet at (6, 6) must be a plain arrow on a board without portals, Movable or hidden blocks
+   at: push_error (core/variant/variant_utility.cpp:1092)
+ERROR: Level 0: magnet at (6, 6) must be a plain arrow on a board without portals, Movable or hidden blocks
+   at: push_error (core/variant/variant_utility.cpp:1092)
+ERROR: Level 0: magnet at (6, 6) must be a plain arrow on a board without portals, Movable or hidden blocks
+   at: push_error (core/variant/variant_utility.cpp:1092)
+ERROR: Level 0: magnet at (6, 6) must be a plain arrow on a board without portals, Movable or hidden blocks
+   at: push_error (core/variant/variant_utility.cpp:1092)
+ERROR: Level 0: magnet at (6, 6) must be a plain arrow on a board without portals, Movable or hidden blocks
+   at: push_error (core/variant/variant_utility.cpp:1092)
+ERROR: Level 0: magnet at (6, 6) must be a plain arrow on a board without portals, Movable or hidden blocks
+   at: push_error (core/variant/variant_utility.cpp:1092)
+ERROR: Level 0: magnet at (6, 6) must be a plain arrow on a board without portals, Movable or hidden blocks
+   at: push_error (core/variant/variant_utility.cpp:1092)
+ERROR: Level 0: magnet at (6, 6) must be a plain arrow on a board without portals, Movable or hidden blocks
+   at: push_error (core/variant/variant_utility.cpp:1092)
+ERROR: Level 0: magnet at (6, 6) must be a plain arrow on a board without portals, Movable or hidden blocks
+   at: push_error (core/variant/variant_utility.cpp:1092)
+ERROR: Level 0: switch / flip / armored block at (4, 0) cannot be a spinner or hidden
+   at: push_error (core/variant/variant_utility.cpp:1092)
+ERROR: Level 0: switch / flip / armored block at (3, 4) cannot be a spinner or hidden
+   at: push_error (core/variant/variant_utility.cpp:1092)
+round 29 (1075 evaluated, 218 s): best 151.2 | 17 pieces, 434 positions, solution 17, distinct 6, steps 15 (cover 0.88, late 0.88), endgame true, mechanic 2/2, shortcut 12% | [". . . . . . P>&A",". . . Bv&A Y^@ R^@- Gv@~",". . . . R^* . Bv%A","Gv&A . . G<* . R^ P<%A","Pv . . Pv@- . . .","B<@- . . B< . . B<",". . . . . . P^@"]
+ERROR: Level 0: magnet at (6, 6) must be a plain arrow on a board without portals, Movable or hidden blocks
+   at: push_error (core/variant/variant_utility.cpp:1092)
+ERROR: Level 0: magnet at (6, 6) must be a plain arrow on a board without portals, Movable or hidden blocks
+   at: push_error (core/variant/variant_utility.cpp:1092)
+ERROR: Level 0: magnet at (6, 6) must be a plain arrow on a board without portals, Movable or hidden blocks
+   at: push_error (core/variant/variant_utility.cpp:1092)
+ERROR: Level 0: magnet at (6, 6) must be a plain arrow on a board without portals, Movable or hidden blocks
+   at: push_error (core/variant/variant_utility.cpp:1092)
+ERROR: Level 0: magnet at (6, 6) must be a plain arrow on a board without portals, Movable or hidden blocks
+   at: push_error (core/variant/variant_utility.cpp:1092)
+ERROR: Level 0: magnet at (6, 6) must be a plain arrow on a board without portals, Movable or hidden blocks
+   at: push_error (core/variant/variant_utility.cpp:1092)
+ERROR: Level 0: magnet at (6, 6) must be a plain arrow on a board without portals, Movable or hidden blocks
+   at: push_error (core/variant/variant_utility.cpp:1092)
+ERROR: Level 0: magnet at (6, 6) must be a plain arrow on a board without portals, Movable or hidden blocks
+   at: push_error (core/variant/variant_utility.cpp:1092)
+ERROR: Level 0: magnet at (6, 6) must be a plain arrow on a board without portals, Movable or hidden blocks
+   at: push_error (core/variant/variant_utility.cpp:1092)
+ERROR: Level 0: magnet at (6, 6) must be a plain arrow on a board without portals, Movable or hidden blocks
+   at: push_error (core/variant/variant_utility.cpp:1092)
+ERROR: Level 0: magnet at (6, 6) must be a plain arrow on a board without portals, Movable or hidden blocks
+   at: push_error (core/variant/variant_utility.cpp:1092)
+ERROR: Level 0: magnet at (6, 6) must be a plain arrow on a board without portals, Movable or hidden blocks
+   at: push_error (core/variant/variant_utility.cpp:1092)
+ERROR: Level 0: magnet at (6, 6) must be a plain arrow on a board without portals, Movable or hidden blocks
+   at: push_error (core/variant/variant_utility.cpp:1092)
+ERROR: Level 0: magnet at (6, 6) must be a plain arrow on a board without portals, Movable or hidden blocks
+   at: push_error (core/variant/variant_utility.cpp:1092)
+ERROR: Level 0: magnet at (1, 1) must be a plain arrow on a board without portals, Movable or hidden blocks
+   at: push_error (core/variant/variant_utility.cpp:1092)
+ERROR: Level 0: magnet at (1, 1) must be a plain arrow on a board without portals, Movable or hidden blocks
+   at: push_error (core/variant/variant_utility.cpp:1092)
+ERROR: Level 0: magnet at (1, 1) must be a plain arrow on a board without portals, Movable or hidden blocks
+   at: push_error (core/variant/variant_utility.cpp:1092)
+ERROR: Level 0: magnet at (0, 1) must be a plain arrow on a board without portals, Movable or hidden blocks
+   at: push_error (core/variant/variant_utility.cpp:1092)
+ERROR: Level 0: magnet at (0, 1) must be a plain arrow on a board without portals, Movable or hidden blocks
+   at: push_error (core/variant/variant_utility.cpp:1092)
+ERROR: Level 0: magnet at (0, 1) must be a plain arrow on a board without portals, Movable or hidden blocks
+   at: push_error (core/variant/variant_utility.cpp:1092)
+round 30 (1111 evaluated, 228 s): best 151.2 | 17 pieces, 434 positions, solution 17, distinct 6, steps 15 (cover 0.88, late 0.88), endgame true, mechanic 2/2, shortcut 12% | [". . . . . . P>&A",". . . Bv&A Y^@ R^@- Gv@~",". . . . R^* . Bv%A","Gv&A . . G<* . R^ P<%A","Pv . . Pv@- . . .","B<@- . . B< . . B<",". . . . . . P^@"]
+ERROR: Level 0: magnet at (6, 6) must be a plain arrow on a board without portals, Movable or hidden blocks
+   at: push_error (core/variant/variant_utility.cpp:1092)
+ERROR: Level 0: magnet at (6, 6) must be a plain arrow on a board without portals, Movable or hidden blocks
+   at: push_error (core/variant/variant_utility.cpp:1092)
+ERROR: Level 0: magnet at (6, 6) must be a plain arrow on a board without portals, Movable or hidden blocks
+   at: push_error (core/variant/variant_utility.cpp:1092)
+round 31 (1148 evaluated, 242 s): best 151.3 | 17 pieces, 688 positions, solution 17, distinct 7, steps 15 (cover 0.88, late 0.88), endgame true, mechanic 2/2, shortcut 8% | [". . . . . . P>&A",". . . Bv&A Y^@ R^@- Gv@~",". . . . R^* . Bv%A","Gv&A . . G<* . R^ P<%A","Pv . . P>@ . . .","B<@- . . B< . . B<@-",". . . . . . P^@"]
+round 32 (1185 evaluated, 255 s): best 153.0 | 17 pieces, 235 positions, solution 17, distinct 7, steps 15 (cover 0.88, late 0.88), endgame true, mechanic 2/2, shortcut 0% | [". . . . . . P>&A",". . . Bv&A Y^@ R^@- Gv@~",". . . . R^* . Bv%A","Gv&A . . G<* . R^ P<%A","Pv . . Pv@- . . P<@",". . . B< . . B<",". . . . . . P^@"]
+round 33 (1224 evaluated, 269 s): best 153.0 | 17 pieces, 235 positions, solution 17, distinct 7, steps 15 (cover 0.88, late 0.88), endgame true, mechanic 2/2, shortcut 0% | [". . . . . . P>&A",". . . Bv&A Y^@ R^@- Gv@~",". . . . R^* . Bv%A","Gv&A . . G<* . R^ P<%A","Pv . . Pv@- . . P<@",". . . B< . . B<",". . . . . . P^@"]
+ERROR: Level 0: switch / flip / armored block at (2, 1) cannot be a spinner or hidden
+   at: push_error (core/variant/variant_utility.cpp:1092)
+ERROR: Level 0: switch / flip / armored block at (1, 3) cannot be a spinner or hidden
+   at: push_error (core/variant/variant_utility.cpp:1092)
+round 34 (1261 evaluated, 279 s): best 153.0 | 17 pieces, 235 positions, solution 17, distinct 7, steps 15 (cover 0.88, late 0.88), endgame true, mechanic 2/2, shortcut 0% | [". . . . . . P>&A",". . . Bv&A Y^@ R^@- Gv@~",". . . . R^* . Bv%A","Gv&A . . G<* . R^ P<%A","Pv . . Pv@- . . P<@",". . . B< . . B<",". . . . . . P^@"]
+round 35 (1297 evaluated, 289 s): best 153.0 | 17 pieces, 235 positions, solution 17, distinct 7, steps 15 (cover 0.88, late 0.88), endgame true, mechanic 2/2, shortcut 0% | [". . . . . . P>&A",". . . Bv&A Y^@ R^@- Gv@~",". . . . R^* . Bv%A","Gv&A . . G<* . R^ P<%A","Pv . . Pv@- . . P<@",". . . B< . . B<",". . . . . . P^@"]
+round 36 (1332 evaluated, 300 s): best 153.0 | 17 pieces, 235 positions, solution 17, distinct 7, steps 15 (cover 0.88, late 0.88), endgame true, mechanic 2/2, shortcut 0% | [". . . . . . P>&A",". . . Bv&A Y^@ R^@- Gv@~",". . . . R^* . Bv%A","Gv&A . . G<* . R^ P<%A","Pv . . Pv@- . . P<@",". . . B< . . B<",". . . . . . P^@"]
+round 37 (1363 evaluated, 310 s): best 153.0 | 17 pieces, 235 positions, solution 17, distinct 7, steps 15 (cover 0.88, late 0.88), endgame true, mechanic 2/2, shortcut 0% | [". . . . . . P>&A",". . . Bv&A Y^@ R^@- Gv@~",". . . . R^* . Bv%A","Gv&A . . G<* . R^ P<%A","Pv . . Pv@- . . P<@",". . . B< . . B<",". . . . . . P^@"]
+ERROR: Level 0: switch / flip / armored block at (0, 3) cannot be a spinner or hidden
+   at: push_error (core/variant/variant_utility.cpp:1092)
+ERROR: Level 0: switch / flip / armored block at (5, 2) cannot be a spinner or hidden
+   at: push_error (core/variant/variant_utility.cpp:1092)
+ERROR: Level 0: switch / flip / armored block at (4, 5) cannot be a spinner or hidden
+   at: push_error (core/variant/variant_utility.cpp:1092)
+round 38 (1398 evaluated, 319 s): best 153.0 | 17 pieces, 235 positions, solution 17, distinct 7, steps 15 (cover 0.88, late 0.88), endgame true, mechanic 2/2, shortcut 0% | [". . . . . . P>&A",". . . Bv&A Y^@ R^@- Gv@~",". . . . R^* . Bv%A","Gv&A . . G<* . R^ P<%A","Pv . . Pv@- . . P<@",". . . B< . . B<",". . . . . . P^@"]
+ERROR: Level 0: switch / flip / armored block at (6, 6) cannot be a spinner or hidden
+   at: push_error (core/variant/variant_utility.cpp:1092)
+ERROR: Level 0: switch / flip / armored block at (6, 4) cannot be a spinner or hidden
+   at: push_error (core/variant/variant_utility.cpp:1092)
+ERROR: Level 0: switch / flip / armored block at (0, 1) cannot be a spinner or hidden
+   at: push_error (core/variant/variant_utility.cpp:1092)
+ERROR: Level 0: switch / flip / armored block at (4, 5) cannot be a spinner or hidden
+   at: push_error (core/variant/variant_utility.cpp:1092)
+round 39 (1428 evaluated, 327 s): best 153.0 | 17 pieces, 407 positions, solution 17, distinct 6, steps 15 (cover 0.88, late 0.88), endgame true, mechanic 2/2, shortcut 0% | [". . . . . . P>&A",". P<&A . Bv&A Y^@ R^@- Gv@~",". . . . R^* . Bv%A",". . . G<* . R^ P<%A",". . . Pv@- . . P<@",". . . B< P< . B<",". . . . . . P^@"]
+round 40 (1466 evaluated, 341 s): best 153.6 | 17 pieces, 451 positions, solution 17, distinct 7, steps 15 (cover 0.88, late 0.88), endgame true, mechanic 2/2, shortcut 0% | [". . . . . . P>&A",". . . Bv&A Y^@ R^@- Gv@~",". . . . R^* . Bv%A",". . . G<* . R^ P<%A",". . . Pv@- R>@ . P<@",". . . B< P< . B<",". . . . . . P^@"]
+ERROR: Level 0: switch / flip / armored block at (5, 1) cannot be a spinner or hidden
+   at: push_error (core/variant/variant_utility.cpp:1092)
+round 41 (1505 evaluated, 353 s): best 153.6 | 17 pieces, 451 positions, solution 17, distinct 7, steps 15 (cover 0.88, late 0.88), endgame true, mechanic 2/2, shortcut 0% | [". . . . . . P>&A",". . . Bv&A Y^@ R^@- Gv@~",". . . . R^* . Bv%A",". . . G<* . R^ P<%A",". . . Pv@- R>@ . P<@",". . . B< P< . B<",". . . . . . P^@"]
+ERROR: Level 0: switch / flip / armored block at (4, 4) cannot be a spinner or hidden
+   at: push_error (core/variant/variant_utility.cpp:1092)
+ERROR: Level 0: switch / flip / armored block at (4, 4) cannot be a spinner or hidden
+   at: push_error (core/variant/variant_utility.cpp:1092)
+round 42 (1541 evaluated, 366 s): best 154.4 | 17 pieces, 427 positions, solution 17, distinct 6, steps 15 (cover 0.88, late 0.88), endgame true, mechanic 2/2, shortcut 0% | [". . . . . . P>&A",". . . Bv&A Y^@ R^@- Gv@~",". . . . R^* . Bv%A",". . . G<* . R^ P<%A",". . . Pv@- R>@ . Pv@~",". . . B< P< . B<",". . . . . . P^@"]
+round 43 (1578 evaluated, 379 s): best 154.4 | 17 pieces, 427 positions, solution 17, distinct 6, steps 15 (cover 0.88, late 0.88), endgame true, mechanic 2/2, shortcut 0% | [". . . . . . P>&A",". . . Bv&A Y^@ R^@- Gv@~",". . . . R^* . Bv%A",". . . G<* . R^ P<%A",". . . Pv@- R>@ . Pv@~",". . . B< P< . B<",". . . . . . P^@"]
+ERROR: Level 0: switch / flip / armored block at (0, 1) cannot be a spinner or hidden
+   at: push_error (core/variant/variant_utility.cpp:1092)
+round 44 (1616 evaluated, 393 s): best 155.7 | 17 pieces, 755 positions, solution 17, distinct 6, steps 15 (cover 0.88, late 0.88), endgame true, mechanic 2/2, shortcut 5% | [". . . . . . P>&A",". . . Bv&A Y^@ R^@- Gv@~",". . . . R^* . Bv%A",". . . G<* . R^ P<%A",". . . Pv@- R>@ Bv@ P<@",". . . B< P< . B<",". . . . . . ."]
+ERROR: Level 0: switch / flip / armored block at (4, 3) cannot be a spinner or hidden
+   at: push_error (core/variant/variant_utility.cpp:1092)
+ERROR: Level 0: switch / flip / armored block at (4, 0) cannot be a spinner or hidden
+   at: push_error (core/variant/variant_utility.cpp:1092)
+round 45 (1647 evaluated, 405 s): best 155.7 | 17 pieces, 755 positions, solution 17, distinct 6, steps 15 (cover 0.88, late 0.88), endgame true, mechanic 2/2, shortcut 5% | [". . . . . . P>&A",". . . Bv&A Y^@ R^@- Gv@~",". . . . R^* . Bv%A",". . . G<* . R^ P<%A",". . . Pv@- R>@ Bv@ P<@",". . . B< P< . B<",". . . . . . ."]
+round 46 (1684 evaluated, 420 s): best 155.7 | 17 pieces, 755 positions, solution 17, distinct 6, steps 15 (cover 0.88, late 0.88), endgame true, mechanic 2/2, shortcut 5% | [". . . . . . P>&A",". . . Bv&A Y^@ R^@- Gv@~",". . . . R^* . Bv%A",". . . G<* . R^ P<%A",". . . Pv@- R>@ Bv@ P<@",". . . B< P< . B<",". . . . . . ."]
+ERROR: Level 0: switch / flip / armored block at (4, 3) cannot be a spinner or hidden
+   at: push_error (core/variant/variant_utility.cpp:1092)
+round 47 (1721 evaluated, 432 s): best 155.7 | 17 pieces, 755 positions, solution 17, distinct 6, steps 15 (cover 0.88, late 0.88), endgame true, mechanic 2/2, shortcut 5% | [". . . . . . P>&A",". . . Bv&A Y^@ R^@- Gv@~",". . . . R^* . Bv%A",". . . G<* . R^ P<%A",". . . Pv@- R>@ Bv@ P<@",". . . B< P< . B<",". . . . . . ."]
+round 48 (1754 evaluated, 444 s): best 155.9 | 17 pieces, 711 positions, solution 17, distinct 6, steps 15 (cover 0.88, late 0.88), endgame true, mechanic 2/2, shortcut 5% | [". . . . . . P>&A",". . . Bv&A Y^@ R^@- Gv@~",". . . . R^* . Bv%A",". . . G<* . R^&A P<%A",". . . Pv@- R>@ Bv@ P<@",". . . Bv@- P< . B<",". . . . . . ."]
+round 49 (1792 evaluated, 457 s): best 156.0 | 17 pieces, 876 positions, solution 17, distinct 7, steps 15 (cover 0.88, late 0.88), endgame true, mechanic 2/2, shortcut 5% | [". . . . . . P>&A",". . . Bv&A Y^@ R^@- Gv@~",". . . . R^* . Bv%A",". . . G<* . R^&A P<%A",". . . Pv@- R>@ Bv@ P<@",". . . Bv@- Pv@~ . B<",". . . . . . ."]
+ERROR: Level 0: switch / flip / armored block at (3, 0) cannot be a spinner or hidden
+   at: push_error (core/variant/variant_utility.cpp:1092)
+round 50 (1827 evaluated, 470 s): best 156.5 | 17 pieces, 149 positions, solution 17, distinct 7, steps 15 (cover 0.88, late 0.88), endgame true, mechanic 2/2, shortcut 8% | [". . . . . . P>&A",". . . Bv&A Y^@ R^@- Gv@~",". . . . R^* . Bv%A",". . . G<* . R^&A P<%A",". . . Pv@- R>@ Bv@ P<@",". . . Bv@- P<@~ . B<",". . . . . . ."]
+ERROR: Level 0: switch / flip / armored block at (0, 1) cannot be a spinner or hidden
+   at: push_error (core/variant/variant_utility.cpp:1092)
+ERROR: Level 0: switch / flip / armored block at (5, 2) cannot be a spinner or hidden
+   at: push_error (core/variant/variant_utility.cpp:1092)
+round 51 (1862 evaluated, 480 s): best 158.4 | 17 pieces, 187 positions, solution 17, distinct 7, steps 15 (cover 0.88, late 0.88), endgame true, mechanic 2/2, shortcut 0% | [". . . . . . P>&A",". . . Bv&A Y^@ R^@- Gv@~",". . . . R^* . Bv%A",". . . G<* . R^&A P<%A",". . . Pv@- Rv@ Bv@ P<@",". . . Bv@- P<@~ . B<",". . . . . . ."]
+round 52 (1900 evaluated, 491 s): best 158.4 | 17 pieces, 187 positions, solution 17, distinct 7, steps 15 (cover 0.88, late 0.88), endgame true, mechanic 2/2, shortcut 0% | [". . . . . . P>&A",". . . Bv&A Y^@ R^@- Gv@~",". . . . R^* . Bv%A",". . . G<* . R^&A P<%A",". . . Pv@- Rv@ Bv@ P<@",". . . Bv@- P<@~ . B<",". . . . . . ."]
+ERROR: Level 0: switch / flip / armored block at (3, 6) cannot be a spinner or hidden
+   at: push_error (core/variant/variant_utility.cpp:1092)
+round 53 (1936 evaluated, 504 s): best 158.4 | 17 pieces, 187 positions, solution 17, distinct 7, steps 15 (cover 0.88, late 0.88), endgame true, mechanic 2/2, shortcut 0% | [". . . . . . P>&A",". . . Bv&A Y^@ R^@- Gv@~",". . . . R^* . Bv%A",". . . G<* . R^&A P<%A",". . . Pv@- Rv@ Bv@ P<@",". . . Bv@- P<@~ . B<",". . . . . . ."]
+round 54 (1969 evaluated, 517 s): best 158.4 | 17 pieces, 187 positions, solution 17, distinct 7, steps 15 (cover 0.88, late 0.88), endgame true, mechanic 2/2, shortcut 0% | [". . . . . . P>&A",". . . Bv&A Y^@ R^@- Gv@~",". . . . R^* . Bv%A",". . . G<* . R^&A P<%A",". . . Pv@- Rv@ Bv@ P<@",". . . Bv@- P<@~ . B<",". . . . . . ."]
+round 55 (2005 evaluated, 529 s): best 158.4 | 17 pieces, 187 positions, solution 17, distinct 7, steps 15 (cover 0.88, late 0.88), endgame true, mechanic 2/2, shortcut 0% | [". . . . . . P>&A",". . . Bv&A Y^@ R^@- Gv@~",". . . . R^* . Bv%A",". . . G<* . R^&A P<%A",". . . Pv@- Rv@ Bv@ P<@",". . . Bv@- P<@~ . B<",". . . . . . ."]
+ERROR: Level 0: switch / flip / armored block at (3, 2) cannot be a spinner or hidden
+   at: push_error (core/variant/variant_utility.cpp:1092)
+round 56 (2040 evaluated, 541 s): best 158.4 | 17 pieces, 187 positions, solution 17, distinct 7, steps 15 (cover 0.88, late 0.88), endgame true, mechanic 2/2, shortcut 0% | [". . . . . . P>&A",". . . Bv&A Y^@ R^@- Gv@~",". . . . R^* . Bv%A",". . . G<* . R^&A P<%A",". . . Pv@- Rv@ Bv@ P<@",". . . Bv@- P<@~ . B<",". . . . . . ."]
+round 57 (2075 evaluated, 553 s): best 158.4 | 17 pieces, 187 positions, solution 17, distinct 7, steps 15 (cover 0.88, late 0.88), endgame true, mechanic 2/2, shortcut 0% | [". . . . . . P>&A",". . . Bv&A Y^@ R^@- Gv@~",". . . . R^* . Bv%A",". . . G<* . R^&A P<%A",". . . Pv@- Rv@ Bv@ P<@",". . . Bv@- P<@~ . B<",". . . . . . ."]
+round 58 (2108 evaluated, 564 s): best 158.4 | 17 pieces, 187 positions, solution 17, distinct 7, steps 15 (cover 0.88, late 0.88), endgame true, mechanic 2/2, shortcut 0% | [". . . . . . P>&A",". . . Bv&A Y^@ R^@- Gv@~",". . . . R^* . Bv%A",". . . G<* . R^&A P<%A",". . . Pv@- Rv@ Bv@ P<@",". . . Bv@- P<@~ . B<",". . . . . . ."]
+round 59 (2141 evaluated, 576 s): best 158.4 | 17 pieces, 187 positions, solution 17, distinct 7, steps 15 (cover 0.88, late 0.88), endgame true, mechanic 2/2, shortcut 0% | [". . . . . . P>&A",". . . Bv&A Y^@ R^@- Gv@~",". . . . R^* . Bv%A",". . . G<* . R^&A P<%A",". . . Pv@- Rv@ Bv@ P<@",". . . Bv@- P<@~ . B<",". . . . . . ."]
+stopped after 59 rounds: no improvement for 8 rounds
+BEST [". . . . . . P>&A",". . . Bv&A Y^@ R^@- Gv@~",". . . . R^* . Bv%A",". . . G<* . R^&A P<%A",". . . Pv@- Rv@ Bv@ P<@",". . . Bv@- P<@~ . B<",". . . . . . ."]

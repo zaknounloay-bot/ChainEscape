@@ -1,0 +1,56 @@
+PASS ?extreme90p22=1: the welcome screen; no overflow; buttons on screen
+PASS CHOOSE A CHALLENGE: ONLY the new boards (N48, N49, N50, N51 = CHALLENGE 1-4), no scrolling; PREVIOUS CHALLENGES, COPY ALL RESULTS, HOW IT WORKS on screen; "DEV BUILD p22-qa1-20261029"
+PASS PREVIOUS CHALLENGES: CHALLENGE 5-37, every tile reached, in a scroll area ([0,388]); BACK on screen; none of the new boards
+PASS CHALLENGE tiles: N48, N49, N50, N51, N39, N40, N41, N42, N43, N44, N45, N46, N47, N37, N38, N35, N36, N3, N5, N7, N11, N13, N14, N15, N16, N18, N21, N26, N27, N29, N30, N23, N24, N31, N32, N33, N34, CHALLENGE 1-37 (the earlier ones on PREVIOUS CHALLENGES, each reachable by scrolling), no reference
+PASS N48: START (a real tap) unlocked audio; the GREEN mix plays; a 90 s clock
+PASS CHALLENGE 1 (N48): solved by touches in a timed 90 s run (29.7 s), rules ta90-v1, silence on SOLVED
+PASS N48: the SHORT questionnaire by touch - difficulty (one per line), 1-5 in a row, YES / NO in a row, all on the iPhone SE screen; then straight back to the selection (no second set)
+PASS CHALLENGE 2 (N49): solved by touches in a timed 90 s run (28.4 s), rules ta90-v1, silence on SOLVED
+PASS N49: one SKIP leaves the questionnaire; back to CHOOSE A CHALLENGE
+PASS CHALLENGE 3 (N50): solved by touches in a timed 90 s run (22.7 s), rules ta90-v1, silence on SOLVED
+PASS N50: one SKIP leaves the questionnaire; back to CHOOSE A CHALLENGE
+PASS CHALLENGE 4 (N51): solved by touches in a timed 90 s run (24.5 s), rules ta90-v1, silence on SOLVED
+PASS N51: one SKIP leaves the questionnaire; back to CHOOSE A CHALLENGE
+PASS CHALLENGE 5 (N39): solved by touches in a timed 90 s run (30.6 s), rules ta90-v1, silence on SOLVED
+PASS N39: one SKIP leaves the questionnaire; back to PREVIOUS CHALLENGES
+PASS CHALLENGE 6 (N40): solved by touches in a timed 90 s run (20.3 s), rules ta90-v1, silence on SOLVED
+PASS N40: one SKIP leaves the questionnaire; back to PREVIOUS CHALLENGES
+PASS CHALLENGE 7 (N41): solved by touches in a timed 90 s run (22.0 s), rules ta90-v1, silence on SOLVED
+PASS N41: one SKIP leaves the questionnaire; back to PREVIOUS CHALLENGES
+PASS CHALLENGE 8 (N42): solved by touches in a timed 90 s run (18.7 s), rules ta90-v1, silence on SOLVED
+PASS N42: one SKIP leaves the questionnaire; back to PREVIOUS CHALLENGES
+PASS CHALLENGE 9 (N43): solved by touches in a timed 90 s run (20.8 s), rules ta90-v1, silence on SOLVED
+PASS N43: one SKIP leaves the questionnaire; back to PREVIOUS CHALLENGES
+PASS CHALLENGE 10 (N44): solved by touches in a timed 90 s run (41.9 s), rules ta90-v1, silence on SOLVED
+PASS N44: one SKIP leaves the questionnaire; back to PREVIOUS CHALLENGES
+PASS CHALLENGE 11 (N45): solved by touches in a timed 90 s run (28.0 s), rules ta90-v1, silence on SOLVED
+PASS N45: one SKIP leaves the questionnaire; back to PREVIOUS CHALLENGES
+PASS CHALLENGE 12 (N46): solved by touches in a timed 90 s run (23.4 s), rules ta90-v1, silence on SOLVED
+PASS N46: one SKIP leaves the questionnaire; back to PREVIOUS CHALLENGES
+PASS CHALLENGE 13 (N47): solved by touches in a timed 90 s run (30.0 s), rules ta90-v1, silence on SOLVED
+PASS N47: one SKIP leaves the questionnaire; back to PREVIOUS CHALLENGES
+PASS CHALLENGE 14 (N37): solved by touches in a timed 90 s run (19.6 s), rules ta90-v1, silence on SOLVED
+PASS N37: one SKIP leaves the questionnaire; back to PREVIOUS CHALLENGES
+PASS CHALLENGE 15 (N38): solved by touches in a timed 90 s run (24.3 s), rules ta90-v1, silence on SOLVED
+PASS N38: one SKIP leaves the questionnaire; back to PREVIOUS CHALLENGES
+PASS CHALLENGE 16 (N35): solved by touches in a timed 90 s run (26.4 s), rules ta90-v1, silence on SOLVED
+PASS N35: one SKIP leaves the questionnaire; back to PREVIOUS CHALLENGES
+PASS CHALLENGE 17 (N36): solved by touches in a timed 90 s run (21.6 s), rules ta90-v1, silence on SOLVED
+PASS N36: one SKIP leaves the questionnaire; back to PREVIOUS CHALLENGES
+PASS CHALLENGE 18 (N3): solved by touches in a timed 90 s run (16.8 s), rules ta90-v1, silence on SOLVED
+PASS N3: one SKIP leaves the questionnaire; back to PREVIOUS CHALLENGES
+PASS CHALLENGE 19 (N5): solved by touches in a timed 90 s run (18.4 s), rules ta90-v1, silence on SOLVED
+PASS N5: one SKIP leaves the questionnaire; back to PREVIOUS CHALLENGES
+PASS CHALLENGE 20 (N7): solved by touches in a timed 90 s run (29.2 s), rules ta90-v1, silence on SOLVED
+PASS N7: one SKIP leaves the questionnaire; back to PREVIOUS CHALLENGES
+PASS CHALLENGE 21 (N11): solved by touches in a timed 90 s run (20.8 s), rules ta90-v1, silence on SOLVED
+PASS N11: one SKIP leaves the questionnaire; back to PREVIOUS CHALLENGES
+PASS CHALLENGE 22 (N13): solved by touches in a timed 90 s run (20.5 s), rules ta90-v1, silence on SOLVED
+PASS N13: one SKIP leaves the questionnaire; back to PREVIOUS CHALLENGES
+PASS CHALLENGE 23 (N14): solved by touches in a timed 90 s run (22.2 s), rules ta90-v1, silence on SOLVED
+PASS N14: one SKIP leaves the questionnaire; back to PREVIOUS CHALLENGES
+PASS CHALLENGE 24 (N15): solved by touches in a timed 90 s run (26.8 s), rules ta90-v1, silence on SOLVED
+PASS N15: one SKIP leaves the questionnaire; back to PREVIOUS CHALLENGES
+PASS CHALLENGE 25 (N16): solved by touches in a timed 90 s run (21.9 s), rules ta90-v1, silence on SOLVED
+PASS N16: one SKIP leaves the questionnaire; back to PREVIOUS CHALLENGES
+PASS CHALLENGE 26 (N18): solved by touches in a timed 90 s run (26.6 s), rules ta90-v1, silence on SOLVED

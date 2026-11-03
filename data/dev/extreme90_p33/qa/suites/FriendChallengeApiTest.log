@@ -1,0 +1,33 @@
+Godot Engine v4.3.stable.official.77dcf97d8 - https://godotengine.org
+
+[Social] friend challenge: hard {"blocks":19,"cols":6,"decision_points":9,"depth":13,"difficulty":30.8,"evals":188,"human_gap":0,"in_accept":true,"in_band":true,"ms":1197,"one_safe_steps":4,"random_win":0.063,"rounds":3,"rows":6,"safe_choices":1.47,"spinners":4,"start_moves":4}
+[Social] friend challenge: easy {"blocks":7,"cols":5,"decision_points":0,"depth":5,"difficulty":5,"evals":1,"human_gap":0,"in_accept":true,"in_band":true,"ms":4,"one_safe_steps":0,"random_win":-1,"rounds":1,"rows":4,"safe_choices":1.86,"spinners":0,"start_moves":2}
+[Social] API POST -> HTTP 200
+[Social] API GET -> HTTP 200
+[Social] API GET -> HTTP 200
+[Social] API GET -> HTTP 200
+[Social] friend challenge: medium {"blocks":13,"cols":5,"decision_points":5,"depth":5,"difficulty":16.9,"evals":6,"human_gap":0,"in_accept":true,"in_band":true,"ms":57,"one_safe_steps":0,"random_win":-1,"rounds":1,"rows":5,"safe_choices":3.77,"spinners":3,"start_moves":7}
+[Social] API POST -> HTTP 200
+[Social] API GET -> HTTP 200
+[Social] API GET -> HTTP 200
+[Social] API GET -> HTTP 200
+[Social] friend challenge: hard {"blocks":18,"cols":6,"decision_points":16,"depth":10,"difficulty":42.1,"evals":230,"human_gap":0,"in_accept":true,"in_band":true,"ms":1120,"one_safe_steps":2,"random_win":0.104,"rounds":4,"rows":6,"safe_choices":2.39,"spinners":4,"start_moves":4}
+[Social] API POST -> HTTP 200
+[Social] API GET -> HTTP 200
+[Social] API GET -> HTTP 200
+[Social] API GET -> HTTP 200
+[Social] friend challenge: very_hard {"blocks":20,"cols":6,"decision_points":13,"depth":14,"difficulty":41.7,"evals":69,"human_gap":0,"in_accept":true,"in_band":true,"ms":373,"one_safe_steps":6,"random_win":0,"rounds":1,"rows":6,"safe_choices":1.65,"spinners":5,"start_moves":3}
+[Social] API POST -> HTTP 200
+[Social] API GET -> HTTP 200
+[Social] API GET -> HTTP 200
+[Social] API GET -> HTTP 200
+[Social] friend challenge: easy {"blocks":8,"cols":5,"decision_points":0,"depth":7,"difficulty":6.4,"evals":1,"human_gap":0,"in_accept":true,"in_band":true,"ms":3,"one_safe_steps":0,"random_win":-1,"rounds":1,"rows":4,"safe_choices":1.25,"spinners":0,"start_moves":2}
+[Social] API POST -> HTTP 200
+[Social] API GET -> HTTP 200
+[Social] API POST -> HTTP 200
+[Social] API GET -> HTTP 200
+[Social] API GET -> HTTP 200
+[Social] friend challenge: medium {"blocks":14,"cols":5,"decision_points":1,"depth":11,"difficulty":12.6,"evals":11,"human_gap":0,"in_accept":true,"in_band":true,"ms":47,"one_safe_steps":0,"random_win":-1,"rounds":1,"rows":5,"safe_choices":2.21,"spinners":3,"start_moves":3}
+[Social] API POST -> HTTP 200
+[Social] API GET -> HTTP 200
+FRIEND CHALLENGE API TEST: PASSED (58 checks)

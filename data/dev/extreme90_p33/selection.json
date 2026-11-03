@@ -1,0 +1,292 @@
+{
+ "N94": {
+  "key": "T01r_s331_3",
+  "core": "T01r_PULLEDTRIGGER",
+  "family": "P30 the pulled trigger (magnet + switch)",
+  "group": "magnet x reversal",
+  "mechanics": [
+   "magnet",
+   "switch",
+   "spinner"
+  ],
+  "idea": "P30 hand core: the pulled trigger: a fixed magnet pulls the switch piece into its own cell, so WHEN the magnet leaves decides where the reversal is fired from and which lane it opens (round 302: larger piece budget, suffix rate 0.45, core_essential on)",
+  "arm": "R",
+  "approved_sibling": "N83",
+  "overlap_to_sibling": 0.32,
+  "related": "closest occupancy N75 0.33 (bank); pairwise with the other Phase 33 boards <= 0.29",
+  "source": "hybrid: hand core frozen cell for cell (seed_T01r_PULLEDTRIGGER.json, Phase 30); blocks added by the Phase 25-27 generator (tools/ta90_search.gd of commit c1ddc89, run in a separate worktree) --ops=v20 with the Phase 25-27 search parameters (piece_free 13, max_pieces 17, suffix_rate 0.30, patience 8), RNG seed 331, round 1; every board then passed the unchanged modern pipeline: engine-valid tokens, bank overlap (bank incl. N88-N93), tools/extreme90_screen30.py (40 ms gates, strict essentiality, filler, hint-follow) and the full evaluation tools/extreme90_eval25.py --full; shortlist rule S_old; Phase 33 protocol data/dev/extreme90_p33/protocol.json (the Phase 31 method, unchanged; arm R)",
+  "selection": "pre-registered rule (select33.py): one board per concept, the fewest positions among the fully qualified boards; pairwise overlap <= 0.30",
+  "advisory_prediction": {
+   "positions": 95,
+   "early3": 6,
+   "open_tempting": 3,
+   "p_look2": 0,
+   "note": "ADVISORY ONLY (no predictor met the pre-registered decision rule, validation.json); recorded before any human play; NOT used to select or reject; the owner is the judge"
+  },
+  "human_test": {
+   "status": "TESTED (owner first exposure, Phase 33 page)",
+   "difficulty": "EXTREME",
+   "enjoyment": "5/5",
+   "outcome_90s": "TIME UP",
+   "solve_time_ms": "TIME UP (no completion)",
+   "attempts": 4,
+   "restarts": 3,
+   "undo_used": 4,
+   "moves": 32,
+   "action_log": "data/dev/extreme90_p33/human/xb33_logs.json (the owner's compact transcription of the export, every event validated on the engine: tools/ta90_replay33.gd -> replay33.txt)",
+   "blocked_taps": 2,
+   "notes": "owner's COPY ALL RESULTS export (validated transcription)",
+   "owner_status": "RECOMMENDED FOR APPROVAL - NOT CONFIRMED BY OWNER",
+   "file": "data/dev/extreme90_p33/human_p33.json",
+   "owner_decision": "NONE YET"
+  }
+ },
+ "N95": {
+  "key": "T10b_s331_2",
+  "core": "T10b_LADDERBLOCK",
+  "family": "P30 the blocked key ladder (switch + lock)",
+  "group": "reversal x lock chain",
+  "mechanics": [
+   "switch",
+   "lock",
+   "spinner"
+  ],
+  "idea": "P30 hand core (round 302 revision of T10): the last prisoner blocks the key's only exit, so the key must be REVERSED to leave - and that same reversal turns the locked middle key away from its exit; the ladder now has an order to get wrong",
+  "arm": "R",
+  "approved_sibling": "N86",
+  "overlap_to_sibling": 0.26,
+  "related": "closest occupancy N9 0.35 (bank); pairwise with the other Phase 33 boards <= 0.29",
+  "source": "hybrid: hand core frozen cell for cell (seed_T10b_LADDERBLOCK.json, Phase 30); blocks added by the Phase 25-27 generator (tools/ta90_search.gd of commit c1ddc89, run in a separate worktree) --ops=v20 with the Phase 25-27 search parameters (piece_free 13, max_pieces 17, suffix_rate 0.30, patience 8), RNG seed 331, round 1; every board then passed the unchanged modern pipeline: engine-valid tokens, bank overlap (bank incl. N88-N93), tools/extreme90_screen30.py (40 ms gates, strict essentiality, filler, hint-follow) and the full evaluation tools/extreme90_eval25.py --full; shortlist rule S_old; Phase 33 protocol data/dev/extreme90_p33/protocol.json (the Phase 31 method, unchanged; arm R)",
+  "selection": "pre-registered rule (select33.py): one board per concept, the fewest positions among the fully qualified boards; pairwise overlap <= 0.30",
+  "advisory_prediction": {
+   "positions": 136,
+   "early3": 5,
+   "open_tempting": 2,
+   "p_look2": 0.022,
+   "note": "ADVISORY ONLY (no predictor met the pre-registered decision rule, validation.json); recorded before any human play; NOT used to select or reject; the owner is the judge"
+  },
+  "human_test": {
+   "status": "TESTED (owner first exposure, Phase 33 page)",
+   "difficulty": "MEDIUM",
+   "enjoyment": "5/5",
+   "outcome_90s": "COMPLETED",
+   "solve_time_ms": 31200,
+   "attempts": 2,
+   "restarts": 1,
+   "undo_used": 0,
+   "moves": 18,
+   "action_log": "data/dev/extreme90_p33/human/xb33_logs.json (the owner's compact transcription of the export, every event validated on the engine: tools/ta90_replay33.gd -> replay33.txt)",
+   "blocked_taps": 0,
+   "notes": "owner's COPY ALL RESULTS export (validated transcription)",
+   "owner_status": "DOWNGRADED (MEDIUM)",
+   "file": "data/dev/extreme90_p33/human_p33.json",
+   "owner_decision": "NOT APPROVED"
+  }
+ },
+ "N96": {
+  "key": "K08_s331_2",
+  "core": "K08_PULLEDTARGET",
+  "family": "P32 the pulled target (magnet + switch)",
+  "group": "magnet x reversal",
+  "mechanics": [
+   "magnet",
+   "switch",
+   "spinner"
+  ],
+  "idea": "the pulled target: a flip target and its switch block each other; a fixed magnet pulls the TARGET into a new lane, and the switch then decides which way it leaves from there",
+  "arm": "N",
+  "related": "closest occupancy N47 0.31 (bank); pairwise with the other Phase 33 boards <= 0.29",
+  "source": "hybrid: hand core frozen cell for cell (seed_K08_PULLEDTARGET.json, Phase 32 (never produced a rated board)); blocks added by the Phase 25-27 generator (tools/ta90_search.gd of commit c1ddc89, run in a separate worktree) --ops=v20 with the Phase 25-27 search parameters (piece_free 13, max_pieces 17, suffix_rate 0.30, patience 8), RNG seed 331, round 1; every board then passed the unchanged modern pipeline: engine-valid tokens, bank overlap (bank incl. N88-N93), tools/extreme90_screen30.py (40 ms gates, strict essentiality, filler, hint-follow) and the full evaluation tools/extreme90_eval25.py --full; shortlist rule S_old+S_p30; Phase 33 protocol data/dev/extreme90_p33/protocol.json (the Phase 31 method, unchanged; arm N)",
+  "selection": "pre-registered rule (select33.py): one board per concept, the fewest positions among the fully qualified boards; pairwise overlap <= 0.30",
+  "advisory_prediction": {
+   "positions": 294,
+   "early3": 8,
+   "open_tempting": 2,
+   "p_look2": 0.002,
+   "note": "ADVISORY ONLY (no predictor met the pre-registered decision rule, validation.json); recorded before any human play; NOT used to select or reject; the owner is the judge"
+  },
+  "human_test": {
+   "status": "TESTED (owner first exposure, Phase 33 page)",
+   "difficulty": "VERY HARD",
+   "enjoyment": "5/5",
+   "outcome_90s": "TIME UP",
+   "solve_time_ms": "TIME UP (no completion)",
+   "attempts": 4,
+   "restarts": 3,
+   "undo_used": 1,
+   "moves": 35,
+   "action_log": "data/dev/extreme90_p33/human/xb33_logs.json (the owner's compact transcription of the export, every event validated on the engine: tools/ta90_replay33.gd -> replay33.txt)",
+   "blocked_taps": 3,
+   "notes": "owner's COPY ALL RESULTS export (validated transcription)",
+   "owner_status": "BORDERLINE - REQUIRES OWNER JUDGMENT",
+   "file": "data/dev/extreme90_p33/human_p33.json",
+   "owner_decision": "NONE YET"
+  }
+ },
+ "N97": {
+  "key": "R04_s332_1",
+  "core": "R04_ARMOREDKEY",
+  "family": "P29 the armored key (switch + lock + armor)",
+  "group": "reversal x lock x armor",
+  "mechanics": [
+   "switch",
+   "lock",
+   "armor",
+   "spinner"
+  ],
+  "idea": "P29 hand core: the key is an armored flip target: cracked, it can leave only the way the reversal leaves it facing - and the prisoner waits for it",
+  "arm": "R",
+  "approved_sibling": "N75",
+  "overlap_to_sibling": 0.22,
+  "related": "closest occupancy N79 0.36 (bank); pairwise with the other Phase 33 boards <= 0.29",
+  "source": "hybrid: hand core frozen cell for cell (seed_R04_ARMOREDKEY.json, Phase 29); blocks added by the Phase 25-27 generator (tools/ta90_search.gd of commit c1ddc89, run in a separate worktree) --ops=v20 with the Phase 25-27 search parameters (piece_free 13, max_pieces 17, suffix_rate 0.30, patience 8), RNG seed 332, round 2 (second RNG seed: no screen PASS in round 1); every board then passed the unchanged modern pipeline: engine-valid tokens, bank overlap (bank incl. N88-N93), tools/extreme90_screen30.py (40 ms gates, strict essentiality, filler, hint-follow) and the full evaluation tools/extreme90_eval25.py --full; shortlist rule S_old; Phase 33 protocol data/dev/extreme90_p33/protocol.json (the Phase 31 method, unchanged; arm R)",
+  "selection": "pre-registered rule (select33.py): one board per concept, the fewest positions among the fully qualified boards; pairwise overlap <= 0.30",
+  "advisory_prediction": {
+   "positions": 323,
+   "early3": 7,
+   "open_tempting": 2,
+   "p_look2": 0.004,
+   "note": "ADVISORY ONLY (no predictor met the pre-registered decision rule, validation.json); recorded before any human play; NOT used to select or reject; the owner is the judge"
+  },
+  "human_test": {
+   "status": "TESTED (owner first exposure, Phase 33 page)",
+   "difficulty": "MEDIUM",
+   "enjoyment": "5/5",
+   "outcome_90s": "COMPLETED",
+   "solve_time_ms": 40500,
+   "attempts": 2,
+   "restarts": 1,
+   "undo_used": 0,
+   "moves": 22,
+   "action_log": "data/dev/extreme90_p33/human/xb33_logs.json (the owner's compact transcription of the export, every event validated on the engine: tools/ta90_replay33.gd -> replay33.txt)",
+   "blocked_taps": 0,
+   "notes": "owner's COPY ALL RESULTS export (validated transcription)",
+   "owner_status": "DOWNGRADED (MEDIUM)",
+   "file": "data/dev/extreme90_p33/human_p33.json",
+   "owner_decision": "NOT APPROVED"
+  }
+ },
+ "N98": {
+  "key": "J4_s331_6",
+  "core": "J4_RELAY",
+  "family": "P26 the two-hop relay (two magnets + armor)",
+  "group": "magnet relay",
+  "mechanics": [
+   "magnet",
+   "armor"
+  ],
+  "idea": "P26 hand core G9a: a two-hop delivery - magnet M1 pulls the cargo up into the line of magnet M2, which pulls it again into the only lane that cracks the shell; M2 fired first pulls M1 itself (and M1 then pulls the shell), and the cargo can simply leave before either",
+  "arm": "N",
+  "related": "closest occupancy N48 0.35 (bank); pairwise with the other Phase 33 boards <= 0.29",
+  "source": "hybrid: hand core frozen cell for cell (seed_J4_RELAY.json, Phase 26 (never produced a rated board)); blocks added by the Phase 25-27 generator (tools/ta90_search.gd of commit c1ddc89, run in a separate worktree) --ops=v20 with the Phase 25-27 search parameters (piece_free 13, max_pieces 17, suffix_rate 0.30, patience 8), RNG seed 331, round 1; every board then passed the unchanged modern pipeline: engine-valid tokens, bank overlap (bank incl. N88-N93), tools/extreme90_screen30.py (40 ms gates, strict essentiality, filler, hint-follow) and the full evaluation tools/extreme90_eval25.py --full; shortlist rule S_p30; Phase 33 protocol data/dev/extreme90_p33/protocol.json (the Phase 31 method, unchanged; arm N)",
+  "selection": "pre-registered rule (select33.py): one board per concept, the fewest positions among the fully qualified boards; pairwise overlap <= 0.30",
+  "advisory_prediction": {
+   "positions": 363,
+   "early3": 6,
+   "open_tempting": 2,
+   "p_look2": 0.001,
+   "note": "ADVISORY ONLY (no predictor met the pre-registered decision rule, validation.json); recorded before any human play; NOT used to select or reject; the owner is the judge"
+  },
+  "human_test": {
+   "status": "TESTED (owner first exposure, Phase 33 page)",
+   "difficulty": "MEDIUM",
+   "enjoyment": "5/5",
+   "outcome_90s": "COMPLETED",
+   "solve_time_ms": 36300,
+   "attempts": 2,
+   "restarts": 1,
+   "undo_used": 0,
+   "moves": 19,
+   "action_log": "data/dev/extreme90_p33/human/xb33_logs.json (the owner's compact transcription of the export, every event validated on the engine: tools/ta90_replay33.gd -> replay33.txt)",
+   "blocked_taps": 0,
+   "notes": "owner's COPY ALL RESULTS export (validated transcription)",
+   "owner_status": "DOWNGRADED (MEDIUM)",
+   "file": "data/dev/extreme90_p33/human_p33.json",
+   "owner_decision": "NOT APPROVED"
+  }
+ },
+ "N99": {
+  "key": "L3_s331_7",
+  "core": "L3_SHELLEXIT",
+  "family": "P27 the reversal frees the shell (switch + armor)",
+  "group": "shell face-off",
+  "mechanics": [
+   "switch",
+   "armor",
+   "spinner"
+  ],
+  "idea": "P27 hand core W6a: the shell's exit - an armored flip target faces its own rammer (cracked, neither could move); the reversal turns it away, but the same reversal turns the other targets",
+  "arm": "R",
+  "approved_sibling": "N62",
+  "overlap_to_sibling": 0.3,
+  "related": "closest occupancy N62 0.30 (bank); pairwise with the other Phase 33 boards <= 0.29",
+  "source": "hybrid: hand core frozen cell for cell (seed_L3_SHELLEXIT.json, Phase 27); blocks added by the Phase 25-27 generator (tools/ta90_search.gd of commit c1ddc89, run in a separate worktree) --ops=v20 with the Phase 25-27 search parameters (piece_free 13, max_pieces 17, suffix_rate 0.30, patience 8), RNG seed 331, round 1; every board then passed the unchanged modern pipeline: engine-valid tokens, bank overlap (bank incl. N88-N93), tools/extreme90_screen30.py (40 ms gates, strict essentiality, filler, hint-follow) and the full evaluation tools/extreme90_eval25.py --full; shortlist rule S_p30; Phase 33 protocol data/dev/extreme90_p33/protocol.json (the Phase 31 method, unchanged; arm R)",
+  "selection": "pre-registered rule (select33.py): one board per concept, the fewest positions among the fully qualified boards; pairwise overlap <= 0.30",
+  "advisory_prediction": {
+   "positions": 791,
+   "early3": 8,
+   "open_tempting": 2,
+   "p_look2": 0.003,
+   "note": "ADVISORY ONLY (no predictor met the pre-registered decision rule, validation.json); recorded before any human play; NOT used to select or reject; the owner is the judge"
+  },
+  "human_test": {
+   "status": "TESTED (owner first exposure, Phase 33 page)",
+   "difficulty": "EXTREME",
+   "enjoyment": "5/5",
+   "outcome_90s": "TIME UP",
+   "solve_time_ms": "TIME UP (no completion)",
+   "attempts": 4,
+   "restarts": 3,
+   "undo_used": 0,
+   "moves": 31,
+   "action_log": "data/dev/extreme90_p33/human/xb33_logs.json (the owner's compact transcription of the export, every event validated on the engine: tools/ta90_replay33.gd -> replay33.txt)",
+   "blocked_taps": 6,
+   "notes": "owner's COPY ALL RESULTS export (validated transcription)",
+   "owner_status": "RECOMMENDED FOR APPROVAL - NOT CONFIRMED BY OWNER",
+   "file": "data/dev/extreme90_p33/human_p33.json",
+   "owner_decision": "NONE YET"
+  }
+ },
+ "N100": {
+  "key": "T30_s331_7",
+  "core": "T30_TWOKEYS",
+  "family": "P30 two keys, one reversal (switch + lock)",
+  "group": "reversal x two locks",
+  "mechanics": [
+   "switch",
+   "lock",
+   "spinner"
+  ],
+  "idea": "P30 hand core: two keys, one reversal - both keys are flip targets of one switch and each faces its own prisoner; one reversal turns both, so each key must leave on the right side of the single switch press",
+  "arm": "R",
+  "approved_sibling": "N87",
+  "overlap_to_sibling": 0.32,
+  "related": "closest occupancy N87 0.32 (bank); pairwise with the other Phase 33 boards <= 0.29",
+  "source": "hybrid: hand core frozen cell for cell (seed_T30_TWOKEYS.json, Phase 30); blocks added by the Phase 25-27 generator (tools/ta90_search.gd of commit c1ddc89, run in a separate worktree) --ops=v20 with the Phase 25-27 search parameters (piece_free 13, max_pieces 17, suffix_rate 0.30, patience 8), RNG seed 331, round 1; every board then passed the unchanged modern pipeline: engine-valid tokens, bank overlap (bank incl. N88-N93), tools/extreme90_screen30.py (40 ms gates, strict essentiality, filler, hint-follow) and the full evaluation tools/extreme90_eval25.py --full; shortlist rule S_p30; Phase 33 protocol data/dev/extreme90_p33/protocol.json (the Phase 31 method, unchanged; arm R)",
+  "selection": "pre-registered rule (select33.py): one board per concept, the fewest positions among the fully qualified boards; pairwise overlap <= 0.30",
+  "advisory_prediction": {
+   "positions": 835,
+   "early3": 4,
+   "open_tempting": 1,
+   "p_look2": 0.013,
+   "note": "ADVISORY ONLY (no predictor met the pre-registered decision rule, validation.json); recorded before any human play; NOT used to select or reject; the owner is the judge"
+  },
+  "human_test": {
+   "status": "TESTED (owner first exposure, Phase 33 page)",
+   "difficulty": "MEDIUM",
+   "enjoyment": "5/5",
+   "outcome_90s": "COMPLETED",
+   "solve_time_ms": 23600,
+   "attempts": 1,
+   "restarts": 0,
+   "undo_used": 1,
+   "moves": 18,
+   "action_log": "data/dev/extreme90_p33/human/xb33_logs.json (the owner's compact transcription of the export, every event validated on the engine: tools/ta90_replay33.gd -> replay33.txt)",
+   "blocked_taps": 0,
+   "notes": "owner's COPY ALL RESULTS export (validated transcription)",
+   "owner_status": "DOWNGRADED (MEDIUM)",
+   "file": "data/dev/extreme90_p33/human_p33.json",
+   "owner_decision": "NOT APPROVED"
+  }
+ }
+}

@@ -1,0 +1,11 @@
+PASS the OLD build: all 22 challenges (N3 = CHALLENGE 1, N35 = CHALLENGE 21), no PREVIOUS CHALLENGES, no build id
+PASS OLD build: N3 and N35 solved by touches; one stored result each (xb19)
+PASS the NEW build: "DEV BUILD p19-qa3-20261028" on CHOOSE A CHALLENGE; only N35 / N36 (CHALLENGE 1-2) and PREVIOUS CHALLENGES; straight to the selection (the saved familiarity kept)
+PASS N35's earlier result kept: CHALLENGE 1 "Solved 0:26", CHALLENGE 2 "New"
+PASS PREVIOUS CHALLENGES: N3 (now CHALLENGE 3) "Solved 0:16"; no new board listed
+PASS N3 and N35 stored records byte-for-byte unchanged by the new build
+PASS N36 played on the new build: its own result stored; N3 / N35 results unchanged
+PASS COPY ALL RESULTS (p19-qa3-20261028): runs N3,N35,N36, each under its real board id and fingerprint (N35 = 1, N36 = 2, N3 = 3, lists new / previous)
+FPS {"N35":"3e6a96041ad6e090b24ea50696b7436ff8819b14d5c73d5974ae5b9121d6adc2","N36":"0ce35e1d021d6a7e0496c5439836e429c769a321f5bce1638484edea380971c6"}
+PASS no page errors []
+WEB P19 UPGRADE TEST: PASSED (9/9)

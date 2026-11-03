@@ -1,0 +1,122 @@
+[
+ {
+  "name": "screen_J4_RELAY_s331",
+  "dir": "data/dev/extreme90_p33/screen/J4_RELAY_s331",
+  "quiet": true,
+  "cmd": [
+   "python3",
+   "tools/extreme90_screen30.py",
+   "data/dev/extreme90_p33/screen/J4_RELAY_s331/shortlist.json",
+   "data/dev/extreme90_p33/screen/J4_RELAY_s331",
+   "/tmp/claude-0/-home-user-ChainEscape/7e9f2bd8-6e70-52bd-944d-4d9f0e72484e/scratchpad/godot/godot"
+  ]
+ },
+ {
+  "name": "screen_J5_KEYFACE_s331",
+  "dir": "data/dev/extreme90_p33/screen/J5_KEYFACE_s331",
+  "quiet": true,
+  "cmd": [
+   "python3",
+   "tools/extreme90_screen30.py",
+   "data/dev/extreme90_p33/screen/J5_KEYFACE_s331/shortlist.json",
+   "data/dev/extreme90_p33/screen/J5_KEYFACE_s331",
+   "/tmp/claude-0/-home-user-ChainEscape/7e9f2bd8-6e70-52bd-944d-4d9f0e72484e/scratchpad/godot/godot"
+  ]
+ },
+ {
+  "name": "screen_K08_PULLEDTARGET_s331",
+  "dir": "data/dev/extreme90_p33/screen/K08_PULLEDTARGET_s331",
+  "quiet": true,
+  "cmd": [
+   "python3",
+   "tools/extreme90_screen30.py",
+   "data/dev/extreme90_p33/screen/K08_PULLEDTARGET_s331/shortlist.json",
+   "data/dev/extreme90_p33/screen/K08_PULLEDTARGET_s331",
+   "/tmp/claude-0/-home-user-ChainEscape/7e9f2bd8-6e70-52bd-944d-4d9f0e72484e/scratchpad/godot/godot"
+  ]
+ },
+ {
+  "name": "screen_L3_SHELLEXIT_s331",
+  "dir": "data/dev/extreme90_p33/screen/L3_SHELLEXIT_s331",
+  "quiet": true,
+  "cmd": [
+   "python3",
+   "tools/extreme90_screen30.py",
+   "data/dev/extreme90_p33/screen/L3_SHELLEXIT_s331/shortlist.json",
+   "data/dev/extreme90_p33/screen/L3_SHELLEXIT_s331",
+   "/tmp/claude-0/-home-user-ChainEscape/7e9f2bd8-6e70-52bd-944d-4d9f0e72484e/scratchpad/godot/godot"
+  ]
+ },
+ {
+  "name": "screen_P03_TURNEDMAGNET_s331",
+  "dir": "data/dev/extreme90_p33/screen/P03_TURNEDMAGNET_s331",
+  "quiet": true,
+  "cmd": [
+   "python3",
+   "tools/extreme90_screen30.py",
+   "data/dev/extreme90_p33/screen/P03_TURNEDMAGNET_s331/shortlist.json",
+   "data/dev/extreme90_p33/screen/P03_TURNEDMAGNET_s331",
+   "/tmp/claude-0/-home-user-ChainEscape/7e9f2bd8-6e70-52bd-944d-4d9f0e72484e/scratchpad/godot/godot"
+  ]
+ },
+ {
+  "name": "screen_P07_ARMOREDKEY_s331",
+  "dir": "data/dev/extreme90_p33/screen/P07_ARMOREDKEY_s331",
+  "quiet": true,
+  "cmd": [
+   "python3",
+   "tools/extreme90_screen30.py",
+   "data/dev/extreme90_p33/screen/P07_ARMOREDKEY_s331/shortlist.json",
+   "data/dev/extreme90_p33/screen/P07_ARMOREDKEY_s331",
+   "/tmp/claude-0/-home-user-ChainEscape/7e9f2bd8-6e70-52bd-944d-4d9f0e72484e/scratchpad/godot/godot"
+  ]
+ },
+ {
+  "name": "screen_R04_ARMOREDKEY_s331",
+  "dir": "data/dev/extreme90_p33/screen/R04_ARMOREDKEY_s331",
+  "quiet": true,
+  "cmd": [
+   "python3",
+   "tools/extreme90_screen30.py",
+   "data/dev/extreme90_p33/screen/R04_ARMOREDKEY_s331/shortlist.json",
+   "data/dev/extreme90_p33/screen/R04_ARMOREDKEY_s331",
+   "/tmp/claude-0/-home-user-ChainEscape/7e9f2bd8-6e70-52bd-944d-4d9f0e72484e/scratchpad/godot/godot"
+  ]
+ },
+ {
+  "name": "screen_T01r_PULLEDTRIGGER_s331",
+  "dir": "data/dev/extreme90_p33/screen/T01r_PULLEDTRIGGER_s331",
+  "quiet": true,
+  "cmd": [
+   "python3",
+   "tools/extreme90_screen30.py",
+   "data/dev/extreme90_p33/screen/T01r_PULLEDTRIGGER_s331/shortlist.json",
+   "data/dev/extreme90_p33/screen/T01r_PULLEDTRIGGER_s331",
+   "/tmp/claude-0/-home-user-ChainEscape/7e9f2bd8-6e70-52bd-944d-4d9f0e72484e/scratchpad/godot/godot"
+  ]
+ },
+ {
+  "name": "screen_T10b_LADDERBLOCK_s331",
+  "dir": "data/dev/extreme90_p33/screen/T10b_LADDERBLOCK_s331",
+  "quiet": true,
+  "cmd": [
+   "python3",
+   "tools/extreme90_screen30.py",
+   "data/dev/extreme90_p33/screen/T10b_LADDERBLOCK_s331/shortlist.json",
+   "data/dev/extreme90_p33/screen/T10b_LADDERBLOCK_s331",
+   "/tmp/claude-0/-home-user-ChainEscape/7e9f2bd8-6e70-52bd-944d-4d9f0e72484e/scratchpad/godot/godot"
+  ]
+ },
+ {
+  "name": "screen_T30_TWOKEYS_s331",
+  "dir": "data/dev/extreme90_p33/screen/T30_TWOKEYS_s331",
+  "quiet": true,
+  "cmd": [
+   "python3",
+   "tools/extreme90_screen30.py",
+   "data/dev/extreme90_p33/screen/T30_TWOKEYS_s331/shortlist.json",
+   "data/dev/extreme90_p33/screen/T30_TWOKEYS_s331",
+   "/tmp/claude-0/-home-user-ChainEscape/7e9f2bd8-6e70-52bd-944d-4d9f0e72484e/scratchpad/godot/godot"
+  ]
+ }
+]

@@ -1,0 +1,37 @@
+PASS A: production build, fresh save (PLAY)
+DIAG {"t1":8899,"wall":8759,"lossA":133,"test_start":3865,"page_title_gone":3710,"start_lag_ms":155,"test_win_mark":12624,"page_last_touch":12716,"touch_after_mark_ms":92,"page_completed":13552,"page_window_ms":9842,"touch_window_ms":9006,"t1_minus_touch_window":-107}
+PASS A: active time 8899 ms within [wall clock 8759 ms - 133 ms beyond the 0.25 s frame cap, wall clock] (board playable -> winning tap)
+PASS A: a clean first clear: BEST = BEST CLEAN = 8899 ms
+PASS A: the card shows "TIME 0:08" (the first time on this level)
+PASS A: the card and its timing block fit the screen (0.083, 0.191, 0.917, 0.809)
+PASS A: first time: "TIME 0:08 | PERSONAL BEST 0:08" (no record banner)
+PASS B: REPLAY starts a fresh attempt (0 ms)
+PASS B: the game sees the hidden page (visibilitychange)
+PASS B: pagehide counts as hidden even while document.hidden is false
+PASS B: the 3 s stall (≤ 0.25 s), hidden 3 s and pagehide 2 s are not counted (9598 ms of 17582 ms on the wall clock)
+PASS B: active time 9598 ms within [wall clock 17582 - hidden 3000 - pagehide 2000 - 2850 ms beyond the frame cap (incl. the stall) = 9732 ms, 12582 ms]
+PASS B: the card time line "TIME 0:09   ·   BEST 0:08"
+PASS B: the replay's timing block: "TIME 0:09 | PERSONAL BEST 0:08"
+PASS B: BEST / BEST CLEAN = the faster of the two (8899 ms)
+PASS B: a faster clean replay improves BEST and BEST CLEAN (8899 -> 6190 ms)
+PASS B: the card shows "NEW PERSONAL BEST! TIME 0:06 | PREVIOUS BEST 0:08" and fits
+PASS C: both records are in the release save (chain_escape_save_r2)
+PASS C: after a reload Level 1 keeps BEST 6190 / CLEAN 6190
+PASS C: after closing and reopening the browser: BEST 6190 / CLEAN 6190
+PASS D[iphoneSE]: Level 1 card with "TIME 0:08 | PERSONAL BEST 0:08 [moved down 0.089]" fits (0.083, 0.214, 0.917, 0.965)
+PASS D[iphoneSE]: NEW PERSONAL BEST card "NEW PERSONAL BEST! TIME 0:06 | PREVIOUS BEST 0:08 [moved down 0.063]" fits (0.083, 0.214, 0.917, 0.911)
+PASS D[promax]: Level 1 card with "TIME 0:09 | PERSONAL BEST 0:09" fits (0.077, 0.186, 0.923, 0.813)
+PASS D[promax]: NEW PERSONAL BEST card "NEW PERSONAL BEST! TIME 0:06 | PREVIOUS BEST 0:09" fits (0.083, 0.215, 0.917, 0.785)
+PASS D[iphoneSE]: the Level 100 milestone card with "TIME 0:02" fits (0.077, 0.208, 0.923, 0.991; auto-solve = assisted)
+PASS D[iphone14]: the Level 100 milestone card with "TIME 0:02" fits (0.087, 0.183, 0.913, 0.816; auto-solve = assisted)
+PASS G[iphoneSE]: Level 10 card "PERFECT!" with "TIME 0:02 | PERSONAL BEST 0:02 [card scale 0.967] [moved down 0.084]" fits (0.097, 0.226, 0.903, 0.942)
+PASS G[iphoneSE]: Level 150 card "150 LEVELS ESCAPED!" with "TIME 0:02 | PERSONAL BEST 0:02 [card scale 0.989] [moved down 0.100]" fits (0.088, 0.218, 0.912, 0.981)
+PASS G[iphoneSE]: Level 250 card "250 LEVELS ESCAPED!" with "TIME 0:02 | PERSONAL BEST 0:02 [card scale 0.993] [moved down 0.100]" fits (0.086, 0.217, 0.914, 0.983)
+PASS G[iphoneSE]: Level 300 card "300 LEVELS ESCAPED!" with "TIME 0:02 | PERSONAL BEST 0:02 [moved down 0.100]" fits (0.077, 0.209, 0.923, 0.991)
+PASS F: the Magnet card and the finger lesson: the clock does not run (0 ms, active false)
+PASS F: 4 guided taps over 7.8 s added 0 ms; the lesson over, the clock runs; not assisted
+PASS F: the recorded time is the independent play only (3371 ms of 3621 ms since the lesson ended)
+PASS E: no page errors ()
+
+33 passed, 0 failed
+WEB TIMING TEST PASSED

@@ -1,0 +1,128 @@
+{
+ "J5_s331_1": {
+  "A": {
+   "fingerprint": "1db8fd14f5bf2c0ec26d22c27643be557db6615b6b3fca07d8d0b692f7a06d51",
+   "hint_nodes": [
+    6,
+    19
+   ],
+   "parity": [
+    0,
+    0
+   ],
+   "portals": 0,
+   "position_cap": 2000,
+   "positions": 206,
+   "replay": true,
+   "solution": 13,
+   "solve_ms": 3.3,
+   "timeup_worst_ms": 2,
+   "timeup_worst_nodes": 71,
+   "winnable": 49
+  },
+  "B": {
+   "coverage": 0.85,
+   "decision_steps": 11,
+   "distinct_mistakes": 4,
+   "endgame_decision": true,
+   "last_decision": 11,
+   "late": 0.85,
+   "line": [
+    "r3c3> ram [x2]",
+    "r4c4^ [x3]",
+    "r4c5< ram [x2]",
+    "r4c2v [x1]",
+    "r3c5^ [x1]",
+    "r3c3> [x1]",
+    "r4c5^ [x1]",
+    "r0c1< [x1]",
+    "r6c6> [x1]",
+    "r6c1> [x1]",
+    "r4c1v [x1]",
+    "r3c1v",
+    "r5c3^"
+   ],
+   "losing_per_step": [
+    2,
+    3,
+    2,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    0,
+    0
+   ],
+   "matters_lock": true,
+   "matters_switch": true,
+   "mistakes": [
+    "r4c5v",
+    "r6c6>",
+    "r3c5^",
+    "r5c3^"
+   ],
+   "shortcut": 0.133,
+   "spinner_dependence": "unsolvable without it",
+   "without_lock": "without it: 8 decision steps, 4 distinct mistakes (with it: 11, 4)",
+   "without_switch": "unsolvable without it"
+  },
+  "C": {
+   "decisions_k4_6_8": [
+    6,
+    3,
+    3
+   ],
+   "deepest": 11,
+   "greedy": {
+    "look2": 0.065,
+    "look4": 0.133,
+    "min_turn": 0,
+    "mobility": 0,
+    "safe": 0.06
+   },
+   "hidden_k6_8": [
+    7,
+    4
+   ],
+   "learner": {
+    "look4": 2,
+    "look6": 2
+   },
+   "look6_greedy": 0.3,
+   "opening": "2 / 4",
+   "pressure": {
+    "advances": 0,
+    "calm_prefix": 1,
+    "flips": 1,
+    "multi_turned": 1,
+    "prediction_share": 0.38,
+    "pulls": 0,
+    "rams": 2,
+    "signals": 0,
+    "spinners_turned": 1,
+    "trap_delay_median": 5,
+    "turns": 2,
+    "undo_proof": 0.67
+   },
+   "win_share": 0.238
+  },
+  "map": [
+   ". G<#Y . . . . .",
+   ". . . . . . .",
+   ". . . . . . .",
+   ". Gv#Y . Y>&A . B^= .",
+   ". R^&A Rv= . Y^@~ Yv@ .",
+   ". . . B^%A . . .",
+   ". B>@- . . . . P>%A"
+  ],
+  "name": "J5_s331_1",
+  "target": "EXTREME",
+  "verdict": "HUMAN-REVIEW CANDIDATE",
+  "why_a": [],
+  "why_b": []
+ }
+}

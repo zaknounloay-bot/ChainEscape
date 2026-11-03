@@ -1,0 +1,211 @@
+{
+ "R04_s332_0": {
+  "map": [
+   "B^@#Y Y^ . Y>&A . . .",
+   ". . . R<@- . . .",
+   "G^@~ . . . B>&A R<@- .",
+   "R> Y^@~ Y<&A= R^= Yv%A . .",
+   ". . Y> P>@~ . . .",
+   ". . . B^#Y . . .",
+   ". . . . . . G^%A"
+  ],
+  "target": "EXTREME",
+  "facts": [],
+  "mechanic": "switch,lock,armor",
+  "max_positions": 2000,
+  "overlap": [
+   0.35,
+   "N21"
+  ]
+ },
+ "R04_s332_1": {
+  "map": [
+   "B^@#Y Y^= . Y>&A . . .",
+   ". . . R<@- . . .",
+   "G^@~ . . . B>&A R<@- .",
+   "R> Y^@~ Y<&A= R^= Yv%A . .",
+   ". . Y> . . . R^",
+   ". . . B^#Y . . .",
+   ". . . . . . G^%A"
+  ],
+  "target": "EXTREME",
+  "facts": [],
+  "mechanic": "switch,lock,armor",
+  "max_positions": 2000,
+  "overlap": [
+   0.36,
+   "N79"
+  ]
+ },
+ "R04_s332_2": {
+  "map": [
+   "B^@#Y Y^ . Y>&A . . .",
+   ". . . R<@- . . .",
+   "G^@~ . . . B>&A R<@- .",
+   "R> Y^@~ Y<&A= R^= Yv%A . .",
+   ". . Y> P>@~ . . R^",
+   ". . . B^#Y . . .",
+   ". . . . . . G^%A"
+  ],
+  "target": "EXTREME",
+  "facts": [],
+  "mechanic": "switch,lock,armor",
+  "max_positions": 2000,
+  "overlap": [
+   0.35,
+   "N79"
+  ]
+ },
+ "R04_s332_3": {
+  "map": [
+   "B^@#Y . . Y>&A . . G>",
+   ". . . R<@- . . .",
+   "Yv . . . B>&A R<@- .",
+   "R> . Y<&A= R^= Yv%A . .",
+   ". . Y> P>@~ . . R^",
+   ". . . B^#Y . . G>@~",
+   ". . . . . . G^%A"
+  ],
+  "target": "EXTREME",
+  "facts": [],
+  "mechanic": "switch,lock,armor",
+  "max_positions": 2000,
+  "overlap": [
+   0.39,
+   "N79"
+  ]
+ },
+ "R04_s332_4": {
+  "map": [
+   "B^@#Y Y^= . Y>&A . . .",
+   ". . . R<@- . . .",
+   "G^@~ . . . B>&A R<@- .",
+   "R> Y^@~ Y<&A= R^= Yv%A . .",
+   ". . Y> P>@~ . . .",
+   ". . . B^#Y . . .",
+   ". . . . . . G^%A"
+  ],
+  "target": "EXTREME",
+  "facts": [],
+  "mechanic": "switch,lock,armor",
+  "max_positions": 2000,
+  "overlap": [
+   0.35,
+   "N21"
+  ]
+ },
+ "R04_s332_5": {
+  "map": [
+   "B^@#Y . Y<@- Y>&A . . .",
+   ". . . R<@- . . .",
+   "B>@- . . . B>&A R<@- .",
+   "R> . Y<&A= R^= Yv%A . .",
+   ". . Y> P>@~ . . R^=",
+   ". . . B^#Y . . G>@~",
+   ". . . . . . G^%A"
+  ],
+  "target": "EXTREME",
+  "facts": [],
+  "mechanic": "switch,lock,armor",
+  "max_positions": 2000,
+  "overlap": [
+   0.32,
+   "N24"
+  ]
+ },
+ "R04_s332_6": {
+  "map": [
+   "B^@#Y P<@~ . Y>&A . . .",
+   ". . . R<@- . . .",
+   ". . . . B>&A R<@- .",
+   "R> . Y<&A= R^= Yv%A . .",
+   ". . Y> P>@~ . . R^",
+   ". . . B^#Y . . G>@~",
+   ". . . . . . G^%A"
+  ],
+  "target": "EXTREME",
+  "facts": [],
+  "mechanic": "switch,lock,armor",
+  "max_positions": 2000,
+  "overlap": [
+   0.3,
+   "N79"
+  ]
+ },
+ "R04_s332_7": {
+  "map": [
+   "B^@#Y . Y<@- Y>&A . . .",
+   ". . . R<@- . . .",
+   ". . . . B>&A R<@- .",
+   "R> . Y<&A= R^= Yv%A . .",
+   "P^@ . . P>@~ . . R^=",
+   ". . . B^#Y . . G>@~",
+   ". . . . . . G^%A"
+  ],
+  "target": "EXTREME",
+  "facts": [],
+  "mechanic": "switch,lock,armor",
+  "max_positions": 2000,
+  "overlap": [
+   0.3,
+   "N70"
+  ]
+ },
+ "R04_s332_8": {
+  "map": [
+   "B^@#Y . Y<@- Y>&A . . .",
+   ". . . R<@- . . .",
+   "P^ . . . B>&A R<@- .",
+   "R> . Y<&A= R^= Yv%A . .",
+   ". . . P>@~ . . R^=",
+   ". . . B^#Y . . G>@~",
+   ". . . . . . G^%A"
+  ],
+  "target": "EXTREME",
+  "facts": [],
+  "mechanic": "switch,lock,armor",
+  "max_positions": 2000,
+  "overlap": [
+   0.31,
+   "N18"
+  ]
+ },
+ "R04_s332_9": {
+  "map": [
+   "B^@#Y . Y<@- Y>&A . . .",
+   ". . . R<@- . . P<@",
+   ". . . . B>&A R<@- .",
+   "R> . Y<&A= R^= Yv%A . .",
+   ". . . P>@~ . . R^=",
+   ". . . B^#Y . . G>@~",
+   ". . . . . . G^%A"
+  ],
+  "target": "EXTREME",
+  "facts": [],
+  "mechanic": "switch,lock,armor",
+  "max_positions": 2000,
+  "overlap": [
+   0.31,
+   "N25"
+  ]
+ },
+ "R04_s332_10": {
+  "map": [
+   "B^@#Y . . Y>&A . . .",
+   ". . . R>@~ . . B^@~",
+   ". . . . B>&A R<@- .",
+   "R> . Y<&A= R^= Yv%A . .",
+   ". . Y> P>@~ . . R^",
+   ". . . B^#Y . . G>@~",
+   ". . . . . . G^%A"
+  ],
+  "target": "EXTREME",
+  "facts": [],
+  "mechanic": "switch,lock,armor",
+  "max_positions": 2000,
+  "overlap": [
+   0.31,
+   "N25"
+  ]
+ }
+}

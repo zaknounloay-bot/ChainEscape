@@ -1,0 +1,18 @@
+RTimeCheck idle comparison, written 2026-11-03 BEFORE any rerun.
+Trigger: RTimeCheck failed once in the Phase 33 suites ("SHOW A MOVE does not pause the clock",
+39 checks) while it passed in the Phase 32 suites. The check is unchanged (tools/rtime_check.gd,
+last changed in 515a361) and Phase 33 touched no R1 / rtime code.
+Protocol: machine idle (1-min load < 0.5 before each run), nothing else running; 6 runs alternating
+CUR (working tree, Phase 33) and BASE (worktree at 649c33a, Phase 32), each the exact suite command
+`godot --headless --path <tree> res://tools/RTimeCheck.tscn`.
+Decision rule: if CUR fails in any run -> a real failure: investigate (diagnose the assertion terms,
+compare with BASE) before any commit. If all 6 pass -> report as not reproduced on an idle machine,
+with the suite-run context (load during the suites), and keep the original failing log.
+The check and its thresholds are not changed.
+
+Addendum (written after the 6 idle runs all passed, before any loaded run):
+Stress arm: 3 runs of CUR and 3 of BASE, alternating, each with 4 busy-loop processes
+(one per CPU, `yes > /dev/null`) running for the whole check, to test whether CPU contention
+reproduces the failure. Same command; nothing in the check changed. Interpretation: a CUR-only
+failure under load = investigate as a Phase 33 regression; failures on both trees = load-
+sensitive check, not a Phase 33 change; no failure = cause not reproduced (reported as such).

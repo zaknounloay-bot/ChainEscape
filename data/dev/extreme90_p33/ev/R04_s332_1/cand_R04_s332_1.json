@@ -1,0 +1,17 @@
+{
+ "R04_s332_1": {
+  "map": [
+   "B^@#Y Y^= . Y>&A . . .",
+   ". . . R<@- . . .",
+   "G^@~ . . . B>&A R<@- .",
+   "R> Y^@~ Y<&A= R^= Yv%A . .",
+   ". . Y> . . . R^",
+   ". . . B^#Y . . .",
+   ". . . . . . G^%A"
+  ],
+  "target": "EXTREME",
+  "facts": [],
+  "mechanic": "switch,lock,armor",
+  "max_positions": 2000
+ }
+}

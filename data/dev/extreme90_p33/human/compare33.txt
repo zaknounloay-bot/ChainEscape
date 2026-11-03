@@ -1,0 +1,55 @@
+Phase 33 human results vs arm (owner first exposure, build p33-qa1-20261103)
+id    arm  core           rating     outcome   time    status sibling (its rating)
+N94   R    T01r           EXTREME    TIME UP   -       REC    N83 EXTREME
+N95   R    T10b           MEDIUM     COMPLETED 31.2    MEDIUM N86 EXTREME
+N96   N    K08            VERY HARD  TIME UP   -       BORDER -
+N97   R    R04            MEDIUM     COMPLETED 40.5    MEDIUM N75 VERY HARD
+N98   N    J4             MEDIUM     COMPLETED 36.3    MEDIUM -
+N99   R    L3             EXTREME    TIME UP   -       REC    N62 EXTREME
+N100  R    T30            MEDIUM     COMPLETED 23.6    MEDIUM N87 VERY HARD
+
+arm R: 5 boards; recommended 2 (N94, N99); borderline 0; MEDIUM/not approved 3; EXTREME-rated 2; EXTREME or VERY HARD 2
+arm N: 2 boards; recommended 0 (-); borderline 1; MEDIUM/not approved 1; EXTREME-rated 0; EXTREME or VERY HARD 1
+
+Play counts (summary of the owner's COPY ALL RESULTS JSON; the action logs are NOT in this session)
+id    rating     outcome   attempts restarts  undo  moves  solution    moves-sol
+N94   EXTREME    TIME UP          4        3     4     32        15           17
+N95   MEDIUM     COMPLETED        2        1     0     18        15            3
+N96   VERY HARD  TIME UP          4        3     1     35        14           21
+N97   MEDIUM     COMPLETED        2        1     0     22        19            3
+N98   MEDIUM     COMPLETED        2        1     0     19        13            6
+N99   EXTREME    TIME UP          4        3     0     31        19           12
+N100  MEDIUM     COMPLETED        1        0     1     18        17            1
+  REC+BORDER (N94, N96, N99)     attempts [4, 4, 4]; restarts [3, 3, 3]; undo [4, 1, 0]; moves [32, 35, 31] (median 32); moves/attempt median 8.00
+  MEDIUM (N95, N97, N98, N100)   attempts [2, 2, 2, 1]; restarts [1, 1, 1, 0]; undo [0, 0, 0, 1]; moves [18, 22, 19, 18] (median 18.5); moves/attempt median 10.25
+  'moves-sol' is plain arithmetic (total moves minus the solution length), NOT a per-attempt split:
+  how the moves fell across attempts is in the action logs, which are not available here.
+
+Structure (tools/ta90_struct33.gd, exact solver; recorded BEFORE human play)
+measure                   N94      N95      N96      N97      N98      N99     N100   med REC+BORDER  med MEDIUM
+positions                  95      136      294      323      363      791      835          294         343
+solution                   15       15       14       19       13       19       17           15          16
+early3                      6        5        8        7        6        8        4            8         5.5
+open_escape_losing          3        2        2        2        2        2        1            2           2
+p_look2                     0    0.022    0.002    0.004    0.001    0.003    0.013        0.002      0.0085
+strat_steps                 9        5        8        9        7       10       10            9           8
+forced                      9        1        6        8        8        7        4            7           6
+max_forced_run              7        1        3        4        5        5        3            5         3.5
+trap_depth_median           7        4       10        9        7       12       12           10           8
+delayed                    15        7       19       18       16       20       16           19          16
+beyond_undo              0.83      0.6        1     0.75     0.75        1        1            1        0.75
+dep_depth                  12       10        7        9        6        9        7            9           8
+win_lines                  40     1320     1970   129360     3744  3376584  9126570     1.97e+03    6.66e+04
+mean_winning              1.4      2.2     1.57     1.74     1.77     1.95     2.18         1.57        1.98
+mistakes                    6        5        5        4        4        4        4            5           4
+
+Reused cores: the child vs its owner-approved sibling (sibling measures from struct_all.json)
+  N94 (EXTREME) <- N83 (EXTREME): overlap 0.32; positions 95 vs 87; solution 15 vs 15; early3 6 vs 5; strat_steps 9 vs 9
+  N95 (MEDIUM) <- N86 (EXTREME): overlap 0.26; positions 136 vs 143; solution 15 vs 16; early3 5 vs 7; strat_steps 5 vs 7
+  N97 (MEDIUM) <- N75 (VERY HARD): overlap 0.22; positions 323 vs 517; solution 19 vs 18; early3 7 vs 3; strat_steps 9 vs 9
+  N99 (EXTREME) <- N62 (EXTREME): overlap 0.30; positions 791 vs 251; solution 19 vs 18; early3 8 vs 3; strat_steps 10 vs 11
+  N100 (MEDIUM) <- N87 (VERY HARD): overlap 0.32; positions 835 vs 94; solution 17 vs 14; early3 4 vs 4; strat_steps 10 vs 4
+
+Caveat: 7 boards, one tester's first exposure, one round. Medians above are descriptive;
+no threshold is fitted and nothing here is a gate. Arm membership was assigned by the
+pre-registered protocol, but concept quality, mechanics and seeds also differ between arms.

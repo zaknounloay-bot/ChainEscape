@@ -1,0 +1,130 @@
+Godot Engine v4.3.stable.official.77dcf97d8 - https://godotengine.org
+
+ERROR: Level 0: bad map token 'M' at row 0 col 1
+   at: push_error (core/variant/variant_utility.cpp:1092)
+ERROR: Level 0: bad map token 'M' at row 0 col 1
+   at: push_error (core/variant/variant_utility.cpp:1092)
+ERROR: Level 0: portals: a lane from (1, 0) moving left would loop
+   at: push_error (core/variant/variant_utility.cpp:1092)
+ERROR: Level 0: portals: a lane from (2, 1) moving left would loop
+   at: push_error (core/variant/variant_utility.cpp:1092)
+ERROR: Level 0: portals: a lane from (1, 1) moving left would loop
+   at: push_error (core/variant/variant_utility.cpp:1092)
+ERROR: Level 0: portals: a lane from (1, 1) moving left would loop
+   at: push_error (core/variant/variant_utility.cpp:1092)
+ERROR: Level 0: portals: a lane from (1, 1) moving left would loop
+   at: push_error (core/variant/variant_utility.cpp:1092)
+ERROR: Level 0: portals: a lane from (2, 3) moving left would loop
+   at: push_error (core/variant/variant_utility.cpp:1092)
+ERROR: Level 0: portals: a lane from (1, 1) moving left would loop
+   at: push_error (core/variant/variant_utility.cpp:1092)
+ERROR: Level 0: portals: a lane from (2, 1) moving up would loop
+   at: push_error (core/variant/variant_utility.cpp:1092)
+ERROR: Level 0: portals: a lane from (1, 0) moving left would loop
+   at: push_error (core/variant/variant_utility.cpp:1092)
+ERROR: Level 0: portals: a lane from (1, 0) moving left would loop
+   at: push_error (core/variant/variant_utility.cpp:1092)
+ERROR: Level 0: portals: a lane from (1, 0) moving left would loop
+   at: push_error (core/variant/variant_utility.cpp:1092)
+ERROR: Level 0: portals: a lane from (0, 1) moving up would loop
+   at: push_error (core/variant/variant_utility.cpp:1092)
+ERROR: Level 0: portals: a lane from (1, 2) moving left would loop
+   at: push_error (core/variant/variant_utility.cpp:1092)
+ERROR: Level 0: portals: a lane from (1, 2) moving left would loop
+   at: push_error (core/variant/variant_utility.cpp:1092)
+ERROR: Level 0: portals: a lane from (1, 2) moving left would loop
+   at: push_error (core/variant/variant_utility.cpp:1092)
+ERROR: Level 0: portals: a lane from (1, 1) moving up would loop
+   at: push_error (core/variant/variant_utility.cpp:1092)
+ERROR: Level 0: portals: a lane from (1, 1) moving up would loop
+   at: push_error (core/variant/variant_utility.cpp:1092)
+ERROR: Level 0: portals: a lane from (1, 1) moving up would loop
+   at: push_error (core/variant/variant_utility.cpp:1092)
+ERROR: Level 0: portals: a lane from (1, 1) moving left would loop
+   at: push_error (core/variant/variant_utility.cpp:1092)
+ERROR: Level 0: portals: a lane from (1, 1) moving left would loop
+   at: push_error (core/variant/variant_utility.cpp:1092)
+ERROR: Level 0: portals: a lane from (1, 1) moving left would loop
+   at: push_error (core/variant/variant_utility.cpp:1092)
+ERROR: Level 0: portals: a lane from (2, 1) moving up would loop
+   at: push_error (core/variant/variant_utility.cpp:1092)
+ERROR: Level 0: portals: a lane from (1, 0) moving left would loop
+   at: push_error (core/variant/variant_utility.cpp:1092)
+ERROR: Level 0: portals: a lane from (1, 1) moving up would loop
+   at: push_error (core/variant/variant_utility.cpp:1092)
+ERROR: Level 0: portals: a lane from (3, 1) moving left would loop
+   at: push_error (core/variant/variant_utility.cpp:1092)
+ERROR: Level 0: portals: a lane from (3, 1) moving left would loop
+   at: push_error (core/variant/variant_utility.cpp:1092)
+ERROR: Level 0: portals: a lane from (3, 1) moving left would loop
+   at: push_error (core/variant/variant_utility.cpp:1092)
+ERROR: Level 0: portals: a lane from (3, 1) moving up would loop
+   at: push_error (core/variant/variant_utility.cpp:1092)
+ERROR: Level 0: portals: a lane from (1, 1) moving up would loop
+   at: push_error (core/variant/variant_utility.cpp:1092)
+ERROR: Level 0: portals: a lane from (2, 2) moving left would loop
+   at: push_error (core/variant/variant_utility.cpp:1092)
+ERROR: Level 0: portals: a lane from (2, 2) moving left would loop
+   at: push_error (core/variant/variant_utility.cpp:1092)
+ERROR: Level 0: portals: a lane from (2, 2) moving left would loop
+   at: push_error (core/variant/variant_utility.cpp:1092)
+ERROR: Level 0: portals: a lane from (3, 1) moving up would loop
+   at: push_error (core/variant/variant_utility.cpp:1092)
+ERROR: Level 0: portals: a lane from (3, 1) moving up would loop
+   at: push_error (core/variant/variant_utility.cpp:1092)
+ERROR: Level 0: portals: a lane from (3, 1) moving up would loop
+   at: push_error (core/variant/variant_utility.cpp:1092)
+ERROR: Level 0: portals: a lane from (0, 2) moving up would loop
+   at: push_error (core/variant/variant_utility.cpp:1092)
+ERROR: Level 0: portals: a lane from (3, 1) moving left would loop
+   at: push_error (core/variant/variant_utility.cpp:1092)
+ERROR: Level 0: portals: a lane from (3, 1) moving left would loop
+   at: push_error (core/variant/variant_utility.cpp:1092)
+ERROR: Level 0: portals: a lane from (3, 1) moving left would loop
+   at: push_error (core/variant/variant_utility.cpp:1092)
+ERROR: Level 0: portals: a lane from (2, 0) moving left would loop
+   at: push_error (core/variant/variant_utility.cpp:1092)
+ERROR: Level 0: portals: a lane from (2, 0) moving left would loop
+   at: push_error (core/variant/variant_utility.cpp:1092)
+ERROR: Level 0: portals: a lane from (2, 0) moving left would loop
+   at: push_error (core/variant/variant_utility.cpp:1092)
+ERROR: Level 0: portals: a lane from (1, 1) moving left would loop
+   at: push_error (core/variant/variant_utility.cpp:1092)
+ERROR: Level 0: portals: a lane from (3, 1) moving up would loop
+   at: push_error (core/variant/variant_utility.cpp:1092)
+ERROR: Level 0: portals: a lane from (3, 1) moving up would loop
+   at: push_error (core/variant/variant_utility.cpp:1092)
+ERROR: Level 0: portals: a lane from (3, 1) moving up would loop
+   at: push_error (core/variant/variant_utility.cpp:1092)
+ERROR: Level 0: portals: a lane from (1, 2) moving left would loop
+   at: push_error (core/variant/variant_utility.cpp:1092)
+ERROR: Level 0: portals: a lane from (1, 2) moving left would loop
+   at: push_error (core/variant/variant_utility.cpp:1092)
+ERROR: Level 0: portals: a lane from (1, 2) moving left would loop
+   at: push_error (core/variant/variant_utility.cpp:1092)
+ERROR: Level 0: portals: a lane from (2, 1) moving up would loop
+   at: push_error (core/variant/variant_utility.cpp:1092)
+ERROR: Level 0: portals: a lane from (1, 1) moving left would loop
+   at: push_error (core/variant/variant_utility.cpp:1092)
+ERROR: Level 0: portals: a lane from (1, 2) moving left would loop
+   at: push_error (core/variant/variant_utility.cpp:1092)
+ERROR: Level 0: portals: a lane from (1, 1) moving left would loop
+   at: push_error (core/variant/variant_utility.cpp:1092)
+ERROR: Level 0: portals: a lane from (1, 1) moving left would loop
+   at: push_error (core/variant/variant_utility.cpp:1092)
+ERROR: Level 0: portals: a lane from (1, 1) moving left would loop
+   at: push_error (core/variant/variant_utility.cpp:1092)
+ERROR: Level 0: portals: a lane from (1, 0) moving left would loop
+   at: push_error (core/variant/variant_utility.cpp:1092)
+ERROR: Level 0: portals: a lane from (1, 0) moving left would loop
+   at: push_error (core/variant/variant_utility.cpp:1092)
+ERROR: Level 0: portals: a lane from (1, 0) moving left would loop
+   at: push_error (core/variant/variant_utility.cpp:1092)
+ERROR: Level 0: portals: a lane from (1, 2) moving left would loop
+   at: push_error (core/variant/variant_utility.cpp:1092)
+ERROR: Level 0: portals: a lane from (3, 1) moving left would loop
+   at: push_error (core/variant/variant_utility.cpp:1092)
+  samples: 450 random boards (178 solvable), 266 mutated lab boards, 97 push solutions (8 through a portal)
+
+64 checks passed, 0 failed
+MOVABLE CHECKS PASSED

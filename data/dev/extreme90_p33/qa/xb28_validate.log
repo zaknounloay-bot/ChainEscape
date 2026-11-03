@@ -1,0 +1,46 @@
+Godot Engine v4.3.stable.official.77dcf97d8 - https://godotengine.org
+
+ERROR: Level 0: switch / flip / armored block at (1, 1) cannot be a spinner or hidden
+   at: push_error (core/variant/variant_utility.cpp:1092)
+ERROR: Level 0: switch / flip / armored block at (1, 1) cannot be a spinner or hidden
+   at: push_error (core/variant/variant_utility.cpp:1092)
+ERROR: Level 0: switch A at (3, 0) has nothing to flip
+   at: push_error (core/variant/variant_utility.cpp:1092)
+ERROR: Level 0: switch / flip / armored block at (1, 1) cannot be a spinner or hidden
+   at: push_error (core/variant/variant_utility.cpp:1092)
+ERROR: Level 0: block at (4, 0) flips with switch A, which does not exist
+   at: push_error (core/variant/variant_utility.cpp:1092)
+ERROR: Level 0: switch / flip / armored block at (1, 1) cannot be a spinner or hidden
+   at: push_error (core/variant/variant_utility.cpp:1092)
+ERROR: Level 0: switch / flip / armored block at (1, 1) cannot be a spinner or hidden
+   at: push_error (core/variant/variant_utility.cpp:1092)
+ERROR: Level 0: switch A at (3, 0) has nothing to flip
+   at: push_error (core/variant/variant_utility.cpp:1092)
+ERROR: Level 0: block at (1, 1) cannot be a switch and a flip target
+   at: push_error (core/variant/variant_utility.cpp:1092)
+ERROR: Level 0: armored block at (1, 1) cannot be locked or a switch
+   at: push_error (core/variant/variant_utility.cpp:1092)
+ERROR: Level 0: armored block at (1, 1) cannot be locked or a switch
+   at: push_error (core/variant/variant_utility.cpp:1092)
+ERROR: Level 0: block at (1, 1) is locked by its own color
+   at: push_error (core/variant/variant_utility.cpp:1092)
+ERROR: Level 0: Sequence block at (1, 1) must be a plain arrow (no other modifier)
+   at: push_error (core/variant/variant_utility.cpp:1092)
+ERROR: Level 0: Sequence block at (1, 1) must be a plain arrow (no other modifier)
+   at: push_error (core/variant/variant_utility.cpp:1092)
+ERROR: Level 0: magnet at (1, 1) must be a plain arrow on a board without portals, Movable or hidden blocks
+   at: push_error (core/variant/variant_utility.cpp:1092)
+ERROR: Level 0: magnet at (1, 1) must be a plain arrow on a board without portals, Movable or hidden blocks
+   at: push_error (core/variant/variant_utility.cpp:1092)
+ERROR: Level 0: magnet at (1, 1) must be a plain arrow on a board without portals, Movable or hidden blocks
+   at: push_error (core/variant/variant_utility.cpp:1092)
+ERROR: Level 0: magnet at (1, 1) must be a plain arrow on a board without portals, Movable or hidden blocks
+   at: push_error (core/variant/variant_utility.cpp:1092)
+ERROR: Level 0: magnet at (1, 1) must be a plain arrow on a board without portals, Movable or hidden blocks
+   at: push_error (core/variant/variant_utility.cpp:1092)
+ERROR: Level 0: spinner at (1, 1) cannot be hidden
+   at: push_error (core/variant/variant_utility.cpp:1092)
+  ok  validator and level parser agree on 21 valid and 17 invalid tokens ()
+  ok  every EXTREME record valid with its fingerprint unchanged (100 boards) []
+  ok  every Classic level valid (300 map levels) []
+XB28 VALIDATE CHECK: PASSED (3 checks)

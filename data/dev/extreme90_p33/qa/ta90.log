@@ -1,0 +1,58 @@
+PASS ?ta90=1: the welcome screen; no overflow; buttons on screen
+PASS CHOOSE A PUZZLE (["N1","N2","N3","N4","N5","N6","N7","N8","N9","N10","N11","N12","N13"])
+PASS no music before the board
+PASS a 90-second clock (1:29, 88450 ms left)
+PASS START (a real tap) unlocked audio (context running); the GREEN mix plays; MUSIC toggle beside the countdown, above the board [0.7694,0.1555,0.2083,0.05] / 0.2423
+PASS tools [3,0,0]: UNDO x3, SHOW A MOVE x0, HAMMER x0
+PASS RESTART: the clock keeps running (85528 -> 84645 ms), the music too
+PASS MUSIC OFF (touch): silence {"button":[0.8736,0.1633],"button_rect":[0.7694,0.1383,0.2083,0.05],"enabled":false,"fades":0,"fps":9,"global":true,"hidden":false,"limit_ms":90000,"mix":"green","mix_now":"","playing":false,"pos":0,"sounding":0,"stage":"green","unlocked":true,"volume_db":-40}
+  frame rate with music 11.2 fps, without 8.7 fps (headless Chromium, software rendering)
+PASS the music costs no meaningful frame rate (11.2 fps with, 8.7 without)
+PASS MUSIC ON (touch): the current mix again
+PASS background: the music paused and came back; the clock kept running (75054 -> 72618 ms)
+PASS a reload mid-run: straight back to the puzzle, the clock not restored (64476 < 68607 ms), and NO sound before a tap (the gesture rule)
+PASS the first tap after the reload unlocks audio; the green mix plays
+PASS 1:00-0:31 ORANGE (0:59): the orange mix (cross-faded, 1 fades so far)
+PASS 0:30-0:00 RED (0:29): the red mix
+PASS TIME UP after 90.0 s of wall time (a reload, a RESTART and the background included); stages ["green","orange","red","final10"]; rules ta90-v1
+PASS TIME UP: the music faded out (a clean result screen) {"enabled":true,"fades":2,"fps":10,"global":true,"hidden":false,"limit_ms":90000,"mix":"red","mix_now":"","playing":false,"pos":0,"sounding":0,"stage":"","unlocked":true,"volume_db":-40}
+PASS the questions: no music
+PASS CONTINUE WITHOUT TIMER: NO TIMER, the CALM mix, no SHOW A MOVE
+PASS solved without the timer, by touches
+PASS the SOLVED card: silence {"enabled":true,"fades":2,"fps":16,"global":true,"hidden":false,"limit_ms":90000,"mix":"calm","mix_now":"","playing":false,"pos":0,"sounding":0,"stage":"","unlocked":true,"volume_db":-40}
+PASS COPY ALL RESULTS: one ce-ta90 bundle (TIME UP and the untimed solve apart, 90 s, hint allowance 0, the music answer, restarts and the reopen)
+PASS no other test page's storage (the 120-second pilot, standalone pages) touched []
+PASS reduced motion: RED without pulse (luma 61-61) or scale
+PASS reduced motion: the music is the same (the red mix after the first tap)
+PASS the selection: a grid of PUZZLE 1-13 (N1-N13), every tile on the iPhone SE screen and at least 40 px tall, no reference row ["N1","N2","N3","N4","N5","N6","N7","N8","N9","N10","N11","N12","N13"]
+PASS N2: the brief before the board
+PASS N2: solved by touches in a timed 90 s run (15.9 s); rules ta90-v1
+PASS N3: the brief before the board
+PASS N3: solved by touches in a timed 90 s run (15.9 s); rules ta90-v1
+PASS N4: the brief before the board
+PASS N4: solved by touches in a timed 90 s run (11.8 s); rules ta90-v1
+PASS N5: the brief before the board
+PASS N5: solved by touches in a timed 90 s run (18.8 s); rules ta90-v1
+PASS N6: the brief before the board
+PASS N6: solved by touches in a timed 90 s run (19.7 s); rules ta90-v1
+PASS N7: the brief before the board
+PASS N7: solved by touches in a timed 90 s run (30.0 s); rules ta90-v1
+PASS N8: the brief before the board
+PASS N8: solved by touches in a timed 90 s run (14.6 s); rules ta90-v1
+PASS N9: the brief before the board
+PASS N9: solved by touches in a timed 90 s run (12.1 s); rules ta90-v1
+PASS N10: the brief before the board
+PASS N10: solved by touches in a timed 90 s run (18.0 s); rules ta90-v1
+PASS N11: the brief before the board
+PASS N11: solved by touches in a timed 90 s run (20.9 s); rules ta90-v1
+PASS N12: the brief before the board
+PASS N12: solved by touches in a timed 90 s run (16.5 s); rules ta90-v1
+PASS N13: the brief before the board
+PASS N13: solved by touches in a timed 90 s run (19.8 s); rules ta90-v1
+PASS N1: the brief before the board
+PASS WebAssembly: a full solve (the TIME UP check) per board {"N2":13.2,"N3":0.3,"N4":0.8,"N5":1.5,"N6":12.9,"N7":2.3,"N8":1.1,"N9":3,"N10":0.4,"N11":7.1,"N12":1.3,"N13":4.1,"N1":0.8} ms (a one-off call at 0:00, limit 250 ms here)
+BENCH {"N2":13.2,"N3":0.3,"N4":0.8,"N5":1.5,"N6":12.9,"N7":2.3,"N8":1.1,"N9":3,"N10":0.4,"N11":7.1,"N12":1.3,"N13":4.1,"N1":0.8}
+PASS the player build ignores ?ta90=1 {"ta90":false,"music":false,"ta":false,"keys":[]}
+PASS no page errors []
+PASS no network calls outside the page []
+WEB TA90 TEST: PASSED (55/55)

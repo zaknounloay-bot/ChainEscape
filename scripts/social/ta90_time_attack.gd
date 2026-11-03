@@ -37,7 +37,8 @@ const TA90_RULES := {"version": "ta90-v1", "limit_ms": 90000, "undo": 3, "show_a
 ## candidates (docs/extreme90_phase29.md), ?extreme90p29=1 only. N78-N82: the Phase 30
 ## candidates (docs/extreme90_phase30.md), ?extreme90p30=1 only. N83-N87: the Phase 31
 ## candidates (docs/extreme90_phase31.md), ?extreme90p31=1 only. N88-N93: the Phase 32
-## candidates (docs/extreme90_phase32.md), ?extreme90p32=1 only. TA: the validated 120-second board, used ONLY as an internal
+## candidates (docs/extreme90_phase32.md), ?extreme90p32=1 only. N94-N100: the Phase 33
+## candidates (docs/extreme90_phase33.md), ?extreme90p33=1 only. TA: the validated 120-second board, used ONLY as an internal
 ## technical reference for the clock and the music (never listed as a new
 ## puzzle).
 const BOARDS90 := {
@@ -134,6 +135,13 @@ const BOARDS90 := {
 	"N91": {"data": "res://data/dev/ta90_n91.json", "fp": "5afe03d7bb9bdbd8b226d8c32ac307cedc67461fc43293a67b734b73593e4882"},
 	"N92": {"data": "res://data/dev/ta90_n92.json", "fp": "e92e83aaed981ce9d2f8883cd0c05a96d4b9f07207cd339b29399e2226c07ccc"},
 	"N93": {"data": "res://data/dev/ta90_n93.json", "fp": "cf0fb153feefa2628c05e01c4c60b9f227cac177288b62ee243963ff22826fba"},
+	"N94": {"data": "res://data/dev/ta90_n94.json", "fp": "4654e81f75c7ba8f8388f0d2dfd23348e5278da2b16dbb227c1987983d34713f"},
+	"N95": {"data": "res://data/dev/ta90_n95.json", "fp": "e7289be01bb874a0a8fa1cdd2ed6aab94300382c48a7b421043f71ec9360870e"},
+	"N96": {"data": "res://data/dev/ta90_n96.json", "fp": "60b63fc1cf3e73cdb6f331e949a577657501de9d834e546a1fc43bb9bcfa7531"},
+	"N97": {"data": "res://data/dev/ta90_n97.json", "fp": "2b71601d2cb42654f43a991bbcaf6ee88abe2cc70ac795b752b9b11f537253af"},
+	"N98": {"data": "res://data/dev/ta90_n98.json", "fp": "161d9f1b6a92d740a14d83a4611964f8c3bf5f0117e132f886fdb2a4ee4129f9"},
+	"N99": {"data": "res://data/dev/ta90_n99.json", "fp": "b6c71c004f4e95901dc944eab42254da016eb957da4b6496d0b8d5a3b8948e88"},
+	"N100": {"data": "res://data/dev/ta90_n100.json", "fp": "01e8abb27b59d23134589c966b1ae7d14d9126874a04e35680e2541f154e34bc"},
 	"TA": {"data": "res://data/dev/extreme16_a.json", "fp": "a28e22f0a1a216ba4ac701ff549e7d212ce1fe83ae2d8e3678065da555b730cf", "reference": true},
 }
 const P90_TIMED_Q := [

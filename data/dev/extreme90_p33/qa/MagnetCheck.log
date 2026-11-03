@@ -1,0 +1,132 @@
+Godot Engine v4.3.stable.official.77dcf97d8 - https://godotengine.org
+
+ok: campaign level files accept the Magnet token (Levels 76-99)
+ERROR: Level 0: bad map token 'R^*' at row 0 col 0
+   at: push_error (core/variant/variant_utility.cpp:1092)
+ok: Social / Friend parsing rejects the Magnet token
+ERROR: Level 0: bad map token 'R^*' at row 0 col 0
+   at: push_error (core/variant/variant_utility.cpp:1092)
+ok: a Friend Challenge puzzle with a magnet never verifies
+ok: '@*' is still a PATTERN spinner, not a magnet
+ok: the Magnet token appears only in Levels 76-99 (never 80, 90 or elsewhere) ([])
+ERROR: Level 0: magnet at (0, 0) must be a plain arrow on a board without portals, Movable or hidden blocks
+   at: push_error (core/variant/variant_utility.cpp:1092)
+ok: a hidden magnet is dropped
+ERROR: Level 0: magnet at (0, 0) must be a plain arrow on a board without portals, Movable or hidden blocks
+   at: push_error (core/variant/variant_utility.cpp:1092)
+ok: a magnet on a portal board is dropped
+ok: a plain arrow with '*' is a magnet in the lab
+ok: the magnet survives the JSON round trip
+ok: preview: blue (1,2) -> (1,0)
+ok: the block behind slides into the magnet's cell ({ "block": 1, "from": (1, 2), "to": (1, 0) })
+ok: a pulled block keeps its arrow
+ok: Undo (restore) puts the magnet and the pulled block back
+ok: nothing behind: nothing moves
+ERROR: Level 1: magnet at (1, 0) must be a plain arrow on a board without portals, Movable or hidden blocks
+   at: push_error (core/variant/variant_utility.cpp:1092)
+ok: a Chain Gate behind stops the pull
+ok: a twin behind stops the pull
+ok: an adjacent spinner turns (left -> up) and is then pulled
+ok: the preview line is exactly the pull that happens (332 / 332 escapes)
+ok: fuzz boards with magnets (250)
+ok: Solver verdict = exhaustive BoardModel search (250 / 250, 161 solvable)
+ok: Solver legal moves = BoardModel's (250 / 250)
+ok: every Solver solution replays through BoardModel (161 / 161)
+ok: Solver do / undo restores the state exactly (1012 / 1012)
+ok: the Magnet lab board file has 3 boards
+ok: A1: the file matches the build tool's board
+ok: A1: solvable, needs its magnets, Solver = BoardModel ([])
+ok: A1: plays in the lab (PuzzleDefinition verifies)
+ok: B1: the file matches the build tool's board
+ok: B1: solvable, needs its magnets, Solver = BoardModel ([])
+ok: B1: plays in the lab (PuzzleDefinition verifies)
+ok: C1: the file matches the build tool's board
+ok: C1: solvable, needs its magnets, Solver = BoardModel ([])
+ok: C1: plays in the lab (PuzzleDefinition verifies)
+ok: stages: A introduction, B combination, C challenge (["A", "B", "C"])
+ok: the Mech Lab knows the Magnet lab
+ok: test runs are not the Magnet lab build
+ok: L76 has magnets
+ok: L77 has magnets
+ok: L78 has magnets
+ok: L79 has magnets
+ok: L81 has magnets
+ok: L82 has magnets
+ok: L83 has magnets
+ok: L84 has magnets
+ok: L85 has magnets
+ok: L86 has magnets
+ok: L87 has magnets
+ok: L88 has magnets
+ok: L89 has magnets
+ok: L91 has magnets
+ok: L92 has magnets
+ok: L93 has magnets
+ok: L94 has magnets
+ok: L95 has magnets
+ok: L96 has magnets
+ok: L97 has magnets
+ok: L98 has magnets
+ok: L99 has magnets
+ok: a smashed magnet pulls nothing (33 / 33 smashes on the 22 levels)
+ok: hammer_safe judges the no-pull smash (33 / 33)
+ok: Undo puts the magnet back with the same preview (33 / 33)
+ok: every magnet of the 22 levels can pull on a winning line ([])
+ok: the rule flags L78's former inert magnet at (5, 0) ([(5, 0)])
+ok: the rule flags L93's former inert magnet at (3, 6) ([(3, 6)])
+ok: the rule flags L94's former inert magnet at (3, 2) ([(3, 2)])
+ok: the rule flags L96's former inert magnet at (0, 4) ([(0, 4)])
+[Save] load: new -> fresh progress
+[Save] profile: new player id
+[Save] write #1: last_played=1 highest_completed=0 highest_unlocked=1 total_score=0 coins=60 file=ok
+[Diag] last session ended at level 13 after 0s: process ended without a clean quit | [Diag] L13 ch2 via=load t=0s fps=1 mem=95.8MB objs=3350 nodes=618 orphans=0 res=97 tweens=14 fx=8 music=c02 music_players=0 sfx=1 save_seq=16
+[Chapter] level=1 chapter=1 theme=First Light (id 1, prev 0) music=c01  <- transition
+[Save] write #2: last_played=1 highest_completed=0 highest_unlocked=1 total_score=0 coins=60 file=ok
+[Diag] L1 ch1 via=launch t=0s fps=1 mem=84.6MB objs=3218 nodes=573 orphans=0 res=99 tweens=6 fx=3 music=c01 music_players=1 sfx=0 save_seq=2
+[Chapter] level=76 chapter=8 theme=Crimson Circuit (id 8, prev 1) music=c08  <- transition
+[Save] write #3: last_played=1 highest_completed=0 highest_unlocked=1 total_score=0 coins=60 file=ok
+[Save] write #4: last_played=76 highest_completed=0 highest_unlocked=1 total_score=0 coins=60 file=ok
+[Diag] L76 ch8 via=select t=0s fps=1 mem=86.0MB objs=3394 nodes=639 orphans=0 res=100 tweens=17 fx=10 music=c08 music_players=0 sfx=1 save_seq=4
+[Chapter] level=77 chapter=8 theme=Crimson Circuit (id 8, prev 8) music=c08
+[Save] write #5: last_played=77 highest_completed=0 highest_unlocked=1 total_score=0 coins=60 file=ok
+[Diag] L77 ch8 via=select t=0s fps=1 mem=86.7MB objs=3505 nodes=693 orphans=0 res=100 tweens=24 fx=16 music=c08 music_players=0 sfx=1 save_seq=5
+[Chapter] level=78 chapter=8 theme=Crimson Circuit (id 8, prev 8) music=c08
+[Save] write #6: last_played=77 highest_completed=0 highest_unlocked=1 total_score=0 coins=60 file=ok
+[Save] write #7: last_played=78 highest_completed=0 highest_unlocked=1 total_score=0 coins=60 file=ok
+[Diag] L78 ch8 via=select t=0s fps=1 mem=86.8MB objs=3555 nodes=720 orphans=0 res=100 tweens=27 fx=19 music=c08 music_players=0 sfx=1 save_seq=7
+[Chapter] level=79 chapter=8 theme=Crimson Circuit (id 8, prev 8) music=c08
+[Save] write #8: last_played=79 highest_completed=0 highest_unlocked=1 total_score=0 coins=60 file=ok
+[Diag] L79 ch8 via=select t=0s fps=1 mem=87.0MB objs=3607 nodes=747 orphans=0 res=100 tweens=30 fx=22 music=c08 music_players=0 sfx=1 save_seq=8
+[Chapter] level=81 chapter=9 theme=Storm Summit (id 9, prev 8) music=c09  <- transition
+[Save] write #9: last_played=81 highest_completed=0 highest_unlocked=1 total_score=0 coins=60 file=ok
+[Diag] L81 ch9 via=select t=0s fps=1 mem=87.4MB objs=3704 nodes=792 orphans=0 res=101 tweens=38 fx=27 music=c09 music_players=0 sfx=2 save_seq=9
+[Chapter] level=82 chapter=9 theme=Storm Summit (id 9, prev 9) music=c09
+[Save] write #10: last_played=82 highest_completed=0 highest_unlocked=1 total_score=0 coins=60 file=ok
+[Diag] L82 ch9 via=select t=0s fps=1 mem=87.6MB objs=3772 nodes=828 orphans=0 res=101 tweens=43 fx=31 music=c09 music_players=0 sfx=2 save_seq=10
+[Chapter] level=83 chapter=9 theme=Storm Summit (id 9, prev 9) music=c09
+[Save] write #11: last_played=83 highest_completed=0 highest_unlocked=1 total_score=0 coins=60 file=ok
+[Diag] L83 ch9 via=select t=0s fps=1 mem=87.5MB objs=3788 nodes=837 orphans=0 res=101 tweens=44 fx=32 music=c09 music_players=0 sfx=2 save_seq=11
+[Chapter] level=84 chapter=9 theme=Storm Summit (id 9, prev 9) music=c09
+[Save] write #12: last_played=84 highest_completed=0 highest_unlocked=1 total_score=0 coins=60 file=ok
+[Diag] L84 ch9 via=select t=0s fps=1 mem=87.7MB objs=3808 nodes=846 orphans=0 res=101 tweens=46 fx=33 music=c09 music_players=0 sfx=2 save_seq=12
+[Chapter] level=85 chapter=9 theme=Storm Summit (id 9, prev 9) music=c09
+[Save] write #13: last_played=85 highest_completed=0 highest_unlocked=1 total_score=0 coins=60 file=ok
+[Diag] L85 ch9 via=select t=0s fps=1 mem=87.6MB objs=3793 nodes=837 orphans=0 res=101 tweens=46 fx=32 music=c09 music_players=0 sfx=2 save_seq=13
+[Save] write #14: last_played=85 highest_completed=0 highest_unlocked=1 total_score=0 coins=60 file=ok
+ok: L85: the smashed magnet is gone and nothing moved (no pull)
+ok: L85: its neighbour spinners still turned
+ok: L85: the smash explains itself ('Magnet smashed - nothing is pulled')
+ok: L85: Undo brings the magnet back with the same pull line
+ok: a magnet beside a spinner was smashed on a campaign level
+[Chapter] level=76 chapter=8 theme=Crimson Circuit (id 8, prev 9) music=c08  <- transition
+[Save] write #15: last_played=76 highest_completed=0 highest_unlocked=1 total_score=0 coins=60 file=ok
+[Diag] L76 ch8 via=select t=0s fps=1 mem=87.5MB objs=3672 nodes=758 orphans=0 res=101 tweens=48 fx=25 music=c08 music_players=0 sfx=5 save_seq=15
+[Save] write #16: last_played=76 highest_completed=0 highest_unlocked=1 total_score=0 coins=65 file=ok
+[Save] write #17: last_played=76 highest_completed=0 highest_unlocked=1 total_score=0 coins=65 file=ok
+ok: L76: a magnet escape pulls in the game and the pulled block's view moves to (4, 2)
+ok: every section ran to its end (["gating", "validation", "rules", "solver", "lab", "campaign", "game"])
+
+73 checks passed, 0 failed
+MAGNET CHECKS PASSED
+WARNING: ObjectDB instances leaked at exit (run with --verbose for details).
+     at: cleanup (core/object/object.cpp:2284)

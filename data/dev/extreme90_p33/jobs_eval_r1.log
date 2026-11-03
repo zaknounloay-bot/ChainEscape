@@ -1,0 +1,27 @@
+START eval_J4_s331_6 pid=2663
+START eval_J4_s331_7 pid=2664
+START eval_J5_s331_1 pid=2665
+START eval_J5_s331_2 pid=2666
+DONE eval_J4_s331_7 exit=0 104s
+DONE eval_J5_s331_1 exit=0 104s
+DONE eval_J5_s331_2 exit=0 104s
+START eval_K08_s331_2 pid=2948
+START eval_K08_s331_3 pid=2949
+START eval_L3_s331_7 pid=2950
+DONE eval_J4_s331_6 exit=0 106s
+START eval_L3_s331_8 pid=2991
+DONE eval_K08_s331_2 exit=0 108s
+DONE eval_K08_s331_3 exit=0 108s
+START eval_T01r_s331_3 pid=3115
+START eval_T01r_s331_4 pid=3116
+DONE eval_L3_s331_7 exit=0 110s
+START eval_T10b_s331_2 pid=3143
+DONE eval_L3_s331_8 exit=0 118s
+START eval_T10b_s331_4 pid=3172
+DONE eval_T10b_s331_2 exit=0 102s
+START eval_T30_s331_7 pid=3295
+DONE eval_T01r_s331_3 exit=0 106s
+DONE eval_T01r_s331_4 exit=0 106s
+DONE eval_T10b_s331_4 exit=0 104s
+DONE eval_T30_s331_7 exit=0 108s
+ALL DONE

@@ -1,0 +1,20 @@
+{
+ "K08_s331_3": {
+  "map": [
+   ". . . . . . .",
+   ". . . Pv@ . . .",
+   ". . . . . . .",
+   "Yv B^@~ . G<* Gv Bv&A .",
+   ". . . . G^@~ R> .",
+   ". R^@~ Rv* Bv@ . P^%A .",
+   ". . . Gv@~ . G< ."
+  ],
+  "mechanic": "magnet,switch",
+  "run": "K08_PULLEDTARGET_s331",
+  "rules": [
+   "S_old",
+   "S_p30"
+  ],
+  "screen_key": "K08_s331_3"
+ }
+}

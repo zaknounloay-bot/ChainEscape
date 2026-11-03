@@ -1,0 +1,17 @@
+{
+ "L3_s331_8": {
+  "map": [
+   ". P<@- Y^&A B< . . .",
+   ". . . . Bv= . .",
+   "Y<&A R> . . B<&A= Gv@ B>%A",
+   "G>@- . P<@~ R^@~ G<= Y< .",
+   ". . . . Gv&A . .",
+   ". . . . . . .",
+   ". . P>%A . . . ."
+  ],
+  "target": "EXTREME",
+  "facts": [],
+  "mechanic": "switch,armor",
+  "max_positions": 2000
+ }
+}

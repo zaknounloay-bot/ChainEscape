@@ -1,0 +1,59 @@
+{
+ "target": "EXTREME",
+ "facts": [],
+ "mechanic": "lock,armor",
+ "idea": "P28 hand core: the key is armored: the prisoner waits until the key's shell is cracked and the key has left",
+ "family": "P28 lock x armor",
+ "map": [
+  ". . . . . . .",
+  ". . . . . . .",
+  "G> . . Y^= . . .",
+  ". . . . . . .",
+  ". . . B>#Y . . .",
+  ". . . . . . .",
+  ". . . . . . ."
+ ],
+ "frozen": [
+  [
+   2,
+   0
+  ],
+  [
+   2,
+   3
+  ],
+  [
+   4,
+   3
+  ]
+ ],
+ "max_positions": 2000,
+ "piece_free": 13,
+ "max_pieces": 17,
+ "shortcut_weight": 80,
+ "coverage_weight": 25,
+ "late_weight": 20,
+ "endgame_weight": 20,
+ "length_weight": 1.0,
+ "length_cap": 18,
+ "pressure_weight": 1.5,
+ "palette": "all",
+ "suffixes": [
+  "#Y",
+  "="
+ ],
+ "suffix_rate": 0.3,
+ "suffix_max": {
+  "#Y": 3,
+  "=": 3
+ },
+ "crates_max": 0,
+ "seed": 192,
+ "size": "medium",
+ "max_solve_nodes": 1500,
+ "spinners_max": 4,
+ "strict_essential": true,
+ "token_guard": true,
+ "phase28_core": "P07_ARMOREDKEY",
+ "phase33_method": "Phase 31 arm A / AM1 (c1ddc89 generator, --ops=v20, Phase 25-27 parameters); core file data/dev/extreme90_p28/seed_P07_ARMOREDKEY.json"
+}

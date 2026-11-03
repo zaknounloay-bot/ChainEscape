@@ -1,0 +1,9 @@
+{
+ "P03_s332_2": {
+  "distinct": 5,
+  "pieces_tested": 14,
+  "steps": 12,
+  "trivial": [],
+  "trivial_removals": 0
+ }
+}

@@ -1,0 +1,55 @@
+Godot Engine v4.3.stable.official.77dcf97d8 - https://godotengine.org
+
+Unicode parsing error, some characters were replaced with � (U+FFFD): NUL character
+Unicode parsing error, some characters were replaced with � (U+FFFD): NUL character
+[Save] load: new -> fresh progress
+[Save] profile: new player id
+[Save] write #1: last_played=1 highest_completed=0 highest_unlocked=1 total_score=0 coins=60 file=ok
+[Diag] last session ended at level 2 after 4s: process ended without a clean quit | [Diag] L2 ch1 via=restart t=4s fps=10 mem=98.9MB objs=3507 nodes=621 orphans=0 res=103 tweens=17 fx=8 music=c01 music_players=0 sfx=1 save_seq=7
+[Chapter] level=1 chapter=1 theme=First Light (id 1, prev 0) music=c01  <- transition
+[Save] write #2: last_played=1 highest_completed=0 highest_unlocked=1 total_score=0 coins=60 file=ok
+[Diag] L1 ch1 via=launch t=0s fps=1 mem=82.1MB objs=3214 nodes=573 orphans=0 res=97 tweens=6 fx=3 music=c01 music_players=1 sfx=0 save_seq=2
+[Save] write #3: last_played=1 highest_completed=0 highest_unlocked=1 total_score=0 coins=60 file=ok
+[Save] write #4: last_played=1 highest_completed=0 highest_unlocked=1 total_score=0 coins=60 file=ok
+[Save] write #5: last_played=1 highest_completed=0 highest_unlocked=1 total_score=0 coins=60 file=ok
+[Save] write #6: last_played=1 highest_completed=0 highest_unlocked=1 total_score=0 coins=60 file=ok
+[Save] write #7: last_played=1 highest_completed=0 highest_unlocked=1 total_score=0 coins=60 file=ok
+[Save] write #8: last_played=1 highest_completed=0 highest_unlocked=1 total_score=0 coins=60 file=ok
+[Save] write #9: last_played=1 highest_completed=0 highest_unlocked=1 total_score=0 coins=60 file=ok
+[Save] write #10: last_played=1 highest_completed=0 highest_unlocked=1 total_score=0 coins=60 file=ok
+[Save] write #11: last_played=1 highest_completed=0 highest_unlocked=1 total_score=0 coins=60 file=ok
+[Save] write #12: last_played=1 highest_completed=0 highest_unlocked=1 total_score=0 coins=60 file=ok
+[Chapter] level=1 chapter=1 theme=First Light (id 1, prev 1) music=c01
+[Save] write #13: last_played=1 highest_completed=0 highest_unlocked=1 total_score=0 coins=60 file=ok
+[Diag] L1 ch1 via=select t=0s fps=1 mem=85.3MB objs=3333 nodes=603 orphans=0 res=97 tweens=6 fx=6 music=c01 music_players=0 sfx=0 save_seq=13
+[Save] load: source=file version=5 seq=13 last_played=1 highest_completed=0 highest_unlocked=1 total_score=0 coins=60 stars=0 saved=2026-11-03 04:06:48 issues=[copies: file#13 bak#12]
+[Diag] last session ended at level 1 after 0s: process ended without a clean quit | [Diag] L1 ch1 via=select t=0s fps=1 mem=85.3MB objs=3333 nodes=603 orphans=0 res=97 tweens=6 fx=6 music=c01 music_players=0 sfx=0 save_seq=13
+[Chapter] level=1 chapter=1 theme=First Light (id 1, prev 0) music=c01  <- transition
+[Save] write #14: last_played=1 highest_completed=0 highest_unlocked=1 total_score=0 coins=60 file=ok
+[Diag] L1 ch1 via=launch t=0s fps=1 mem=85.4MB objs=3291 nodes=573 orphans=0 res=97 tweens=6 fx=3 music=c01 music_players=1 sfx=0 save_seq=14
+[Save] load: new -> fresh progress
+[Save] write #1: last_played=1 highest_completed=1 highest_unlocked=2 total_score=9001 coins=60 file=ok
+[Save] write #2: last_played=1 highest_completed=2 highest_unlocked=3 total_score=18003 coins=60 file=ok
+[Save] write #3: last_played=1 highest_completed=3 highest_unlocked=4 total_score=27006 coins=60 file=ok
+[Save] profile: new player id
+[Save] merge: profile adopted
+[Save] merge: +3 levels, highest_completed 0 -> 3, total 0 -> 27006, coins 321
+[Save] write #15: last_played=1 highest_completed=3 highest_unlocked=4 total_score=27006 coins=321 file=ok
+[Chapter] level=1 chapter=1 theme=First Light (id 1, prev 1) music=c01
+[Save] write #16: last_played=1 highest_completed=3 highest_unlocked=4 total_score=27006 coins=321 file=ok
+[Diag] L1 ch1 via=restore t=0s fps=1 mem=85.8MB objs=3350 nodes=603 orphans=0 res=97 tweens=11 fx=6 music=c01 music_players=1 sfx=0 save_seq=16
+[Save] restored: +3 levels, total 0 -> 27006
+[Save] load: new -> fresh progress
+[Save] write #1: last_played=1 highest_completed=1 highest_unlocked=2 total_score=9001 coins=60 file=ok
+[Save] write #2: last_played=1 highest_completed=2 highest_unlocked=3 total_score=18003 coins=60 file=ok
+[Save] write #3: last_played=1 highest_completed=3 highest_unlocked=4 total_score=27006 coins=60 file=ok
+[Save] profile: new player id
+[Save] merge: profile kept_local
+[Save] merge: +0 levels, highest_completed 3 -> 3, total 27006 -> 27006, coins 321
+[Save] write #17: last_played=1 highest_completed=3 highest_unlocked=4 total_score=27006 coins=321 file=ok
+[Chapter] level=1 chapter=1 theme=First Light (id 1, prev 1) music=c01
+[Save] write #18: last_played=1 highest_completed=3 highest_unlocked=4 total_score=27006 coins=321 file=ok
+[Diag] L1 ch1 via=restore t=0s fps=1 mem=86.5MB objs=3361 nodes=603 orphans=0 res=97 tweens=13 fx=6 music=c01 music_players=1 sfx=0 save_seq=18
+[Save] restored: +0 levels, total 27006 -> 27006
+207 checks passed, 0 failed
+PROFILE CHECKS PASSED

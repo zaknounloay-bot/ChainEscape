@@ -1,0 +1,127 @@
+{
+ "J4_s331_7": {
+  "A": {
+   "fingerprint": "aba65da582a75556d74ce52154bb492d94cdc55786f82b8b6ed8ed6d14d402de",
+   "hint_nodes": [
+    126,
+    0
+   ],
+   "parity": [
+    0,
+    0
+   ],
+   "portals": 0,
+   "position_cap": 2000,
+   "positions": 363,
+   "replay": true,
+   "solution": 13,
+   "solve_ms": 2.4,
+   "timeup_worst_ms": 2.7,
+   "timeup_worst_nodes": 126,
+   "winnable": 79
+  },
+  "B": {
+   "coverage": 0.77,
+   "decision_steps": 10,
+   "distinct_mistakes": 4,
+   "endgame_decision": true,
+   "last_decision": 10,
+   "late": 0.77,
+   "line": [
+    "r4c3^ ram [x2]",
+    "r6c4^ [x2]",
+    "r1c1< [x2]",
+    "r2c2< [x3]",
+    "r3c3> [x3]",
+    "r4c3^ ram [x3]",
+    "r1c2< [x2]",
+    "r1c2< [x2]",
+    "r4c3^ [x2]",
+    "r4c1< [x1]",
+    "r4c1v ram",
+    "r5c1>",
+    "r4c1v"
+   ],
+   "losing_per_step": [
+    2,
+    2,
+    2,
+    3,
+    3,
+    3,
+    2,
+    2,
+    2,
+    1,
+    0,
+    0,
+    0
+   ],
+   "matters_armor": true,
+   "matters_magnet": true,
+   "mistakes": [
+    "r4c1<",
+    "r6c3v",
+    "r1c2<",
+    "r4c3v"
+   ],
+   "shortcut": 0.135,
+   "without_armor": "without it: 0 decision steps, 0 distinct mistakes (with it: 10, 4)",
+   "without_magnet": "unsolvable without it"
+  },
+  "C": {
+   "decisions_k4_6_8": [
+    7,
+    5,
+    3
+   ],
+   "deepest": 11,
+   "greedy": {
+    "look2": 0.015,
+    "look4": 0.05,
+    "min_turn": 0.015,
+    "mobility": 0.135,
+    "safe": 0.015
+   },
+   "hidden_k6_8": [
+    10,
+    3
+   ],
+   "learner": {
+    "look4": 1,
+    "look6": 0
+   },
+   "look6_greedy": 0.267,
+   "opening": "4 / 6",
+   "pressure": {
+    "advances": 0,
+    "calm_prefix": 2,
+    "flips": 0,
+    "multi_turned": 0,
+    "prediction_share": 0.46,
+    "pulls": 3,
+    "rams": 3,
+    "signals": 0,
+    "spinners_turned": 0,
+    "trap_delay_median": 5,
+    "turns": 0,
+    "undo_proof": 0.73
+   },
+   "win_share": 0.218
+  },
+  "map": [
+   ". . . . . . .",
+   ". Y< P<* Y<= . . .",
+   ". . R< . . . .",
+   ". . . B>= . . .",
+   ". B<* . R^* . . .",
+   ". G>= . . . . .",
+   ". . . Yv Y^ . ."
+  ],
+  "name": "J4_s331_7",
+  "target": "EXTREME",
+  "verdict": "HUMAN-REVIEW CANDIDATE",
+  "why_a": [],
+  "why_b": []
+ }
+}

@@ -1,0 +1,26 @@
+L3_s331_0              filler         ['r6c3 Y^']
+L3_s331_1              not essential  {'without_armor': 'without it: 12 decision steps, 4 distinct mistakes (with it: 13, 5)'}
+L3_s331_2              not essential  {'without_armor': 'without it: 14 decision steps, 5 distinct mistakes (with it: 16, 5)'}
+L3_s331_3              not essential  {'without_armor': 'without it: 15 decision steps, 5 distinct mistakes (with it: 17, 5)'}
+L3_s331_4              not essential  {'without_armor': 'without it: 13 decision steps, 4 distinct mistakes (with it: 14, 5)'}
+L3_s331_5              not essential  {'without_armor': 'without it: 13 decision steps, 4 distinct mistakes (with it: 14, 5)'}
+L3_s331_6              not essential  {'without_armor': 'without it: 14 decision steps, 4 distinct mistakes (with it: 16, 5)'}
+L3_s331_7              PASS           []
+L3_s331_8              PASS           []
+L3_s331_9              not essential  {'without_armor': 'without it: 15 decision steps, 4 distinct mistakes (with it: 17, 5)'}
+L3_s331_10             not essential  {'without_armor': 'without it: 15 decision steps, 4 distinct mistakes (with it: 15, 5)'}
+L3_s331_11             not essential  {'without_armor': 'without it: 15 decision steps, 4 distinct mistakes (with it: 15, 5)'}
+SCREEN: 12 boards, 2 PASS
+L3_s331_0              filler         
+L3_s331_1              not essential  
+L3_s331_2              not essential  
+L3_s331_3              not essential  
+L3_s331_4              not essential  
+L3_s331_5              not essential  
+L3_s331_6              not essential  
+L3_s331_7              PASS           PASS
+L3_s331_8              PASS           PASS
+L3_s331_9              not essential  
+L3_s331_10             not essential  
+L3_s331_11             not essential  
+SCREEN30: 12 boards, 2 PASS

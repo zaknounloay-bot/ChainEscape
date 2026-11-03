@@ -1,0 +1,26 @@
+T30_s331_0             overlap        (0.4, 'N87')
+T30_s331_1             filler         ['r2c4 P^@-#Y']
+T30_s331_2             filler         ['r2c4 Pv@~#Y']
+T30_s331_3             filler         ['r2c4 Pv@-#Y']
+T30_s331_4             filler         ['r2c4 P^#Y']
+T30_s331_5             filler         ['r2c4 P^#Y']
+T30_s331_6             filler         ['r0c0 G^@', 'r6c4 Bv@~']
+T30_s331_7             PASS           []
+T30_s331_8             Category A/B   ['a simple greedy player wins 41% (> 20%): a shortcut']
+T30_s331_9             filler         ['r0c1 R^#Y', 'r1c1 P^#Y']
+T30_s331_10            filler         ['r1c0 P^@', 'r6c4 Bv@~']
+T30_s331_11            filler         ['r0c0 P<@', 'r6c4 Bv@~']
+SCREEN: 12 boards, 1 PASS
+T30_s331_0             overlap        
+T30_s331_1             filler         
+T30_s331_2             filler         
+T30_s331_3             filler         
+T30_s331_4             filler         
+T30_s331_5             filler         
+T30_s331_6             filler         
+T30_s331_7             PASS           PASS
+T30_s331_8             Category A/B   
+T30_s331_9             filler         
+T30_s331_10            filler         
+T30_s331_11            filler         
+SCREEN30: 12 boards, 1 PASS

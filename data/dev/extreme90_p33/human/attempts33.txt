@@ -1,0 +1,46 @@
+Per attempt (measured by replaying the log on the engine; times in s from the attempt's start)
+board att    dur end      moves  esc undo blkd clr/max  first first losing move (move no., time)     legal/winning depth after lost_s  rec  same choices
+N94   1     22.0 RESTART      4    4    1    0   3/3      4.7 #0 P> R1C7 (#1, 4.7 s)                 5/2              11     3   17.2    0     0  0/1 
+N94   2     23.6 RESTART     12   12    0    2  12/12     8.2 #1 B^ R2C4 (#5, 12.4 s)                3/1               8     7   11.1    0     0  4/5 
+N94   3      4.4 RESTART      1    1    0    0   1/1      1.1 #2 Y^ R2C5 spinner (#1, 1.1 s)         5/2               4     0    3.3    0     0  0/1 
+N94   4     40.1 TIME UP     15   15    3    0  12/12     0.6 #0 P< R1C7 (#7, 20.5 s)                3/1               6     8   19.6    0     0  6/7 
+N96   1     27.5 RESTART     12   12    1    0  11/11     6.0 #12 Gv R7C4 spinner (#1, 6.0 s)        4/2              11    11   21.6    0     0  0/1 
+N96   2     31.9 RESTART     12   12    0    3  12/12     2.7 #12 Gv R7C4 spinner (#3, 4.3 s)        4/2               9     9   27.6    0     0  2/3 
+N96   3      9.1 RESTART      3    3    0    0   3/3      4.7 #9 Rv R6C3 magnet (#2, 5.7 s)          5/2              10     1    3.4    0     1  1/2 
+N96   4     21.5 TIME UP      8    8    0    0   8/8      1.1 #12 Gv R7C4 spinner (#3, 9.4 s)        4/2               9     5   12.1    0     1  2/3 
+N99   1     23.9 RESTART      9    7    0    1   7/7      3.5 #14 P> R7C3 switch (#5, 12.0 s)        5/3              10     4   11.9    0     0  3/4 
+N99   2     26.1 RESTART     12   10    0    1  10/10     5.9 #14 P> R7C3 switch (#10, 21.4 s)       2/1               5     2    4.7    0     3  3/4 
+N99   3     34.2 RESTART     15   13    0    4  13/13     5.4 #8 B> R3C7 switch (#2, 15.6 s)         5/3              13    13   18.6    0     1  1/2 
+N99   4      5.8 TIME UP      2    1    0    0   1/1      3.5 never lost                             -                 -     0    0.0    0     1  2/2 
+N95   1     12.4 RESTART      3    3    0    0   3/3      2.7 #8 P> R4C5 spinner (#2, 4.6 s)         3/1               3     1    7.7    0     0  1/2 
+N95   2     18.8 SOLVED      14   15    0    0  15/15     1.8 never lost                             -                 -     0    0.0    0     0 10/10
+N97   1     17.4 RESTART      9    6    0    0   6/6      2.0 #2 Y> R1C4 (#7, 10.4 s)                4/1               3     2    7.1    0     0  6/7 
+N97   2     23.0 SOLVED      18   16    0    0  16/16     1.0 never lost                             -                 -     0    0.0    0     0 11/11
+N98   1     21.5 RESTART     11    9    0    0   9/9      2.0 #5 B< R5C2 magnet (#4, 11.7 s)         5/3               7     7    9.8    0     0  3/4 
+N98   2     14.8 SOLVED      12   10    0    0  10/10     1.2 never lost                             -                 -     0    0.0    0     3  8/8 
+N100  1     23.6 SOLVED      17   18    1    0  17/17     1.7 #15 R> R7C1 switch (#8, 13.1 s)        3/2               2     0    2.8    1     0 14/15
+columns: depth = longest run of legal moves still possible right after the losing move (how late the loss can show itself);
+after = moves the player made in the lost position; lost_s = seconds spent in a lost position before RESTART / the end;
+rec = UNDOs that made the board winnable again; same = moves identical to the previous attempt's opening;
+choices = consequential choices met on the path (positions with >= 1 winning and >= 1 losing legal move): won/met.
+
+Board-level (measured)
+  N94   EXTREME   attempts 4; losing decisions 4; repeated losing block {'#0': [1, 4]}; trap depth of losses [11, 8, 4, 6]; moves in lost positions [3, 7, 0, 8]; undo recoveries 0; exact solution 15 moves
+  N96   VERY_HARD attempts 4; losing decisions 4; repeated losing block {'#12': [1, 2, 4]}; trap depth of losses [11, 9, 10, 9]; moves in lost positions [11, 9, 1, 5]; undo recoveries 0; exact solution 14 moves
+  N99   EXTREME   attempts 4; losing decisions 3; repeated losing block {'#14': [1, 2]}; trap depth of losses [10, 5, 13]; moves in lost positions [4, 2, 13]; undo recoveries 0; exact solution 19 moves
+  N95   MEDIUM    attempts 2; losing decisions 1; repeated losing block -; trap depth of losses [3]; moves in lost positions [1]; undo recoveries 0; exact solution 15 moves
+  N97   MEDIUM    attempts 2; losing decisions 1; repeated losing block -; trap depth of losses [3]; moves in lost positions [2]; undo recoveries 0; exact solution 19 moves
+  N98   MEDIUM    attempts 2; losing decisions 1; repeated losing block -; trap depth of losses [7]; moves in lost positions [7]; undo recoveries 0; exact solution 13 moves
+  N100  MEDIUM    attempts 1; losing decisions 1; repeated losing block -; trap depth of losses [2]; moves in lost positions [0]; undo recoveries 1; exact solution 17 moves
+
+  trap depth of each losing move         hard [11, 8, 4, 6, 11, 9, 10, 9, 10, 5, 13] median 9     | MEDIUM [3, 3, 7, 2]             median 3.0
+  moves made in a lost position          hard [3, 7, 0, 8, 11, 9, 1, 5, 4, 2, 13] median 5     | MEDIUM [1, 2, 7, 0]             median 1.5
+  seconds in a lost position             hard [17.2, 11.1, 3.3, 19.6, 21.6, 27.6, 3.4, 12.1, 11.9, 4.7, 18.6] median 12.1  | MEDIUM [7.7, 7.1, 9.8, 2.8]     median 7.4
+  winning share at the losing decision   hard [0.4, 0.33, 0.4, 0.33, 0.5, 0.5, 0.4, 0.5, 0.6, 0.5, 0.6] median 0.5   | MEDIUM [0.33, 0.25, 0.6, 0.67]  median 0.46499999999999997
+  move number of the first loss          hard [1, 5, 1, 7, 1, 3, 2, 3, 5, 10, 2] median 3     | MEDIUM [2, 7, 4, 8]             median 5.5
+  time to first move (s)                 hard [4.7, 8.2, 1.1, 0.6, 6.0, 2.7, 4.7, 1.1, 3.5, 5.9, 5.4, 3.5] median 4.1   | MEDIUM [2.7, 1.8, 2.0, 1.0, 2.0, 1.2, 1.7] median 1.8
+
+Recording notes (engine-verified, see the report): the solving escape of a completed board is not logged (per-frame
+poll ends with the puzzle) -> moves/escapes above include it; rams are logged 'm' but are not 'moves' (escapes only);
+first_move_ms counts the first escape, not the first ram; UNDO is per attempt (3, reset on RESTART); unaided_max_cleared
+is one below max_cleared on completed boards for the same unlogged-final reason (no SHOW A MOVE exists on this page).
