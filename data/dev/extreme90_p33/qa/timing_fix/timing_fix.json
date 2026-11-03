@@ -1,0 +1,80 @@
+{
+ "change": "tools/web_timing_test.mjs check A only: wall clock taken between in-page event boundaries (first frame whose published state shows the title gone; the winning touch as it reaches the page) instead of test-process marks (after a 100 ms poll + CDP round trip; before the CDP tap); ceiling t <= wall - capLoss + 150 (was wall + 150; floor unchanged wall - capLoss - 300); three negative controls on each run's own numbers",
+ "unchanged": "game timer, gameplay, Classic levels, the 150 / 300 ms slack, sections B-G of the test",
+ "runs": [
+  {
+   "build": "P33",
+   "run": 1,
+   "exit": 0,
+   "t1_ms": 11032,
+   "inpage_wall_ms": 11412,
+   "cap_loss_ms": 400,
+   "t1_minus_wall_less_loss_ms": 20,
+   "test_side_window_ms": 11066,
+   "old_assertion_on_test_side_marks": true,
+   "negative_controls": "PASS"
+  },
+  {
+   "build": "P32",
+   "run": 1,
+   "exit": 0,
+   "t1_ms": 9261,
+   "inpage_wall_ms": 9904,
+   "cap_loss_ms": 650,
+   "t1_minus_wall_less_loss_ms": 7,
+   "test_side_window_ms": 9754,
+   "old_assertion_on_test_side_marks": true,
+   "negative_controls": "PASS"
+  },
+  {
+   "build": "P33",
+   "run": 2,
+   "exit": 0,
+   "t1_ms": 9866,
+   "inpage_wall_ms": 10350,
+   "cap_loss_ms": 500,
+   "t1_minus_wall_less_loss_ms": 16,
+   "test_side_window_ms": 9988,
+   "old_assertion_on_test_side_marks": true,
+   "negative_controls": "PASS"
+  },
+  {
+   "build": "P32",
+   "run": 2,
+   "exit": 0,
+   "t1_ms": 9914,
+   "inpage_wall_ms": 10676,
+   "cap_loss_ms": 750,
+   "t1_minus_wall_less_loss_ms": -12,
+   "test_side_window_ms": 10556,
+   "old_assertion_on_test_side_marks": true,
+   "negative_controls": "PASS"
+  },
+  {
+   "build": "P33",
+   "run": 3,
+   "exit": 0,
+   "t1_ms": 9775,
+   "inpage_wall_ms": 10619,
+   "cap_loss_ms": 717,
+   "t1_minus_wall_less_loss_ms": -127,
+   "test_side_window_ms": 10069,
+   "old_assertion_on_test_side_marks": true,
+   "negative_controls": "PASS"
+  },
+  {
+   "build": "P32",
+   "run": 3,
+   "exit": 0,
+   "t1_ms": 9604,
+   "inpage_wall_ms": 10560,
+   "cap_loss_ms": 950,
+   "t1_minus_wall_less_loss_ms": -6,
+   "test_side_window_ms": 10186,
+   "old_assertion_on_test_side_marks": true,
+   "negative_controls": "PASS"
+  }
+ ],
+ "TimingCheck": "TIMING CHECKS PASSED (headless)",
+ "superseded": "first corrected version kept the old ceiling wall + 150: its negative controls FAILED (cap loss 500 ms let +500 ms and a 500 ms late start pass) - log in superseded_loose_ceiling/"
+}

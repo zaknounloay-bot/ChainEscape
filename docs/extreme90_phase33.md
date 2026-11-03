@@ -277,11 +277,41 @@ Evidence: `data/dev/extreme90_p33/qa/` (`summary.txt` is the chain's own log, in
    - **Not a Phase 33 regression:** it reproduces on the Phase 32 baseline, and Phase 33 changes no Classic code.
    - **Unknown:** why the lag exceeds the slack in this container now, when the same Phase 32 build passed during Phase 32 QA.
    - **Unchanged:** the test, its 150 ms slack and the timer.
-   - **Proposed fix (owner decision, not applied):** take both marks inside the page.
+   - **Proposed fix:** take both marks inside the page. Applied afterwards in a separate corrective commit; see G.1.
 
 **Run conditions:**
 - **Container restarts and time limits:** the container restarted four times (06:17, 08:29, 09:12, 10:26) and the 2-hour background time limit was hit twice (12:27, 14:27). Each time the chain resumed and skipped the steps that had already passed. Interrupted partial logs are kept as `*_interrupted*.log`, and none of them contained a FAIL.
 - **Parallel work:** the action-log replay (section M) ran at nice 19 during web_p27, which passed 114/114.
+
+### G.1 Correction of web_timing_test check A (separate local commit after `d845bae`)
+
+Evidence: `data/dev/extreme90_p33/qa/timing_fix/` (`timing_fix.json`). The original failure logs in `qa/timing/` are unchanged.
+
+**Confirmed (code and measurement):**
+- **When the game's clock runs.** The attempt clock (`AttemptTimer`, ticked in `game_manager._process`) counts only while `_attempt_active()` is true. That starts with the first frame after the title closes; `TitleScreen.close()` hides it at once, with no fade. It stops in `_on_board_cleared`, on the winning move. Frames longer than 0.25 s are capped (`MAX_FRAME`).
+- **What the old test compared against.** Its "wall clock" ran from a mark taken *after* a 100 ms state poll and a CDP round trip, to a mark taken *before* the CDP tap was sent. Those are not the game's boundaries. In-page instrumentation (4 runs) measured:
+  - the start mark lagged the title-gone frame by 155–232 ms;
+  - the winning touch reached the page 83–92 ms after the end mark.
+- **Why it failed.** The test's window came out shorter than the game's, so `t ≤ wall + 150` failed on the Phase 32 and Phase 33 builds alike (7 of 9 runs before the fix).
+- **The game's timer is consistent.** Measured between in-page boundaries, the game's time equals the in-page wall clock less the frame-cap loss, to within −127 to +39 ms across 11 runs.
+
+**Fix (test only):**
+- **Boundaries.** Check A now measures the wall clock inside the page, between the first frame whose published state shows the title gone and the winning touch as it reaches the page (capture-phase `touchstart`/`pointerdown`). The test's own marks are still reported, for information only.
+- **Ceiling.** The ceiling is now `wall − capLoss + 150` (it was `wall + 150`). The floor `wall − capLoss − 300` and the 150 / 300 ms slack are unchanged, so the accepted band is *narrower*.
+- **Why the ceiling changed.** The first corrected version kept the old ceiling, and its own negative controls **failed**. With 500 ms capped, a +500 ms over-count and a start mark 500 ms late both passed. That log is kept in `superseded_loose_ceiling/`.
+- **Negative controls.** Each run checks that the assertion rejects a start mark 500 ms late, a timer over-counting by 500 ms and one under-counting by 500 ms, using that run's own numbers.
+- **Unchanged:** the game timer, gameplay, the Classic levels, and sections B–G of the test.
+
+**Results:**
+- **Browser runs:** 6 of 6 passed (Phase 33 ×3, Phase 32 ×3, alternating), 35 of 35 checks each.
+- **Negative controls:** rejected in all 6 runs.
+- **Game's time against the in-page wall clock less cap loss:** +20, +16, −127 ms (Phase 33); +7, −12, −6 ms (Phase 32).
+- **Headless TimingCheck:** passed.
+
+**Remaining uncertainty:**
+- In these six runs the old test-side marks lagged less, and the old assertion would also have passed. The failure was intermittent, so the passes do not by themselves prove the fix. They rest on the measured boundary mismatch and on the negative controls.
+- Why the lag (and the cap loss: 67–167 ms before, 400–950 ms in these runs) varies between container sessions is not established.
+- Section B uses test-side marks in the same way and passes with margin. It was left unchanged and is a candidate for the same correction.
 
 ## H. Downloadable QA ZIP
 

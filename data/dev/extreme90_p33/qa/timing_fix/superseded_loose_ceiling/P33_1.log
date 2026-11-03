@@ -1,0 +1,16 @@
+PASS A: production build, fresh save (PLAY)
+PASS A: in-page boundaries recorded (title gone 9404 ms, winning touch 19631 ms; test-side marks 9441 / 19554 ms)
+PASS A: active time 9755 ms within [wall clock 10226 ms - 500 ms beyond the 0.25 s frame cap, wall clock] (title gone -> winning touch, in-page; test-side marks gave 10113 ms)
+FAIL A: negative controls rejected (start 500 ms late, +500 ms, -500 ms)
+PASS A: a clean first clear: BEST = BEST CLEAN = 9755 ms
+PASS A: the card shows "TIME 0:09" (the first time on this level)
+PASS A: the card and its timing block fit the screen (0.083, 0.191, 0.917, 0.809)
+PASS A: first time: "TIME 0:09 | PERSONAL BEST 0:09" (no record banner)
+PASS B: REPLAY starts a fresh attempt (0 ms)
+PASS B: the game sees the hidden page (visibilitychange)
+PASS B: pagehide counts as hidden even while document.hidden is false
+FAIL exception: Cannot read properties of null (reading 'completed')
+PASS E: no page errors ()
+
+11 passed, 2 failed
+WEB TIMING TEST FAILED

@@ -72,9 +72,26 @@ async function open(url, dir, size) {
   // counts as 0.25 s by design. Headless SwiftShader stalls a frame for
   // ~0.3-0.45 s on every screenshot (used to find the blocks), so the
   // expected time subtracts that documented cap loss.
+  // In-page event boundaries for A (same clock as the frames): the first
+  // frame on which the game's published state shows the title gone (the
+  // game starts the attempt's clock on that frame), and every touch as it
+  // reaches the page (the winning touch ends the attempt). Marks taken from
+  // the test process instead lag by a poll and a CDP round trip each.
   await page.addInitScript(() => {
     window.__frames = [];
-    const f = (t) => { window.__frames.push(t); requestAnimationFrame(f); };
+    window.__titleGone = null;
+    window.__touches = [];
+    const note = () => window.__touches.push(performance.now());
+    addEventListener('touchstart', note, { capture: true });
+    addEventListener('pointerdown', note, { capture: true });
+    let titleSeen = false;
+    const f = (t) => {
+      window.__frames.push(t);
+      const st = window.chainEscapeState;
+      if (st && st.title_open) titleSeen = true;
+      if (st && titleSeen && !st.title_open && window.__titleGone === null) window.__titleGone = performance.now();
+      requestAnimationFrame(f);
+    };
     requestAnimationFrame(f);
   });
   await page.goto(url);
@@ -179,12 +196,29 @@ try {
   await sleep(2500);
   const tWin = await clearLevel1(g);
   s = await waitFor(g, (x) => x.card_open && x.level === 1, 'card 1', 20000);
-  const wall = Math.round(tWin - tStart);
-  const lossA = await capLoss(g, tStart, tWin);
+  // The wall clock runs between the in-page boundaries: the frame the title
+  // was gone -> the winning touch reaching the page (the last touch before
+  // the card). tStart / tWin (test-side marks) are reported only.
+  const marks = await g.page.evaluate(() => ({ gone: window.__titleGone, touches: window.__touches.slice() }));
+  const pageStart = marks.gone;
+  const pageEnd = marks.touches.length ? marks.touches[marks.touches.length - 1] : null;
+  check(pageStart !== null && pageEnd !== null && pageEnd > pageStart && pageStart <= tStart && pageEnd >= tWin,
+    `A: in-page boundaries recorded (title gone ${pageStart && Math.round(pageStart)} ms, winning touch ${pageEnd && Math.round(pageEnd)} ms; test-side marks ${Math.round(tStart)} / ${Math.round(tWin)} ms)`);
+  const wall = Math.round(pageEnd - pageStart);
+  const lossA = await capLoss(g, pageStart, pageEnd);
   const t1 = s.time_result.time_ms;
-  // Never more than the wall clock; at least the wall clock less what the
-  // 0.25 s cap takes off long frames (small slack for frame alignment).
-  check(t1 <= wall + 150 && t1 >= wall - lossA - 300, `A: active time ${t1} ms within [wall clock ${wall} ms - ${lossA} ms beyond the 0.25 s frame cap, wall clock] (board playable -> winning tap)`);
+  // Never more than the wall clock less what the 0.25 s cap takes off long
+  // frames (the game cannot count that time); at least that less a frame-
+  // alignment slack. Same 150 / 300 ms slack as before; the ceiling no
+  // longer leaves the cap loss as extra room (a 500 ms over-count passed
+  // the old ceiling when 500 ms was capped).
+  const withinA = (t, w, loss) => t <= w - loss + 150 && t >= w - loss - 300;
+  check(withinA(t1, wall, lossA), `A: active time ${t1} ms within [wall clock ${wall} ms - ${lossA} ms beyond the 0.25 s frame cap - 300, + 150] (title gone -> winning touch, in-page; test-side marks gave ${Math.round(tWin - tStart)} ms)`);
+  // Negative controls on this run's numbers: the same assertion must reject
+  // a wrong measurement - a start mark 500 ms late, a timer over-counting
+  // 500 ms, a timer under-counting 500 ms.
+  check(!withinA(t1, wall - 500, lossA) && !withinA(t1 + 500, wall, lossA) && !withinA(t1 - 500, wall, lossA),
+    `A: negative controls rejected (start 500 ms late, +500 ms, -500 ms)`);
   check(s.time_result.clean && s.best_time_ms === t1 && s.best_clean_ms === t1, `A: a clean first clear: BEST = BEST CLEAN = ${t1} ms`);
   check(s.card_time === `TIME 0:${String(Math.floor(t1 / 1000)).padStart(2, '0')}`, `A: the card shows "${s.card_time}" (the first time on this level)`);
   check(cardFits(s), `A: the card and its timing block fit the screen (${s.card_rect.map((v) => v.toFixed(3)).join(', ')})`);
