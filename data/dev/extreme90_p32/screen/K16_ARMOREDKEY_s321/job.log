@@ -1,0 +1,26 @@
+K16_ARMOREDKEY_s321_5  overlap        (0.42, 'N60')
+K16_ARMOREDKEY_s321_0  not essential  {'without_armor': 'without it: 13 decision steps, 4 distinct mistakes (with it: 15, 4)', 'without_lock': 'without it: 14 decision steps, 5 distinct mi
+K16_ARMOREDKEY_s321_1  not essential  {'without_armor': 'without it: 13 decision steps, 4 distinct mistakes (with it: 15, 4)', 'without_lock': 'without it: 14 decision steps, 5 distinct mi
+K16_ARMOREDKEY_s321_2  not essential  {'without_armor': 'without it: 12 decision steps, 4 distinct mistakes (with it: 14, 4)'}
+K16_ARMOREDKEY_s321_3  not essential  {'without_armor': 'without it: 12 decision steps, 4 distinct mistakes (with it: 14, 4)', 'without_lock': 'without it: 13 decision steps, 6 distinct mi
+K16_ARMOREDKEY_s321_4  not essential  {'without_armor': 'without it: 12 decision steps, 4 distinct mistakes (with it: 14, 4)'}
+K16_ARMOREDKEY_s321_6  not essential  {'without_armor': 'without it: 14 decision steps, 4 distinct mistakes (with it: 16, 4)', 'without_lock': 'without it: 15 decision steps, 3 distinct mi
+K16_ARMOREDKEY_s321_7  not essential  {'without_armor': 'without it: 14 decision steps, 4 distinct mistakes (with it: 16, 4)'}
+K16_ARMOREDKEY_s321_8  not essential  {'without_armor': 'without it: 14 decision steps, 4 distinct mistakes (with it: 16, 4)'}
+K16_ARMOREDKEY_s321_9  not essential  {'without_armor': 'without it: 14 decision steps, 4 distinct mistakes (with it: 16, 4)', 'without_lock': 'without it: 15 decision steps, 5 distinct mi
+K16_ARMOREDKEY_s321_10 not essential  {'without_armor': 'without it: 14 decision steps, 4 distinct mistakes (with it: 16, 4)', 'without_lock': 'without it: 15 decision steps, 5 distinct mi
+K16_ARMOREDKEY_s321_11 not essential  {'without_armor': 'without it: 14 decision steps, 4 distinct mistakes (with it: 16, 4)', 'without_lock': 'without it: 15 decision steps, 5 distinct mi
+SCREEN: 12 boards, 0 PASS
+K16_ARMOREDKEY_s321_5  overlap        
+K16_ARMOREDKEY_s321_0  not essential  
+K16_ARMOREDKEY_s321_1  not essential  
+K16_ARMOREDKEY_s321_2  not essential  
+K16_ARMOREDKEY_s321_3  not essential  
+K16_ARMOREDKEY_s321_4  not essential  
+K16_ARMOREDKEY_s321_6  not essential  
+K16_ARMOREDKEY_s321_7  not essential  
+K16_ARMOREDKEY_s321_8  not essential  
+K16_ARMOREDKEY_s321_9  not essential  
+K16_ARMOREDKEY_s321_10 not essential  
+K16_ARMOREDKEY_s321_11 not essential  
+SCREEN30: 12 boards, 0 PASS

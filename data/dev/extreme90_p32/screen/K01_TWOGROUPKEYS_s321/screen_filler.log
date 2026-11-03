@@ -1,0 +1,10 @@
+Godot Engine v4.3.stable.official.77dcf97d8 - https://godotengine.org
+
+K01_TWOGROUPKEYS_s321_0 {"distinct":5,"pieces_tested":16,"steps":13,"trivial":["r1c0 Pv@-#Y"],"trivial_removals":1}
+K01_TWOGROUPKEYS_s321_1 {"distinct":5,"pieces_tested":16,"steps":13,"trivial":["r1c0 Pv#Y"],"trivial_removals":1}
+K01_TWOGROUPKEYS_s321_2 {"distinct":4,"pieces_tested":16,"steps":13,"trivial":["r0c1 P<#Y","r1c1 P^#Y"],"trivial_removals":2}
+K01_TWOGROUPKEYS_s321_3 {"distinct":5,"pieces_tested":16,"steps":14,"trivial":[],"trivial_removals":0}
+K01_TWOGROUPKEYS_s321_4 {"distinct":5,"pieces_tested":16,"steps":14,"trivial":[],"trivial_removals":0}
+K01_TWOGROUPKEYS_s321_5 {"distinct":5,"pieces_tested":17,"steps":14,"trivial":["r1c0 Pv#Y"],"trivial_removals":1}
+K01_TWOGROUPKEYS_s321_7 {"distinct":4,"pieces_tested":17,"steps":15,"trivial":[],"trivial_removals":0}
+K01_TWOGROUPKEYS_s321_9 {"distinct":4,"pieces_tested":17,"steps":15,"trivial":[],"trivial_removals":0}

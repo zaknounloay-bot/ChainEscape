@@ -1,0 +1,20 @@
+{
+ "what": "Extreme11Check Q1 'SHOW A MOVE after 6 mistakes (page button)' slowest time vs the unchanged 40 ms native-desktop gate",
+ "failures": {"suite_run_2026-11-02_15:19": 42.6, "idle_run_1": 39.7, "idle_run_2_FAIL": 41.8, "ab_cur_run4_FAIL": 41.9},
+ "history_p13_p31": "18.5 - 35.4 ms (Phase 31: 35.4 ms)",
+ "ab_interleaved_idle": {
+  "base_22e57e1": [26.4, 22.1, 22.7, 22.0, 22.3],
+  "current_tree": [23.0, 22.3, 24.3, 41.9, 22.0],
+  "fisher_p_fail_rate": 1.0
+ },
+ "component_diagnostic": {
+  "method": "temporary script (not kept): 8 reps x 6 mistakes per configuration, state save and solver timed separately, both trees, with and without the check's full data/dev scan",
+  "save_ms_max": "<= 1.2 (one 10.7 on base); never the cause",
+  "solver_ms_median_per_mistake_cur": [3.0, 19.4, 2.2, 21.2, 7.5, 1.6],
+  "solver_ms_median_per_mistake_base": [3.0, 17.3, 2.2, 21.0, 7.7, 1.7],
+  "solver_spikes_over_30ms": {"current": "6 / 96 (max 49.4)", "base": "3 / 96 (max 35.6)", "fisher_p": 0.5},
+  "engine_code_diff_since_22e57e1": "none (only game_manager.gd page wiring and the ta90_time_attack.gd board list)"
+ },
+ "conclusion": "the deterministic solver work is identical on both trees; the 40-50 ms readings are sporadic scheduling stalls on the shared container that occur on the Phase 31 baseline as well; no Phase 32 regression. The 40 ms gate is NOT changed.",
+ "pre_registered_rerun": "written before running: exactly 3 Extreme11Check runs, each pinned to CPU 3 (taskset) at SCHED_FIFO 50 (chrt), each started on an idle machine (1-min load < 0.5, no other Godot); ALL 3 must PASS with slowest <= 40 ms; any failure keeps the chain halted, no further retries, report to the owner"
+}

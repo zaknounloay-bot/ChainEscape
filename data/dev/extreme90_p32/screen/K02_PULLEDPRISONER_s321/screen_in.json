@@ -1,0 +1,230 @@
+{
+ "K02_PULLEDPRISONER_s321_0": {
+  "map": [
+   ". . . . . . .",
+   ". . . . . . .",
+   "Y^@- R>@~ . P^#Y G>* Pv Y>@",
+   "P>@- B^#Y P> . Gv* . Gv@",
+   "P>@~ . . Y^ . . .",
+   "B^#Y . . . . . .",
+   ". . . . . . ."
+  ],
+  "target": "EXTREME",
+  "facts": [],
+  "mechanic": "magnet,lock",
+  "max_positions": 2000,
+  "overlap": [
+   0.36,
+   "N22"
+  ]
+ },
+ "K02_PULLEDPRISONER_s321_1": {
+  "map": [
+   ". . . . . . .",
+   ". . . . Y<@- . .",
+   "Y^@- R>@~ . P^#Y G>* Pv .",
+   "P>@- B^#Y P> . Gv* . Gv@",
+   "P>@~ . . Y^ . . .",
+   "B^#Y . . . . . .",
+   ". . . . . . ."
+  ],
+  "target": "EXTREME",
+  "facts": [],
+  "mechanic": "magnet,lock",
+  "max_positions": 2000,
+  "overlap": [
+   0.35,
+   "N13"
+  ]
+ },
+ "K02_PULLEDPRISONER_s321_2": {
+  "map": [
+   ". . . . . . .",
+   ". . . . Y<@- . .",
+   "Y^@- R>@~ B<@- P^#Y G>* Pv Y>@",
+   "P>@- B^#Y P> . Gv* . Gv@",
+   "P>@~ . . Y^ . . .",
+   "B^#Y . . . . . .",
+   ". . . . . . ."
+  ],
+  "target": "EXTREME",
+  "facts": [],
+  "mechanic": "magnet,lock",
+  "max_positions": 2000,
+  "overlap": [
+   0.38,
+   "N13"
+  ]
+ },
+ "K02_PULLEDPRISONER_s321_3": {
+  "map": [
+   ". . . . . . .",
+   ". . . . Y<@- . .",
+   "Y^@- R>@~ Rv#Y P^#Y G>* Pv Y>@",
+   "P>@- B^ P> . Gv* . Gv@",
+   "P>@~ . . Y^ . . .",
+   "B^#Y . . . . . .",
+   ". . . . . . ."
+  ],
+  "target": "EXTREME",
+  "facts": [],
+  "mechanic": "magnet,lock",
+  "max_positions": 2000,
+  "overlap": [
+   0.35,
+   "N2"
+  ]
+ },
+ "K02_PULLEDPRISONER_s321_4": {
+  "map": [
+   ". . . . . . .",
+   ". . . . Y<@- . .",
+   "Y^@- R>@~ . P^#Y G>* Pv Y>@",
+   "P^ B^#Y P> . Gv* . Gv@",
+   "P>@~ . . Y^ R<@- . .",
+   "B^@ . . . . . .",
+   ". . . . . . ."
+  ],
+  "target": "EXTREME",
+  "facts": [],
+  "mechanic": "magnet,lock",
+  "max_positions": 2000,
+  "overlap": [
+   0.39,
+   "N22"
+  ]
+ },
+ "K02_PULLEDPRISONER_s321_5": {
+  "map": [
+   ". . . . . . .",
+   ". . . . Y<@- . .",
+   "Y^@- R>@~ . P^#Y G>* Pv Y>@",
+   "P^ B^#Y P> . Gv* P> Gv@",
+   "P>@~ . . Y^ . . .",
+   "B^@ . . . . . .",
+   ". . . . . . ."
+  ],
+  "target": "EXTREME",
+  "facts": [],
+  "mechanic": "magnet,lock",
+  "max_positions": 2000,
+  "overlap": [
+   0.39,
+   "N22"
+  ]
+ },
+ "K02_PULLEDPRISONER_s321_6": {
+  "map": [
+   ". . . . . . .",
+   ". . . . Y<@- . .",
+   "Y^@- . . P^#Y G>* Pv Y>@",
+   "P^ . P> . Gv* . Gv@",
+   "P>@~ . . Y^ . . .",
+   "B^@ . . . . . .",
+   ". . . . . . ."
+  ],
+  "target": "EXTREME",
+  "facts": [],
+  "mechanic": "magnet,lock",
+  "max_positions": 2000,
+  "overlap": [
+   0.32,
+   "N22"
+  ]
+ },
+ "K02_PULLEDPRISONER_s321_7": {
+  "map": [
+   ". . . . . . .",
+   ". . . . Y<@- . .",
+   "Y^@- . . P^#Y G>* Pv Y>@",
+   "P^ . P> . Gv* . Gv@",
+   "P>@~ . Yv Y^ . . .",
+   "B^@ . . . . . .",
+   ". . . . . . ."
+  ],
+  "target": "EXTREME",
+  "facts": [],
+  "mechanic": "magnet,lock",
+  "max_positions": 2000,
+  "overlap": [
+   0.32,
+   "N22"
+  ]
+ },
+ "K02_PULLEDPRISONER_s321_8": {
+  "map": [
+   ". . . . . . .",
+   ". . . . Y<@- . .",
+   "Y^@- . . P^#Y G>* Pv Y>@",
+   "P^ . Pv@- . Gv* . Gv@",
+   "P>@~ . Yv Y^ . . .",
+   "B^@ . . . . . .",
+   ". . . . . . ."
+  ],
+  "target": "EXTREME",
+  "facts": [],
+  "mechanic": "magnet,lock",
+  "max_positions": 2000,
+  "overlap": [
+   0.32,
+   "N22"
+  ]
+ },
+ "K02_PULLEDPRISONER_s321_9": {
+  "map": [
+   ". . . . . . .",
+   ". . . . Y<@- . .",
+   "Y^@- Rv#Y . P^#Y G>* Pv Y>@",
+   "P^ . P> . Gv* . Gv@",
+   "P>@~ . Yv Y^ . . .",
+   "B^@ . . . . . .",
+   ". . . . . . ."
+  ],
+  "target": "EXTREME",
+  "facts": [],
+  "mechanic": "magnet,lock",
+  "max_positions": 2000,
+  "overlap": [
+   0.32,
+   "N22"
+  ]
+ },
+ "K02_PULLEDPRISONER_s321_10": {
+  "map": [
+   ". . . . . . .",
+   ". . . . Y<@- . .",
+   "Y^@- . . P^#Y G>* Pv Y>@",
+   "P^ B>#Y P>#Y . Gv* . Gv@",
+   "P>@~ . Yv Y^ . . .",
+   "B^@ . . . . . .",
+   ". . . R^@- . . ."
+  ],
+  "target": "EXTREME",
+  "facts": [],
+  "mechanic": "magnet,lock",
+  "max_positions": 2000,
+  "overlap": [
+   0.32,
+   "N67"
+  ]
+ },
+ "K02_PULLEDPRISONER_s321_11": {
+  "map": [
+   ". . . . . . .",
+   ". . . . Y<@- . .",
+   "Y^@- . . P^#Y G>* Pv Y>@",
+   "P^ B>#Y P> . Gv* . Gv@",
+   "P>@~ . Yv Y^ . . .",
+   "B^@ . . . . . .",
+   ". . . G^ . . ."
+  ],
+  "target": "EXTREME",
+  "facts": [],
+  "mechanic": "magnet,lock",
+  "max_positions": 2000,
+  "overlap": [
+   0.32,
+   "N67"
+  ]
+ }
+}

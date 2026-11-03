@@ -1,0 +1,211 @@
+{
+ "K20_RELAYPULL_s322_0": {
+  "map": [
+   "G^@- . P<@~ P< . . .",
+   "Bv@ Y^@- R^* . . R>* .",
+   "P>@~ . P^* . R< . .",
+   "B> . G>#B . . . .",
+   ". . Rv#B . . . .",
+   ". . . . . . .",
+   ". . . . . . ."
+  ],
+  "target": "EXTREME",
+  "facts": [],
+  "mechanic": "magnet,lock",
+  "max_positions": 2000,
+  "overlap": [
+   0.33,
+   "N4"
+  ]
+ },
+ "K20_RELAYPULL_s322_1": {
+  "map": [
+   "G^@~ . P<@~ P< R<@- Yv@~ .",
+   "Bv@ Y^@- R^* . . R>* .",
+   "P>@~ . P^* . R< . Y<@",
+   "B> . G>#B . . B>@- .",
+   ". . . . . . .",
+   ". . . . . . .",
+   ". . . . . . ."
+  ],
+  "target": "EXTREME",
+  "facts": [],
+  "mechanic": "magnet,lock",
+  "max_positions": 2000,
+  "overlap": [
+   0.33,
+   "N85"
+  ]
+ },
+ "K20_RELAYPULL_s322_2": {
+  "map": [
+   "G^@~ . P<@~ P< . Yv@~ .",
+   "Bv@ Yv@ R^* . . R>* .",
+   "P>@~ . P^* . . . Y<@",
+   "B> . G>#B . Bv@- . .",
+   ". . . . . . .",
+   ". . . . . . .",
+   ". . . . . . ."
+  ],
+  "target": "EXTREME",
+  "facts": [],
+  "mechanic": "magnet,lock",
+  "max_positions": 2000,
+  "overlap": [
+   0.31,
+   "N4"
+  ]
+ },
+ "K20_RELAYPULL_s322_3": {
+  "map": [
+   "G^@- . P<@~ . . . .",
+   "Bv@ Y^@ R^* . . R>* .",
+   "P>@~ . P^* . R< . .",
+   "B> . G>#B . . . .",
+   ". . Rv#B . . . .",
+   "P>@~ Pv@ . . . . .",
+   ". . . . . . ."
+  ],
+  "target": "EXTREME",
+  "facts": [],
+  "mechanic": "magnet,lock",
+  "max_positions": 2000,
+  "overlap": [
+   0.32,
+   "N20"
+  ]
+ },
+ "K20_RELAYPULL_s322_4": {
+  "map": [
+   "G^@~ . P<@~ P< . Yv@~ .",
+   "Bv@ Y^@- R^* . . R>* .",
+   "P>@~ . P^* . R< . Y<@",
+   "B> . G>#B . Bv@- . .",
+   ". . . . . . .",
+   ". . . . . . .",
+   ". . . . . . ."
+  ],
+  "target": "EXTREME",
+  "facts": [],
+  "mechanic": "magnet,lock",
+  "max_positions": 2000,
+  "overlap": [
+   0.29,
+   "N85"
+  ]
+ },
+ "K20_RELAYPULL_s322_5": {
+  "map": [
+   "G^@- . P<@~ . . . .",
+   "Bv@ Y^@- R^* . . R>* .",
+   "P>@~ . P^* . R< . .",
+   "B> . G>#B . . . .",
+   ". . Rv#B . . . .",
+   "P>@~ Pv@ . . . . .",
+   ". . . . . . ."
+  ],
+  "target": "EXTREME",
+  "facts": [],
+  "mechanic": "magnet,lock",
+  "max_positions": 2000,
+  "overlap": [
+   0.32,
+   "N20"
+  ]
+ },
+ "K20_RELAYPULL_s322_6": {
+  "map": [
+   "G^@- . P<@~ P< . Yv@~ .",
+   "Bv@ Y^@- R^* . . R>* .",
+   "P>@~ . P^* . R< . Y<@",
+   "B> . G>#B . Bv@- . .",
+   ". . . . . . .",
+   ". . . . . . .",
+   ". . . . . . ."
+  ],
+  "target": "EXTREME",
+  "facts": [],
+  "mechanic": "magnet,lock",
+  "max_positions": 2000,
+  "overlap": [
+   0.29,
+   "N85"
+  ]
+ },
+ "K20_RELAYPULL_s322_7": {
+  "map": [
+   "G^@~ . P<@~ P< . Y<@-#B .",
+   "Bv@ Yv@ R^* . . R>* .",
+   "P>@~ . P^* . R< . Y<@",
+   "B> . G>#B . Bv@- B>@- .",
+   ". . . . . Y<#B .",
+   ". . . . . . .",
+   ". . . . . . ."
+  ],
+  "target": "EXTREME",
+  "facts": [],
+  "mechanic": "magnet,lock",
+  "max_positions": 2000,
+  "overlap": [
+   0.29,
+   "N83"
+  ]
+ },
+ "K20_RELAYPULL_s322_8": {
+  "map": [
+   "G^@~ . P<@~ P< . Yv@~ .",
+   "Bv@ Y^@- R^* . . R>* .",
+   "P>@~ . P^* . R< Y^#B Y<@",
+   "B> . G>#B . Bv@- B>@- .",
+   ". . . . . . .",
+   ". . . . . . .",
+   ". . . . . . ."
+  ],
+  "target": "EXTREME",
+  "facts": [],
+  "mechanic": "magnet,lock",
+  "max_positions": 2000,
+  "overlap": [
+   0.29,
+   "N43"
+  ]
+ },
+ "K20_RELAYPULL_s322_9": {
+  "map": [
+   "G^@~ . P<@~ P< . Yv@~ .",
+   "Bv@ Yv@ R^* . . R>* .",
+   "P>@~ . P^* . R< P<#B Y<@",
+   "B> . G>#B . Bv@- B>@- .",
+   ". . . . . . .",
+   ". . . . . . .",
+   ". . . . . . ."
+  ],
+  "target": "EXTREME",
+  "facts": [],
+  "mechanic": "magnet,lock",
+  "max_positions": 2000,
+  "overlap": [
+   0.29,
+   "N43"
+  ]
+ },
+ "K20_RELAYPULL_s322_10": {
+  "map": [
+   "G^@- . P<@~ P< . Yv@~ .",
+   "Bv@ Y^@- R^* . . R>* .",
+   "P>@~ . P^* . R< P^#B Y<@",
+   "B> . G>#B . Bv@- B>@- .",
+   ". . . . . . .",
+   ". . . . . . .",
+   ". . . . . . ."
+  ],
+  "target": "EXTREME",
+  "facts": [],
+  "mechanic": "magnet,lock",
+  "max_positions": 2000,
+  "overlap": [
+   0.29,
+   "N43"
+  ]
+ }
+}

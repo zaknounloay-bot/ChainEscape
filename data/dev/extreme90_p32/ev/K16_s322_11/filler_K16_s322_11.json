@@ -1,0 +1,9 @@
+{
+ "K16_s322_11": {
+  "distinct": 4,
+  "pieces_tested": 16,
+  "steps": 15,
+  "trivial": [],
+  "trivial_removals": 0
+ }
+}

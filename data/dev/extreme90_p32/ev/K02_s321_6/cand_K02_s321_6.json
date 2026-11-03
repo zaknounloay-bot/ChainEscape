@@ -1,0 +1,17 @@
+{
+ "K02_s321_6": {
+  "map": [
+   ". . . . . . .",
+   ". . . . Y<@- . .",
+   "Y^@- . . P^#Y G>* Pv Y>@",
+   "P^ . P> . Gv* . Gv@",
+   "P>@~ . . Y^ . . .",
+   "B^@ . . . . . .",
+   ". . . . . . ."
+  ],
+  "target": "EXTREME",
+  "facts": [],
+  "mechanic": "magnet,lock",
+  "max_positions": 2000
+ }
+}

@@ -1,0 +1,81 @@
+{
+ "source": "Phase 33 brief (project owner): human ratings and explicit decisions for the Phase 32 boards, first exposure of ?extreme90p32=1 (build p32-qa1-20261102). Recorded verbatim; nothing inferred. 90-second outcome, solve time, attempts, restarts, Undo use and enjoyment were NOT supplied.",
+ "recorded": "2026-11-02",
+ "boards": {
+  "N88": {
+   "difficulty": "MEDIUM",
+   "decision": "NOT APPROVED",
+   "fingerprint": "388687df39ee21716a98001555d609fa2e994531fd23a3c0a56b48b323fe94d7",
+   "outcome_90s": "not supplied",
+   "enjoyment": "not supplied",
+   "solve_time": "not supplied",
+   "attempts": "not supplied",
+   "restarts": "not supplied",
+   "undo_used": "not supplied"
+  },
+  "N89": {
+   "difficulty": "MEDIUM",
+   "decision": "NOT APPROVED",
+   "fingerprint": "c2e8a9492ad23dccf1e4065d16b6bc9c22661baa4de1def93d61d1867081cb00",
+   "outcome_90s": "not supplied",
+   "enjoyment": "not supplied",
+   "solve_time": "not supplied",
+   "attempts": "not supplied",
+   "restarts": "not supplied",
+   "undo_used": "not supplied"
+  },
+  "N90": {
+   "difficulty": "MEDIUM",
+   "decision": "NOT APPROVED",
+   "fingerprint": "0a6f1fc170b245fc8c9d3f7e664d9aea98ff22553ec85f4ca928804cd7954445",
+   "outcome_90s": "not supplied",
+   "enjoyment": "not supplied",
+   "solve_time": "not supplied",
+   "attempts": "not supplied",
+   "restarts": "not supplied",
+   "undo_used": "not supplied"
+  },
+  "N91": {
+   "difficulty": "MEDIUM",
+   "decision": "NOT APPROVED",
+   "fingerprint": "5afe03d7bb9bdbd8b226d8c32ac307cedc67461fc43293a67b734b73593e4882",
+   "outcome_90s": "not supplied",
+   "enjoyment": "not supplied",
+   "solve_time": "not supplied",
+   "attempts": "not supplied",
+   "restarts": "not supplied",
+   "undo_used": "not supplied"
+  },
+  "N92": {
+   "difficulty": "VERY HARD",
+   "decision": "NOT APPROVED",
+   "fingerprint": "e92e83aaed981ce9d2f8883cd0c05a96d4b9f07207cd339b29399e2226c07ccc",
+   "outcome_90s": "not supplied",
+   "enjoyment": "not supplied",
+   "solve_time": "not supplied",
+   "attempts": "not supplied",
+   "restarts": "not supplied",
+   "undo_used": "not supplied"
+  },
+  "N93": {
+   "difficulty": "MEDIUM",
+   "decision": "NOT APPROVED",
+   "fingerprint": "cf0fb153feefa2628c05e01c4c60b9f227cac177288b62ee243963ff22826fba",
+   "outcome_90s": "not supplied",
+   "enjoyment": "not supplied",
+   "solve_time": "not supplied",
+   "attempts": "not supplied",
+   "restarts": "not supplied",
+   "undo_used": "not supplied"
+  }
+ },
+ "acceptance": "0 / 6",
+ "count": {
+  "approved_before": 38,
+  "approved_now": 38,
+  "target": 50,
+  "remaining": 12,
+  "reconciled": "38 (Phase 31) + 0 = 38"
+ },
+ "unchanged": "every earlier owner decision; N82 still pending an explicit decision; N84 and N85 not approved"
+}

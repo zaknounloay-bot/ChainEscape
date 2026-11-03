@@ -1,0 +1,26 @@
+K16_ARMOREDKEY_s322_0  overlap        (0.42, 'N21')
+K16_ARMOREDKEY_s322_1  overlap        (0.4, 'N9')
+K16_ARMOREDKEY_s322_2  overlap        (0.4, 'N9')
+K16_ARMOREDKEY_s322_3  overlap        (0.4, 'N83')
+K16_ARMOREDKEY_s322_4  overlap        (0.4, 'N21')
+K16_ARMOREDKEY_s322_5  overlap        (0.46, 'N21')
+K16_ARMOREDKEY_s322_6  not essential  {'without_armor': 'without it: 12 decision steps, 4 distinct mistakes (with it: 14, 4)'}
+K16_ARMOREDKEY_s322_7  not essential  {'without_armor': 'without it: 12 decision steps, 4 distinct mistakes (with it: 14, 4)'}
+K16_ARMOREDKEY_s322_8  not essential  {'without_armor': 'without it: 12 decision steps, 4 distinct mistakes (with it: 14, 4)'}
+K16_ARMOREDKEY_s322_9  not essential  {'without_armor': 'without it: 13 decision steps, 4 distinct mistakes (with it: 15, 4)'}
+K16_ARMOREDKEY_s322_10 not essential  {'without_armor': 'without it: 13 decision steps, 4 distinct mistakes (with it: 15, 4)'}
+K16_ARMOREDKEY_s322_11 PASS           []
+SCREEN: 12 boards, 1 PASS
+K16_ARMOREDKEY_s322_0  overlap        
+K16_ARMOREDKEY_s322_1  overlap        
+K16_ARMOREDKEY_s322_2  overlap        
+K16_ARMOREDKEY_s322_3  overlap        
+K16_ARMOREDKEY_s322_4  overlap        
+K16_ARMOREDKEY_s322_5  overlap        
+K16_ARMOREDKEY_s322_6  not essential  
+K16_ARMOREDKEY_s322_7  not essential  
+K16_ARMOREDKEY_s322_8  not essential  
+K16_ARMOREDKEY_s322_9  not essential  
+K16_ARMOREDKEY_s322_10 not essential  
+K16_ARMOREDKEY_s322_11 PASS           PASS
+SCREEN30: 12 boards, 1 PASS

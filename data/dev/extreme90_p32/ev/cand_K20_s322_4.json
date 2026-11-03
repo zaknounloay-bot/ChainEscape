@@ -1,0 +1,20 @@
+{
+ "K20_s322_4": {
+  "map": [
+   "G^@~ . P<@~ P< . Yv@~ .",
+   "Bv@ Y^@- R^* . . R>* .",
+   "P>@~ . P^* . R< . Y<@",
+   "B> . G>#B . Bv@- . .",
+   ". . . . . . .",
+   ". . . . . . .",
+   ". . . . . . ."
+  ],
+  "mechanic": "magnet,lock",
+  "run": "K20_RELAYPULL_s322",
+  "rules": [
+   "S_old",
+   "S_p30"
+  ],
+  "screen_key": "K20_RELAYPULL_s322_4"
+ }
+}

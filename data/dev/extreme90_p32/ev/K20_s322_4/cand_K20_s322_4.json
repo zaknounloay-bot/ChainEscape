@@ -1,0 +1,17 @@
+{
+ "K20_s322_4": {
+  "map": [
+   "G^@~ . P<@~ P< . Yv@~ .",
+   "Bv@ Y^@- R^* . . R>* .",
+   "P>@~ . P^* . R< . Y<@",
+   "B> . G>#B . Bv@- . .",
+   ". . . . . . .",
+   ". . . . . . .",
+   ". . . . . . ."
+  ],
+  "target": "EXTREME",
+  "facts": [],
+  "mechanic": "magnet,lock",
+  "max_positions": 2000
+ }
+}

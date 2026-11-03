@@ -1,0 +1,20 @@
+T03r_PULLTHEKEY_s321_0 PASS           []
+T03r_PULLTHEKEY_s321_1 filler         ['r3c2 Y^@-']
+T03r_PULLTHEKEY_s321_2 filler         ['r3c2 Y^@-']
+T03r_PULLTHEKEY_s321_3 Category A/B   ['a simple greedy player wins 20% (> 20%): a shortcut']
+T03r_PULLTHEKEY_s321_4 Category A/B   ['a simple greedy player wins 22% (> 20%): a shortcut']
+T03r_PULLTHEKEY_s321_5 Category A/B   ['a simple greedy player wins 22% (> 20%): a shortcut']
+T03r_PULLTHEKEY_s321_6 Category A/B   ['solve 100.6 ms (> 40)', 'the TIME UP check takes 44.0 ms in its worst position (> 40)']
+T03r_PULLTHEKEY_s321_7 PASS           []
+T03r_PULLTHEKEY_s321_8 Category A/B   ['a simple greedy player wins 21% (> 20%): a shortcut']
+SCREEN: 9 boards, 2 PASS
+T03r_PULLTHEKEY_s321_0 PASS           PASS
+T03r_PULLTHEKEY_s321_1 filler         
+T03r_PULLTHEKEY_s321_2 filler         
+T03r_PULLTHEKEY_s321_3 Category A/B   
+T03r_PULLTHEKEY_s321_4 Category A/B   
+T03r_PULLTHEKEY_s321_5 Category A/B   
+T03r_PULLTHEKEY_s321_6 Category A/B   
+T03r_PULLTHEKEY_s321_7 PASS           PASS
+T03r_PULLTHEKEY_s321_8 Category A/B   
+SCREEN30: 9 boards, 2 PASS

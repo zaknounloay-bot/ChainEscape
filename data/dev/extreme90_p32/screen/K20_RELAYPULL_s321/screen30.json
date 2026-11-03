@@ -1,0 +1,50 @@
+{
+ "K20_RELAYPULL_s321_0": {
+  "result": "not essential",
+  "detail": {
+   "without_lock": "without it: 13 decision steps, 4 distinct mistakes (with it: 14, 5)"
+  }
+ },
+ "K20_RELAYPULL_s321_1": {
+  "result": "not essential",
+  "detail": {
+   "without_lock": "without it: 13 decision steps, 4 distinct mistakes (with it: 13, 5)"
+  }
+ },
+ "K20_RELAYPULL_s321_2": {
+  "result": "not essential",
+  "detail": {
+   "without_lock": "without it: 13 decision steps, 4 distinct mistakes (with it: 13, 5)"
+  }
+ },
+ "K20_RELAYPULL_s321_3": {
+  "result": "not essential",
+  "detail": {
+   "without_lock": "without it: 13 decision steps, 4 distinct mistakes (with it: 14, 5)"
+  }
+ },
+ "K20_RELAYPULL_s321_4": {
+  "result": "not essential",
+  "detail": {
+   "without_lock": "without it: 13 decision steps, 4 distinct mistakes (with it: 14, 5)"
+  }
+ },
+ "K20_RELAYPULL_s321_5": {
+  "result": "not essential",
+  "detail": {
+   "without_lock": "without it: 13 decision steps, 4 distinct mistakes (with it: 14, 5)"
+  }
+ },
+ "K20_RELAYPULL_s321_6": {
+  "result": "not essential",
+  "detail": {
+   "without_lock": "without it: 13 decision steps, 4 distinct mistakes (with it: 13, 5)"
+  }
+ },
+ "K20_RELAYPULL_s321_7": {
+  "result": "not essential",
+  "detail": {
+   "without_lock": "without it: 12 decision steps, 4 distinct mistakes (with it: 12, 5)"
+  }
+ }
+}

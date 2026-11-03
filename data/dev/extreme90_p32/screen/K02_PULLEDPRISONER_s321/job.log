@@ -1,0 +1,26 @@
+K02_PULLEDPRISONER_s321_0 not essential  {'without_lock': 'without it: 12 decision steps, 5 distinct mistakes (with it: 11, 6)'}
+K02_PULLEDPRISONER_s321_1 not essential  {'without_lock': 'without it: 9 decision steps, 3 distinct mistakes (with it: 11, 4)'}
+K02_PULLEDPRISONER_s321_2 not essential  {'without_lock': 'without it: 14 decision steps, 4 distinct mistakes (with it: 14, 5)'}
+K02_PULLEDPRISONER_s321_3 not essential  {'without_lock': 'without it: 14 decision steps, 4 distinct mistakes (with it: 14, 5)'}
+K02_PULLEDPRISONER_s321_4 not essential  {'without_lock': 'without it: 14 decision steps, 3 distinct mistakes (with it: 13, 4)'}
+K02_PULLEDPRISONER_s321_5 not essential  {'without_lock': 'without it: 14 decision steps, 3 distinct mistakes (with it: 13, 4)'}
+K02_PULLEDPRISONER_s321_6 PASS           []
+K02_PULLEDPRISONER_s321_7 PASS           []
+K02_PULLEDPRISONER_s321_8 PASS           []
+K02_PULLEDPRISONER_s321_9 PASS           []
+K02_PULLEDPRISONER_s321_10 PASS           []
+K02_PULLEDPRISONER_s321_11 PASS           []
+SCREEN: 12 boards, 6 PASS
+K02_PULLEDPRISONER_s321_0 not essential  
+K02_PULLEDPRISONER_s321_1 not essential  
+K02_PULLEDPRISONER_s321_2 not essential  
+K02_PULLEDPRISONER_s321_3 not essential  
+K02_PULLEDPRISONER_s321_4 not essential  
+K02_PULLEDPRISONER_s321_5 not essential  
+K02_PULLEDPRISONER_s321_6 PASS           PASS
+K02_PULLEDPRISONER_s321_7 PASS           PASS
+K02_PULLEDPRISONER_s321_8 PASS           PASS
+K02_PULLEDPRISONER_s321_9 PASS           PASS
+K02_PULLEDPRISONER_s321_10 PASS           PASS
+K02_PULLEDPRISONER_s321_11 PASS           PASS
+SCREEN30: 12 boards, 6 PASS

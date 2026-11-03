@@ -1,0 +1,6 @@
+Godot Engine v4.3.stable.official.77dcf97d8 - https://godotengine.org
+
+K01_TWOGROUPKEYS_s321_3 HINT-FOLLOW PASS: WIN after 16 moves; ids [5, 12, 7, 8, 9, 15, 13, 14, 6, 11, 0, 1, 3, 4, 10, 2]
+K01_TWOGROUPKEYS_s321_4 HINT-FOLLOW PASS: WIN after 16 moves; ids [5, 12, 7, 8, 9, 15, 13, 14, 6, 0, 11, 1, 3, 4, 10, 2]
+K01_TWOGROUPKEYS_s321_7 HINT-FOLLOW PASS: WIN after 17 moves; ids [7, 9, 10, 16, 14, 15, 11, 8, 0, 5, 13, 1, 2, 4, 6, 12, 3]
+K01_TWOGROUPKEYS_s321_9 HINT-FOLLOW PASS: WIN after 17 moves; ids [6, 9, 8, 10, 16, 14, 15, 11, 7, 0, 13, 1, 2, 4, 5, 12, 3]

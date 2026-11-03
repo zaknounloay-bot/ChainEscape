@@ -1,0 +1,9 @@
+{
+ "K01_s321_3": {
+  "distinct": 5,
+  "pieces_tested": 16,
+  "steps": 14,
+  "trivial": [],
+  "trivial_removals": 0
+ }
+}

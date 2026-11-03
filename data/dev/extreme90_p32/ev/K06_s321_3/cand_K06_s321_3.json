@@ -1,0 +1,17 @@
+{
+ "K06_s321_3": {
+  "map": [
+   "Y^@- R<%B P<%B . . Bv%A .",
+   "B>#Y . . . . . .",
+   ". P^#Y&B . . G<#P . .",
+   ". . . . . . .",
+   ". Y^&A R^@~ G^@- P>@- . .",
+   ". . . . . . .",
+   "R>%A . . . . . R<&B"
+  ],
+  "target": "EXTREME",
+  "facts": [],
+  "mechanic": "switch,lock",
+  "max_positions": 2000
+ }
+}

@@ -1,0 +1,230 @@
+{
+ "K06_TWOGROUPLADDER_s321_0": {
+  "map": [
+   "Y<@~ R<%B P<%B . . Bv%A .",
+   ". . . . . . .",
+   ". P^#Y&B . . G<#P . .",
+   ". . . . . . .",
+   ". Y^&A R^@~ G^@- P>@- . .",
+   ". Gv&A . . . . .",
+   "R>%A . . . . . R<&B"
+  ],
+  "target": "EXTREME",
+  "facts": [],
+  "mechanic": "switch,lock",
+  "max_positions": 2000,
+  "overlap": [
+   0.36,
+   "N35"
+  ]
+ },
+ "K06_TWOGROUPLADDER_s321_1": {
+  "map": [
+   ". R<%B P<&B . . Bv%A .",
+   "B>#Y Pv@- P<@~ Bv . . .",
+   "R>@~#P P^#Y&B . . G<#P . .",
+   ". Y^@ . . . . .",
+   ". Y^&A R^@~ G^@- P>@- . .",
+   ". Gv&A . . . . .",
+   "R>%A . . . . . ."
+  ],
+  "target": "EXTREME",
+  "facts": [],
+  "mechanic": "switch,lock",
+  "max_positions": 2000,
+  "overlap": [
+   0.29,
+   "N47"
+  ]
+ },
+ "K06_TWOGROUPLADDER_s321_2": {
+  "map": [
+   "Y<@~ R<%B P<%B . . B<%A .",
+   "B>#Y . . . . . .",
+   ". P^#Y&B . . G<#P . .",
+   ". . . . . . .",
+   ". Y^&A R^@~ G^@- P>@- . .",
+   ". Gv&A . . . . .",
+   "R>%A . . . . . R<&B"
+  ],
+  "target": "EXTREME",
+  "facts": [],
+  "mechanic": "switch,lock",
+  "max_positions": 2000,
+  "overlap": [
+   0.35,
+   "N35"
+  ]
+ },
+ "K06_TWOGROUPLADDER_s321_3": {
+  "map": [
+   "Y^@- R<%B P<%B . . Bv%A .",
+   "B>#Y . . . . . .",
+   ". P^#Y&B . . G<#P . .",
+   ". . . . . . .",
+   ". Y^&A R^@~ G^@- P>@- . .",
+   ". . . . . . .",
+   "R>%A . . . . . R<&B"
+  ],
+  "target": "EXTREME",
+  "facts": [],
+  "mechanic": "switch,lock",
+  "max_positions": 2000,
+  "overlap": [
+   0.3,
+   "N38"
+  ]
+ },
+ "K06_TWOGROUPLADDER_s321_4": {
+  "map": [
+   ". R<%B P<&B . . Bv%A .",
+   "B>#Y Pv@- P<@~ . . . .",
+   "R>@~#P P^#Y&B . Rv G<#P . .",
+   ". Y^@ . . . . .",
+   ". Y^&A R^@~ G^@- P>@- . .",
+   ". Gv&A . . . . .",
+   "R>%A . . . . . ."
+  ],
+  "target": "EXTREME",
+  "facts": [],
+  "mechanic": "switch,lock",
+  "max_positions": 2000,
+  "overlap": [
+   0.32,
+   "N11"
+  ]
+ },
+ "K06_TWOGROUPLADDER_s321_5": {
+  "map": [
+   ". R<%B P<&B . Bv@- Bv%A .",
+   "B>#Y . P<@~ . . . .",
+   "R>@~#P P^#Y&B . . G<#P . .",
+   ". Y^@ . . . . .",
+   ". Y^&A R^@~ G^@- P>@- . .",
+   ". Gv&A . . . . .",
+   "R>%A . . . . . ."
+  ],
+  "target": "EXTREME",
+  "facts": [],
+  "mechanic": "switch,lock",
+  "max_positions": 2000,
+  "overlap": [
+   0.29,
+   "N86"
+  ]
+ },
+ "K06_TWOGROUPLADDER_s321_6": {
+  "map": [
+   ". R<%B P<%B . . Bv%A .",
+   "Bv@- Pv@- P<@~ . . . .",
+   "R>@~#P P^#Y&B . . G<#P . .",
+   ". . . . . . .",
+   ". Y^&A R^@~ G^@- P>@- . .",
+   ". . . . . . .",
+   "R>%A . . . . . ."
+  ],
+  "target": "EXTREME",
+  "facts": [],
+  "mechanic": "switch,lock",
+  "max_positions": 2000,
+  "overlap": [
+   0.26,
+   "N47"
+  ]
+ },
+ "K06_TWOGROUPLADDER_s321_7": {
+  "map": [
+   ". R<%B P<%B . . Bv%A .",
+   "Bv@- Pv@- P<@~ . . . .",
+   "R>@~#P P^#Y&B . . G<#P . .",
+   ". R^#Y . . . . .",
+   ". Y^&A R^@~ G^@- P>@- . Y>@",
+   ". . . . . . .",
+   "R>%A . . . . . ."
+  ],
+  "target": "EXTREME",
+  "facts": [],
+  "mechanic": "switch,lock",
+  "max_positions": 2000,
+  "overlap": [
+   0.28,
+   "N35"
+  ]
+ },
+ "K06_TWOGROUPLADDER_s321_8": {
+  "map": [
+   ". R<%B P<%B . . Bv%A .",
+   "B> Pv@- P<@~ . . . .",
+   "R>@~#P P^#Y&B . . G<#P . .",
+   ". . . . . . .",
+   ". Y^&A R^@~ G^@- P>@- . .",
+   ". Gv&A . . . . .",
+   "R>%A . Rv@~ . . . ."
+  ],
+  "target": "EXTREME",
+  "facts": [],
+  "mechanic": "switch,lock",
+  "max_positions": 2000,
+  "overlap": [
+   0.28,
+   "N35"
+  ]
+ },
+ "K06_TWOGROUPLADDER_s321_9": {
+  "map": [
+   "P^&B R<%B P<%B . . Bv%A .",
+   "B> Pv@- P<@~ . . . .",
+   "R>@~#P P^#Y&B . . G<#P . .",
+   ". . . . . . .",
+   ". Y^&A R^@~ G^@- P>@- . .",
+   ". Gv&A . . . . .",
+   "R>%A . . Pv@- . . ."
+  ],
+  "target": "EXTREME",
+  "facts": [],
+  "mechanic": "switch,lock",
+  "max_positions": 2000,
+  "overlap": [
+   0.28,
+   "N37"
+  ]
+ },
+ "K06_TWOGROUPLADDER_s321_10": {
+  "map": [
+   "P^&B R<%B P<%B . . Bv%A .",
+   "B> Pv@- P<@~ . . . .",
+   "R>@~#P P^#Y&B . . G<#P . P>@-",
+   ". . . . . . .",
+   ". Y^&A R^@~ G^@- P>@- . .",
+   ". Gv&A . . . . .",
+   "R>%A . . . . . ."
+  ],
+  "target": "EXTREME",
+  "facts": [],
+  "mechanic": "switch,lock",
+  "max_positions": 2000,
+  "overlap": [
+   0.28,
+   "N37"
+  ]
+ },
+ "K06_TWOGROUPLADDER_s321_11": {
+  "map": [
+   ". R<%B P<%B . . Bv%A Y>@~",
+   "B> Pv@- P<@~ . . . .",
+   "R>@~#P P^#Y&B . . G<#P . .",
+   ". . . . . . .",
+   ". Y^&A R^@~ G^@- P>@- . .",
+   ". Gv&A . . . . .",
+   "R>%A . . . . . ."
+  ],
+  "target": "EXTREME",
+  "facts": [],
+  "mechanic": "switch,lock",
+  "max_positions": 2000,
+  "overlap": [
+   0.28,
+   "N35"
+  ]
+ }
+}

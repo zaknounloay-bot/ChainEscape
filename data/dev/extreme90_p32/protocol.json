@@ -1,0 +1,30 @@
+{
+ "fixed_before_generating": "2026-11-02, before any Phase 32 generator run",
+ "role": "development only; no Production, no gameplay or mechanic change, the 300 frozen Classic levels, the 90-second EXTREME rules and the 120-second baseline untouched, the exact Solver and the repository generator unchanged",
+ "owner_state": "approved bank 38 / 50 (N83, N86, N87 approved in Phase 31); 12 remaining; N82 pending an explicit decision",
+ "method": "the Phase 31 method, unchanged (owner instruction): the generator of commit c1ddc89 in its own git worktree, --ops=v20, piece_free 13, max_pieces 17, suffix_rate 0.30, patience 8, 12 minutes, batch 40, beam 5; shortlist per run = tools/extreme90_sel31.py union (S_old and S_p30, 6 each); the unchanged modern screen (tools/extreme90_screen30.py: engine-valid tokens, bank overlap < 0.40, solve and TIME UP <= 40 ms, strict essentiality of every declared mechanic, 0 filler, hint-follow); the unchanged full evaluation (tools/extreme90_eval25.py --full); one board per concept, the FEWEST POSITIONS among the boards that pass everything",
+ "gates": "Phase 30 / 31 gates unchanged: distinct mistakes >= 4, decision steps >= 8, coverage >= 0.60, late >= 0.75, solution >= 13, shortcut <= 0.20, solve and TIME UP <= 40 ms, bank overlap < 0.40 (bank includes N78-N87), pairwise overlap among the new boards <= 0.30, 0 filler, strict essentiality, engine-valid tokens, hint-follow progress, dead-end check",
+ "cores": {
+  "rationale": "the owner approved the lock and magnet families in Phase 31 (N83 magnet x switch, N86 and N87 switch x lock) and did not approve the armor or gate-family boards (N79, N81, N84); the new cores stay near the approved families but each carries a dependency the bank does not have",
+  "new": {
+   "K01_TWOGROUPKEYS": "switch x lock, two switch groups: two keys, two reversals with an order",
+   "K02_PULLEDPRISONER": "magnet x lock: the magnet pulls the PRISONER out of its key's lane (a deadlock only the pull breaks)",
+   "K06_TWOGROUPLADDER": "switch x lock, two groups: the prisoner is itself a key and a flip target of the second switch",
+   "K08_PULLEDTARGET": "magnet x switch: the magnet pulls the FLIP TARGET (N83 pulls the switch piece)",
+   "K16_ARMOREDKEY": "armor x switch x lock: the key is shelled and faces its own prisoner",
+   "K20_RELAYPULL": "magnet x lock: two magnets in one column relay the prisoner out of the key's row"
+  },
+  "rerun": {
+   "T03r_PULLTHEKEY": "Phase 30 concept (magnet x lock) that gave a qualifying pool but no screen PASS in Phase 31 (RNG 302); a new RNG seed"
+  },
+  "checked": "every core parses with engine-valid tokens and is solvable (tools/ta90_design.gd --quick); K01's first draft had its two switches facing each other (unsolvable) and was corrected before any run"
+ },
+ "budget": {
+  "round_1": "7 runs, RNG seed 321, one per core",
+  "round_2": "RNG seed 322, only for cores with NO screen PASS board after round 1 and a non-empty qualifying pool; at most 7 runs",
+  "full_evaluations_max": 24,
+  "no_further_rounds": "if fewer than 5 concepts pass, the phase reports fewer candidates; gates are never lowered and no filler is added"
+ },
+ "human_evidence_fields": "every new record carries a human_test block for the owner's first exposure: difficulty, enjoyment, 90-second outcome, solve time, attempts, restarts, Undo used, notes - all 'not yet tested' until the owner supplies them; nothing is inferred",
+ "predictions": "positions, early3 and tempting fatal openings are recorded per selected board before any human play; not used to select"
+}

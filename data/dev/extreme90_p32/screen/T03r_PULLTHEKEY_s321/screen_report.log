@@ -1,0 +1,150 @@
+Godot Engine v4.3.stable.official.77dcf97d8 - https://godotengine.org
+
+SCRIPT ERROR: Invalid access of index '6' on a base object of type: 'Array'.
+          at: _rot (res://tools/vh_pilot4_canon.gd:101)
+SCRIPT ERROR: Out of bounds get index '0' (on base: 'Array')
+          at: _relabel (res://tools/vh_pilot4_canon.gd:141)
+SCRIPT ERROR: Out of bounds get index '0' (on base: 'Array')
+          at: _relabel (res://tools/vh_pilot4_canon.gd:141)
+SCRIPT ERROR: Out of bounds get index '0' (on base: 'Array')
+          at: _rot (res://tools/vh_pilot4_canon.gd:96)
+SCRIPT ERROR: Out of bounds get index '0' (on base: 'Array')
+          at: _relabel (res://tools/vh_pilot4_canon.gd:141)
+SCRIPT ERROR: Out of bounds get index '0' (on base: 'Array')
+          at: _relabel (res://tools/vh_pilot4_canon.gd:141)
+SCRIPT ERROR: Out of bounds get index '0' (on base: 'Array')
+          at: _rot (res://tools/vh_pilot4_canon.gd:96)
+SCRIPT ERROR: Out of bounds get index '0' (on base: 'Array')
+          at: _relabel (res://tools/vh_pilot4_canon.gd:141)
+SCRIPT ERROR: Out of bounds get index '0' (on base: 'Array')
+          at: _relabel (res://tools/vh_pilot4_canon.gd:141)
+SCRIPT ERROR: Out of bounds get index '0' (on base: 'Array')
+          at: _rot (res://tools/vh_pilot4_canon.gd:96)
+known boards: 53903
+known boards incl. T1-T5 and the demos: 53903; played boards for the near-copy guard: 333
+
+=== T03r_PULLTHEKEY_s321_0 (target EXTREME, 16 pieces) ===
+   . . . . . . .
+   . . Y>@ G>@~ . . .
+   . R^@~ P<@ Y>@~ . G<@- P>@~
+   . B^* Y<@ R<* Rv#Y Yv Y>@
+   . Y<@- . . . . .
+   . . . B^#Y . . P^
+   . . . . . . .
+   solution: r2c1^ [x4], r3c1^ [x4], r3c6> [x3], r3c5v [x1], r2c5v [x1], r2c6> [x1], r5c6^ [x1], r2c3> [x1], r2c2>, r3c1v, r3c2v, r1c2v [x1], r1c3> [x1], r3c4v [x1], r3c3<, r5c3^
+   A {"fingerprint":"c2e8a9492ad23dccf1e4065d16b6bc9c22661baa4de1def93d61d1867081cb00","hint_nodes":[150,42],"portals":0,"position_cap":2000,"positions":217,"replay":true,"solution":16,"solve_ms":13.4,"timeup_worst_ms":11,"timeup_worst_nodes":192,"winnable":53}
+   B {"coverage":0.69,"decision_steps":11,"distinct_mistakes":5,"endgame_decision":true,"last_decision":14,"late":0.88,"line(see above)":["r2c1^ [x4]","r3c1^ [x4]","r3c6> [x3]","r3c5v [x1]","r2c5v [x1]","r2c6> [x1]","r5c6^ [x1]","r2c3> [x1]","r2c2>","r3c1v","r3c2v","r1c2v [x1]","r1c3> [x1]","r3c4v [x1]","r3c3<","r5c3^"],"losing_per_step":[4,4,3,1,1,1,1,1,0,0,0,1,1,1,0,0],"matters_lock":true,"matters_magnet":true,"mistakes":["r1c3>","r2c6>","r3c5v","r4c1<","r3c3<"],"shortcut":0.042,"spinner_dependence":"unsolvable without it","without_lock":"without it: 7 decision steps, 2 distinct mistakes (with it: 11, 5)","without_magnet":"unsolvable without it"}
+   C {"decisions_k4_6_8":[5,3,3],"deepest":12,"greedy":{"look2":0.01,"look4":0.042,"min_turn":0,"mobility":0,"safe":0},"hidden_k6_8":[11,9],"look6_greedy":0.058,"opening":"2 / 6","pressure":{"advances":0,"calm_prefix":0,"flips":0,"multi_turned":4,"prediction_share":0.56,"pulls":1,"rams":0,"signals":2,"spinners_turned":7,"trap_delay_median":7,"turns":12,"undo_proof":0.68},"win_share":0.244}
+   VERDICT: NEEDS WORK  -- 
+
+=== T03r_PULLTHEKEY_s321_1 (target EXTREME, 16 pieces) ===
+   . . . . . . .
+   . . Y>@ G>@~ . . .
+   . R^@~ P<@ Y>@~ . G<@- P>@~
+   . . Y^@- R<* Rv#Y Yv Y>@
+   . Y<@- . . . . .
+   . . Bv@ B^#Y . . P^
+   . . . . . . .
+   solution: r4c1< [x3], r5c2v [x3], r2c1^ [x3], r3c6> [x3], r3c5v [x1], r2c5v [x1], r2c6> [x1], r5c6^ [x1], r2c3> [x1], r2c2>, r3c2<, r1c2v [x1], r1c3> [x1], r3c4v [x1], r3c3<, r5c3^
+   A {"fingerprint":"33a8d0518a3c18fa03ee799d876435a478e010788130edf0889106552e12c369","hint_nodes":[39,30],"portals":0,"position_cap":2000,"positions":269,"replay":true,"solution":16,"solve_ms":4.7,"timeup_worst_ms":5.9,"timeup_worst_nodes":57,"winnable":97}
+   B {"coverage":0.75,"decision_steps":12,"distinct_mistakes":4,"endgame_decision":true,"last_decision":14,"late":0.88,"line(see above)":["r4c1< [x3]","r5c2v [x3]","r2c1^ [x3]","r3c6> [x3]","r3c5v [x1]","r2c5v [x1]","r2c6> [x1]","r5c6^ [x1]","r2c3> [x1]","r2c2>","r3c2<","r1c2v [x1]","r1c3> [x1]","r3c4v [x1]","r3c3<","r5c3^"],"losing_per_step":[3,3,3,3,1,1,1,1,1,0,0,1,1,1,0,0],"matters_lock":true,"matters_magnet":true,"mistakes":["r1c3>","r2c6>","r3c5v","r3c3<"],"shortcut":0.108,"spinner_dependence":"unsolvable without it","without_lock":"without it: 8 decision steps, 1 distinct mistakes (with it: 12, 4)","without_magnet":"without it: 9 decision steps, 3 distinct mistakes (with it: 12, 4)"}
+   C {"decisions_k4_6_8":[5,4,4],"deepest":12,"greedy":{"look2":0.045,"look4":0.108,"min_turn":0,"mobility":0,"safe":0.01},"hidden_k6_8":[11,9],"look6_greedy":0.242,"opening":"4 / 7","pressure":{"advances":0,"calm_prefix":2,"flips":0,"multi_turned":3,"prediction_share":0.44,"pulls":0,"rams":0,"signals":2,"spinners_turned":6,"trap_delay_median":7,"turns":9,"undo_proof":0.65},"win_share":0.361}
+   VERDICT: NEEDS WORK  -- 
+
+=== T03r_PULLTHEKEY_s321_2 (target EXTREME, 16 pieces) ===
+   . . . . . . .
+   . . Y>@ G>@~ . . .
+   . R< P<@ Y>@~ . G<@- P>@~
+   . . Y^@- R<* Rv#Y Yv Y>@
+   . Y<@- . . . . .
+   . . Bv@ B^#Y . . P^
+   . . . . . . .
+   solution: r4c1< [x3], r5c2v [x3], r2c1< [x3], r3c6> [x3], r3c5v [x1], r2c5v [x1], r2c6> [x1], r5c6^ [x1], r2c3> [x1], r2c2>, r3c2<, r1c2v [x1], r1c3> [x1], r3c4v [x1], r3c3<, r5c3^
+   A {"fingerprint":"7e51b440572ab4619d94143f678edb4ff2720039e950cd317607f3043014371f","hint_nodes":[39,30],"portals":0,"position_cap":2000,"positions":269,"replay":true,"solution":16,"solve_ms":5.2,"timeup_worst_ms":3.4,"timeup_worst_nodes":57,"winnable":97}
+   B {"coverage":0.75,"decision_steps":12,"distinct_mistakes":4,"endgame_decision":true,"last_decision":14,"late":0.88,"line(see above)":["r4c1< [x3]","r5c2v [x3]","r2c1< [x3]","r3c6> [x3]","r3c5v [x1]","r2c5v [x1]","r2c6> [x1]","r5c6^ [x1]","r2c3> [x1]","r2c2>","r3c2<","r1c2v [x1]","r1c3> [x1]","r3c4v [x1]","r3c3<","r5c3^"],"losing_per_step":[3,3,3,3,1,1,1,1,1,0,0,1,1,1,0,0],"matters_lock":true,"matters_magnet":true,"mistakes":["r1c3>","r2c6>","r3c5v","r3c3<"],"shortcut":0.108,"spinner_dependence":"unsolvable without it","without_lock":"without it: 8 decision steps, 1 distinct mistakes (with it: 12, 4)","without_magnet":"without it: 9 decision steps, 3 distinct mistakes (with it: 12, 4)"}
+   C {"decisions_k4_6_8":[5,4,4],"deepest":12,"greedy":{"look2":0.045,"look4":0.108,"min_turn":0,"mobility":0,"safe":0.01},"hidden_k6_8":[11,9],"look6_greedy":0.242,"opening":"4 / 7","pressure":{"advances":0,"calm_prefix":2,"flips":0,"multi_turned":3,"prediction_share":0.44,"pulls":0,"rams":0,"signals":2,"spinners_turned":6,"trap_delay_median":7,"turns":9,"undo_proof":0.65},"win_share":0.361}
+   VERDICT: NEEDS WORK  -- 
+
+=== T03r_PULLTHEKEY_s321_3 (target EXTREME, 14 pieces) ===
+   . . . . . . .
+   . . Y>@ G> . . .
+   . . . Y>@~ . . Pv@-
+   . B^* . R<* Rv#Y Yv Y>@~
+   . Y> . . . . .
+   . . . B^#Y . B^@~ B^@~
+   . . . . . G>@~ .
+   solution: r3c6> [x3], r2c6> [x3], r2c3> [x3], r1c3> [x2], r1c2v [x2], r4c1> [x2], r3c1^ [x1], r5c6^ [x2], r5c5> [x2], r6c5v [x1], r3c5v [x1], r3c4v [x1], r3c3<, r5c3^
+   A {"fingerprint":"fdf81826e62dfa39801beeefb6c3146414a8278693485fa768b7dba799c79420","hint_nodes":[89,60],"portals":0,"position_cap":2000,"positions":273,"replay":true,"solution":14,"solve_ms":8.8,"timeup_worst_ms":7.7,"timeup_worst_nodes":150,"winnable":69}
+   B {"coverage":0.86,"decision_steps":12,"distinct_mistakes":4,"endgame_decision":true,"last_decision":12,"late":0.86,"line(see above)":["r3c6> [x3]","r2c6> [x3]","r2c3> [x3]","r1c3> [x2]","r1c2v [x2]","r4c1> [x2]","r3c1^ [x1]","r5c6^ [x2]","r5c5> [x2]","r6c5v [x1]","r3c5v [x1]","r3c4v [x1]","r3c3<","r5c3^"],"losing_per_step":[3,3,3,2,2,2,1,2,2,1,1,1,0,0],"matters_lock":true,"matters_magnet":true,"mistakes":["r1c3>","r3c1^","r6c5>","r3c3<"],"shortcut":0.205,"spinner_dependence":"unsolvable without it","without_lock":"without it: 11 decision steps, 3 distinct mistakes (with it: 12, 4)","without_magnet":"without it: 10 decision steps, 1 distinct mistakes (with it: 12, 4)"}
+   C {"decisions_k4_6_8":[7,4,3],"deepest":12,"greedy":{"look2":0.005,"look4":0.017,"min_turn":0,"mobility":0.205,"safe":0},"hidden_k6_8":[11,7],"look6_greedy":0.067,"opening":"2 / 5","pressure":{"advances":0,"calm_prefix":0,"flips":0,"multi_turned":0,"prediction_share":0.29,"pulls":0,"rams":0,"signals":0,"spinners_turned":4,"trap_delay_median":5,"turns":4,"undo_proof":0.7},"win_share":0.253}
+   VERDICT: NEEDS WORK  -- a simple greedy player wins 20% (> 20%): a shortcut
+
+=== T03r_PULLTHEKEY_s321_4 (target EXTREME, 13 pieces) ===
+   . . . . . . .
+   . . Y>@ G> . . .
+   . . . Y>@~ . . Pv@-
+   . B^* . R<* Rv#Y Yv Y>@~
+   . Y> . . . . .
+   . . . B^#Y . . B^@~
+   . . . . . G>@~ .
+   solution: r6c5> [x2], r3c6> [x3], r2c6> [x2], r5c6^ [x2], r2c3> [x2], r1c3> [x1], r1c2v [x1], r3c5v [x1], r4c1> [x1], r3c1^, r3c4v [x1], r3c3<, r5c3^
+   A {"fingerprint":"64f221d04a45a425dd6c503a1f6e3a5846dc5a57383520bc06bc7e093fe9ec0e","hint_nodes":[30,35],"portals":0,"position_cap":2000,"positions":277,"replay":true,"solution":13,"solve_ms":4.9,"timeup_worst_ms":3.3,"timeup_worst_nodes":72,"winnable":94}
+   B {"coverage":0.77,"decision_steps":10,"distinct_mistakes":4,"endgame_decision":true,"last_decision":11,"late":0.85,"line(see above)":["r6c5> [x2]","r3c6> [x3]","r2c6> [x2]","r5c6^ [x2]","r2c3> [x2]","r1c3> [x1]","r1c2v [x1]","r3c5v [x1]","r4c1> [x1]","r3c1^","r3c4v [x1]","r3c3<","r5c3^"],"losing_per_step":[2,3,2,2,2,1,1,1,1,0,1,0,0],"matters_lock":true,"matters_magnet":true,"mistakes":["r1c3>","r3c1^","r3c5v","r3c3<"],"shortcut":0.215,"spinner_dependence":"unsolvable without it","without_lock":"without it: 9 decision steps, 2 distinct mistakes (with it: 10, 4)","without_magnet":"without it: 4 decision steps, 1 distinct mistakes (with it: 10, 4)"}
+   C {"decisions_k4_6_8":[5,5,3],"deepest":11,"greedy":{"look2":0.07,"look4":0.133,"min_turn":0,"mobility":0.215,"safe":0.055},"hidden_k6_8":[8,4],"look6_greedy":0.317,"opening":"3 / 5","pressure":{"advances":0,"calm_prefix":1,"flips":0,"multi_turned":0,"prediction_share":0.15,"pulls":0,"rams":0,"signals":0,"spinners_turned":2,"trap_delay_median":6,"turns":2,"undo_proof":0.69},"win_share":0.339}
+   VERDICT: NEEDS WORK  -- a simple greedy player wins 22% (> 20%): a shortcut
+
+=== T03r_PULLTHEKEY_s321_5 (target EXTREME, 13 pieces) ===
+   . . . . . . .
+   . . Y>@ G> . . .
+   . . . Y>@~ . . Pv@-
+   . B^* . R<* Rv#Y Yv Y>@-
+   . Y> . . . . .
+   . . . B^#Y . . B^@~
+   . . . . . G>@~ .
+   solution: r6c5> [x2], r3c6> [x3], r2c6> [x2], r5c6^ [x2], r2c3> [x2], r1c3> [x1], r1c2v [x1], r3c5v [x1], r4c1> [x1], r3c1^, r3c4v [x1], r3c3<, r5c3^
+   A {"fingerprint":"d43afd56c14f1e1e5150c7357eb9a17871c44a9a54fc23445e1e30426d8cdce5","hint_nodes":[30,35],"portals":0,"position_cap":2000,"positions":277,"replay":true,"solution":13,"solve_ms":4.2,"timeup_worst_ms":3.3,"timeup_worst_nodes":72,"winnable":94}
+   B {"coverage":0.77,"decision_steps":10,"distinct_mistakes":4,"endgame_decision":true,"last_decision":11,"late":0.85,"line(see above)":["r6c5> [x2]","r3c6> [x3]","r2c6> [x2]","r5c6^ [x2]","r2c3> [x2]","r1c3> [x1]","r1c2v [x1]","r3c5v [x1]","r4c1> [x1]","r3c1^","r3c4v [x1]","r3c3<","r5c3^"],"losing_per_step":[2,3,2,2,2,1,1,1,1,0,1,0,0],"matters_lock":true,"matters_magnet":true,"mistakes":["r1c3>","r3c1^","r3c5v","r3c3<"],"shortcut":0.215,"spinner_dependence":"unsolvable without it","without_lock":"without it: 9 decision steps, 2 distinct mistakes (with it: 10, 4)","without_magnet":"without it: 4 decision steps, 1 distinct mistakes (with it: 10, 4)"}
+   C {"decisions_k4_6_8":[5,5,3],"deepest":11,"greedy":{"look2":0.07,"look4":0.133,"min_turn":0,"mobility":0.215,"safe":0.055},"hidden_k6_8":[8,4],"look6_greedy":0.317,"opening":"3 / 5","pressure":{"advances":0,"calm_prefix":1,"flips":0,"multi_turned":0,"prediction_share":0.15,"pulls":0,"rams":0,"signals":0,"spinners_turned":2,"trap_delay_median":6,"turns":2,"undo_proof":0.69},"win_share":0.339}
+   VERDICT: NEEDS WORK  -- a simple greedy player wins 22% (> 20%): a shortcut
+
+=== T03r_PULLTHEKEY_s321_6 (target EXTREME, 17 pieces) ===
+   . . . . . . .
+   . . Y>@ G>@~ . . .
+   . R^@~ P<@ Y>@~ . G<@- P>@~
+   . B^* Y^@- R<* Rv#Y Yv Y>@
+   . Y<@- . . . . .
+   . . . B^#Y . . P^
+   . . . P< . . .
+   solution: r2c1^ [x3], r3c1^ [x3], r3c6> [x3], r3c5v [x1], r2c5v [x1], r2c6> [x1], r5c6^ [x1], r2c3> [x1], r3c1v [x1], r3c2v [x1], r2c2v [x1], r1c2v [x1], r1c3> [x1], r3c4v [x1], r3c3<, r5c3^, r6c3<
+   A {"fingerprint":"dd7011c558aaa1b127ebcb1ce95b3c5cf9459d5f03b241b6ece0cc81145e3012","hint_nodes":[674,196],"portals":0,"position_cap":2000,"positions":799,"replay":true,"solution":17,"solve_ms":100.6,"timeup_worst_ms":44,"timeup_worst_nodes":772,"winnable":249}
+   B {"coverage":0.82,"decision_steps":14,"distinct_mistakes":5,"endgame_decision":true,"last_decision":14,"late":0.82,"line(see above)":["r2c1^ [x3]","r3c1^ [x3]","r3c6> [x3]","r3c5v [x1]","r2c5v [x1]","r2c6> [x1]","r5c6^ [x1]","r2c3> [x1]","r3c1v [x1]","r3c2v [x1]","r2c2v [x1]","r1c2v [x1]","r1c3> [x1]","r3c4v [x1]","r3c3<","r5c3^","r6c3<"],"losing_per_step":[3,3,3,1,1,1,1,1,1,1,1,1,1,1,0,0,0],"matters_lock":true,"matters_magnet":true,"mistakes":["r1c3>","r2c6>","r3c5v","r2c2>","r3c3<"],"shortcut":0.042,"spinner_dependence":"unsolvable without it","without_lock":"without it: 2 decision steps, 1 distinct mistakes (with it: 14, 5)","without_magnet":"without it: 8 decision steps, 2 distinct mistakes (with it: 14, 5)"}
+   C {"decisions_k4_6_8":[10,8,7],"deepest":15,"greedy":{"look2":0.005,"look4":0.042,"min_turn":0,"mobility":0,"safe":0.005},"hidden_k6_8":[14,13],"look6_greedy":0.033,"opening":"4 / 7","pressure":{"advances":0,"calm_prefix":0,"flips":0,"multi_turned":4,"prediction_share":0.59,"pulls":1,"rams":0,"signals":3,"spinners_turned":7,"trap_delay_median":10,"turns":12,"undo_proof":0.8},"win_share":0.312}
+   VERDICT: REJECTED  -- solve 100.6 ms (> 40); the TIME UP check takes 44.0 ms in its worst position (> 40)
+
+=== T03r_PULLTHEKEY_s321_7 (target EXTREME, 16 pieces) ===
+   . . . . . . .
+   . . Y>@ G>@~ . . .
+   . R^@~ P<@ Y>@~ . G<@- P>@~
+   . B^* Y^@- R<* Rv#Y Yv Y>@
+   . Y<@- . . . . .
+   . . . B^#Y . . P^
+   . . . . . . .
+   solution: r2c1^ [x3], r3c1^ [x3], r3c6> [x3], r3c5v [x1], r2c5v [x1], r2c6> [x1], r5c6^ [x1], r2c3> [x1], r3c1v [x1], r3c2v [x1], r2c2v [x1], r1c2v [x1], r1c3> [x1], r3c4v [x1], r3c3<, r5c3^
+   A {"fingerprint":"566f4c72695c04b4a2f7bc307e5fa83e1c7dc8fb93e500081a780e1763e34589","hint_nodes":[279,84],"portals":0,"position_cap":2000,"positions":398,"replay":true,"solution":16,"solve_ms":32.4,"timeup_worst_ms":19.6,"timeup_worst_nodes":321,"winnable":123}
+   B {"coverage":0.88,"decision_steps":14,"distinct_mistakes":5,"endgame_decision":true,"last_decision":14,"late":0.88,"line(see above)":["r2c1^ [x3]","r3c1^ [x3]","r3c6> [x3]","r3c5v [x1]","r2c5v [x1]","r2c6> [x1]","r5c6^ [x1]","r2c3> [x1]","r3c1v [x1]","r3c2v [x1]","r2c2v [x1]","r1c2v [x1]","r1c3> [x1]","r3c4v [x1]","r3c3<","r5c3^"],"losing_per_step":[3,3,3,1,1,1,1,1,1,1,1,1,1,1,0,0],"matters_lock":true,"matters_magnet":true,"mistakes":["r1c3>","r2c6>","r3c5v","r2c2>","r3c3<"],"shortcut":0.025,"spinner_dependence":"unsolvable without it","without_lock":"without it: 2 decision steps, 1 distinct mistakes (with it: 14, 5)","without_magnet":"without it: 7 decision steps, 2 distinct mistakes (with it: 14, 5)"}
+   C {"decisions_k4_6_8":[8,8,6],"deepest":14,"greedy":{"look2":0.01,"look4":0.025,"min_turn":0,"mobility":0,"safe":0.005},"hidden_k6_8":[14,12],"look6_greedy":0.025,"opening":"3 / 6","pressure":{"advances":0,"calm_prefix":0,"flips":0,"multi_turned":4,"prediction_share":0.63,"pulls":1,"rams":0,"signals":2,"spinners_turned":7,"trap_delay_median":9,"turns":12,"undo_proof":0.7},"win_share":0.309}
+   VERDICT: NEEDS WORK  -- 
+
+=== T03r_PULLTHEKEY_s321_8 (target EXTREME, 17 pieces) ===
+   . . . . . . .
+   . . Y>@ G> . . .
+   . R>@~ . Y>@~ . G>@ P>
+   . B^* . R<* Rv#Y Yv Y>@~
+   . Y> . . P>@~ . .
+   . . Bv@ B^#Y . . P^@
+   . . . . . G>@~ .
+   solution: r4c4> [x2], r5c2v [x2], r6c5> [x2], r3c5v [x2], r2c5v [x2], r2c6> [x1], r2c3> [x1], r1c3>, r1c2v, r2c1>, r3c6> [x1], r5c6^ [x1], r4c1> [x1], r3c1^, r3c4v [x1], r3c3<, r5c3^
+   A {"fingerprint":"6f79e8866ed8d56e5b3a83668db83f01dca1787fd219e41046f83f8e089912c3","hint_nodes":[62,30],"portals":0,"position_cap":2000,"positions":459,"replay":true,"solution":17,"solve_ms":7.4,"timeup_worst_ms":4.9,"timeup_worst_nodes":62,"winnable":180}
+   B {"coverage":0.65,"decision_steps":11,"distinct_mistakes":4,"endgame_decision":true,"last_decision":15,"late":0.88,"line(see above)":["r4c4> [x2]","r5c2v [x2]","r6c5> [x2]","r3c5v [x2]","r2c5v [x2]","r2c6> [x1]","r2c3> [x1]","r1c3>","r1c2v","r2c1>","r3c6> [x1]","r5c6^ [x1]","r4c1> [x1]","r3c1^","r3c4v [x1]","r3c3<","r5c3^"],"losing_per_step":[2,2,2,2,2,1,1,0,0,0,1,1,1,0,1,0,0],"matters_lock":true,"matters_magnet":true,"mistakes":["r1c3>","r2c6>","r3c1^","r3c3<"],"shortcut":0.208,"spinner_dependence":"without it: 5 decision steps, 2 distinct mistakes (with it: 11, 4)","without_lock":"without it: 11 decision steps, 3 distinct mistakes (with it: 11, 4)","without_magnet":"without it: 10 decision steps, 2 distinct mistakes (with it: 11, 4)"}
+   C {"decisions_k4_6_8":[7,5,3],"deepest":11,"greedy":{"look2":0.12,"look4":0.208,"min_turn":0,"mobility":0,"safe":0.055},"hidden_k6_8":[9,5],"look6_greedy":0.458,"opening":"4 / 6","pressure":{"advances":0,"calm_prefix":3,"flips":0,"multi_turned":1,"prediction_share":0.18,"pulls":0,"rams":0,"signals":1,"spinners_turned":3,"trap_delay_median":6,"turns":4,"undo_proof":0.75},"win_share":0.392}
+   VERDICT: NEEDS WORK  -- a simple greedy player wins 21% (> 20%): a shortcut

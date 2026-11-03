@@ -1,0 +1,206 @@
+{
+ "K16_ARMOREDKEY_s321_0": {
+  "map": [
+   ". . . . . . .",
+   ". Rv%A B<= Y>&A= . P^#Y .",
+   ". . . G> . . .",
+   ". . . R>@ . Bv@~ .",
+   ". R<@ . R^ . . .",
+   ". . . Y^@~ . . .",
+   "G>%A . B>&A Bv Rv@- G^@- Rv@-"
+  ],
+  "mechanic": "armor,switch,lock",
+  "positions": 263,
+  "overlap": 0.35,
+  "rules": [
+   "S_old"
+  ]
+ },
+ "K16_ARMOREDKEY_s321_1": {
+  "map": [
+   ". . . Y<@ . . .",
+   ". Rv%A B<= Y>&A= . P^#Y .",
+   ". . . G> . . .",
+   ". . . R>@ . Yv@~ .",
+   ". R<@ . R^ . . .",
+   ". . . . . . .",
+   "G>%A . B>&A Bv Rv@- G^@- Rv@-"
+  ],
+  "mechanic": "armor,switch,lock",
+  "positions": 318,
+  "overlap": 0.35,
+  "rules": [
+   "S_old"
+  ]
+ },
+ "K16_ARMOREDKEY_s321_2": {
+  "map": [
+   ". . . . . . .",
+   ". Rv%A Bv= Y>&A= . P^#Y .",
+   ". . . G> . . .",
+   ". . . R>@ . . .",
+   ". R<@ . R^ . . .",
+   ". . . Y^@~ . . .",
+   "G>%A . B>&A Bv Rv@- G^@- Rv@-"
+  ],
+  "mechanic": "armor,switch,lock",
+  "positions": 330,
+  "overlap": 0.37,
+  "rules": [
+   "S_old"
+  ]
+ },
+ "K16_ARMOREDKEY_s321_3": {
+  "map": [
+   ". . . . . . .",
+   ". Rv%A B<= Y>&A= . P^#Y .",
+   ". . . G> . . .",
+   ". . . R>@ . . .",
+   ". R<@ . R^ . . .",
+   ". . . Y^@~ . . .",
+   "G>%A . B>&A Bv Rv@- G^@- R^@-"
+  ],
+  "mechanic": "armor,switch,lock",
+  "positions": 408,
+  "overlap": 0.37,
+  "rules": [
+   "S_old"
+  ]
+ },
+ "K16_ARMOREDKEY_s321_4": {
+  "map": [
+   ". . . . . . .",
+   ". Rv%A B<= Y>&A= . P^#Y .",
+   ". . . G> . . .",
+   ". . . R>@ . . .",
+   ". R<@ . R^ . . .",
+   ". . . Y^@~ . . .",
+   "G>%A . B>&A Bv Rv@- G^@- Rv@-"
+  ],
+  "mechanic": "armor,switch,lock",
+  "positions": 417,
+  "overlap": 0.37,
+  "rules": [
+   "S_old"
+  ]
+ },
+ "K16_ARMOREDKEY_s321_5": {
+  "map": [
+   ". . . . . . .",
+   ". Rv%A B<= Y>&A= . P^#Y .",
+   ". . . G> . . .",
+   ". . . R>@ . . .",
+   ". R< . R^ . . .",
+   ". . . Y^@~ . . .",
+   "G>%A . B>&A Bv Rv@- G^@- Rv@-"
+  ],
+  "mechanic": "armor,switch,lock",
+  "positions": 417,
+  "overlap": 0.42,
+  "rules": [
+   "S_old"
+  ]
+ },
+ "K16_ARMOREDKEY_s321_6": {
+  "map": [
+   ". . P>@~ Y<@ . . .",
+   ". Rv%A Bv= Y>&A= . P^#Y .",
+   ". . . G> . . .",
+   ". . . R>@ . . .",
+   ". . . R^ . Rv@ .",
+   ". . . Y^@~ . . .",
+   "G>%A . B>&A Bv R^@ G^@- Rv@-"
+  ],
+  "mechanic": "armor,switch,lock",
+  "positions": 464,
+  "overlap": 0.33,
+  "rules": [
+   "S_p30"
+  ]
+ },
+ "K16_ARMOREDKEY_s321_7": {
+  "map": [
+   ". . P>@~ Y<@ . . .",
+   ". Rv%A B<= Y>&A= . P^#Y .",
+   ". G> . G> . . .",
+   ". . . R>@ . . .",
+   ". . . R^ . . .",
+   ". . . Y^@~ . . .",
+   "G>%A . B>&A Bv R^@ G^@- Rv@-"
+  ],
+  "mechanic": "armor,switch,lock",
+  "positions": 492,
+  "overlap": 0.33,
+  "rules": [
+   "S_p30"
+  ]
+ },
+ "K16_ARMOREDKEY_s321_8": {
+  "map": [
+   ". . P>@~ Y<@ . . .",
+   ". Rv%A B<= Y>&A= . P^#Y .",
+   ". G> . G> . . .",
+   ". . . R>@ . . .",
+   ". . . R^ . . .",
+   ". . . Y^@~ . . .",
+   "G>%A . B>&A Bv R^@ G<@ Rv@-"
+  ],
+  "mechanic": "armor,switch,lock",
+  "positions": 494,
+  "overlap": 0.33,
+  "rules": [
+   "S_p30"
+  ]
+ },
+ "K16_ARMOREDKEY_s321_9": {
+  "map": [
+   ". . . Y<@ . . .",
+   ". Rv%A B<= Y>&A= . P^#Y .",
+   ". . . G> . . .",
+   ". . . R>@ . Yv@~ .",
+   ". R<@ . R^ . . .",
+   ". . . Y^@~ . . .",
+   "G>%A . B>&A Bv Rv@- G^@- Rv@-"
+  ],
+  "mechanic": "armor,switch,lock",
+  "positions": 533,
+  "overlap": 0.33,
+  "rules": [
+   "S_p30"
+  ]
+ },
+ "K16_ARMOREDKEY_s321_10": {
+  "map": [
+   ". . . Y<@ . . .",
+   ". Rv%A B<= Y>&A= . P^#Y .",
+   ". . . G> . . .",
+   ". . . R>@ . Yv@~ .",
+   ". R<@- . R^ . . .",
+   ". . . Y^@~ . . .",
+   "G>%A . B>&A Bv Rv@- G^@- Rv@-"
+  ],
+  "mechanic": "armor,switch,lock",
+  "positions": 533,
+  "overlap": 0.33,
+  "rules": [
+   "S_p30"
+  ]
+ },
+ "K16_ARMOREDKEY_s321_11": {
+  "map": [
+   ". . . Y<@ . . .",
+   ". Rv%A B<= Y>&A= . P^#Y .",
+   ". . . G> . . .",
+   ". . . R>@ . Yv@ .",
+   ". R<@ . R^ . . .",
+   ". . . Y^@~ . . .",
+   "G>%A . B>&A Bv Rv@- G^@- Rv@-"
+  ],
+  "mechanic": "armor,switch,lock",
+  "positions": 533,
+  "overlap": 0.33,
+  "rules": [
+   "S_p30"
+  ]
+ }
+}

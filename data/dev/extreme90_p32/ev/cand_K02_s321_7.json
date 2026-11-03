@@ -1,0 +1,19 @@
+{
+ "K02_s321_7": {
+  "map": [
+   ". . . . . . .",
+   ". . . . Y<@- . .",
+   "Y^@- . . P^#Y G>* Pv Y>@",
+   "P^ . P> . Gv* . Gv@",
+   "P>@~ . Yv Y^ . . .",
+   "B^@ . . . . . .",
+   ". . . . . . ."
+  ],
+  "mechanic": "magnet,lock",
+  "run": "K02_PULLEDPRISONER_s321",
+  "rules": [
+   "S_p30"
+  ],
+  "screen_key": "K02_PULLEDPRISONER_s321_7"
+ }
+}

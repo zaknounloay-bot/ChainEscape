@@ -1,0 +1,19 @@
+{
+ "K16_s322_11": {
+  "map": [
+   ". . . R^#Y . . .",
+   ". . B<= Y>&A= . P^#Y .",
+   "R<@~ . . Pv&A . G> .",
+   ". B<@~ Y^@ Yv@ B^@~ . .",
+   ". . . R^ . . .",
+   "R^ . . Y<@~ . . .",
+   "G>%A . . R>%A . . ."
+  ],
+  "mechanic": "armor,switch,lock",
+  "run": "K16_ARMOREDKEY_s322",
+  "rules": [
+   "S_p30"
+  ],
+  "screen_key": "K16_ARMOREDKEY_s322_11"
+ }
+}

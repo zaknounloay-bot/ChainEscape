@@ -1,0 +1,19 @@
+{
+ "K01_s321_4": {
+  "map": [
+   "Y<@~#B P<@ . . . . .",
+   ". P^#Y . . . G^#B .",
+   ". . . . . . .",
+   ". Y^&A . R^&B . B^&B .",
+   ". . B^@- G^@ . G<@~ .",
+   "Rv%A R>%B Bv@ . Rv%B R>%A .",
+   ". . . . Yv&A . ."
+  ],
+  "mechanic": "switch,lock",
+  "run": "K01_TWOGROUPKEYS_s321",
+  "rules": [
+   "S_old"
+  ],
+  "screen_key": "K01_TWOGROUPKEYS_s321_4"
+ }
+}

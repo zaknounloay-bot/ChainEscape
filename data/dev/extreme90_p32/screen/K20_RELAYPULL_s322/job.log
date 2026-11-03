@@ -1,0 +1,24 @@
+K20_RELAYPULL_s322_0   filler         ['r4c2 Rv#B']
+K20_RELAYPULL_s322_1   not essential  {'without_lock': 'without it: 13 decision steps, 3 distinct mistakes (with it: 13, 4)'}
+K20_RELAYPULL_s322_2   PASS           []
+K20_RELAYPULL_s322_3   filler         ['r4c2 Rv#B']
+K20_RELAYPULL_s322_4   PASS           []
+K20_RELAYPULL_s322_5   filler         ['r4c2 Rv#B']
+K20_RELAYPULL_s322_6   PASS           []
+K20_RELAYPULL_s322_7   filler         ['r0c5 Y<@-#B', 'r4c5 Y<#B']
+K20_RELAYPULL_s322_8   Category A/B   ['solve 53.6 ms (> 40)', 'the TIME UP check takes 53.4 ms in its worst position (> 40)']
+K20_RELAYPULL_s322_9   Category A/B   ['solve 53.8 ms (> 40)', 'the TIME UP check takes 50.3 ms in its worst position (> 40)']
+K20_RELAYPULL_s322_10  Category A/B   ['solve 42.0 ms (> 40)']
+SCREEN: 11 boards, 3 PASS
+K20_RELAYPULL_s322_0   filler         
+K20_RELAYPULL_s322_1   not essential  
+K20_RELAYPULL_s322_2   PASS           PASS
+K20_RELAYPULL_s322_3   filler         
+K20_RELAYPULL_s322_4   PASS           PASS
+K20_RELAYPULL_s322_5   filler         
+K20_RELAYPULL_s322_6   PASS           PASS
+K20_RELAYPULL_s322_7   filler         
+K20_RELAYPULL_s322_8   Category A/B   
+K20_RELAYPULL_s322_9   Category A/B   
+K20_RELAYPULL_s322_10  Category A/B   
+SCREEN30: 11 boards, 3 PASS

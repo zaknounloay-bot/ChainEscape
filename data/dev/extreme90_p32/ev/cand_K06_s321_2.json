@@ -1,0 +1,19 @@
+{
+ "K06_s321_2": {
+  "map": [
+   "Y<@~ R<%B P<%B . . B<%A .",
+   "B>#Y . . . . . .",
+   ". P^#Y&B . . G<#P . .",
+   ". . . . . . .",
+   ". Y^&A R^@~ G^@- P>@- . .",
+   ". Gv&A . . . . .",
+   "R>%A . . . . . R<&B"
+  ],
+  "mechanic": "switch,lock",
+  "run": "K06_TWOGROUPLADDER_s321",
+  "rules": [
+   "S_old"
+  ],
+  "screen_key": "K06_TWOGROUPLADDER_s321_2"
+ }
+}

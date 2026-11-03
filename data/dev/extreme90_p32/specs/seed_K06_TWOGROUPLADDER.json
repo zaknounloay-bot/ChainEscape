@@ -1,0 +1,71 @@
+{
+ "target": "EXTREME",
+ "facts": [],
+ "max_positions": 2000,
+ "piece_free": 13,
+ "max_pieces": 17,
+ "shortcut_weight": 80,
+ "coverage_weight": 25,
+ "late_weight": 20,
+ "endgame_weight": 20,
+ "length_weight": 1.0,
+ "length_cap": 18,
+ "pressure_weight": 1.5,
+ "palette": "all",
+ "suffix_rate": 0.3,
+ "crates_max": 0,
+ "size": "medium",
+ "max_solve_nodes": 1500,
+ "spinners_max": 4,
+ "strict_essential": true,
+ "token_guard": true,
+ "core_essential": true,
+ "mechanic": "switch,lock",
+ "suffixes": [
+  "&A",
+  "&B",
+  "#Y",
+  "#P"
+ ],
+ "suffix_max": {
+  "&A": 2,
+  "&B": 2,
+  "#Y": 2,
+  "#P": 2
+ },
+ "idea": "a two-group ladder: the key must be reversed (A) to leave, its prisoner is itself a key and a flip target of B, and B's switch stands in the prisoner's exit - firing B to clear the lane turns the prisoner round",
+ "map": [
+  ". R<%B . . . . .",
+  ". . . . . . .",
+  ". P^#Y&B . . G<#P . .",
+  ". . . . . . .",
+  ". Y^&A . . . . .",
+  ". . . . . . .",
+  "R>%A . . . . . ."
+ ],
+ "family": "P32 K06_TWOGROUPLADDER",
+ "phase32_core": "K06_TWOGROUPLADDER",
+ "frozen": [
+  [
+   0,
+   1
+  ],
+  [
+   2,
+   1
+  ],
+  [
+   2,
+   4
+  ],
+  [
+   4,
+   1
+  ],
+  [
+   6,
+   0
+  ]
+ ],
+ "phase32_method": "Phase 31 arm A / AM1 (c1ddc89 generator, --ops=v20, Phase 25-27 parameters)"
+}

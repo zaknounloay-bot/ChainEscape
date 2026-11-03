@@ -1,0 +1,19 @@
+{
+ "K08_s321_1": {
+  "map": [
+   ". . . . . . .",
+   ". . . Rv R^@~ . .",
+   ". . . Gv@- . . .",
+   ". . . G<* Yv Bv&A P>",
+   ". . . Y>@- Yv@- G^@ P^@~",
+   ". P^&A R^@ . R< P^%A .",
+   ". . . . . . ."
+  ],
+  "mechanic": "magnet,switch",
+  "run": "K08_PULLEDTARGET_s321",
+  "rules": [
+   "S_old"
+  ],
+  "screen_key": "K08_PULLEDTARGET_s321_1"
+ }
+}

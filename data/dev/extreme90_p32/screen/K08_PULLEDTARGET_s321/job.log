@@ -1,0 +1,26 @@
+K08_PULLEDTARGET_s321_2 overlap        (0.45, 'N60')
+K08_PULLEDTARGET_s321_3 overlap        (0.4, 'N60')
+K08_PULLEDTARGET_s321_0 PASS           []
+K08_PULLEDTARGET_s321_1 PASS           []
+K08_PULLEDTARGET_s321_4 PASS           []
+K08_PULLEDTARGET_s321_5 PASS           []
+K08_PULLEDTARGET_s321_6 Category A/B   ['a simple greedy player wins 21% (> 20%): a shortcut']
+K08_PULLEDTARGET_s321_7 Category A/B   ['a simple greedy player wins 21% (> 20%): a shortcut']
+K08_PULLEDTARGET_s321_8 Category A/B   ['a simple greedy player wins 21% (> 20%): a shortcut']
+K08_PULLEDTARGET_s321_9 Category A/B   ['a simple greedy player wins 21% (> 20%): a shortcut']
+K08_PULLEDTARGET_s321_10 PASS           []
+K08_PULLEDTARGET_s321_11 PASS           []
+SCREEN: 12 boards, 6 PASS
+K08_PULLEDTARGET_s321_2 overlap        
+K08_PULLEDTARGET_s321_3 overlap        
+K08_PULLEDTARGET_s321_0 PASS           PASS
+K08_PULLEDTARGET_s321_1 PASS           PASS
+K08_PULLEDTARGET_s321_4 PASS           PASS
+K08_PULLEDTARGET_s321_5 PASS           PASS
+K08_PULLEDTARGET_s321_6 Category A/B   
+K08_PULLEDTARGET_s321_7 Category A/B   
+K08_PULLEDTARGET_s321_8 Category A/B   
+K08_PULLEDTARGET_s321_9 Category A/B   
+K08_PULLEDTARGET_s321_10 PASS           PASS
+K08_PULLEDTARGET_s321_11 PASS           PASS
+SCREEN30: 12 boards, 6 PASS

@@ -1,0 +1,131 @@
+{
+ "K16_ARMOREDKEY_s322_0": {
+  "result": "overlap",
+  "detail": [
+   0.42,
+   "N21"
+  ]
+ },
+ "K16_ARMOREDKEY_s322_1": {
+  "result": "overlap",
+  "detail": [
+   0.4,
+   "N9"
+  ]
+ },
+ "K16_ARMOREDKEY_s322_2": {
+  "result": "overlap",
+  "detail": [
+   0.4,
+   "N9"
+  ]
+ },
+ "K16_ARMOREDKEY_s322_3": {
+  "result": "overlap",
+  "detail": [
+   0.4,
+   "N83"
+  ]
+ },
+ "K16_ARMOREDKEY_s322_4": {
+  "result": "overlap",
+  "detail": [
+   0.4,
+   "N21"
+  ]
+ },
+ "K16_ARMOREDKEY_s322_5": {
+  "result": "overlap",
+  "detail": [
+   0.46,
+   "N21"
+  ]
+ },
+ "K16_ARMOREDKEY_s322_6": {
+  "result": "not essential",
+  "detail": {
+   "without_armor": "without it: 12 decision steps, 4 distinct mistakes (with it: 14, 4)"
+  }
+ },
+ "K16_ARMOREDKEY_s322_7": {
+  "result": "not essential",
+  "detail": {
+   "without_armor": "without it: 12 decision steps, 4 distinct mistakes (with it: 14, 4)"
+  }
+ },
+ "K16_ARMOREDKEY_s322_8": {
+  "result": "not essential",
+  "detail": {
+   "without_armor": "without it: 12 decision steps, 4 distinct mistakes (with it: 14, 4)"
+  }
+ },
+ "K16_ARMOREDKEY_s322_9": {
+  "result": "not essential",
+  "detail": {
+   "without_armor": "without it: 13 decision steps, 4 distinct mistakes (with it: 15, 4)"
+  }
+ },
+ "K16_ARMOREDKEY_s322_10": {
+  "result": "not essential",
+  "detail": {
+   "without_armor": "without it: 13 decision steps, 4 distinct mistakes (with it: 15, 4)"
+  }
+ },
+ "K16_ARMOREDKEY_s322_11": {
+  "result": "PASS",
+  "B": {
+   "coverage": 0.83,
+   "decision_steps": 15,
+   "distinct_mistakes": 4,
+   "endgame_decision": true,
+   "last_decision": 16,
+   "late": 0.89,
+   "losing_per_step": [
+    3,
+    3,
+    3,
+    3,
+    3,
+    3,
+    2,
+    2,
+    1,
+    1,
+    0,
+    1,
+    1,
+    1,
+    1,
+    1,
+    0,
+    0
+   ],
+   "matters_armor": true,
+   "matters_lock": true,
+   "matters_switch": true,
+   "mistakes": [
+    "r3c1<",
+    "r3c4^",
+    "r6c3>",
+    "r6c0>"
+   ],
+   "shortcut": 0.05,
+   "spinner_dependence": "unsolvable without it",
+   "without_armor": "without it: 12 decision steps, 4 distinct mistakes (with it: 15, 4)",
+   "without_lock": "without it: 3 decision steps, 1 distinct mistakes (with it: 15, 4)",
+   "without_switch": "unsolvable without it"
+  },
+  "A": {
+   "positions": 935,
+   "solution": 18,
+   "solve_ms": 2.6,
+   "timeup_worst_ms": 6.4
+  },
+  "overlap": [
+   0.36,
+   "N83"
+  ],
+  "filler": [],
+  "hint_follow": "PASS"
+ }
+}

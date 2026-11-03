@@ -1,0 +1,7 @@
+Godot Engine v4.3.stable.official.77dcf97d8 - https://godotengine.org
+
+ERROR: Level 0: block at (5, 3) flips with switch A, which does not exist
+   at: push_error (core/variant/variant_utility.cpp:1092)
+ERROR: Level 0: block at (1, 5) flips with switch A, which does not exist
+   at: push_error (core/variant/variant_utility.cpp:1092)
+K08_s321_1 {"distinct":4,"pieces_tested":15,"steps":12,"trivial":[],"trivial_removals":0}

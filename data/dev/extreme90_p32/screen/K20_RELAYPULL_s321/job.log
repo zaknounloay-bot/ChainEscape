@@ -1,0 +1,18 @@
+K20_RELAYPULL_s321_0   not essential  {'without_lock': 'without it: 13 decision steps, 4 distinct mistakes (with it: 14, 5)'}
+K20_RELAYPULL_s321_1   not essential  {'without_lock': 'without it: 13 decision steps, 4 distinct mistakes (with it: 13, 5)'}
+K20_RELAYPULL_s321_2   not essential  {'without_lock': 'without it: 13 decision steps, 4 distinct mistakes (with it: 13, 5)'}
+K20_RELAYPULL_s321_3   not essential  {'without_lock': 'without it: 13 decision steps, 4 distinct mistakes (with it: 14, 5)'}
+K20_RELAYPULL_s321_4   not essential  {'without_lock': 'without it: 13 decision steps, 4 distinct mistakes (with it: 14, 5)'}
+K20_RELAYPULL_s321_5   not essential  {'without_lock': 'without it: 13 decision steps, 4 distinct mistakes (with it: 14, 5)'}
+K20_RELAYPULL_s321_6   not essential  {'without_lock': 'without it: 13 decision steps, 4 distinct mistakes (with it: 13, 5)'}
+K20_RELAYPULL_s321_7   not essential  {'without_lock': 'without it: 12 decision steps, 4 distinct mistakes (with it: 12, 5)'}
+SCREEN: 8 boards, 0 PASS
+K20_RELAYPULL_s321_0   not essential  
+K20_RELAYPULL_s321_1   not essential  
+K20_RELAYPULL_s321_2   not essential  
+K20_RELAYPULL_s321_3   not essential  
+K20_RELAYPULL_s321_4   not essential  
+K20_RELAYPULL_s321_5   not essential  
+K20_RELAYPULL_s321_6   not essential  
+K20_RELAYPULL_s321_7   not essential  
+SCREEN30: 8 boards, 0 PASS

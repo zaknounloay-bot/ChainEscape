@@ -1,0 +1,220 @@
+{
+ "format": "ce-ta90-proto",
+ "v": 1,
+ "test": "ta90_n91",
+ "assist": {
+  "undo": 3,
+  "show_a_move": 0,
+  "hammer": 0
+ },
+ "note": "Development only. Phase 32 EXTREME candidate (?extreme90p32=1); never shared, never production. TECHNICALLY QUALIFIED (Category A and B): NOT human-approved; human difficulty unvalidated.",
+ "boards": [
+  {
+   "id": "N91",
+   "accepted": true,
+   "label": "TECHNICALLY QUALIFIED - HUMAN TESTED, NOT APPROVED",
+   "variant": "N91",
+   "design": "P32_K06_s321_3",
+   "family": "P32 the two-group ladder (switch A + switch B + lock)",
+   "concept_group": "reversal x reversal x lock chain",
+   "primary": "switch, lock, spinner",
+   "target": "EXTREME (a design target, not a rating; never shown to players)",
+   "idea": "a two-group ladder: the key must be reversed (A) to leave, its prisoner is itself a key and a flip target of B, and B's switch stands in the prisoner's exit - firing B to clear the lane turns the prisoner round",
+   "source": "hybrid: hand core frozen cell for cell (seed_K06_TWOGROUPLADDER.json, Phase 32); blocks added by the Phase 25-27 generator (tools/ta90_search.gd of commit c1ddc89, run in a separate worktree) --ops=v20 with the Phase 25-27 search parameters (piece_free 13, max_pieces 17, suffix_rate 0.30, patience 8), RNG seed 321, round 1 (K06_s321_2, fewer positions, failed the shortcut gate); every board then passed the unchanged modern pipeline: engine-valid tokens, bank overlap, tools/extreme90_screen30.py (40 ms gates, strict essentiality, filler, hint-follow) and the full evaluation tools/extreme90_eval25.py --full; shortlist rule S_old; Phase 32 protocol data/dev/extreme90_p32/protocol.json (the Phase 31 method, unchanged)",
+   "related_bank_concept": "closest occupancy N38 0.30 (bank); pairwise with the other Phase 32 boards <= 0.28",
+   "fingerprint": "5afe03d7bb9bdbd8b226d8c32ac307cedc67461fc43293a67b734b73593e4882",
+   "mechanics": [
+    "switch",
+    "lock",
+    "spinner"
+   ],
+   "puzzle": {
+    "format": "ce-puzzle",
+    "v": 1,
+    "rules": 1,
+    "rows": 7,
+    "cols": 7,
+    "map": [
+     "Y^@- R<%B P<%B . . Bv%A .",
+     "B>#Y . . . . . .",
+     ". P^#Y&B . . G<#P . .",
+     ". . . . . . .",
+     ". Y^&A R^@~ G^@- P>@- . .",
+     ". . . . . . .",
+     "R>%A . . . . . R<&B"
+    ]
+   },
+   "design_report": {
+    "A": {
+     "fingerprint": "5afe03d7bb9bdbd8b226d8c32ac307cedc67461fc43293a67b734b73593e4882",
+     "hint_nodes": [
+      16,
+      24
+     ],
+     "parity": [
+      0,
+      0
+     ],
+     "portals": 0,
+     "position_cap": 2000,
+     "positions": 274,
+     "replay": true,
+     "solution": 13,
+     "solve_ms": 2,
+     "timeup_worst_ms": 1.3,
+     "timeup_worst_nodes": 29,
+     "winnable": 80
+    },
+    "B": {
+     "coverage": 0.77,
+     "decision_steps": 10,
+     "distinct_mistakes": 5,
+     "endgame_decision": true,
+     "last_decision": 10,
+     "late": 0.77,
+     "line": [
+      "r0c0^ [x1]",
+      "r0c1< [x1]",
+      "r6c6> [x2]",
+      "r0c2< [x1]",
+      "r0c5v [x1]",
+      "r4c2^ [x3]",
+      "r4c1v [x1]",
+      "r1c0> [x1]",
+      "r2c1^ [x1]",
+      "r4c4> [x1]",
+      "r2c4<",
+      "r4c3v",
+      "r6c0>"
+     ],
+     "losing_per_step": [
+      1,
+      1,
+      2,
+      1,
+      1,
+      3,
+      1,
+      1,
+      1,
+      1,
+      0,
+      0,
+      0
+     ],
+     "matters_lock": true,
+     "matters_switch": true,
+     "mistakes": [
+      "r4c3^",
+      "r0c2<",
+      "r4c1v",
+      "r6c0>",
+      "r4c3<"
+     ],
+     "shortcut": 0.117,
+     "spinner_dependence": "without it: 2 decision steps, 2 distinct mistakes (with it: 10, 5)",
+     "without_lock": "without it: 2 decision steps, 2 distinct mistakes (with it: 10, 5)",
+     "without_switch": "unsolvable without it"
+    },
+    "C": {
+     "decisions_k4_6_8": [
+      6,
+      5,
+      3
+     ],
+     "deepest": 11,
+     "greedy": {
+      "look2": 0.085,
+      "look4": 0.117,
+      "min_turn": 0,
+      "mobility": 0,
+      "safe": 0.065
+     },
+     "hidden_k6_8": [
+      6,
+      4
+     ],
+     "learner": {
+      "look4": 2,
+      "look6": 0
+     },
+     "look6_greedy": 0.333,
+     "opening": "3 / 4",
+     "pressure": {
+      "advances": 0,
+      "calm_prefix": 1,
+      "flips": 4,
+      "multi_turned": 1,
+      "prediction_share": 0.38,
+      "pulls": 0,
+      "rams": 0,
+      "signals": 0,
+      "spinners_turned": 1,
+      "trap_delay_median": 5,
+      "turns": 2,
+      "undo_proof": 0.62
+     },
+     "win_share": 0.292
+    },
+    "filler": {
+     "distinct": 5,
+     "pieces_tested": 13,
+     "steps": 10,
+     "trivial": [],
+     "trivial_removals": 0
+    },
+    "similarity": {
+     "closest_known": "N38",
+     "overlap": 0.3
+    },
+    "structure31": {
+     "beyond_undo": 0.6,
+     "capped": false,
+     "escape_order_free": 12,
+     "first_choice": 1,
+     "forced": 1,
+     "instant_dead": 0,
+     "mean_winning": 2.77,
+     "mistakes": 5,
+     "open_escape_losing": 1,
+     "open_moves": 4,
+     "open_safe": 3,
+     "optional": 12,
+     "positions": 274,
+     "repeat_taps": 0,
+     "solution": 13,
+     "tempting": 5,
+     "tempting_share": 1,
+     "trap_depth_median": 5,
+     "winning": 80
+    },
+    "preregistered_prediction": {
+     "positions": 274,
+     "early3": 4,
+     "open_escape_losing": 1,
+     "note": "recorded before any human play; NOT used to select; the owner is the judge"
+    }
+   },
+   "human_test": {
+    "status": "TESTED (owner first exposure, Phase 32 page)",
+    "difficulty": "MEDIUM",
+    "enjoyment": "not supplied",
+    "outcome_90s": "not supplied",
+    "solve_time_ms": "not supplied",
+    "attempts": "not supplied",
+    "restarts": "not supplied",
+    "undo_used": "not supplied",
+    "notes": "not supplied",
+    "owner_decision": "NOT APPROVED",
+    "how_recorded": "filled only from the owner's first exposure on ?extreme90p32=1 (COPY ALL RESULTS JSON carries time, restarts, Undo, moves, attempts per run) and the owner's own ratings; nothing is inferred",
+    "recorded": "2026-11-02",
+    "source": "data/dev/extreme90_p32/owner_decisions_n88_n93.json"
+   },
+   "owner_decision": {
+    "decision": "NOT APPROVED",
+    "recorded": "2026-11-02",
+    "file": "data/dev/extreme90_p32/owner_decisions_n88_n93.json"
+   }
+  }
+ ]
+}

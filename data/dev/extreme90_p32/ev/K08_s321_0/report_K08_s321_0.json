@@ -1,0 +1,131 @@
+{
+ "K08_s321_0": {
+  "A": {
+   "fingerprint": "8723a188a0c922b473be42f0c3304e45b3a370e384db3207616eb5cc7f5fcb23",
+   "hint_nodes": [
+    90,
+    93
+   ],
+   "parity": [
+    0,
+    0
+   ],
+   "portals": 0,
+   "position_cap": 2000,
+   "positions": 213,
+   "replay": true,
+   "solution": 14,
+   "solve_ms": 6.1,
+   "timeup_worst_ms": 8.6,
+   "timeup_worst_nodes": 112,
+   "winnable": 40
+  },
+  "B": {
+   "coverage": 0.79,
+   "decision_steps": 11,
+   "distinct_mistakes": 5,
+   "endgame_decision": true,
+   "last_decision": 12,
+   "late": 0.86,
+   "line": [
+    "r5c2^ [x3]",
+    "r5c1^ [x2]",
+    "r4c6v [x3]",
+    "r3c6> [x2]",
+    "r4c5> [x2]",
+    "r4c4> [x2]",
+    "r5c4< [x1]",
+    "r3c4v [x1]",
+    "r3c3<",
+    "r2c3> [x1]",
+    "r4c3< [x1]",
+    "r3c3v [x1]",
+    "r1c3v",
+    "r5c5^"
+   ],
+   "losing_per_step": [
+    3,
+    2,
+    3,
+    2,
+    2,
+    2,
+    1,
+    1,
+    0,
+    1,
+    1,
+    1,
+    0,
+    0
+   ],
+   "matters_magnet": true,
+   "matters_switch": true,
+   "mistakes": [
+    "r3c3<",
+    "r3c6>",
+    "r5c1^",
+    "r5c4<",
+    "r5c5^"
+   ],
+   "shortcut": 0.04,
+   "spinner_dependence": "without it: 9 decision steps, 2 distinct mistakes (with it: 11, 5)",
+   "without_magnet": "unsolvable without it",
+   "without_switch": "without it: 8 decision steps, 4 distinct mistakes (with it: 11, 5)"
+  },
+  "C": {
+   "decisions_k4_6_8": [
+    8,
+    6,
+    4
+   ],
+   "deepest": 12,
+   "greedy": {
+    "look2": 0.015,
+    "look4": 0.017,
+    "min_turn": 0.04,
+    "mobility": 0,
+    "safe": 0.015
+   },
+   "hidden_k6_8": [
+    11,
+    7
+   ],
+   "learner": {
+    "look4": 2,
+    "look6": 0
+   },
+   "look6_greedy": 0.033,
+   "opening": "2 / 5",
+   "pressure": {
+    "advances": 0,
+    "calm_prefix": 2,
+    "flips": 0,
+    "multi_turned": 1,
+    "prediction_share": 0.29,
+    "pulls": 1,
+    "rams": 0,
+    "signals": 0,
+    "spinners_turned": 4,
+    "trap_delay_median": 6,
+    "turns": 5,
+    "undo_proof": 0.79
+   },
+   "win_share": 0.188
+  },
+  "map": [
+   ". . . . . . .",
+   ". . . Rv . . .",
+   ". . . Gv@- . . .",
+   ". . . G<* Yv Bv&A P>",
+   ". . . Y>@- Yv@- G^@ Pv@",
+   ". P^&A R^@ . R< P^%A .",
+   ". . . . . . ."
+  ],
+  "name": "K08_s321_0",
+  "target": "EXTREME",
+  "verdict": "HUMAN-REVIEW CANDIDATE",
+  "why_a": [],
+  "why_b": []
+ }
+}

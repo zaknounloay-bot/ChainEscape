@@ -1,0 +1,24 @@
+K01_TWOGROUPKEYS_s321_0 filler         ['r1c0 Pv@-#Y']
+K01_TWOGROUPKEYS_s321_1 filler         ['r1c0 Pv#Y']
+K01_TWOGROUPKEYS_s321_2 filler         ['r0c1 P<#Y', 'r1c1 P^#Y']
+K01_TWOGROUPKEYS_s321_3 PASS           []
+K01_TWOGROUPKEYS_s321_4 PASS           []
+K01_TWOGROUPKEYS_s321_5 filler         ['r1c0 Pv#Y']
+K01_TWOGROUPKEYS_s321_6 not essential  {'spinner_dependence': 'without it: 13 decision steps, 3 distinct mistakes (with it: 14, 4)'}
+K01_TWOGROUPKEYS_s321_7 PASS           []
+K01_TWOGROUPKEYS_s321_8 not essential  {'spinner_dependence': 'without it: 14 decision steps, 3 distinct mistakes (with it: 15, 4)'}
+K01_TWOGROUPKEYS_s321_9 PASS           []
+K01_TWOGROUPKEYS_s321_10 not essential  {'spinner_dependence': 'without it: 14 decision steps, 3 distinct mistakes (with it: 15, 4)'}
+SCREEN: 11 boards, 4 PASS
+K01_TWOGROUPKEYS_s321_0 filler         
+K01_TWOGROUPKEYS_s321_1 filler         
+K01_TWOGROUPKEYS_s321_2 filler         
+K01_TWOGROUPKEYS_s321_3 PASS           PASS
+K01_TWOGROUPKEYS_s321_4 PASS           PASS
+K01_TWOGROUPKEYS_s321_5 filler         
+K01_TWOGROUPKEYS_s321_6 not essential  
+K01_TWOGROUPKEYS_s321_7 PASS           PASS
+K01_TWOGROUPKEYS_s321_8 not essential  
+K01_TWOGROUPKEYS_s321_9 PASS           PASS
+K01_TWOGROUPKEYS_s321_10 not essential  
+SCREEN30: 11 boards, 4 PASS

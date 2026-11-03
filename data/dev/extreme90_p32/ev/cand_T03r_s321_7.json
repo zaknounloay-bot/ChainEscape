@@ -1,0 +1,19 @@
+{
+ "T03r_s321_7": {
+  "map": [
+   ". . . . . . .",
+   ". . Y>@ G>@~ . . .",
+   ". R^@~ P<@ Y>@~ . G<@- P>@~",
+   ". B^* Y^@- R<* Rv#Y Yv Y>@",
+   ". Y<@- . . . . .",
+   ". . . B^#Y . . P^",
+   ". . . . . . ."
+  ],
+  "mechanic": "magnet,lock",
+  "run": "T03r_PULLTHEKEY_s321",
+  "rules": [
+   "S_p30"
+  ],
+  "screen_key": "T03r_PULLTHEKEY_s321_7"
+ }
+}

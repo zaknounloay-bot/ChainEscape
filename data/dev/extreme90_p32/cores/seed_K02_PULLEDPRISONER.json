@@ -1,0 +1,58 @@
+{
+ "target": "EXTREME",
+ "facts": [],
+ "max_positions": 2000,
+ "piece_free": 13,
+ "max_pieces": 17,
+ "shortcut_weight": 80,
+ "coverage_weight": 25,
+ "late_weight": 20,
+ "endgame_weight": 20,
+ "length_weight": 1.0,
+ "length_cap": 18,
+ "pressure_weight": 1.5,
+ "palette": "all",
+ "suffix_rate": 0.3,
+ "crates_max": 0,
+ "size": "medium",
+ "max_solve_nodes": 1500,
+ "spinners_max": 4,
+ "strict_essential": true,
+ "token_guard": true,
+ "core_essential": true,
+ "mechanic": "magnet,lock",
+ "suffixes": [
+  "#Y",
+  "*"
+ ],
+ "suffix_max": {
+  "#Y": 3,
+  "*": 2
+ },
+ "idea": "the magnet frees a deadlock: the key and its prisoner block each other; only a magnet pulling the PRISONER out of the key's lane breaks it - so what stands behind the magnet when it leaves decides everything",
+ "map": [
+  ". . . . . . .",
+  ". . . . . . .",
+  ". . . P^#Y G>* . .",
+  ". . . . . . .",
+  ". . . Y^ . . .",
+  ". . . . . . .",
+  ". . . . . . ."
+ ],
+ "family": "P32 K02_PULLEDPRISONER",
+ "phase32_core": "K02_PULLEDPRISONER",
+ "frozen": [
+  [
+   2,
+   3
+  ],
+  [
+   2,
+   4
+  ],
+  [
+   4,
+   3
+  ]
+ ]
+}

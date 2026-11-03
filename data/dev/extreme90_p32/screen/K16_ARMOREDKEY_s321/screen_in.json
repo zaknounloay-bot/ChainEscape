@@ -1,0 +1,211 @@
+{
+ "K16_ARMOREDKEY_s321_0": {
+  "map": [
+   ". . . . . . .",
+   ". Rv%A B<= Y>&A= . P^#Y .",
+   ". . . G> . . .",
+   ". . . R>@ . Bv@~ .",
+   ". R<@ . R^ . . .",
+   ". . . Y^@~ . . .",
+   "G>%A . B>&A Bv Rv@- G^@- Rv@-"
+  ],
+  "target": "EXTREME",
+  "facts": [],
+  "mechanic": "armor,switch,lock",
+  "max_positions": 2000,
+  "overlap": [
+   0.35,
+   "N60"
+  ]
+ },
+ "K16_ARMOREDKEY_s321_1": {
+  "map": [
+   ". . . Y<@ . . .",
+   ". Rv%A B<= Y>&A= . P^#Y .",
+   ". . . G> . . .",
+   ". . . R>@ . Yv@~ .",
+   ". R<@ . R^ . . .",
+   ". . . . . . .",
+   "G>%A . B>&A Bv Rv@- G^@- Rv@-"
+  ],
+  "target": "EXTREME",
+  "facts": [],
+  "mechanic": "armor,switch,lock",
+  "max_positions": 2000,
+  "overlap": [
+   0.35,
+   "N55"
+  ]
+ },
+ "K16_ARMOREDKEY_s321_2": {
+  "map": [
+   ". . . . . . .",
+   ". Rv%A Bv= Y>&A= . P^#Y .",
+   ". . . G> . . .",
+   ". . . R>@ . . .",
+   ". R<@ . R^ . . .",
+   ". . . Y^@~ . . .",
+   "G>%A . B>&A Bv Rv@- G^@- Rv@-"
+  ],
+  "target": "EXTREME",
+  "facts": [],
+  "mechanic": "armor,switch,lock",
+  "max_positions": 2000,
+  "overlap": [
+   0.37,
+   "N60"
+  ]
+ },
+ "K16_ARMOREDKEY_s321_3": {
+  "map": [
+   ". . . . . . .",
+   ". Rv%A B<= Y>&A= . P^#Y .",
+   ". . . G> . . .",
+   ". . . R>@ . . .",
+   ". R<@ . R^ . . .",
+   ". . . Y^@~ . . .",
+   "G>%A . B>&A Bv Rv@- G^@- R^@-"
+  ],
+  "target": "EXTREME",
+  "facts": [],
+  "mechanic": "armor,switch,lock",
+  "max_positions": 2000,
+  "overlap": [
+   0.37,
+   "N60"
+  ]
+ },
+ "K16_ARMOREDKEY_s321_4": {
+  "map": [
+   ". . . . . . .",
+   ". Rv%A B<= Y>&A= . P^#Y .",
+   ". . . G> . . .",
+   ". . . R>@ . . .",
+   ". R<@ . R^ . . .",
+   ". . . Y^@~ . . .",
+   "G>%A . B>&A Bv Rv@- G^@- Rv@-"
+  ],
+  "target": "EXTREME",
+  "facts": [],
+  "mechanic": "armor,switch,lock",
+  "max_positions": 2000,
+  "overlap": [
+   0.37,
+   "N60"
+  ]
+ },
+ "K16_ARMOREDKEY_s321_6": {
+  "map": [
+   ". . P>@~ Y<@ . . .",
+   ". Rv%A Bv= Y>&A= . P^#Y .",
+   ". . . G> . . .",
+   ". . . R>@ . . .",
+   ". . . R^ . Rv@ .",
+   ". . . Y^@~ . . .",
+   "G>%A . B>&A Bv R^@ G^@- Rv@-"
+  ],
+  "target": "EXTREME",
+  "facts": [],
+  "mechanic": "armor,switch,lock",
+  "max_positions": 2000,
+  "overlap": [
+   0.33,
+   "N60"
+  ]
+ },
+ "K16_ARMOREDKEY_s321_7": {
+  "map": [
+   ". . P>@~ Y<@ . . .",
+   ". Rv%A B<= Y>&A= . P^#Y .",
+   ". G> . G> . . .",
+   ". . . R>@ . . .",
+   ". . . R^ . . .",
+   ". . . Y^@~ . . .",
+   "G>%A . B>&A Bv R^@ G^@- Rv@-"
+  ],
+  "target": "EXTREME",
+  "facts": [],
+  "mechanic": "armor,switch,lock",
+  "max_positions": 2000,
+  "overlap": [
+   0.33,
+   "N39"
+  ]
+ },
+ "K16_ARMOREDKEY_s321_8": {
+  "map": [
+   ". . P>@~ Y<@ . . .",
+   ". Rv%A B<= Y>&A= . P^#Y .",
+   ". G> . G> . . .",
+   ". . . R>@ . . .",
+   ". . . R^ . . .",
+   ". . . Y^@~ . . .",
+   "G>%A . B>&A Bv R^@ G<@ Rv@-"
+  ],
+  "target": "EXTREME",
+  "facts": [],
+  "mechanic": "armor,switch,lock",
+  "max_positions": 2000,
+  "overlap": [
+   0.33,
+   "N39"
+  ]
+ },
+ "K16_ARMOREDKEY_s321_9": {
+  "map": [
+   ". . . Y<@ . . .",
+   ". Rv%A B<= Y>&A= . P^#Y .",
+   ". . . G> . . .",
+   ". . . R>@ . Yv@~ .",
+   ". R<@ . R^ . . .",
+   ". . . Y^@~ . . .",
+   "G>%A . B>&A Bv Rv@- G^@- Rv@-"
+  ],
+  "target": "EXTREME",
+  "facts": [],
+  "mechanic": "armor,switch,lock",
+  "max_positions": 2000,
+  "overlap": [
+   0.33,
+   "N60"
+  ]
+ },
+ "K16_ARMOREDKEY_s321_10": {
+  "map": [
+   ". . . Y<@ . . .",
+   ". Rv%A B<= Y>&A= . P^#Y .",
+   ". . . G> . . .",
+   ". . . R>@ . Yv@~ .",
+   ". R<@- . R^ . . .",
+   ". . . Y^@~ . . .",
+   "G>%A . B>&A Bv Rv@- G^@- Rv@-"
+  ],
+  "target": "EXTREME",
+  "facts": [],
+  "mechanic": "armor,switch,lock",
+  "max_positions": 2000,
+  "overlap": [
+   0.33,
+   "N60"
+  ]
+ },
+ "K16_ARMOREDKEY_s321_11": {
+  "map": [
+   ". . . Y<@ . . .",
+   ". Rv%A B<= Y>&A= . P^#Y .",
+   ". . . G> . . .",
+   ". . . R>@ . Yv@ .",
+   ". R<@ . R^ . . .",
+   ". . . Y^@~ . . .",
+   "G>%A . B>&A Bv Rv@- G^@- Rv@-"
+  ],
+  "target": "EXTREME",
+  "facts": [],
+  "mechanic": "armor,switch,lock",
+  "max_positions": 2000,
+  "overlap": [
+   0.33,
+   "N60"
+  ]
+ }
+}

@@ -1,0 +1,82 @@
+{
+ "K16_ARMOREDKEY_s321_5": {
+  "result": "overlap",
+  "detail": [
+   0.42,
+   "N60"
+  ]
+ },
+ "K16_ARMOREDKEY_s321_0": {
+  "result": "not essential",
+  "detail": {
+   "without_armor": "without it: 13 decision steps, 4 distinct mistakes (with it: 15, 4)",
+   "without_lock": "without it: 14 decision steps, 5 distinct mistakes (with it: 15, 4)"
+  }
+ },
+ "K16_ARMOREDKEY_s321_1": {
+  "result": "not essential",
+  "detail": {
+   "without_armor": "without it: 13 decision steps, 4 distinct mistakes (with it: 15, 4)",
+   "without_lock": "without it: 14 decision steps, 5 distinct mistakes (with it: 15, 4)"
+  }
+ },
+ "K16_ARMOREDKEY_s321_2": {
+  "result": "not essential",
+  "detail": {
+   "without_armor": "without it: 12 decision steps, 4 distinct mistakes (with it: 14, 4)"
+  }
+ },
+ "K16_ARMOREDKEY_s321_3": {
+  "result": "not essential",
+  "detail": {
+   "without_armor": "without it: 12 decision steps, 4 distinct mistakes (with it: 14, 4)",
+   "without_lock": "without it: 13 decision steps, 6 distinct mistakes (with it: 14, 4)"
+  }
+ },
+ "K16_ARMOREDKEY_s321_4": {
+  "result": "not essential",
+  "detail": {
+   "without_armor": "without it: 12 decision steps, 4 distinct mistakes (with it: 14, 4)"
+  }
+ },
+ "K16_ARMOREDKEY_s321_6": {
+  "result": "not essential",
+  "detail": {
+   "without_armor": "without it: 14 decision steps, 4 distinct mistakes (with it: 16, 4)",
+   "without_lock": "without it: 15 decision steps, 3 distinct mistakes (with it: 16, 4)"
+  }
+ },
+ "K16_ARMOREDKEY_s321_7": {
+  "result": "not essential",
+  "detail": {
+   "without_armor": "without it: 14 decision steps, 4 distinct mistakes (with it: 16, 4)"
+  }
+ },
+ "K16_ARMOREDKEY_s321_8": {
+  "result": "not essential",
+  "detail": {
+   "without_armor": "without it: 14 decision steps, 4 distinct mistakes (with it: 16, 4)"
+  }
+ },
+ "K16_ARMOREDKEY_s321_9": {
+  "result": "not essential",
+  "detail": {
+   "without_armor": "without it: 14 decision steps, 4 distinct mistakes (with it: 16, 4)",
+   "without_lock": "without it: 15 decision steps, 5 distinct mistakes (with it: 16, 4)"
+  }
+ },
+ "K16_ARMOREDKEY_s321_10": {
+  "result": "not essential",
+  "detail": {
+   "without_armor": "without it: 14 decision steps, 4 distinct mistakes (with it: 16, 4)",
+   "without_lock": "without it: 15 decision steps, 5 distinct mistakes (with it: 16, 4)"
+  }
+ },
+ "K16_ARMOREDKEY_s321_11": {
+  "result": "not essential",
+  "detail": {
+   "without_armor": "without it: 14 decision steps, 4 distinct mistakes (with it: 16, 4)",
+   "without_lock": "without it: 15 decision steps, 5 distinct mistakes (with it: 16, 4)"
+  }
+ }
+}

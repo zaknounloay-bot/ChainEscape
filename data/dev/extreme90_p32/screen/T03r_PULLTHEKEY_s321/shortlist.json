@@ -1,0 +1,158 @@
+{
+ "T03r_PULLTHEKEY_s321_0": {
+  "map": [
+   ". . . . . . .",
+   ". . Y>@ G>@~ . . .",
+   ". R^@~ P<@ Y>@~ . G<@- P>@~",
+   ". B^* Y<@ R<* Rv#Y Yv Y>@",
+   ". Y<@- . . . . .",
+   ". . . B^#Y . . P^",
+   ". . . . . . ."
+  ],
+  "mechanic": "magnet,lock",
+  "positions": 217,
+  "overlap": 0.33,
+  "rules": [
+   "S_old",
+   "S_p30"
+  ]
+ },
+ "T03r_PULLTHEKEY_s321_1": {
+  "map": [
+   ". . . . . . .",
+   ". . Y>@ G>@~ . . .",
+   ". R^@~ P<@ Y>@~ . G<@- P>@~",
+   ". . Y^@- R<* Rv#Y Yv Y>@",
+   ". Y<@- . . . . .",
+   ". . Bv@ B^#Y . . P^",
+   ". . . . . . ."
+  ],
+  "mechanic": "magnet,lock",
+  "positions": 269,
+  "overlap": 0.33,
+  "rules": [
+   "S_old",
+   "S_p30"
+  ]
+ },
+ "T03r_PULLTHEKEY_s321_2": {
+  "map": [
+   ". . . . . . .",
+   ". . Y>@ G>@~ . . .",
+   ". R< P<@ Y>@~ . G<@- P>@~",
+   ". . Y^@- R<* Rv#Y Yv Y>@",
+   ". Y<@- . . . . .",
+   ". . Bv@ B^#Y . . P^",
+   ". . . . . . ."
+  ],
+  "mechanic": "magnet,lock",
+  "positions": 269,
+  "overlap": 0.33,
+  "rules": [
+   "S_old",
+   "S_p30"
+  ]
+ },
+ "T03r_PULLTHEKEY_s321_3": {
+  "map": [
+   ". . . . . . .",
+   ". . Y>@ G> . . .",
+   ". . . Y>@~ . . Pv@-",
+   ". B^* . R<* Rv#Y Yv Y>@~",
+   ". Y> . . . . .",
+   ". . . B^#Y . B^@~ B^@~",
+   ". . . . . G>@~ ."
+  ],
+  "mechanic": "magnet,lock",
+  "positions": 273,
+  "overlap": 0.35,
+  "rules": [
+   "S_old"
+  ]
+ },
+ "T03r_PULLTHEKEY_s321_4": {
+  "map": [
+   ". . . . . . .",
+   ". . Y>@ G> . . .",
+   ". . . Y>@~ . . Pv@-",
+   ". B^* . R<* Rv#Y Yv Y>@~",
+   ". Y> . . . . .",
+   ". . . B^#Y . . B^@~",
+   ". . . . . G>@~ ."
+  ],
+  "mechanic": "magnet,lock",
+  "positions": 277,
+  "overlap": 0.37,
+  "rules": [
+   "S_old"
+  ]
+ },
+ "T03r_PULLTHEKEY_s321_5": {
+  "map": [
+   ". . . . . . .",
+   ". . Y>@ G> . . .",
+   ". . . Y>@~ . . Pv@-",
+   ". B^* . R<* Rv#Y Yv Y>@-",
+   ". Y> . . . . .",
+   ". . . B^#Y . . B^@~",
+   ". . . . . G>@~ ."
+  ],
+  "mechanic": "magnet,lock",
+  "positions": 277,
+  "overlap": 0.37,
+  "rules": [
+   "S_old"
+  ]
+ },
+ "T03r_PULLTHEKEY_s321_6": {
+  "map": [
+   ". . . . . . .",
+   ". . Y>@ G>@~ . . .",
+   ". R^@~ P<@ Y>@~ . G<@- P>@~",
+   ". B^* Y^@- R<* Rv#Y Yv Y>@",
+   ". Y<@- . . . . .",
+   ". . . B^#Y . . P^",
+   ". . . P< . . ."
+  ],
+  "mechanic": "magnet,lock",
+  "positions": 799,
+  "overlap": 0.32,
+  "rules": [
+   "S_p30"
+  ]
+ },
+ "T03r_PULLTHEKEY_s321_7": {
+  "map": [
+   ". . . . . . .",
+   ". . Y>@ G>@~ . . .",
+   ". R^@~ P<@ Y>@~ . G<@- P>@~",
+   ". B^* Y^@- R<* Rv#Y Yv Y>@",
+   ". Y<@- . . . . .",
+   ". . . B^#Y . . P^",
+   ". . . . . . ."
+  ],
+  "mechanic": "magnet,lock",
+  "positions": 398,
+  "overlap": 0.33,
+  "rules": [
+   "S_p30"
+  ]
+ },
+ "T03r_PULLTHEKEY_s321_8": {
+  "map": [
+   ". . . . . . .",
+   ". . Y>@ G> . . .",
+   ". R>@~ . Y>@~ . G>@ P>",
+   ". B^* . R<* Rv#Y Yv Y>@~",
+   ". Y> . . P>@~ . .",
+   ". . Bv@ B^#Y . . P^@",
+   ". . . . . G>@~ ."
+  ],
+  "mechanic": "magnet,lock",
+  "positions": 459,
+  "overlap": 0.33,
+  "rules": [
+   "S_p30"
+  ]
+ }
+}

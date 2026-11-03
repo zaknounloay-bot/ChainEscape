@@ -1,0 +1,206 @@
+{
+ "K08_PULLEDTARGET_s321_0": {
+  "map": [
+   ". . . . . . .",
+   ". . . Rv . . .",
+   ". . . Gv@- . . .",
+   ". . . G<* Yv Bv&A P>",
+   ". . . Y>@- Yv@- G^@ Pv@",
+   ". P^&A R^@ . R< P^%A .",
+   ". . . . . . ."
+  ],
+  "mechanic": "magnet,switch",
+  "positions": 213,
+  "overlap": 0.35,
+  "rules": [
+   "S_old"
+  ]
+ },
+ "K08_PULLEDTARGET_s321_1": {
+  "map": [
+   ". . . . . . .",
+   ". . . Rv R^@~ . .",
+   ". . . Gv@- . . .",
+   ". . . G<* Yv Bv&A P>",
+   ". . . Y>@- Yv@- G^@ P^@~",
+   ". P^&A R^@ . R< P^%A .",
+   ". . . . . . ."
+  ],
+  "mechanic": "magnet,switch",
+  "positions": 242,
+  "overlap": 0.35,
+  "rules": [
+   "S_old"
+  ]
+ },
+ "K08_PULLEDTARGET_s321_2": {
+  "map": [
+   ". . . . . . .",
+   ". . . Rv* Rv@ . .",
+   ". . . Gv@- . . Rv@-",
+   ". . R<@~ G<* Yv Bv&A P>@",
+   ". . . Y^@~ Yv@- G^@ Pv@",
+   ". P^&A . . R< P^%A .",
+   ". . . . . . ."
+  ],
+  "mechanic": "magnet,switch",
+  "positions": 257,
+  "overlap": 0.45,
+  "rules": [
+   "S_old"
+  ]
+ },
+ "K08_PULLEDTARGET_s321_3": {
+  "map": [
+   ". . . . . . .",
+   ". . . Rv* Rv&A . .",
+   ". . . G^@~ . . Rv@-",
+   ". . . G<* Yv Bv&A P>",
+   ". . . Y>@- . G^@ P^@~",
+   ". P^&A R^@ . R< P^%A .",
+   ". . . . . . ."
+  ],
+  "mechanic": "magnet,switch",
+  "positions": 258,
+  "overlap": 0.4,
+  "rules": [
+   "S_old"
+  ]
+ },
+ "K08_PULLEDTARGET_s321_4": {
+  "map": [
+   ". . . . . . .",
+   ". . . Rv R^@~ . .",
+   ". . . Gv@- . . Rv@-",
+   ". . . G<* Yv Bv&A P>",
+   ". . . Y>@- Yv@- G^@ Pv@",
+   ". . R^@ . R< P^%A .",
+   ". . . . . . ."
+  ],
+  "mechanic": "magnet,switch",
+  "positions": 296,
+  "overlap": 0.35,
+  "rules": [
+   "S_old"
+  ]
+ },
+ "K08_PULLEDTARGET_s321_5": {
+  "map": [
+   ". . . . . . .",
+   ". . . Rv* R^@~ . .",
+   ". . . Gv@- . . .",
+   ". . . G<* Yv Bv&A P>",
+   ". . . Y>@- Yv@- G^@ Pv@",
+   ". P^&A R^@ . R< P^%A R>",
+   ". . . . . . ."
+  ],
+  "mechanic": "magnet,switch",
+  "positions": 302,
+  "overlap": 0.39,
+  "rules": [
+   "S_old"
+  ]
+ },
+ "K08_PULLEDTARGET_s321_6": {
+  "map": [
+   ". . . . . . .",
+   ". . P<&A Rv* R^@~ . .",
+   ". . . Gv@- . . Rv@-",
+   ". . . G<* Yv Bv&A P>",
+   ". . . Y>@- . G^@ Pv@",
+   ". P^&A R^@ . R< P^%A R>",
+   ". . . . . . ."
+  ],
+  "mechanic": "magnet,switch",
+  "positions": 497,
+  "overlap": 0.32,
+  "rules": [
+   "S_p30"
+  ]
+ },
+ "K08_PULLEDTARGET_s321_7": {
+  "map": [
+   ". . . . . . .",
+   ". . . Rv* R^@~ . .",
+   ". . . Gv@- . . Rv@-",
+   ". . . G<* Yv Bv&A P>",
+   ". . . Y>@- . G^@ Pv@",
+   ". P^&A R^@ . R< P^%A R>",
+   ". B^@ . . . . ."
+  ],
+  "mechanic": "magnet,switch",
+  "positions": 678,
+  "overlap": 0.32,
+  "rules": [
+   "S_p30"
+  ]
+ },
+ "K08_PULLEDTARGET_s321_8": {
+  "map": [
+   ". . . . . . .",
+   ". . . Rv* R^@~ . .",
+   ". . . Gv@- . . Rv@-",
+   ". . . G<* Yv Bv&A P>",
+   ". . . Y>@- . G^@ Pv@",
+   ". P^&A R^@ . R<&A P^%A R>",
+   ". B^@ . . . . ."
+  ],
+  "mechanic": "magnet,switch",
+  "positions": 678,
+  "overlap": 0.32,
+  "rules": [
+   "S_p30"
+  ]
+ },
+ "K08_PULLEDTARGET_s321_9": {
+  "map": [
+   ". . . . . . .",
+   ". . . Rv* R^@~ . .",
+   ". . . Gv@- . . Rv@-",
+   ". . . G<* Yv Bv&A P>",
+   ". . . Y>@- . G^@ Pv@",
+   ". P^ R^@ . R< P^%A R>",
+   ". B^@ . . . . ."
+  ],
+  "mechanic": "magnet,switch",
+  "positions": 678,
+  "overlap": 0.32,
+  "rules": [
+   "S_p30"
+  ]
+ },
+ "K08_PULLEDTARGET_s321_10": {
+  "map": [
+   ". . . . . . .",
+   ". . . Rv* R^@~ . .",
+   ". . . Gv@- . . .",
+   ". . . G<* Y^@- Bv&A P^@",
+   ". . . Y>@- Yv&A G^@ Pv@",
+   ". P^ R^@ . R< P^%A .",
+   ". . . . . . ."
+  ],
+  "mechanic": "magnet,switch",
+  "positions": 843,
+  "overlap": 0.32,
+  "rules": [
+   "S_p30"
+  ]
+ },
+ "K08_PULLEDTARGET_s321_11": {
+  "map": [
+   ". . . . . . .",
+   ". . . Rv* R^@~ . .",
+   ". . . Gv@- . . .",
+   ". . . G<* Yv Bv&A P>",
+   ". . . Y>@- Yv@- G^@ Pv@",
+   ". P^&A R^@ . R< P^%A Yv@~",
+   ". . . . . . ."
+  ],
+  "mechanic": "magnet,switch",
+  "positions": 302,
+  "overlap": 0.33,
+  "rules": [
+   "S_p30"
+  ]
+ }
+}

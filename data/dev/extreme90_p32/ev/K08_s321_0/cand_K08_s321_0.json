@@ -1,0 +1,17 @@
+{
+ "K08_s321_0": {
+  "map": [
+   ". . . . . . .",
+   ". . . Rv . . .",
+   ". . . Gv@- . . .",
+   ". . . G<* Yv Bv&A P>",
+   ". . . Y>@- Yv@- G^@ Pv@",
+   ". P^&A R^@ . R< P^%A .",
+   ". . . . . . ."
+  ],
+  "target": "EXTREME",
+  "facts": [],
+  "mechanic": "magnet,switch",
+  "max_positions": 2000
+ }
+}

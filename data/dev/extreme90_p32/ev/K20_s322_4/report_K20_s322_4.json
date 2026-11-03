@@ -1,0 +1,132 @@
+{
+ "K20_s322_4": {
+  "A": {
+   "fingerprint": "6476433ba9697cb93c711aab4ddc22de1c175a663fd598f2d89396a7d06feb1f",
+   "hint_nodes": [
+    226,
+    134
+   ],
+   "parity": [
+    0,
+    0
+   ],
+   "portals": 0,
+   "position_cap": 2000,
+   "positions": 479,
+   "replay": true,
+   "solution": 15,
+   "solve_ms": 14,
+   "timeup_worst_ms": 16.4,
+   "timeup_worst_nodes": 227,
+   "winnable": 85
+  },
+  "B": {
+   "coverage": 0.87,
+   "decision_steps": 13,
+   "distinct_mistakes": 4,
+   "endgame_decision": true,
+   "last_decision": 13,
+   "late": 0.87,
+   "line": [
+    "r3c4v [x2]",
+    "r0c0^ [x2]",
+    "r0c2< [x3]",
+    "r0c3< [x3]",
+    "r1c2^ [x3]",
+    "r1c2^ [x2]",
+    "r1c5> [x2]",
+    "r0c5< [x2]",
+    "r3c0> [x2]",
+    "r2c0v [x2]",
+    "r2c4< [x1]",
+    "r2c6< [x1]",
+    "r1c0^ [x1]",
+    "r1c5>",
+    "r1c1>"
+   ],
+   "losing_per_step": [
+    2,
+    2,
+    3,
+    3,
+    3,
+    2,
+    2,
+    2,
+    2,
+    2,
+    1,
+    1,
+    1,
+    0,
+    0
+   ],
+   "matters_lock": true,
+   "matters_magnet": true,
+   "mistakes": [
+    "r1c1^",
+    "r1c5>",
+    "r1c0<",
+    "r1c1v"
+   ],
+   "shortcut": 0.01,
+   "spinner_dependence": "unsolvable without it",
+   "without_lock": "without it: 10 decision steps, 2 distinct mistakes (with it: 13, 4)",
+   "without_magnet": "unsolvable without it"
+  },
+  "C": {
+   "decisions_k4_6_8": [
+    9,
+    7,
+    5
+   ],
+   "deepest": 13,
+   "greedy": {
+    "look2": 0,
+    "look4": 0,
+    "min_turn": 0.01,
+    "mobility": 0,
+    "safe": 0
+   },
+   "hidden_k6_8": [
+    15,
+    11
+   ],
+   "learner": {
+    "look4": 7,
+    "look6": 8
+   },
+   "look6_greedy": 0,
+   "opening": "2 / 4",
+   "pressure": {
+    "advances": 0,
+    "calm_prefix": 1,
+    "flips": 0,
+    "multi_turned": 2,
+    "prediction_share": 0.47,
+    "pulls": 3,
+    "rams": 0,
+    "signals": 2,
+    "spinners_turned": 4,
+    "trap_delay_median": 7,
+    "turns": 7,
+    "undo_proof": 0.77
+   },
+   "win_share": 0.177
+  },
+  "map": [
+   "G^@~ . P<@~ P< . Yv@~ .",
+   "Bv@ Y^@- R^* . . R>* .",
+   "P>@~ . P^* . R< . Y<@",
+   "B> . G>#B . Bv@- . .",
+   ". . . . . . .",
+   ". . . . . . .",
+   ". . . . . . ."
+  ],
+  "name": "K20_s322_4",
+  "target": "EXTREME",
+  "verdict": "HUMAN-REVIEW CANDIDATE",
+  "why_a": [],
+  "why_b": []
+ }
+}

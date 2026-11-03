@@ -1,0 +1,17 @@
+{
+ "T03r_s321_0": {
+  "map": [
+   ". . . . . . .",
+   ". . Y>@ G>@~ . . .",
+   ". R^@~ P<@ Y>@~ . G<@- P>@~",
+   ". B^* Y<@ R<* Rv#Y Yv Y>@",
+   ". Y<@- . . . . .",
+   ". . . B^#Y . . P^",
+   ". . . . . . ."
+  ],
+  "target": "EXTREME",
+  "facts": [],
+  "mechanic": "magnet,lock",
+  "max_positions": 2000
+ }
+}

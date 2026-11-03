@@ -1,0 +1,206 @@
+{
+ "K06_TWOGROUPLADDER_s321_0": {
+  "map": [
+   "Y<@~ R<%B P<%B . . Bv%A .",
+   ". . . . . . .",
+   ". P^#Y&B . . G<#P . .",
+   ". . . . . . .",
+   ". Y^&A R^@~ G^@- P>@- . .",
+   ". Gv&A . . . . .",
+   "R>%A . . . . . R<&B"
+  ],
+  "mechanic": "switch,lock",
+  "positions": 237,
+  "overlap": 0.36,
+  "rules": [
+   "S_old"
+  ]
+ },
+ "K06_TWOGROUPLADDER_s321_1": {
+  "map": [
+   ". R<%B P<&B . . Bv%A .",
+   "B>#Y Pv@- P<@~ Bv . . .",
+   "R>@~#P P^#Y&B . . G<#P . .",
+   ". Y^@ . . . . .",
+   ". Y^&A R^@~ G^@- P>@- . .",
+   ". Gv&A . . . . .",
+   "R>%A . . . . . ."
+  ],
+  "mechanic": "switch,lock",
+  "positions": 253,
+  "overlap": 0.29,
+  "rules": [
+   "S_old"
+  ]
+ },
+ "K06_TWOGROUPLADDER_s321_2": {
+  "map": [
+   "Y<@~ R<%B P<%B . . B<%A .",
+   "B>#Y . . . . . .",
+   ". P^#Y&B . . G<#P . .",
+   ". . . . . . .",
+   ". Y^&A R^@~ G^@- P>@- . .",
+   ". Gv&A . . . . .",
+   "R>%A . . . . . R<&B"
+  ],
+  "mechanic": "switch,lock",
+  "positions": 265,
+  "overlap": 0.35,
+  "rules": [
+   "S_old"
+  ]
+ },
+ "K06_TWOGROUPLADDER_s321_3": {
+  "map": [
+   "Y^@- R<%B P<%B . . Bv%A .",
+   "B>#Y . . . . . .",
+   ". P^#Y&B . . G<#P . .",
+   ". . . . . . .",
+   ". Y^&A R^@~ G^@- P>@- . .",
+   ". . . . . . .",
+   "R>%A . . . . . R<&B"
+  ],
+  "mechanic": "switch,lock",
+  "positions": 274,
+  "overlap": 0.3,
+  "rules": [
+   "S_old"
+  ]
+ },
+ "K06_TWOGROUPLADDER_s321_4": {
+  "map": [
+   ". R<%B P<&B . . Bv%A .",
+   "B>#Y Pv@- P<@~ . . . .",
+   "R>@~#P P^#Y&B . Rv G<#P . .",
+   ". Y^@ . . . . .",
+   ". Y^&A R^@~ G^@- P>@- . .",
+   ". Gv&A . . . . .",
+   "R>%A . . . . . ."
+  ],
+  "mechanic": "switch,lock",
+  "positions": 277,
+  "overlap": 0.32,
+  "rules": [
+   "S_old"
+  ]
+ },
+ "K06_TWOGROUPLADDER_s321_5": {
+  "map": [
+   ". R<%B P<&B . Bv@- Bv%A .",
+   "B>#Y . P<@~ . . . .",
+   "R>@~#P P^#Y&B . . G<#P . .",
+   ". Y^@ . . . . .",
+   ". Y^&A R^@~ G^@- P>@- . .",
+   ". Gv&A . . . . .",
+   "R>%A . . . . . ."
+  ],
+  "mechanic": "switch,lock",
+  "positions": 292,
+  "overlap": 0.29,
+  "rules": [
+   "S_old"
+  ]
+ },
+ "K06_TWOGROUPLADDER_s321_6": {
+  "map": [
+   ". R<%B P<%B . . Bv%A .",
+   "Bv@- Pv@- P<@~ . . . .",
+   "R>@~#P P^#Y&B . . G<#P . .",
+   ". . . . . . .",
+   ". Y^&A R^@~ G^@- P>@- . .",
+   ". . . . . . .",
+   "R>%A . . . . . ."
+  ],
+  "mechanic": "switch,lock",
+  "positions": 326,
+  "overlap": 0.26,
+  "rules": [
+   "S_p30"
+  ]
+ },
+ "K06_TWOGROUPLADDER_s321_7": {
+  "map": [
+   ". R<%B P<%B . . Bv%A .",
+   "Bv@- Pv@- P<@~ . . . .",
+   "R>@~#P P^#Y&B . . G<#P . .",
+   ". R^#Y . . . . .",
+   ". Y^&A R^@~ G^@- P>@- . Y>@",
+   ". . . . . . .",
+   "R>%A . . . . . ."
+  ],
+  "mechanic": "switch,lock",
+  "positions": 473,
+  "overlap": 0.28,
+  "rules": [
+   "S_p30"
+  ]
+ },
+ "K06_TWOGROUPLADDER_s321_8": {
+  "map": [
+   ". R<%B P<%B . . Bv%A .",
+   "B> Pv@- P<@~ . . . .",
+   "R>@~#P P^#Y&B . . G<#P . .",
+   ". . . . . . .",
+   ". Y^&A R^@~ G^@- P>@- . .",
+   ". Gv&A . . . . .",
+   "R>%A . Rv@~ . . . ."
+  ],
+  "mechanic": "switch,lock",
+  "positions": 607,
+  "overlap": 0.28,
+  "rules": [
+   "S_p30"
+  ]
+ },
+ "K06_TWOGROUPLADDER_s321_9": {
+  "map": [
+   "P^&B R<%B P<%B . . Bv%A .",
+   "B> Pv@- P<@~ . . . .",
+   "R>@~#P P^#Y&B . . G<#P . .",
+   ". . . . . . .",
+   ". Y^&A R^@~ G^@- P>@- . .",
+   ". Gv&A . . . . .",
+   "R>%A . . Pv@- . . ."
+  ],
+  "mechanic": "switch,lock",
+  "positions": 638,
+  "overlap": 0.28,
+  "rules": [
+   "S_p30"
+  ]
+ },
+ "K06_TWOGROUPLADDER_s321_10": {
+  "map": [
+   "P^&B R<%B P<%B . . Bv%A .",
+   "B> Pv@- P<@~ . . . .",
+   "R>@~#P P^#Y&B . . G<#P . P>@-",
+   ". . . . . . .",
+   ". Y^&A R^@~ G^@- P>@- . .",
+   ". Gv&A . . . . .",
+   "R>%A . . . . . ."
+  ],
+  "mechanic": "switch,lock",
+  "positions": 911,
+  "overlap": 0.28,
+  "rules": [
+   "S_p30"
+  ]
+ },
+ "K06_TWOGROUPLADDER_s321_11": {
+  "map": [
+   ". R<%B P<%B . . Bv%A Y>@~",
+   "B> Pv@- P<@~ . . . .",
+   "R>@~#P P^#Y&B . . G<#P . .",
+   ". . . . . . .",
+   ". Y^&A R^@~ G^@- P>@- . .",
+   ". Gv&A . . . . .",
+   "R>%A . . . . . ."
+  ],
+  "mechanic": "switch,lock",
+  "positions": 998,
+  "overlap": 0.28,
+  "rules": [
+   "S_p30"
+  ]
+ }
+}

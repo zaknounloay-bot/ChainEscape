@@ -1,0 +1,17 @@
+{
+ "K16_s322_11": {
+  "map": [
+   ". . . R^#Y . . .",
+   ". . B<= Y>&A= . P^#Y .",
+   "R<@~ . . Pv&A . G> .",
+   ". B<@~ Y^@ Yv@ B^@~ . .",
+   ". . . R^ . . .",
+   "R^ . . Y<@~ . . .",
+   "G>%A . . R>%A . . ."
+  ],
+  "target": "EXTREME",
+  "facts": [],
+  "mechanic": "armor,switch,lock",
+  "max_positions": 2000
+ }
+}

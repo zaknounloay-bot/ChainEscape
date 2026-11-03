@@ -1,0 +1,247 @@
+{
+ "T03r_PULLTHEKEY_s321_0": {
+  "result": "PASS",
+  "B": {
+   "coverage": 0.69,
+   "decision_steps": 11,
+   "distinct_mistakes": 5,
+   "endgame_decision": true,
+   "last_decision": 14,
+   "late": 0.88,
+   "losing_per_step": [
+    4,
+    4,
+    3,
+    1,
+    1,
+    1,
+    1,
+    1,
+    0,
+    0,
+    0,
+    1,
+    1,
+    1,
+    0,
+    0
+   ],
+   "matters_lock": true,
+   "matters_magnet": true,
+   "mistakes": [
+    "r1c3>",
+    "r2c6>",
+    "r3c5v",
+    "r4c1<",
+    "r3c3<"
+   ],
+   "shortcut": 0.042,
+   "spinner_dependence": "unsolvable without it",
+   "without_lock": "without it: 7 decision steps, 2 distinct mistakes (with it: 11, 5)",
+   "without_magnet": "unsolvable without it"
+  },
+  "A": {
+   "positions": 217,
+   "solution": 16,
+   "solve_ms": 13.4,
+   "timeup_worst_ms": 11
+  },
+  "overlap": [
+   0.33,
+   "N84"
+  ],
+  "filler": []
+ },
+ "T03r_PULLTHEKEY_s321_1": {
+  "result": "filler",
+  "B": {
+   "coverage": 0.75,
+   "decision_steps": 12,
+   "distinct_mistakes": 4,
+   "endgame_decision": true,
+   "last_decision": 14,
+   "late": 0.88,
+   "losing_per_step": [
+    3,
+    3,
+    3,
+    3,
+    1,
+    1,
+    1,
+    1,
+    1,
+    0,
+    0,
+    1,
+    1,
+    1,
+    0,
+    0
+   ],
+   "matters_lock": true,
+   "matters_magnet": true,
+   "mistakes": [
+    "r1c3>",
+    "r2c6>",
+    "r3c5v",
+    "r3c3<"
+   ],
+   "shortcut": 0.108,
+   "spinner_dependence": "unsolvable without it",
+   "without_lock": "without it: 8 decision steps, 1 distinct mistakes (with it: 12, 4)",
+   "without_magnet": "without it: 9 decision steps, 3 distinct mistakes (with it: 12, 4)"
+  },
+  "A": {
+   "positions": 269,
+   "solution": 16,
+   "solve_ms": 4.7,
+   "timeup_worst_ms": 5.9
+  },
+  "overlap": [
+   0.33,
+   "N34"
+  ],
+  "filler": [
+   "r3c2 Y^@-"
+  ]
+ },
+ "T03r_PULLTHEKEY_s321_2": {
+  "result": "filler",
+  "B": {
+   "coverage": 0.75,
+   "decision_steps": 12,
+   "distinct_mistakes": 4,
+   "endgame_decision": true,
+   "last_decision": 14,
+   "late": 0.88,
+   "losing_per_step": [
+    3,
+    3,
+    3,
+    3,
+    1,
+    1,
+    1,
+    1,
+    1,
+    0,
+    0,
+    1,
+    1,
+    1,
+    0,
+    0
+   ],
+   "matters_lock": true,
+   "matters_magnet": true,
+   "mistakes": [
+    "r1c3>",
+    "r2c6>",
+    "r3c5v",
+    "r3c3<"
+   ],
+   "shortcut": 0.108,
+   "spinner_dependence": "unsolvable without it",
+   "without_lock": "without it: 8 decision steps, 1 distinct mistakes (with it: 12, 4)",
+   "without_magnet": "without it: 9 decision steps, 3 distinct mistakes (with it: 12, 4)"
+  },
+  "A": {
+   "positions": 269,
+   "solution": 16,
+   "solve_ms": 5.2,
+   "timeup_worst_ms": 3.4
+  },
+  "overlap": [
+   0.33,
+   "N9"
+  ],
+  "filler": [
+   "r3c2 Y^@-"
+  ]
+ },
+ "T03r_PULLTHEKEY_s321_3": {
+  "result": "Category A/B",
+  "detail": [
+   "a simple greedy player wins 20% (> 20%): a shortcut"
+  ]
+ },
+ "T03r_PULLTHEKEY_s321_4": {
+  "result": "Category A/B",
+  "detail": [
+   "a simple greedy player wins 22% (> 20%): a shortcut"
+  ]
+ },
+ "T03r_PULLTHEKEY_s321_5": {
+  "result": "Category A/B",
+  "detail": [
+   "a simple greedy player wins 22% (> 20%): a shortcut"
+  ]
+ },
+ "T03r_PULLTHEKEY_s321_6": {
+  "result": "Category A/B",
+  "detail": [
+   "solve 100.6 ms (> 40)",
+   "the TIME UP check takes 44.0 ms in its worst position (> 40)"
+  ]
+ },
+ "T03r_PULLTHEKEY_s321_7": {
+  "result": "PASS",
+  "B": {
+   "coverage": 0.88,
+   "decision_steps": 14,
+   "distinct_mistakes": 5,
+   "endgame_decision": true,
+   "last_decision": 14,
+   "late": 0.88,
+   "losing_per_step": [
+    3,
+    3,
+    3,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    0,
+    0
+   ],
+   "matters_lock": true,
+   "matters_magnet": true,
+   "mistakes": [
+    "r1c3>",
+    "r2c6>",
+    "r3c5v",
+    "r2c2>",
+    "r3c3<"
+   ],
+   "shortcut": 0.025,
+   "spinner_dependence": "unsolvable without it",
+   "without_lock": "without it: 2 decision steps, 1 distinct mistakes (with it: 14, 5)",
+   "without_magnet": "without it: 7 decision steps, 2 distinct mistakes (with it: 14, 5)"
+  },
+  "A": {
+   "positions": 398,
+   "solution": 16,
+   "solve_ms": 32.4,
+   "timeup_worst_ms": 19.6
+  },
+  "overlap": [
+   0.33,
+   "N84"
+  ],
+  "filler": []
+ },
+ "T03r_PULLTHEKEY_s321_8": {
+  "result": "Category A/B",
+  "detail": [
+   "a simple greedy player wins 21% (> 20%): a shortcut"
+  ]
+ }
+}

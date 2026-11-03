@@ -1,0 +1,244 @@
+Godot Engine v4.3.stable.official.77dcf97d8 - https://godotengine.org
+
+[Save] load: new -> fresh progress
+[Save] profile: new player id
+[Save] write #1: last_played=1 highest_completed=0 highest_unlocked=1 total_score=0 coins=60 file=ok
+[Diag] last session ended at level 9 after 0s: process ended without a clean quit | [Diag] L9 ch1 via=load t=0s fps=27 mem=96.1MB objs=3392 nodes=645 orphans=0 res=96 tweens=15 fx=11 music=c01 music_players=0 sfx=0 save_seq=12
+[Chapter] level=1 chapter=1 theme=First Light (id 1, prev 0) music=c01  <- transition
+[Save] write #2: last_played=1 highest_completed=0 highest_unlocked=1 total_score=0 coins=60 file=ok
+[Diag] L1 ch1 via=launch t=0s fps=12 mem=96.2MB objs=3237 nodes=575 orphans=0 res=96 tweens=6 fx=3 music=c01 music_players=1 sfx=0 save_seq=2
+[Save] write #3: last_played=1 highest_completed=1 highest_unlocked=2 total_score=1001 coins=60 file=ok
+[Save] write #4: last_played=1 highest_completed=2 highest_unlocked=3 total_score=2003 coins=60 file=ok
+[Save] write #5: last_played=1 highest_completed=3 highest_unlocked=4 total_score=3006 coins=60 file=ok
+[Save] write #6: last_played=1 highest_completed=4 highest_unlocked=5 total_score=4010 coins=60 file=ok
+[Save] write #7: last_played=1 highest_completed=5 highest_unlocked=6 total_score=5015 coins=60 file=ok
+[Save] write #8: last_played=1 highest_completed=6 highest_unlocked=7 total_score=6021 coins=60 file=ok
+[Save] write #9: last_played=1 highest_completed=7 highest_unlocked=8 total_score=7028 coins=60 file=ok
+[Save] write #10: last_played=1 highest_completed=8 highest_unlocked=9 total_score=8036 coins=60 file=ok
+[Save] write #11: last_played=1 highest_completed=9 highest_unlocked=10 total_score=9045 coins=60 file=ok
+[Save] write #12: last_played=1 highest_completed=10 highest_unlocked=11 total_score=10055 coins=60 file=ok
+[Save] write #13: last_played=1 highest_completed=11 highest_unlocked=12 total_score=11066 coins=60 file=ok
+[Save] write #14: last_played=12 highest_completed=11 highest_unlocked=12 total_score=11066 coins=77 file=ok
+[Social] API POST -> HTTP 200
+[Social] API POST -> HTTP 200
+[Social] API POST -> HTTP 200
+[Save] load: source=file version=5 seq=14 last_played=12 highest_completed=11 highest_unlocked=12 total_score=11066 coins=77 stars=33 saved=2026-11-02 15:13:29 issues=[copies: file#14 bak#13]
+[Diag] last session ended at level 1 after 0s: process ended without a clean quit | [Diag] L1 ch1 via=launch t=0s fps=12 mem=96.2MB objs=3237 nodes=575 orphans=0 res=96 tweens=6 fx=3 music=c01 music_players=1 sfx=0 save_seq=2
+[Chapter] level=12 chapter=2 theme=Sunny Meadow (id 2, prev 0) music=c02  <- transition
+[Save] write #15: last_played=12 highest_completed=11 highest_unlocked=12 total_score=11066 coins=77 file=ok
+[Diag] L12 ch2 via=launch t=0s fps=4 mem=97.2MB objs=3443 nodes=666 orphans=0 res=97 tweens=16 fx=13 music=c02 music_players=1 sfx=0 save_seq=15
+[Chapter] level=12 chapter=2 theme=Sunny Meadow (id 2, prev 2) music=c02
+[Save] write #16: last_played=12 highest_completed=11 highest_unlocked=12 total_score=11066 coins=77 file=ok
+[Diag] L12 ch2 via=load t=0s fps=4 mem=97.9MB objs=3631 nodes=780 orphans=0 res=97 tweens=29 fx=26 music=c02 music_players=0 sfx=0 save_seq=16
+[Save] load: source=file version=5 seq=16 last_played=12 highest_completed=11 highest_unlocked=12 total_score=11066 coins=77 stars=33 saved=2026-11-02 15:13:33 issues=[copies: file#16 bak#15]
+[Diag] last session ended at level 12 after 0s: process ended without a clean quit | [Diag] L12 ch2 via=load t=0s fps=4 mem=97.9MB objs=3631 nodes=780 orphans=0 res=97 tweens=29 fx=26 music=c02 music_players=0 sfx=0 save_seq=16
+[Chapter] level=12 chapter=2 theme=Sunny Meadow (id 2, prev 0) music=c02  <- transition
+[Save] write #17: last_played=12 highest_completed=11 highest_unlocked=12 total_score=11066 coins=77 file=ok
+[Diag] L12 ch2 via=launch t=0s fps=4 mem=97.5MB objs=3479 nodes=663 orphans=0 res=97 tweens=31 fx=13 music=c02 music_players=1 sfx=0 save_seq=17
+[Chapter] level=12 chapter=2 theme=Sunny Meadow (id 2, prev 2) music=c02
+[Save] write #18: last_played=12 highest_completed=11 highest_unlocked=12 total_score=11066 coins=77 file=ok
+[Diag] L12 ch2 via=load t=0s fps=16 mem=97.9MB objs=3632 nodes=780 orphans=0 res=97 tweens=29 fx=26 music=c02 music_players=0 sfx=0 save_seq=18
+[Save] load: source=file version=5 seq=18 last_played=12 highest_completed=11 highest_unlocked=12 total_score=11066 coins=77 stars=33 saved=2026-11-02 15:13:34 issues=[copies: file#18 bak#17]
+[Diag] last session ended at level 12 after 0s: process ended without a clean quit | [Diag] L12 ch2 via=load t=0s fps=16 mem=97.9MB objs=3632 nodes=780 orphans=0 res=97 tweens=29 fx=26 music=c02 music_players=0 sfx=0 save_seq=18
+[Chapter] level=12 chapter=2 theme=Sunny Meadow (id 2, prev 0) music=c02  <- transition
+[Save] write #19: last_played=12 highest_completed=11 highest_unlocked=12 total_score=11066 coins=77 file=ok
+[Diag] L12 ch2 via=launch t=0s fps=16 mem=97.5MB objs=3479 nodes=663 orphans=0 res=97 tweens=31 fx=13 music=c02 music_players=1 sfx=0 save_seq=19
+[Chapter] level=12 chapter=2 theme=Sunny Meadow (id 2, prev 2) music=c02
+[Save] write #20: last_played=12 highest_completed=11 highest_unlocked=12 total_score=11066 coins=77 file=ok
+[Diag] L12 ch2 via=load t=0s fps=16 mem=97.9MB objs=3632 nodes=780 orphans=0 res=97 tweens=29 fx=26 music=c02 music_players=0 sfx=0 save_seq=20
+[Save] load: source=file version=5 seq=20 last_played=12 highest_completed=11 highest_unlocked=12 total_score=11066 coins=77 stars=33 saved=2026-11-02 15:13:34 issues=[copies: file#20 bak#19]
+[Diag] last session ended at level 12 after 0s: process ended without a clean quit | [Diag] L12 ch2 via=load t=0s fps=16 mem=97.9MB objs=3632 nodes=780 orphans=0 res=97 tweens=29 fx=26 music=c02 music_players=0 sfx=0 save_seq=20
+[Chapter] level=12 chapter=2 theme=Sunny Meadow (id 2, prev 0) music=c02  <- transition
+[Save] write #21: last_played=12 highest_completed=11 highest_unlocked=12 total_score=11066 coins=77 file=ok
+[Diag] L12 ch2 via=launch t=0s fps=16 mem=97.5MB objs=3437 nodes=665 orphans=0 res=97 tweens=15 fx=13 music=c02 music_players=1 sfx=0 save_seq=21
+[Social] API GET -> HTTP 200
+[Social] photo -> HTTP 200
+[Save] load: source=file version=5 seq=21 last_played=12 highest_completed=11 highest_unlocked=12 total_score=11066 coins=77 stars=33 saved=2026-11-02 15:13:34 issues=[copies: file#21 bak#20]
+[Diag] last session ended at level 12 after 0s: process ended without a clean quit | [Diag] L12 ch2 via=launch t=0s fps=16 mem=97.5MB objs=3437 nodes=665 orphans=0 res=97 tweens=15 fx=13 music=c02 music_players=1 sfx=0 save_seq=21
+[Chapter] level=12 chapter=2 theme=Sunny Meadow (id 2, prev 0) music=c02  <- transition
+[Save] write #22: last_played=12 highest_completed=11 highest_unlocked=12 total_score=11066 coins=77 file=ok
+[Diag] L12 ch2 via=launch t=0s fps=145 mem=98.6MB objs=3467 nodes=663 orphans=0 res=97 tweens=15 fx=13 music=c02 music_players=1 sfx=0 save_seq=22
+[Social] API GET -> HTTP 200
+[Social] photo -> HTTP 200
+[Save] load: source=file version=5 seq=22 last_played=12 highest_completed=11 highest_unlocked=12 total_score=11066 coins=77 stars=33 saved=2026-11-02 15:13:52 issues=[copies: file#22 bak#21]
+[Diag] last session ended at level 12 after 0s: process ended without a clean quit | [Diag] L12 ch2 via=launch t=0s fps=145 mem=98.6MB objs=3467 nodes=663 orphans=0 res=97 tweens=15 fx=13 music=c02 music_players=1 sfx=0 save_seq=22
+[Chapter] level=12 chapter=2 theme=Sunny Meadow (id 2, prev 0) music=c02  <- transition
+[Save] write #23: last_played=12 highest_completed=11 highest_unlocked=12 total_score=11066 coins=77 file=ok
+[Diag] L12 ch2 via=launch t=0s fps=144 mem=98.7MB objs=3472 nodes=663 orphans=0 res=97 tweens=17 fx=13 music=c02 music_players=1 sfx=0 save_seq=23
+[Social] API GET -> HTTP 200
+[Save] load: source=file version=5 seq=23 last_played=12 highest_completed=11 highest_unlocked=12 total_score=11066 coins=77 stars=33 saved=2026-11-02 15:13:59 issues=[copies: file#23 bak#22]
+[Diag] last session ended at level 12 after 0s: process ended without a clean quit | [Diag] L12 ch2 via=launch t=0s fps=144 mem=98.7MB objs=3472 nodes=663 orphans=0 res=97 tweens=17 fx=13 music=c02 music_players=1 sfx=0 save_seq=23
+[Chapter] level=12 chapter=2 theme=Sunny Meadow (id 2, prev 0) music=c02  <- transition
+[Save] write #24: last_played=12 highest_completed=11 highest_unlocked=12 total_score=11066 coins=77 file=ok
+[Diag] L12 ch2 via=launch t=0s fps=145 mem=99.0MB objs=3475 nodes=665 orphans=0 res=97 tweens=16 fx=13 music=c02 music_players=1 sfx=0 save_seq=24
+[Social] API GET -> HTTP 200
+[Social] photo -> HTTP 400
+[Social] API GET -> HTTP 200
+[Social] photo -> HTTP 200
+[Save] load: source=file version=5 seq=24 last_played=12 highest_completed=11 highest_unlocked=12 total_score=11066 coins=77 stars=33 saved=2026-11-02 15:14:05 issues=[copies: file#24 bak#23]
+[Diag] last session ended at level 12 after 0s: process ended without a clean quit | [Diag] L12 ch2 via=launch t=0s fps=145 mem=99.0MB objs=3475 nodes=665 orphans=0 res=97 tweens=16 fx=13 music=c02 music_players=1 sfx=0 save_seq=24
+[Chapter] level=12 chapter=2 theme=Sunny Meadow (id 2, prev 0) music=c02  <- transition
+[Save] write #25: last_played=12 highest_completed=11 highest_unlocked=12 total_score=11066 coins=77 file=ok
+[Diag] L12 ch2 via=launch t=0s fps=145 mem=99.0MB objs=3497 nodes=665 orphans=0 res=97 tweens=23 fx=13 music=c02 music_players=1 sfx=0 save_seq=25
+[Social] API GET -> HTTP 200
+[Social] photo -> HTTP 500
+[Social] API GET -> HTTP 200
+[Social] photo -> HTTP 500
+[Social] API GET -> HTTP 200
+[Social] photo -> HTTP 200
+[Save] load: source=file version=5 seq=25 last_played=12 highest_completed=11 highest_unlocked=12 total_score=11066 coins=77 stars=33 saved=2026-11-02 15:14:05 issues=[copies: file#25 bak#24]
+[Diag] last session ended at level 12 after 0s: process ended without a clean quit | [Diag] L12 ch2 via=launch t=0s fps=145 mem=99.0MB objs=3497 nodes=665 orphans=0 res=97 tweens=23 fx=13 music=c02 music_players=1 sfx=0 save_seq=25
+[Chapter] level=12 chapter=2 theme=Sunny Meadow (id 2, prev 0) music=c02  <- transition
+[Save] write #26: last_played=12 highest_completed=11 highest_unlocked=12 total_score=11066 coins=77 file=ok
+[Diag] L12 ch2 via=launch t=0s fps=145 mem=99.1MB objs=3472 nodes=665 orphans=0 res=97 tweens=15 fx=13 music=c02 music_players=1 sfx=0 save_seq=26
+[Social] API GET -> HTTP 200
+[Social] photo -> HTTP 200
+[Save] load: source=file version=5 seq=26 last_played=12 highest_completed=11 highest_unlocked=12 total_score=11066 coins=77 stars=33 saved=2026-11-02 15:14:13 issues=[copies: file#26 bak#25]
+[Diag] last session ended at level 12 after 0s: process ended without a clean quit | [Diag] L12 ch2 via=launch t=0s fps=145 mem=99.1MB objs=3472 nodes=665 orphans=0 res=97 tweens=15 fx=13 music=c02 music_players=1 sfx=0 save_seq=26
+[Chapter] level=12 chapter=2 theme=Sunny Meadow (id 2, prev 0) music=c02  <- transition
+[Save] write #27: last_played=12 highest_completed=11 highest_unlocked=12 total_score=11066 coins=77 file=ok
+[Diag] L12 ch2 via=launch t=0s fps=145 mem=99.1MB objs=3472 nodes=665 orphans=0 res=97 tweens=15 fx=13 music=c02 music_players=1 sfx=0 save_seq=27
+[Save] load: source=file version=5 seq=27 last_played=12 highest_completed=11 highest_unlocked=12 total_score=11066 coins=77 stars=33 saved=2026-11-02 15:14:21 issues=[copies: file#27 bak#26]
+[Diag] last session ended at level 12 after 0s: process ended without a clean quit | [Diag] L12 ch2 via=launch t=0s fps=145 mem=99.1MB objs=3472 nodes=665 orphans=0 res=97 tweens=15 fx=13 music=c02 music_players=1 sfx=0 save_seq=27
+[Chapter] level=12 chapter=2 theme=Sunny Meadow (id 2, prev 0) music=c02  <- transition
+[Save] write #28: last_played=12 highest_completed=11 highest_unlocked=12 total_score=11066 coins=77 file=ok
+[Diag] L12 ch2 via=launch t=0s fps=145 mem=99.1MB objs=3515 nodes=665 orphans=0 res=97 tweens=29 fx=13 music=c02 music_players=1 sfx=0 save_seq=28
+[Save] load: source=file version=5 seq=28 last_played=12 highest_completed=11 highest_unlocked=12 total_score=11066 coins=77 stars=33 saved=2026-11-02 15:14:21 issues=[copies: file#28 bak#27]
+[Diag] last session ended at level 12 after 0s: process ended without a clean quit | [Diag] L12 ch2 via=launch t=0s fps=145 mem=99.1MB objs=3515 nodes=665 orphans=0 res=97 tweens=29 fx=13 music=c02 music_players=1 sfx=0 save_seq=28
+[Chapter] level=12 chapter=2 theme=Sunny Meadow (id 2, prev 0) music=c02  <- transition
+[Save] write #29: last_played=12 highest_completed=11 highest_unlocked=12 total_score=11066 coins=77 file=ok
+[Diag] L12 ch2 via=launch t=0s fps=145 mem=99.1MB objs=3512 nodes=663 orphans=0 res=97 tweens=29 fx=13 music=c02 music_players=1 sfx=0 save_seq=29
+[Save] load: source=file version=5 seq=29 last_played=12 highest_completed=11 highest_unlocked=12 total_score=11066 coins=77 stars=33 saved=2026-11-02 15:14:21 issues=[copies: file#29 bak#28]
+[Diag] last session ended at level 12 after 0s: process ended without a clean quit | [Diag] L12 ch2 via=launch t=0s fps=145 mem=99.1MB objs=3512 nodes=663 orphans=0 res=97 tweens=29 fx=13 music=c02 music_players=1 sfx=0 save_seq=29
+[Chapter] level=12 chapter=2 theme=Sunny Meadow (id 2, prev 0) music=c02  <- transition
+[Save] write #30: last_played=12 highest_completed=11 highest_unlocked=12 total_score=11066 coins=77 file=ok
+[Diag] L12 ch2 via=launch t=0s fps=145 mem=99.1MB objs=3513 nodes=663 orphans=0 res=97 tweens=29 fx=13 music=c02 music_players=1 sfx=0 save_seq=30
+[Save] load: source=file version=5 seq=30 last_played=12 highest_completed=11 highest_unlocked=12 total_score=11066 coins=77 stars=33 saved=2026-11-02 15:14:22 issues=[copies: file#30 bak#29]
+[Diag] last session ended at level 12 after 0s: process ended without a clean quit | [Diag] L12 ch2 via=launch t=0s fps=145 mem=99.1MB objs=3513 nodes=663 orphans=0 res=97 tweens=29 fx=13 music=c02 music_players=1 sfx=0 save_seq=30
+[Chapter] level=12 chapter=2 theme=Sunny Meadow (id 2, prev 0) music=c02  <- transition
+[Save] write #31: last_played=12 highest_completed=11 highest_unlocked=12 total_score=11066 coins=77 file=ok
+[Diag] L12 ch2 via=launch t=0s fps=145 mem=99.1MB objs=3513 nodes=663 orphans=0 res=97 tweens=29 fx=13 music=c02 music_players=1 sfx=0 save_seq=31
+[Save] load: source=file version=5 seq=31 last_played=12 highest_completed=11 highest_unlocked=12 total_score=11066 coins=77 stars=33 saved=2026-11-02 15:14:22 issues=[copies: file#31 bak#30]
+[Diag] last session ended at level 12 after 0s: process ended without a clean quit | [Diag] L12 ch2 via=launch t=0s fps=145 mem=99.1MB objs=3513 nodes=663 orphans=0 res=97 tweens=29 fx=13 music=c02 music_players=1 sfx=0 save_seq=31
+[Chapter] level=12 chapter=2 theme=Sunny Meadow (id 2, prev 0) music=c02  <- transition
+[Save] write #32: last_played=12 highest_completed=11 highest_unlocked=12 total_score=11066 coins=77 file=ok
+[Diag] L12 ch2 via=launch t=0s fps=60 mem=99.1MB objs=3513 nodes=663 orphans=0 res=97 tweens=29 fx=13 music=c02 music_players=1 sfx=0 save_seq=32
+[Save] load: source=file version=5 seq=32 last_played=12 highest_completed=11 highest_unlocked=12 total_score=11066 coins=77 stars=33 saved=2026-11-02 15:14:22 issues=[copies: file#32 bak#31]
+[Diag] last session ended at level 12 after 0s: process ended without a clean quit | [Diag] L12 ch2 via=launch t=0s fps=60 mem=99.1MB objs=3513 nodes=663 orphans=0 res=97 tweens=29 fx=13 music=c02 music_players=1 sfx=0 save_seq=32
+[Chapter] level=12 chapter=2 theme=Sunny Meadow (id 2, prev 0) music=c02  <- transition
+[Save] write #33: last_played=12 highest_completed=11 highest_unlocked=12 total_score=11066 coins=77 file=ok
+[Diag] L12 ch2 via=launch t=0s fps=60 mem=99.1MB objs=3473 nodes=663 orphans=0 res=97 tweens=15 fx=13 music=c02 music_players=1 sfx=0 save_seq=33
+[Social] API GET -> HTTP 404
+[Social] API POST -> HTTP 200
+[Save] load: source=file version=5 seq=33 last_played=12 highest_completed=11 highest_unlocked=12 total_score=11066 coins=77 stars=33 saved=2026-11-02 15:14:22 issues=[copies: file#33 bak#32]
+[Diag] last session ended at level 12 after 0s: process ended without a clean quit | [Diag] L12 ch2 via=launch t=0s fps=60 mem=99.1MB objs=3473 nodes=663 orphans=0 res=97 tweens=15 fx=13 music=c02 music_players=1 sfx=0 save_seq=33
+[Chapter] level=12 chapter=2 theme=Sunny Meadow (id 2, prev 0) music=c02  <- transition
+[Save] write #34: last_played=12 highest_completed=11 highest_unlocked=12 total_score=11066 coins=77 file=ok
+[Diag] L12 ch2 via=launch t=0s fps=60 mem=99.1MB objs=3519 nodes=665 orphans=0 res=97 tweens=29 fx=13 music=c02 music_players=1 sfx=0 save_seq=34
+[Social] API GET -> HTTP 410
+[Save] load: source=file version=5 seq=34 last_played=12 highest_completed=11 highest_unlocked=12 total_score=11066 coins=77 stars=33 saved=2026-11-02 15:14:23 issues=[copies: file#34 bak#33]
+[Diag] last session ended at level 12 after 0s: process ended without a clean quit | [Diag] L12 ch2 via=launch t=0s fps=60 mem=99.1MB objs=3519 nodes=665 orphans=0 res=97 tweens=29 fx=13 music=c02 music_players=1 sfx=0 save_seq=34
+[Chapter] level=12 chapter=2 theme=Sunny Meadow (id 2, prev 0) music=c02  <- transition
+[Save] write #35: last_played=12 highest_completed=11 highest_unlocked=12 total_score=11066 coins=77 file=ok
+[Diag] L12 ch2 via=launch t=0s fps=71 mem=99.1MB objs=3519 nodes=665 orphans=0 res=97 tweens=29 fx=13 music=c02 music_players=1 sfx=0 save_seq=35
+[Social] API GET -> HTTP 200
+[Save] load: source=file version=5 seq=35 last_played=12 highest_completed=11 highest_unlocked=12 total_score=11066 coins=77 stars=33 saved=2026-11-02 15:14:23 issues=[copies: file#35 bak#34]
+[Diag] last session ended at level 12 after 0s: process ended without a clean quit | [Diag] L12 ch2 via=launch t=0s fps=71 mem=99.1MB objs=3519 nodes=665 orphans=0 res=97 tweens=29 fx=13 music=c02 music_players=1 sfx=0 save_seq=35
+[Chapter] level=12 chapter=2 theme=Sunny Meadow (id 2, prev 0) music=c02  <- transition
+[Save] write #36: last_played=12 highest_completed=11 highest_unlocked=12 total_score=11066 coins=77 file=ok
+[Diag] L12 ch2 via=launch t=0s fps=71 mem=99.3MB objs=3519 nodes=665 orphans=0 res=97 tweens=29 fx=13 music=c02 music_players=1 sfx=0 save_seq=36
+[Social] API GET -> HTTP 200
+[Save] load: source=file version=5 seq=36 last_played=12 highest_completed=11 highest_unlocked=12 total_score=11066 coins=77 stars=33 saved=2026-11-02 15:14:23 issues=[copies: file#36 bak#35]
+[Diag] last session ended at level 12 after 0s: process ended without a clean quit | [Diag] L12 ch2 via=launch t=0s fps=71 mem=99.3MB objs=3519 nodes=665 orphans=0 res=97 tweens=29 fx=13 music=c02 music_players=1 sfx=0 save_seq=36
+[Chapter] level=12 chapter=2 theme=Sunny Meadow (id 2, prev 0) music=c02  <- transition
+[Save] write #37: last_played=12 highest_completed=11 highest_unlocked=12 total_score=11066 coins=77 file=ok
+[Diag] L12 ch2 via=launch t=0s fps=71 mem=99.3MB objs=3520 nodes=665 orphans=0 res=97 tweens=29 fx=13 music=c02 music_players=1 sfx=0 save_seq=37
+[Social] API GET -> HTTP 200
+[Save] load: source=file version=5 seq=37 last_played=12 highest_completed=11 highest_unlocked=12 total_score=11066 coins=77 stars=33 saved=2026-11-02 15:14:23 issues=[copies: file#37 bak#36]
+[Diag] last session ended at level 12 after 0s: process ended without a clean quit | [Diag] L12 ch2 via=launch t=0s fps=71 mem=99.3MB objs=3520 nodes=665 orphans=0 res=97 tweens=29 fx=13 music=c02 music_players=1 sfx=0 save_seq=37
+[Chapter] level=12 chapter=2 theme=Sunny Meadow (id 2, prev 0) music=c02  <- transition
+[Save] write #38: last_played=12 highest_completed=11 highest_unlocked=12 total_score=11066 coins=77 file=ok
+[Diag] L12 ch2 via=launch t=0s fps=71 mem=99.3MB objs=3520 nodes=665 orphans=0 res=97 tweens=29 fx=13 music=c02 music_players=1 sfx=0 save_seq=38
+[Social] API GET -> HTTP 200
+[Save] load: source=file version=5 seq=38 last_played=12 highest_completed=11 highest_unlocked=12 total_score=11066 coins=77 stars=33 saved=2026-11-02 15:14:24 issues=[copies: file#38 bak#37]
+[Diag] last session ended at level 12 after 0s: process ended without a clean quit | [Diag] L12 ch2 via=launch t=0s fps=71 mem=99.3MB objs=3520 nodes=665 orphans=0 res=97 tweens=29 fx=13 music=c02 music_players=1 sfx=0 save_seq=38
+[Chapter] level=12 chapter=2 theme=Sunny Meadow (id 2, prev 0) music=c02  <- transition
+[Save] write #39: last_played=12 highest_completed=11 highest_unlocked=12 total_score=11066 coins=77 file=ok
+[Diag] L12 ch2 via=launch t=0s fps=50 mem=99.3MB objs=3520 nodes=665 orphans=0 res=97 tweens=29 fx=13 music=c02 music_players=1 sfx=0 save_seq=39
+[Social] API GET -> HTTP 500
+[Social] API GET -> HTTP 200
+[Save] load: source=file version=5 seq=39 last_played=12 highest_completed=11 highest_unlocked=12 total_score=11066 coins=77 stars=33 saved=2026-11-02 15:14:24 issues=[copies: file#39 bak#38]
+[Diag] last session ended at level 12 after 0s: process ended without a clean quit | [Diag] L12 ch2 via=launch t=0s fps=50 mem=99.3MB objs=3520 nodes=665 orphans=0 res=97 tweens=29 fx=13 music=c02 music_players=1 sfx=0 save_seq=39
+[Chapter] level=12 chapter=2 theme=Sunny Meadow (id 2, prev 0) music=c02  <- transition
+[Save] write #40: last_played=12 highest_completed=11 highest_unlocked=12 total_score=11066 coins=77 file=ok
+[Diag] L12 ch2 via=launch t=0s fps=50 mem=99.2MB objs=3477 nodes=665 orphans=0 res=97 tweens=15 fx=13 music=c02 music_players=1 sfx=0 save_seq=40
+ERROR: Parse JSON failed. Error at line 0: Unexpected character.
+   at: parse_string (core/io/json.cpp:576)
+[Social] API GET -> HTTP 200
+[Social] API GET -> HTTP 200
+[Save] load: source=file version=5 seq=40 last_played=12 highest_completed=11 highest_unlocked=12 total_score=11066 coins=77 stars=33 saved=2026-11-02 15:14:24 issues=[copies: file#40 bak#39]
+[Diag] last session ended at level 12 after 0s: process ended without a clean quit | [Diag] L12 ch2 via=launch t=0s fps=50 mem=99.2MB objs=3477 nodes=665 orphans=0 res=97 tweens=15 fx=13 music=c02 music_players=1 sfx=0 save_seq=40
+[Chapter] level=12 chapter=2 theme=Sunny Meadow (id 2, prev 0) music=c02  <- transition
+[Save] write #41: last_played=12 highest_completed=11 highest_unlocked=12 total_score=11066 coins=77 file=ok
+[Diag] L12 ch2 via=launch t=0s fps=103 mem=99.2MB objs=3477 nodes=665 orphans=0 res=97 tweens=15 fx=13 music=c02 music_players=1 sfx=0 save_seq=41
+----------------------------------------
+Exception occurred during processing of request from ('127.0.0.1', 54974)
+Traceback (most recent call last):
+  File "/usr/lib/python3.13/socketserver.py", line 697, in process_request_thread
+    self.finish_request(request, client_address)
+    ~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.13/socketserver.py", line 362, in finish_request
+    self.RequestHandlerClass(request, client_address, self)
+    ~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.13/socketserver.py", line 766, in __init__
+    self.handle()
+    ~~~~~~~~~~~^^
+  File "/usr/lib/python3.13/http/server.py", line 451, in handle
+    self.handle_one_request()
+    ~~~~~~~~~~~~~~~~~~~~~~~^^
+  File "/usr/lib/python3.13/http/server.py", line 439, in handle_one_request
+    method()
+    ~~~~~~^^
+  File "/home/user/ChainEscape/tools/mock_social_api.py", line 186, in do_GET
+    return self._send(200, {"ok": True, "challenge": out})
+           ~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/user/ChainEscape/tools/mock_social_api.py", line 138, in _send
+    self.wfile.write(data)
+    ~~~~~~~~~~~~~~~~^^^^^^
+  File "/usr/lib/python3.13/socketserver.py", line 845, in write
+    self._sock.sendall(b)
+    ~~~~~~~~~~~~~~~~~~^^^
+BrokenPipeError: [Errno 32] Broken pipe
+----------------------------------------
+[Save] load: source=file version=5 seq=41 last_played=12 highest_completed=11 highest_unlocked=12 total_score=11066 coins=77 stars=33 saved=2026-11-02 15:14:25 issues=[copies: file#41 bak#40]
+[Diag] last session ended at level 12 after 0s: process ended without a clean quit | [Diag] L12 ch2 via=launch t=0s fps=103 mem=99.2MB objs=3477 nodes=665 orphans=0 res=97 tweens=15 fx=13 music=c02 music_players=1 sfx=0 save_seq=41
+[Chapter] level=12 chapter=2 theme=Sunny Meadow (id 2, prev 0) music=c02  <- transition
+[Save] write #42: last_played=12 highest_completed=11 highest_unlocked=12 total_score=11066 coins=77 file=ok
+[Diag] L12 ch2 via=launch t=0s fps=145 mem=99.2MB objs=3471 nodes=663 orphans=0 res=97 tweens=15 fx=13 music=c02 music_players=1 sfx=0 save_seq=42
+[Social] API GET -> HTTP 200
+[Save] load: source=file version=5 seq=42 last_played=12 highest_completed=11 highest_unlocked=12 total_score=11066 coins=77 stars=33 saved=2026-11-02 15:14:31 issues=[copies: file#42 bak#41]
+[Diag] last session ended at level 12 after 0s: process ended without a clean quit | [Diag] L12 ch2 via=launch t=0s fps=145 mem=99.2MB objs=3471 nodes=663 orphans=0 res=97 tweens=15 fx=13 music=c02 music_players=1 sfx=0 save_seq=42
+[Chapter] level=12 chapter=2 theme=Sunny Meadow (id 2, prev 0) music=c02  <- transition
+[Save] write #43: last_played=12 highest_completed=11 highest_unlocked=12 total_score=11066 coins=77 file=ok
+[Diag] L12 ch2 via=launch t=0s fps=126 mem=99.2MB objs=3474 nodes=663 orphans=0 res=97 tweens=15 fx=13 music=c02 music_players=1 sfx=0 save_seq=43
+[Social] API GET -> HTTP 200
+[Social] photo -> HTTP 200
+[Save] load: source=file version=5 seq=43 last_played=12 highest_completed=11 highest_unlocked=12 total_score=11066 coins=77 stars=33 saved=2026-11-02 15:14:32 issues=[copies: file#43 bak#42]
+[Diag] last session ended at level 12 after 0s: process ended without a clean quit | [Diag] L12 ch2 via=launch t=0s fps=126 mem=99.2MB objs=3474 nodes=663 orphans=0 res=97 tweens=15 fx=13 music=c02 music_players=1 sfx=0 save_seq=43
+[Chapter] level=12 chapter=2 theme=Sunny Meadow (id 2, prev 0) music=c02  <- transition
+[Save] write #44: last_played=12 highest_completed=11 highest_unlocked=12 total_score=11066 coins=77 file=ok
+[Diag] L12 ch2 via=launch t=0s fps=145 mem=99.7MB objs=3487 nodes=663 orphans=0 res=97 tweens=16 fx=13 music=c02 music_players=1 sfx=0 save_seq=44
+[Social] API GET -> HTTP 200
+[Social] photo -> HTTP 200
+[Social] challenge ready: reveal {"attempts":1,"blocks":6,"decision_points":0,"depth":3,"difficulty":3.7,"in_band":true,"ms":24,"special":"","spinners":0}
+[Social] API POST -> HTTP 200
+[Save] load: source=file version=5 seq=44 last_played=12 highest_completed=11 highest_unlocked=12 total_score=11066 coins=77 stars=33 saved=2026-11-02 15:14:45 issues=[copies: file#44 bak#43]
+[Diag] last session ended at level 12 after 0s: process ended without a clean quit | [Diag] L12 ch2 via=launch t=0s fps=145 mem=99.7MB objs=3487 nodes=663 orphans=0 res=97 tweens=16 fx=13 music=c02 music_players=1 sfx=0 save_seq=44
+[Chapter] level=12 chapter=2 theme=Sunny Meadow (id 2, prev 0) music=c02  <- transition
+[Save] write #45: last_played=12 highest_completed=11 highest_unlocked=12 total_score=11066 coins=77 file=ok
+[Diag] L12 ch2 via=launch t=0s fps=145 mem=100.3MB objs=3496 nodes=663 orphans=0 res=97 tweens=15 fx=13 music=c02 music_players=1 sfx=0 save_seq=45
+[Social] API GET -> HTTP 200
+RECIPIENT TEST: FAILED (149 checks)
+  FAIL: T(en_US): TOTAL SCORE left, coins right
+  FAIL: T(he_IL): TOTAL SCORE left, coins right
+  FAIL: T(ar_SA): TOTAL SCORE left, coins right

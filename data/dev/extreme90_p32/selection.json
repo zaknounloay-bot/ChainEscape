@@ -1,0 +1,237 @@
+{
+ "N88": {
+  "key": "K01_s321_3",
+  "core": "K01_TWOGROUPKEYS",
+  "family": "P32 two keys, two reversals (switch A + switch B + lock)",
+  "group": "reversal x reversal x lock",
+  "mechanics": [
+   "switch",
+   "lock",
+   "spinner"
+  ],
+  "idea": "two keys, two reversals: each key faces its own prisoner and needs ITS switch; switch A stands in key B's exit and blocks switch B, so the two reversals have an order",
+  "related": "closest occupancy N63 0.35 (bank); pairwise with the other Phase 32 boards <= 0.28",
+  "source": "hybrid: hand core frozen cell for cell (seed_K01_TWOGROUPKEYS.json, Phase 32); blocks added by the Phase 25-27 generator (tools/ta90_search.gd of commit c1ddc89, run in a separate worktree) --ops=v20 with the Phase 25-27 search parameters (piece_free 13, max_pieces 17, suffix_rate 0.30, patience 8), RNG seed 321, round 1; every board then passed the unchanged modern pipeline: engine-valid tokens, bank overlap, tools/extreme90_screen30.py (40 ms gates, strict essentiality, filler, hint-follow) and the full evaluation tools/extreme90_eval25.py --full; shortlist rule S_old; Phase 32 protocol data/dev/extreme90_p32/protocol.json (the Phase 31 method, unchanged)",
+  "selection": "one board per concept: the fewest positions among the fully qualified boards of the concept (Phase 31 method)",
+  "preregistered_prediction": {
+   "positions": 209,
+   "early3": 10,
+   "open_escape_losing": 3,
+   "note": "recorded before any human play; NOT used to select; the owner is the judge"
+  },
+  "human_test": {
+   "status": "NOT YET TESTED",
+   "difficulty": "not supplied",
+   "enjoyment": "not supplied",
+   "outcome_90s": "not supplied",
+   "solve_time_ms": "not supplied",
+   "attempts": "not supplied",
+   "restarts": "not supplied",
+   "undo_used": "not supplied",
+   "notes": "not supplied",
+   "owner_decision": "none",
+   "how_recorded": "filled only from the owner's first exposure on ?extreme90p32=1 (COPY ALL RESULTS JSON carries time, restarts, Undo, moves, attempts per run) and the owner's own ratings; nothing is inferred"
+  },
+  "owner_decision": {
+   "difficulty": "MEDIUM",
+   "decision": "NOT APPROVED",
+   "file": "data/dev/extreme90_p32/owner_decisions_n88_n93.json"
+  }
+ },
+ "N89": {
+  "key": "T03r_s321_0",
+  "core": "T03r_PULLTHEKEY",
+  "family": "P30 pull the key (magnet + lock)",
+  "group": "magnet x lock",
+  "mechanics": [
+   "magnet",
+   "lock",
+   "spinner"
+  ],
+  "idea": "P30 hand core: pull the key: a magnet pulls the key into the prisoner's own column - the key must leave before the magnet fires, or the pull parks it where it blocks its prisoner (round 302: larger piece budget, suffix rate 0.45, core_essential on)",
+  "related": "closest occupancy N84 0.33 (bank); pairwise with the other Phase 32 boards <= 0.28",
+  "source": "hybrid: hand core frozen cell for cell (seed_T03r_PULLTHEKEY.json, Phase 30); blocks added by the Phase 25-27 generator (tools/ta90_search.gd of commit c1ddc89, run in a separate worktree) --ops=v20 with the Phase 25-27 search parameters (piece_free 13, max_pieces 17, suffix_rate 0.30, patience 8), RNG seed 321, round 1 (Phase 30 core, new RNG seed); every board then passed the unchanged modern pipeline: engine-valid tokens, bank overlap, tools/extreme90_screen30.py (40 ms gates, strict essentiality, filler, hint-follow) and the full evaluation tools/extreme90_eval25.py --full; shortlist rule S_old+S_p30; Phase 32 protocol data/dev/extreme90_p32/protocol.json (the Phase 31 method, unchanged)",
+  "selection": "one board per concept: the fewest positions among the fully qualified boards of the concept (Phase 31 method)",
+  "preregistered_prediction": {
+   "positions": 217,
+   "early3": 11,
+   "open_escape_losing": 4,
+   "note": "recorded before any human play; NOT used to select; the owner is the judge"
+  },
+  "human_test": {
+   "status": "NOT YET TESTED",
+   "difficulty": "not supplied",
+   "enjoyment": "not supplied",
+   "outcome_90s": "not supplied",
+   "solve_time_ms": "not supplied",
+   "attempts": "not supplied",
+   "restarts": "not supplied",
+   "undo_used": "not supplied",
+   "notes": "not supplied",
+   "owner_decision": "none",
+   "how_recorded": "filled only from the owner's first exposure on ?extreme90p32=1 (COPY ALL RESULTS JSON carries time, restarts, Undo, moves, attempts per run) and the owner's own ratings; nothing is inferred"
+  },
+  "owner_decision": {
+   "difficulty": "MEDIUM",
+   "decision": "NOT APPROVED",
+   "file": "data/dev/extreme90_p32/owner_decisions_n88_n93.json"
+  }
+ },
+ "N90": {
+  "key": "K02_s321_6",
+  "core": "K02_PULLEDPRISONER",
+  "family": "P32 the pulled prisoner (magnet + lock)",
+  "group": "magnet x lock (deadlock)",
+  "mechanics": [
+   "magnet",
+   "lock",
+   "spinner"
+  ],
+  "idea": "the magnet frees a deadlock: the key and its prisoner block each other; only a magnet pulling the PRISONER out of the key's lane breaks it - so what stands behind the magnet when it leaves decides everything",
+  "related": "closest occupancy N22 0.32 (bank); pairwise with the other Phase 32 boards <= 0.28",
+  "source": "hybrid: hand core frozen cell for cell (seed_K02_PULLEDPRISONER.json, Phase 32); blocks added by the Phase 25-27 generator (tools/ta90_search.gd of commit c1ddc89, run in a separate worktree) --ops=v20 with the Phase 25-27 search parameters (piece_free 13, max_pieces 17, suffix_rate 0.30, patience 8), RNG seed 321, round 1; every board then passed the unchanged modern pipeline: engine-valid tokens, bank overlap, tools/extreme90_screen30.py (40 ms gates, strict essentiality, filler, hint-follow) and the full evaluation tools/extreme90_eval25.py --full; shortlist rule S_p30; Phase 32 protocol data/dev/extreme90_p32/protocol.json (the Phase 31 method, unchanged)",
+  "selection": "one board per concept: the fewest positions among the fully qualified boards of the concept (Phase 31 method)",
+  "preregistered_prediction": {
+   "positions": 269,
+   "early3": 10,
+   "open_escape_losing": 3,
+   "note": "recorded before any human play; NOT used to select; the owner is the judge"
+  },
+  "human_test": {
+   "status": "NOT YET TESTED",
+   "difficulty": "not supplied",
+   "enjoyment": "not supplied",
+   "outcome_90s": "not supplied",
+   "solve_time_ms": "not supplied",
+   "attempts": "not supplied",
+   "restarts": "not supplied",
+   "undo_used": "not supplied",
+   "notes": "not supplied",
+   "owner_decision": "none",
+   "how_recorded": "filled only from the owner's first exposure on ?extreme90p32=1 (COPY ALL RESULTS JSON carries time, restarts, Undo, moves, attempts per run) and the owner's own ratings; nothing is inferred"
+  },
+  "owner_decision": {
+   "difficulty": "MEDIUM",
+   "decision": "NOT APPROVED",
+   "file": "data/dev/extreme90_p32/owner_decisions_n88_n93.json"
+  }
+ },
+ "N91": {
+  "key": "K06_s321_3",
+  "core": "K06_TWOGROUPLADDER",
+  "family": "P32 the two-group ladder (switch A + switch B + lock)",
+  "group": "reversal x reversal x lock chain",
+  "mechanics": [
+   "switch",
+   "lock",
+   "spinner"
+  ],
+  "idea": "a two-group ladder: the key must be reversed (A) to leave, its prisoner is itself a key and a flip target of B, and B's switch stands in the prisoner's exit - firing B to clear the lane turns the prisoner round",
+  "related": "closest occupancy N38 0.30 (bank); pairwise with the other Phase 32 boards <= 0.28",
+  "source": "hybrid: hand core frozen cell for cell (seed_K06_TWOGROUPLADDER.json, Phase 32); blocks added by the Phase 25-27 generator (tools/ta90_search.gd of commit c1ddc89, run in a separate worktree) --ops=v20 with the Phase 25-27 search parameters (piece_free 13, max_pieces 17, suffix_rate 0.30, patience 8), RNG seed 321, round 1 (K06_s321_2, fewer positions, failed the shortcut gate); every board then passed the unchanged modern pipeline: engine-valid tokens, bank overlap, tools/extreme90_screen30.py (40 ms gates, strict essentiality, filler, hint-follow) and the full evaluation tools/extreme90_eval25.py --full; shortlist rule S_old; Phase 32 protocol data/dev/extreme90_p32/protocol.json (the Phase 31 method, unchanged)",
+  "selection": "one board per concept: the fewest positions among the fully qualified boards of the concept (Phase 31 method)",
+  "preregistered_prediction": {
+   "positions": 274,
+   "early3": 4,
+   "open_escape_losing": 1,
+   "note": "recorded before any human play; NOT used to select; the owner is the judge"
+  },
+  "human_test": {
+   "status": "NOT YET TESTED",
+   "difficulty": "not supplied",
+   "enjoyment": "not supplied",
+   "outcome_90s": "not supplied",
+   "solve_time_ms": "not supplied",
+   "attempts": "not supplied",
+   "restarts": "not supplied",
+   "undo_used": "not supplied",
+   "notes": "not supplied",
+   "owner_decision": "none",
+   "how_recorded": "filled only from the owner's first exposure on ?extreme90p32=1 (COPY ALL RESULTS JSON carries time, restarts, Undo, moves, attempts per run) and the owner's own ratings; nothing is inferred"
+  },
+  "owner_decision": {
+   "difficulty": "MEDIUM",
+   "decision": "NOT APPROVED",
+   "file": "data/dev/extreme90_p32/owner_decisions_n88_n93.json"
+  }
+ },
+ "N92": {
+  "key": "K20_s322_2",
+  "core": "K20_RELAYPULL",
+  "family": "P32 the relay pull (two magnets + lock)",
+  "group": "magnet x magnet x lock",
+  "mechanics": [
+   "magnet",
+   "lock",
+   "spinner"
+  ],
+  "idea": "the relay pull: two magnets in one column; the first pulls the second, the second pulls the prisoner out of the key's row - the relay works only while nothing else is in the column",
+  "related": "closest occupancy N4 0.31 (bank); pairwise with the other Phase 32 boards <= 0.28",
+  "source": "hybrid: hand core frozen cell for cell (seed_K20_RELAYPULL.json, Phase 32); blocks added by the Phase 25-27 generator (tools/ta90_search.gd of commit c1ddc89, run in a separate worktree) --ops=v20 with the Phase 25-27 search parameters (piece_free 13, max_pieces 17, suffix_rate 0.30, patience 8), RNG seed 322, round 2 (second RNG seed: no screen PASS in round 1); every board then passed the unchanged modern pipeline: engine-valid tokens, bank overlap, tools/extreme90_screen30.py (40 ms gates, strict essentiality, filler, hint-follow) and the full evaluation tools/extreme90_eval25.py --full; shortlist rule S_old; Phase 32 protocol data/dev/extreme90_p32/protocol.json (the Phase 31 method, unchanged)",
+  "selection": "one board per concept: the fewest positions among the fully qualified boards of the concept (Phase 31 method)",
+  "preregistered_prediction": {
+   "positions": 449,
+   "early3": 7,
+   "open_escape_losing": 2,
+   "note": "recorded before any human play; NOT used to select; the owner is the judge"
+  },
+  "human_test": {
+   "status": "NOT YET TESTED",
+   "difficulty": "not supplied",
+   "enjoyment": "not supplied",
+   "outcome_90s": "not supplied",
+   "solve_time_ms": "not supplied",
+   "attempts": "not supplied",
+   "restarts": "not supplied",
+   "undo_used": "not supplied",
+   "notes": "not supplied",
+   "owner_decision": "none",
+   "how_recorded": "filled only from the owner's first exposure on ?extreme90p32=1 (COPY ALL RESULTS JSON carries time, restarts, Undo, moves, attempts per run) and the owner's own ratings; nothing is inferred"
+  },
+  "owner_decision": {
+   "difficulty": "VERY HARD",
+   "decision": "NOT APPROVED",
+   "file": "data/dev/extreme90_p32/owner_decisions_n88_n93.json"
+  }
+ },
+ "N93": {
+  "key": "K16_s322_11",
+  "core": "K16_ARMOREDKEY",
+  "family": "P32 the shelled key (armor + switch + lock)",
+  "group": "armor x reversal x lock",
+  "mechanics": [
+   "switch",
+   "lock",
+   "armor",
+   "spinner"
+  ],
+  "idea": "the shelled key: the key is armored AND faces its own prisoner, so it needs a ram and a reversal; the rammer is the only piece aimed at the shell",
+  "related": "closest occupancy N83 0.36 (bank); pairwise with the other Phase 32 boards <= 0.28",
+  "source": "hybrid: hand core frozen cell for cell (seed_K16_ARMOREDKEY.json, Phase 32); blocks added by the Phase 25-27 generator (tools/ta90_search.gd of commit c1ddc89, run in a separate worktree) --ops=v20 with the Phase 25-27 search parameters (piece_free 13, max_pieces 17, suffix_rate 0.30, patience 8), RNG seed 322, round 2 (second RNG seed: no screen PASS in round 1); every board then passed the unchanged modern pipeline: engine-valid tokens, bank overlap, tools/extreme90_screen30.py (40 ms gates, strict essentiality, filler, hint-follow) and the full evaluation tools/extreme90_eval25.py --full; shortlist rule S_p30; Phase 32 protocol data/dev/extreme90_p32/protocol.json (the Phase 31 method, unchanged)",
+  "selection": "one board per concept: the fewest positions among the fully qualified boards of the concept (Phase 31 method)",
+  "preregistered_prediction": {
+   "positions": 935,
+   "early3": 9,
+   "open_escape_losing": 3,
+   "note": "recorded before any human play; NOT used to select; the owner is the judge"
+  },
+  "human_test": {
+   "status": "NOT YET TESTED",
+   "difficulty": "not supplied",
+   "enjoyment": "not supplied",
+   "outcome_90s": "not supplied",
+   "solve_time_ms": "not supplied",
+   "attempts": "not supplied",
+   "restarts": "not supplied",
+   "undo_used": "not supplied",
+   "notes": "not supplied",
+   "owner_decision": "none",
+   "how_recorded": "filled only from the owner's first exposure on ?extreme90p32=1 (COPY ALL RESULTS JSON carries time, restarts, Undo, moves, attempts per run) and the owner's own ratings; nothing is inferred"
+  },
+  "owner_decision": {
+   "difficulty": "MEDIUM",
+   "decision": "NOT APPROVED",
+   "file": "data/dev/extreme90_p32/owner_decisions_n88_n93.json"
+  }
+ }
+}

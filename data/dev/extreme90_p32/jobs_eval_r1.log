@@ -1,0 +1,21 @@
+START eval_K01_s321_3 pid=1959
+START eval_K01_s321_4 pid=1960
+DONE eval_K01_s321_3 exit=0 156s
+START eval_K02_s321_6 pid=2134
+DONE eval_K01_s321_4 exit=0 158s
+START eval_K02_s321_7 pid=2149
+DONE eval_K02_s321_6 exit=0 156s
+START eval_K06_s321_2 pid=2236
+DONE eval_K02_s321_7 exit=0 156s
+START eval_K06_s321_3 pid=2254
+DONE eval_K06_s321_2 exit=0 76s
+START eval_K08_s321_0 pid=2279
+DONE eval_K06_s321_3 exit=0 148s
+START eval_K08_s321_1 pid=2345
+DONE eval_K08_s321_0 exit=0 144s
+START eval_T03r_s321_0 pid=2397
+DONE eval_K08_s321_1 exit=0 148s
+START eval_T03r_s321_7 pid=2432
+DONE eval_T03r_s321_0 exit=0 174s
+DONE eval_T03r_s321_7 exit=0 170s
+ALL DONE
