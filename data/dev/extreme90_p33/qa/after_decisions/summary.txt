@@ -1,0 +1,3 @@
+Extreme90p33Check exit=0 :: EXTREME90 P33 CHECK: PASSED (378 checks) 
+Ta90Check exit=0 :: TA90 CHECK: PASSED (91 checks) 
+Ta90ContinueCheck exit=0 :: TA90 CONTINUE CHECK: PASSED (955 checks) 

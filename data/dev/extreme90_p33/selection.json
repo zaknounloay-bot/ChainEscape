@@ -36,9 +36,10 @@
    "action_log": "data/dev/extreme90_p33/human/xb33_logs.json (the owner's compact transcription of the export, every event validated on the engine: tools/ta90_replay33.gd -> replay33.txt)",
    "blocked_taps": 2,
    "notes": "owner's COPY ALL RESULTS export (validated transcription)",
-   "owner_status": "RECOMMENDED FOR APPROVAL - NOT CONFIRMED BY OWNER",
+   "owner_status": "OWNER APPROVED",
    "file": "data/dev/extreme90_p33/human_p33.json",
-   "owner_decision": "NONE YET"
+   "owner_decision": "APPROVED",
+   "owner_status_before_decision": "RECOMMENDED FOR APPROVAL - NOT CONFIRMED BY OWNER"
   }
  },
  "N95": {
@@ -78,9 +79,10 @@
    "action_log": "data/dev/extreme90_p33/human/xb33_logs.json (the owner's compact transcription of the export, every event validated on the engine: tools/ta90_replay33.gd -> replay33.txt)",
    "blocked_taps": 0,
    "notes": "owner's COPY ALL RESULTS export (validated transcription)",
-   "owner_status": "DOWNGRADED (MEDIUM)",
+   "owner_status": "NOT APPROVED",
    "file": "data/dev/extreme90_p33/human_p33.json",
-   "owner_decision": "NOT APPROVED"
+   "owner_decision": "NOT APPROVED",
+   "owner_status_before_decision": "DOWNGRADED (MEDIUM)"
   }
  },
  "N96": {
@@ -118,9 +120,10 @@
    "action_log": "data/dev/extreme90_p33/human/xb33_logs.json (the owner's compact transcription of the export, every event validated on the engine: tools/ta90_replay33.gd -> replay33.txt)",
    "blocked_taps": 3,
    "notes": "owner's COPY ALL RESULTS export (validated transcription)",
-   "owner_status": "BORDERLINE - REQUIRES OWNER JUDGMENT",
+   "owner_status": "NOT APPROVED AT THIS STAGE",
    "file": "data/dev/extreme90_p33/human_p33.json",
-   "owner_decision": "NONE YET"
+   "owner_decision": "NOT APPROVED",
+   "owner_status_before_decision": "BORDERLINE - REQUIRES OWNER JUDGMENT"
   }
  },
  "N97": {
@@ -161,9 +164,10 @@
    "action_log": "data/dev/extreme90_p33/human/xb33_logs.json (the owner's compact transcription of the export, every event validated on the engine: tools/ta90_replay33.gd -> replay33.txt)",
    "blocked_taps": 0,
    "notes": "owner's COPY ALL RESULTS export (validated transcription)",
-   "owner_status": "DOWNGRADED (MEDIUM)",
+   "owner_status": "NOT APPROVED",
    "file": "data/dev/extreme90_p33/human_p33.json",
-   "owner_decision": "NOT APPROVED"
+   "owner_decision": "NOT APPROVED",
+   "owner_status_before_decision": "DOWNGRADED (MEDIUM)"
   }
  },
  "N98": {
@@ -200,9 +204,10 @@
    "action_log": "data/dev/extreme90_p33/human/xb33_logs.json (the owner's compact transcription of the export, every event validated on the engine: tools/ta90_replay33.gd -> replay33.txt)",
    "blocked_taps": 0,
    "notes": "owner's COPY ALL RESULTS export (validated transcription)",
-   "owner_status": "DOWNGRADED (MEDIUM)",
+   "owner_status": "NOT APPROVED",
    "file": "data/dev/extreme90_p33/human_p33.json",
-   "owner_decision": "NOT APPROVED"
+   "owner_decision": "NOT APPROVED",
+   "owner_status_before_decision": "DOWNGRADED (MEDIUM)"
   }
  },
  "N99": {
@@ -242,9 +247,10 @@
    "action_log": "data/dev/extreme90_p33/human/xb33_logs.json (the owner's compact transcription of the export, every event validated on the engine: tools/ta90_replay33.gd -> replay33.txt)",
    "blocked_taps": 6,
    "notes": "owner's COPY ALL RESULTS export (validated transcription)",
-   "owner_status": "RECOMMENDED FOR APPROVAL - NOT CONFIRMED BY OWNER",
+   "owner_status": "OWNER APPROVED",
    "file": "data/dev/extreme90_p33/human_p33.json",
-   "owner_decision": "NONE YET"
+   "owner_decision": "APPROVED",
+   "owner_status_before_decision": "RECOMMENDED FOR APPROVAL - NOT CONFIRMED BY OWNER"
   }
  },
  "N100": {
@@ -284,9 +290,10 @@
    "action_log": "data/dev/extreme90_p33/human/xb33_logs.json (the owner's compact transcription of the export, every event validated on the engine: tools/ta90_replay33.gd -> replay33.txt)",
    "blocked_taps": 0,
    "notes": "owner's COPY ALL RESULTS export (validated transcription)",
-   "owner_status": "DOWNGRADED (MEDIUM)",
+   "owner_status": "NOT APPROVED",
    "file": "data/dev/extreme90_p33/human_p33.json",
-   "owner_decision": "NOT APPROVED"
+   "owner_decision": "NOT APPROVED",
+   "owner_status_before_decision": "DOWNGRADED (MEDIUM)"
   }
  }
 }

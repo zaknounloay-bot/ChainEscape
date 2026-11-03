@@ -1,6 +1,6 @@
 {
- "note": "Authoritative EXTREME bank status after the owner decisions on the Phase 29 boards (recorded in Phase 29 closure; data/dev/extreme90_p29/owner_decisions_n71_n77.json) and the Phase 28 boards (owner_approvals_p29.json). Development only. Records are never deleted; this manifest only classifies them.",
- "updated": "2026-10-31",
+ "note": "Authoritative EXTREME bank status. Reconciled 2026-11-03 with every per-phase owner decision file: extreme90_p29/owner_decisions_n71_n77.json (35), extreme90_p31/owner_decisions_n83_n87.json (+N83, N86, N87 = 38), extreme90_p32/owner_decisions_n88_n93.json (+0), extreme90_p33/owner_decisions_n94_n100.json (+N94, N99 = 40). N78-N82 classified from the Phase 31 report (N80 borderline, N82 pending, N78/N79/N81 outside the bank). Development only. Records are never deleted; this manifest only classifies them.",
+ "updated": "2026-11-03",
  "owner_approved": [
   "N3",
   "N5",
@@ -36,7 +36,12 @@
   "N69",
   "N72",
   "N75",
-  "N77"
+  "N77",
+  "N83",
+  "N86",
+  "N87",
+  "N94",
+  "N99"
  ],
  "strong_provisional": [
   "N48",
@@ -56,7 +61,9 @@
  ],
  "technically_qualified_untested": [],
  "borderline_not_approved": [
-  "N66"
+  "N66",
+  "N80",
+  "N96"
  ],
  "downgraded_or_archived": [
   "N71",
@@ -87,19 +94,38 @@
   "N8",
   "N9",
   "N10",
-  "N12"
+  "N12",
+  "N78",
+  "N79",
+  "N81",
+  "N84",
+  "N85",
+  "N88",
+  "N89",
+  "N90",
+  "N91",
+  "N92",
+  "N93",
+  "N95",
+  "N97",
+  "N98",
+  "N100"
  ],
  "release_readiness_watch": {
   "N68": "owner-approved; WebAssembly TIME UP 22.8-31.5 ms in 10 controlled low-load headless-Chromium runs (median ~25 ms; Phase 28 report J). Real iPhone timing not yet measured."
  },
  "target": 50,
  "counts": {
-  "owner_approved": 35,
+  "owner_approved": 40,
   "strong_provisional": 3,
   "provisional": 9,
   "technically_qualified_untested": 0,
-  "borderline_not_approved": 1,
-  "downgraded_or_archived": 29,
-  "remaining_to_target": 15
- }
+  "borderline_not_approved": 3,
+  "pending_owner_decision": 1,
+  "downgraded_or_archived": 44,
+  "remaining_to_target": 10
+ },
+ "pending_owner_decision": [
+  "N82"
+ ]
 }

@@ -12,7 +12,7 @@
   {
    "id": "N94",
    "accepted": true,
-   "label": "TECHNICALLY QUALIFIED - HUMAN TESTED, RECOMMENDED FOR APPROVAL (NOT OWNER-CONFIRMED)",
+   "label": "TECHNICALLY QUALIFIED - OWNER APPROVED (Phase 33 owner decision)",
    "variant": "N94",
    "design": "P33_T01r_s331_3",
    "family": "P30 the pulled trigger (magnet + switch)",
@@ -255,8 +255,14 @@
     "action_log": "data/dev/extreme90_p33/human/xb33_logs.json (the owner's compact transcription of the export, every event validated on the engine: tools/ta90_replay33.gd -> replay33.txt)",
     "blocked_taps": 2,
     "notes": "owner's COPY ALL RESULTS export (validated transcription)",
-    "owner_status": "RECOMMENDED FOR APPROVAL - NOT CONFIRMED BY OWNER",
-    "file": "data/dev/extreme90_p33/human_p33.json"
+    "owner_status": "OWNER APPROVED",
+    "file": "data/dev/extreme90_p33/human_p33.json",
+    "owner_status_before_decision": "RECOMMENDED FOR APPROVAL - NOT CONFIRMED BY OWNER"
+   },
+   "owner_decision": {
+    "decision": "APPROVED",
+    "recorded": "2026-11-03",
+    "file": "data/dev/extreme90_p33/owner_decisions_n94_n100.json"
    }
   }
  ]

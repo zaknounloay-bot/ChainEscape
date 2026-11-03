@@ -268,13 +268,14 @@
     "action_log": "data/dev/extreme90_p33/human/xb33_logs.json (the owner's compact transcription of the export, every event validated on the engine: tools/ta90_replay33.gd -> replay33.txt)",
     "blocked_taps": 0,
     "notes": "owner's COPY ALL RESULTS export (validated transcription)",
-    "owner_status": "DOWNGRADED (MEDIUM)",
-    "file": "data/dev/extreme90_p33/human_p33.json"
+    "owner_status": "NOT APPROVED",
+    "file": "data/dev/extreme90_p33/human_p33.json",
+    "owner_status_before_decision": "DOWNGRADED (MEDIUM)"
    },
    "owner_decision": {
     "decision": "NOT APPROVED",
     "recorded": "2026-11-03",
-    "file": "data/dev/extreme90_p33/owner_status_n94_n100.json"
+    "file": "data/dev/extreme90_p33/owner_decisions_n94_n100.json"
    }
   }
  ]

@@ -1,0 +1,73 @@
+{
+ "source": "Phase 33 owner decision message (project owner): explicit final decisions on the Phase 33 boards, stored SEPARATELY from the player ratings (human_p33.json, unchanged) and from technical qualification.",
+ "recorded": "2026-11-03",
+ "boards": {
+  "N94": {
+   "decision": "APPROVED",
+   "player_rating": "EXTREME",
+   "enjoyment": "5/5",
+   "outcome_90s": "TIME UP",
+   "previous_status": "RECOMMENDED FOR APPROVAL - NOT CONFIRMED BY OWNER",
+   "fingerprint": "4654e81f75c7ba8f8388f0d2dfd23348e5278da2b16dbb227c1987983d34713f"
+  },
+  "N99": {
+   "decision": "APPROVED",
+   "player_rating": "EXTREME",
+   "enjoyment": "5/5",
+   "outcome_90s": "TIME UP",
+   "previous_status": "RECOMMENDED FOR APPROVAL - NOT CONFIRMED BY OWNER",
+   "fingerprint": "b6c71c004f4e95901dc944eab42254da016eb957da4b6496d0b8d5a3b8948e88"
+  },
+  "N96": {
+   "decision": "NOT APPROVED",
+   "player_rating": "VERY HARD",
+   "enjoyment": "5/5",
+   "outcome_90s": "TIME UP",
+   "previous_status": "BORDERLINE - REQUIRES OWNER JUDGMENT",
+   "fingerprint": "60b63fc1cf3e73cdb6f331e949a577657501de9d834e546a1fc43bb9bcfa7531",
+   "note": "NOT APPROVED at this stage (owner); was BORDERLINE - REQUIRES OWNER JUDGMENT"
+  },
+  "N95": {
+   "decision": "NOT APPROVED",
+   "player_rating": "MEDIUM",
+   "enjoyment": "5/5",
+   "outcome_90s": "COMPLETED",
+   "previous_status": "DOWNGRADED (MEDIUM)",
+   "fingerprint": "e7289be01bb874a0a8fa1cdd2ed6aab94300382c48a7b421043f71ec9360870e"
+  },
+  "N97": {
+   "decision": "NOT APPROVED",
+   "player_rating": "MEDIUM",
+   "enjoyment": "5/5",
+   "outcome_90s": "COMPLETED",
+   "previous_status": "DOWNGRADED (MEDIUM)",
+   "fingerprint": "2b71601d2cb42654f43a991bbcaf6ee88abe2cc70ac795b752b9b11f537253af"
+  },
+  "N98": {
+   "decision": "NOT APPROVED",
+   "player_rating": "MEDIUM",
+   "enjoyment": "5/5",
+   "outcome_90s": "COMPLETED",
+   "previous_status": "DOWNGRADED (MEDIUM)",
+   "fingerprint": "161d9f1b6a92d740a14d83a4611964f8c3bf5f0117e132f886fdb2a4ee4129f9"
+  },
+  "N100": {
+   "decision": "NOT APPROVED",
+   "player_rating": "MEDIUM",
+   "enjoyment": "5/5",
+   "outcome_90s": "COMPLETED",
+   "previous_status": "DOWNGRADED (MEDIUM)",
+   "fingerprint": "01e8abb27b59d23134589c966b1ae7d14d9126874a04e35680e2541f154e34bc"
+  }
+ },
+ "acceptance": "2 / 7",
+ "count": {
+  "approved_before": 38,
+  "approved_now": 40,
+  "target": 50,
+  "remaining": 10,
+  "reconciled": "38 (Phase 31: N83, N86, N87 on top of 35; Phase 32: 0) + N94, N99 = 40"
+ },
+ "supersedes": "data/dev/extreme90_p33/owner_status_n94_n100.json (interim recommendation status, kept as history)",
+ "unchanged": "every earlier owner decision; N82 still pending an explicit decision; all fingerprints, puzzle maps and human ratings"
+}

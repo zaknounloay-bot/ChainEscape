@@ -7,18 +7,15 @@ Development only. **Not deployed to Production.** Not touched:
 - the exact Solver and the repository's generator;
 - every gameplay mechanic (none added or changed).
 
-**Owner-approved EXTREME bank: 38 / 50 (12 remaining).** The 38 approvals are not reopened.
+**Owner-approved EXTREME bank: 40 / 50 (10 remaining)** after the final Phase 33 owner decision (section N). The 38 earlier approvals are not reopened.
 - Phase 31: N83, N86, N87 approved; N84, N85 not approved.
 - Phase 32: N88–N93 **not approved** (N88–N91 and N93 MEDIUM, N92 VERY HARD): 0 / 6.
+- Phase 33: **N94 and N99 approved** (both rated EXTREME). N96 (VERY HARD) is **not approved at this stage**. N95, N97, N98 and N100 (MEDIUM) are not approved. 2 / 7.
 - N82: still unapproved, pending an explicit owner decision.
 
 **Labels:** the new boards **N94–N100** were built as **TECHNICALLY QUALIFIED — HUMAN UNTESTED** (sections D–I describe them as they were before play).
-**Update 2026-11-03 (section J):** the owner has played N94–N100.
-- N94 and N99: rated EXTREME, **recommended for approval, not yet confirmed**.
-- N96: rated VERY HARD, **borderline, owner judgment pending**.
-- N95, N97, N98, N100: rated MEDIUM, **not approved**.
-
-**The approved bank stays 38 / 50** until the owner explicitly confirms.
+- **Section J (2026-11-03):** the owner played N94–N100. N94 and N99 were recommended, N96 was borderline, and the other four were not approved. At that point the bank stayed 38 / 50.
+- **Section N (2026-11-03):** the owner's final decision is N94 and N99 **APPROVED**, N96 **NOT APPROVED at this stage**, and N95, N97, N98, N100 **NOT APPROVED**. The bank is now **40 / 50**.
 
 ## A. Phase 32 closure
 
@@ -338,7 +335,7 @@ One local commit on `claude/elegant-fermat-0jrmxo`, on top of `649c33a` (Phase 3
 
 **Excluded:** `tools/__pycache__`, `build/`.
 
-The approved bank stays **38 / 50**. N94, N99 and N96 await the owner's explicit decision.
+The approved bank stayed **38 / 50** at this commit; N94, N99 and N96 then awaited the owner's decision. Superseded by section N: **40 / 50**.
 
 
 ## J. Human results (owner first exposure, build p33-qa1-20261103)
@@ -598,3 +595,39 @@ Times are seconds from the start of the attempt. "Depth" is the depth of the los
 - **H2:** EXTREME needs **more than one** distinct deep-trap decision, rather than one recurring decision (N96).
 - **H3:** a MEDIUM rating follows when the most tempting error is shallow (≤ 3), even if deep traps exist elsewhere (N100: board `beyond_undo` 1.0, but the error made had depth 2).
 - **Caveat:** none has a pre-play proxy yet; the board-level `trap_depth_median` and `beyond_undo` failed on N100. So they inform *what to look for in the logs*, not how to select boards.
+
+## N. Final owner decision on N94–N100 (2026-11-03)
+
+Recorded in `data/dev/extreme90_p33/owner_decisions_n94_n100.json`, stored apart from the player ratings in `human_p33.json`, which are unchanged.
+
+| Board | Player rating | 90 s outcome | Status before | **Owner decision** |
+|---|---|---|---|---|
+| N94 | EXTREME | TIME UP | recommended | **APPROVED** |
+| N99 | EXTREME | TIME UP | recommended | **APPROVED** |
+| N96 | VERY HARD | TIME UP | borderline | **NOT APPROVED at this stage** |
+| N95 | MEDIUM | completed 31.2 s | not approved | NOT APPROVED |
+| N97 | MEDIUM | completed 40.5 s | not approved | NOT APPROVED |
+| N98 | MEDIUM | completed 36.3 s | not approved | NOT APPROVED |
+| N100 | MEDIUM | completed 23.6 s | not approved | NOT APPROVED |
+
+**Approved bank: 38 + N94 + N99 = 40 / 50 (10 remaining).**
+
+**What was updated:**
+- **Records `ta90_n94`…`ta90_n100`:** `label`, `owner_decision` and `human_test.owner_status`, with the interim status kept in `owner_status_before_decision`.
+- **`selection.json`:** the same decision fields.
+- **`owner_status_n94_n100.json`:** kept as the interim history, marked `superseded_by`.
+- **The bank manifest `data/dev/extreme90_bank_status.json`:** it had last been updated at 35 / 50 (Phase 29). It is now reconciled with every per-phase decision file, adding N83, N86, N87, N94 and N99. The other boards are classified as follows:
+  - **Borderline, not approved:** N80 and N96.
+  - **Pending owner decision:** N82.
+  - **Downgraded or outside the bank:** N78, N79, N81, N84, N85, N88–N93, N95, N97, N98, N100.
+  - N78–N82 are classified from the Phase 31 report; their records were not edited.
+- **Script:** `human/make_decisions33.py`.
+
+**Verified:**
+- Against `HEAD`, only those decision fields changed in the seven records and in `selection.json`.
+- Puzzle maps, fingerprints and the human ratings are unchanged, and every fingerprint matches `BOARDS90` in `ta90_time_attack.gd`.
+- The manifest classifies 100 boards with no duplicates. Every record marked APPROVED is in `owner_approved`, and no record marked otherwise is.
+- **Checks rerun** (`qa/after_decisions/`): Extreme90p33Check 378, Ta90Check 91, Ta90ContinueCheck 955, all passed.
+- The tested build and the QA ZIP are unchanged. The page does not read these fields.
+
+Gameplay, puzzle maps and the Classic levels were not modified. Phase 34 has not started.

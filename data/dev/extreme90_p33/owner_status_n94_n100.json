@@ -38,5 +38,6 @@
    "status": "DOWNGRADED (MEDIUM)",
    "fingerprint": "01e8abb27b59d23134589c966b1ae7d14d9126874a04e35680e2541f154e34bc"
   }
- }
+ },
+ "superseded_by": "data/dev/extreme90_p33/owner_decisions_n94_n100.json (final owner decision 2026-11-03: N94, N99 APPROVED; N95-N98, N100 NOT APPROVED; approved bank 40/50)"
 }
